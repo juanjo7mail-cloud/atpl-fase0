@@ -1,0 +1,1407 @@
+<!doctype html><html><head><meta charset=utf8><script>/* puente con la app: el progreso lo guarda la app (navegador o nube), no la página */
+(function(){var K="031",P=window.parent&&window.parent!==window,W={},n=0,LS="f0:"+K;
+function ask(m){return new Promise(function(r){if(!P)return r(undefined);var id=++n;W[id]=r;m.id=id;try{window.parent.postMessage(m,"*")}catch(e){delete W[id];return r(undefined)}setTimeout(function(){if(W[id]){delete W[id];r(undefined)}},4000)})}
+addEventListener("message",function(e){var d=e.data;if(d&&d.t==="f0-reply"&&W[d.id]){W[d.id](d.v);delete W[d.id]}});
+async function load(){var v=await ask({t:"f0-load",k:K});if(v===undefined){try{v=JSON.parse(localStorage.getItem(LS)||"null")}catch(e){}}return v||null}
+async function save(st){try{localStorage.setItem(LS,JSON.stringify(st))}catch(e){}await ask({t:"f0-save",k:K,v:st})}
+window.__hub={use:async function(n){return n==="artifact"?{publish:async function(f){var x=f&&f["progreso.json"];if(x){await save(JSON.parse(typeof x==="string"?x:x.content))}return{}}}:null},
+fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
+})();</script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>070 Flight Performance and Planning — Phase 0</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF3F5; --paper:#FFFFFF; --ink:#14304A; --muted:#5A6F82; --line:#CBD8E0;
+  --blue:#2F6FA3; --magenta:#A3246F; --ok:#1F7A4D; --bad:#B3302C; --warn:#9A6A00;
+  --warnbg:#FFF6DC; --compbg:#F3ECF6; --okbg:#E4F3EB; --badbg:#FBE9E8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1B26; --paper:#172634; --ink:#E3ECF2; --muted:#94A9BA; --line:#2B3F50;
+    --blue:#7EB3DE; --magenta:#E07BB6; --ok:#5CC98F; --bad:#F0827D; --warn:#E7BD55;
+    --warnbg:#2E2715; --compbg:#2A2133; --okbg:#16301F; --badbg:#3A1C1B;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1B26; --paper:#172634; --ink:#E3ECF2; --muted:#94A9BA; --line:#2B3F50;
+  --blue:#7EB3DE; --magenta:#E07BB6; --ok:#5CC98F; --bad:#F0827D; --warn:#E7BD55;
+  --warnbg:#2E2715; --compbg:#2A2133; --okbg:#16301F; --badbg:#3A1C1B;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 64px}
+header{padding:28px 0 8px}
+header .code{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;font-size:64px;line-height:.9;color:var(--magenta);letter-spacing:-1px}
+header h1{font-family:"Barlow Condensed",Barlow,sans-serif;font-size:28px;margin:4px 0 2px;font-weight:600}
+header p{margin:0;color:var(--muted)}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:4px;padding:12px 0;border-bottom:2px solid var(--ink);margin-bottom:20px}
+nav button{flex:1;font:600 17px "Barlow Condensed",Barlow,sans-serif;padding:10px 6px;border:0;background:transparent;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-14px}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--magenta)}
+button:focus-visible,summary:focus-visible,label:focus-within{outline:2px solid var(--blue);outline-offset:2px}
+section[hidden]{display:none}
+h2{font-family:"Barlow Condensed",Barlow,sans-serif;font-size:24px;margin:28px 0 4px;font-weight:600}
+.classmeta{color:var(--muted);margin:0 0 12px;font-size:15px}
+details.lo{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:6px;margin:10px 0}
+details.lo.empty{border-left-color:var(--line)}
+details.lo summary{cursor:pointer;padding:12px 14px;list-style:none;display:flex;gap:10px;align-items:baseline}
+details.lo summary::-webkit-details-marker{display:none}
+.lonum{font:600 15px "Barlow Condensed",Barlow,sans-serif;color:var(--blue);white-space:nowrap}
+.lotitle{font-weight:500;flex:1}
+.status{font-size:13px;color:var(--muted);white-space:nowrap}
+.body{padding:0 14px 14px}
+.body h4{font:600 16px "Barlow Condensed",Barlow,sans-serif;margin:14px 0 4px;color:var(--ink)}
+.body ul{margin:4px 0;padding-left:20px}
+.body li{margin:3px 0}
+.flag{background:var(--warnbg);border-left:3px solid var(--warn);padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}
+.flag b{color:var(--warn)}
+.comp{background:var(--compbg);border-left:3px solid var(--magenta);padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}
+.comp > b:first-child{color:var(--magenta);display:block;margin-bottom:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:600}
+td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--magenta);width:36px}
+tr.al td{background:color-mix(in srgb,var(--blue) 8%,transparent)}
+.legend{font-size:14px;color:var(--muted)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px;margin:12px 0}
+.opts label{display:flex;gap:10px;align-items:center;padding:6px 0;cursor:pointer}
+.btn{font:600 17px "Barlow Condensed",Barlow,sans-serif;background:var(--ink);color:var(--paper);border:0;border-radius:4px;padding:12px 20px;cursor:pointer}
+.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px;margin:12px 0}
+.qhead{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+.qtext{font-weight:500;margin-bottom:10px}
+.choice{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:4px;margin:6px 0;cursor:pointer}
+.choice input{margin-top:4px}
+.choice.right{background:var(--okbg);border-color:var(--ok)}
+.choice.wrong{background:var(--badbg);border-color:var(--bad)}
+.expl{margin-top:10px;font-size:15px;border-top:1px dashed var(--line);padding-top:8px}
+.expl .es{color:var(--muted)}
+.tag{font-size:12px;padding:1px 6px;border-radius:3px;border:1px solid var(--magenta);color:var(--magenta)}
+.score{font:700 56px "Barlow Condensed",Barlow,sans-serif;line-height:1}
+.pass{color:var(--ok)} .fail{color:var(--bad)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;background:var(--blue)}
+.lorow{margin:8px 0}
+.progress{position:sticky;top:62px;background:var(--bg);padding:6px 0;font-size:14px;color:var(--muted);z-index:4}
+.muted{color:var(--muted)}
+.hist td{white-space:nowrap}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+<style>
+.mode{display:block;border:1px solid var(--line);border-radius:4px;padding:10px 12px;margin:6px 0;cursor:pointer}
+.mode:has(input:checked){border-color:var(--blue);background:color-mix(in srgb,var(--blue) 7%,transparent)}
+.mode small{display:block;color:var(--muted);margin-left:26px}
+select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.map td{vertical-align:middle}
+.pill{font-size:12px;padding:1px 7px;border-radius:10px;white-space:nowrap;border:1px solid var(--line);color:var(--muted)}
+.pill.done{border-color:var(--blue);color:var(--blue)}
+.pill.gap{border-color:var(--warn);color:var(--warn)}
+.m{font:700 18px "Barlow Condensed",Barlow,sans-serif}
+.m.lo{color:var(--bad)} .m.mid{color:var(--warn)} .m.hi{color:var(--ok)}
+.ref{margin-top:6px;font-size:14px;background:var(--bg);border-left:3px solid var(--blue);padding:6px 8px;border-radius:3px}
+.tag.g{border-color:var(--blue);color:var(--blue)}
+.focus{border-left:4px solid var(--magenta)}
+.linkbtn{background:none;border:0;color:var(--blue);font:inherit;cursor:pointer;padding:0;text-decoration:underline}
+.weak li{margin:4px 0}
+</style>
+
+<style>
+:root{--teal:#127C87}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--teal:#6FC6D0}}
+:root[data-theme="dark"]{--teal:#6FC6D0}
+.ppt{background:color-mix(in srgb,var(--teal) 10%,transparent);border-left:3px solid var(--teal);padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}
+.ppt > b:first-child{color:var(--teal);display:block;margin-bottom:2px}
+.ppt ul{margin:4px 0;padding-left:18px}
+.src{font-size:13px;color:var(--muted);margin:2px 0 0}
+.profe{background:color-mix(in srgb,var(--ok) 9%,transparent);border-left:3px solid var(--ok);padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}
+.profe > b:first-child{color:var(--ok);display:block;margin-bottom:2px}
+.profe ul{margin:4px 0;padding-left:18px}
+.tag.tr{background:var(--warn);border-color:var(--warn);color:var(--paper);font-weight:600}
+.tag.pf{background:var(--ok);border-color:var(--ok);color:var(--paper);font-weight:600}
+.tag.dp{border-color:var(--teal);color:var(--teal)}
+.pill.ok{border-color:var(--ok);color:var(--ok)} .pill.mid{border-color:var(--warn);color:var(--warn)} .pill.lo{border-color:var(--bad);color:var(--bad)} .pill.nd{color:var(--muted)}
+.concept{margin:10px 0} .concept .crow{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap} .cmeta{font-size:13px;margin-top:3px}
+.vis{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:12px;margin:12px 0}
+.vis svg{width:100%;height:auto;display:block}
+.visbtns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px} .visbtns .btn{padding:7px 10px;font-size:15px} .visbtns .btn.on{background:var(--ink);color:var(--paper)}
+.vismsg{margin-top:8px;font-size:15px;min-height:2.6em}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;border:1px solid var(--line)}
+.dot.red{background:#d61f1f}.dot.green{background:#13a538}.dot.white{background:#fff}.dot.both{background:linear-gradient(90deg,#d61f1f 50%,#13a538 50%)}
+.towerwrap{display:grid;grid-template-columns:minmax(120px,200px) 1fr;gap:14px;align-items:start}
+@media (max-width:560px){.towerwrap{grid-template-columns:1fr}}
+.blink{animation:blink .8s steps(1) infinite} @keyframes blink{50%{opacity:.08}}
+.rise{animation:rise 1.6s ease-out infinite} @keyframes rise{0%{transform:translateY(30px);opacity:1}100%{transform:translateY(-30px);opacity:0}}
+.svgbox{margin:12px 0}
+.svgbox svg{width:100%;height:auto;display:block}
+li.done{color:var(--muted);text-decoration:line-through}
+.tag.t{border-color:var(--warn);color:var(--warn)}
+.mode:has(input:disabled){opacity:.5}
+</style>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+nav{top:env(safe-area-inset-top,0px)}
+.deftable td:first-child{font-weight:600;white-space:nowrap}
+.deftable td .es{color:var(--muted);font-size:14px}
+.kbd{font:700 15px "Barlow Condensed",sans-serif;border:1px solid var(--ink);border-radius:4px;padding:0 6px;background:var(--paper)}
+.slider{width:100%}
+.ditchgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:560px){.ditchgrid{grid-template-columns:1fr}}
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.steps span{font:600 14px "Barlow Condensed",sans-serif;padding:3px 8px;border-radius:10px;border:1px solid var(--line);color:var(--muted)}
+.steps span.on{border-color:var(--magenta);color:var(--magenta)}
+.steps span.past{border-color:var(--ok);color:var(--ok)}
+.flame{transform-origin:50% 100%;animation:flick .5s ease-in-out infinite alternate}
+@keyframes flick{from{transform:scaleY(1)}to{transform:scaleY(.86)}}
+.drillstep{padding:6px 10px;border-left:3px solid var(--ok);margin:4px 0;background:color-mix(in srgb,var(--ok) 7%,transparent);border-radius:3px}
+.sq{display:inline-block;font:700 28px "Barlow Condensed",monospace;letter-spacing:4px;background:#111;color:#F5B83D;padding:4px 14px;border-radius:4px;min-width:120px;text-align:center}
+.hist .los{white-space:normal;font-size:13px;color:var(--muted)}
+.fixed .crow b{color:var(--ok)}
+button.choice{width:100%;text-align:left;background:transparent;color:inherit;font:inherit}
+</style>
+<style>
+/* 070: mismo sistema que 010/060 · añadidos para los simuladores de masa y centrado */
+:root{--amber:#B87500;--slate:#6B7F93}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--amber:#E7B04A;--slate:#8FA3B6;color-scheme:dark}}
+:root[data-theme="dark"]{--amber:#E7B04A;--slate:#8FA3B6;color-scheme:dark}
+.num{font-variant-numeric:tabular-nums}
+.examcard{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.examcard .big{font:700 40px "Barlow Condensed",sans-serif;color:var(--magenta);line-height:1}
+.ctl{display:grid;grid-template-columns:minmax(120px,190px) 1fr 70px;gap:8px;align-items:center;font-size:15px;margin:4px 0}
+.ctl output{font:600 16px "Barlow Condensed",sans-serif;text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:520px){.ctl{grid-template-columns:1fr 64px}.ctl label{grid-column:1/-1}}
+.ls td,.ls th{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ls td:not(:first-child),.ls th:not(:first-child){text-align:right}
+.ls tr.tot td{font-weight:600;border-top:2px solid var(--ink)}
+.calcin{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.calcin input{font:600 18px "Barlow Condensed",sans-serif;width:130px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.stepsol{margin:8px 0 0;padding-left:20px}
+.stepsol li{margin:4px 0}
+.formula{font:600 17px "Barlow Condensed",sans-serif;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:6px 10px;display:inline-block;margin:4px 0}
+.timer{font:700 16px "Barlow Condensed",sans-serif;color:var(--ink)}
+.timer.low{color:var(--bad)}
+.tag.k{border-color:var(--amber);color:var(--amber)}
+.warnmsg{color:var(--bad);font-weight:600}
+</style>
+<div class="wrap">
+<header>
+  <div class="code">031 · 032 · 033</div>
+  <h1>Performance</h1>
+  <p><b>031 Mass and Balance · 032 Performance · 033 Flight Planning — Fase 0: 30 preguntas · 1 h · aprobado 75 %</b></p>
+</header>
+<nav role="tablist">
+  <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
+  <button role="tab" aria-selected="false" data-tab="map">Mapa</button>
+  <button role="tab" aria-selected="false" data-tab="test">Test</button>
+  <button role="tab" aria-selected="false" data-tab="hist">Historial</button>
+</nav>
+
+<!-- ============ APUNTES ============ -->
+<section id="notes">
+
+
+<div class="card examcard">
+  <div class="big">30 · 1 h</div>
+  <div style="flex:1;min-width:220px"><b>★ El examen: 30 preguntas en una hora</b> (2 minutos por pregunta). Lo dijo el profesor el primer día. Por eso el test adaptativo de esta página es de 30 preguntas y lleva reloj de examen de 60 minutos, para que te hagas a la idea del ritmo.</div>
+</div>
+
+
+
+
+
+<!-- ===== 031.02.01.01 ===== -->
+<details class="lo">
+<summary><span class="lonum">031.02.01</span><span class="lotitle">Terminology · Mass and balance: purpose and limitations</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li>Hay que saber hacer los cálculos del <b>CG</b> (centro de gravedad) en tierra <b>y también en el aire</b>: al quemar combustible, el CG se mueve.</li>
+    <li><b>CG adelantado</b> (forward CG): el avión es <b>más estable</b>, pero vas <b>tirando hacia atrás todo el rato</b>. <b>CG atrasado</b> (aft CG): el avión va <b>más nervioso</b>.</li>
+    <li><b>Masa y peso son distintos</b>, pero en masa y centrado los tratamos como iguales (W = m).</li>
+    <li>El <b>gráfico de las etapas</b> de masa (BEM → DOM → ZFM → TOM → LM): lo tienes abajo, interactivo.</li>
+    <li><b>ZFM</b> sirve para colocar bien el CG y para las <b>cargas estructurales en el encastre del ala</b> (wing root).</li>
+    <li>En un <b>monomotor de tren fijo</b> la MTOM y la MLM pueden ser <b>iguales</b>; normalmente la MTOM es <b>mayor</b> que la MLM.</li>
+    <li>El <b>datum</b> es un punto imaginario de referencia. Si está en el morro, todas las distancias hacia atrás son <b>positivas</b>.</li>
+  </ul></div>
+  
+
+  <h4>Mass and weight (masa y peso) y las unidades</h4>
+  <ul>
+    <li><b>Mass</b> (masa) = cantidad de materia, en kg o lb. <b>Weight</b> (peso) = la fuerza con que la gravedad tira de esa masa: <b>W = m × g</b>. En masa y centrado usamos W = m.</li>
+    <li><b>Mass = density × volume</b> (masa = densidad × volumen). El combustible tiene densidad <b>menor que 1</b>: unos <b>0,7 kg/l</b>. Un litro de AVGAS pesa menos de un kilo.</li>
+  </ul>
+  <div class="scroll"><table class="deftable">
+    <tr><th colspan="2">Conversiones que entran en los cálculos</th></tr>
+    <tr><td>1 kg</td><td>≈ <b>2,2 lb</b> (de lb a kg: divide entre 2,2)</td></tr>
+    <tr><td>1 US gallon de AVGAS</td><td>≈ <b>6 lb</b> (por eso la hoja de carga pone «( )×6» junto al combustible)</td></tr>
+    <tr><td>1 inch</td><td>= <b>2,54 cm</b> (100 in = 2,54 m)</td></tr>
+    <tr><td>Densidad del combustible</td><td>≈ <b>0,7 kg/l</b> (AVGAS 0,72): 100 l ≈ 72 kg</td></tr>
+  </table></div>
+
+  <h4>Datum, arm and moment (datum, brazo y momento)</h4>
+  <div class="ppt"><b>Del PDF 070.06</b><b>Datum</b>: línea vertical imaginaria desde la que se miden todos los brazos. Puede estar <b>delante del morro, en el morro o detrás</b>: lo decide el fabricante. <b>Arm</b> (brazo): distancia <b>horizontal</b> desde el datum hasta el objeto, el pasajero o la estación, normalmente en <b>pulgadas</b>. <b>Moment</b> (momento): <b>masa × brazo</b>.</div>
+  <p><span class="formula">Moment = mass × arm</span> &nbsp; → &nbsp; <span class="formula">mass = moment ÷ arm</span> &nbsp; <span class="formula">arm = moment ÷ mass</span></p>
+  <p class="src">Detrás del datum: brazo y momento <b>positivos</b>. Delante: <b>negativos</b>. En el datum: momento cero.</p>
+  <div id="visMoment"></div>
+
+  <h4>Centre of gravity (centro de gravedad) y sus límites</h4>
+  <div class="ppt"><b>Del PDF 070.06</b>El <b>CG</b> es el punto donde se aplican todo el peso y las fuerzas del avión. <b>No es fijo</b>: se puede mover <b>dentro de unos límites</b>, delantero y trasero, que fija cada avión. Fuera de ellos aparecen <b>actitudes de alabeo y cabeceo</b> que no controlas. El <b>manual</b> (AFM/POH) fija la carga máxima y los límites del CG. El CG afecta a la <b>estabilidad</b> y a la <b>performance aerodinámica</b>.</div>
+  <div id="visFwd"></div>
+  <div class="ppt"><b>Del PDF 070.06 · diapositiva 4</b>CG adelantado: la cola tiene que empujar <b>más hacia abajo</b> y el ala necesita <b>más sustentación adicional</b> para compensarlo. CG retrasado: <b>menos carga en la cola</b> y menos sustentación adicional. La pregunta de la diapositiva es si podemos asumir el riesgo de salirnos de los márgenes: <b>no</b>, siempre dentro de lo que fija el fabricante.</div>
+  <div class="comp"><b>Complemento · la pregunta del A320</b>La última diapositiva pregunta qué pasa con el CG al bajar el tren auxiliar (el de morro) de un A320. La regla: <b>el CG se mueve hacia donde se mueve la masa</b>. Si la pata se recoge hacia delante, al bajarla su masa va hacia atrás y el CG se retrasa un poco. Confírmalo con el profesor; en la diapositiva no está la respuesta.</div>
+
+  <h4>La escalera de masas (el gráfico de las etapas)</h4>
+  <div id="visChain"></div>
+  <div class="ppt"><b>Del PDF 070.06 · diapositiva 21</b>
+    <ul>
+      <li><b>BEM</b> · Basic Empty Mass (masa básica en vacío): el avión con su <b>equipo estándar y fluidos</b>: agua, hidráulicos y <b>combustible no utilizable</b> (unusable fuel).</li>
+      <li><b>DOM</b> · Dry Operating Mass = BEM + <b>items</b>: tripulación y su equipaje, mayordomía, repuestos y equipo desmontable (gancho, foco…).</li>
+      <li><b>ZFM</b> · Zero Fuel Mass = DOM + <b>payload</b> (carga de pago). Sin combustible utilizable.</li>
+      <li><b>OM</b> · Operating Mass = DOM + <b>TOF</b> (take-off fuel, combustible de despegue).</li>
+      <li><b>TOM</b> · Take-Off Mass = ZFM + TOF = OM + payload. El avión en pista para despegar.</li>
+      <li><b>LM</b> · Landing Mass = TOM − <b>trip fuel</b> (combustible del trayecto).</li>
+      <li><b>RM</b> · Ramp Mass = TOM + <b>taxi fuel</b>. El avión en plataforma, antes de arrancar.</li>
+      <li><b>Traffic load = payload</b> · <b>Usable fuel = take-off fuel</b> · <b>Useful load</b> (carga útil) = payload + TOF · <b>Variable load</b> = tripulación, su equipaje y equipo desmontable.</li>
+    </ul></div>
+
+  <h4>El combustible: qué tiene que haber en la plataforma</h4>
+  <ul>
+    <li>En los apuntes: <b>start-up, taxi, trip, alternate, contingency y final reserve</b>. Todo eso tiene que estar a bordo en la <b>rampa</b> (block fuel).</li>
+    <li><b>Block fuel − taxi fuel = take-off fuel (TOF)</b>. Según la diapositiva, TOF = <b>trip + final reserve (30 min) + contingency (5 % del trip) + alternate</b>.</li>
+    <li>Al pasar de RM a TOM se quita el <b>taxi</b>; de TOM a LM se quita el <b>trip</b>. Al aterrizar te quedan contingencia, alternativo y reserva final.</li>
+  </ul>
+
+  <h4>Masas máximas (structural limits)</h4>
+  <div class="scroll"><table class="deftable">
+    <tr><td>MZFM (MZFW)</td><td>Maximum Zero Fuel Mass: máximo <b>sin combustible utilizable</b>. Protege el <b>encastre del ala</b>: el combustible en las alas alivia la flexión; sin él, todo el peso está en el fuselaje.</td></tr>
+    <tr><td>MRM (MRW)</td><td>Maximum Ramp Mass: máximo para <b>maniobrar en tierra</b>. La limita la <b>resistencia del tren de aterrizaje</b> en esas maniobras.</td></tr>
+    <tr><td>MTOM (MTOW)</td><td>Maximum Take-Off Mass: máximo al despegue, <b>sin</b> el combustible de arranque y rodaje.</td></tr>
+    <tr><td>MLM (MLW)</td><td>Maximum Landing Mass: máximo al aterrizar. La limita la capacidad del <b>tren para absorber la energía</b> de la toma.</td></tr>
+  </table></div>
+  <p class="src">Orden habitual: MRM &gt; MTOM ≥ MLM &gt; MZFM. Además hay una <b>masa máxima por performance</b> en despegue y aterrizaje (pista, altitud, temperatura, viento), que puede ser menor que la estructural.</p>
+
+  <h4>Consecuencias del exceso de peso · muévelo</h4>
+  <div id="visOver"></div>
+  <div class="ppt"><b>Del PDF 070.06 · diapositiva 24</b>Más distancia de despegue y aterrizaje · peor ascenso · menos velocidad de crucero · más consumo · menos alcance y autonomía (range and endurance) · peor maniobrabilidad · más velocidad de aterrizaje · <b>Vs mayor</b> · más esfuerzos estructurales · menos seguridad.</div>
+  <div class="flag"><b>Traducción confusa del PDF:</b> pone «Minor Vx and Vy». Quiere decir que el avión pesado <b>sube peor</b>: menos ángulo y menos régimen de ascenso. Las velocidades Vx y Vy en sí no bajan con el peso (si acaso suben un poco).</div>
+</div>
+</details>
+
+<!-- ===== 031.05.01.01 ===== -->
+<details class="lo">
+<summary><span class="lonum">031.05.01.01</span><span class="lotitle">Arithmetic method · Loading: CG determination</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li><b>CG respecto al datum = momentos totales ÷ masa total</b>. El resultado es una <b>distancia</b> al datum.</li>
+    <li>Tres casos: <b>calcular el CG</b>, <b>reposicionar masas</b> dentro del avión y <b>cargar o descargar</b>.</li>
+    <li>Al <b>reposicionar</b>, la masa total <b>no cambia</b>. Al cargar o descargar, la masa final es la inicial más (o menos) lo que pones o quitas.</li>
+    <li><b>CG en % MAC = (CG − LEMAC) ÷ MAC × 100</b>, y <b>MAC = TEMAC − LEMAC</b>.</li>
+    <li>Un avión suele estar entre el <b>12 % y el 30 y pico % de la MAC</b>.</li>
+    <li>Ejercicios en clase (CG inicial y final, % MAC, mover, quitar y añadir pesos) y uno para casa: lo tienes abajo, en «Deberes».</li>
+  </ul></div>
+  
+
+  <h4>Las fórmulas, en los tres casos</h4>
+  <div class="ppt"><b>Del PDF 070.06 · diapositiva 5</b>
+    <p><span class="formula">(M + m) · y = M · x + m · z</span> &nbsp; cargar &nbsp;·&nbsp; <span class="formula">(M − m) · y = M · x − m · z</span> &nbsp; descargar</p>
+    <p>M = masa total · m = masa que añades o quitas · x = CG inicial · y = CG final · z = estación de la masa.</p>
+    <p>Atajo: <span class="formula">masa que cambia ÷ masa total antigua = cambio del CG ÷ distancia de la masa a la NUEVA posición del CG</span></p></div>
+  <div class="comp"><b>Complemento · por qué funciona el atajo</b>De (M + m)·y = M·x + m·z sale M·(y − x) = m·(z − y). Si usas la masa <b>antigua</b>, la distancia es hasta el CG <b>nuevo</b>. Es fácil equivocarse: en el examen usa la fórmula completa y no te la juegas.</div>
+  <div class="scroll"><table class="deftable">
+    <tr><th>Caso</th><th>Qué haces</th></tr>
+    <tr><td>1 · Calcular el CG</td><td>Suma de momentos ÷ suma de masas. Como una hoja de carga: masa, brazo, momento por fila; totales abajo.</td></tr>
+    <tr><td>2 · Mover una masa</td><td>La masa total no cambia. ΔCG = m × distancia movida ÷ M. Hacia atrás = CG atrás.</td></tr>
+    <tr><td>3 · Cargar o descargar</td><td>(M ± m)·y = M·x ± m·z. La masa total cambia.</td></tr>
+    <tr><td>3b · ¿Cuánto puedo cargar?</td><td>Pones el límite como CG final y despejas m. Diapositiva 6: 2900 kg con CG 115, límite trasero 116, estación 130 → (2900 + m)·116 = 2900·115 + 130·m → <b>m = 207,14 kg</b>.</td></tr>
+  </table></div>
+
+  <h4>MAC, LEMAC y TEMAC</h4>
+  <div class="svgbox" id="svgMAC"></div>
+  <div class="ppt"><b>Del PDF 070.06 · diapositivas 7 a 18</b><b>MAC</b> = Mean Aerodynamic Chord (cuerda media aerodinámica): sirve para decir <b>dónde está el CG sobre el ala</b>, en porcentaje. <b>LEMAC</b> = datum → borde de ataque de la MAC. <b>TEMAC</b> = datum → borde de salida. Ejemplos: LEMAC 144 in, TEMAC 206 in → MAC 62 in; CG 161 in → 17 ÷ 62 = <b>27,4 %</b>. Avioneta: LEMAC 2,5 m, MAC 1,8 m, CG 3,5 m → 1 ÷ 1,8 = <b>55,6 %</b>. MAC 8 m, TEMAC 12 m, CG 8 m → LEMAC 4 m → <b>50 %</b>. CG 15 % MAC, LEMAC 625,6 in, MAC 134,5 in → 625,6 + 20,2 = <b>645,8 in</b>.</div>
+  <div class="flag"><b>Erratas del PDF:</b> «streamlined rope half» es una mala traducción de <b>cuerda media aerodinámica</b> (Mean Aerodynamic Chord). La diapositiva 16 da 55,5 %; redondeado es <b>55,6 %</b>. Y LEMAC es simplemente el borde de ataque de la MAC, no «el borde de ataque permitido para establecer el centro de presiones».</div>
+
+  <h4>Simulador · hoja de carga del Warrior (EC-HPN)</h4>
+  <div id="visCG"></div>
+  <div class="flag"><b>Del PDF, a revisar:</b> en la hoja del Warrior el momento en vacío (137.713,6) no cuadra con 1557,2 lb × 88,40 in (= 137.656,5); el brazo real sería 88,44. El simulador usa el momento de la hoja. La envolvente está leída del gráfico de la diapositiva: aproximada.</div>
+
+  <h4>Entrenador de cálculos · ponme a prueba</h4>
+  <div id="visCalc"></div>
+
+  <h4>Deberes del profesor</h4>
+  <div id="visHW"></div>
+</div>
+</details>
+
+
+
+
+
+
+
+</section>
+
+<!-- ============ MAPA ============ -->
+<section id="map" hidden>
+  <div class="card">
+    <b>Qué toca reforzar ahora</b>
+    <ul class="weak" id="weakList"><li class="muted">Calculando…</li></ul>
+    <button class="btn" id="goAdaptive">Hacer test adaptativo</button>
+  </div>
+  <h2>Tu evolución</h2>
+  <div class="card svgbox" id="evoMap"></div>
+  <div class="card"><b>Conceptos que más fallas (temario ya dado)</b>
+    <p class="muted" style="font-size:14px;margin:2px 0 8px">Tus fallos agrupados por concepto, ordenados por número de fallos. Cuando aciertas las 3 últimas preguntas de un concepto, pasa a verde.</p>
+    <div id="failList"></div></div>
+  <h2>Syllabus 031 y dominio por LO</h2>
+  <p class="classmeta">Cada fila es un objetivo del syllabus (LO), agrupado por la clase en que se dio. <b>Preguntas en el banco</b>: cuántas hay para ese LO (+ variantes del trial; los cálculos generan números nuevos cada vez). <b>Dominio</b>: aciertos en tus últimas 10 respuestas de ese LO (entre paréntesis, respuestas totales). <b>Tendencia</b>: últimas 10 frente a las 10 anteriores (▲ mejora, ▼ baja, = estable). <b>Mi valoración</b>: Preparado (≥ 85 % con al menos 10 respuestas y sin bajar) · Casi listo (≥ 75 %) · Bajando (≥ 75 % pero empeorando) · Reforzar (&lt; 75 %) · Pocos datos (menos de 5 respuestas).</p>
+  <div class="scroll"><table class="map" id="mapTable"></table></div>
+  <div class="card" id="genCard" hidden>
+    <b>Preguntas nuevas para tus puntos débiles</b>
+    <p class="muted" style="font-size:14px">Claude redacta 5 preguntas sobre tus 2 LOs más flojos usando solo el contenido de los apuntes. Se añaden al banco marcadas como «generada».</p>
+    <button class="btn sec" id="genBtn">Crear 5 preguntas</button>
+    <p id="genMsg" class="muted" style="font-size:14px"></p>
+  </div>
+</section>
+
+<!-- ============ TEST ============ -->
+<section id="test" hidden>
+  <div id="setup" class="card">
+    <b>Elige el test</b>
+    <div style="margin-top:8px">
+      <label class="mode"><input type="radio" name="mode" value="adaptive" checked> Adaptativo · 30 preguntas (formato del examen) <small>Prioriza tus fallos, tus LOs flojos, lo que aún no has visto, el trial (TRIAL) y lo que remarcó el profesor (★ PROFE). Siempre al menos 6 variantes del trial y un reparto equilibrado entre los LOs dados. Los cálculos salen con números nuevos cada vez.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="trial"> Trial (simulacro con variantes) <small id="trialCount"></small></label>
+      <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount">Preguntas cuya última respuesta fue incorrecta.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="lo"> Un LO concreto <small><select id="loSel" aria-label="LO"></select></small></label>
+      <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos · 15 preguntas <small>Todos los tipos de cálculo de masa y centrado, con números nuevos.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
+    </div>
+    <label class="row" style="margin:10px 0"><input type="checkbox" id="examClock" checked> Reloj de examen: 2 minutos por pregunta (30 preguntas = 1 hora). Al llegar a cero se corrige solo.</label>
+    <label class="row" style="margin:0 0 10px"><input type="checkbox" id="incComp" checked> Incluir complemento (lo que no está ni en los apuntes ni en el PDF)</label>
+    <p class="muted" style="font-size:14px">Formato examen: 4 opciones, corrección al final, 75 % para aprobar. Las preguntas del trial y del PDF salen siempre como variante: mismo fondo, otra forma. Ten papel y calculadora a mano.</p>
+    <button class="btn" id="startBtn">Empezar test</button>
+    <p id="startMsg" class="muted" style="font-size:14px"></p>
+  </div>
+  <div id="quiz" hidden>
+    <div class="progress" id="progress"></div>
+    <div id="result" hidden></div>
+    <div id="qlist"></div>
+    <button class="btn" id="finishBtn">Corregir</button>
+    <p id="finishMsg" class="warnmsg" style="font-size:15px"></p>
+  </div>
+</section>
+
+<!-- ============ HISTORIAL ============ -->
+<section id="hist" hidden>
+  <div class="card svgbox" id="histEvo"></div>
+  
+  <div id="histBody"></div>
+  <div id="histDetail"></div>
+</section>
+
+</div>
+<script>
+// ---------- utilidades básicas ----------
+const $ = s => document.querySelector(s);
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const fmtDate = d => new Date(d).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+const prefersReduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const pick = a => a[Math.floor(Math.random()*a.length)];
+
+// ---------- generadores de cálculo (números nuevos cada vez) ----------
+// cada uno devuelve {text, opts:[correcta, x, x, x], expl, steps:[...], ans, unit, d}
+const R = (a,b,s=1) => { const n=Math.round((b-a)/s); return +(a + s*Math.floor(Math.random()*(n+1))).toFixed(6); };
+const f = (x,d) => (Math.round(x*Math.pow(10,d))/Math.pow(10,d)).toFixed(d);
+const fe = (x,d) => f(x,d).replace(".",","); // para los pasos en español
+function mkOpts(correct, wrongs, d, unit){
+  const F = v => f(v,d) + (unit?" "+unit:"");
+  const out = [F(correct)];
+  wrongs.forEach(w=>{ if(!isFinite(w)) return; let s=F(w), k=1; while(out.includes(s) && k<8){ s=F(w*(1+0.07*k*(k%2?1:-1))); k++; } if(!out.includes(s)) out.push(s); });
+  let guard=0; while(out.length<4 && guard++<40){ const s=F(correct*(1+(Math.random()<.5?-1:1)*(0.08+Math.random()*0.3))); if(!out.includes(s)) out.push(s); }
+  return out.slice(0,4);
+}
+const GEN = {
+ // --- variantes numéricas del trial 1 (momento = masa × brazo) ---
+ t1a(){ const arm=R(0.8,3.5,0.1), mass=R(6,60,0.5), M=+f(mass*arm,1), ans=M/arm;
+   return {text:`An item has a total moment of ${M} kg·m and a lever arm of ${arm} m. What is the item's mass?`,
+     opts:mkOpts(ans,[M*arm, M-arm, M/(arm+1)],1,"kg"), ans, unit:"kg", d:1,
+     expl:`Masa = momento ÷ brazo = ${fe(M,1)} ÷ ${fe(arm,1)} = ${fe(ans,2)} kg.`,
+     steps:["Moment = mass × arm, así que <b>mass = moment ÷ arm</b>.", `${fe(M,1)} ÷ ${fe(arm,1)} = <b>${fe(ans,2)} kg</b>.`]}; },
+ t1b(){ const mass=R(10,90,1), arm=R(0.5,4,0.1), M=+f(mass*arm,1), ans=M/mass;
+   return {text:`A ${mass} kg item produces a moment of ${M} kg·m about the datum. How far aft of the datum is it?`,
+     opts:mkOpts(ans,[mass/M, 2*M/mass, M/(mass+10)],2,"m"), ans, unit:"m", d:2,
+     expl:`Brazo = momento ÷ masa = ${fe(M,1)} ÷ ${mass} = ${fe(ans,2)} m.`,
+     steps:["<b>arm = moment ÷ mass</b>.", `${fe(M,1)} ÷ ${mass} = <b>${fe(ans,2)} m</b>.`]}; },
+ t1c(){ const w=R(120,220,1), a=pick([80.5,85.5,118.1,142.8,95.0]), ans=w*a;
+   return {text:`A passenger weighing ${w} lb sits at an arm of ${a.toFixed(1)} in. What moment does the passenger produce?`,
+     opts:mkOpts(ans,[w/a, w*a/12, w+a],1,"lb·in"), ans, unit:"lb·in", d:1,
+     expl:`Momento = ${w} lb × ${fe(a,1)} in = ${fe(ans,1)} lb·in. Si la masa va en lb y el brazo en pulgadas, el momento va en lb·in.`,
+     steps:["<b>moment = weight × arm</b>.", `${w} × ${fe(a,1)} = <b>${fe(ans,1)} lb·in</b>.`]}; },
+ t1f(){ const m=R(5,40,1), d=R(0.5,2,0.1), ans=-m*d;
+   return {text:`A ${m} kg item is placed ${d} m FORWARD of the datum. Its moment is:`,
+     opts:mkOpts(ans,[m*d, -m/d, -(m+d)],1,"kg·m"), ans, unit:"kg·m", d:1,
+     expl:`Delante del datum el brazo es negativo: ${m} × (−${fe(d,1)}) = ${fe(ans,1)} kg·m.`,
+     steps:["Delante del datum, el brazo es <b>negativo</b>: −" + fe(d,1) + " m.", `${m} × (−${fe(d,1)}) = <b>${fe(ans,1)} kg·m</b>.`]}; },
+ // --- 031.05.01.01 · método aritmético ---
+ k1(){ const it=[["Basic empty mass",R(620,780,5),R(2.10,2.40,0.01)],["Pilot",R(65,95,1),R(1.90,2.10,0.01)],["Rear passenger",R(60,160,5),R(2.90,3.10,0.01)],["Fuel",R(40,110,5),R(2.25,2.55,0.01)]];
+   const Mt=it.reduce((s,x)=>s+x[1],0), Mo=it.reduce((s,x)=>s+x[1]*x[2],0), ans=Mo/Mt;
+   return {text:`Find the CG: ${it.map(x=>`${x[0]} ${x[1]} kg at ${x[2].toFixed(2)} m`).join("; ")}.`,
+     opts:mkOpts(ans,[it.reduce((s,x)=>s+x[2],0)/it.length, Mo/it[0][1], Mo/(Mt-it[3][1])],3,"m"), ans, unit:"m", d:3,
+     expl:`CG = momentos totales ÷ masa total = ${fe(Mo,1)} ÷ ${Mt} = ${fe(ans,3)} m. La media de los brazos no vale: cada brazo pesa según su masa.`,
+     steps:["Momento de cada fila = masa × brazo: " + it.map(x=>`${x[1]} × ${fe(x[2],2)} = ${fe(x[1]*x[2],1)}`).join(" · "),
+       `Masa total = <b>${Mt} kg</b>. Momento total = <b>${fe(Mo,1)} kg·m</b>.`, `CG = ${fe(Mo,1)} ÷ ${Mt} = <b>${fe(ans,3)} m</b> detrás del datum.`]}; },
+ k2(){ const M=R(1700,2150,5), x=R(84,90,0.1), m=R(20,180,5), z=pick([80.5,118.1,142.8]), ans=(M*x+m*z)/(M+m);
+   return {text:`An aeroplane of ${M} lb has its CG at ${x.toFixed(1)} in. ${m} lb is loaded at station ${z.toFixed(1)} in. What is the new CG?`,
+     opts:mkOpts(ans,[(M*x+m*z)/M, 2*x-ans, (M*x+m*(z-x))/(M+m)],2,"in"), ans, unit:"in", d:2,
+     expl:`(M + m)·y = M·x + m·z → y = (${M}·${fe(x,1)} + ${m}·${fe(z,1)}) ÷ ${M+m} = ${fe(ans,2)} in. La masa total cambia: divide entre ${M+m}, no entre ${M}.`,
+     steps:[`Momento inicial: ${M} × ${fe(x,1)} = ${fe(M*x,1)} lb·in.`, `Momento añadido: ${m} × ${fe(z,1)} = ${fe(m*z,1)} lb·in.`, `Masa nueva: ${M} + ${m} = <b>${M+m} lb</b>.`, `y = ${fe(M*x+m*z,1)} ÷ ${M+m} = <b>${fe(ans,2)} in</b>. ${z>x?"La masa está detrás del CG: el CG va hacia atrás.":"La masa está delante del CG: el CG va hacia delante."}`]}; },
+ k3(){ const M=R(900,1300,10), x=R(2.20,2.50,0.01), m=R(50,120,5), z=R(2.90,3.20,0.01), ans=(M*x-m*z)/(M-m);
+   return {text:`Total mass ${M} kg, CG ${x.toFixed(2)} m aft of the datum. A ${m} kg passenger seated at ${z.toFixed(2)} m disembarks. The new CG is:`,
+     opts:mkOpts(ans,[(M*x-m*z)/M, (M*x+m*z)/(M+m), 2*x-ans],3,"m"), ans, unit:"m", d:3,
+     expl:`(M − m)·y = M·x − m·z → y = (${M}·${fe(x,2)} − ${m}·${fe(z,2)}) ÷ ${M-m} = ${fe(ans,3)} m. Quitas una masa de detrás del CG: el CG se adelanta.`,
+     steps:[`Momento inicial: ${M} × ${fe(x,2)} = ${fe(M*x,1)} kg·m.`, `Momento que sale: ${m} × ${fe(z,2)} = ${fe(m*z,1)} kg·m.`, `Masa nueva: ${M} − ${m} = <b>${M-m} kg</b>.`, `y = ${fe(M*x-m*z,1)} ÷ ${M-m} = <b>${fe(ans,3)} m</b>.`]}; },
+ k4(){ const M=R(950,1250,10), x=R(2.15,2.45,0.01), m=R(15,60,5); let a=R(1.5,3.0,0.1), b=+(a+R(0.5,1.8,0.1)).toFixed(1); if(Math.random()<.4){ const t=a; a=b; b=t; }
+   const ans=x+m*(b-a)/M;
+   return {text:`Aeroplane mass ${M} kg, CG at ${x.toFixed(2)} m. A ${m} kg box is moved from station ${a.toFixed(1)} m to station ${b.toFixed(1)} m. The new CG is:`,
+     opts:mkOpts(ans,[x-m*(b-a)/M, x+m*b/M, (M*x+m*b)/(M+m)],3,"m"), ans, unit:"m", d:3,
+     expl:`Reposicionar: la masa total no cambia. ΔCG = m × distancia ÷ M = ${m} × ${fe(b-a,1)} ÷ ${M} = ${fe((b-a)*m/M,3)} m → ${fe(ans,3)} m.`,
+     steps:["Mover una masa dentro del avión: <b>la masa total no cambia</b> (" + M + " kg).", `Distancia movida: ${fe(b,1)} − ${fe(a,1)} = <b>${fe(b-a,1)} m</b> (${b>a?"hacia atrás":"hacia delante"}).`, `ΔCG = ${m} × ${fe(b-a,1)} ÷ ${M} = <b>${fe(m*(b-a)/M,3)} m</b>.`, `CG nuevo = ${fe(x,2)} ${b>a?"+":"−"} ${fe(Math.abs(m*(b-a)/M),3)} = <b>${fe(ans,3)} m</b>.`]}; },
+ k5(){ const M=R(300,1500,10), MAC=R(1.5,4,0.1), p1=R(10,22,1), p2=p1+R(3,10,1), a=pick([-2,-1.5,-1,-0.5,0.5,1]), b=R(3,8,0.5), dCG=(p2-p1)/100*MAC, ans=M*dCG/(b-a);
+   return {text:`Total mass ${M} kg. An item is moved from ${a} m to +${b} m (distances from the datum, aft positive). The CG moves from ${p1} % to ${p2} % MAC. The MAC is ${MAC.toFixed(1)} m. What is the mass of the item?`,
+     opts:mkOpts(ans,[M*(p2-p1)/100/(b-a), M*dCG/b, M*dCG/(b+a)],1,"kg"), ans, unit:"kg", d:1,
+     expl:`ΔCG = ${p2-p1} % de ${fe(MAC,1)} m = ${fe(dCG,3)} m; distancia movida = ${b} − (${a}) = ${fe(b-a,1)} m; m = ${M} × ${fe(dCG,3)} ÷ ${fe(b-a,1)} = ${fe(ans,1)} kg.`,
+     steps:["Es un reposicionamiento: la masa total <b>no cambia</b> (" + M + " kg).", `El CG se mueve ${p2} − ${p1} = ${p2-p1} % de la MAC → ${p2-p1} % × ${fe(MAC,1)} m = <b>${fe(dCG,3)} m</b>.`, `El objeto se mueve ${b} − (${fe(a,1)}) = <b>${fe(b-a,1)} m</b>. Ojo con el signo: delante del datum es negativo.`, `m × ${fe(b-a,1)} = ${M} × ${fe(dCG,3)} → m = ${fe(M*dCG,1)} ÷ ${fe(b-a,1)} = <b>${fe(ans,1)} kg</b>.`]}; },
+ k6(){ const inch=Math.random()<.4, LE=inch?R(600,650,0.5):R(1.8,2.6,0.05), MAC=inch?R(120,150,0.5):R(1.2,2.0,0.05), p=R(12,38,0.5), CG=+(LE+p/100*MAC).toFixed(inch?1:3), u=inch?"in":"m", ans=(CG-LE)/MAC*100, dd=inch?1:2;
+   return {text:`LEMAC is ${f(LE,dd)} ${u} and the MAC is ${f(MAC,dd)} ${u} long. The CG is ${f(CG,inch?1:3)} ${u} from the datum. Where is the CG in % MAC?`,
+     opts:mkOpts(ans,[CG/(LE+MAC)*100, (CG-LE)/(LE+MAC)*100, 100-ans],1,"%"), ans, unit:"%", d:1,
+     expl:`% MAC = (CG − LEMAC) ÷ MAC × 100 = (${fe(CG,inch?1:3)} − ${fe(LE,dd)}) ÷ ${fe(MAC,dd)} × 100 = ${fe(ans,1)} %.`,
+     steps:[`Distancia del CG al borde de ataque de la MAC: ${fe(CG,inch?1:3)} − ${fe(LE,dd)} = <b>${fe(CG-LE,3)} ${u}</b>.`, `Divide entre la MAC y multiplica por 100: ${fe(CG-LE,3)} ÷ ${fe(MAC,dd)} × 100 = <b>${fe(ans,1)} %</b>.`]}; },
+ k7(){ const inch=Math.random()<.5, LE=inch?R(600,650,0.1):R(1.8,4.5,0.1), MAC=inch?R(120,150,0.5):R(1.2,4.0,0.1), p=R(12,35,1), u=inch?"in":"m", ans=LE+p/100*MAC, dd=inch?1:2;
+   return {text:`The CG is at ${p} % MAC. LEMAC is ${f(LE,1)} ${u} from the datum and the MAC measures ${f(MAC,1)} ${u}. The CG relative to the datum is:`,
+     opts:mkOpts(ans,[p/100*MAC, LE+MAC-p/100*MAC, LE*(1+p/100)],dd,u), ans, unit:u, d:dd,
+     expl:`CG = LEMAC + % × MAC = ${fe(LE,1)} + ${p} % × ${fe(MAC,1)} = ${fe(ans,dd)} ${u}.`,
+     steps:[`${p} % de la MAC: ${p} ÷ 100 × ${fe(MAC,1)} = <b>${fe(p/100*MAC,3)} ${u}</b> detrás del LEMAC.`, `Súmale el LEMAC: ${fe(LE,1)} + ${fe(p/100*MAC,3)} = <b>${fe(ans,dd)} ${u}</b> desde el datum.`]}; },
+ k8(){ const M=R(1800,3200,50), x=R(100,120,0.5), L=x+R(0.5,2,0.5), z=L+R(8,25,1), ans=M*(L-x)/(z-L);
+   return {text:`Total mass ${M} kg, CG at station ${x.toFixed(1)}. The aft CG limit is station ${L.toFixed(1)}. What is the maximum mass that can be loaded at station ${z.toFixed(1)}?`,
+     opts:mkOpts(ans,[M*(L-x)/(z-x), M*(L-x)/z, M*(L-x)/L],2,"kg"), ans, unit:"kg", d:2,
+     expl:`Pon el límite como CG final: (${M} + m)·${fe(L,1)} = ${M}·${fe(x,1)} + m·${fe(z,1)} → m = ${M}·(${fe(L,1)} − ${fe(x,1)}) ÷ (${fe(z,1)} − ${fe(L,1)}) = ${fe(ans,2)} kg.`,
+     steps:["El CG final que buscas es el <b>límite</b>: " + fe(L,1) + ".", `(M + m)·límite = M·x + m·z → M·(límite − x) = m·(z − límite).`, `m = ${M} × ${fe(L-x,1)} ÷ ${fe(z-L,1)} = <b>${fe(ans,2)} kg</b>.`, "Como en la diapositiva 6 (2900 kg, 115 → 116, estación 130: 207,14 kg)."]}; },
+ k9(){ const BEM=R(640,720,5), crew=R(70,95,1), pay=R(80,240,5), taxi=R(3,6,1), trip=R(30,90,2), cont=+(trip*0.05).toFixed(1), alt=R(10,20,1), res=R(20,25,1);
+   const TOF=trip+cont+alt+res, DOM=BEM+crew, ZFM=DOM+pay, TOM=ZFM+TOF, LM=TOM-trip, RM=TOM+taxi, OM=DOM+TOF;
+   const all={"zero fuel mass (ZFM)":ZFM,"take-off mass (TOM)":TOM,"landing mass (LM)":LM,"ramp mass (RM)":RM,"operating mass (OM)":OM};
+   const k=pick(Object.keys(all)), ans=all[k], others=Object.entries(all).filter(e=>e[0]!==k).map(e=>e[1]);
+   return {text:`BEM ${BEM} kg; pilot ${crew} kg; payload ${pay} kg. Fuel: taxi ${taxi} kg, trip ${trip} kg, contingency 5 % of trip, alternate ${alt} kg, final reserve ${res} kg. What is the ${k}?`,
+     opts:mkOpts(ans,shuffle(others).slice(0,3),1,"kg"), ans, unit:"kg", d:1,
+     expl:`DOM = ${BEM} + ${crew} = ${DOM}. TOF = trip ${trip} + contingencia ${fe(cont,1)} + alternativo ${alt} + reserva ${res} = ${fe(TOF,1)}. ZFM ${ZFM} · OM ${fe(OM,1)} · TOM ${fe(TOM,1)} · LM ${fe(LM,1)} · RM ${fe(RM,1)}.`,
+     steps:[`DOM = BEM + piloto = ${BEM} + ${crew} = <b>${DOM}</b>.`, `ZFM = DOM + payload = <b>${ZFM}</b>.`, `TOF = trip + 5 % trip + alternate + reserve = ${trip} + ${fe(cont,1)} + ${alt} + ${res} = <b>${fe(TOF,1)}</b> (el taxi no entra).`, `OM = DOM + TOF = ${fe(OM,1)} · TOM = ZFM + TOF = ${fe(TOM,1)} · LM = TOM − trip = ${fe(LM,1)} · RM = TOM + taxi = ${fe(RM,1)}.`]}; },
+ k10(){ const t=pick(["lb","gal","in","l"]);
+   if(t==="lb"){ const w=R(110,240,2), ans=w/2.2; return {text:`A passenger weighs ${w} lb. In kilograms that is about:`, opts:mkOpts(ans,[w*2.2,w/2.54,w/6],1,"kg"), ans, unit:"kg", d:1, expl:`1 kg ≈ 2,2 lb → ${w} ÷ 2,2 = ${fe(ans,1)} kg.`, steps:["1 kg ≈ 2,2 lb: de lb a kg, <b>divide</b> entre 2,2.", `${w} ÷ 2,2 = <b>${fe(ans,1)} kg</b>.`]}; }
+   if(t==="gal"){ const g=R(10,48,1), ans=g*6; return {text:`You load ${g} US gallons of AVGAS. Using the load-sheet factor, what does it weigh?`, opts:mkOpts(ans,[g/6*10,g*2.2,g*3.785],0,"lb"), ans, unit:"lb", d:0, expl:`1 US gal de AVGAS ≈ 6 lb → ${g} × 6 = ${ans} lb (el «×6» de la hoja de carga).`, steps:["1 US gallon de AVGAS ≈ <b>6 lb</b>.", `${g} × 6 = <b>${ans} lb</b>.`]}; }
+   if(t==="in"){ const i=R(80,160,0.5), ans=i*0.0254; return {text:`An arm of ${i.toFixed(1)} in expressed in metres is:`, opts:mkOpts(ans,[i/22,i*0.254,i/25.4*0.1],2,"m"), ans, unit:"m", d:2, expl:`1 in = 2,54 cm → ${fe(i,1)} × 2,54 = ${fe(i*2.54,1)} cm = ${fe(ans,2)} m.`, steps:["1 in = <b>2,54 cm</b>.", `${fe(i,1)} × 2,54 = ${fe(i*2.54,1)} cm = <b>${fe(ans,2)} m</b>.`]}; }
+   const l=R(40,180,5), ans=l*0.72; return {text:`AVGAS density is 0.72 kg/l. What is the mass of ${l} litres?`, opts:mkOpts(ans,[l/0.72,l,l*0.72*2.2],1,"kg"), ans, unit:"kg", d:1, expl:`Masa = densidad × volumen = 0,72 × ${l} = ${fe(ans,1)} kg. Menos que los litros: el combustible pesa menos que el agua.`, steps:["<b>mass = density × volume</b>.", `0,72 × ${l} = <b>${fe(ans,1)} kg</b>.`]}; },
+ k11(){ const M=R(900,1300,10), m=R(20,80,5), dcg=R(0.02,0.08,0.005), ans=M*dcg/m;
+   return {text:`Total mass ${M} kg. How far must a ${m} kg item be moved to shift the CG by ${dcg.toFixed(3)} m?`,
+     opts:mkOpts(ans,[m/(M*dcg), dcg*m, M*dcg/(M+m)*10],2,"m"), ans, unit:"m", d:2,
+     expl:`m × d = M × ΔCG → d = ${M} × ${fe(dcg,3)} ÷ ${m} = ${fe(ans,2)} m.`,
+     steps:["Reposicionar: <b>m × distancia = M × ΔCG</b>.", `d = ${M} × ${fe(dcg,3)} ÷ ${m} = <b>${fe(ans,2)} m</b>.`]}; }
+};
+const GEN_NAMES = {k1:"CG con varias masas",k2:"Cargar una masa",k3:"Descargar una masa",k4:"Mover una masa",k5:"Masa movida (tipo deberes)",k6:"CG en % MAC",k7:"CG desde el % MAC",k8:"Masa máxima hasta el límite",k9:"Escalera de masas",k10:"Unidades",k11:"Distancia a mover",t1a:"Masa desde momento y brazo",t1b:"Brazo desde momento y masa",t1c:"Momento en lb·in",t1f:"Momento delante del datum"};
+// ---------- visuales ----------
+const ST = `<style>.bx{fill:var(--paper);stroke:var(--line)} .hd{fill:var(--ink);font:600 14px "Barlow Condensed",sans-serif} .tx{fill:var(--muted);font:400 12px Barlow,sans-serif} .tk{fill:var(--ink);font:500 12px Barlow,sans-serif} .ln{stroke:var(--line);fill:none} .ac{fill:var(--magenta)} .acs{stroke:var(--magenta)}</style>`;
+const PLANE = (x,y,s=1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M0,0 Q10,-14 40,-16 L300,-18 Q330,-18 350,-40 L372,-62 L388,-62 L380,-16 L392,-12 L392,-4 L300,6 L40,8 Q8,8 0,0Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/><path d="M60,-14 L78,-30 L120,-30 L130,-16Z" fill="color-mix(in srgb,var(--blue) 25%,transparent)" stroke="var(--ink)" stroke-width="1"/></g>`;
+
+// mini test reutilizable: una pregunta generada con 4 botones y los pasos
+function miniQuiz(el, ids){
+  function next(){
+    const id = pick(ids), g = GEN[id](), opts = shuffle(g.opts.map((t,i)=>({t,ok:i===0})));
+    el.innerHTML = `<p style="margin:6px 0"><b>${esc(g.text)}</b></p>${opts.map((o,i)=>`<button class="choice" data-i="${i}">${String.fromCharCode(65+i)}. ${esc(o.t)}</button>`).join("")}<div class="vismsg" data-m></div>`;
+    el.querySelectorAll("[data-i]").forEach(b=>b.addEventListener("click",()=>{
+      if(el.dataset.done==="1") return; el.dataset.done="1";
+      const o = opts[+b.dataset.i];
+      el.querySelectorAll("[data-i]").forEach((x,j)=>{ if(opts[j].ok) x.classList.add("right"); else if(x===b) x.classList.add("wrong"); });
+      el.querySelector("[data-m]").innerHTML = `<b class="${o.ok?'pass':'fail'}">${o.ok?'Correcto':'No'}</b><ol class="stepsol">${g.steps.map(s=>`<li>${s}</li>`).join("")}</ol><button class="btn sec" data-n>Otra</button>`;
+      el.querySelector("[data-n]").addEventListener("click",()=>{ el.dataset.done="0"; next(); });
+    }));
+  }
+  el.dataset.done="0"; next();
+}
+
+// 1 · momento = masa × brazo
+function initMoment(){
+  const box=$("#visMoment");
+  box.innerHTML=`<div class="vis"><b>Mueve la maleta respecto al datum</b>
+   <div class="ctl"><label for="moPos">Posición (brazo)</label><input type="range" id="moPos" min="-2" max="8" step="0.1" value="3"><output id="moPosO"></output></div>
+   <div class="ctl"><label for="moMas">Masa</label><input type="range" id="moMas" min="5" max="100" step="1" value="20"><output id="moMasO"></output></div>
+   <svg viewBox="0 0 700 150" role="img" aria-label="Regla con el datum y una masa">${ST}
+    <line x1="40" x2="660" y1="100" y2="100" stroke="var(--ink)" stroke-width="2"/>
+    ${Array.from({length:11},(_,i)=>{const v=i-2,x=40+i*62;return `<line x1="${x}" x2="${x}" y1="95" y2="105" stroke="var(--ink)"/><text class="tx" x="${x}" y="122" text-anchor="middle">${v>0?'+':''}${v} m</text>`}).join("")}
+    <line x1="164" x2="164" y1="20" y2="130" stroke="var(--magenta)" stroke-width="2" stroke-dasharray="6 4"/><text class="hd" x="168" y="30" style="fill:var(--magenta)">DATUM</text>
+    <text class="tx" x="60" y="145">← delante: brazo negativo</text><text class="tx" x="640" y="145" text-anchor="end">detrás: brazo positivo →</text>
+    <g id="moBox"><rect x="-18" y="-36" width="36" height="34" rx="4" fill="var(--blue)"/><text id="moBoxT" x="0" y="-14" text-anchor="middle" style="fill:var(--paper);font:600 12px Barlow,sans-serif"></text></g>
+    <line id="moArm" y1="70" y2="70" stroke="var(--amber)" stroke-width="3"/><text id="moArmT" class="tk" y="64" text-anchor="middle"></text>
+   </svg>
+   <div class="vismsg" id="moMsg"></div>
+   <div class="row"><b>Ponme a prueba</b><span class="muted" style="font-size:14px">(como la pregunta 1 del trial, con otros números)</span></div>
+   <div id="moQ"></div></div>`;
+  const X = v => 164 + v*62;
+  function upd(){
+    const p=+$("#moPos").value, m=+$("#moMas").value, M=m*p;
+    $("#moPosO").textContent=(p>0?"+":"")+p.toFixed(1)+" m"; $("#moMasO").textContent=m+" kg";
+    $("#moBox").setAttribute("transform",`translate(${X(p)},100)`); $("#moBoxT").textContent=m+" kg";
+    $("#moArm").setAttribute("x1",X(0)); $("#moArm").setAttribute("x2",X(p)); $("#moArmT").setAttribute("x",(X(0)+X(p))/2); $("#moArmT").textContent=Math.abs(p)>0.25?`brazo ${p.toFixed(1)} m`:"";
+    $("#moMsg").innerHTML = `Momento = ${m} kg × ${p.toFixed(1).replace(".",",")} m = <b class="${M<0?'fail':M>0?'pass':''}">${M.toFixed(1).replace(".",",")} kg·m</b>. ${M<0?"Delante del datum: momento <b>negativo</b>.":M>0?"Detrás del datum: momento <b>positivo</b>. Más masa o más lejos = más momento.":"En el datum el momento es <b>cero</b>, pese lo que pese."}`;
+  }
+  $("#moPos").addEventListener("input",upd); $("#moMas").addEventListener("input",upd); upd();
+  miniQuiz($("#moQ"),["t1a","t1b","t1c","t1f"]);
+}
+
+// 2 · CG adelantado / atrasado
+function initFwd(){
+  const box=$("#visFwd");
+  box.innerHTML=`<div class="vis"><b>Mueve el CG por la cuerda del ala (% MAC)</b>
+   <div class="ctl"><label for="fwS">Posición del CG</label><input type="range" id="fwS" min="5" max="45" step="1" value="20"><output id="fwO"></output></div>
+   <svg viewBox="0 0 700 230" role="img" aria-label="Fuerzas en el avión según la posición del CG">${ST}
+    ${PLANE(150,130,1.2)}
+    <rect x="300" y="122" width="96" height="8" fill="var(--slate)" opacity=".5"/>
+    <line x1="314" x2="314" y1="110" y2="140" stroke="var(--ok)" stroke-dasharray="3 2"/><line x1="334" x2="334" y1="110" y2="140" stroke="var(--ok)" stroke-dasharray="3 2"/>
+    <text class="tx" x="300" y="152">límites del CG (ejemplo: 15–35 % MAC)</text>
+    <g id="fwLift"><line x1="348" x2="348" y1="118" y2="40" stroke="var(--ok)" stroke-width="4"/><path d="M340,48 L348,34 L356,48Z" fill="var(--ok)"/><text class="tk" x="358" y="48">sustentación (lift)</text></g>
+    <g id="fwW"><line id="fwWl" y1="130" y2="205" stroke="var(--bad)" stroke-width="4"/><path id="fwWa" fill="var(--bad)"/><text id="fwWt" class="tk" y="222" text-anchor="middle">peso en el CG</text></g>
+    <g id="fwT"><line id="fwTl" x1="600" x2="600" stroke="var(--blue)" stroke-width="4"/><path id="fwTa" fill="var(--blue)"/><text id="fwTt" class="tk" x="588" text-anchor="end"></text></g>
+   </svg>
+   <div class="vismsg" id="fwMsg"></div></div>`;
+  function upd(){
+    const c=+$("#fwS").value, x=300+c/100*96, t=(40-c)*2.4; // carga de cola ∝ distancia CG–centro de presiones
+    $("#fwO").textContent=c+" % MAC";
+    $("#fwWl").setAttribute("x1",x); $("#fwWl").setAttribute("x2",x); $("#fwWa").setAttribute("d",`M${x-8},197 L${x},211 L${x+8},197Z`);
+    $("#fwWt").setAttribute("x",x);
+    const y0=104, y1=y0 + t; // hacia abajo si positivo
+    $("#fwTl").setAttribute("y1",y0); $("#fwTl").setAttribute("y2",y1);
+    $("#fwTa").setAttribute("d", t>=0 ? `M592,${y1-8} L600,${y1+6} L608,${y1-8}Z` : `M592,${y1+8} L600,${y1-6} L608,${y1+8}Z`);
+    $("#fwTt").setAttribute("y", y0+t/2+4); $("#fwTt").textContent = t>4 ? "la cola empuja abajo" : t<-4 ? "la cola ya no empuja" : "";
+    let m;
+    if(c<15) m=`<b class="fail">Fuera de límites, demasiado adelantado.</b> Morro muy pesado: puede que no consigas levantar el morro para rotar ni para la recogida. La cola empuja mucho hacia abajo y el ala tiene que dar mucha sustentación extra.`;
+    else if(c<=24) m=`<b class="pass">Adelantado, dentro de límites.</b> Muy <b>estable</b>, pero vas <b>tirando todo el rato</b> (lo dijo el profesor). La cola empuja más hacia abajo: el ala necesita <b>más sustentación adicional</b>.`;
+    else if(c<=35) m=`<b class="pass">Atrasado, dentro de límites.</b> Menos estable, más <b>nervioso</b> y ligero de mandos. La cola empuja menos: menos sustentación adicional.`;
+    else m=`<b class="fail">Fuera de límites, demasiado atrasado.</b> Inestable en cabeceo. <span style="color:var(--magenta)">Complemento: puede no haber manera de recuperar una pérdida o una barrena.</span>`;
+    $("#fwMsg").innerHTML=m;
+  }
+  $("#fwS").addEventListener("input",upd); upd();
+}
+
+// 3 · escalera de masas
+const CH = {BEM:690, items:85, taxi:4, alt:15, res:22, MZFM:980, MTOM:1055, MLM:1055, MRM:1060};
+const CH_QUIZ=[["DOM + payload","ZFM"],["DOM + take-off fuel","OM"],["ZFM + take-off fuel","TOM"],["OM + payload","TOM"],["TOM − trip fuel","LM"],["TOM + taxi fuel","RM"],["BEM + crew, catering and removable equipment","DOM"],["Block fuel − taxi fuel","TOF"],["Payload + take-off fuel","Useful load"],["The aeroplane with standard equipment, fluids and unusable fuel","BEM"]];
+function initChain(){
+  const box=$("#visChain");
+  box.innerHTML=`<div class="vis"><div class="row"><b>Construye las masas de un vuelo</b><span class="muted" style="font-size:14px">avioneta de ejemplo, en kg</span></div>
+   <div class="ctl"><label for="chPay">Payload (pasajeros y equipaje)</label><input type="range" id="chPay" min="0" max="320" step="5" value="170"><output id="chPayO"></output></div>
+   <div class="ctl"><label for="chTrip">Trip fuel</label><input type="range" id="chTrip" min="20" max="120" step="2" value="60"><output id="chTripO"></output></div>
+   <div class="scroll"><svg id="chSvg" viewBox="0 0 700 300" role="img" aria-label="Escalera de masas"></svg></div>
+   <div class="visbtns"><button class="btn sec" id="chStep">Construir paso a paso</button><button class="btn sec" id="chPrev" hidden>◀</button><button class="btn sec" id="chNext" hidden>Siguiente ▶</button><button class="btn sec" id="chAll" hidden>Ver todo</button></div>
+   <div class="vismsg" id="chMsg"></div>
+   <div class="row" style="margin-top:6px"><b>Ponme a prueba</b><span class="muted" style="font-size:14px">¿qué masa es…?</span></div>
+   <div id="chQ"></div>
+   <div id="chQ2" style="margin-top:10px"></div></div>`;
+  let shown=7;
+  const COL={BEM:"var(--slate)",items:"var(--teal)",pay:"var(--magenta)",tof:"var(--amber)",taxi:"var(--blue)"};
+  function rows(){
+    const pay=+$("#chPay").value, trip=+$("#chTrip").value, cont=trip*0.05, TOF=trip+cont+CH.alt+CH.res, DOM=CH.BEM+CH.items, ZFM=DOM+pay;
+    return {pay,trip,TOF,list:[
+      ["BEM",[["BEM",CH.BEM]],null,"Basic Empty Mass: el avión con equipo estándar, fluidos y combustible no utilizable."],
+      ["DOM",[["BEM",CH.BEM],["items",CH.items]],null,`DOM = BEM + items (piloto ${CH.items} kg con su equipaje). Sin carga de pago y sin combustible utilizable.`],
+      ["ZFM",[["BEM",CH.BEM],["items",CH.items],["pay",pay]],"MZFM",`ZFM = DOM + payload. Sin combustible utilizable. Límite MZFM ${CH.MZFM} kg: protege el encastre del ala.`],
+      ["OM",[["BEM",CH.BEM],["items",CH.items],["tof",TOF]],null,`OM = DOM + take-off fuel (${TOF.toFixed(0)} kg = trip ${trip} + 5 % ${cont.toFixed(1)} + alternativo ${CH.alt} + reserva ${CH.res}).`],
+      ["TOM",[["BEM",CH.BEM],["items",CH.items],["pay",pay],["tof",TOF]],"MTOM",`TOM = ZFM + TOF = OM + payload. Límite MTOM ${CH.MTOM} kg.`],
+      ["RM",[["BEM",CH.BEM],["items",CH.items],["pay",pay],["tof",TOF],["taxi",CH.taxi]],"MRM",`RM = TOM + taxi fuel (${CH.taxi} kg). En la plataforma, antes de arrancar. Límite MRM ${CH.MRM} kg (tren de aterrizaje en tierra).`],
+      ["LM",[["BEM",CH.BEM],["items",CH.items],["pay",pay],["tof",TOF-trip]],"MLM",`LM = TOM − trip fuel. Llegas con contingencia, alternativo y reserva. Límite MLM ${CH.MLM} kg (= MTOM: monomotor de tren fijo).`]
+    ]};
+  }
+  function draw(){
+    const {pay,trip,list}=rows(); $("#chPayO").textContent=pay+" kg"; $("#chTripO").textContent=trip+" kg";
+    const X=v=>70+v*0.45; let g=ST, over=[];
+    [0,200,400,600,800,1000,1200].forEach(v=>{ g+=`<line x1="${X(v)}" x2="${X(v)}" y1="8" y2="262" class="ln" stroke-dasharray="2 4"/><text class="tx" x="${X(v)}" y="278" text-anchor="middle">${v}</text>`; });
+    list.forEach((r,i)=>{ if(i>=shown) return; const y=14+i*36; let x=X(0), tot=0;
+      g+=`<text class="hd" x="8" y="${y+19}">${r[0]}</text>`;
+      r[1].forEach(s=>{ const w=s[1]*0.45; g+=`<rect x="${x}" y="${y}" width="${Math.max(0,w)}" height="26" fill="${COL[s[0]]}" opacity="${s[0]==='tof'&&r[0]==='LM'?.55:.9}"/>`; x+=w; tot+=s[1]; });
+      let lx = x+6;
+      if(r[2]){ const L=CH[r[2]], bad=tot>L; if(bad) over.push(`${r[0]} ${Math.round(tot)} &gt; ${r[2]} ${L}`); lx=Math.max(x,X(L))+8;
+        g+=`<line x1="${X(L)}" x2="${X(L)}" y1="${y-3}" y2="${y+29}" stroke="${bad?'var(--bad)':'var(--ok)'}" stroke-width="3"/><text class="tx" x="${lx+56}" y="${y+18}" style="fill:${bad?'var(--bad)':'var(--ok)'}">${r[2]} ${CH[r[2]]}</text>`; }
+      g+=`<text class="tk" x="${lx}" y="${y+18}">${Math.round(tot)} kg</text>`;
+    });
+    g+=`<text class="tx" x="70" y="296"><tspan style="fill:var(--slate)">■ BEM</tspan>  <tspan style="fill:var(--teal)">■ items (crew)</tspan>  <tspan style="fill:var(--magenta)">■ payload</tspan>  <tspan style="fill:var(--amber)">■ take-off fuel</tspan>  <tspan style="fill:var(--blue)">■ taxi</tspan></text>`;
+    $("#chSvg").innerHTML=g;
+    const last=list[Math.min(shown,7)-1];
+    $("#chMsg").innerHTML = (shown<7?`<b>Paso ${shown} de 7 · ${last[0]}</b>: ${last[3]}`:`Mueve la carga de pago y el combustible: mira qué límite salta primero.`) + (over.length?`<br><b class="fail">Fuera de límites:</b> ${over.join(" · ")}. Quita carga de pago o combustible.`: shown===7?` <b class="pass">Todo dentro de límites.</b>`:"");
+    $("#chPrev").hidden=$("#chNext").hidden=$("#chAll").hidden = shown===7; $("#chStep").hidden = shown<7;
+  }
+  $("#chPay").addEventListener("input",draw); $("#chTrip").addEventListener("input",draw);
+  $("#chStep").addEventListener("click",()=>{shown=1;draw();});
+  $("#chNext").addEventListener("click",()=>{shown=Math.min(7,shown+1);draw();});
+  $("#chPrev").addEventListener("click",()=>{shown=Math.max(1,shown-1);draw();});
+  $("#chAll").addEventListener("click",()=>{shown=7;draw();});
+  draw();
+  const q=$("#chQ"); let sc=0, n=0;
+  function ask(){ const it=pick(CH_QUIZ); const names=shuffle(["BEM","DOM","ZFM","OM","TOM","LM","RM","TOF","Useful load"].filter(x=>x!==it[1])).slice(0,3); const opts=shuffle([it[1],...names]);
+    q.innerHTML=`<p style="margin:6px 0"><span class="formula">${esc(it[0])} = ?</span> <span class="muted">${n?`${sc}/${n}`:""}</span></p><div class="visbtns">${opts.map(o=>`<button class="btn sec" data-o="${esc(o)}">${esc(o)}</button>`).join("")}</div><p class="vismsg" data-m></p>`;
+    q.querySelectorAll("[data-o]").forEach(b=>b.addEventListener("click",()=>{ if(q.dataset.done==="1") return; q.dataset.done="1"; n++; const ok=b.dataset.o===it[1]; if(ok) sc++;
+      q.querySelector("[data-m]").innerHTML=`<b class="${ok?'pass':'fail'}">${ok?'Correcto':'No: es '+esc(it[1])}</b> <button class="linkbtn" data-n>Otra</button>`;
+      q.querySelector("[data-n]").addEventListener("click",()=>{q.dataset.done="0";ask();}); })); }
+  q.dataset.done="0"; ask();
+  miniQuiz($("#chQ2"),["k9"]);
+}
+
+// 4 · exceso de peso
+function initOver(){
+  const box=$("#visOver");
+  box.innerHTML=`<div class="vis"><b>Carga el avión de ejemplo (MTOM ${CH.MTOM} kg)</b>
+   <div class="ctl"><label for="ovS">Masa al despegue</label><input type="range" id="ovS" min="850" max="1250" step="5" value="1000"><output id="ovO"></output></div>
+   <div id="ovBars"></div><div class="vismsg" id="ovMsg"></div>
+   <p class="src" style="color:var(--magenta)">Complemento: las cifras son aproximadas, solo para ver el sentido de cada cambio.</p></div>`;
+  function upd(){
+    const W=+$("#ovS").value, r=W/CH.MTOM; $("#ovO").textContent=W+" kg";
+    const items=[["Carrera de despegue",300*r*r,"m",450],["Distancia de aterrizaje",280*r,"m",450],["Velocidad de pérdida (Vs)",50*Math.sqrt(r),"kt",70],["Régimen de ascenso",Math.max(80,700*(1-2.5*(r-1))),"ft/min",1000],["Esfuerzo en la estructura",100*r,"%",130]];
+    $("#ovBars").innerHTML=items.map(it=>{ const p=Math.min(100,it[1]/it[3]*100); const worse = it[0].startsWith("Régimen") ? r>1 : r>1;
+      return `<div class="lorow"><div style="display:flex;justify-content:space-between;gap:8px"><span>${it[0]}</span><span class="num">${Math.round(it[1])} ${it[2]}</span></div><div class="bar"><i style="width:${p}%;background:${worse?'var(--bad)':'var(--blue)'}"></i></div></div>`; }).join("");
+    $("#ovMsg").innerHTML = W>CH.MTOM ? `<b class="fail">Sobrepeso: ${W-CH.MTOM} kg por encima de la MTOM.</b> Ilegal y peligroso: acelera menos y despega más tarde, Vs más alta, sube peor, más esfuerzo estructural (puede dañarse en turbulencia o en la toma).` : `<b class="pass">Dentro de la MTOM.</b> Aun así, cuanto más pesado, peores prestaciones.`;
+  }
+  $("#ovS").addEventListener("input",upd); upd();
+}
+
+// 5 · MAC (diapositiva 10)
+function svgMAC(){
+  const X=v=>40+v*2.8;
+  return `<svg viewBox="0 0 700 210" role="img" aria-label="Datum, LEMAC, TEMAC, MAC y CG">${ST}
+   ${PLANE(60,150,1.45)}
+   <line x1="${X(0)}" x2="${X(0)}" y1="20" y2="190" stroke="var(--magenta)" stroke-width="2" stroke-dasharray="6 4"/><text class="hd" x="${X(0)+4}" y="30" style="fill:var(--magenta)">DATUM</text>
+   <rect x="${X(144)}" y="128" width="${62*2.8}" height="10" fill="var(--amber)" opacity=".75"/>
+   <line x1="${X(144)}" x2="${X(144)}" y1="40" y2="140" stroke="var(--ink)"/><line x1="${X(206)}" x2="${X(206)}" y1="40" y2="140" stroke="var(--ink)"/>
+   <text class="hd" x="${X(144)}" y="36" text-anchor="middle">LEMAC 144"</text><text class="hd" x="${X(206)}" y="36" text-anchor="middle">TEMAC 206"</text>
+   <line x1="${X(0)}" x2="${X(144)}" y1="58" y2="58" stroke="var(--muted)" marker-end=""/><text class="tx" x="${X(72)}" y="53" text-anchor="middle">datum → borde de ataque de la MAC</text>
+   <line x1="${X(144)}" x2="${X(206)}" y1="82" y2="82" stroke="var(--amber)" stroke-width="2"/><text class="tk" x="${X(175)}" y="77" text-anchor="middle">MAC = 206 − 144 = 62"</text>
+   <circle cx="${X(161)}" cy="133" r="7" fill="var(--paper)" stroke="var(--bad)" stroke-width="3"/><line x1="${X(161)}" x2="${X(161)}" y1="100" y2="190" stroke="var(--bad)" stroke-dasharray="3 3"/>
+   <text class="tk" x="${X(161)}" y="205" text-anchor="middle" style="fill:var(--bad)">CG 161" → (161 − 144) ÷ 62 = 27,4 % MAC</text>
+  </svg>`;
+}
+
+// 6 · hoja de carga del Warrior EC-HPN
+const WR = {bew:1557.2, bewMom:137713.6, front:80.5, rear:118.1, bag:142.8, fuel:95.0, maxW:2325, utilW:2020, aft:93.0, utilAft:87.4};
+const wrFwd = w => w<=1950 ? 83.0 : 83.0 + (w-1950)/375*4;
+function initCG(){
+  const box=$("#visCG");
+  box.innerHTML=`<div class="vis"><div class="row"><b>Carga el PA28-151 Warrior</b><span class="muted" style="font-size:14px">lb e in, como la hoja de carga real · método gráfico: adelanto</span></div>
+   <div class="ctl"><label for="wrF">Piloto + pasajero delante</label><input type="range" id="wrF" min="0" max="400" step="5" value="340"><output id="wrFO"></output></div>
+   <div class="ctl"><label for="wrR">Pasajeros detrás</label><input type="range" id="wrR" min="0" max="400" step="5" value="140"><output id="wrRO"></output></div>
+   <div class="ctl"><label for="wrB">Equipaje (máx. 200 lb)</label><input type="range" id="wrB" min="0" max="200" step="5" value="30"><output id="wrBO"></output></div>
+   <div class="ctl"><label for="wrG">Combustible (máx. 48 gal)</label><input type="range" id="wrG" min="0" max="48" step="1" value="40"><output id="wrGO"></output></div>
+   <div class="ctl"><label for="wrT">Combustible del viaje</label><input type="range" id="wrT" min="0" max="40" step="1" value="18"><output id="wrTO"></output></div>
+   <div class="scroll"><table class="ls" id="wrTable"></table></div>
+   <div class="scroll"><svg id="wrSvg" viewBox="0 0 700 330" role="img" aria-label="Envolvente de peso y centrado del Warrior"></svg></div>
+   <div class="vismsg" id="wrMsg"></div></div>`;
+  const X=v=>70+(v-82)*(570/13), Y=w=>290-(w-1200)*(270/1200);
+  function upd(){
+    const F=+$("#wrF").value, Rr=+$("#wrR").value, B=+$("#wrB").value, G=+$("#wrG").value, T=Math.min(+$("#wrT").value,G);
+    $("#wrFO").textContent=F+" lb"; $("#wrRO").textContent=Rr+" lb"; $("#wrBO").textContent=B+" lb"; $("#wrGO").textContent=G+" gal"; $("#wrTO").textContent=T+" gal";
+    const rows=[["Basic Empty Weight",WR.bew,WR.bewMom/WR.bew,WR.bewMom],["Pilot and front passenger",F,WR.front,F*WR.front],["Passengers (rear seats)",Rr,WR.rear,Rr*WR.rear],["Baggage",B,WR.bag,B*WR.bag],[`Fuel (${G} gal × 6)`,G*6,WR.fuel,G*6*WR.fuel]];
+    const W=rows.reduce((s,r)=>s+r[1],0), M=rows.reduce((s,r)=>s+r[3],0), cg=M/W;
+    const WL=W-T*6, ML=M-T*6*WR.fuel, cgL=ML/WL;
+    const n=v=>v.toLocaleString("es-ES",{minimumFractionDigits:1,maximumFractionDigits:1});
+    $("#wrTable").innerHTML=`<tr><th>Item</th><th>Weight (lb)</th><th>Arm (in)</th><th>Moment (lb·in)</th></tr>`+rows.map(r=>`<tr><td>${r[0]}</td><td>${n(r[1])}</td><td>${r[2].toFixed(2).replace(".",",")}</td><td>${n(r[3])}</td></tr>`).join("")+
+      `<tr class="tot"><td>Total al despegue</td><td>${n(W)}</td><td>${cg.toFixed(2).replace(".",",")}</td><td>${n(M)}</td></tr><tr><td class="muted">Al aterrizar (− ${T} gal)</td><td>${n(WL)}</td><td>${cgL.toFixed(2).replace(".",",")}</td><td>${n(ML)}</td></tr>`;
+    let g=ST;
+    for(let v=82;v<=95;v++) g+=`<line x1="${X(v)}" x2="${X(v)}" y1="20" y2="290" class="ln"/><text class="tx" x="${X(v)}" y="306" text-anchor="middle">${v}</text>`;
+    for(let w=1200;w<=2400;w+=200) g+=`<line x1="70" x2="640" y1="${Y(w)}" y2="${Y(w)}" class="ln"/><text class="tx" x="64" y="${Y(w)+4}" text-anchor="end">${w}</text>`;
+    g+=`<polygon points="${[[83,1200],[83,1950],[87,2325],[93,2325],[93,1200]].map(p=>X(p[0])+","+Y(p[1])).join(" ")}" fill="color-mix(in srgb,var(--blue) 10%,transparent)" stroke="var(--blue)" stroke-width="2"/>`;
+    g+=`<polyline points="${[[83.75,2020],[87.4,2020],[87.4,1200]].map(p=>X(p[0])+","+Y(p[1])).join(" ")}" fill="none" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+    g+=`<text class="tx" x="${X(90)}" y="${Y(2325)-6}" style="fill:var(--blue)">NORMAL CATEGORY</text><text class="tx" x="${X(84)}" y="${Y(2020)-6}" style="fill:var(--blue)">UTILITY</text>`;
+    g+=`<text class="tx" x="355" y="324" text-anchor="middle">CG (in desde el datum)</text>`;
+    g+=`<line x1="${X(cg)}" y1="${Y(W)}" x2="${X(cgL)}" y2="${Y(WL)}" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4 3"/>`;
+    g+=`<circle cx="${X(Math.max(82,Math.min(95,cgL)))}" cy="${Y(Math.max(1200,Math.min(2400,WL)))}" r="6" fill="var(--paper)" stroke="var(--amber)" stroke-width="3"><title>Aterrizaje</title></circle>`;
+    g+=`<circle cx="${X(Math.max(82,Math.min(95,cg)))}" cy="${Y(Math.max(1200,Math.min(2400,W)))}" r="7" fill="var(--magenta)"><title>Despegue</title></circle>`;
+    g+=`<text class="tx" x="640" y="14" text-anchor="end"><tspan style="fill:var(--magenta)">● despegue</tspan>  <tspan style="fill:var(--amber)">○ aterrizaje</tspan></text>`;
+    $("#wrSvg").innerHTML=g;
+    const chk=(w,c)=>{ const p=[]; if(w>WR.maxW) p.push(`${Math.round(w-WR.maxW)} lb por encima del máximo (2325)`); if(c<wrFwd(w)) p.push(`CG ${c.toFixed(2)} por delante del límite (${wrFwd(w).toFixed(2)})`); if(c>WR.aft) p.push(`CG ${c.toFixed(2)} por detrás del límite (93,0)`); return p; };
+    const pT=chk(W,cg), pL=chk(WL,cgL), util = W<=WR.utilW && cg<=WR.utilAft && cg>=wrFwd(W) && B===0 && Rr===0;
+    $("#wrMsg").innerHTML = (pT.length?`<b class="fail">Despegue fuera de envolvente:</b> ${pT.join(" · ")}.`:`<b class="pass">Despegue dentro de la categoría normal</b>${util?" y también de la utility":""}.`) + " " +
+      (pL.length?`<b class="fail">Aterrizaje fuera:</b> ${pL.join(" · ")}.`:`Al aterrizar, el CG va de ${cg.toFixed(2).replace(".",",")} a ${cgL.toFixed(2).replace(".",",")} in: el combustible (brazo 95) está ${cg<WR.fuel?"detrás":"delante"} del CG, así que al quemarlo el CG ${cg<WR.fuel?"se adelanta":"se retrasa"}. Eso es el «CG también en el aire».`) +
+      ` <span class="muted">Utility: máx. 2020 lb, sin equipaje ni pasajeros detrás.</span>`;
+  }
+  ["wrF","wrR","wrB","wrG","wrT"].forEach(id=>$("#"+id).addEventListener("input",upd)); upd();
+}
+
+// 7 · entrenador de cálculos
+function initCalc(){
+  const box=$("#visCalc");
+  const types=["k1","k2","k3","k4","k11","k5","k6","k7","k8","k9","k10","t1a"];
+  box.innerHTML=`<div class="vis"><p class="muted" style="margin:0 0 6px;font-size:14px">Elige un tipo. Escribe tu resultado (vale coma o punto) y comprueba. Si te atascas, «Ver pasos». Cada vez salen números nuevos.</p>
+   <div class="visbtns">${types.map(t=>`<button class="btn sec" data-t="${t}">${GEN_NAMES[t]}</button>`).join("")}</div>
+   <div id="clBody"></div></div>`;
+  let g=null, cur="k4", sc=0, n=0;
+  function gen(t){ cur=t; g=GEN[t](); box.querySelectorAll("[data-t]").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+    $("#clBody").innerHTML=`<p style="margin:8px 0"><b>${esc(g.text)}</b></p>
+     <div class="calcin"><input id="clIn" inputmode="decimal" aria-label="Tu resultado" placeholder="resultado"><span>${esc(g.unit)}</span><button class="btn" id="clChk">Comprobar</button><button class="btn sec" id="clSteps">Ver pasos</button><button class="btn sec" id="clNew">Otro</button><span class="muted" id="clSc">${n?`${sc}/${n} bien`:""}</span></div>
+     <div class="vismsg" id="clMsg"></div>`;
+    $("#clChk").addEventListener("click",check); $("#clIn").addEventListener("keydown",e=>{ if(e.key==="Enter") check(); });
+    $("#clSteps").addEventListener("click",()=>{ $("#clMsg").innerHTML=`<ol class="stepsol">${g.steps.map(s=>`<li>${s}</li>`).join("")}</ol>`; });
+    $("#clNew").addEventListener("click",()=>gen(cur)); }
+  function check(){ const v=parseFloat(String($("#clIn").value).replace(",",".")); if(!isFinite(v)){ $("#clMsg").textContent="Escribe un número."; return; }
+    const tol=Math.max(Math.abs(g.ans)*0.006, 1.5*Math.pow(10,-g.d)); const ok=Math.abs(v-g.ans)<=tol; n++; if(ok) sc++;
+    $("#clSc").textContent=`${sc}/${n} bien`;
+    $("#clMsg").innerHTML=`<b class="${ok?'pass':'fail'}">${ok?'Correcto':'No'}</b> · resultado: <b>${fe(g.ans,g.d)} ${esc(g.unit)}</b><ol class="stepsol">${g.steps.map(s=>`<li>${s}</li>`).join("")}</ol>`; }
+  box.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>gen(b.dataset.t)));
+  gen("k4");
+}
+
+// 8 · deberes del profesor
+function initHW(){
+  const box=$("#visHW");
+  const X=v=>110+v*55;
+  box.innerHTML=`<div class="vis">
+   <p style="margin:0 0 6px"><b>Enunciado (de tu foto, pasado a limpio):</b> masa total <b>380 kg</b>. Un objeto (el azul) se mueve desde <b>1,5 m por delante del datum</b> hasta <b>+7,5 m</b>. El CG pasa del <b>16 %</b> al <b>24 % de la MAC</b>. La MAC mide <b>4 m</b> y del datum al borde de ataque hay +2 m. ¿Cuánto pesa el objeto?</p>
+   <svg viewBox="0 0 700 190" role="img" aria-label="Esquema de los deberes">${ST}
+    <line x1="40" x2="680" y1="120" y2="120" stroke="var(--ink)" stroke-width="2"/>
+    ${[-1.5,0,2,6,7.5].map(v=>`<line x1="${X(v)}" x2="${X(v)}" y1="114" y2="126" stroke="var(--ink)"/><text class="tx" x="${X(v)}" y="142" text-anchor="middle">${v>0?'+':''}${String(v).replace(".",",")} m</text>`).join("")}
+    <line x1="${X(0)}" x2="${X(0)}" y1="20" y2="150" stroke="var(--magenta)" stroke-width="2" stroke-dasharray="6 4"/><text class="hd" x="${X(0)+4}" y="30" style="fill:var(--magenta)">DATUM</text>
+    <rect x="${X(2)}" y="92" width="${4*55}" height="10" fill="var(--amber)" opacity=".75"/><text class="tk" x="${X(4)}" y="86" text-anchor="middle">MAC 4 m (de +2 a +6)</text>
+    <line x1="${X(2.64)}" x2="${X(2.64)}" y1="70" y2="110" stroke="var(--bad)" stroke-width="2"/><text class="tx" x="${X(2.64)-4}" y="66" text-anchor="end" style="fill:var(--bad)">16 %</text>
+    <line x1="${X(2.96)}" x2="${X(2.96)}" y1="70" y2="110" stroke="var(--ok)" stroke-width="2"/><text class="tx" x="${X(2.96)+4}" y="66" style="fill:var(--ok)">24 %</text>
+    <rect id="hwBox" x="${X(-1.5)-14}" y="94" width="28" height="24" rx="3" fill="var(--blue)"/>
+    <path d="M${X(-1.5)},165 L${X(7.5)-8},165" stroke="var(--blue)" stroke-width="2"/><path d="M${X(7.5)-10},159 L${X(7.5)},165 L${X(7.5)-10},171Z" fill="var(--blue)"/>
+    <text class="tk" x="${X(3)}" y="182" text-anchor="middle" style="fill:var(--blue)">se mueve 9 m hacia atrás</text>
+   </svg>
+   <div class="calcin"><input id="hwIn" inputmode="decimal" aria-label="Masa del objeto en kg" placeholder="masa"><span>kg</span><button class="btn" id="hwChk">Comprobar</button><button class="btn sec" id="hwHint">Pista</button><button class="btn sec" id="hwAnim">Mover el objeto</button></div>
+   <div class="vismsg" id="hwMsg"></div>
+   <div class="flag" style="margin-top:8px"><b>El «+2» de tu foto:</b> lo interpreto como la distancia del datum al borde de ataque de la MAC (LEMAC). Sirve para situar el CG en metros (2,64 m → 2,96 m), pero <b>no hace falta para la masa</b>: solo importa cuánto se mueve el CG. Si era otra cosa, el resultado no cambia.</div>
+   <div class="row" style="margin-top:8px"><b>Más como este</b><span class="muted" style="font-size:14px">mismo planteamiento, otros números</span></div>
+   <div id="hwQ"></div></div>`;
+  const hints=["¿Cambia la masa total al mover algo dentro del avión? No: siguen siendo <b>380 kg</b>.","El CG se mueve 24 − 16 = <b>8 % de la MAC</b> → 0,08 × 4 m = <b>0,32 m</b>.","El objeto va de −1,5 a +7,5: se mueve 7,5 − (−1,5) = <b>9 m</b>. Ojo con el signo.","m × 9 = 380 × 0,32 = 121,6 → m = 121,6 ÷ 9 = <b>13,5 kg</b>. Comprobación: 380 × 2,64 + 121,6 = 1124,8 → ÷ 380 = 2,96 m = 24 % ✔"];
+  let h=0;
+  $("#hwHint").addEventListener("click",()=>{ h=Math.min(h+1,hints.length); $("#hwMsg").innerHTML=`<ol class="stepsol">${hints.slice(0,h).map(s=>`<li>${s}</li>`).join("")}</ol>`; });
+  $("#hwChk").addEventListener("click",()=>{ const v=parseFloat(String($("#hwIn").value).replace(",",".")); if(!isFinite(v)){ $("#hwMsg").textContent="Escribe un número."; return; }
+    const ok=Math.abs(v-13.51)<=0.2; $("#hwMsg").innerHTML=`<b class="${ok?'pass':'fail'}">${ok?'Correcto: 13,5 kg':'No'}</b>${ok?'':' · pide una pista o mira los pasos'}<ol class="stepsol">${hints.map(s=>`<li>${s}</li>`).join("")}</ol>`; });
+  $("#hwAnim").addEventListener("click",()=>{ const r=$("#hwBox"); const x0=X(-1.5)-14, x1=X(7.5)-14; if(prefersReduced){ r.setAttribute("x",x1); return; }
+    let t0=null; const step=ts=>{ if(!t0) t0=ts; const p=Math.min(1,(ts-t0)/1400); r.setAttribute("x",x0+(x1-x0)*p); if(p<1) requestAnimationFrame(step); else setTimeout(()=>r.setAttribute("x",x0),1200); }; requestAnimationFrame(step); });
+  miniQuiz($("#hwQ"),["k5"]);
+}
+initMoment(); initFwd(); initChain(); initOver(); $("#svgMAC").innerHTML=svgMAC(); initCG(); initCalc(); initHW();
+// ---------- syllabus 070 (classplan; agrupado por la clase en que se dio) ----------
+const SYLLABUS = [["PFP-1 · 6 oct","031.01.01.02","Importance with regard to performance","done"],["PFP-1 · 6 oct","031.01.02.01","Importance with regard to stability and controllability","done"],["PFP-1 · 6 oct","031.02.01.01","Mass terms","done"],["PFP-1 · 6 oct","031.02.01.02","Load terms (including fuel terms)","done"],["PFP-1 · 6 oct","031.02.02.01","Structural limitations","done"],["PFP-1 · 6 oct","031.04.01.01","Datum, moment arm","done"],["PFP-1 · 6 oct","031.04.01.03","CG position as percentage of mean aerodynamic chord (per cent MAC)","done"],["PFP-1 · 6 oct","031.05.01.01","Arithmetic method","done"],["PFP-1 · 6 oct","031.05.03.01","Repositioning of CG by shifting the load","done"],["PFP-1 · 6 oct","031.05.03.02","Repositioning of CG by additional load or ballast or by load or ballast removal","done"],["PFP-2 · pendiente","032.02.03","Take-off and landing","todo"],["PFP-3 · pendiente","033.01.01","VFR navigation plan","todo"],["PFP-4 · pendiente","033.04.02","Meteorological briefing","todo"]];
+const DONE_LOS = new Set(SYLLABUS.filter(x=>x[3]==="done").map(x=>x[1]));
+const LO_NAME = Object.fromEntries(SYLLABUS.map(x=>[x[1],x[2]]));
+const loLabel = l => `${l} · ${LO_NAME[l]||l}`;
+const NOT_GIVEN = new Set([]);
+const baseOf = id => (String(id).match(/^(t\d+)/)||[id])[0];
+const isGiven = q => DONE_LOS.has(q[1]) && !NOT_GIVEN.has(baseOf(q[0]));
+
+// ---------- resumen por concepto: se muestra al fallar y es la fuente de las preguntas generadas ----------
+const REFS = {
+ units:"Masa ≠ peso (W = m·g), pero en masa y centrado W = m. 1 kg ≈ 2,2 lb. 1 US gal de AVGAS ≈ 6 lb. 1 in = 2,54 cm. Masa = densidad × volumen; combustible ≈ 0,7 kg/l (AVGAS 0,72), menos que el agua.",
+ datum:"Datum: línea vertical imaginaria desde la que se miden los brazos; delante del morro, en el morro o detrás, lo decide el fabricante. Arm: distancia horizontal del datum al objeto (pulgadas o metros). Moment = masa × brazo. Detrás del datum, positivo; delante, negativo; en el datum, cero. masa = momento ÷ brazo; brazo = momento ÷ masa.",
+ cgfwd:"CG: punto donde se aplica todo el peso. No es fijo: debe estar entre un límite delantero y uno trasero, que fija el manual. Fuera de límites: actitudes de cabeceo y alabeo incontrolables. CG adelantado: más estable, morro pesado, tiras todo el rato; la cola empuja más hacia abajo y el ala necesita más sustentación. CG atrasado: menos estable, nervioso; la cola empuja menos.",
+ chain:"BEM (equipo estándar, fluidos, combustible no utilizable) + items (tripulación y su equipaje, mayordomía, equipo desmontable) = DOM. DOM + payload = ZFM. DOM + TOF = OM. ZFM + TOF = TOM = OM + payload. TOM − trip = LM. TOM + taxi = RM. Traffic load = payload. Useful load = payload + TOF. Variable load = tripulación, equipaje, equipo desmontable.",
+ fuel:"En la rampa: arranque y rodaje, trip, alternativo, contingencia y reserva final. Block fuel − taxi = take-off fuel. TOF = trip + reserva final (30 min) + contingencia (5 % del trip) + alternativo. De RM a TOM se quita el taxi; de TOM a LM, el trip.",
+ maxw:"MZFM: máximo sin combustible utilizable; protege el encastre del ala. MRM: máximo en tierra, lo limita el tren al maniobrar. MTOM: máximo al despegue, sin el combustible de arranque y rodaje. MLM: lo limita el tren al absorber la energía de la toma. Normalmente MTOM > MLM; en monomotor de tren fijo pueden ser iguales. Además hay masas máximas por performance en despegue y aterrizaje.",
+ over:"Exceso de peso: más distancia de despegue y aterrizaje, menos aceleración, peor ascenso (ángulo y régimen), menos velocidad de crucero, más consumo, menos alcance y autonomía, peor maniobrabilidad, más velocidad de aterrizaje, Vs mayor, más esfuerzos estructurales (puede dañarse), menos seguridad.",
+ cgcalc:"CG = momentos totales ÷ masa total; da una distancia al datum. Se hace como una hoja de carga: masa, brazo y momento por fila y totales. El CG cambia en vuelo al quemar combustible.",
+ addrem:"Cargar: (M + m)·y = M·x + m·z. Descargar: (M − m)·y = M·x − m·z. La masa total cambia. Masa máxima hasta un límite: pon el límite como y y despeja m (2900 kg, CG 115, límite 116, estación 130 → 207,14 kg).",
+ move:"Reposicionar: la masa total NO cambia. M·CG final = M·CG inicial − m·d antes + m·d después → ΔCG = m × distancia movida ÷ M. Si el CG se da en % MAC, pásalo a metros: Δ% × MAC.",
+ mac:"MAC = Mean Aerodynamic Chord. LEMAC = datum → borde de ataque; TEMAC = datum → borde de salida; MAC = TEMAC − LEMAC. % MAC = (CG − LEMAC) ÷ MAC × 100; CG = LEMAC + % × MAC. Un avión suele estar entre el 12 % y el 30 y pico % MAC."
+};
+const LO_REFS = {"031.02.01.02":["units","fuel"],"031.04.01.01":["datum"],"031.01.02.01":["cgfwd"],"031.02.01.01":["chain"],"031.02.02.01":["maxw"],"031.01.01.02":["over"],"031.05.01.01":["cgcalc"],"031.05.03.02":["addrem"],"031.05.03.01":["move"],"031.04.01.03":["mac"]};
+// conceptos para «Conceptos que más fallas»: [nombre, visual]
+const CONCEPT = {
+ units:["Masa, peso y unidades","visCalc"], datum:["Datum, brazo y momento","visMoment"], cgfwd:["CG adelantado o atrasado y límites","visFwd"],
+ chain:["Escalera de masas (BEM, DOM, ZFM, OM, TOM, LM, RM)","visChain"], fuel:["Combustible: block, taxi, trip y reservas","visChain"],
+ maxw:["Masas máximas (MZFM, MRM, MTOM, MLM)","visChain"], over:["Efectos del exceso de peso","visOver"],
+ cgcalc:["Calcular el CG (momentos ÷ masa)","visCG"], addrem:["Cargar o descargar masa","visCalc"], move:["Mover una masa dentro del avión","visHW"], mac:["MAC, LEMAC, TEMAC y % MAC","svgMAC"]
+};
+
+// ---------- seed: lo que Claude sabe al publicar ----------
+const SEED = {"updatedAt": "2026-10-07T10:00:00+02:00", "attempts": [], "generated": [], "focus": [], "ignore": {}};
+// [id, LO, fuente, ref, pregunta, [correcta, x, x, x], explicación]
+// fuente: n = los apuntes · p = PDF · t = variante del trial · o = trial original (no se sirve) · k = cálculo con números nuevos · c = complemento
+// las preguntas con id en GEN se generan al vuelo (texto y opciones nuevas cada vez)
+
+const TRIAL_ORIG = [
+ ["t1o","031.04.01.01","o","datum","—",["—","·","··","···"],""],
+ ["t2o","031.01.01.02","o","over","—",["—","·","··","···"],""],
+ ["t3o","031.02.02.01","o","maxw","—",["—","·","··","···"],""],
+ ["t4o","031.01.01.02","o","over","—",["—","·","··","···"],""],
+ ["t5o","031.01.01.02","o","over","—",["—","·","··","···"],""]
+];
+
+// ---- variantes del trial: mismo fondo, distinta forma (t1a, t1b, t1c, t1f se generan con números nuevos) ----
+const TRIALVAR = [
+ ["t1a","031.04.01.01","datum","[cálculo] mass from moment and arm",[],""],
+ ["t1b","031.04.01.01","datum","[cálculo] arm from moment and mass",[],""],
+ ["t1c","031.04.01.01","datum","[cálculo] moment in lb·in",[],""],
+ ["t1f","031.04.01.01","datum","[cálculo] moment forward of the datum",[],""],
+ ["t1d","031.04.01.01","datum","Which statement about moments is NOT correct?",["A heavier item always produces a larger moment, wherever it is placed","Moment = mass × arm","An item located exactly at the datum produces zero moment","An item forward of the datum produces a negative moment"],"El momento depende de la masa Y del brazo: una masa pequeña lejos puede dar más momento que una grande cerca, y en el datum es cero pese lo que pese."],
+ ["t1e","031.04.01.01","datum","On the Seneca load sheet the pilot's moment is 15,988.5 lb·in at an arm of 85.50 in. The pilot's weight is:",["187 lb","1,367 lb","170 lb","85 lb"],"Peso = momento ÷ brazo = 15.988,5 ÷ 85,5 = 187 lb (es la fila del piloto de la diapositiva 1)."],
+ ["t2a","031.01.01.02","over","Which of the following is NOT a consequence of flying an overweight aeroplane?",["A lower stalling speed","A longer take-off run","Higher structural loads","Reduced climb performance"],"Con sobrepeso la Vs SUBE, no baja. Lo demás sí pasa."],
+ ["t2b","031.01.01.02","over","An aeroplane is loaded 40 kg above its MTOM. Compared with a correctly loaded flight, the pilot should expect:",["A higher stalling speed, a longer take-off run and higher stress on the structure","A lower stalling speed and a shorter landing roll","A better glide range thanks to the greater mass","No change, as long as the CG is within limits"],"Sobrepeso = Vs mayor, más carrera y más esfuerzo estructural. Que el CG esté bien no arregla el exceso de masa."],
+ ["t2c","031.01.01.02","over","Why can flying an overweight aeroplane cause structural damage?",["The structure is designed for loads up to the maximum certified mass; extra mass raises the stresses, e.g. in turbulence or at touchdown","Because the CG always moves outside the aft limit","Because the engine produces less power","It cannot: overweight only affects performance"],"La estructura está calculada hasta la masa máxima certificada. Por encima, cada ráfaga o toma la carga más de lo previsto."],
+ ["t2d","031.01.01.02","over","Overweight: which pair of effects is correct?",["Higher Vs and higher landing speed","Lower Vs and lower landing speed","Higher Vs and shorter landing distance","Lower fuel consumption and longer range"],"Más peso: Vs más alta, se aterriza más rápido y se necesita más distancia."],
+ ["t2e","031.01.01.02","over","Which statement about an overweight aeroplane is TRUE?",["Its range and endurance are reduced","It cruises faster because of its greater momentum","It consumes less fuel per hour","It manoeuvres better because it is more stable"],"Diapositiva 24: menos alcance y autonomía, más consumo, menos velocidad de crucero, peor maniobrabilidad."],
+ ["t3a","031.02.02.01","maxw","The maximum landing mass (MLM / MLW) is mainly limited by:",["The ability of the landing gear to absorb the energy at touchdown","The engine power available for a go-around","The length of the runway only","The fuel tank capacity"],"Diapositiva 20: lo limita la capacidad del tren de absorber la energía de la toma."],
+ ["t3b","031.02.02.01","maxw","Which limit is the maximum mass permitted for ground manoeuvring (taxi)?",["MRM / MRW (maximum ramp mass)","MLM","MZFM","MTOM"],"MRM: máximo para maniobrar en tierra, lo limita el tren."],
+ ["t3c","031.02.02.01","maxw","In MTOW, MLW and MZFW, the first 'M' stands for:",["Maximum","Minimum","Moment","Mean"],"Son masas MÁXIMAS. No hay «minimum landing weight»."],
+ ["t3d","031.02.02.01","maxw","On a large aeroplane, which relationship between the structural limits is normal?",["MTOM greater than MLM","MLM greater than MTOM","MZFM greater than MTOM","MRM smaller than MTOM"],"Lo normal es MTOM > MLM (y MRM > MTOM por el combustible de rodaje)."],
+ ["t3e","031.02.02.01","maxw","For which kind of aeroplane can MTOM and MLM be the same figure?",["A light single-engine aeroplane with fixed landing gear","A large jet transport","Any aeroplane with retractable gear","Only aeroplanes able to dump fuel"],"Lo dijo el profesor: en un monomotor de tren fijo pueden coincidir."],
+ ["t3f","031.02.02.01","maxw","As defined in the course, MTOW does NOT include:",["The fuel used for start-up and taxi","The take-off fuel","The payload","The crew"],"Diapositiva 19: MTOW no incluye el combustible de arranque y rodaje (eso está en la MRM)."],
+ ["t4a","031.01.01.02","over","If the aeroplane's mass increases, its rate of climb will:",["Decrease","Increase","Not change","Increase only at high altitude"],"Más masa, menos régimen de ascenso."],
+ ["t4b","031.01.01.02","over","Which change IMPROVES climb performance?",["Reducing the aeroplane's mass","Adding baggage","Filling the tanks to the maximum","Carrying an extra passenger"],"Lo único que mejora el ascenso de la lista es quitar peso."],
+ ["t4c","031.01.01.02","over","The pilot takes two extra passengers. The climb gradient and the rate of climb will:",["Both be reduced","Both be increased","Gradient reduced, rate increased","Not be affected"],"Más peso empeora las dos: ángulo y régimen."],
+ ["t4d","031.01.01.02","over","An overweight aeroplane will achieve:",["A smaller maximum climb angle and a lower maximum rate of climb","A larger climb angle but a lower rate of climb","A higher rate of climb","The same climb performance at a higher speed"],"Es lo que quiere decir el «Minor Vx and Vy» de la diapositiva: sube peor en ángulo y en régimen."],
+ ["t5a","031.01.01.02","over","An aeroplane is overloaded. Its take-off run will be ___ because its acceleration is ___.",["longer / reduced","shorter / increased","longer / increased","unchanged / unchanged"],"Con el mismo empuje y más masa, acelera menos: carrera más larga."],
+ ["t5b","031.01.01.02","over","Which is NOT expected when an aircraft is overloaded?",["A shorter take-off run","Reduced acceleration","A higher lift-off speed","A longer landing distance"],"La carrera se ALARGA. Lo demás sí pasa."],
+ ["t5c","031.01.01.02","over","Two identical aeroplanes take off from the same runway; one is 100 kg heavier. The heavier one will:",["Accelerate more slowly, need a higher lift-off speed and a longer run","Accelerate faster thanks to its greater momentum","Lift off at a lower speed","Need the same distance if the engine is at full power"],"Más masa: menos aceleración, Vs y velocidad de rotación mayores, más carrera."],
+ ["t5d","031.01.01.02","over","Excess mass affects the landing as follows:",["Higher approach and landing speed and a longer landing distance","Lower landing speed and a shorter roll","No effect on landing, only on take-off","Shorter landing distance thanks to better braking"],"Diapositivas 23 y 24: más peso, más velocidad de aterrizaje y más distancia."]
+];
+
+// ---- diapositivas (PDF 070.06) ----
+const PDFQ = [
+ ["p01","031.04.01.01","p","datum","In mass and balance, the datum is:",["An imaginary vertical line from which all arm measurements are taken","The point where the CG must always be","The leading edge of the mean aerodynamic chord","The main landing gear axle"],"Datum = línea vertical imaginaria de referencia para los brazos."],
+ ["p02","031.04.01.01","p","datum","Where can the datum be placed?",["Ahead of the nose, on the nose or behind it, wherever the designer decides","Always on the nose","Always at the wing leading edge","Always at the firewall"],"Lo decide el fabricante: delante, en el morro o detrás."],
+ ["p03","031.04.01.01","p","datum","The arm of an item is:",["The horizontal distance from the datum to the item","The vertical distance from the ground to the item","The item's mass multiplied by its distance","The distance from the CG to the item"],"Arm = distancia HORIZONTAL del datum al objeto."],
+ ["p04","031.04.01.01","p","datum","Moment is the result of:",["Multiplying the mass by its arm","Dividing the mass by its arm","Adding the mass and the arm","Dividing the arm by the total mass"],"Moment = mass × arm."],
+ ["p05","031.04.01.01","p","datum","If mass is in lb and the arm in inches, the moment is expressed in:",["lb·in (pound-inches)","lb/in","inches","lb"],"Masa × brazo → lb × in. En la hoja de carga: «Moment (in-lbs)»."],
+ ["p06","031.01.02.01","p","cgfwd","According to the course, the centre of gravity is:",["The point where all the weights and forces of the aircraft are considered to act","The point where lift acts","The midpoint of the wing chord","The datum"],"Diapositiva 25: el punto donde se aplican todos los pesos y fuerzas."],
+ ["p07","031.01.02.01","p","cgfwd","What can happen if the CG moves outside its limits?",["Pitch and roll attitudes the pilot may not be able to control","Nothing, provided the mass is below MTOM","Only the fuel consumption increases","The stall speed is no longer defined"],"Diapositiva 25: fuera de límites aparecen actitudes de cabeceo y alabeo."],
+ ["p08","031.01.02.01","p","cgfwd","Where are the maximum load and the CG limits of a particular aeroplane established?",["In its flight manual (AFM/POH)","In the AIP","In the NOTAMs","In the insurance policy"],"El manual del avión fija la carga máxima y los límites del CG."],
+ ["p09","031.01.02.01","p","cgfwd","With a FORWARD CG, the tailplane must produce:",["More downforce, so the wing needs more lift","Less downforce, so the wing needs less lift","Upward lift instead of downforce","No force at all"],"Diapositiva 4: CG adelantado → más carga en la cola → más sustentación adicional."],
+ ["p10","031.01.02.01","p","cgfwd","Compared with a forward CG, an AFT CG means:",["Less tail downforce and a less stable aeroplane","More tail downforce and a more stable aeroplane","A heavier aeroplane in pitch","More lift needed from the wing"],"CG atrasado: menos carga en la cola, menos estable."],
+ ["p11","031.05.03.02","p","addrem","In (M + m)·y = M·x + m·z, the letter y is:",["The final CG position","The initial CG position","The station of the added mass","The added mass"],"Diapositiva 5: y = CG final, x = CG inicial, z = estación de la masa."],
+ ["p12","031.05.03.02","p","addrem","When a mass is REMOVED, the formula becomes:",["(M − m)·y = M·x − m·z","(M + m)·y = M·x − m·z","(M − m)·y = M·x + m·z","M·y = M·x − m·z"],"Se quita la masa a los dos lados: a la masa total y al momento."],
+ ["p13","031.05.03.02","p","addrem","In the shortcut 'mass change ÷ old total mass = change of CG ÷ distance', the distance is measured from the mass station to:",["The NEW CG position","The datum","The old CG position","The LEMAC"],"De (M + m)·y = M·x + m·z sale m ÷ M = (y − x) ÷ (z − y): con la masa ANTIGUA, la distancia es hasta el CG NUEVO."],
+ ["p14","031.05.03.02","p","addrem","Total mass 2,900 kg, CG at station 115.0, aft CG limit at station 116.0. The maximum mass that can be added at station 130.0 is:",["207.14 kg","193.33 kg","223.08 kg","22.31 kg"],"(2900 + m)·116 = 2900·115 + 130·m → 2900 = 14·m → 207,14 kg (diapositiva 6)."],
+ ["p15","031.04.01.03","p","mac","LEMAC is the distance from the datum to:",["The leading edge of the mean aerodynamic chord","The trailing edge of the MAC","The CG","The wing tip"],"Leading Edge MAC: borde de ATAQUE. En los apuntes pusiste trailing: es al revés."],
+ ["p16","031.04.01.03","p","mac","TEMAC is the distance from the datum to:",["The trailing edge of the MAC","The leading edge of the MAC","The tail","The main gear"],"Trailing Edge MAC: borde de salida."],
+ ["p17","031.04.01.03","p","mac","The length of the MAC equals:",["TEMAC − LEMAC","LEMAC − TEMAC","TEMAC + LEMAC","LEMAC ÷ TEMAC"],"MAC = TEMAC − LEMAC."],
+ ["p18","031.04.01.03","p","mac","LEMAC at station 144 in, TEMAC at 206 in, CG at 161 in. The CG in % MAC is:",["27.4 %","17.0 %","78.2 %","72.6 %"],"(161 − 144) ÷ 62 × 100 = 27,4 % (diapositiva 10)."],
+ ["p19","031.04.01.03","p","mac","LEMAC 2.5 m, TEMAC 4.3 m, CG 3.5 m from the datum. The CG in % MAC is:",["55.6 %","81.4 %","44.4 %","35.7 %"],"MAC 1,8 m; (3,5 − 2,5) ÷ 1,8 = 55,6 % (la diapositiva redondea a 55,5)."],
+ ["p20","031.04.01.03","p","mac","The MAC measures 8 m, the CG is 8 m from the datum and TEMAC is 12 m from the datum. The CG in % MAC is:",["50 %","66.7 %","100 %","33.3 %"],"LEMAC = 12 − 8 = 4 m; (8 − 4) ÷ 8 = 50 % (diapositiva 17)."],
+ ["p21","031.04.01.03","p","mac","The CG is at 15 % MAC, LEMAC is 625.6 in from the datum and the MAC measures 134.5 in. The CG from the datum is:",["645.8 in","645.6 in","114.3 in","720.0 in"],"625,6 + 0,15 × 134,5 = 625,6 + 20,2 = 645,8 in (diapositiva 18)."],
+ ["p22","031.04.01.03","p","mac","In mass and balance, the MAC is used to:",["Express where the CG is on the wing, as a percentage","Measure the wing span","Calculate fuel density","Locate the datum"],"La MAC sirve para dar la posición del CG sobre el ala en %."],
+ ["p23","031.02.02.01","p","maxw","MZFM is the maximum mass of the aeroplane:",["Without usable fuel","With full fuel","At landing","On the ramp before start-up"],"Zero fuel: sin combustible utilizable."],
+ ["p24","031.02.02.01","p","maxw","The maximum ramp mass (MRM) is determined by:",["The strength of the landing gear during ground manoeuvring","The engine thrust","The runway length","The cargo door size"],"Diapositiva 19: resistencia del tren al maniobrar."],
+ ["p25","031.02.02.01","p","maxw","Why is the MRM slightly higher than the MTOM?",["It includes the fuel for start-up and taxi","Because the ramp is at a lower altitude","It includes the trip fuel","It is not: they are always equal"],"RM = TOM + taxi fuel."],
+ ["p26","031.02.01.01","p","chain","According to the mass chain, DOM equals:",["BEM + items (crew and their baggage, catering, removable equipment)","BEM + payload","BEM + take-off fuel","TOM − trip fuel"],"DOM = BEM + items."],
+ ["p27","031.02.01.01","p","chain","DOM + payload = ?",["ZFM","OM","TOM","LM"],"DOM + payload = Zero Fuel Mass."],
+ ["p28","031.02.01.01","p","chain","DOM + take-off fuel = ?",["OM (operating mass)","ZFM","TOM","RM"],"DOM + TOF = Operating Mass."],
+ ["p29","031.02.01.01","p","chain","ZFM + take-off fuel = ?",["TOM","OM","LM","RM"],"ZFM + TOF = TOM (y también OM + payload)."],
+ ["p30","031.02.01.01","p","chain","TOM − trip fuel = ?",["LM","ZFM","OM","DOM"],"Al aterrizar ya has quemado el trip."],
+ ["p31","031.02.01.01","p","chain","TOM + taxi fuel = ?",["RM (ramp mass)","LM","OM","ZFM"],"En la plataforma aún llevas el combustible de rodaje."],
+ ["p32","031.02.01.01","p","chain","Which of these is included in the BEM?",["Unusable fuel, hydraulic fluid and standard equipment","The crew","The usable fuel","The passengers' baggage"],"BEM = equipo estándar + fluidos (agua, hidráulicos, combustible NO utilizable)."],
+ ["p33","031.02.01.01","p","chain","Which of these is NOT one of the items added to BEM to obtain DOM?",["Passengers","Crew and their baggage","Catering","Removable equipment (spares, hook, searchlight)"],"Los pasajeros son payload: van de DOM a ZFM, no de BEM a DOM."],
+ ["p34","031.02.01.01","p","chain","'Traffic load' is another name for:",["Payload","Take-off fuel","Useful load","Variable load"],"Traffic load = payload."],
+ ["p35","031.02.01.01","p","chain","Useful load is:",["Payload + usable (take-off) fuel","Payload only","BEM + crew","Crew + their baggage"],"Diapositiva 21: payload y TOF juntos forman la carga útil."],
+ ["p36","031.02.01.01","p","chain","Variable load includes:",["Crew, their baggage and removable equipment","Passengers and cargo","The usable fuel","Unusable fuel and fluids"],"Variable load: tripulación, equipaje, equipo desmontable."],
+ ["p37","031.02.01.02","p","fuel","Block fuel minus taxi fuel equals:",["Take-off fuel","Trip fuel","Final reserve","Contingency fuel"],"Block − taxi = TOF."],
+ ["p38","031.02.01.02","p","fuel","According to the slide, take-off fuel is made up of:",["Trip + final reserve (30 min) + contingency (5 % of trip) + alternate","Trip + taxi","Taxi + trip + reserve only","Trip only"],"Diapositiva 21."],
+ ["p39","031.02.01.02","p","fuel","In the slide, contingency fuel is:",["5 % of the trip fuel","10 % of the block fuel","30 minutes of flight","Equal to the taxi fuel"],"Contingencia = 5 % del trip."],
+ ["p40","031.02.01.02","p","fuel","Which fuel is subtracted from TOM to obtain LM?",["Trip fuel","Taxi fuel","Final reserve","Alternate fuel"],"El trip es lo que quemas entre despegue y aterrizaje."],
+ ["p41","031.01.01.02","p","over","Which is listed in the course as a consequence of excess weight?",["Higher fuel consumption","Higher cruise speed","Shorter landing distance","Better manoeuvrability"],"Diapositiva 24."],
+ ["p42","031.01.01.02","p","over","With excess weight, range and endurance:",["Both decrease","Both increase","Range increases, endurance decreases","Are not affected"],"Menos alcance y menos autonomía."],
+ ["p43","031.01.01.02","p","over","Excess weight and the stall speed (Vs):",["Vs increases","Vs decreases","Vs is unchanged","Vs changes only with flap"],"Más peso, Vs mayor."],
+ ["p44","031.02.02.01","p","maxw","Besides the structural limits, the slides mention a maximum mass imposed by performance. It applies to:",["Both take-off and landing","Cruise only","Taxi only","Zero fuel only"],"Diapositiva 22: masa máxima por performance en despegue y aterrizaje."],
+ ["p46","031.01.01.02","p","over","On the landing distance chart, increasing the landing weight gives:",["A longer landing distance","A shorter landing distance","No change","A lower approach speed"],"Diapositiva 23: más peso, más distancia."],
+ ["p47","031.05.01.01","p","cgcalc","On the Seneca load sheet, the BEW is 2,900 lb with a moment of 247,747 lb·in. The empty CG is at:",["85.43 in","84.43 in","0.85 in","2,900 in"],"247.747 ÷ 2.900 = 85,43 in."],
+ ["p48","031.05.01.01","p","cgcalc","On the Seneca sheet the zero fuel weight is 3,267 lb with a total moment of 280,057.5 lb·in. The CG is at:",["85.72 in","85.43 in","87.12 in","81.60 in"],"280.057,5 ÷ 3.267 = 85,72 in."],
+ ["p49","031.02.01.02","p","units","On the load sheet the fuel is entered as '93 × 6'. What does the 6 mean?",["About 6 lb per US gallon of AVGAS, to convert gallons into pounds","6 litres per gallon","An arm of 6 inches","6 % contingency"],"1 US gal de AVGAS ≈ 6 lb (lo dijo el profesor)."],
+ ["p50","031.02.01.02","p","units","93 US gallons of AVGAS weigh about:",["558 lb","155 lb","352 lb","930 lb"],"93 × 6 = 558 lb (diapositiva 1). 352 serían los litros."],
+ ["p51","031.05.01.01","p","cgcalc","The pilot weighs 187 lb and sits at an arm of 85.50 in. His moment is:",["15,988.5 lb·in","2.19 lb·in","272.5 lb·in","1,598.9 lb·in"],"187 × 85,5 = 15.988,5 lb·in."]
+];
+
+// ---- los apuntes de clase ----
+const NOTESQ = [
+ ["n01","031.02.01.02","n","units","Mass and weight are:",["Different: weight is the force of gravity on the mass (W = m·g)","The same physical quantity","Different: mass = weight × g","Different: weight is measured in kg and mass in newtons"],"W = m·g (en los apuntes pusiste m·a). En masa y centrado tratamos W = m."],
+ ["n02","031.02.01.02","n","units","1 kg is approximately:",["2.2 lb","0.45 lb","2.54 lb","6 lb"],"1 kg ≈ 2,2 lb (y 1 lb ≈ 0,45 kg)."],
+ ["n03","031.02.01.02","n","units","A passenger weighs 176 lb. In kg that is about:",["80 kg","387 kg","69 kg","176 kg"],"176 ÷ 2,2 = 80 kg."],
+ ["n04","031.02.01.02","n","units","1 inch equals:",["2.54 cm","2.2 cm","25.4 cm","0.254 cm"],"1 in = 2,54 cm."],
+ ["n05","031.02.01.02","n","units","An arm of 100 in expressed in metres is:",["2.54 m","0.254 m","39.4 m","45.5 m"],"100 × 2,54 cm = 254 cm = 2,54 m."],
+ ["n06","031.02.01.02","n","units","Mass equals:",["Density × volume","Density ÷ volume","Volume ÷ density","Weight × g"],"m = ρ × V."],
+ ["n07","031.02.01.02","n","units","AVGAS density is about 0.72 kg/l. 100 litres weigh about:",["72 kg","139 kg","100 kg","7.2 kg"],"0,72 × 100 = 72 kg."],
+ ["n08","031.02.01.02","n","units","Which statement about fuel density is correct?",["It is less than 1 kg/l (about 0.7), so a litre of fuel weighs less than a kilogram","It is more than 1 kg/l","It is exactly 1 kg/l, like water","It is about 6 kg/l"],"El combustible es menos denso que el agua: ≈ 0,7 kg/l."],
+ ["n09","031.01.02.01","n","cgfwd","With the CG well FORWARD (within limits), the pilot will notice:",["A very stable, nose-heavy aeroplane that needs constant back pressure","A nervous aeroplane, light on the controls","No difference at all","The nose tends to pitch up"],"Lo dijo el profesor: más estable, pero tirando todo el rato."],
+ ["n10","031.01.02.01","n","cgfwd","With the CG AFT (within limits), the aeroplane will feel:",["Less stable, 'nervous' and light in pitch","More stable and nose-heavy","Exactly the same","Heavier on the elevator in the flare"],"CG atrasado: más nervioso."],
+ ["n11","031.05.01.01","n","cgcalc","The CG position relative to the datum equals:",["Total moments ÷ total mass","Total mass ÷ total moments","Total moments × total mass","Sum of the arms ÷ number of items"],"CG = Σ momentos ÷ Σ masas. El resultado es una distancia al datum."],
+ ["n12","031.05.03.01","n","move","When a mass is moved INSIDE the aeroplane (repositioning), the total mass:",["Does not change; only the CG moves","Increases by the mass moved","Decreases by the mass moved","Changes in proportion to the distance moved"],"Reposicionar no cambia la masa total."],
+ ["n13","031.05.03.02","n","addrem","After loading or unloading, the final total mass is:",["The initial mass plus the masses added (minus those removed)","Always the same as the initial mass","The initial mass times the CG shift","The MTOM"],"Al cargar o descargar, la masa total sí cambia."],
+ ["n14","031.04.01.03","n","mac","CG in % MAC = ?",["(CG from datum − LEMAC) ÷ MAC × 100","(CG from datum ÷ MAC) × 100","(TEMAC − CG) ÷ MAC × 100","(LEMAC − CG) ÷ TEMAC × 100"],"Distancia del CG al borde de ataque, dividida entre la MAC."],
+ ["n15","031.04.01.03","n","mac","A light aeroplane's CG is usually somewhere around:",["12 % to 30-something % of the MAC","0 % to 5 % MAC","50 % to 80 % MAC","Exactly 25 % MAC, always"],"Lo dijo el profesor: entre el 12 y el 30 y pico %."],
+ ["n16","031.04.01.01","n","datum","If the datum is on the nose, arms aft of the datum are:",["Positive","Negative","Zero","Expressed in % MAC"],"Con el datum en el morro, todo lo que hay detrás es positivo."],
+ ["n17","031.04.01.01","n","datum","An item is 1.5 m FORWARD of the datum. Its arm is:",["−1.5 m","+1.5 m","0 m","1.5 % MAC"],"Delante del datum, brazo negativo (como el objeto de los deberes)."],
+ ["n18","031.04.01.01","n","datum","A 20 kg item at an arm of −0.5 m produces a moment of:",["−10 kg·m","+10 kg·m","−40 kg·m","+40 kg·m"],"20 × (−0,5) = −10 kg·m."],
+ ["n19","031.02.01.01","n","chain","Why does the ZFM matter?",["It limits the bending loads at the wing root and helps place the CG correctly","It sets the maximum fuel you can carry","It is the mass at which you land","It only applies while taxiing"],"Lo dijo el profesor: CG y cargas estructurales en el encastre del ala."],
+ ["n21","031.02.01.02","n","fuel","When the aeroplane is at TOM, which fuel has already been used?",["Taxi fuel","Trip fuel","Final reserve","Contingency fuel"],"De RM a TOM se gasta el taxi."],
+ ["n22","031.02.01.02","n","fuel","Which fuel must be on board at the ramp (block fuel)?",["Start-up and taxi, trip, alternate, contingency and final reserve","Trip only","Trip and final reserve only","Taxi and trip only"],"Los apuntes: todo eso tiene que estar en la rampa."],
+ ["n24","031.05.01.01","n","cgcalc","In flight, the CG of the aeroplane:",["Can move as fuel is burnt, so it must stay within limits for the whole flight","Never changes after take-off","Always moves aft","Changes only if passengers move"],"Lo dijo el profesor: cálculos del CG también en el aire."],
+ ["n25","031.05.03.01","n","move","A mass m is moved from station dA to station dB. The final CG is:",["(M·x − m·dA + m·dB) ÷ M","(M·x + m·dA + m·dB) ÷ M","(M·x + m·(dB − dA)) ÷ (M + m)","M·x ÷ (m·dB)"],"Quitas el momento de donde estaba y lo pones donde va; la masa total no cambia (tu fórmula de clase quedó a medias)."]
+];
+
+// ---- complemento: fuera de los apuntes y del PDF ----
+const COMPQ = [
+ ["c01","031.01.02.01","c","cgfwd","A landing gear leg retracts FORWARD. When it is extended, the CG moves:",["Slightly aft, because that mass moves aft","Slightly forward","It does not move, the mass is the same","Outside the limits"],"El CG va hacia donde va la masa. Es la pregunta del A320 de la última diapositiva: confírmalo con el profesor."],
+ ["c02","031.01.02.01","c","cgfwd","Compared with an aft CG, a forward CG gives a stall speed that is:",["Higher","Lower","The same","Undefined"],"Más carga en la cola = el ala soporta más = Vs algo mayor."],
+ ["c03","031.01.02.01","c","cgfwd","A CG beyond the FORWARD limit may make it:",["Impossible to raise the nose for rotation or the flare","Impossible to recover from a spin","Easier to flare","Lower the stall speed"],"Morro demasiado pesado: el timón de profundidad no basta."],
+ ["c04","031.01.02.01","c","cgfwd","A CG beyond the AFT limit may make it:",["Impossible to recover from a stall or a spin","Easier to recover from a spin","Safer in turbulence","Impossible to rotate on take-off"],"CG demasiado atrás: inestable en cabeceo."]
+];
+
+// ---- cálculos con números nuevos cada vez (031.05.01.01) ----
+const CALCQ = ["k1","k2","k3","k4","k5","k6","k7","k8","k11"].map(k=>[k,"031.05.01.01","k",{k1:"cgcalc",k2:"addrem",k3:"addrem",k4:"move",k5:"move",k6:"mac",k7:"mac",k8:"addrem",k11:"move"}[k],"[cálculo] "+GEN_NAMES[k],[],""])
+  .concat([["k9","031.02.01.01","k","chain","[cálculo] "+GEN_NAMES.k9,[],""],["k10","031.02.01.02","k","units","[cálculo] "+GEN_NAMES.k10,[],""]]);
+
+// ★ PROFE: lo que el profesor remarcó en clase (los apuntes) y sus variantes
+const PROFE = new Set(["n09","n10","n11","n12","n14","n15","n16","n19","n24","t3e","p49","k2","k3","k4","k5","k6","k10","t3d"]);
+
+const BASE = [].concat(
+  TRIAL_ORIG,
+  TRIALVAR.map(t=>[t[0],t[1],"t",t[2],t[3],t[4],t[5]]),
+  PDFQ, NOTESQ, COMPQ, CALCQ
+);
+// ---------- banco ----------
+let state = JSON.parse(JSON.stringify(SEED));
+let BANK = [], BYID = new Map();
+function buildBank(){
+  const gen = (state.generated||[]).map(g=>[g.id,g.lo,"g",null,g.q,g.options,g.expl]);
+  BANK = BASE.concat(gen); BYID = new Map(BANK.map(q=>[q[0],q]));
+}
+const byId = id => BYID.get(id);
+const servable = q => q[2]!=="o";
+const isGen = q => !!GEN[q[0]];
+const isIgnored = a => !!(a.ignore || (state.ignore||{})[a.id]);
+
+// ---------- estadísticas (por pregunta, por grupo del trial y por LO) ----------
+function stats(){
+  const q = {}, base = {}, loHist = {};
+  const sorted = state.attempts.filter(a=>!isIgnored(a)).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  sorted.forEach(at=> (at.items||[]).forEach(it=>{
+    const s = q[it.q] || (q[it.q]={n:0,ok:0,streak:0,last:null});
+    s.n++; if(it.ok){s.ok++; s.streak++;} else s.streak=0; s.last = it.ok;
+    const b = baseOf(it.q); if(/^t\d+$/.test(b)) base[b] = {last:it.ok, date:at.date};
+    const qq = byId(it.q); if(!qq || at.partial) return;
+    if(DONE_LOS.has(qq[1]) && !isGiven(qq)) return;
+    (loHist[qq[1]] = loHist[qq[1]]||[]).push(it.ok);
+  }));
+  const lo = {};
+  Object.keys(loHist).forEach(k=>{ const r=loHist[k].slice(-10), pv=loHist[k].slice(-20,-10);
+    lo[k]={n:loHist[k].length, m:r.filter(Boolean).length/r.length, prev: pv.length>=4 ? pv.filter(Boolean).length/pv.length : null}; });
+  return {q, base, lo};
+}
+function focusActive(id, st){ return (state.focus||[]).includes(id) && !((st.q[id]||{}).streak>=2); }
+function pendingFromBase(q, st){ const b=baseOf(q[0]); return q[2]==="t" && !st.q[q[0]] && st.base[b] && st.base[b].last===false; }
+
+// ---------- motor adaptativo ----------
+function priority(q, st){
+  const s = st.q[q[0]], lo = st.lo[q[1]];
+  let p = 1;
+  if(!s) p += 3; else { if(s.last===false) p += 5; p -= Math.min(s.streak,3); }
+  if(pendingFromBase(q, st)) p += 4;
+  p += (1 - (lo ? lo.m : .5)) * 4;
+  if(focusActive(q[0], st)) p += 2.5;
+  if(q[2]==="g" && !s) p += 1;
+  if(PROFE.has(q[0])) p += 1.5;
+  if(q[2]==="t") p += 1.5;
+  if(isGen(q) && s) p += 1; // los cálculos traen números nuevos: repetirlos sigue siendo útil
+  return Math.max(.2,p) * (0.8 + Math.random()*0.4);
+}
+function selectQuestions(mode, inc, lo){
+  const st = stats();
+  const trialGroups = () => { const g={}; BANK.filter(q=>q[2]==="t").forEach(q=>{ const k=baseOf(q[0]); (g[k]=g[k]||[]).push(q); }); return g; };
+  if(mode==="trial") return shuffle(Object.values(trialGroups()).map(g=>g[Math.floor(Math.random()*g.length)]));
+  let pool = BANK.filter(q=> servable(q) && (inc || q[2]!=="c") && isGiven(q));
+  if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
+  if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
+  if(mode==="all") return shuffle(pool);
+  if(mode==="calc"){ const c=pool.filter(isGen); const out=[]; while(out.length<15){ out.push(...shuffle(c).sort((a,b)=>priority(b,st)-priority(a,st))); } return shuffle(out.slice(0,15)); }
+  const N = Math.min(30, pool.length);
+  const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
+  const chosen = [], los = [...DONE_LOS].filter(l=>pool.some(q=>q[1]===l));
+  const MINLO = Math.min(6, Math.floor(N/Math.max(1,los.length))), MAXLO = Math.ceil(N/2);
+  const nLO = l => chosen.filter(q=>q[1]===l).length;
+  const nG = Object.keys(trialGroups()).length, perGroup = nG>=6 ? 1 : 2; // con menos de 6 preguntas en el trial, hasta 2 variantes de cada una
+  const usedB = {};
+  const take = x => { if(chosen.includes(x.q)) return false; if(x.q[2]==="t"){ const b=baseOf(x.q[0]); if((usedB[b]||0)>=perGroup) return false; usedB[b]=(usedB[b]||0)+1; } chosen.push(x.q); return true; };
+  los.forEach(l=>{ for(const x of scored){ if(nLO(l)>=MINLO) break; if(x.q[1]===l) take(x); } });
+  for(const x of scored){ if(chosen.filter(q=>q[2]==="t" && isGiven(q)).length>=6) break;
+    if(x.q[2]==="t" && isGiven(x.q) && nLO(x.q[1])<MAXLO) take(x); }
+  for(const x of scored){ if(chosen.length>=N) break; if(nLO(x.q[1])<MAXLO) take(x); }
+  for(const x of scored){ if(chosen.length>=N) break; take(x); }
+  return shuffle(chosen);
+}
+
+// ---------- persistencia: progreso.json dentro del propio artefacto ----------
+// Nunca se descarta nada: copia local pendiente + progreso.json + sembrados por Claude, unidos por id. Sin comparar fechas.
+let artifactApi = null, canSave = true;
+const PKEY = "pfp070-pending";
+function mergeInto(base, other){
+  if(!other) return base;
+  const ids = new Set(base.attempts.map(a=>a.id));
+  (other.attempts||[]).forEach(a=>{ if(a && a.id && !ids.has(a.id)){ base.attempts.push(a); ids.add(a.id); } });
+  const gids = new Set(base.generated.map(g=>g.id));
+  (other.generated||[]).forEach(g=>{ if(g && !gids.has(g.id)){ base.generated.push(g); gids.add(g.id); } });
+  base.focus = [...new Set(base.focus.concat(other.focus||[]))];
+  Object.entries(other.ignore||{}).forEach(([k,v])=>{ if(!(k in base.ignore)) base.ignore[k]=v; });
+  return base;
+}
+async function loadState(){
+  state = {updatedAt:SEED.updatedAt, attempts:[], generated:[], focus:[], ignore:{}};
+  try{ const sp = sessionStorage.getItem(PKEY); if(sp) mergeInto(state, JSON.parse(sp)); }catch(e){}
+  try{ const r = await window.__hub.fetch("progreso.json", {cache:"no-store"}); if(r.ok) mergeInto(state, await r.json()); }catch(e){}
+  mergeInto(state, SEED);
+  buildBank();
+}
+async function saveState(msgEl){
+  state.updatedAt = new Date().toISOString();
+  try{ sessionStorage.setItem(PKEY, JSON.stringify(state)); }catch(e){}
+  if(!canSave){ msgEl && (msgEl.textContent = "Esta vista es de solo lectura: el progreso no se guarda."); return false; }
+  if(!artifactApi){ try{ artifactApi = (window.__hub && window.__hub.use) ? await window.__hub.use("artifact") : null; }catch(e){} }
+  if(!artifactApi){ msgEl && (msgEl.textContent = "No se ha podido guardar en esta vista; se conserva mientras la pestaña siga abierta."); return false; }
+  try{
+    await artifactApi.publish({"progreso.json": {content: JSON.stringify(state, null, 1), contentType:"application/json"}});
+    try{ sessionStorage.removeItem(PKEY); }catch(e){}
+    msgEl && (msgEl.textContent = "Progreso guardado.");
+    return true;
+  }catch(e){
+    const c = e && e.code;
+    if(c==="not_writer"||c==="not_granted"||c==="capability_disabled"||c==="consent_required"){ canSave=false; msgEl && (msgEl.textContent="Esta vista es de solo lectura: el progreso no se guarda."); }
+    else if(c==="conflict"){ msgEl && (msgEl.textContent="Había una versión más nueva; la página se recargará y tu intento se une al cargar."); }
+    else msgEl && (msgEl.textContent = "No se pudo guardar el progreso (" + (c||"error") + "). Se conserva en esta pestaña.");
+    return false;
+  }
+}
+
+// ---------- pestañas ----------
+const TABS = ["notes","map","test","hist"];
+function showTab(t){
+  if(!TABS.includes(t)) t="notes";
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===t));
+  document.querySelectorAll("section").forEach(s=>s.hidden = s.id!==t);
+  if(t==="map") renderMap();
+  if(t==="hist") renderHist();
+  if(t==="test" && $("#quiz").hidden) renderSetup();
+  try{ history.replaceState(null,"","#"+t); }catch(e){}
+  window.scrollTo({top:0});
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+document.querySelector("nav").addEventListener("keydown",e=>{ if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
+  const cur=TABS.indexOf(document.querySelector('nav [aria-selected="true"]').dataset.tab), n=(cur+(e.key==="ArrowRight"?1:TABS.length-1))%TABS.length;
+  showTab(TABS[n]); document.querySelector(`nav [data-tab="${TABS[n]}"]`).focus(); });
+
+// ---------- evolución ----------
+function countedAttempts(){ return state.attempts.filter(a=>a.total && !isIgnored(a)).sort((a,b)=>new Date(a.date)-new Date(b.date)); }
+function evoChart(){
+  const list = countedAttempts();
+  if(!list.length) return '<p class="muted">Aún no hay intentos que cuenten.</p>';
+  const W=700,H=250,L=40,Rr=112,T=16,B=48, n=list.length;
+  const x=i=> n===1 ? (L+W-Rr)/2 : L + i*(W-L-Rr)/(n-1), y=v=> T + (100-v)*(H-T-B)/100;
+  const avg = Math.round(list.reduce((a,b)=>a+b.pct,0)/n);
+  let run=0; const runAvg = list.map((a,i)=>{ run+=a.pct; return run/(i+1); });
+  let g = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución de las notas"><style>.ax{stroke:var(--line)} .tk{fill:var(--muted);font:400 11px Barlow,sans-serif} .pl{fill:none;stroke:var(--blue);stroke-width:2} .ra{fill:none;stroke:var(--magenta);stroke-width:1.5;stroke-dasharray:5 4} .av{fill:var(--magenta);font:700 15px "Barlow Condensed",sans-serif}</style>`;
+  [0,25,50,75,100].forEach(v=>{ g+=`<line class="ax" x1="${L}" x2="${W-Rr}" y1="${y(v)}" y2="${y(v)}" ${v===75?'style="stroke:var(--ok)" stroke-dasharray="2 3"':''}/><text class="tk" x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}%</text>`; });
+  g += `<text class="tk" x="${L+4}" y="${y(75)-5}" style="fill:var(--ok)">apto 75 %</text>`;
+  if(n>1){ g += `<polyline class="pl" points="${list.map((a,i)=>`${x(i)},${y(a.pct)}`).join(" ")}"/>`;
+           g += `<polyline class="ra" points="${runAvg.map((v,i)=>`${x(i)},${y(v)}`).join(" ")}"/>`; }
+  list.forEach((a,i)=>{ const tr=a.mode==="trial"; g+=`<circle cx="${x(i)}" cy="${y(a.pct)}" r="${tr?6:5}" fill="${tr?"var(--warn)":"var(--blue)"}"><title>${fmtDate(a.date)} · ${tr?(a.source==="campus"?"trial":"simulacro del trial"):"test"} · ${a.score}/${a.total} (${a.pct} %)</title></circle>`;
+    if(n<=12 || i%2===0 || i===n-1) g+=`<text class="tk" x="${x(i)}" y="${H-B+16}" text-anchor="middle">${new Date(a.date).toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit"})}</text>`; });
+  g += `<line x1="${W-Rr+6}" x2="${W-Rr+14}" y1="${y(avg)}" y2="${y(avg)}" stroke="var(--magenta)" stroke-width="2"/><text class="av" x="${W-Rr+18}" y="${y(avg)+5}">media ${avg} %</text>`;
+  g += `<text class="tk" x="${W-Rr+18}" y="${y(avg)+20}">${n} test${n>1?'s':''} en total</text>`;
+  g += `<text class="tk" x="${L}" y="${H-6}">● test</text><text class="tk" x="${L+52}" y="${H-6}" style="fill:var(--warn)">● trial y simulacros del trial</text><text class="tk" x="${L+262}" y="${H-6}" style="fill:var(--magenta)">- - media acumulada</text></svg>`;
+  return g;
+}
+
+function mClass(m){ return m==null?"":m<.6?"lo":m<.8?"mid":"hi"; }
+// ---------- mi valoración por LO ----------
+function assess(l){
+  if(!l || l.n<5) return {k:"nd", t:"Pocos datos", d:`${l?l.n:0} respuestas: necesito al menos 5 para valorarte`};
+  const tr = l.prev==null ? 0 : l.m-l.prev;
+  if(l.m>=0.85 && l.n>=10 && tr>-0.05) return {k:"ok", t:"Preparado", d:"Aciertas con regularidad; mantenlo con repasos espaciados"};
+  if(l.m>=0.75) return {k:"mid", t:tr<-0.05?"Bajando":"Casi listo", d:tr<-0.05?"Sigue por encima del aprobado, pero vas a peor: repasa":"Por encima del 75 %, falta consolidar"};
+  return {k:"lo", t:"Reforzar", d:tr>0.05?"Por debajo del 75 %, aunque mejorando":"Por debajo del 75 %: repasa los apuntes y el visual"};
+}
+function weakLOs(st){
+  return SYLLABUS.filter(s=>s[3]==="done").map(s=>{
+    const l = st.lo[s[1]];
+    const score = l ? (l.m*Math.min(l.n,10) + 0.5*2)/(Math.min(l.n,10)+2) : 0.5;
+    return {lo:s[1], title:s[2], score, l};
+  }).sort((a,b)=>a.score-b.score);
+}
+
+// ---------- conceptos más fallados (agrupados por el concepto de cada pregunta) ----------
+function conceptOf(q){ const c = CONCEPT[q[3]]; return c ? [c[0], c[1]] : [loLabel(q[1]), null]; }
+function topConcepts(){
+  const agg = {};
+  countedAttempts().forEach(at=>(at.items||[]).forEach(it=>{
+    const q = byId(it.q); if(!q || !isGiven(q)) return;
+    const c = conceptOf(q), k=c[0];
+    const a = agg[k] || (agg[k]={name:k, vis:c[1], lo:new Set(), fails:0, n:0, last:[]});
+    a.n++; if(!it.ok) a.fails++; a.last.push(it.ok); a.lo.add(q[1]);
+  }));
+  return Object.values(agg).filter(a=>a.fails>0).map(a=>({...a, recent: a.last.length>=3 && a.last.slice(-3).every(Boolean)}))
+    .sort((a,b)=> (a.recent-b.recent) || (b.fails-a.fails) || (b.fails/b.n - a.fails/a.n));
+}
+
+// ---------- mapa ----------
+function trendHTML(l){ return l && l.prev!=null ? (l.m-l.prev>0.05?'<span class="pass">▲ mejora</span>':l.m-l.prev<-0.05?'<span class="fail">▼ baja</span>':'<span class="muted">= estable</span>') : '<span class="muted" title="Hacen falta más de 14 respuestas para comparar">–</span>'; }
+function goVisual(id){
+  showTab("notes"); const el=document.getElementById(id); if(!el) return;
+  let d=el.closest("details"); while(d){ d.open=true; d=d.parentElement.closest("details"); }
+  setTimeout(()=>el.scrollIntoView({behavior:prefersReduced?"auto":"smooth",block:"center"}),60);
+}
+function renderMap(){
+  const st = stats();
+  const weak = weakLOs(st).filter(w=>!w.l || w.l.m<0.85 || w.l.n<10).slice(0,3);
+  let html = weak.map(w=>{ const a=assess(w.l); return `<li><b>${esc(loLabel(w.lo))}</b> <span class="pill ${a.k}">${a.t}</span> ${trendHTML(w.l)}<br><span class="muted">${a.d}</span></li>`; }).join("");
+  const fa = (state.focus||[]).filter(id=>byId(id) && focusActive(id,st)).length;
+  if(fa) html += `<li>${fa} preguntas de refuerzo (los cálculos de clase y de los deberes, y la fórmula de reposicionar que quedó a medias en los apuntes). Salen hasta que las aciertes dos veces seguidas.</li>`;
+  $("#weakList").innerHTML = html || '<li>Todo lo dado está en verde. Mantén un adaptativo cada pocos días.</li>';
+  $("#evoMap").innerHTML = evoChart();
+  const tc = topConcepts().slice(0,10);
+  const maxF = Math.max(1,...tc.map(c=>c.fails));
+  $("#failList").innerHTML = tc.length ? tc.map(c=>`<div class="concept ${c.recent?'fixed':''}">
+      <div class="crow"><b>${esc(c.name)}</b><span>${c.fails} fallo${c.fails>1?'s':''} de ${c.n}${c.recent?' · <span class="pass">superado: últimas 3 bien</span>':''}</span></div>
+      <div class="bar"><i style="width:${Math.round(c.fails/maxF*100)}%;background:${c.recent?'var(--ok)':'var(--bad)'}"></i></div>
+      <div class="muted cmeta">Syllabus: ${[...c.lo].map(l=>esc(loLabel(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-vis="${c.vis}">ver el visual</button>`:''}</div>
+    </div>`).join("") : '<p class="muted">Aún no hay fallos en temario dado: el trial lo hiciste 5 de 5. En cuanto hagas tests, aquí aparecen tus fallos agrupados por concepto.</p>';
+  $("#failList").querySelectorAll("[data-vis]").forEach(b=>b.addEventListener("click",()=>goVisual(b.dataset.vis)));
+  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th>Estado</th><th>Preguntas en el banco</th><th>Dominio</th><th>Tendencia</th><th>Mi valoración</th></tr>`;
+  let cur="";
+  SYLLABUS.forEach(s=>{
+    if(s[0]!==cur){ cur=s[0]; rows += `<tr><th colspan="7" style="padding-top:14px">${cur}</th></tr>`; }
+    const nq = BANK.filter(q=>q[1]===s[1] && q[2]!=="t" && q[2]!=="o" && q[2]!=="k").length;
+    const nk = BANK.filter(q=>q[1]===s[1] && q[2]==="k").length;
+    const ntq = BANK.filter(q=>q[1]===s[1] && q[2]==="t").length;
+    const l = st.lo[s[1]];
+    const pill = s[3]==="done"?'<span class="pill done">dado</span>':'<span class="pill">pendiente</span>';
+    const a = s[3]==="done" ? assess(l) : null;
+    rows += `<tr><td class="lonum">${s[1]}</td><td>${esc(s[2])}</td><td>${pill}</td><td>${nq||"–"}${ntq?` <span class="muted">+${ntq} trial</span>`:""}${nk?` <span class="muted">+${nk} tipos de cálculo</span>`:""}</td><td>${l?`<span class="m ${mClass(l.m)}">${Math.round(l.m*100)} %</span> <span class="muted">(${l.n})</span>`:'<span class="muted">–</span>'}</td><td>${trendHTML(l)}</td><td>${a?`<span class="pill ${a.k}" title="${esc(a.d)}">${a.t}</span>`:'<span class="muted">se valora al darlo</span>'}</td></tr>`;
+  });
+  $("#mapTable").innerHTML = rows;
+}
+$("#goAdaptive").addEventListener("click",()=>{ showTab("test"); document.querySelector('input[value=adaptive]').checked=true; });
+
+// ---------- generación con Claude ----------
+let sampleApi = null;
+(async()=>{ try{ sampleApi = (window.__hub && window.__hub.use) ? await window.__hub.use("sample") : null; }catch(e){} if(sampleApi) $("#genCard").hidden=false; })();
+$("#genBtn").addEventListener("click", async ()=>{
+  const btn=$("#genBtn"), msg=$("#genMsg"); btn.disabled=true; msg.textContent="Redactando preguntas…";
+  const st = stats();
+  const weak = weakLOs(st).slice(0,2).map(w=>w.lo);
+  const src = weak.map(l=>`${l}:\n`+(LO_REFS[l]||[]).map(r=>"- "+REFS[r]).join("\n")).join("\n\n");
+  const existing = BANK.filter(q=>weak.includes(q[1]) && servable(q) && !isGen(q)).map(q=>"- "+q[4]).join("\n");
+  const failed = BANK.filter(q=>(st.q[q[0]]||{}).last===false && weak.includes(q[1]) && !isGen(q)).map(q=>"- "+q[4]).join("\n") || "(ninguna)";
+  const prompt = `You write EASA PPL 070 Flight Performance and Planning (mass and balance) exam questions, ECQB style, for a student.
+Write exactly 5 NEW multiple-choice questions for these learning objectives: ${weak.join(", ")}.
+STRICT SOURCE RULE: every fact tested must come from the STUDENT NOTES below. Do not test anything that is not stated there. Wrong options must be plausible but clearly wrong according to the notes. Prefer reversed framings, "which is NOT", and concrete cases with numbers (check every calculation twice).
+STUDENT NOTES (Spanish):
+${src}
+
+Do not repeat these existing questions:
+${existing}
+
+The student recently failed these, so test the same concepts from a different angle:
+${failed}
+
+Questions and options in English, exam register. Explanation in Spanish, one sentence, citing the note.
+Respond ONLY with JSON, no markdown: {"questions":[{"lo":"070.x","q":"...","correct":"...","wrong":["...","...","..."],"expl":"..."}]}`;
+  try{
+    const out = await sampleApi.json(prompt, {modelTier:"default"});
+    const list = (out && out.questions || []).filter(x=>x && weak.includes(x.lo) && x.q && x.correct && Array.isArray(x.wrong) && x.wrong.length===3);
+    if(!list.length){ msg.textContent="No han salido preguntas válidas. Prueba otra vez más tarde."; btn.disabled=false; return; }
+    const stamp = Date.now().toString(36);
+    list.forEach((x,i)=> state.generated.push({id:`g${stamp}${i}`, lo:x.lo, q:String(x.q), options:[String(x.correct),...x.wrong.map(String)], expl:String(x.expl||""), date:new Date().toISOString()}));
+    buildBank(); renderMap();
+    msg.textContent = `${list.length} preguntas añadidas a ${weak.map(loLabel).join(" y ")}. Guardando…`;
+    await saveState(msg);
+  }catch(e){
+    const c = e && e.code;
+    if(c==="not_granted"){ $("#genCard").hidden=true; }
+    else msg.textContent = c==="rate_limited" ? "Demasiadas peticiones seguidas; espera un poco." : "No se pudieron generar (" + (c||"error") + ").";
+  }
+  btn.disabled=false;
+});
+
+// ---------- test ----------
+function renderSetup(){
+  const st = stats();
+  const nw = BANK.filter(q=>servable(q) && isGiven(q) && ((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
+  $("#wrongCount").textContent = nw ? `${nw} preguntas de temario dado: las que fallaste y las variantes de lo que fallaste en el trial.` : "Sin fallos pendientes de temario dado.";
+  const nk = BANK.filter(isGen).length;
+  $("#allCount").textContent = `${BANK.filter(q=>servable(q) && isGiven(q)).length} preguntas de temario dado (${nk} de ellas son cálculos con números nuevos).`;
+  const groups = new Set(BANK.filter(q=>q[2]==="t").map(q=>baseOf(q[0])));
+  const nt = BANK.filter(q=>q[2]==="t").length;
+  $("#trialCount").textContent = `Una variante al azar de cada una de las ${groups.size} preguntas del trial. ${nt} variantes en el banco (las del cálculo del trial, con números nuevos cada vez).`;
+  const los = [...new Set(BANK.filter(q=>servable(q) && isGiven(q)).map(q=>q[1]))].sort();
+  const selected = $("#loSel").value;
+  $("#loSel").innerHTML = los.map(l=>`<option value="${l}" ${l===selected?'selected':''}>${esc(loLabel(l))}</option>`).join("");
+}
+function instantiate(q){
+  if(isGen(q)){ const g=GEN[q[0]](); return {text:g.text, opts:g.opts, expl:g.expl, steps:g.steps, gen:true}; }
+  return {text:q[4], opts:q[5], expl:q[6], steps:null, gen:false};
+}
+let current = [], curMode = "adaptive", timer = null, deadline = 0, startedAt = 0, finishArmed = false;
+$("#startBtn").addEventListener("click",()=>{
+  curMode = document.querySelector('input[name=mode]:checked').value;
+  const qs = selectQuestions(curMode, $("#incComp").checked, $("#loSel").value);
+  if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
+  $("#startMsg").textContent = ""; $("#finishMsg").textContent = ""; finishArmed=false;
+  const st = stats();
+  current = qs.map(q=>{ const ins=instantiate(q); return {id:q[0],lo:q[1],src:q[2],ref:q[3],text:ins.text,expl:ins.expl,steps:ins.steps,gen:ins.gen,
+    opts:shuffle(ins.opts.map((t,i)=>({t,ok:i===0}))),ans:null,
+    tag: (st.q[q[0]]||{}).last===false ? "fallada antes" : pendingFromBase(q,st) ? "fallaste su original" : focusActive(q[0],st) ? "refuerzo" : !st.q[q[0]] ? "nueva" : ""}; });
+  $("#qlist").innerHTML = current.map((q,i)=>`
+    <div class="q ${q.tag&&q.tag!=="nueva"?'focus':''}" id="q${i}">
+      <div class="qhead"><span>${i+1} / ${current.length} · ${esc(loLabel(q.lo))}</span><span>${q.tag&&q.tag!=="nueva"?`<span class="tag">${q.tag}</span> `:''}${q.src==="c"?'<span class="tag">complemento</span> ':''}${q.src==="g"?'<span class="tag g">generada</span> ':''}${q.src==="t"?'<span class="tag tr">TRIAL</span> ':''}${q.src==="p"?'<span class="tag dp">PDF</span> ':''}${q.gen?'<span class="tag k">cálculo</span> ':''}${PROFE.has(q.id)?'<span class="tag pf">★ PROFE</span> ':''}</span></div>
+      <div class="qtext">${esc(q.text)}</div>
+      ${q.opts.map((o,j)=>`<label class="choice"><input type="radio" name="r${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${esc(o.t)}</span></label>`).join("")}
+    </div>`).join("");
+  $("#qlist").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{ current[+e.target.name.slice(1)].ans = +e.target.value; finishArmed=false; $("#finishMsg").textContent=""; updProg(); }));
+  $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBtn").hidden=false; $("#finishBtn").disabled=false;
+  startedAt = Date.now(); clearInterval(timer); timer=null;
+  if($("#examClock").checked){ deadline = startedAt + current.length*120000; timer = setInterval(()=>{ updProg(); if(Date.now()>=deadline){ clearInterval(timer); timer=null; finish(true); } }, 1000); }
+  updProg(); window.scrollTo({top:0});
+});
+function updProg(){
+  const names={adaptive:"Adaptativo",trial:"Simulacro del trial",wrong:"Solo mis fallos",lo:"Un LO",all:"Banco completo",calc:"Solo cálculos"};
+  let t=""; if(timer){ const s=Math.max(0,Math.round((deadline-Date.now())/1000)); t=` · <span class="timer ${s<300?'low':''}">⏱ ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}</span>`; }
+  $("#progress").innerHTML = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${names[curMode]}${t}`;
+}
+function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
+$("#finishBtn").addEventListener("click",()=>{
+  const un = current.filter(q=>q.ans===null).length;
+  if(un && !finishArmed){ finishArmed=true; $("#finishMsg").textContent = `Te quedan ${un} sin responder. Pulsa «Corregir» otra vez para corregir igualmente.`; return; }
+  finish(false);
+});
+async function finish(timeout){
+  clearInterval(timer); timer=null; $("#finishMsg").textContent="";
+  $("#finishBtn").disabled = true;
+  const byLO = {}; let score=0; const items=[];
+  current.forEach((q,i)=>{
+    const ok = q.ans!==null && q.opts[q.ans].ok; if(ok) score++;
+    const it = {q:q.id, ok, a: q.ans===null?null:q.opts[q.ans].t};
+    if(q.gen){ it.t=q.text; it.c=q.opts.find(o=>o.ok).t; }
+    items.push(it);
+    (byLO[q.lo]=byLO[q.lo]||{ok:0,total:0}).total++; if(ok) byLO[q.lo].ok++;
+    const box = $("#q"+i);
+    box.querySelectorAll(".choice").forEach((c,j)=>{ c.querySelector("input").disabled = true; if(q.opts[j].ok) c.classList.add("right"); else if(j===q.ans) c.classList.add("wrong"); });
+    box.insertAdjacentHTML("beforeend", `<div class="expl"><b class="${ok?'pass':'fail'}">${ok?'Correcta':(q.ans===null?'Sin responder':'Fallada')}</b> · <span class="es">${esc(q.expl)}</span>${q.steps&&!ok?`<ol class="stepsol">${q.steps.map(s=>`<li>${s}</li>`).join("")}</ol>`:''}${ok?'':`<div class="ref"><b>Repasa:</b> ${esc(refText(q))}</div>`}</div>`);
+  });
+  const pct = Math.round(score/current.length*100), pass = pct>=75, secs=Math.round((Date.now()-startedAt)/1000);
+  state.attempts.push({id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:curMode, score, total:current.length, pct, secs, byLO, items});
+  const st = stats(), nextWeak = weakLOs(st).slice(0,2), los = Object.keys(byLO).sort();
+  $("#result").innerHTML = `
+    <div class="card">
+      <div class="score ${pass?'pass':'fail'}">${score}/${current.length}</div>
+      <div><b>${pct} % · ${pass?'APTO':'NO APTO'}</b> <span class="muted">(mínimo 75 %) · ${Math.floor(secs/60)} min ${secs%60} s${timeout?' · se acabó el tiempo':''}</span></div>
+      <div style="margin-top:12px">${los.map(l=>{const p=Math.round(byLO[l].ok/byLO[l].total*100);
+        return `<div class="lorow"><div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(loLabel(l))}</span><span>${byLO[l].ok}/${byLO[l].total} · ${p} %</span></div><div class="bar"><i style="width:${p}%"></i></div></div>`}).join("")}</div>
+      <p style="margin:12px 0 4px"><b>Siguiente foco:</b> ${nextWeak.map(w=>`${esc(loLabel(w.lo))} (${Math.round(w.score*100)} %)`).join(" y ")}</p>
+      <p id="saveMsg" class="muted" style="font-size:14px">Guardando…</p>
+      <div class="row"><button class="btn" id="againBtn">Otro test adaptativo</button><button class="btn sec" id="mapBtn">Ver mapa</button></div>
+    </div>`;
+  $("#result").hidden = false; $("#finishBtn").hidden = true;
+  $("#againBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; document.querySelector('input[value=adaptive]').checked=true; $("#startBtn").click(); });
+  $("#mapBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; showTab("map"); });
+  window.scrollTo({top:0});
+  await saveState($("#saveMsg"));
+}
+
+// ---------- historial ----------
+function loSummary(at){
+  let b = at.byLO;
+  if(!b){ b={}; (at.items||[]).forEach(it=>{ const q=byId(it.q); if(!q) return; (b[q[1]]=b[q[1]]||{ok:0,total:0}).total++; if(it.ok) b[q[1]].ok++; }); }
+  return Object.keys(b).sort().map(l=>`${esc(loLabel(l))} ${b[l].ok}/${b[l].total}`).join(" · ");
+}
+function renderHist(){
+  const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const modeName = {adaptive:"Adaptativo",wrong:"Fallos",lo:"Por LO",all:"Completo",trial:"Trial",calc:"Cálculos"};
+  $("#histEvo").innerHTML = evoChart();
+  $("#histBody").innerHTML = list.length ? `<div class="card"><div class="scroll"><table class="hist"><tr><th>Fecha</th><th>Tipo</th><th>Nota</th><th></th><th></th></tr>${
+    list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${r.source==="campus"?"Trial":(modeName[r.mode]||r.mode)}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Ver detalle</button>`:''}${r.mode==="trial"?` · <button class="linkbtn" data-ig="${r.id}">${ig?'volver a contar':'lo hice al azar: no contar'}</button>`:''}</td></tr>
+      <tr style="${ig?'opacity:.5':''}"><td colspan="5" class="los">${loSummary(r)}</td></tr>`; }).join("")
+  }</table></div></div>` : `<div class="card muted">Aún no hay intentos.</div>`;
+  $("#histBody").querySelectorAll("[data-id]").forEach(b=>b.addEventListener("click",()=>showDetail(b.dataset.id)));
+  $("#histBody").querySelectorAll("[data-ig]").forEach(b=>b.addEventListener("click",async ()=>{
+    const id=b.dataset.ig; state.ignore = state.ignore||{}; state.ignore[id] = !isIgnored(state.attempts.find(a=>a.id===id));
+    renderHist(); const m=document.createElement("p"); m.className="muted"; m.style.fontSize="14px"; $("#histBody").prepend(m); await saveState(m);
+  }));
+  $("#histDetail").innerHTML = "";
+}
+function showDetail(id){
+  const at = state.attempts.find(a=>a.id===id);
+  const wrong = (at.items||[]).filter(i=>!i.ok);
+  $("#histDetail").innerHTML = `<h2>Detalle del ${fmtDate(at.date)}</h2><p class="muted">${loSummary(at)}</p>${at.note?`<p class="muted">${esc(at.note)}</p>`:""}` + (wrong.length ? wrong.map(w=>{
+    const q = byId(w.q); if(!q) return "";
+    const text = w.t || q[4], right = w.c || q[5][0];
+    return `<div class="q"><div class="qhead"><span>${esc(loLabel(q[1]))}</span><span>${q[2]==="t"||q[2]==="o"?'<span class="tag tr">TRIAL</span>':''}${q[2]==="o"?' <span class="tag">pregunta original</span>':''}${isGen(q)?' <span class="tag k">cálculo</span>':''}</span></div><div class="qtext">${esc(text)}</div>
+      ${w.a!==undefined?`<div class="choice wrong">${w.a===null?'Sin responder':esc(w.a)}</div>`:''}
+      <div class="choice right">${esc(right)}</div>
+      <div class="expl">${q[6]?`<span class="es">${esc(q[6])}</span>`:''}<div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
+  }).join("") : `<p class="muted">Sin fallos en este intento.</p>`);
+  $("#histDetail").scrollIntoView({behavior:prefersReduced?"auto":"smooth"});
+}
+
+// ---------- arranque ----------
+buildBank();
+showTab((location.hash||"").slice(1)||"notes");
+
+// ---------- códigos EASA: el historial se recalcula al cargar desde sus propias preguntas ----------
+const __F0MAP = {"070.1":"031.02.01.01","070.2":"031.05.01.01","070.3":"032.02.03","070.4":"033.01.01","070.5":"033.04.02"};
+function __f0RemapLO(){ try{
+  const find = id => (typeof BANK!=="undefined" && Array.isArray(BANK)) ? BANK.find(q=>q[0]===id) : null;
+  (state.attempts||[]).forEach(a=>{
+    if(a.lo && __F0MAP[a.lo]) a.lo = __F0MAP[a.lo];
+    if(!a.byLO) return;
+    let nb = {}, ok = Array.isArray(a.items) && a.items.length>0 && !a.partial;
+    if(ok) a.items.forEach(it=>{ const q=find(it.q); if(!q){ ok=false; return; } const k=q[1]; (nb[k]=nb[k]||{ok:0,total:0}).total++; if(it.ok) nb[k].ok++; });
+    if(!ok){ nb = {}; Object.entries(a.byLO).forEach(([k,v])=>{ const n=__F0MAP[k]||k; const t=(nb[n]=nb[n]||{ok:0,total:0}); t.ok+=(v&&v.ok)||0; t.total+=(v&&v.total)||0; }); }
+    a.byLO = nb;
+  });
+  if(state.selfConf && typeof state.selfConf==="object"){ const sc={}; Object.entries(state.selfConf).forEach(([k,v])=>{ sc[__F0MAP[k]||k]=v; }); state.selfConf=sc; }
+}catch(e){} }
+loadState().then(()=>{ __f0RemapLO(); renderSetup(); const t=document.querySelector('nav [aria-selected="true"]').dataset.tab; if(t==="map") renderMap(); if(t==="hist") renderHist(); });
+</script>
+
+<style id="f0-pub">details.lo>summary{cursor:pointer}:root{--magenta:#0E7C86;--accent:#0E7C86;--compbg:#E3F1F1;--f0none:#B9C7D2}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}}:root[data-theme="dark"]{--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}.seg.atpl{background:var(--f0none)!important}mark.f0hit{background:#FFE58A;color:#14304A;border-radius:2px;padding:0 1px}mark.f0hit.first{outline:2px solid #0E7C86;outline-offset:1px}</style>
+<script>/* órdenes de la app: abrir pestaña o modo de test */
+(function(){
+function go(tab,mode,start){
+  try{ var b=document.querySelector('nav [data-tab="'+tab+'"]'); if(b) b.click(); }catch(e){}
+  if(mode){ setTimeout(function(){
+    var q=document.getElementById("quiz"), s=document.getElementById("setup");
+    if(q&&!q.hidden&&s){ q.hidden=true; s.hidden=false; }
+    var r=document.querySelector('input[name=mode][value="'+mode+'"]'); if(r){ r.checked=true; r.dispatchEvent(new Event("change",{bubbles:true})); }
+    if(start&&r){ var sb=document.getElementById("startBtn"); if(sb) setTimeout(function(){ sb.click(); },40); }
+  },60); }
+  try{ window.scrollTo({top:0}); }catch(e){}
+}
+function fold(c){ return c.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase(); }
+function seek(out,t,p){ while((p=out.indexOf(t,p))>-1){ if(p===0||!/[a-z0-9ñç]/.test(out[p-1])) return p; p++; } return -1; }
+function find(f){
+  var root=document.getElementById("notes")||document.body, ds=root.querySelectorAll("details"), d=ds[f.i]; if(!d) return;
+  [].slice.call(document.querySelectorAll("mark.f0hit")).forEach(function(m){ var p=m.parentNode; p.replaceChild(document.createTextNode(m.textContent),m); p.normalize(); });
+  for(var x=d; x; x=x.parentElement){ if(x.tagName==="DETAILS") x.open=true; }
+  var ts=(f.terms||[]).filter(function(t){ return t&&t.length>1; }), first=null;
+  if(ts.length){
+    var w=document.createTreeWalker(d, NodeFilter.SHOW_TEXT, {acceptNode:function(n){ var p=n.parentElement; return (!p||/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName)||p.closest("svg"))?2:1; }}), nodes=[], n;
+    while((n=w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var str=node.nodeValue, out="", map=[], i, k;
+      for(i=0;i<str.length;i++){ var c=fold(str[i]); for(k=0;k<c.length;k++){ out+=c[k]; map.push(i); } } map.push(str.length);
+      var ms=[]; ts.forEach(function(t){ var p=0; while((p=seek(out,t,p))>-1){ ms.push([map[p],map[p+t.length]]); p+=t.length; } });
+      if(!ms.length) return; ms.sort(function(a,b){ return a[0]-b[0]; });
+      var frag=document.createDocumentFragment(), last=0;
+      ms.forEach(function(m){ if(m[0]<last) return; frag.appendChild(document.createTextNode(str.slice(last,m[0]))); var mk=document.createElement("mark"); mk.className="f0hit"; mk.textContent=str.slice(m[0],m[1]); frag.appendChild(mk); if(!first) first=mk; last=m[1]; });
+      frag.appendChild(document.createTextNode(str.slice(last))); node.parentNode.replaceChild(frag,node);
+    });
+  }
+  if(first) first.classList.add("first");
+  (first||d).scrollIntoView({block:first?"center":"start"});
+}
+addEventListener("message",function(e){ var d=e.data; if(d&&d.t==="f0-cmd"){ go(d.tab,d.mode,d.start); if(d.find) setTimeout(function(){ find(d.find); },150); } });
+function fromHash(){ var m=/(?:^|[#&])go=([a-z]+)(?:&mode=([a-z0-9]+))?/.exec(location.hash); if(m) go(m[1],m[2]); }
+addEventListener("load",function(){ setTimeout(fromHash,50); });
+try{ if(window.parent!==window) window.parent.postMessage({t:"f0-ready",k:"031"},"*"); }catch(e){}
+})();</script></body></html>
