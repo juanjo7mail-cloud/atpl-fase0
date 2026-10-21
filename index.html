@@ -9,7 +9,7 @@
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7d3fd663388c40489e21c01c73fe2505"}'></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f1d0070793724820ae63bfa8c465ba85"}'></script>
 </head>
 <body>
 
@@ -136,6 +136,14 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .okline input{margin-top:3px;width:16px;height:16px;flex:none}
 .sheet a{color:var(--accent)}
 #login{background:var(--bg)}
+/* etiqueta «Remove before flight» */
+.rbf{align-self:flex-start;display:flex;align-items:center;gap:12px;background:#C8102E;color:#fff;border-radius:7px;padding:10px 14px 10px 10px;max-width:100%;outline:2px dashed rgba(255,255,255,.6);outline-offset:-6px;box-shadow:0 3px 0 #8E0B20,0 10px 22px rgba(10,20,30,.22);transform-origin:14px 50%;animation:rbfswing 2.4s ease-in-out infinite alternate;margin:2px 0 8px}
+.rbf-ring{width:24px;height:24px;border-radius:50%;flex:none;background:radial-gradient(circle,var(--paper) 0 5px,#C9D1D8 6px 9px,#7C8791 10px 12px)}
+.rbf-txt{font:700 clamp(15px,4.3vw,23px)/1 var(--display);letter-spacing:.09em;white-space:nowrap}
+@keyframes rbfswing{from{transform:rotate(-5deg)}to{transform:rotate(2deg)}}
+#lgForm.pulled .rbf{animation:rbfpull .5s ease-in forwards}
+@keyframes rbfpull{to{transform:translate(160%,-30px) rotate(22deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.rbf{animation:none;transform:rotate(-3deg)}#lgForm.pulled .rbf{animation:none}}
 /* ---- estadísticas (solo admin) ---- */
 .st-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:6px 0 18px}
 .st-k{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
@@ -226,13 +234,14 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 
 <div class="sheet" id="login" hidden role="dialog" aria-modal="true" aria-labelledby="lgT">
   <form class="box" id="lgForm" autocomplete="on">
-    <h2 id="lgT">ATPL Fase 0</h2>
-    <p class="muted">Apuntes y tests de Fase 0. Entra o crea tu cuenta: tu progreso se guarda y lo ves en cualquier móvil u ordenador.</p>
+    <div class="rbf" aria-hidden="true"><span class="rbf-ring"></span><span class="rbf-txt">REMOVE BEFORE FLIGHT</span></div>
+    <h2 id="lgT">Último check antes de despegar</h2>
+    <p class="muted">Entra o crea tu cuenta y quita la etiqueta. Tu progreso viaja contigo en cualquier móvil u ordenador.</p>
     <label class="fld" for="lgEmail">Email<input id="lgEmail" type="email" autocomplete="email" required></label>
     <label class="fld" for="lgPass">Contraseña<input id="lgPass" type="password" autocomplete="current-password" minlength="6" required></label>
     <label class="okline" for="lgOk"><input type="checkbox" id="lgOk"><span>Acepto la <a href="privacidad.html" target="_blank" rel="noopener">política de privacidad</a>: se guardan mi email, mi progreso y cuándo y cuánto uso la app. (Solo para crear cuenta.)</span></label>
     <div class="row">
-      <button class="btn" type="submit" id="lgIn">Entrar</button>
+      <button class="btn" type="submit" id="lgIn">Entrar y despegar</button>
       <button class="btn sec" type="button" id="lgUp">Crear cuenta</button>
     </div>
     <p class="muted">¿Olvidaste la contraseña? Escribe al contacto de la política de privacidad y te la restablecemos.</p>
@@ -588,7 +597,8 @@ document.addEventListener("visibilitychange",()=>{ if(!sbUser) return; if(docume
 async function signedIn(user, consent){
   sbUser=user; remote=webRemote();
   isAdmin = String(user.email||"").toLowerCase()===ADMIN_EMAIL;
-  $("#login").hidden=true;
+  if(!$("#login").hidden){ $("#lgForm").classList.add("pulled"); await new Promise(r=>setTimeout(r, matchMedia("(prefers-reduced-motion: reduce)").matches?0:480)); }
+  $("#login").hidden=true; $("#lgForm").classList.remove("pulled");
   // lo guardado en este navegador solo se une si es de esta misma cuenta
   try{ const prev=localStorage.getItem("f0:uid"); if(prev && prev!==user.id){ SUBJ.forEach(x=>localStorage.removeItem("f0:"+x.k)); loadAllLocal(); } localStorage.setItem("f0:uid", user.id); }catch(e){}
   try{ await loadAllCloud(); }catch(e){ console.warn(e); }
