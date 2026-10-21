@@ -630,7 +630,7 @@ async function signOut(){
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
-const MODE_ES = {adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo"};
+const MODE_ES = {adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas del profesor", notes:"Desde los apuntes"};
 const fmtD = d => d ? new Date(d).toLocaleDateString("es-ES",{day:"numeric",month:"short"}) : "–";
 const fmtT = s => { s=s|0; const h=Math.floor(s/3600), m=Math.round((s%3600)/60); return h ? `${h} h ${m} min` : `${m} min`; };
 function bars(rows){ return rows.map(r=>`<div class="hbar"><span>${r.label}</span><span class="tr"><i class="${r.low?"low":""}" style="width:${Math.max(2,r.w)}%"></i></span><b>${r.val}</b></div>`).join("") || `<p class="muted">Sin datos todavía.</p>`; }
@@ -653,7 +653,7 @@ async function renderStats(){
     at.forEach(a=>{ u.tests++; u.sum+=a.pct; if(!u.last||a.date>u.last) u.last=a.date; s.tests++; s.sum+=a.pct; s.users.add(r.user_id); if(a.pct>=75) s.pass++; const m=MODE_ES[a.mode]||a.mode||"Otro"; modes[m]=(modes[m]||0)+1; });
   });
   const users=Object.values(per), tests=users.reduce((a,u)=>a+u.tests,0), sum=users.reduce((a,u)=>a+u.sum,0);
-  const kp=[[users.length,"usuarios"],[users.filter(u=>u.last_seen&&now-new Date(u.last_seen)<wk).length,"activos 7 días"],[users.reduce((a,u)=>a+(u.visits||0),0),"visitas"],[fmtT(users.reduce((a,u)=>a+(u.seconds||0),0)),"tiempo de uso"],[tests,"tests hechos"],[tests?Math.round(sum/tests)+" %":"–","nota media"]];
+  const kp=[[users.length,"usuarios"],[users.filter(u=>u.last_seen&&now-new Date(u.last_seen)<wk).length,"activos 7 días"],[users.reduce((a,u)=>a+(u.visits||0),0),"entradas con cuenta"],[fmtT(users.reduce((a,u)=>a+(u.seconds||0),0)),"tiempo de uso"],[tests,"tests hechos"],[tests?Math.round(sum/tests)+" %":"–","nota media"]];
   const maxT=Math.max(1,...Object.values(subj).map(s=>s.tests));
   const subjRows=SUBJ.map(s=>{ const x=subj[s.k], avg=x.tests?Math.round(x.sum/x.tests):null; return {label:`<b>${s.code}</b> ${esc(s.short)}`, w:avg||0, low:avg!=null&&avg<75, val:avg==null?"–":avg+" %", tests:x.tests, users:x.users.size, pass:x.tests?Math.round(100*x.pass/x.tests):null}; });
   const modeRows=Object.entries(modes).sort((a,b)=>b[1]-a[1]); const maxM=Math.max(1,...modeRows.map(m=>m[1]));
