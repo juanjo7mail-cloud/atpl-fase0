@@ -634,39 +634,76 @@ const MODE_ES = {adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senas
 const fmtD = d => d ? new Date(d).toLocaleDateString("es-ES",{day:"numeric",month:"short"}) : "–";
 const fmtT = s => { s=s|0; const h=Math.floor(s/3600), m=Math.round((s%3600)/60); return h ? `${h} h ${m} min` : `${m} min`; };
 function bars(rows){ return rows.map(r=>`<div class="hbar"><span>${r.label}</span><span class="tr"><i class="${r.low?"low":""}" style="width:${Math.max(2,r.w)}%"></i></span><b>${r.val}</b></div>`).join("") || `<p class="muted">Sin datos todavía.</p>`; }
+let ST=null, stUser="";
+function modeName(m){ return MODE_ES[m]||m||"Otro"; }
+function dayKey(d){ const x=new Date(d); return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"); }
+function dayChart(list){
+  const days=[], now=new Date(); for(let i=29;i>=0;i--){ const d=new Date(now); d.setDate(now.getDate()-i); days.push(dayKey(d)); }
+  const cnt={}; list.forEach(a=>{ const k=dayKey(a.date); cnt[k]=(cnt[k]||0)+1; });
+  const v=days.map(d=>cnt[d]||0), mx=Math.max(1,...v), W=600,H=120,bw=W/30;
+  return `<svg viewBox="0 0 ${W} ${H+18}" style="width:100%;height:auto;display:block" role="img" aria-label="Tests por día, últimos 30 días">`+
+    v.map((n,i)=>`<rect x="${(i*bw+2).toFixed(1)}" y="${(H-(n/mx)*H).toFixed(1)}" width="${(bw-4).toFixed(1)}" height="${((n/mx)*H).toFixed(1)}" rx="2" fill="var(--accent)" opacity="${n?1:.15}"><title>${days[i].slice(5).split("-").reverse().join("/")}: ${n} test${n===1?"":"s"}</title></rect>`).join("")+
+    `<text x="0" y="${H+14}" font-size="11" fill="var(--muted)">${days[0].slice(5).split("-").reverse().join("/")}</text><text x="${W}" y="${H+14}" font-size="11" fill="var(--muted)" text-anchor="end">hoy</text></svg>`;
+}
+function evoChart(list){
+  const pts=list.slice(-30); if(pts.length<2) return `<p class="muted">Hacen falta al menos 2 tests.</p>`;
+  const W=600,H=120,p=6, x=i=>p+i*(W-2*p)/(pts.length-1), y=v=>H-p-(v/100)*(H-2*p);
+  const line=pts.map((a,i)=>`${x(i).toFixed(1)},${y(a.pct).toFixed(1)}`).join(" ");
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="Evolución de la nota"><line x1="0" x2="${W}" y1="${y(75)}" y2="${y(75)}" stroke="var(--line)" stroke-dasharray="4 4"/><polyline points="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>`+
+    pts.map((a,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(a.pct).toFixed(1)}" r="3.5" fill="${a.pct>=75?"var(--ok)":"var(--warn)"}"><title>${fmtD(a.date)} · ${a.code} · ${a.pct} %</title></circle>`).join("")+`</svg>`;
+}
 async function renderStats(){
   const box=$("#stats"); if(!isAdmin||!sb){ box.innerHTML=""; return; }
-  box.innerHTML=`<div class="dhead"><div><h1>Estadísticas</h1><p>Solo las ves tú. Visitas totales y países, en Cloudflare Web Analytics.</p></div></div><p class="muted">Cargando…</p>`;
-  let profs=[], prog=[];
+  box.innerHTML=`<div class="dhead"><div><h1>Estadísticas</h1><p>Solo las ves tú. Visitas sin cuenta y países, en Cloudflare Web Analytics.</p></div></div><p class="muted" id="stLoad">Cargando…</p>`;
   try{
     const [a,b] = await Promise.all([sb.from("profiles").select("user_id,email,created_at,last_seen,visits,seconds"), sb.from("progress").select("user_id,subject,state")]);
-    if(a.error||b.error) throw (a.error||b.error); profs=a.data||[]; prog=b.data||[];
-  }catch(e){ box.querySelector("p.muted:last-child").textContent="No se han podido cargar: "+(e.message||e); return; }
-  const now=Date.now(), wk=7*864e5;
-  const per={}; profs.forEach(p=>per[p.user_id]={...p, tests:0, sum:0, last:null});
-  const subj={}; SUBJ.forEach(s=>subj[s.k]={tests:0,sum:0,users:new Set(),pass:0});
-  const modes={};
-  prog.forEach(r=>{
-    const at=(r.state&&Array.isArray(r.state.attempts)?r.state.attempts:[]).filter(a=>a&&a.total>0&&typeof a.pct==="number");
-    const u=per[r.user_id] || (per[r.user_id]={user_id:r.user_id,email:"(sin perfil)",visits:0,seconds:0,tests:0,sum:0,last:null});
-    const s=subj[r.subject]; if(!s) return;
-    at.forEach(a=>{ u.tests++; u.sum+=a.pct; if(!u.last||a.date>u.last) u.last=a.date; s.tests++; s.sum+=a.pct; s.users.add(r.user_id); if(a.pct>=75) s.pass++; const m=MODE_ES[a.mode]||a.mode||"Otro"; modes[m]=(modes[m]||0)+1; });
-  });
-  const users=Object.values(per), tests=users.reduce((a,u)=>a+u.tests,0), sum=users.reduce((a,u)=>a+u.sum,0);
-  const kp=[[users.length,"usuarios"],[users.filter(u=>u.last_seen&&now-new Date(u.last_seen)<wk).length,"activos 7 días"],[users.reduce((a,u)=>a+(u.visits||0),0),"entradas con cuenta"],[fmtT(users.reduce((a,u)=>a+(u.seconds||0),0)),"tiempo de uso"],[tests,"tests hechos"],[tests?Math.round(sum/tests)+" %":"–","nota media"]];
-  const maxT=Math.max(1,...Object.values(subj).map(s=>s.tests));
-  const subjRows=SUBJ.map(s=>{ const x=subj[s.k], avg=x.tests?Math.round(x.sum/x.tests):null; return {label:`<b>${s.code}</b> ${esc(s.short)}`, w:avg||0, low:avg!=null&&avg<75, val:avg==null?"–":avg+" %", tests:x.tests, users:x.users.size, pass:x.tests?Math.round(100*x.pass/x.tests):null}; });
-  const modeRows=Object.entries(modes).sort((a,b)=>b[1]-a[1]); const maxM=Math.max(1,...modeRows.map(m=>m[1]));
-  users.sort((a,b)=>String(b.last_seen||"").localeCompare(String(a.last_seen||"")));
-  box.innerHTML=`<div class="dhead"><div><h1>Estadísticas</h1><p>Solo las ves tú. Visitas totales y países, en Cloudflare Web Analytics.</p></div></div>
+    if(a.error||b.error) throw (a.error||b.error);
+    const per={}; (a.data||[]).forEach(p=>per[p.user_id]={...p, at:[]});
+    (b.data||[]).forEach(r=>{
+      const s=SUBJ.find(x=>x.k===r.subject); if(!s) return;
+      const u=per[r.user_id] || (per[r.user_id]={user_id:r.user_id,email:"(sin perfil)",visits:0,seconds:0,at:[]});
+      (r.state&&Array.isArray(r.state.attempts)?r.state.attempts:[]).filter(x=>x&&x.total>0&&typeof x.pct==="number"&&x.date)
+        .forEach(x=>u.at.push({date:x.date, pct:x.pct, mode:x.mode, k:s.k, code:s.code, short:s.short, total:x.total}));
+    });
+    Object.values(per).forEach(u=>u.at.sort((x,y)=>new Date(x.date)-new Date(y.date)));
+    ST=Object.values(per).sort((x,y)=>String(y.last_seen||"").localeCompare(String(x.last_seen||"")));
+  }catch(e){ $("#stLoad").textContent="No se han podido cargar: "+(e.message||e); return; }
+  if(stUser && !ST.some(u=>u.user_id===stUser)) stUser="";
+  drawStats();
+}
+function drawStats(){
+  const box=$("#stats"), now=Date.now(), wk=7*864e5;
+  const users = stUser ? ST.filter(u=>u.user_id===stUser) : ST, one = stUser ? users[0] : null;
+  const all = users.flatMap(u=>u.at), avg = l => l.length ? Math.round(l.reduce((a,x)=>a+x.pct,0)/l.length) : null;
+  const kp = one
+    ? [[fmtD(one.created_at),"alta"],[fmtD(one.last_seen),"última visita"],[one.visits||0,"entradas"],[fmtT(one.seconds),"tiempo de uso"],[all.length,"tests hechos"],[avg(all)==null?"–":avg(all)+" %","nota media"]]
+    : [[ST.length,"usuarios"],[ST.filter(u=>u.last_seen&&now-new Date(u.last_seen)<wk).length,"activos 7 días"],[ST.reduce((a,u)=>a+(u.visits||0),0),"entradas con cuenta"],[fmtT(ST.reduce((a,u)=>a+(u.seconds||0),0)),"tiempo de uso"],[all.length,"tests hechos"],[avg(all)==null?"–":avg(all)+" %","nota media"]];
+  const bySub = SUBJ.map(s=>{ const l=all.filter(x=>x.k===s.k), a=avg(l); return {label:`<b>${s.code}</b> ${esc(s.short)}`, tests:l.length, avg:a, users:new Set(users.filter(u=>u.at.some(x=>x.k===s.k)).map(u=>u.user_id)).size, pass:l.length?Math.round(100*l.filter(x=>x.pct>=75).length/l.length):null, last5:avg(l.slice(-5))}; });
+  const modes={}; all.forEach(x=>{ const m=modeName(x.mode); modes[m]=(modes[m]||0)+1; });
+  const modeRows=Object.entries(modes).sort((a,b)=>b[1]-a[1]), maxM=Math.max(1,...modeRows.map(m=>m[1]));
+  const top=[...ST].sort((a,b)=>b.at.length-a.at.length||(b.seconds||0)-(a.seconds||0)).slice(0,10), maxTop=Math.max(1,...top.map(u=>u.at.length));
+  const opts = `<option value="">Todos los usuarios (${ST.length})</option>` + ST.map(u=>`<option value="${esc(u.user_id)}" ${u.user_id===stUser?"selected":""}>${esc(u.email)} · ${u.at.length} tests</option>`).join("");
+  box.innerHTML = `<div class="dhead"><div><h1>Estadísticas</h1><p>Solo las ves tú. Visitas sin cuenta y países, en Cloudflare Web Analytics.</p></div>
+    <label class="fld" style="margin-left:auto;min-width:min(100%,320px)">Ver<select id="stSel" style="font:15px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:9px 10px">${opts}</select></label></div>
   <div class="st-grid">${kp.map(([v,l])=>`<div class="st-k"><b>${v}</b><span>${l}</span></div>`).join("")}</div>
   <div class="st-two">
-    <div class="st-box"><h2>Nota media por asignatura</h2>${bars(subjRows.filter(r=>r.tests))}${subjRows.some(r=>r.tests)?`<div class="st-scroll" style="margin-top:10px"><table class="st-tbl"><thead><tr><th>Asignatura</th><th class="n">Tests</th><th class="n">Personas</th><th class="n">≥ 75 %</th></tr></thead><tbody>${subjRows.filter(r=>r.tests).map(r=>`<tr><td>${r.label}</td><td class="n">${r.tests}</td><td class="n">${r.users}</td><td class="n">${r.pass} %</td></tr>`).join("")}</tbody></table></div>`:""}</div>
-    <div class="st-box"><h2>Tests más usados</h2>${bars(modeRows.map(([m,n])=>({label:esc(m), w:100*n/maxM, val:n})))}<h2 style="margin-top:14px">Tests por asignatura</h2>${bars(subjRows.map(r=>({label:r.label, w:100*r.tests/maxT, val:r.tests})))}</div>
+    <div class="st-box"><h2>Tests por día · últimos 30 días</h2>${dayChart(all)}</div>
+    ${one ? `<div class="st-box"><h2>Evolución de la nota</h2>${evoChart(all)}</div>`
+          : `<div class="st-box"><h2>Usuarios más activos</h2>${bars(top.filter(u=>u.at.length||u.seconds).map(u=>({label:`<button type="button" class="linkbtn" data-u="${esc(u.user_id)}" style="background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font:inherit;text-align:left">${esc(u.email.split("@")[0])}</button>`, w:100*u.at.length/maxTop, val:u.at.length})))}<p class="muted" style="margin-top:6px">Tests hechos. Pulsa un nombre para ver su detalle.</p></div>`}
   </div>
-  <div class="st-box"><h2>Usuarios</h2><div class="st-scroll"><table class="st-tbl"><thead><tr><th>Email</th><th>Alta</th><th>Última visita</th><th class="n">Visitas</th><th class="n">Tiempo</th><th class="n">Tests</th><th class="n">Media</th></tr></thead><tbody>
-  ${users.map(u=>`<tr><td>${esc(u.email)}${u.email===ADMIN_EMAIL?" <span class=\"muted\">(tú)</span>":""}</td><td>${fmtD(u.created_at)}</td><td>${fmtD(u.last_seen)}</td><td class="n">${u.visits||0}</td><td class="n">${fmtT(u.seconds)}</td><td class="n">${u.tests}</td><td class="n">${u.tests?Math.round(u.sum/u.tests)+" %":"–"}</td></tr>`).join("")}
-  </tbody></table></div></div>`;
+  <div class="st-two">
+    <div class="st-box"><h2>Nota por asignatura</h2>${bars(bySub.filter(r=>r.tests).map(r=>({label:r.label, w:r.avg, low:r.avg<75, val:r.avg+" %"})))}
+      ${bySub.some(r=>r.tests)?`<div class="st-scroll" style="margin-top:10px"><table class="st-tbl"><thead><tr><th>Asignatura</th><th class="n">Tests</th>${one?"":`<th class="n">Personas</th>`}<th class="n">Media</th><th class="n">Últ. 5</th><th class="n">≥ 75 %</th></tr></thead><tbody>${bySub.filter(r=>r.tests).map(r=>`<tr><td>${r.label}</td><td class="n">${r.tests}</td>${one?"":`<td class="n">${r.users}</td>`}<td class="n">${r.avg} %</td><td class="n">${r.last5} %</td><td class="n">${r.pass} %</td></tr>`).join("")}</tbody></table></div>`:""}</div>
+    <div class="st-box"><h2>Tests más usados</h2>${bars(modeRows.map(([m,n])=>({label:esc(m), w:100*n/maxM, val:n})))}</div>
+  </div>
+  ${one ? `<div class="st-box"><h2>Últimos tests</h2><div class="st-scroll"><table class="st-tbl"><thead><tr><th>Fecha</th><th>Asignatura</th><th>Tipo</th><th class="n">Preguntas</th><th class="n">Nota</th></tr></thead><tbody>
+      ${all.slice(-25).reverse().map(x=>`<tr><td>${new Date(x.date).toLocaleString("es-ES",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</td><td><b>${x.code}</b> ${esc(x.short)}</td><td>${esc(modeName(x.mode))}</td><td class="n">${x.total}</td><td class="n" style="color:${x.pct>=75?"var(--ok)":"var(--warn)"};font-weight:600">${x.pct} %</td></tr>`).join("") || `<tr><td colspan="5" class="muted">Aún no ha hecho tests.</td></tr>`}
+      </tbody></table></div></div>`
+  : `<div class="st-box"><h2>Usuarios</h2><div class="st-scroll"><table class="st-tbl"><thead><tr><th>Email</th><th>Alta</th><th>Última visita</th><th class="n">Entradas</th><th class="n">Tiempo</th><th class="n">Tests</th><th class="n">Media</th></tr></thead><tbody>
+      ${ST.map(u=>`<tr><td><button type="button" data-u="${esc(u.user_id)}" style="background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font:inherit">${esc(u.email)}</button>${u.email===ADMIN_EMAIL?` <span class="muted">(tú)</span>`:""}</td><td>${fmtD(u.created_at)}</td><td>${fmtD(u.last_seen)}</td><td class="n">${u.visits||0}</td><td class="n">${fmtT(u.seconds)}</td><td class="n">${u.at.length}</td><td class="n">${avg(u.at)==null?"–":avg(u.at)+" %"}</td></tr>`).join("")}
+      </tbody></table></div></div>`}`;
+  $("#stSel").addEventListener("change", e=>{ stUser=e.target.value; drawStats(); });
+  box.querySelectorAll("button[data-u]").forEach(b=>b.addEventListener("click", ()=>{ stUser=b.dataset.u; drawStats(); $("#main").scrollTop=0; const v=$("#v-stats"); if(v) v.scrollTop=0; }));
 }
 
 const boot = (async ()=>{
