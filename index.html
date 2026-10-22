@@ -281,7 +281,7 @@ const SUBJ = [
   {k:"061", code:"061·062", short:"Navigation", name:"General Navigation · Radio Navigation", extra:[["senasa","Simulacro SENASA"]]},
   {k:"070", code:"070", short:"Operational Procedures", name:"Operational Procedures", extra:[["senasa","Simulacro SENASA"]]},
   {k:"081", code:"081", short:"Principles of Flight", name:"Principles of Flight", extra:[["examen","Simulacro SENASA"]]},
-  {k:"090", code:"090", short:"Communications", name:"Communications", extra:[["calc","Números y fórmulas"]]},
+  {k:"090", code:"090", short:"Communications", name:"Communications", extra:[["senasa","Simulacro SENASA"],["voice","Radio por voz"]]},
 ];
 const DONATE_URL = "";   // enlace de donaciones (PayPal.me, Ko-fi…); vacío = sin botón
 const $ = s => document.querySelector(s);
@@ -356,7 +356,7 @@ async function saveSubj(k,v){ STATE[k]=union(v,STATE[k]); lsSet(k,STATE[k]); awa
 function attemptsOf(k){
   const st=STATE[k]; if(!st||!Array.isArray(st.attempts)) return [];
   const ign=new Set([...(st.ignored||[]), ...Object.keys(st.ignore||{}).filter(x=>st.ignore[x])]);
-  return st.attempts.filter(a=>a&&a.total>0&&typeof a.pct==="number"&&!a.ignore&&!a.partial&&!ign.has(a.id))
+  return st.attempts.filter(a=>a&&a.total>0&&typeof a.pct==="number"&&!a.ignore&&!a.partial&&a.mode!=="voice"&&!ign.has(a.id))
     .sort((a,b)=>new Date(a.date)-new Date(b.date));
 }
 function summary(k){
@@ -398,7 +398,7 @@ function show(v, cmd){
     if(!view){
       view=document.createElement("section"); view.className="view"; view.id="v-"+v; view.setAttribute("role","tabpanel");
       view.innerHTML=`<div class="loading">Cargando…</div>`;
-      const f=document.createElement("iframe"); f.className="subj"; f.title=SUBJ.find(s=>s.k===v).name; f.src="s/"+v+".html";
+      const f=document.createElement("iframe"); f.className="subj"; f.allow="microphone; autoplay"; f.title=SUBJ.find(s=>s.k===v).name; f.src="s/"+v+".html";
       f.addEventListener("load",()=>{ const l=view.querySelector(".loading"); if(l) l.remove(); });
       view.appendChild(f); $("#main").appendChild(view); frames[v]=f;
     }
@@ -630,7 +630,7 @@ async function signOut(){
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
-const MODE_ES = {adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas del profesor", notes:"Desde los apuntes"};
+const MODE_ES = {voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas del profesor", notes:"Desde los apuntes"};
 const fmtD = d => d ? new Date(d).toLocaleDateString("es-ES",{day:"numeric",month:"short"}) : "–";
 const fmtT = s => { s=s|0; const h=Math.floor(s/3600), m=Math.round((s%3600)/60); return h ? `${h} h ${m} min` : `${m} min`; };
 function bars(rows){ return rows.map(r=>`<div class="hbar"><span>${r.label}</span><span class="tr"><i class="${r.low?"low":""}" style="width:${Math.max(2,r.w)}%"></i></span><b>${r.val}</b></div>`).join("") || `<p class="muted">Sin datos todavía.</p>`; }
