@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ATPL Fase 0</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Cpath d=%22M3 18.5 29 9l-6.5 8.5L29 23 3 18.5Z%22 fill=%22%230E7C86%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="alternate icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#14304A">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -136,6 +140,40 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .okline input{margin-top:3px;width:16px;height:16px;flex:none}
 .sheet a{color:var(--accent)}
 #login{background:var(--bg)}
+/* ---- ranking ---- */
+.rk-chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;margin:0 0 4px;scrollbar-width:thin}
+.rk-chips button{flex:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:20px;padding:6px 12px;font:600 13px var(--body);cursor:pointer;white-space:nowrap}
+.rk-chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .rk-chips button[aria-pressed="true"]{color:#0A1724}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rk-chips button[aria-pressed="true"]{color:#0A1724}}
+.rk-tbl tr.me td{background:var(--accentbg)}
+.rk-tbl td.pos{width:38px}
+.pd{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font:700 14px var(--display);background:var(--bg);border:1px solid var(--line)}
+.pd.p1{background:#F2C94C;border-color:#D4A81F;color:#4A3600}.pd.p2{background:#D5DCE3;border-color:#A9B4BF;color:#2B3640}.pd.p3{background:#D9A066;border-color:#B87A3B;color:#3E2410}
+.rk-form{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+.rk-form .fld{flex:1;min-width:180px}
+.rk-how summary{cursor:pointer;font:600 14px var(--body);color:var(--accent)}
+.rk-how p,.rk-how li{font-size:14px;line-height:1.45;margin:6px 0}
+.rk-how ul{margin:6px 0;padding-left:18px}
+/* ---- novedades a bordo ---- */
+.nbox{max-width:460px;overflow:hidden;padding-top:0!important}
+.sky{margin:0 -20px 4px;height:96px;background:linear-gradient(180deg,var(--accentbg),var(--paper));position:relative;overflow:hidden}
+.sky .cl{position:absolute;height:12px;border-radius:12px;background:var(--paper);opacity:.8;animation:cdrift 14s linear infinite}
+.sky .cl.a{width:70px;top:14px;left:62%}.sky .cl.b{width:46px;top:62px;left:18%;animation-duration:19s}
+@keyframes cdrift{from{transform:translateX(30px)}to{transform:translateX(-60px)}}
+.plane{position:absolute;left:50%;top:10px;width:min(360px,96%);margin-left:calc(min(360px,96%)/-2);animation:pfly 1.1s cubic-bezier(.2,.7,.2,1) both,pbob 2.8s ease-in-out 1.1s infinite alternate}
+@keyframes pfly{from{transform:translateX(-120%)}to{transform:none}}
+@keyframes pbob{from{transform:translateY(0) rotate(-1deg)}to{transform:translateY(5px) rotate(1.5deg)}}
+.plane .ban{transform-box:fill-box;transform-origin:100% 50%;animation:bflut 1.1s ease-in-out infinite alternate}
+@keyframes bflut{from{transform:skewY(-3deg) scaleX(1)}to{transform:skewY(3deg) scaleX(.97)}}
+.plane .prop{transform-box:fill-box;transform-origin:50% 50%;animation:pspin .12s linear infinite alternate}
+@keyframes pspin{from{transform:scaleY(1)}to{transform:scaleY(.25)}}
+.nlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.nlist li{display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:start}
+.nlist .ni{width:36px;height:36px;border-radius:10px;background:var(--accentbg);display:grid;place-items:center;font-size:19px}
+.nlist b{display:block;font:700 16px/1.2 var(--body)}
+.nlist span.t{display:block;font-size:14px;color:var(--muted);line-height:1.4;margin-top:2px}
+@media (prefers-reduced-motion:reduce){.plane,.plane .ban,.plane .prop,.sky .cl{animation:none}}
 /* etiqueta «Remove before flight» */
 .rbf{align-self:flex-start;display:flex;align-items:center;gap:12px;background:#C8102E;color:#fff;border-radius:7px;padding:10px 14px 10px 10px;max-width:100%;outline:2px dashed rgba(255,255,255,.6);outline-offset:-6px;box-shadow:0 3px 0 #8E0B20,0 10px 22px rgba(10,20,30,.22);transform-origin:14px 50%;animation:rbfswing 2.4s ease-in-out infinite alternate;margin:2px 0 8px}
 .rbf-ring{width:24px;height:24px;border-radius:50%;flex:none;background:radial-gradient(circle,var(--paper) 0 5px,#C9D1D8 6px 9px,#7C8791 10px 12px)}
@@ -208,6 +246,9 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
   <section class="view" id="v-stats" role="tabpanel" hidden>
     <div class="dash" id="stats"></div>
   </section>
+  <section class="view" id="v-rank" role="tabpanel" hidden>
+    <div class="dash" id="rank"></div>
+  </section>
 </main>
 
 <div class="sheet top" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscar en los apuntes">
@@ -215,6 +256,15 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
     <div class="sfield"><input id="q" type="search" placeholder="Buscar en los apuntes: hypoxia, QNH, foehn…" autocomplete="off" enterkeyhint="search" aria-describedby="qMeta"><button class="btn ghost" id="qClose" type="button">Cerrar</button></div>
     <p class="muted" id="qMeta" aria-live="polite"></p>
     <ol class="qres" id="qRes"></ol>
+  </div>
+</div>
+
+<div class="sheet" id="news" hidden role="dialog" aria-modal="true" aria-labelledby="nwT">
+  <div class="box nbox">
+    <div class="sky" aria-hidden="true"><i class="cl a"></i><i class="cl b"></i><svg class="plane" viewBox="0 0 360 84" aria-hidden="true"><g class="ban"><path d="M6 26h172l-8 16 8 16H6l7-16z" fill="#fff" stroke="#C8102E" stroke-width="2.5" stroke-linejoin="round"/><text x="92" y="48" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="15" letter-spacing=".6" fill="#C8102E">NOVEDADES</text></g><path d="M178 42 236 44" stroke="#14304A" stroke-width="1.6" fill="none"/><path d="M238 44q0-9 14-10h46q24 0 34 10-10 10-34 10h-46q-14-1-14-10z" fill="#0E7C86"/><path d="M243 38l-9-20h17l9 18z" fill="#14304A"/><path d="M272 46l16 26h15l-9-26z" fill="#14304A"/><rect x="243" y="46.5" width="66" height="3" fill="#C8102E"/><path d="M300 38h14q7 2 9 7h-23z" fill="#DFF1F1"/><ellipse class="prop" cx="336" cy="44" rx="2.4" ry="14" fill="#14304A"/></svg></div>
+    <h2 id="nwT">¡Novedades a bordo!</h2>
+    <ul class="nlist" id="nwList"></ul>
+    <div class="row"><button class="btn" id="nwOk" type="button">¡A volar!</button></div>
   </div>
 </div>
 
@@ -281,7 +331,7 @@ const SUBJ = [
   {k:"061", code:"061·062", short:"Navigation", name:"General Navigation · Radio Navigation", extra:[["senasa","Simulacro SENASA"]]},
   {k:"070", code:"070", short:"Operational Procedures", name:"Operational Procedures", extra:[["senasa","Simulacro SENASA"]]},
   {k:"081", code:"081", short:"Principles of Flight", name:"Principles of Flight", extra:[["examen","Simulacro SENASA"]]},
-  {k:"090", code:"090", short:"Communications", name:"Communications", extra:[["senasa","Simulacro SENASA"],["voice","Radio por voz"]]},
+  {k:"090", code:"090", short:"Communications", name:"Communications", extra:[["voice","Radio por voz"]]},
 ];
 const DONATE_URL = "";   // enlace de donaciones (PayPal.me, Ko-fi…); vacío = sin botón
 const $ = s => document.querySelector(s);
@@ -387,12 +437,14 @@ function renderTabs(){
   const lv = k => summary(k).lvl;
   $("#tabs").innerHTML = (isAdmin?`<button class="tab test" role="tab" data-v="stats" aria-selected="${current==="stats"}"><b>STATS</b><span>Solo tú</span></button>`:"") +
     `<button class="tab test" role="tab" data-v="test" aria-selected="${current==="test"}"><b>TEST</b><span>Progreso</span></button>` +
+    (sbUser?`<button class="tab test" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b><span>Promoción</span></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
 }
 function show(v, cmd){
   current=v; renderTabs();
   document.querySelectorAll(".view").forEach(el=>el.hidden = el.id!=="v-"+v);
   if(v==="stats"){ renderStats(); }
+  else if(v==="rank"){ renderRank(); }
   else if(v!=="test"){
     let view=$("#v-"+v);
     if(!view){
@@ -412,7 +464,7 @@ function sendCmd(v,cmd){ const f=frames[v]; if(f&&f.contentWindow) f.contentWind
 $("#tabs").addEventListener("click",e=>{ const b=e.target.closest(".tab"); if(b) show(b.dataset.v); });
 $("#tabs").addEventListener("keydown",e=>{
   if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
-  const ids=[...(isAdmin?["stats"]:[]),"test",...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
+  const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser?["rank"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
   show(n); document.querySelector(`.tab[data-v="${n}"]`).focus();
 });
 
@@ -565,7 +617,7 @@ if(DONATE_URL){ const d=$("#donate"); d.href=DONATE_URL; d.hidden=false; }
 function deviceNote(){
   if(owner||sb) return;
   try{ if(localStorage.getItem("f0:devNote")) return; }catch(e){ return; }
-  $("#devNote").hidden=false; $("#dnOk").focus();
+  newsMark(); $("#devNote").hidden=false; $("#dnOk").focus();
 }
 $("#dnOk").addEventListener("click", ()=>{ try{ localStorage.setItem("f0:devNote","1"); }catch(e){} $("#devNote").hidden=true; });
 
@@ -606,6 +658,8 @@ async function signedIn(user, consent){
   visStart = document.visibilityState==="visible"?Date.now():null; clearInterval(beatT); beatT=setInterval(beatFlush,60000);
   $("#saveTxt").textContent="Mi progreso"; setSaveState("ok"); renderAcct(); renderDash(); renderTabs();
   Object.entries(frames).forEach(([k,f])=>{ ready[k]=false; f.src=f.src; });
+  if(consent) newsMark();
+  setTimeout(showNews, 900);
 }
 function renderAcct(){ $("#acctTxt").textContent = sbUser ? sbUser.email.split("@")[0] : "Cuenta"; }
 function openLogin(){ $("#login").hidden=false; $("#lgMsg").textContent=""; setTimeout(()=>$("#lgEmail").focus(),30); }
@@ -626,7 +680,7 @@ async function signOut(){
   try{ await sb.auth.signOut(); }catch(e){}
   sbUser=null; remote=null; isAdmin=false;
   try{ SUBJ.forEach(s=>localStorage.removeItem("f0:"+s.k)); }catch(e){}
-  loadAllLocal(); if(current==="stats") show("test"); renderAcct(); renderDash(); renderTabs(); openLogin();
+  loadAllLocal(); if(current==="stats"||current==="rank") show("test"); renderAcct(); renderDash(); renderTabs(); openLogin();
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
@@ -706,6 +760,77 @@ function drawStats(){
   box.querySelectorAll("button[data-u]").forEach(b=>b.addEventListener("click", ()=>{ stUser=b.dataset.u; drawStats(); $("#main").scrollTop=0; const v=$("#v-stats"); if(v) v.scrollTop=0; }));
 }
 
+/* ===================== ranking por asignatura (web) ===================== */
+let RK=null, rkSub="";
+// puntos = media de los últimos 20 tests × factor de esfuerzo (75 % con 5 tests → 100 % con 40 o más, escala logarítmica)
+const rkPts=(avg,n)=>avg*(0.75+0.25*Math.min(1,Math.log(n/5)/Math.log(8)));
+const rkHave=k=>attemptsOf(k).filter(a=>a.total>=10).length;
+async function renderRank(){
+  const box=$("#rank"); if(!sb||!sbUser){ box.innerHTML=""; return; }
+  box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1><p>Quién lleva mejor cada asignatura.</p></div></div><p class="muted" id="rkLoad">Cargando…</p>`;
+  try{
+    const [r,p]=await Promise.all([sb.rpc("ranking"), sb.from("profiles").select("nick").eq("user_id",sbUser.id).maybeSingle()]);
+    if(r.error) throw r.error;
+    RK={rows:r.data||[], nick:(p.data&&p.data.nick)||""};
+  }catch(e){ $("#rkLoad").textContent="El ranking aún no está activado. Vuelve a probar en un rato."; return; }
+  if(!rkSub||!SUBJ.some(s=>s.k===rkSub)) rkSub=(SUBJ.find(s=>RK.rows.some(x=>x.subject===s.k))||SUBJ[0]).k;
+  drawRank();
+}
+function drawRank(){
+  const box=$("#rank"), s=SUBJ.find(x=>x.k===rkSub);
+  const rows=RK.rows.filter(x=>x.subject===rkSub).map(x=>({nick:x.nick, n:x.n, avg:Number(x.avg20), pts:rkPts(Number(x.avg20),x.n), mine:!!x.mine}))
+    .sort((a,b)=>b.pts-a.pts||b.n-a.n);
+  rows.forEach((x,i)=>{ x.pos=i+1; });
+  const me=rows.find(x=>x.mine), shown=rows.slice(0,15); if(me&&me.pos>15){ shown.push(null,me); }
+  const have=rkHave(rkSub);
+  const status = have<5 ? `Llevas <b>${have}</b> de 5 tests en ${esc(s.short)}. Te faltan <b>${5-have}</b> para entrar en su ranking.`
+    : !RK.nick ? `Ya cumples los 5 tests. Pon un apodo arriba para que te vean los demás.`
+    : me ? `Vas el <b>nº ${me.pos}</b> de ${rows.length} en ${esc(s.short)} con <b>${me.pts.toFixed(1)}</b> puntos.` : `Tus tests se están contando; vuelve a abrir el ranking en unos segundos.`;
+  const pd=n=>`<span class="pd ${n<=3?"p"+n:""}">${n}</span>`;
+  box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1><p>Quién lleva mejor cada asignatura. Mínimo 5 tests para entrar.</p></div></div>
+  <form class="st-box rk-form" id="rkNick" style="margin-bottom:12px"><label class="fld">Tu apodo en el ranking<input id="rkNickIn" maxlength="20" autocomplete="nickname" value="${esc(RK.nick)}" placeholder="Ej.: Capitán"></label><button class="btn" type="submit">Guardar</button>
+    <p class="muted" style="flex-basis:100%;margin:0;font-size:13px">Los demás solo ven tu apodo, tus tests y tu nota. Déjalo vacío si no quieres aparecer.</p></form>
+  <div class="rk-chips" role="group" aria-label="Asignatura">${SUBJ.map(x=>`<button type="button" data-rk="${x.k}" aria-pressed="${x.k===rkSub}">${x.code} · ${esc(x.short)}</button>`).join("")}</div>
+  <div class="st-box"><h2>${esc(s.code)} ${esc(s.short)}</h2><p style="margin:0 0 10px;font-size:15px">${status}</p>
+    ${rows.length?`<div class="st-scroll"><table class="st-tbl rk-tbl"><thead><tr><th></th><th>Apodo</th><th class="n">Tests</th><th class="n">Nota</th><th class="n">Puntos</th></tr></thead><tbody>
+      ${shown.map(x=>x===null?`<tr><td colspan="5" class="muted" style="text-align:center">···</td></tr>`:`<tr class="${x.mine?"me":""}"><td class="pos">${pd(x.pos)}</td><td>${x.nick?esc(x.nick):"<i>sin apodo</i>"}${x.mine?` <span class="muted">(tú)</span>`:""}</td><td class="n">${x.n}</td><td class="n">${Math.round(x.avg)} %</td><td class="n"><b>${x.pts.toFixed(1)}</b></td></tr>`).join("")}
+      </tbody></table></div>`:`<p class="muted">Todavía nadie ha llegado a 5 tests en esta asignatura. ¡Sé el primero!</p>`}
+  </div>
+  <details class="st-box rk-how" style="margin-top:12px"><summary>Cómo se puntúa</summary>
+    <p><b>Puntos = tu nota media de los últimos 20 tests × un factor de esfuerzo.</b></p>
+    <ul><li>El factor sube del <b>75 %</b> (5 tests) al <b>100 %</b> (40 o más). Los primeros tests suben más que los últimos.</li>
+    <li>Así, 5 tests perfectos (75 puntos) no superan a quien lleva 40 con un 80 % (80 puntos), y acumular tests sin acertar tampoco da la victoria.</li>
+    <li>Ejemplos: 5 tests al 95 % → 71 · 10 al 90 % → 75 · 20 al 85 % → 78 · 40 al 80 % → 80.</li>
+    <li>Cuentan los tests de 10 o más preguntas. No cuentan «Radio por voz» ni los que ignoras. Empate: gana quien tenga más tests.</li></ul></details>`;
+  box.querySelectorAll("[data-rk]").forEach(b=>b.addEventListener("click",()=>{ rkSub=b.dataset.rk; drawRank(); }));
+  const cur=box.querySelector('[data-rk][aria-pressed="true"]'); if(cur&&cur.parentNode) cur.parentNode.scrollLeft=Math.max(0,cur.offsetLeft-cur.parentNode.offsetLeft-12);
+  $("#rkNick").addEventListener("submit",async e=>{ e.preventDefault();
+    const v=$("#rkNickIn").value.trim(); if(v&&v.length<2){ alert("El apodo necesita al menos 2 letras."); return; }
+    const r=await sb.rpc("set_nick",{p_nick:v}); if(r.error){ alert("No se ha podido guardar el apodo."); return; } renderRank(); });
+}
+
+/* ===================== novedades a bordo ===================== */
+// Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
+const NEWS=[
+  {id:"2026-10-22", items:[
+    {i:"🎙️", t:"Radio por voz · Communications", d:"Practica el diálogo ATC–piloto hablando: ATC te habla en inglés y tú contestas por el micrófono."},
+    {i:"🏆", t:"Ranking por asignatura", d:"Compárate con la promoción: necesitas 5 tests en la asignatura y un apodo. Mira la pestaña RANKING.", web:true}
+  ]}
+];
+function newsSeen(){ try{ return localStorage.getItem("f0:news")||""; }catch(e){ return "~"; } }
+function newsMark(){ try{ localStorage.setItem("f0:news", NEWS[0].id); }catch(e){} }
+function showNews(){
+  const seen=newsSeen(); if(seen==="~"||!$("#news").hidden) return;
+  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>!x.web||sb);
+  if(!items.length){ if(NEWS[0].id>seen && !sb) newsMark(); return; }
+  if(!$("#devNote").hidden||!$("#login").hidden) return;
+  $("#nwList").innerHTML=items.map(x=>`<li><span class="ni" aria-hidden="true">${x.i}</span><div><b>${esc(x.t)}</b><span class="t">${esc(x.d)}</span></div></li>`).join("");
+  $("#news").hidden=false; $("#nwOk").focus();
+}
+function closeNews(){ newsMark(); $("#news").hidden=true; }
+$("#nwOk").addEventListener("click",closeNews);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#news").hidden) closeNews(); });
+
 const boot = (async ()=>{
   const C = window.claude;
   const cfg = window.F0_CONFIG;
@@ -719,7 +844,7 @@ const boot = (async ()=>{
     if(owner && db){ await loadAllCloud(); $("#saveBtn").classList.add("cloud"); $("#saveTxt").textContent="En tu cuenta"; renderDash(); renderTabs(); }
   }catch(e){}
 })();
-boot.then(()=>setTimeout(deviceNote, 400));
+boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); });
 </script>
 
 </body>
