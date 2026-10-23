@@ -13,6 +13,7 @@
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
+<script src="radio.js"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f1d0070793724820ae63bfa8c465ba85"}'></script>
 </head>
 <body>
@@ -284,6 +285,9 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
   <section class="view" id="v-stats" role="tabpanel" hidden>
     <div class="dash" id="stats"></div>
   </section>
+  <section class="view" id="v-radio" role="tabpanel" hidden>
+    <div class="dash" id="radio"></div>
+  </section>
   <section class="view" id="v-rank" role="tabpanel" hidden>
     <div class="dash" id="rank"></div>
   </section>
@@ -533,6 +537,7 @@ function renderTabs(){
   const lv = k => summary(k).lvl;
   $("#tabs").innerHTML = (isAdmin?`<button class="tab test solo" role="tab" data-v="stats" aria-selected="${current==="stats"}"><b>STATS</b></button>`:"") +
     `<button class="tab test solo" role="tab" data-v="test" aria-selected="${current==="test"}"><b>INICIO</b></button>` +
+    (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
     (sbUser?`<button class="tab test solo" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
 }
@@ -541,6 +546,7 @@ function show(v, cmd){
   document.querySelectorAll(".view").forEach(el=>el.hidden = el.id!=="v-"+v);
   if(v==="stats"){ renderStats(); }
   else if(v==="rank"){ renderRank(); }
+  else if(v==="radio"){ if(window.F0Radio&&sbUser) window.F0Radio.render($("#radio"),{sb,user:sbUser,name:()=>MY.name||(sbUser.email||"alumno").split("@")[0]}); }
   else if(v!=="test"){
     let view=$("#v-"+v);
     if(!view){
@@ -560,7 +566,7 @@ function sendCmd(v,cmd){ const f=frames[v]; if(f&&f.contentWindow) f.contentWind
 $("#tabs").addEventListener("click",e=>{ const b=e.target.closest(".tab"); if(b) show(b.dataset.v); });
 $("#tabs").addEventListener("keydown",e=>{
   if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
-  const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser?["rank"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
+  const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser&&window.F0Radio?["radio"]:[]),...(sbUser?["rank"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
   show(n); document.querySelector(`.tab[data-v="${n}"]`).focus();
 });
 
@@ -579,10 +585,12 @@ function renderDash(){
         <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo · 30</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Ir a la asignatura</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">Más tipos de test</button>
+        ${s.k==="090"&&sbUser&&window.F0Radio?`<button class="btn ghost wide" type="button" data-radio="1">📻 Radio PTT · practicar en clase</button>`:""}
       </div>
     </article>`).join("");
 }
 $("#grid").addEventListener("click",e=>{
+  if(e.target.closest("[data-radio]")){ show("radio"); return; }
   const b=e.target.closest("button[data-go]"); if(!b) return;
   show(b.dataset.go, b.dataset.tab ? {tab:b.dataset.tab} : {tab:"test", mode:b.dataset.mode});
 });
@@ -836,7 +844,7 @@ async function signOut(){
   try{ await sb.auth.signOut(); }catch(e){}
   sbUser=null; remote=null; isAdmin=false; MY={name:"",show:true};
   try{ SUBJ.forEach(s=>localStorage.removeItem("f0:"+s.k)); }catch(e){}
-  loadAllLocal(); if(current==="stats"||current==="rank") show("test"); renderAcct(); renderDash(); renderTabs(); openLogin();
+  loadAllLocal(); try{ if(window.F0Radio) window.F0Radio.leave(); }catch(e){} if(current==="stats"||current==="rank"||current==="radio") show("test"); renderAcct(); renderDash(); renderTabs(); openLogin();
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
@@ -972,6 +980,11 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-23c", items:[
+    {i:"📻", t:"Radio PTT", d:"Pestaña RADIO: elige frecuencia, pulsa y habla; otra persona te escucha y responde, como en la radio de verdad (ATC–piloto, un solo emisor a la vez).", web:true},
+    {i:"🔥", t:"Dificultad extra", d:"En «Más tipos de test» de cada asignatura: preguntas más duras y un 25 % menos de tiempo."},
+    {i:"🧹", t:"Menos repetidas", d:"Los tests evitan preguntas del mismo concepto con otra redacción."}
+  ]},
   {id:"2026-10-23b", items:[
     {i:"📘", t:"Nueva asignatura: POH", d:"Pilot Operating Handbook del Cessna 172 y el Piper PA-28: apuntes con esquemas interactivos y tests, incluido el simulacro cronometrado."},
     {i:"✉️", t:"Buzón de sugerencias", d:"Arriba a la derecha: propón preguntas nuevas o corrige errores.", web:true},

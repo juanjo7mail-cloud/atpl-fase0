@@ -3639,7 +3639,7 @@ const MODE_NAME = {adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un
 $("#startBtn").addEventListener("click",()=>{
   curMode = document.querySelector('input[name=mode]:checked').value;
   curEx = $("#senEx").value; curLen = curMode==="senasa" ? $("#senLen").value : null;
-  const qs = selectQuestions(curMode, $("#incComp").checked, $("#loSel").value, $("#incTrial").checked);
+  const qs = F0DEDUP(selectQuestions(curMode, $("#incComp").checked, $("#loSel").value, $("#incTrial").checked), curMode);
   if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
   $("#startMsg").textContent = "";
   const st = stats();
@@ -4350,5 +4350,63 @@ addEventListener("message",function(e){ var d=e.data; if(d&&d.t==="f0-cmd"){ go(
 function fromHash(){ var m=/(?:^|[#&])go=([a-z]+)(?:&mode=([a-z0-9]+))?/.exec(location.hash); if(m) go(m[1],m[2]); }
 addEventListener("load",function(){ setTimeout(fromHash,50); });
 try{ if(window.parent!==window) window.parent.postMessage({t:"f0-ready",k:"021"},"*"); }catch(e){}
-})();</script></body>
+})();</script><!--f0dedup--><script>(function(){
+const CL={"p77":0,"x73":0,"a2303":1,"p102":1,"n77":2,"x82":2,"n63":3,"p81":3,"n33":4,"p74":4,"n32":5,"x72":5,"n55":6,"n56":6,"p82":6,"n35":7,"x71":7,"n73":8,"n80":8,"f5":9,"f6":9,"n69":10,"x83":10,"a2207":11,"p103":11,"n04":12,"p43":12,"n10":13,"p56":13,"n49":14,"n81":14};
+const norm=s=>String(s||"").toLowerCase().replace(/[^a-z0-9áéíóúñ%°]+/g," ").trim();
+const qOf=it=>Array.isArray(it)?it:(it&&it.k==="mc"&&it.q?it.q:null);
+const keys=q=>{ const k=[]; const c=CL[q[0]]; if(c!==undefined) k.push("c"+c); if(!(q[7]||q[8])&&q[4]&&String(q[4]).length>25&&q[4]!=="—") k.push("t"+norm(q[4])); return k; };
+const _simw=(a,b)=>{ const A=new Set(norm(a).split(" ")), B=new Set(norm(b).split(" ")); let i=0; A.forEach(x=>{ if(x&&B.has(x)) i++; }); return i/Math.max(1,Math.min(A.size,B.size)); };
+const _hm={};
+const hard=q=>{ const id=q[0]; if(_hm[id]!==undefined) return _hm[id]; const o=q[5]||[], c=String(o[0]||""); let m=0; for(let i=1;i<o.length;i++) m=Math.max(m,_simw(c,String(o[i])));
+  let s=m; if(/\b(NOT|EXCEPT|INCORRECT|FALSE|INCORRECTLY)\b/.test(String(q[4]))) s+=.3; if(/\d/.test(c)&&o.length>1&&o.every(x=>/\d/.test(String(x)))) s+=.2; if(String(q[4]).length>140) s+=.15; return (_hm[id]=s); };
+const XK="f0:extra:"+location.pathname;
+const isExtra=()=>{ try{ return localStorage.getItem(XK)==="1"; }catch(e){ return false; } };
+const SKIP=/^(all|wrong|lo|calc|voice|trial|profe)$/;
+const harden=(list,mode)=>{
+  if(!isExtra()||SKIP.test(mode)) return list;
+  const pool=(typeof BANK!=="undefined"&&Array.isArray(BANK))?BANK:[];
+  const srcs=new Set(list.map(it=>{const q=qOf(it);return q&&q[2];}).filter(Boolean)), have=new Set(list.map(it=>{const q=qOf(it);return q&&q[0];}).filter(Boolean)), seen=new Set();
+  list.forEach(it=>{ const q=qOf(it); if(q) keys(q).forEach(k=>seen.add(k)); });
+  const med={}; const byLo={}; pool.forEach(p=>{ if(p[2]!=="o"&&p[4]&&p[4]!=="—"&&srcs.has(p[2])) (byLo[p[1]]=byLo[p[1]]||[]).push(p); });
+  Object.keys(byLo).forEach(lo=>{ const s=byLo[lo].map(hard).sort((a,b)=>a-b); med[lo]=s[Math.floor(s.length/2)]; });
+  return list.map(it=>{ const q=qOf(it); if(!q||med[q[1]]===undefined||hard(q)>=med[q[1]]) return it;
+    const cand=(byLo[q[1]]||[]).filter(p=>p[2]===q[2]&&hard(p)>=med[q[1]]&&!have.has(p[0])&&!keys(p).some(k=>seen.has(k)));
+    if(!cand.length) return it;
+    cand.sort((a,b)=>hard(b)-hard(a)); const top=cand.slice(0,Math.max(1,Math.ceil(cand.length/2))); const p=top[Math.floor(Math.random()*top.length)];
+    have.add(p[0]); keys(p).forEach(k=>seen.add(k)); return Array.isArray(it)?p:{k:"mc",q:p}; });
+};
+window.F0DEDUP=function(list,mode){ return harden(dd(list,mode),mode); };
+const dd=function(list,mode){
+  try{
+    if(!Array.isArray(list)||/^(all|wrong|lo|calc|voice|trial|profe)$/.test(mode)) return list;
+    const pool=(typeof BANK!=="undefined"&&Array.isArray(BANK))?BANK:[];
+    const srcs=new Set(list.map(it=>{const q=qOf(it);return q&&q[2];}).filter(Boolean)), seen=new Set(), have=new Set(list.map(it=>{const q=qOf(it);return q&&q[0];}).filter(Boolean));
+    return list.map(it=>{ const q=qOf(it); if(!q) return it; const ks=keys(q);
+      if(!ks.some(k=>seen.has(k))){ ks.forEach(k=>seen.add(k)); return it; }
+      const ok=p=>p[1]===q[1]&&p[2]!=="o"&&p[4]&&p[4]!=="—"&&!have.has(p[0])&&!keys(p).some(k=>seen.has(k));
+      let cand=pool.filter(p=>ok(p)&&p[2]===q[2]);
+      if(!cand.length) cand=pool.filter(p=>ok(p)&&srcs.has(p[2]));
+      if(!cand.length){ const ch=String(q[1]).split(".").slice(0,3).join("."); const ok2=p=>p[2]!=="o"&&p[4]&&p[4]!=="—"&&!have.has(p[0])&&!keys(p).some(k=>seen.has(k))&&srcs.has(p[2]);
+        cand=pool.filter(p=>ok2(p)&&String(p[1]).startsWith(ch)); if(!cand.length) cand=pool.filter(ok2); }
+      if(!cand.length) return it;
+      const p=cand[Math.floor(Math.random()*cand.length)]; keys(p).forEach(k=>seen.add(k)); have.add(p[0]);
+      return Array.isArray(it)?p:{k:"mc",q:p};
+    });
+  }catch(e){ return list; }
+};
+function ui(){
+  const sb=document.getElementById("startBtn"); if(!sb||document.getElementById("f0x")) return;
+  const st=document.createElement("style"); st.textContent=".f0x{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line,#CBD8E0);border-radius:8px;padding:10px 12px;margin:10px 0;cursor:pointer}.f0x input{margin-top:3px;width:18px;height:18px;flex:none}.f0x small{display:block;color:var(--muted,#5A6F82);font-size:13px;line-height:1.35}.f0x:has(input:checked){border-color:#C8102E;background:color-mix(in srgb,#C8102E 8%,transparent)}.f0xb{display:inline-block;font:700 12px/1 system-ui,sans-serif;letter-spacing:.06em;background:#C8102E;color:#fff;border-radius:4px;padding:4px 8px;margin:0 0 8px}";
+  document.head.appendChild(st);
+  const l=document.createElement("label"); l.className="f0x"; l.id="f0x";
+  l.innerHTML='<input type="checkbox" id="f0xc"><span><b>Dificultad extra</b><small>Preguntas más duras (respuestas muy parecidas, cálculos y «cuál NO es») y un 25 % menos de tiempo en los tests con reloj.</small></span>';
+  sb.parentNode.insertBefore(l,sb);
+  const c=l.querySelector("input"); c.checked=isExtra(); c.addEventListener("change",()=>{ try{ localStorage.setItem(XK,c.checked?"1":"0"); }catch(e){} });
+  const q=document.getElementById("qlist"); const bd=document.createElement("div"); bd.className="f0xb"; bd.textContent="DIFICULTAD EXTRA"; bd.hidden=true; if(q&&q.parentNode) q.parentNode.insertBefore(bd,q);
+  sb.addEventListener("click",()=>{ const m=(document.querySelector("input[name=mode]:checked")||{}).value||"";
+    const on=isExtra()&&!SKIP.test(m); bd.hidden=!on;
+    if(on){ try{ if(typeof tLimit!=="undefined"&&tLimit>0){ tLimit=Math.round(tLimit*0.75); if(typeof tick==="function") tick(); } }catch(e){} } });
+}
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",ui); else ui();
+})();</script><!--/f0dedup--></body>
 </html>
