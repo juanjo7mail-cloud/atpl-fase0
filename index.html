@@ -370,8 +370,8 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
 
 <div class="sheet" id="nameAsk" hidden role="dialog" aria-modal="true" aria-labelledby="naT">
   <form class="box" id="naForm" autocomplete="on">
-    <h2 id="naT">¿Cómo te llamas?</h2>
-    <p class="muted">Tu nombre y apellidos salen en el ranking (y yo los veo en las estadísticas). Entras automáticamente en el ranking de cada asignatura al hacer 5 tests.</p>
+    <h2 id="naT">Antes de seguir: tu nombre</h2>
+    <p class="muted">Ahora es obligatorio poner nombre y apellidos. Salen en el ranking (y yo los veo en las estadísticas). Entras automáticamente en el ranking de cada asignatura al hacer 5 tests.</p>
     <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px">
       <label class="fld" for="naFirst">Nombre<input id="naFirst" autocomplete="given-name" maxlength="30"></label>
       <label class="fld" for="naLast">Apellidos<input id="naLast" autocomplete="family-name" maxlength="40"></label>
@@ -564,14 +564,14 @@ function renderTabs(){
   const lv = k => summary(k).lvl;
   $("#tabs").innerHTML = (isAdmin?`<button class="tab test solo" role="tab" data-v="stats" aria-selected="${current==="stats"}"><b>STATS</b></button>`:"") +
     `<button class="tab test solo" role="tab" data-v="test" aria-selected="${current==="test"}"><b>INICIO</b></button>` +
-    (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
     (sbUser?`<button class="tab test solo" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b></button>`:"") +
+    (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
   drawMenu(); tabArrows();
 }
 function drawMenu(){
   const lv = k => summary(k).lvl, it=(v,c,n,d)=>`<button role="menuitem" data-v="${v}" aria-current="${current===v}"><span class="mc">${c}</span><span class="mn">${esc(n)}</span><i class="md ${d||""}"></i></button>`;
-  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+"<hr>"+
+  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+"<hr>"+
     SUBJ.map(s=>it(s.k,s.code,s.short,lv(s.k))).join("");
 }
 function tabArrows(){
@@ -584,6 +584,7 @@ function menuOpen(on){
   if(on){ const c=m.querySelector('[aria-current="true"]')||m.querySelector("button"); if(c){ c.focus({preventScroll:true}); c.scrollIntoView({block:"nearest"}); } }
 }
 function show(v, cmd){
+  if(sbUser&&MY&&MY.ok&&!MY.name){ openNameAsk(); return; }   // sin nombre y apellidos no se entra
   current=v; renderTabs();
   document.querySelectorAll(".view").forEach(el=>el.hidden = el.id!=="v-"+v);
   if(v==="stats"){ renderStats(); }
@@ -620,7 +621,7 @@ document.addEventListener("click",e=>{ if(!$("#menu").hidden && !e.target.closes
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#menu").hidden) menuOpen(false); });
 $("#tabs").addEventListener("keydown",e=>{
   if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
-  const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser&&window.F0Radio?["radio"]:[]),...(sbUser?["rank"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
+  const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser?["rank"]:[]),...(sbUser&&window.F0Radio?["radio"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
   show(n); document.querySelector(`.tab[data-v="${n}"]`).focus();
 });
 
@@ -826,7 +827,7 @@ async function signedIn(user, consent){
 async function loadMine(){
   if(!sb||!sbUser) return;
   try{ const {data,error}=await sb.from("profiles").select("full_name,show_rank").eq("user_id",sbUser.id).maybeSingle(); if(error) throw error;
-    MY={name:(data&&data.full_name)||"", show:true}; }catch(e){ return; }
+    MY={name:(data&&data.full_name)||"", show:true, ok:true}; }catch(e){ if(!loadMine.retry){ loadMine.retry=1; setTimeout(loadMine,3000); } return; }
   if(!MY.name) setTimeout(openNameAsk,700);
 }
 /* ===================== buzón de sugerencias (web) ===================== */
@@ -1034,6 +1035,10 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-23e", items:[
+    {i:"📻", t:"Radio con dos paneles", d:"Si eliges controlador ves una consola de posición ATC; si eliges piloto, el panel de audio de cabina con botón PTT. Incluye prueba en solitario.", web:true},
+    {i:"🪪", t:"Nombre obligatorio", d:"Quien aún no haya puesto nombre y apellidos tendrá que hacerlo al volver a entrar."}
+  ]},
   {id:"2026-10-23d", items:[
     {i:"☰", t:"Menú y flechas", d:"Arriba a la izquierda, las 3 rayas abren la lista de todas las pestañas. En ordenador hay flechas a los lados (y la rueda del ratón) para moverse por ellas."}
   ]},
