@@ -55,7 +55,28 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 .savepill{white-space:nowrap;display:flex;align-items:center;gap:6px;border:1px solid #3B5874;border-radius:20px;padding:4px 12px;background:transparent;color:#DCE6EE;font:600 13px var(--body);cursor:pointer}
 .savepill i{width:8px;height:8px;border-radius:50%;background:#8CA3B6}
 .savepill.cloud i{background:#5CC98F}
-.tabs{display:flex;gap:2px;max-width:1180px;margin:0 auto;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabbar{position:relative;display:flex;align-items:stretch;max-width:1180px;margin:0 auto}
+.tabs{display:flex;gap:2px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+.mbtn{flex:none;width:44px;border:0;background:transparent;color:#DCE6EE;display:grid;place-items:center;cursor:pointer;margin-left:-10px;border-bottom:3px solid transparent}
+.mbtn:hover,.mbtn[aria-expanded="true"]{color:#fff;background:rgba(255,255,255,.08)}
+.arr{position:absolute;top:0;bottom:3px;width:40px;border:0;color:#fff;cursor:pointer;display:grid;place-items:center;z-index:3;padding:0}
+.arr[hidden]{display:none}
+.arr.l{left:34px;background:linear-gradient(90deg,var(--head) 55%,transparent)}
+.arr.r{right:0;background:linear-gradient(270deg,var(--head) 55%,transparent)}
+.arr.l{justify-items:start;padding-left:6px}.arr.r{justify-items:end;padding-right:6px}
+.arr:hover svg{transform:scale(1.2)}
+.menu{position:fixed;z-index:15;left:max(8px,env(safe-area-inset-left,0px));width:min(360px,calc(100vw - 16px));max-height:calc(100dvh - 130px);overflow:auto;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 34px rgba(10,20,30,.35);padding:6px}
+.menu[hidden]{display:none}
+.menu button{display:grid;grid-template-columns:96px 1fr auto;gap:2px 10px;align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:7px;padding:9px 10px;cursor:pointer;min-height:44px}
+.menu button:hover,.menu button:focus-visible{background:var(--accentbg)}
+.menu button[aria-current="true"]{background:var(--accentbg);box-shadow:inset 3px 0 0 var(--accent)}
+.menu .mc{font:700 17px/1.1 var(--display);color:var(--accent);white-space:nowrap}
+.menu .mn{font:600 14.5px/1.25 var(--body);min-width:0}
+.menu .md{width:9px;height:9px;border-radius:50%;background:transparent;border:1px solid var(--line)}
+.menu .md.ok{background:var(--ok);border-color:var(--ok)}.menu .md.mid{background:var(--blue);border-color:var(--blue)}.menu .md.low{background:var(--warn);border-color:var(--warn)}
+.menu hr{border:0;border-top:1px solid var(--line);margin:4px 6px}
+@media (pointer:coarse){.arr{display:none!important}}
+@media (max-width:560px){.menu{left:8px}}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:none;border:0;background:transparent;color:#AFC3D3;padding:8px 12px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:1px;border-bottom:3px solid transparent;min-width:0}
 .tab b{font:700 15px/1 var(--display);letter-spacing:.4px;color:#fff}
@@ -264,8 +285,14 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
     <button class="savepill" id="saveBtn" type="button" aria-haspopup="dialog"><i></i><span id="saveTxt">Mi progreso</span></button>
     <button class="savepill" id="acct" type="button" hidden aria-label="Cuenta"><span id="acctTxt">Cuenta</span></button>
   </div>
-  <nav class="tabs" id="tabs" role="tablist" aria-label="Asignaturas"></nav>
+  <div class="tabbar">
+    <button class="mbtn" id="menuBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Menú de asignaturas"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button>
+    <button class="arr l" id="tabPrev" type="button" tabindex="-1" aria-label="Pestañas anteriores" hidden><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M12.5 4 6.5 10l6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Asignaturas"></nav>
+    <button class="arr r" id="tabNext" type="button" tabindex="-1" aria-label="Pestañas siguientes" hidden><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M7.5 4l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+  </div>
 </header>
+<div class="menu" id="menu" role="menu" aria-label="Todas las pestañas" hidden></div>
 
 <main id="main">
   <section class="view" id="v-test" role="tabpanel">
@@ -540,6 +567,21 @@ function renderTabs(){
     (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
     (sbUser?`<button class="tab test solo" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
+  drawMenu(); tabArrows();
+}
+function drawMenu(){
+  const lv = k => summary(k).lvl, it=(v,c,n,d)=>`<button role="menuitem" data-v="${v}" aria-current="${current===v}"><span class="mc">${c}</span><span class="mn">${esc(n)}</span><i class="md ${d||""}"></i></button>`;
+  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+"<hr>"+
+    SUBJ.map(s=>it(s.k,s.code,s.short,lv(s.k))).join("");
+}
+function tabArrows(){
+  const t=$("#tabs"), p=$("#tabPrev"), n=$("#tabNext"); if(!t||!p||!n) return;
+  const max=t.scrollWidth-t.clientWidth-2; p.hidden = t.scrollLeft<=2; n.hidden = t.scrollLeft>=max || max<=0;
+}
+function menuOpen(on){
+  const m=$("#menu"), b=$("#menuBtn"); if(on){ drawMenu(); m.style.top=($(".top").getBoundingClientRect().bottom+4)+"px"; }
+  m.hidden=!on; b.setAttribute("aria-expanded",on?"true":"false");
+  if(on){ const c=m.querySelector('[aria-current="true"]')||m.querySelector("button"); if(c){ c.focus({preventScroll:true}); c.scrollIntoView({block:"nearest"}); } }
 }
 function show(v, cmd){
   current=v; renderTabs();
@@ -564,6 +606,18 @@ function show(v, cmd){
 }
 function sendCmd(v,cmd){ const f=frames[v]; if(f&&f.contentWindow) f.contentWindow.postMessage({t:"f0-cmd", tab:cmd.tab, mode:cmd.mode, start:!!cmd.mode, find:cmd.find||null},"*"); }
 $("#tabs").addEventListener("click",e=>{ const b=e.target.closest(".tab"); if(b) show(b.dataset.v); });
+$("#tabs").addEventListener("scroll",tabArrows,{passive:true});
+window.addEventListener("resize",tabArrows);
+$("#tabPrev").addEventListener("click",()=>$("#tabs").scrollBy({left:-Math.max(160,$("#tabs").clientWidth*0.6)}));
+$("#tabNext").addEventListener("click",()=>$("#tabs").scrollBy({left:Math.max(160,$("#tabs").clientWidth*0.6)}));
+$("#tabs").addEventListener("wheel",e=>{ if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&$("#tabs").scrollWidth>$("#tabs").clientWidth){ e.preventDefault(); $("#tabs").scrollLeft+=e.deltaY; } },{passive:false});
+$("#menuBtn").addEventListener("click",e=>{ e.stopPropagation(); menuOpen($("#menu").hidden); });
+$("#menu").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(b){ menuOpen(false); show(b.dataset.v); } });
+$("#menu").addEventListener("keydown",e=>{ const bs=[...$("#menu").querySelectorAll("button")], i=bs.indexOf(document.activeElement);
+  if(e.key==="ArrowDown"){ e.preventDefault(); bs[(i+1)%bs.length].focus(); } else if(e.key==="ArrowUp"){ e.preventDefault(); bs[(i+bs.length-1)%bs.length].focus(); }
+  else if(e.key==="Escape"||e.key==="Tab"){ menuOpen(false); $("#menuBtn").focus(); } });
+document.addEventListener("click",e=>{ if(!$("#menu").hidden && !e.target.closest("#menu")) menuOpen(false); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#menu").hidden) menuOpen(false); });
 $("#tabs").addEventListener("keydown",e=>{
   if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
   const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser&&window.F0Radio?["radio"]:[]),...(sbUser?["rank"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
@@ -933,7 +987,7 @@ function drawStats(){
 let RK=null, rkSub="";
 // puntos = media de los últimos 20 tests × factor de esfuerzo (75 % con 5 tests → 100 % con 40 o más, escala logarítmica)
 const rkPts=(avg,n)=>avg*(0.75+0.25*Math.min(1,Math.log(n/5)/Math.log(8)));
-const rkHave=k=>attemptsOf(k).filter(a=>a.total>=10).length;
+const rkHave=k=>attemptsOf(k).filter(a=>a.total>=5).length;
 async function renderRank(){
   const box=$("#rank"); if(!sb||!sbUser){ box.innerHTML=""; return; }
   box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1><p>Quién lleva mejor cada asignatura.</p></div></div><p class="muted" id="rkLoad">Cargando…</p>`;
@@ -980,9 +1034,12 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-23d", items:[
+    {i:"☰", t:"Menú y flechas", d:"Arriba a la izquierda, las 3 rayas abren la lista de todas las pestañas. En ordenador hay flechas a los lados (y la rueda del ratón) para moverse por ellas."}
+  ]},
   {id:"2026-10-23c", items:[
     {i:"📻", t:"Radio PTT", d:"Pestaña RADIO: elige frecuencia, pulsa y habla; otra persona te escucha y responde, como en la radio de verdad (ATC–piloto, un solo emisor a la vez).", web:true},
-    {i:"🔥", t:"Dificultad extra", d:"En «Más tipos de test» de cada asignatura: preguntas más duras y un 25 % menos de tiempo."},
+    {i:"🔥", t:"Dificultad extra", d:"En «Más tipos de test» de cada asignatura: más de 300 preguntas nuevas, más difíciles y rebuscadas sobre el temario. El tiempo no cambia."},
     {i:"🧹", t:"Menos repetidas", d:"Los tests evitan preguntas del mismo concepto con otra redacción."}
   ]},
   {id:"2026-10-23b", items:[

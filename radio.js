@@ -74,7 +74,7 @@ async function ensureMic(){
   lp.type="lowpass"; lp.frequency.value=3400; mute.gain.value=0; src.connect(lp); lp.connect(pr); pr.connect(mute); mute.connect(ac.destination);
   const ratio=ac.sampleRate/8000; let acc=0, cnt=0, phase=0;
   pr.onaudioprocess=e=>{
-    if(!R.tx) { acc=0; cnt=0; return; }
+    if(!R.tx&&!R.solo) { acc=0; cnt=0; return; }
     const inp=e.inputBuffer.getChannelData(0);
     for(let i=0;i<inp.length;i++){ acc+=inp[i]; cnt++; phase+=1; if(phase>=ratio){ phase-=ratio; R.txBuf.push(mu(acc/cnt)); acc=0; cnt=0; } }
     while(R.txBuf.length>=CHUNK){ sendChunk(R.txBuf.splice(0,CHUNK)); }
@@ -82,9 +82,9 @@ async function ensureMic(){
   R.src=src; R.proc=pr; return true;
 }
 function sendChunk(arr){
-  if(!R.ch) return;
+  const ch=R.solo?R.solo.ch:R.ch; if(!ch) return;
   R.stats.txChunks++;
-  R.ch.send({type:"broadcast",event:"a",payload:{u:R.uid,q:R.txSeq++,d:b64(Uint8Array.from(arr))}});
+  ch.send({type:"broadcast",event:"a",payload:{u:R.uid,q:R.txSeq++,d:b64(Uint8Array.from(arr))}});
 }
 
 /* ---------- canal ---------- */
@@ -187,6 +187,34 @@ function startCaps(){
 function stopCaps(){ if(R.rec){ const r=R.rec; R.rec=null; try{ r.stop(); }catch(e){} } }
 function flash(){ const b=$("#rdPtt"); if(b){ b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); } }
 
+/* ---------- prueba en solitario: micro → servidor Realtime → tú mismo ---------- */
+async function solo(){
+  const d=R.deps; if(!d||!d.sb||!d.user||R.solo) return;
+  const say=t=>{ R.msg=t; update(); };
+  ensureAudio(); say("Conectando con el servidor de radio…");
+  const res={rtt:null,sent:0,got:0,peak:0,err:""}; let ch;
+  try{ ch=d.sb.channel("radio:selftest:"+d.user.id,{config:{broadcast:{self:true,ack:false}}}); }catch(e){ say("No se ha podido abrir el canal de prueba."); return; }
+  const done=new Promise(ok=>{ ch.subscribe(st=>{ if(st==="SUBSCRIBED") ok(true); else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT") ok(false); }); });
+  ch.on("broadcast",{event:"p"},m=>{ const p=m.payload||m; if(p&&p.t) res.rtt=Math.round(performance.now()-p.t); });
+  ch.on("broadcast",{event:"a"},m=>{ const p=m.payload||m; if(p&&p.d){ res.got++; const b=unb64(p.d); for(let i=0;i<b.length;i++){ const a=Math.abs(unmu(b[i])); if(a>res.peak) res.peak=a; } playChunk(b); } });
+  const ok=await Promise.race([done,new Promise(r=>setTimeout(()=>r(false),8000))]);
+  if(!ok){ try{ d.sb.removeChannel(ch); }catch(e){} say("❌ El servidor de radio no responde. Comprueba que Realtime está activado en Supabase (Project Settings → Realtime) y vuelve a probar."); return; }
+  ch.send({type:"broadcast",event:"p",payload:{t:performance.now()}}); await new Promise(r=>setTimeout(r,900));
+  if(res.rtt==null){ try{ d.sb.removeChannel(ch); }catch(e){} say("❌ El canal abre pero no devuelve mensajes. Revisa Realtime en Supabase."); return; }
+  say("✅ Servidor conectado ("+res.rtt+" ms). Ahora el micrófono…");
+  if(!(await ensureMic())){ try{ d.sb.removeChannel(ch); }catch(e){} return; }
+  R.solo={ch}; R.txBuf=[]; R.txSeq=0; R.nextT=0; R.stats.txChunks=0; blip(1500,0.05,0.08);
+  for(let s=4;s>0;s--){ say("🎙️ Habla ahora… "+s+" s (te oirás por los auriculares)"); await new Promise(r=>setTimeout(r,1000)); }
+  if(R.txBuf.length) sendChunk(R.txBuf.splice(0)); res.sent=R.stats.txChunks;
+  R.solo=null; R.txBuf=[]; say("Escuchando tu transmisión de vuelta…");
+  await new Promise(r=>setTimeout(r,2200)); try{ d.sb.removeChannel(ch); }catch(e){}
+  const okAll=res.got>=res.sent*0.8&&res.sent>0&&res.peak>0.02;
+  say(okAll?"✅ Todo funciona: micrófono, servidor ("+res.rtt+" ms) y sonido de radio. Ya puedes hablar con otra persona.":
+    res.sent===0?"❌ No se ha captado audio del micrófono. Revisa el permiso y el micrófono elegido en el sistema.":
+    res.peak<=0.02?"⚠️ Llega silencio: el micrófono parece mudo o sin volumen.":
+    "⚠️ Llegaron "+res.got+" de "+res.sent+" trozos de audio. La conexión pierde paquetes; prueba con mejor cobertura.");
+}
+
 /* ---------- interfaz ---------- */
 const CSS=`
 .rd{max-width:760px;display:flex;flex-direction:column}.rd .dhead{order:-3}.rd.on #rdTxCard{order:-2}.rd.on #rdCfg{order:-1}.rd summary{cursor:pointer;font:700 18px var(--display);list-style:none}.rd summary::-webkit-details-marker{display:none}.rd summary small{font:500 14px var(--body);color:var(--muted);margin-left:8px}.rd #rdCfg[open] summary{margin-bottom:10px}
@@ -247,7 +275,7 @@ function render(el,deps){
       <label class="fld">Tu papel<select id="rdRole">${Object.keys(ROLES).map(k=>`<option value="${k}">${ROLES[k]}</option>`).join("")}</select></label>
       <label class="fld">Indicativo (como te oirán)<input type="text" id="rdCall" maxlength="24" placeholder="EC-ABC, Madrid Torre…" autocomplete="off"></label>
     </div>
-    <div class="row" style="margin-top:12px"><button class="btn" id="rdConn" type="button">Conectar</button><button class="btn ghost" id="rdTest" type="button">Probar sonido</button>
+    <div class="row" style="margin-top:12px"><button class="btn" id="rdConn" type="button">Conectar</button><button class="btn ghost" id="rdTest" type="button">Probar sonido</button><button class="btn ghost" id="rdSolo" type="button">Prueba en solitario</button>
       <label class="fld" style="flex:0 1 auto;flex-direction:row;align-items:center;gap:8px">Volumen <input type="range" id="rdVol" min="0.1" max="1.5" step="0.05"></label></div>
     <div class="status" id="rdSt" style="margin-top:10px"></div><p class="msg" id="rdMsg" aria-live="polite"></p>
   </details>
@@ -265,6 +293,7 @@ function render(el,deps){
   q("#rdCall").addEventListener("change",()=>{ if(R.ch&&R.status==="on"){ try{ R.ch.track(me()); }catch(_){} } });
   q("#rdVol").addEventListener("input",e=>{ R.vol=+e.target.value; set("vol",String(R.vol)); if(R.vg) R.vg.gain.value=R.vol; });
   q("#rdConn").addEventListener("click",()=>{ ensureAudio(); if(R.status==="off"||R.status==="err") join(false); else leave(); });
+  q("#rdSolo").addEventListener("click",()=>{ solo(); });
   q("#rdTest").addEventListener("click",()=>{ ensureAudio(); const ac=R.ac; R.nextT=0; const b=new Uint8Array(CHUNK*3); for(let i=0;i<b.length;i++) b[i]=mu(0.35*Math.sin(2*Math.PI*900*i/8000)*(i<80?i/80:1)); playChunk(b); setTimeout(()=>{ squelch(); blip(1100,0.09,0.12); },b.length/8+260); });
   q("#rdLatch").addEventListener("change",e=>{ R.latch=e.target.checked; set("latch",R.latch?"1":"0"); });
   const caps=q("#rdCaps"); if(caps) caps.addEventListener("change",e=>{ R.caps=e.target.checked; set("caps",R.caps?"1":"0"); });
