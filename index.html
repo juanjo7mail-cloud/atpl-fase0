@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: barra fija con las 10 pestañas (Test + 9 asignaturas); cada asignatura ocupa el resto de la pantalla. */
+/* Layout: barra fija con las pestañas (Test + 10 asignaturas); cada asignatura ocupa el resto de la pantalla. */
 :root{
   --bg:#EEF3F5; --paper:#FFFFFF; --ink:#14304A; --muted:#5A6F82; --line:#CBD8E0;
   --accent:#0E7C86; --blue:#2F6FA3; --ok:#1F7A4D; --warn:#9A6A00; --bad:#B3302C;
@@ -230,6 +230,26 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
   .kpis{margin-left:0;gap:18px}
   .grid{grid-template-columns:1fr}
 }
+/* ---- buzón de sugerencias ---- */
+.sheet.sg{place-items:center}
+#sgForm select,#sgForm textarea{font:16px/1.4 var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:9px 10px;width:100%;min-width:0;box-sizing:border-box}
+#sgForm textarea{min-height:130px;resize:vertical}
+#sgForm .cnt{font-size:12px;color:var(--muted);text-align:right;margin-top:-6px}
+.sg-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.sg-seg label{display:flex;align-items:center;justify-content:center;text-align:center;border:1px solid var(--line);border-radius:8px;padding:9px 4px;font-size:14px;font-weight:600;cursor:pointer;min-height:44px;line-height:1.15}
+.sg-seg input{position:absolute;opacity:0;pointer-events:none}
+.sg-seg label:has(input:checked){background:var(--accent);border-color:var(--accent);color:#fff}
+.sg-seg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.sg-it{border-top:1px solid var(--line);padding:10px 0;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.sg-it:first-child{border-top:0}
+.sg-it .tx{flex:1 1 260px;min-width:0;overflow-wrap:anywhere}
+.sg-it .mt{font-size:12px;color:var(--muted)}
+.sg-it.done .tx{opacity:.55}
+.sg-it button{font:600 12px var(--body);border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:14px;padding:4px 10px;cursor:pointer}
+.sg-tag{display:inline-block;font-size:11px;font-weight:700;border-radius:10px;padding:1px 8px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--ink);margin-right:6px}
+#acctTxt{max-width:92px;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:560px){#acctTxt{max-width:64px}.top .row1{gap:8px}.sg-seg label{font-size:13px}.sheet.sg{place-items:start center;padding-top:max(12px,env(safe-area-inset-top,0px))}.sheet .box{max-height:92dvh}}
+@media (max-width:380px){.brand{font-size:16px;gap:6px}.brand svg{width:30px;height:30px}.brand small{font-size:8.5px}#acctTxt{max-width:50px}.top .row1{gap:6px}.iconbtn{padding:7px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -239,6 +259,7 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
   <div class="row1">
     <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(-7 32 32)"><rect x="3" y="18" width="58" height="32" rx="7" fill="#8E0B20"/><rect x="3" y="14" width="58" height="32" rx="7" fill="#C8102E"/><rect x="8" y="19" width="48" height="22" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="1.6" stroke-dasharray="3.2 2.4"/><circle cx="15" cy="30" r="5" fill="#fff"/><circle cx="15" cy="30" r="2.4" fill="#8E0B20"/><text x="39" y="37" font-family="Arial Black,Impact,Arial,sans-serif" font-weight="900" font-size="15.5" letter-spacing=".5" text-anchor="middle" fill="#fff">RBF</text></g></svg><span class="bt">ATPL Fase 0<small>por Juanjo Ruano</small></span></div>
     <button class="iconbtn" id="searchBtn" type="button" aria-haspopup="dialog" aria-label="Buscar en los apuntes"><svg viewBox="0 0 20 20" aria-hidden="true" style="transform:rotate(45deg)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z" fill="currentColor"/></svg><span>Buscar</span><kbd>/</kbd></button>
+    <button class="iconbtn" id="sugBtn" type="button" hidden aria-haspopup="dialog" aria-label="Buzón de sugerencias"><svg viewBox="0 0 20 20" aria-hidden="true" width="18" height="18"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h11A1.5 1.5 0 0 1 17 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 14.5zm1.6.3 5.4 4.3 5.4-4.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Buzón</span></button>
     <button class="savepill" id="saveBtn" type="button" aria-haspopup="dialog"><i></i><span id="saveTxt">Mi progreso</span></button>
     <button class="savepill" id="acct" type="button" hidden aria-label="Cuenta"><span id="acctTxt">Cuenta</span></button>
   </div>
@@ -299,15 +320,32 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
   </div>
 </div>
 
+<div class="sheet sg" id="sugBox" hidden role="dialog" aria-modal="true" aria-labelledby="sgT">
+  <form class="box" id="sgForm" autocomplete="off">
+    <h2 id="sgT">Buzón de sugerencias</h2>
+    <p class="muted">¿Falta una pregunta o hay algo mal? Cuéntalo y lo reviso.</p>
+    <div class="sg-seg" role="radiogroup" aria-label="Tipo">
+      <label><input type="radio" name="sgKind" value="pregunta" checked>Pregunta nueva</label>
+      <label><input type="radio" name="sgKind" value="correccion">Corrección</label>
+      <label><input type="radio" name="sgKind" value="otro">Otra idea</label>
+    </div>
+    <label class="fld">Asignatura<select id="sgSubj"></select></label>
+    <label class="fld">Mensaje<textarea id="sgBody" maxlength="1500" placeholder="Escribe la pregunta con sus opciones y la correcta, o qué hay que corregir…"></textarea></label>
+    <div class="cnt" id="sgCnt">0 / 1500</div>
+    <div class="row"><button class="btn" type="submit" id="sgSend">Enviar</button><button class="btn ghost" type="button" id="sgCancel">Cerrar</button></div>
+    <p class="msg" id="sgMsg" aria-live="polite"></p>
+  </form>
+</div>
+
 <div class="sheet" id="nameAsk" hidden role="dialog" aria-modal="true" aria-labelledby="naT">
   <form class="box" id="naForm" autocomplete="on">
     <h2 id="naT">¿Cómo te llamas?</h2>
-    <p class="muted">Tu nombre y apellidos salen en el ranking (y yo los veo en las estadísticas). Podrás ocultarlos del ranking cuando quieras.</p>
+    <p class="muted">Tu nombre y apellidos salen en el ranking (y yo los veo en las estadísticas). Entras automáticamente en el ranking de cada asignatura al hacer 5 tests.</p>
     <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px">
       <label class="fld" for="naFirst">Nombre<input id="naFirst" autocomplete="given-name" maxlength="30"></label>
       <label class="fld" for="naLast">Apellidos<input id="naLast" autocomplete="family-name" maxlength="40"></label>
     </div>
-    <div class="row"><button class="btn" type="submit">Guardar</button><button class="btn ghost" type="button" id="naLater">Más tarde</button></div>
+    <div class="row"><button class="btn" type="submit">Guardar</button></div>
     <p class="msg" id="naMsg" aria-live="polite" style="color:var(--bad)"></p>
   </form>
 </div>
@@ -323,7 +361,7 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
       <label class="fld" for="lgFirst">Nombre<input id="lgFirst" autocomplete="given-name" maxlength="30"></label>
       <label class="fld" for="lgLast">Apellidos<input id="lgLast" autocomplete="family-name" maxlength="40"></label>
     </div>
-    <label class="okline" for="lgOk"><input type="checkbox" id="lgOk"><span>Acepto la <a href="privacidad.html" target="_blank" rel="noopener">política de privacidad</a>: se guardan mi nombre y apellidos (los verán los demás en el ranking, si no lo oculto), mi email, mi progreso y cuándo y cuánto uso la app. (Solo para crear cuenta.)</span></label>
+    <label class="okline" for="lgOk"><input type="checkbox" id="lgOk"><span>Acepto la <a href="privacidad.html" target="_blank" rel="noopener">política de privacidad</a>: se guardan mi nombre y apellidos (los verán los demás en el ranking, que es obligatorio a partir de 5 tests por asignatura), mi email, mi progreso y cuándo y cuánto uso la app. (Solo para crear cuenta.)</span></label>
     <div class="row">
       <button class="btn" type="submit" id="lgIn">Entrar y despegar</button>
       <button class="btn sec" type="button" id="lgUp">Crear cuenta</button>
@@ -366,6 +404,7 @@ const SUBJ = [
   {k:"070", code:"070", short:"Operational Procedures", name:"Operational Procedures", extra:[["senasa","Simulacro SENASA"]]},
   {k:"081", code:"081", short:"Principles of Flight", name:"Principles of Flight", extra:[["examen","Simulacro SENASA"]]},
   {k:"090", code:"090", short:"Communications", name:"Communications", extra:[["voice","Radio por voz"]]},
+  {k:"poh", code:"POH", short:"POH", name:"Pilot Operating Handbook · Cessna 172 y Piper PA-28", extra:[]},
 ];
 const DONATE_URL = "";   // enlace de donaciones (PayPal.me, Ko-fi…); vacío = sin botón
 const $ = s => document.querySelector(s);
@@ -530,7 +569,7 @@ function renderDash(){
   const sums=SUBJ.map(s=>({s, m:summary(s.k)}));
   const tests=sums.reduce((a,x)=>a+x.m.n,0), readyN=sums.filter(x=>x.m.lvl==="ok").length;
   const started=sums.filter(x=>x.m.n), avg = started.length ? Math.round(started.reduce((a,x)=>a+x.m.avg5,0)/started.length) : null;
-  $("#kpis").innerHTML = `<div class="kpi"><b>${tests}</b><span>tests hechos</span></div><div class="kpi"><b>${avg==null?"–":avg+" %"}</b><span>media reciente</span></div><div class="kpi"><b>${readyN}/9</b><span>preparadas</span></div>`;
+  $("#kpis").innerHTML = `<div class="kpi"><b>${tests}</b><span>tests hechos</span></div><div class="kpi"><b>${avg==null?"–":avg+" %"}</b><span>media reciente</span></div><div class="kpi"><b>${readyN}/${SUBJ.length}</b><span>preparadas</span></div>`;
   $("#grid").innerHTML = sums.map(({s,m})=>`
     <article class="card ${m.n?'':'empty'}">
       <div class="chead"><span class="code">${s.code}</span><span class="nm">${esc(s.short)}${s.name!==s.short?`<small>${esc(s.name)}</small>`:""}</span><span class="chip ${m.lvl}">${m.label}</span></div>
@@ -630,7 +669,7 @@ function hl(str, ts){
 }
 function runSearch(){
   const q=$("#q").value, ts=terms(q), box=$("#qRes"), meta=$("#qMeta");
-  if(!ts.length){ box.innerHTML=""; meta.textContent="Busca una palabra o un código (p. ej. 040.02) en los apuntes de las 9 asignaturas."; return; }
+  if(!ts.length){ box.innerHTML=""; meta.textContent="Busca una palabra o un código (p. ej. 040.02) en los apuntes de las 10 asignaturas."; return; }
   if(!IDX){ meta.textContent="Cargando…"; loadIdx().then(runSearch, ()=>{ meta.textContent="No se ha podido cargar el buscador. Recarga la página."; }); return; }
   const hits=[];
   for(const e of IDX){
@@ -690,7 +729,7 @@ renderTabs(); renderDash(); show(start);
 /* ===================== web propia: cuenta obligatoria (Supabase) ===================== */
 async function webBoot(cfg){
   sb = window.supabase.createClient(cfg.url, cfg.key, {auth:{persistSession:true, autoRefreshToken:true}});
-  $("#acct").hidden=false; $("#privLink").hidden=false; $("#saveBtn").hidden=true;
+  $("#acct").hidden=false; $("#sugBtn").hidden=false; $("#privLink").hidden=false; $("#saveBtn").hidden=true;
   const { data } = await sb.auth.getSession();
   if(data && data.session) await signedIn(data.session.user, false); else openLogin();
 }
@@ -725,17 +764,51 @@ async function signedIn(user, consent){
 async function loadMine(){
   if(!sb||!sbUser) return;
   try{ const {data,error}=await sb.from("profiles").select("full_name,show_rank").eq("user_id",sbUser.id).maybeSingle(); if(error) throw error;
-    MY={name:(data&&data.full_name)||"", show:!data||data.show_rank!==false}; }catch(e){ return; }
+    MY={name:(data&&data.full_name)||"", show:true}; }catch(e){ return; }
   if(!MY.name) setTimeout(openNameAsk,700);
 }
+/* ===================== buzón de sugerencias (web) ===================== */
+let SG=null;
+function openSug(){
+  if(!sb||!sbUser) return;
+  $("#sgSubj").innerHTML=`<option value="">General</option>`+SUBJ.map(s=>`<option value="${s.k}" ${s.k===current?"selected":""}>${esc(s.code)} · ${esc(s.short)}</option>`).join("");
+  $("#sgMsg").textContent=""; $("#sgBody").value=""; $("#sgCnt").textContent="0 / 1500"; $("#sgSend").disabled=false;
+  $("#sugBox").hidden=false; setTimeout(()=>$("#sgBody").focus(),30);
+}
+$("#sugBtn").addEventListener("click",openSug);
+$("#sgCancel").addEventListener("click",()=>{ $("#sugBox").hidden=true; });
+$("#sugBox").addEventListener("click",e=>{ if(e.target.id==="sugBox") $("#sugBox").hidden=true; });
+$("#sgBody").addEventListener("input",()=>{ $("#sgCnt").textContent=$("#sgBody").value.length+" / 1500"; });
+$("#sgForm").addEventListener("submit",async e=>{ e.preventDefault();
+  const body=$("#sgBody").value.trim(), msg=$("#sgMsg"); msg.style.color="var(--bad)";
+  if(body.length<5){ msg.textContent="Escribe algo más de detalle."; return; }
+  $("#sgSend").disabled=true;
+  const kind=(document.querySelector('input[name=sgKind]:checked')||{}).value||"otro";
+  const r=await sb.from("suggestions").insert({email:sbUser.email, name:MY.name||null, kind, subject:$("#sgSubj").value||null, body});
+  if(r.error){ $("#sgSend").disabled=false; msg.textContent=(r.error.code==="42P01"||/suggestions/.test(r.error.message||""))?"El buzón aún no está activado. Prueba en un rato.":"No se ha podido enviar. Inténtalo en un rato."; return; }
+  msg.style.color="var(--ok)"; msg.textContent="¡Recibido! Gracias."; SG=null; setTimeout(()=>{ $("#sugBox").hidden=true; },1300);
+});
+const SG_KIND={pregunta:"Pregunta",correccion:"Corrección",otro:"Idea"};
+async function drawInbox(){
+  const el=$("#inbox"); if(!el||!sb) return;
+  if(!SG){ const r=await sb.from("suggestions").select("*").order("created_at",{ascending:false}).limit(200);
+    if(r.error){ el.innerHTML=`<div class="st-box"><h2>Buzón</h2><p class="muted">Aún no está activado (falta ejecutar el SQL).</p></div>`; return; }
+    SG=r.data||[]; }
+  const nu=SG.filter(x=>x.status!=="hecho").length;
+  el.innerHTML=`<div class="st-box" style="margin-bottom:12px"><h2>Buzón · ${nu} nuevas</h2>${SG.length?SG.map(x=>{ const s=SUBJ.find(y=>y.k===x.subject);
+    return `<div class="sg-it ${x.status==="hecho"?"done":""}"><div class="tx"><div class="mt"><span class="sg-tag">${SG_KIND[x.kind]||x.kind}</span>${s?esc(s.code)+" · "+esc(s.short)+" · ":""}${esc(x.name||x.email||"")} · ${fmtD(x.created_at)}</div>${esc(x.body).replace(/\n/g,"<br>")}</div><button type="button" data-sg="${x.id}" data-a="toggle">${x.status==="hecho"?"Reabrir":"Hecho"}</button><button type="button" data-sg="${x.id}" data-a="del">Borrar</button></div>`; }).join(""):`<p class="muted">Todavía no hay mensajes.</p>`}</div>`;
+  el.querySelectorAll("button[data-sg]").forEach(b=>b.addEventListener("click",async()=>{ const id=Number(b.dataset.sg), it=SG.find(x=>x.id===id); if(!it) return;
+    if(b.dataset.a==="del"){ if(!confirm("¿Borrar este mensaje?")) return; const r=await sb.from("suggestions").delete().eq("id",id); if(!r.error) SG=SG.filter(x=>x.id!==id); }
+    else { const st=it.status==="hecho"?"nuevo":"hecho"; const r=await sb.from("suggestions").update({status:st}).eq("id",id); if(!r.error) it.status=st; }
+    drawInbox(); }));
+}
 function openNameAsk(){ if(MY.name||!sbUser) return; if(!$("#login").hidden) return; $("#naMsg").textContent=""; $("#nameAsk").hidden=false; setTimeout(()=>$("#naFirst").focus(),30); }
-async function saveName(name,show){
-  const r=await sb.rpc("set_profile",{p_name:name,p_show:show}); if(r.error) throw r.error; MY={name:name.trim().replace(/\\s+/g," "),show:show};
+async function saveName(name){
+  const r=await sb.rpc("set_profile",{p_name:name,p_show:true}); if(r.error) throw r.error; MY={name:name.trim().replace(/\\s+/g," "),show:true};
 }
 $("#naForm").addEventListener("submit",async e=>{ e.preventDefault();
   const f=$("#naFirst").value.trim(), l=$("#naLast").value.trim(); if(f.length<2||l.length<2){ $("#naMsg").textContent="Escribe tu nombre y tus apellidos."; return; }
-  try{ await saveName(f+" "+l, MY.show); $("#nameAsk").hidden=true; setTimeout(showNews,300); if(current==="rank") renderRank(); }catch(err){ $("#naMsg").textContent="No se ha podido guardar. Inténtalo en un rato."; } });
-$("#naLater").addEventListener("click",()=>{ $("#nameAsk").hidden=true; setTimeout(showNews,300); });
+  try{ await saveName(f+" "+l); $("#nameAsk").hidden=true; setTimeout(showNews,300); if(current==="rank") renderRank(); }catch(err){ $("#naMsg").textContent="No se ha podido guardar. Inténtalo en un rato."; } });
 function renderAcct(){ $("#acctTxt").textContent = sbUser ? sbUser.email.split("@")[0] : "Cuenta"; }
 function openLogin(){ $("#login").hidden=false; $("#lgMsg").textContent=""; setTimeout(()=>$("#lgEmail").focus(),30); }
 async function doAuth(mode){
@@ -792,6 +865,7 @@ function evoChart(list){
 }
 async function renderStats(){
   const box=$("#stats"); if(!isAdmin||!sb){ box.innerHTML=""; return; }
+  SG=null;
   box.innerHTML=`<div class="dhead"><div><h1>Estadísticas</h1><p>Solo las ves tú. Visitas sin cuenta y países, en Cloudflare Web Analytics.</p></div></div><p class="muted" id="stLoad">Cargando…</p>`;
   try{
     let a = await sb.from("profiles").select("user_id,email,created_at,last_seen,visits,seconds,full_name");
@@ -842,6 +916,7 @@ function drawStats(){
   : `<div class="st-box"><h2>Usuarios</h2><div class="st-scroll"><table class="st-tbl"><thead><tr><th>Nombre</th><th>Email</th><th>Alta</th><th>Última visita</th><th class="n">Entradas</th><th class="n">Tiempo</th><th class="n">Tests</th><th class="n">Media</th></tr></thead><tbody>
       ${ST.map(u=>`<tr><td><button type="button" data-u="${esc(u.user_id)}" style="background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font:inherit">${esc(uname(u))}</button>${u.email===ADMIN_EMAIL?` <span class="muted">(tú)</span>`:""}</td><td>${esc(u.email)}</td><td>${fmtD(u.created_at)}</td><td>${fmtD(u.last_seen)}</td><td class="n">${u.visits||0}</td><td class="n">${fmtT(u.seconds)}</td><td class="n">${u.at.length}</td><td class="n">${avg(u.at)==null?"–":avg(u.at)+" %"}</td></tr>`).join("")}
       </tbody></table></div></div>`}`;
+  if(!one){ const d=document.createElement("div"); d.id="inbox"; box.querySelector(".st-grid").before(d); drawInbox(); }
   $("#stSel").addEventListener("change", e=>{ stUser=e.target.value; drawStats(); });
   box.querySelectorAll("button[data-u]").forEach(b=>b.addEventListener("click", ()=>{ stUser=b.dataset.u; drawStats(); $("#main").scrollTop=0; const v=$("#v-stats"); if(v) v.scrollTop=0; }));
 }
@@ -870,11 +945,10 @@ function drawRank(){
   const have=rkHave(rkSub);
   const status = have<5 ? `Llevas <b>${have}</b> de 5 tests en ${esc(s.short)}. Te faltan <b>${5-have}</b> para entrar en su ranking.`
     : !MY.name ? `Ya cumples los 5 tests. Pon tu nombre arriba para entrar en el ranking.`
-    : me ? `Vas el <b>nº ${me.pos}</b> de ${rows.length} en ${esc(s.short)} con <b>${me.pts.toFixed(1)}</b> puntos.${MY.show?"":" Estás oculto: solo tú ves tu posición."}` : `Tus tests se están contando; vuelve a abrir el ranking en unos segundos.`;
+    : me ? `Vas el <b>nº ${me.pos}</b> de ${rows.length} en ${esc(s.short)} con <b>${me.pts.toFixed(1)}</b> puntos.` : `Tus tests se están contando; vuelve a abrir el ranking en unos segundos.`;
   const pd=n=>`<span class="pd ${n<=3?"p"+n:""}">${n}</span>`;
-  box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1><p>Quién lleva mejor cada asignatura. Mínimo 5 tests para entrar.</p></div></div>
-  <form class="st-box rk-form" id="rkNick" style="margin-bottom:12px"><label class="fld">Tu nombre en el ranking<input id="rkNickIn" maxlength="70" autocomplete="name" value="${esc(MY.name)}" placeholder="Nombre y apellidos"></label><button class="btn" type="submit">Guardar</button>
-    <label class="okline" style="flex-basis:100%"><input type="checkbox" id="rkShow" ${MY.show?"checked":""}><span>Mostrar mi nombre a los demás en el ranking</span></label></form>
+  box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1><p>Quién lleva mejor cada asignatura. Entras solo con hacer 5 tests de la asignatura.</p></div></div>
+  <form class="st-box rk-form" id="rkNick" style="margin-bottom:12px"><label class="fld">Tu nombre en el ranking<input id="rkNickIn" maxlength="70" autocomplete="name" value="${esc(MY.name)}" placeholder="Nombre y apellidos"></label><button class="btn" type="submit">Guardar</button></form>
   <div class="rk-chips" role="group" aria-label="Asignatura">${SUBJ.map(x=>`<button type="button" data-rk="${x.k}" aria-pressed="${x.k===rkSub}">${x.code} · ${esc(x.short)}</button>`).join("")}</div>
   <div class="st-box"><h2>${esc(s.code)} ${esc(s.short)}</h2><p style="margin:0 0 10px;font-size:15px">${status}</p>
     ${rows.length?`<div class="st-scroll"><table class="st-tbl rk-tbl"><thead><tr><th></th><th>Nombre</th><th class="n">Tests</th><th class="n">Nota</th><th class="n">Puntos</th></tr></thead><tbody>
@@ -891,20 +965,27 @@ function drawRank(){
   const cur=box.querySelector('[data-rk][aria-pressed="true"]'); if(cur&&cur.parentNode) cur.parentNode.scrollLeft=Math.max(0,cur.offsetLeft-cur.parentNode.offsetLeft-12);
   const sync=async ()=>{ const v=$("#rkNickIn").value.trim().replace(/\s+/g," ");
     if(v.length<3){ alert("Escribe tu nombre y apellidos."); return; }
-    try{ await saveName(v,$("#rkShow").checked); renderRank(); }catch(e){ alert("No se ha podido guardar. Inténtalo en un rato."); } };
+    try{ await saveName(v); renderRank(); }catch(e){ alert("No se ha podido guardar. Inténtalo en un rato."); } };
   $("#rkNick").addEventListener("submit",e=>{ e.preventDefault(); sync(); });
-  $("#rkShow").addEventListener("change",()=>{ if(MY.name) sync(); });
 }
 
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-23b", items:[
+    {i:"📘", t:"Nueva asignatura: POH", d:"Pilot Operating Handbook del Cessna 172 y el Piper PA-28: apuntes con esquemas interactivos y tests, incluido el simulacro cronometrado."},
+    {i:"✉️", t:"Buzón de sugerencias", d:"Arriba a la derecha: propón preguntas nuevas o corrige errores.", web:true},
+    {i:"🏆", t:"Ranking para todos", d:"Con 5 tests de una asignatura entras solo en su ranking, con tu nombre.", web:true}
+  ]},
+  {id:"2026-10-23", items:[
+    {i:"⚖️", t:"Performance renovada", d:"Simulacros SENASA de 031, 032 y 033 con el reparto oficial y reloj, «Examen Fase 0» de 30 preguntas en 1 h, altimetría (PA, ISA y altitud de densidad) y muchas preguntas ATPL nuevas."}
+  ]},
   {id:"2026-10-22b", items:[
     {i:"🛫", t:"Nuevo diseño de vuelo", d:"Pista de aeropuerto, un avión en cada asignatura (despega si vas bien, aterriza si toca reforzar) y cursor de avión."}
   ]},
   {id:"2026-10-22", items:[
     {i:"🎙️", t:"Radio por voz · Communications", d:"Practica el diálogo ATC–piloto hablando: ATC te habla en inglés y tú contestas por el micrófono."},
-    {i:"🏆", t:"Ranking por asignatura", d:"Compárate con la promoción: necesitas 5 tests en la asignatura. Mira la pestaña RANKING (puedes ocultar tu nombre).", web:true}
+    {i:"🏆", t:"Ranking por asignatura", d:"Compárate con la promoción: necesitas 5 tests en la asignatura. Mira la pestaña RANKING.", web:true}
   ]}
 ];
 function newsSeen(){ try{ return localStorage.getItem("f0:news")||""; }catch(e){ return "~"; } }

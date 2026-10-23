@@ -1,0 +1,1423 @@
+<!doctype html><html><head><meta charset=utf8><script>/* puente con la app: el progreso lo guarda la app (navegador o nube), no la página */
+(function(){var K="poh",P=window.parent&&window.parent!==window,W={},n=0,LS="f0:"+K;
+function ask(m){return new Promise(function(r){if(!P)return r(undefined);var id=++n;W[id]=r;m.id=id;try{window.parent.postMessage(m,"*")}catch(e){delete W[id];return r(undefined)}setTimeout(function(){if(W[id]){delete W[id];r(undefined)}},4000)})}
+addEventListener("message",function(e){var d=e.data;if(d&&d.t==="f0-reply"&&W[d.id]){W[d.id](d.v);delete W[d.id]}});
+async function load(){var v=await ask({t:"f0-load",k:K});if(v===undefined){try{v=JSON.parse(localStorage.getItem(LS)||"null")}catch(e){}}return v||null}
+async function save(st){try{localStorage.setItem(LS,JSON.stringify(st))}catch(e){}await ask({t:"f0-save",k:K,v:st})}
+window.__hub={use:async function(n){return n==="artifact"?{publish:async function(f){var x=f&&f["progreso.json"];if(x){await save(JSON.parse(typeof x==="string"?x:x.content))}return{}}}:null},
+fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
+})();</script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>POH Piper y Cessna</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF3F5; --paper:#FFFFFF; --ink:#14304A; --muted:#5A6F82; --line:#CBD8E0;
+  --blue:#2F6FA3; --magenta:#A3246F; --ok:#1F7A4D; --bad:#B3302C; --warn:#9A6A00;
+  --warnbg:#FFF6DC; --compbg:#F3ECF6; --okbg:#E4F3EB; --badbg:#FBE9E8; --teal:#127C87;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1B26; --paper:#172634; --ink:#E3ECF2; --muted:#94A9BA; --line:#2B3F50;
+    --blue:#7EB3DE; --magenta:#E07BB6; --ok:#5CC98F; --bad:#F0827D; --warn:#E7BD55;
+    --warnbg:#2E2715; --compbg:#2A2133; --okbg:#16301F; --badbg:#3A1C1B; --teal:#6FC6D0; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1B26; --paper:#172634; --ink:#E3ECF2; --muted:#94A9BA; --line:#2B3F50;
+  --blue:#7EB3DE; --magenta:#E07BB6; --ok:#5CC98F; --bad:#F0827D; --warn:#E7BD55;
+  --warnbg:#2E2715; --compbg:#2A2133; --okbg:#16301F; --badbg:#3A1C1B; --teal:#6FC6D0; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-block:0 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{padding:28px 0 8px}
+header .code{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;font-size:64px;line-height:.9;color:var(--magenta);letter-spacing:-1px}
+header h1{font-family:"Barlow Condensed",Barlow,sans-serif;font-size:28px;margin:4px 0 2px;font-weight:600;text-wrap:balance}
+header p{margin:0;color:var(--muted)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;padding:12px 0;border-bottom:2px solid var(--ink);margin-bottom:20px}
+nav button{flex:1;font:600 17px "Barlow Condensed",Barlow,sans-serif;padding:10px 6px;border:0;background:transparent;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-14px}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--magenta)}
+button:focus-visible,summary:focus-visible,label:focus-within{outline:2px solid var(--blue);outline-offset:2px}
+h2{font-family:"Barlow Condensed",Barlow,sans-serif;font-size:24px;margin:28px 0 4px;font-weight:600}
+details.lo{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:6px;margin:10px 0}
+details.lo.atpl{border-left-color:var(--magenta)}
+details.lo summary{cursor:pointer;padding:12px 14px;list-style:none;display:flex;gap:4px 10px;align-items:baseline;flex-wrap:wrap}
+details.lo summary::-webkit-details-marker{display:none}
+.lonum{font:600 15px "Barlow Condensed",Barlow,sans-serif;color:var(--blue);white-space:nowrap}
+details.lo.atpl .lonum{color:var(--magenta)}
+.lotitle{font-weight:500;flex:1;min-width:0}
+.lometa{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap;justify-content:flex-end}
+.lometa .m{font-size:15px}
+.wtag{font:500 16px Barlow,sans-serif;color:var(--muted)}
+.body{padding:0 14px 14px}
+.body h4{font:600 16px "Barlow Condensed",Barlow,sans-serif;margin:14px 0 4px;color:var(--ink)}
+.body ul{margin:4px 0;padding-left:20px}
+.body li{margin:3px 0}
+.flag,.comp,.key,.profe{padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}
+.flag{background:var(--warnbg);border-left:3px solid var(--warn)}
+.flag b:first-child{color:var(--warn)}
+.comp{background:var(--compbg);border-left:3px solid var(--magenta)}
+.comp > b:first-child{color:var(--magenta);display:block;margin-bottom:2px}
+.key{background:color-mix(in srgb,var(--blue) 8%,transparent);border-left:3px solid var(--blue)}
+.key > b:first-child{color:var(--blue);display:block;margin-bottom:2px}
+.profe{background:color-mix(in srgb,var(--ok) 9%,transparent);border-left:3px solid var(--ok)}
+.profe > b:first-child{color:var(--ok);display:block;margin-bottom:2px}
+.profe ul{margin:4px 0;padding-left:18px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:600}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px;margin:12px 0}
+.btn{font:600 17px "Barlow Condensed",Barlow,sans-serif;background:var(--ink);color:var(--paper);border:0;border-radius:4px;padding:12px 20px;cursor:pointer}
+.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn.sm{padding:6px 12px;font-size:15px}
+.btn:disabled{opacity:.4;cursor:default}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px;margin:12px 0}
+.q.focus{border-left:4px solid var(--magenta)}
+.qhead{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:6px}
+.qtext{font-weight:500;margin-bottom:10px}
+.choice{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:4px;margin:6px 0;cursor:pointer}
+.choice input{margin-top:4px}
+.choice.right{background:var(--okbg);border-color:var(--ok)}
+.choice.wrong{background:var(--badbg);border-color:var(--bad)}
+button.choice{width:100%;text-align:left;background:transparent;color:inherit;font:inherit}
+.expl{margin-top:10px;font-size:15px;border-top:1px dashed var(--line);padding-top:8px}
+.expl .es{color:var(--muted)}
+.ref{margin-top:6px;font-size:14px;background:var(--bg);border-left:3px solid var(--blue);padding:6px 8px;border-radius:3px}
+.tag{font-size:12px;padding:1px 6px;border-radius:3px;border:1px solid var(--magenta);color:var(--magenta)}
+.tag.pf{background:var(--ok);border-color:var(--ok);color:var(--paper);font-weight:600}
+.tag.at{background:var(--magenta);border-color:var(--magenta);color:var(--paper);font-weight:600}
+.score{font:700 56px "Barlow Condensed",Barlow,sans-serif;line-height:1}
+.pass{color:var(--ok)} .fail{color:var(--bad)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;background:var(--blue)}
+.lorow{margin:8px 0}
+.progress{position:sticky;top:calc(env(safe-area-inset-top,0px) + 56px);background:var(--bg);padding:6px 0;font-size:14px;color:var(--muted);z-index:4}
+.timer{position:sticky;top:calc(env(safe-area-inset-top,0px) + 88px);z-index:4;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:4px;padding:6px 10px;font-size:15px;margin-bottom:6px}
+.timer b{font:700 20px "Barlow Condensed",sans-serif}
+.timer.warn{border-left-color:var(--warn)} .timer.late{border-left-color:var(--bad)} .timer.late b{color:var(--bad)}
+.muted{color:var(--muted)} .small{font-size:13px}
+.hist td{white-space:nowrap} .hist .los{white-space:normal;font-size:13px;color:var(--muted)}
+.mode{display:block;border:1px solid var(--line);border-radius:4px;padding:10px 12px;margin:6px 0;cursor:pointer}
+.mode:has(input:checked){border-color:var(--blue);background:color-mix(in srgb,var(--blue) 7%,transparent)}
+.mode small{display:block;color:var(--muted);margin-left:26px}
+select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);max-width:100%}
+.mode small select{width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.map td{vertical-align:middle}
+.pill{font-size:12px;padding:1px 7px;border-radius:10px;white-space:nowrap;border:1px solid var(--line);color:var(--muted)}
+.pill.done{border-color:var(--blue);color:var(--blue)}
+.pill.at{border-color:var(--magenta);color:var(--magenta)}
+.pill.wt{border-color:var(--ink);color:var(--ink)}
+.pill.ok{border-color:var(--ok);color:var(--ok)} .pill.mid{border-color:var(--warn);color:var(--warn)} .pill.lo{border-color:var(--bad);color:var(--bad)} .pill.nd{color:var(--muted)}
+.m{font:700 18px "Barlow Condensed",Barlow,sans-serif}
+.m.lo{color:var(--bad)} .m.mid{color:var(--warn)} .m.hi{color:var(--ok)}
+.lonum.b{font:600 15px "Barlow Condensed",sans-serif}
+.linkbtn{background:none;border:0;color:var(--blue);font:inherit;cursor:pointer;padding:0;text-decoration:underline;text-align:left}
+.weak{padding-left:20px} .weak li{margin:4px 0}
+.concept{margin:10px 0} .concept .crow{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap} .cmeta{font-size:13px;margin-top:3px}
+.fixed .crow b{color:var(--ok)}
+.hot{border-top:1px solid var(--line);padding:10px 0 4px}
+.hot:first-child{border-top:0}
+.hot .crow{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.hot p{margin:4px 0 8px;font-size:15px}
+.xrow{display:grid;grid-template-columns:78px 1fr;gap:8px;align-items:center;margin:5px 0}
+.xrow .xlab{font-size:13px;color:var(--muted);white-space:nowrap}
+.xrow .xlab b{color:var(--ink);font-family:"Barlow Condensed",sans-serif;font-size:15px}
+.xtrack{min-width:0}
+.xsegs{display:flex;gap:2px;height:28px}
+.seg{border:0;padding:0;min-width:5px;border-radius:2px;cursor:pointer}
+.seg.full{background:var(--blue)} .seg.part{background:var(--warn)} .seg.atpl{background:var(--magenta)}
+.seg:hover{outline:2px solid var(--ink)}
+.xleg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted);margin:8px 0 0}
+.xleg i.seg{display:inline-block;width:12px;height:12px;vertical-align:-1px;margin-right:5px;cursor:default}
+.svgbox{margin:12px 0} .svgbox svg{width:100%;height:auto;display:block}
+.vis{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:12px;margin:12px 0}
+.vis svg{width:100%;height:auto;display:block}
+.visbtns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px} .visbtns .btn{padding:7px 10px;font-size:15px} .visbtns .btn.on{background:var(--ink);color:var(--paper)}
+.vismsg{margin-top:8px;font-size:15px;min-height:2.6em}
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.steps span{font:600 14px "Barlow Condensed",sans-serif;padding:3px 8px;border-radius:10px;border:1px solid var(--line);color:var(--muted)}
+.steps span.on{border-color:var(--magenta);color:var(--magenta)}
+.steps span.past{border-color:var(--ok);color:var(--ok)}
+.lamps{display:flex;gap:10px;margin:8px 0}
+.lamp{flex:1;border:2px solid var(--line);border-radius:6px;background:#1d242b;color:#8a97a3;padding:14px 4px;font:600 15px "Barlow Condensed",sans-serif;text-align:center;cursor:pointer}
+.lamp.on{background:#d6362f;color:#fff;border-color:#d6362f;box-shadow:0 0 14px #d6362f88}
+.six{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.six button{aspect-ratio:1;border-radius:50%;border:3px solid var(--ink);background:var(--paper);color:var(--ink);font:600 14px "Barlow Condensed",sans-serif;cursor:pointer;padding:4px}
+.six button.on{border-color:var(--magenta);background:color-mix(in srgb,var(--magenta) 12%,var(--paper))}
+.gbar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:14px}
+.gbar span.l{width:120px;flex:none}
+.gbar .tr{flex:1;height:16px;background:var(--line);border-radius:3px;position:relative}
+.gbar .tr i{position:absolute;top:0;bottom:0;border-radius:3px}
+@media (max-width:560px){details.lo summary{gap:4px 10px}.lometa{justify-content:flex-start;width:100%}.gbar span.l{width:96px}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+<div class="wrap">
+<header>
+  <div class="code">POH</div>
+  <h1>Pilot Operating Handbook · Cessna 172 y Piper PA-28</h1>
+  <p><b title="Examen interno sin cifras publicadas: nº de preguntas, tiempo y reparto estimados">30 preguntas · 45 min · aprobado 75 %</b></p>
+</header>
+<nav role="tablist">
+  <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
+  <button role="tab" aria-selected="false" data-tab="map">Mapa</button>
+  <button role="tab" aria-selected="false" data-tab="test">Test</button>
+  <button role="tab" aria-selected="false" data-tab="hist">Historial</button>
+</nav>
+
+<section id="p-notes">
+<div class="card"><b>Examen SENASA ATPL · dónde están las 30 preguntas</b>
+  <div id="examBar"></div>
+</div>
+<div class="card" id="hotCard" hidden><b>Lo que más fallas</b><div id="hotFails"></div></div>
+<h2>POH.1 · General <span class="wtag">9 preg. · 30 %</span></h2>
+
+<details class="lo" id="lo-POH.1.1" data-lo="POH.1.1">
+<summary><span class="lonum">POH.1.1</span><span class="lotitle">Motor y hélice</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li>El 90 % de las preguntas sale de las secciones <b>1, 2 y 7</b>. De General: aprender <b>todo de ambos aviones</b>.</li>
+    <li>La medida de la hélice es la <b>total</b>, de punta a punta, no solo la de las palas.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Los dos aviones llevan un Lycoming <b>O-320</b> de <b>160 BHP a 2700 RPM</b>, 4 cilindros, directo, opuestos, refrigerado por aire, con hélice de <b>paso fijo</b>.</div>
+  <div class="scroll"><table>
+   <tr><th></th><th>Piper PA-28</th><th>Cessna 172</th></tr>
+   <tr><td><b>Modelo</b></td><td>O-320-<b>D2A/D3O</b></td><td>O-320-<b>H2AD</b></td></tr>
+   <tr><td><b>Potencia</b></td><td colspan="2">160 BHP a 2700 RPM (los dos)</td></tr>
+   <tr><td><b>Hélice</b></td><td>Sensenich · 2 palas · 72–74 in</td><td>McCauley · 2 palas · 74–75 in</td></tr>
+  </table></div>
+  <div class="flag"><b>Trampa</b> «O» = cilindros <b>opuestos</b>; «320» = cilindrada; <b>IO</b> = inyección. Piper = <b>Sens</b>enich · Cessna = <b>Mc</b>Cauley.</div>
+</div>
+</details>
+
+<details class="lo" id="lo-POH.1.2" data-lo="POH.1.2">
+<summary><span class="lonum">POH.1.2</span><span class="lotitle">Combustible y aceite</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>Piper: <b>50</b> totales, <b>48</b> útiles, aceite <b>6 a 8 qts</b>. Cessna: <b>43</b> totales, <b>40</b> útiles, aceite <b>6 qts, mínimo 4</b>.</div>
+  <div class="scroll"><table>
+   <tr><th></th><th>Piper PA-28</th><th>Cessna 172</th></tr>
+   <tr><td><b>Capacidad</b></td><td>50</td><td>43</td></tr>
+   <tr><td><b>Utilizable</b></td><td>48</td><td>40</td></tr>
+   <tr><td><b>Combustible</b></td><td>100LL AVGAS</td><td>100 y 100LL AVGAS</td></tr>
+   <tr><td><b>Aceite</b></td><td>6 a 8 qts</td><td>capacidad 6 qts · mínimo 4 qts</td></tr>
+  </table></div>
+  <div class="comp"><b>Complemento</b><ul><li>Las capacidades son en galones US, la unidad estándar de estos POH.</li></ul></div>
+  <div class="flag"><b>Trampa</b> No confundas <b>capacidad</b> con <b>utilizable</b>: la diferencia es combustible que no puedes usar (2 en el Piper, 3 en el Cessna).</div>
+</div>
+</details>
+
+<details class="lo" id="lo-POH.1.3" data-lo="POH.1.3">
+<summary><span class="lonum">POH.1.3</span><span class="lotitle">Pesos máximos</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>En ambos aviones <b>MLW = MTOW</b>. Piper <b>2325 lbs</b>. Cessna <b>2300 lbs</b> (normal) · <b>2000 lbs</b> (utility).</div>
+  <div class="scroll"><table>
+   <tr><th></th><th>MTOW</th><th>MLW</th></tr>
+   <tr><td><b>Piper PA-28</b></td><td>2325 lbs</td><td>2325 lbs</td></tr>
+   <tr><td><b>Cessna · normal</b></td><td>2300 lbs</td><td>2300 lbs</td></tr>
+   <tr><td><b>Cessna · utility</b></td><td>2000 lbs</td><td>2000 lbs</td></tr>
+  </table></div>
+  <div class="flag"><b>Trampa</b> Las fotos de mass &amp; balance no entran: se hacen en Mass &amp; Balance.</div>
+</div>
+</details>
+
+<h2>POH.2 · Limitaciones <span class="wtag">9 preg. · 30 %</span></h2>
+
+<details class="lo" id="lo-POH.2.1" data-lo="POH.2.1">
+<summary><span class="lonum">POH.2.1</span><span class="lotitle">Velocidades: VNE · VNO · VA · VFE</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li><b>Muy importantes todas las velocidades</b>: VA y VFE sobre todo. Aprender las velocidades máximas de los flaps.</li>
+    <li>Velocidad de planeo: <b>Cruiser 60 kt</b> · <b>Cessna 65 kt</b>.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Los dos tienen <b>VNE 160</b>. Piper: VNO <b>126</b> · VA <b>88–111</b> · VFE <b>103</b>. Cessna: VNO <b>128</b> · VA <b>80–97</b> · VFE <b>85</b>.</div>
+  <h4>Velocidades · tócalas y ponte a prueba</h4>
+  <div id="visSpeeds" class="vis"></div>
+  <div class="scroll"><table>
+   <tr><th>Velocidad (KIAS)</th><th>Piper</th><th>Cessna</th><th>Qué protege</th></tr>
+   <tr><td><b>VNE</b> Never Exceed</td><td>160</td><td>160</td><td>integridad estructural</td></tr>
+   <tr><td><b>VNO</b> Normal Operating</td><td>126</td><td>128</td><td>la turbulencia puede sobrecargar</td></tr>
+   <tr><td><b>VA</b> Maneuvering</td><td>88–111</td><td>80–97</td><td>deflexión máxima hacia arriba puede sobrecargar</td></tr>
+   <tr><td><b>VFE</b> Flaps Extended</td><td>103</td><td>85</td><td>no superar con flaps abajo</td></tr>
+  </table></div>
+  <h4>Arcos del anemómetro</h4>
+  <div class="scroll"><table>
+   <tr><th></th><th>Piper</th><th>Cessna</th></tr>
+   <tr><td><b>Arco blanco</b></td><td>44 – 103</td><td>41 – 85</td></tr>
+   <tr><td><b>Arco verde</b></td><td>50 – 126</td><td>47 – 128</td></tr>
+   <tr><td><b>Arco amarillo</b></td><td>126 – 160</td><td>128 – 160</td></tr>
+   <tr><td><b>Línea roja</b></td><td>160</td><td>160</td></tr>
+  </table></div>
+  <div class="flag"><b>Trampa</b> El Cessna tiene todo <b>más bajo</b> que el Piper salvo VNE: VFE 85 frente a 103 y VA 80–97 frente a 88–111.</div>
+  <div class="comp"><b>Complemento</b><ul><li>Blanco = rango de flaps · verde = operación normal · amarillo = solo con aire en calma · rojo = VNE.</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-POH.2.2" data-lo="POH.2.2">
+<summary><span class="lonum">POH.2.2</span><span class="lotitle">Factor de carga (los G que aguanta el avión)</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li><b>Load factor: muy importante</b>. Son los G que puede asumir el avión.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Flaps arriba: <b>+3,8 g</b> (normal) y <b>+4,4 g</b> (utility). Flaps abajo: <b>+3,0 g</b> en <b>ambas</b> categorías.</div>
+  <h4>Factor de carga · elige configuración</h4>
+  <div id="visLoad" class="vis"></div>
+  <div class="scroll"><table>
+   <tr><th>Configuración</th><th>Positivo</th><th>Negativo (Piper)</th></tr>
+   <tr><td>Flaps arriba · <b>normal</b></td><td>+3,8 g</td><td>−1,52 g</td></tr>
+   <tr><td>Flaps arriba · <b>utility</b></td><td>+4,4 g</td><td>−1,76 g</td></tr>
+   <tr><td>Flaps abajo · ambas</td><td>+3,0 g</td><td>–</td></tr>
+  </table></div>
+  <div class="flag"><b>Trampa</b> Con flaps abajo el límite baja a <b>+3,0 g</b> y es el mismo en normal y utility.</div>
+</div>
+</details>
+
+<details class="lo" id="lo-POH.2.3" data-lo="POH.2.3">
+<summary><span class="lonum">POH.2.3</span><span class="lotitle">Aceite y presión de combustible</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>Aceite: presión <b>25–100 psi</b> y temperatura máxima <b>118 °C</b>. Piper: presión de combustible <b>0,5–8 psi</b>. Cessna: usar con más de <b>4 qts</b>.</div>
+  <div class="scroll"><table>
+   <tr><th>Límite</th><th>Valor</th></tr>
+   <tr><td>Presión de aceite</td><td>25 – 100 psi</td></tr>
+   <tr><td>Temperatura máxima del aceite</td><td>118 °C</td></tr>
+   <tr><td>Presión de combustible (Piper)</td><td>0,5 – 8 psi</td></tr>
+   <tr><td>Aceite mínimo (Cessna)</td><td>más de 4 qts</td></tr>
+  </table></div>
+</div>
+</details>
+
+<details class="lo" id="lo-POH.2.4" data-lo="POH.2.4">
+<summary><span class="lonum">POH.2.4</span><span class="lotitle">Centro de gravedad</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li>En el CG, <b>no es importante</b>; sí lo es el factor de carga.</li>
+  </ul></div>
+  <div class="scroll"><table>
+   <tr><th></th><th>Límite delantero</th><th>Límite trasero</th></tr>
+   <tr><td><b>Piper</b></td><td>83 in con 1950 lbs o menos</td><td>93 in con cualquier peso</td></tr>
+   <tr><td><b>Cessna</b></td><td>31 in con 1950 lbs o menos</td><td>47,3 in con cualquier peso</td></tr>
+  </table></div>
+  <p class="muted small">Datum del Cessna: parte baja del frente del cortafuegos.</p>
+</div>
+</details>
+<h2>POH.7 · Sistemas <span class="wtag">9 preg. · 30 %</span></h2>
+
+<details class="lo" id="lo-POH.7.3" data-lo="POH.7.3">
+<summary><span class="lonum">POH.7.3</span><span class="lotitle">Annunciator panel y seis instrumentos</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li>Lo más importante y lo más probable en el examen: el <b>panel de las 3 luces</b> (Annunciator Panel) y <b>qué fallo indica cada luz</b>.</li>
+    <li>Seis instrumentos, de izquierda a derecha: anemómetro (pitot), horizonte artificial, altímetro, coordinador de virajes, giro direccional y VSI.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>De izquierda a derecha: <b>bomba de vacío</b> · <b>alternador</b> · <b>presión de aceite</b>.</div>
+  <h4>Annunciator panel · enciende cada luz</h4>
+  <div id="visAnnun" class="vis"></div>
+  <h4>Los seis instrumentos · tócalos</h4>
+  <div id="visSix" class="vis"></div>
+  <div class="flag"><b>Trampa</b> Luz del <b>centro</b> = alternador: queda batería para unos <b>30 min</b>. La luz de la <b>izquierda</b> es el vacío, no el alternador.</div>
+</div>
+</details>
+
+<details class="lo" id="lo-POH.7.2" data-lo="POH.7.2">
+<summary><span class="lonum">POH.7.2</span><span class="lotitle">Mandos, flaps y estabilator</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li>Aprenderse los <b>flaps</b>, el <b>stabilator</b> y el <b>anti-balance tab</b>.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Flaps manuales: <b>0° · 10° · 25° · 40°</b>. Cola horizontal = <b>stabilator</b>, con <b>anti-balance tab</b>. En tierra, rueda de morro <b>±30°</b>.</div>
+  <h4>Stabilator · mueve la palanca</h4>
+  <div id="visCtrl" class="vis"></div>
+  <ul>
+    <li>Doble mando, con <b>cables y poleas</b>.</li>
+    <li>Compensadores manuales de <b>guiñada y cabeceo</b>.</li>
+    <li>Flaps manuales de tres posiciones: <b>10° · 25° · 40°</b>.</li>
+  </ul>
+  <div class="comp"><b>Complemento</b><ul><li>El anti-balance tab se mueve en el mismo sentido que el borde de salida del stabilator: reduce su sensibilidad y da tacto a los mandos.</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-POH.7.1" data-lo="POH.7.1">
+<summary><span class="lonum">POH.7.1</span><span class="lotitle">Estructura y motor del Piper</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li>Parte de las cargas las soporta la <b>piel</b> y otra parte los <b>refuerzos internos</b> (semi-monocoque).</li>
+    <li>Los <b>dos mufflers</b> son tubos de escape que sirven para <b>calentar el carburador</b>.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Fuselaje <b>semi-monocoque</b>: soporte del motor y tren de <b>acero</b>, el resto <b>aleación de aluminio</b>.</div>
+  <div class="scroll"><table>
+   <tr><th>Parte</th><th>Dato</th></tr>
+   <tr><td><b>Soporte del motor</b></td><td>tubos de acero</td></tr>
+   <tr><td><b>Tren de aterrizaje</b></td><td>acero</td></tr>
+   <tr><td><b>Resto del fuselaje</b></td><td>aleación de aluminio, fibra de vidrio y termoplásticos</td></tr>
+   <tr><td><b>Motor</b></td><td>160 HP a 2700 RPM · directo · 4 cilindros</td></tr>
+   <tr><td><b>Instalación</b></td><td>2 mufflers · enfriador de aceite · entradas de aire · admisión de carburador separada</td></tr>
+  </table></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-POH.7.4" data-lo="POH.7.4">
+<summary><span class="lonum">POH.7.4</span><span class="lotitle">Tren de aterrizaje y frenos</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>Tren <b>fijo</b>, triciclo, suspensión <b>aire-aceite</b>. Frenos <b>solo en las ruedas principales</b>, incluido el de parking.</div>
+  <div class="scroll"><table>
+   <tr><th></th><th>Presión del neumático</th><th>Elongación de la suspensión</th></tr>
+   <tr><td><b>Principal</b></td><td>24 psi</td><td>4,5 in</td></tr>
+   <tr><td><b>Morro</b></td><td>30 psi</td><td>3,25 in</td></tr>
+  </table></div>
+  <p>En tierra se gira con los <b>pedales</b>.</p>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-POH.7.5" data-lo="POH.7.5">
+<summary><span class="lonum">POH.7.5</span><span class="lotitle">Sistema de combustible</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>Bomba <b>eléctrica</b> y bomba del <b>motor</b>. <b>Tres</b> puntos de drenaje.</div>
+  <ul>
+    <li>Dos depósitos principales (izquierdo y derecho) con una <b>válvula selectora</b>.</li>
+    <li>Después del selector van el filtro, las bombas y el carburador.</li>
+  </ul>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-POH.7.6" data-lo="POH.7.6">
+<summary><span class="lonum">POH.7.6</span><span class="lotitle">Sistema eléctrico</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>Batería de plomo-ácido de <b>12 V</b> y alternador de <b>14 V · 60 amp</b>.</div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-POH.7.7" data-lo="POH.7.7">
+<summary><span class="lonum">POH.7.7</span><span class="lotitle">Vacío y pitot-estática</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>El vacío mueve el <b>horizonte artificial</b>, el <b>DGI</b> y el <b>coordinador de virajes</b>.</div>
+  <ul>
+    <li><b>Poca succión</b>: puede ser un filtro bloqueado. <b>Presión baja</b> por encima de 12.000 ft o con pocas RPM.</li>
+    <li>Presión total y estática se toman en el <b>ala izquierda</b>.</li>
+    <li><b>Estática alterna</b> desde la cabina: ventanas cerradas, calefacción y defroster encendidos, para el mínimo error.</li>
+  </ul>
+</div>
+</details>
+
+<h2>POH.3 · Procedimientos de emergencia <span class="wtag">2 preg. · 7 %</span></h2>
+
+<details class="lo" id="lo-POH.3.1" data-lo="POH.3.1">
+<summary><span class="lonum">POH.3.1</span><span class="lotitle">Fallo de alternador</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li><b>Muy importante</b>: es la única checklist que hay que saber (Piper, página 51).</li>
+    <li>Quedan unos <b>30 min de batería</b>. El motor sigue dando potencia, pero fallan comunicaciones e instrumentos eléctricos.</li>
+    <li>No se apaga el motor: se reduce la carga eléctrica y se resetean breakers y botones.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Primero <b>reducir la carga eléctrica al mínimo</b>, luego revisar el breaker del alternador.</div>
+  <h4>Checklist paso a paso</h4>
+  <div id="visAlt" class="vis"></div>
+  <div class="flag"><b>Trampa</b> El motor <b>no</b> se para y el master <b>no</b> se apaga: el objetivo es alargar la batería y aterrizar cuanto antes.</div>
+</div>
+</details>
+
+<details class="lo" id="lo-POH.3.2" data-lo="POH.3.2">
+<summary><span class="lonum">POH.3.2</span><span class="lotitle">Pérdida de presión de aceite y otros fallos</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li><b>Muy importante</b>: pérdida de presión de aceite, siempre contrastada con la temperatura.</li>
+    <li>Presión baja y mucha temperatura: el motor puede llegar a pararse. Aterrizar cuanto antes.</li>
+  </ul></div>
+  <div class="scroll"><table>
+   <tr><th>Fallo</th><th>Qué hacer</th></tr>
+   <tr><td><b>Pérdida parcial de presión de aceite</b></td><td>Aterrizar en cuanto sea posible en el aeródromo más cercano.</td></tr>
+   <tr><td><b>Pérdida total</b></td><td>Ir al aeródromo más cercano; el motor puede pararse de golpe. Con temperatura alta o humo, plantéate un aterrizaje fuera de aeródromo mientras haya potencia.</td></tr>
+   <tr><td><b>Temperatura de aceite alta</b></td><td>Contrastar con la presión y aterrizar en cuanto sea posible.</td></tr>
+   <tr><td><b>Pérdida de presión de combustible</b></td><td>Bomba ON y selector en el depósito más lleno; si no es depósito vacío, aterrizar.</td></tr>
+   <tr><td><b>Rugosidad del motor</b></td><td>Calefacción de carburador ON; si no mejora en 1 minuto, OFF y buscar otras causas (magnetos).</td></tr>
+  </table></div>
+  <div class="flag"><b>Trampa</b> Una pérdida de presión suele ir acompañada de una <b>subida de temperatura</b>.</div>
+</div>
+</details>
+
+<h2>POH.4 · Procedimientos normales <span class="wtag">1 preg. · 3 %</span></h2>
+
+<details class="lo" id="lo-POH.4.1" data-lo="POH.4.1">
+<summary><span class="lonum">POH.4.1</span><span class="lotitle">Checklists normales</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li>Las checklists <b>no hacen falta</b>, salvo la de fallo de alternador. Las secciones 3 y 4 pesan menos.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Prueba de magnetos del Cessna: caída máxima <b>175 RPM</b> y diferencia máxima <b>75 RPM</b>, con <b>1700 RPM</b>.</div>
+  <div class="scroll"><table>
+   <tr><th>Cessna · ground check</th><th>Valor</th></tr>
+   <tr><td>Gases para la prueba de magnetos</td><td>1700 RPM</td></tr>
+   <tr><td>Caída máxima de magnetos</td><td>175 RPM</td></tr>
+   <tr><td>Diferencia máxima entre magnetos</td><td>75 RPM</td></tr>
+   <tr><td>Primer, arranque en frío</td><td>6 emboladas</td></tr>
+  </table></div>
+</div>
+</details>
+
+<h2>De otras asignaturas <span class="wtag">no entra en el simulacro</span></h2>
+
+<details class="lo out" id="lo-POH.5.1" data-lo="POH.5.1">
+<summary><span class="lonum">POH.5.1</span><span class="lotitle">Conversión de unidades de combustible (032 Performance)</span></summary>
+<div class="body">
+  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+    <li>Las secciones 5 y 6 no entran, pero hay que saber hacer el <b>cálculo básico de combustible y peso</b>.</li>
+  </ul></div>
+  <div class="scroll"><table>
+   <tr><th>De → a</th><th>Operación</th></tr>
+   <tr><td>US gal → Imperial gal</td><td>÷ 1,2</td></tr>
+   <tr><td>Imperial gal → US gal</td><td>× 1,2</td></tr>
+   <tr><td>Imperial gal → litros</td><td>× 4,546</td></tr>
+   <tr><td>Litros → Imperial gal</td><td>÷ 4,546</td></tr>
+   <tr><td>US gal → litros</td><td>× 3,78</td></tr>
+   <tr><td>Litros → US gal</td><td>÷ 3,78</td></tr>
+  </table></div>
+</div>
+</details>
+
+<details class="lo out" id="lo-POH.6.1" data-lo="POH.6.1">
+<summary><span class="lonum">POH.6.1</span><span class="lotitle">Del volumen a la masa (031 Mass &amp; Balance)</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>Volumen × <b>densidad</b> = masa. Con la densidad en kg/L, el resultado sale en kg.</div>
+  <div class="comp"><b>Complemento</b><ul><li>Densidad estándar del avgas: 0,72 kg/L.</li></ul></div>
+</div>
+</details>
+</section>
+
+<section id="p-map" hidden>
+  <div class="card"><b>Si el examen fuera hoy</b>
+    <div id="forecast"></div>
+    <button class="btn" id="goSim" style="margin-top:10px">Hacer un simulacro</button>
+  </div>
+  <div class="card"><b>Dónde te juegas más preguntas</b>
+    <ul class="weak" id="weakList"><li class="muted">Calculando…</li></ul>
+  </div>
+  <h2>Tu evolución</h2>
+  <div class="card svgbox" id="evoMap"></div>
+  <div class="card"><b>Conceptos que más fallas</b>
+    <div id="failList"></div></div>
+  <h2>Syllabus POH</h2>
+  <div class="scroll"><table class="map" id="mapTable"></table></div>
+  <div class="card" id="genCard" hidden>
+    <b>Más preguntas de tus temas flojos</b>
+    <div><button class="btn sec" id="genBtn" style="margin-top:8px">Crear 5 preguntas</button></div>
+    <p id="genMsg" class="muted small"></p>
+  </div>
+</section>
+
+<section id="p-test" hidden>
+  <div id="setup" class="card">
+    <b>Elige el test</b>
+    <div style="margin-top:8px">
+      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro cronometrado <small><span class="row" style="margin-top:6px"><select id="senLen"><option value="full">Completo · 30 preguntas en 36 min</option><option value="half">Exprés · 15 preguntas en 18 min</option><option value="real">Tiempo real · 30 preguntas en 45 min</option></select></span></small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
+      <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
+      <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
+    </div>
+    <label class="row" style="margin:10px 0 4px"><input type="checkbox" id="incTrial" checked> Incluir temario aún no dado</label>
+    <label class="row" style="margin:0 0 10px"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
+    <button class="btn" id="startBtn">Empezar</button>
+    <p id="startMsg" class="muted small"></p>
+  </div>
+  <div id="quiz" hidden>
+    <div class="progress" id="progress"></div><div id="timerBar" class="timer" hidden></div>
+    <div id="result" hidden></div>
+    <div id="qlist"></div>
+    <div id="finishBox">
+      <p id="finishAsk" class="muted" hidden></p>
+      <button class="btn" id="finishBtn">Corregir</button>
+    </div>
+  </div>
+</section>
+
+<section id="p-hist" hidden>
+  <div class="card svgbox" id="histEvo"></div>
+  <div id="histBody"></div>
+  <div id="histDetail"></div>
+</section>
+
+</div>
+<script>
+// ---------- utilidades ----------
+const $ = s => document.querySelector(s);
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const fmtDate = d => new Date(d).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+const pct1 = x => Math.round(x*100);
+const fmt1 = x => x.toLocaleString("es-ES",{maximumFractionDigits:1});
+
+// ---------- temario: capítulos y subcapítulos (peso estimado según lo que remarcó el profesor) ----------
+// [código, capítulo, peso en preguntas, nombre, cov]  cov: given = dado · nd = aún no dado · out = de otra asignatura
+const BLOCKS = [
+ {k:"1",code:"POH.1",name:"General",n:9},
+ {k:"2",code:"POH.2",name:"Limitaciones",n:9},
+ {k:"7",code:"POH.7",name:"Sistemas",n:9},
+ {k:"3",code:"POH.3",name:"Emergencia",n:2},
+ {k:"4",code:"POH.4",name:"Normales",n:1}
+];
+const SUB = [
+ ["POH.1.1","1",3.5,"Motor y hélice","given"],
+ ["POH.1.2","1",3,"Combustible y aceite","given"],
+ ["POH.1.3","1",2.5,"Pesos máximos","given"],
+ ["POH.2.1","2",4,"Velocidades: VNE · VNO · VA · VFE","given"],
+ ["POH.2.2","2",3,"Factor de carga","given"],
+ ["POH.2.3","2",1.5,"Aceite y presión de combustible","given"],
+ ["POH.2.4","2",0.5,"Centro de gravedad","given"],
+ ["POH.7.3","7",2.5,"Annunciator panel y seis instrumentos","given"],
+ ["POH.7.2","7",2,"Mandos, flaps y estabilator","given"],
+ ["POH.7.1","7",1.5,"Estructura y motor del Piper","given"],
+ ["POH.7.4","7",0.8,"Tren de aterrizaje y frenos","nd"],
+ ["POH.7.5","7",0.8,"Sistema de combustible","nd"],
+ ["POH.7.6","7",0.7,"Sistema eléctrico","nd"],
+ ["POH.7.7","7",0.7,"Vacío y pitot-estática","nd"],
+ ["POH.3.1","3",1.2,"Fallo de alternador","given"],
+ ["POH.3.2","3",0.8,"Pérdida de presión de aceite y otros fallos","given"],
+ ["POH.4.1","4",1,"Checklists normales","given"],
+ ["POH.5.1","X",0,"Conversión de unidades de combustible (032)","out"],
+ ["POH.6.1","X",0,"Del volumen a la masa (031)","out"]
+];
+const BLK = Object.fromEntries(BLOCKS.map(b=>[b.k,b]));
+const SUBMAP = Object.fromEntries(SUB.map(s=>[s[0],{code:s[0],block:s[1],w:s[2],name:s[3],cov:s[4]}]));
+const W = Object.fromEntries(SUB.map(s=>[s[0],s[2]]));
+const LO_NAME = Object.fromEntries(SUB.map(s=>[s[0],s[3]]));
+const loLabel = l => `${l} ${LO_NAME[l]||""}`.trim();
+const SEN_LEN = {full:{n:30,min:36,label:"Completo"}, half:{n:15,min:18,label:"Exprés"}, real:{n:30,min:45,label:"Tiempo real"}};
+const REAL_MIN = 45, REAL_N = 30, TOTAL_N = 30;
+const baseOf = id => String(id).replace(/[a-z]$/,"");
+const blockOf = q => (SUBMAP[q[1]]||{}).block;
+const inSim = q => blockOf(q)!=="X";
+const isGiven = q => (SUBMAP[q[1]]||{}).cov!=="nd";
+
+// ---------- resúmenes de apuntes (salen en «Repasa» y en «Lo que más fallas») ----------
+const REFS = {
+ eng:"Piper: Lycoming O-320-D2A/D3O. Cessna: Lycoming O-320-H2AD. Los dos: 160 BHP a 2700 RPM, 4 cilindros, directo, horizontalmente opuesto, refrigerado por aire. «O» = cilindros opuestos; IO = inyección.",
+ prop:"Hélice de paso fijo y 2 palas en los dos aviones. Piper: Sensenich, 72–74 in. Cessna: McCauley, 74–75 in. La medida es la hélice entera, de punta a punta.",
+ fuel:"Piper: capacidad 50, utilizable 48, 100LL AVGAS. Cessna: capacidad 43, utilizable 40, 100 y 100LL AVGAS. La diferencia es combustible inutilizable.",
+ oil:"Aceite del Piper: 6 a 8 qts. Aceite del Cessna: capacidad 6 qts, mínimo 4 qts (se usa con más de 4 qts).",
+ wt:"Piper: MTOW 2325 lbs y MLW 2325 lbs. Cessna: MTOW y MLW 2300 lbs en normal y 2000 lbs en utility.",
+ vne:"VNE (Never Exceed) = 160 KIAS en los dos aviones: integridad estructural.",
+ vno:"VNO (Normal Operating): Piper 126, Cessna 128. Por encima, la turbulencia puede sobrecargar la estructura.",
+ va:"VA (Maneuvering): Piper 88–111, Cessna 80–97. Por encima, la deflexión máxima hacia arriba puede sobrecargar el avión.",
+ vfe:"VFE (Flaps Extended): Piper 103, Cessna 85. No superar con flaps abajo.",
+ arcs:"Anemómetro. Piper: blanco 44–103, verde 50–126, amarillo 126–160, rojo 160. Cessna: blanco 41–85, verde 47–128, amarillo 128–160, rojo 160.",
+ glide:"Velocidad de planeo: Cessna 65 kt · Cruiser 60 kt.",
+ lf:"Factor de carga (los G que aguanta el avión). Flaps arriba: +3,8 g normal y +4,4 g utility. Flaps abajo: +3,0 g en ambas. Piper, negativos: −1,52 g normal y −1,76 g utility.",
+ oilp:"Aceite: presión 25–100 psi, temperatura máxima 118 °C. Piper: presión de combustible 0,5–8 psi.",
+ cg:"Piper: 83 in con 1950 lbs o menos, hasta 93 in con cualquier peso. Cessna: 31 in con 1950 lbs o menos, hasta 47,3 in con cualquier peso; datum en la parte baja del frente del cortafuegos.",
+ struct:"Piper: fuselaje semi-monocoque (la piel y los refuerzos internos soportan las cargas). Soporte del motor y tren de acero; el resto, aleación de aluminio, fibra de vidrio y termoplásticos.",
+ muff:"El Piper lleva dos mufflers (tubos de escape) que se usan para calentar el carburador; enfriador de aceite, entradas de aire y admisión de carburador separada.",
+ flaps:"Flaps manuales del Piper: 0°, 10°, 25° y 40° (tres posiciones).",
+ stab:"El Piper lleva un stabilator (toda la superficie horizontal se mueve) con anti-balance tab. Doble mando con cables y poleas, compensadores manuales de guiñada y cabeceo; rueda de morro ±30° en tierra.",
+ annun:"Annunciator panel, de izquierda a derecha: bomba de vacío (succión) · alternador · presión de aceite.",
+ six:"Seis instrumentos. Fila de arriba: anemómetro, horizonte artificial, altímetro. Fila de abajo: coordinador de virajes, giro direccional (DGI) y VSI.",
+ gear:"Tren fijo, triciclo, suspensión aire-aceite. Principal: 24 psi y 4,5 in de elongación. Morro: 30 psi y 3,25 in. Frenos solo en las principales (incluido el de parking). En tierra se gira con los pedales.",
+ fsys:"Combustible del Piper: bomba eléctrica y bomba del motor, tres puntos de drenaje, dos depósitos con válvula selectora.",
+ elec:"Batería de plomo-ácido de 12 V y alternador de 14 V y 60 amp.",
+ vac:"El vacío mueve horizonte artificial, DGI y coordinador de virajes. Poca succión: filtro bloqueado; presión baja por encima de 12.000 ft o con pocas RPM. Presión total y estática en el ala izquierda; estática alterna desde la cabina con ventanas cerradas y calefacción y defroster encendidos.",
+ alt:"Fallo de alternador: 1) carga eléctrica al mínimo, 2) revisar el breaker del alternador, 3) alternador OFF, esperar 1 s, 4) alternador ON, 5) si el amperímetro sigue sin carga, alternador OFF. Aterrizar cuanto antes. Quedan unos 30 min de batería; el motor sigue funcionando.",
+ oilf:"Pérdida parcial de presión de aceite: aterrizar en cuanto sea posible. Pérdida total: ir al aeródromo más cercano, el motor puede pararse de golpe; con temperatura alta o humo, plantéate aterrizar fuera mientras haya potencia. La pérdida de presión suele ir con subida de temperatura.",
+ norm:"Cessna, ground check: 1700 RPM, caída máxima de magnetos 175 RPM, diferencia máxima 75 RPM. Primer en frío: 6.",
+ conv:"US gal → Imperial: ÷ 1,2. Imperial → US: × 1,2. Imperial → litros: × 4,546. US gal → litros: × 3,78. Litros → US gal: ÷ 3,78.",
+ dens:"Volumen × densidad = masa. Densidad estándar del avgas: 0,72 kg/L."
+};
+// concepto que agrupa los fallos: [nombre, id del visual en los apuntes]
+const REF_CONCEPT = {
+ eng:["Motor Lycoming O-320"], prop:["Hélice de paso fijo"], fuel:["Combustible: capacidad y utilizable"], oil:["Aceite: cantidad"], wt:["Pesos máximos"],
+ vne:["Velocidades VNE · VNO · VA · VFE","visSpeeds"], vno:["Velocidades VNE · VNO · VA · VFE","visSpeeds"], va:["Velocidades VNE · VNO · VA · VFE","visSpeeds"], vfe:["Velocidades VNE · VNO · VA · VFE","visSpeeds"],
+ arcs:["Arcos del anemómetro","visSpeeds"], glide:["Velocidad de planeo","visSpeeds"],
+ lf:["Factor de carga","visLoad"], oilp:["Límites de aceite y combustible"], cg:["Centro de gravedad"],
+ struct:["Estructura semi-monocoque"], muff:["Mufflers y calefacción del carburador"], flaps:["Flaps manuales","visCtrl"], stab:["Stabilator y mandos","visCtrl"],
+ annun:["Annunciator panel","visAnnun"], six:["Seis instrumentos","visSix"],
+ gear:["Tren y frenos"], fsys:["Sistema de combustible"], elec:["Sistema eléctrico"], vac:["Vacío y pitot-estática"],
+ alt:["Fallo de alternador","visAlt"], oilf:["Pérdida de presión de aceite"], norm:["Checklists normales"], conv:["Conversión de unidades"], dens:["Del volumen a la masa"]
+};
+// ---------- banco: [id, tema, origen, resumen, pregunta, opciones (la 1ª es la correcta), explicación] ----------
+// origen: p = diapositivas y apuntes · c = complemento · a = temario aún no dado. Las variantes de una misma pregunta comparten id base (m1, m1b, m1c).
+const Q = (id,lo,src,ref,text,opts,expl)=>[id,lo,src,ref,text,opts,expl];
+const BANK1 = [
+// ===== POH.1.1 Motor y hélice =====
+Q("m1","POH.1.1","p","eng","Which engine powers the school's Piper PA-28?",["Lycoming O-320-D2A/D3O","Lycoming O-320-H2AD","Lycoming IO-360-L2A","Continental IO-240-B"],"El Piper lleva el Lycoming O-320-D2A/D3O; el H2AD es el del Cessna."),
+Q("m1b","POH.1.1","p","eng","Which engine powers the school's Cessna 172?",["Lycoming O-320-H2AD","Lycoming O-320-D2A/D3O","Lycoming IO-360-L2A","Continental O-200-A"],"El Cessna lleva el Lycoming O-320-H2AD."),
+Q("m1c","POH.1.1","p","eng","An O-320-D2A/D3O engine is fitted to which aircraft?",["The Piper PA-28","The Cessna 172","Both school aircraft","Neither of them"],"El D2A/D3O es del Piper; el Cessna monta el H2AD."),
+Q("m2","POH.1.1","p","eng","In an engine designation such as O-320, what does the letter O stand for?",["Horizontally opposed cylinders","Overhead camshaft layout","Oil-cooled cylinders","Overboosted induction"],"«O» = cilindros opuestos entre sí; 320 es la cilindrada."),
+Q("m2b","POH.1.1","p","eng","What does the prefix IO indicate in an engine designation?",["A fuel-injected opposed engine","A diesel engine with direct injection","An inline oil-cooled engine","An indirect-drive opposed engine"],"IO = inyección (injection) y cilindros opuestos."),
+Q("m3","POH.1.1","p","eng","What power do the engines of both school aircraft develop?",["160 BHP at 2700 RPM","180 BHP at 2700 RPM","160 BHP at 2400 RPM","150 BHP at 2500 RPM"],"Los dos O-320 dan 160 BHP a 2700 RPM."),
+Q("m3b","POH.1.1","p","eng","At what engine speed is the rated 160 BHP of the O-320 delivered?",["2700 RPM","2500 RPM","2400 RPM","2800 RPM"],"La potencia de 160 BHP se da a 2700 RPM."),
+Q("m4","POH.1.1","p","eng","How many cylinders do the school engines have, and how are they cooled?",["Four, air cooled","Four, liquid cooled","Six, air cooled","Six, liquid cooled"],"Son motores de 4 cilindros refrigerados por aire."),
+Q("m4b","POH.1.1","p","eng","Which description fits the O-320 engine?",["Four cylinders, direct drive, air cooled","Four cylinders, geared, liquid cooled","Six cylinders, direct drive, air cooled","Four cylinders, geared, air cooled"],"4 cilindros, directo (sin reductora), horizontalmente opuesto y refrigerado por aire."),
+Q("m5","POH.1.1","p","prop","What type of propeller do the Piper and the Cessna have?",["Fixed pitch, two blades","Constant speed, two blades","Fixed pitch, three blades","Variable pitch, three blades"],"Los dos llevan hélice de paso fijo con dos palas."),
+Q("m5b","POH.1.1","p","prop","Which statement about the school propellers is correct?",["The blade angle cannot be changed","The pilot selects the blade angle","The blade angle changes with RPM","They have three blades each"],"Paso fijo: no se puede variar el ángulo de las palas."),
+Q("m6","POH.1.1","p","prop","Who manufactures the propeller of the Piper PA-28?",["Sensenich","McCauley","Hartzell","Lycoming"],"Piper = Sensenich."),
+Q("m6b","POH.1.1","p","prop","Who manufactures the propeller of the Cessna 172?",["McCauley","Sensenich","Hartzell","Lycoming"],"Cessna = McCauley."),
+Q("m6c","POH.1.1","p","prop","Sensenich propellers are fitted to which aircraft?",["The Piper PA-28","The Cessna 172","Both school aircraft","Neither of them"],"Sensenich es la hélice del Piper."),
+Q("m7","POH.1.1","p","prop","What is the propeller size of the Piper PA-28?",["72 to 74 inches","74 to 75 inches","68 to 70 inches","78 to 80 inches"],"El Piper lleva hélice de 72 a 74 pulgadas."),
+Q("m7b","POH.1.1","p","prop","What is the propeller size of the Cessna 172?",["74 to 75 inches","72 to 74 inches","68 to 70 inches","78 to 80 inches"],"El Cessna lleva hélice de 74 a 75 pulgadas."),
+Q("m8","POH.1.1","p","prop","The propeller size in the POH (for example 72 to 74 inches) refers to the:",["Total length of the propeller, tip to tip","Length of a single blade","Blade chord at the hub","Distance from hub to the spinner"],"La medida es la hélice entera, no solo las palas."),
+// ===== POH.1.2 Combustible y aceite =====
+Q("f1","POH.1.2","p","fuel","What are the total and usable fuel quantities of the Piper PA-28?",["50 total, 48 usable","43 total, 40 usable","50 total, 40 usable","48 total, 43 usable"],"Piper: capacidad 50 y utilizable 48."),
+Q("f1b","POH.1.2","p","fuel","What are the total and usable fuel quantities of the Cessna 172?",["43 total, 40 usable","50 total, 48 usable","50 total, 40 usable","48 total, 43 usable"],"Cessna: capacidad 43 y utilizable 40."),
+Q("f1c","POH.1.2","p","fuel","Which aircraft has 40 usable fuel?",["The Cessna 172","The Piper PA-28","Both school aircraft","Neither of them"],"El Cessna tiene 43 de capacidad y 40 utilizables."),
+Q("f2","POH.1.2","p","fuel","Which fuel grade does the Piper PA-28 use?",["100LL AVGAS","100 or 100LL AVGAS","Jet A-1","MOGAS 95"],"El Piper usa 100LL AVGAS."),
+Q("f2b","POH.1.2","p","fuel","Which fuel grades can the Cessna 172 use?",["100 and 100LL AVGAS","100LL AVGAS only","Jet A-1 only","Diesel or Jet A-1"],"El Cessna admite 100 y 100LL AVGAS."),
+Q("f3","POH.1.2","p","oil","What oil quantity does the Piper PA-28 carry?",["6 to 8 qts","4 to 6 qts","8 to 10 qts","2 to 4 qts"],"El Piper lleva de 6 a 8 qts de aceite."),
+Q("f3b","POH.1.2","p","oil","What is the oil capacity of the Cessna 172, and the minimum for flight?",["Capacity 6 qts, minimum 4 qts","Capacity 8 qts, minimum 6 qts","Capacity 6 qts, minimum 2 qts","Capacity 4 qts, minimum 2 qts"],"Cessna: capacidad 6 qts y mínimo 4 qts."),
+Q("f3c","POH.1.2","p","oil","What is the minimum oil quantity to operate the Cessna 172?",["4 qts","2 qts","6 qts","8 qts"],"El Cessna se usa con más de 4 qts."),
+Q("f4","POH.1.2","p","fuel","How much of the Piper's fuel is unusable (capacity 50, usable 48)?",["2","5","8","10"],"50 − 48 = 2 inutilizables."),
+Q("f4b","POH.1.2","p","fuel","How much of the Cessna's fuel is unusable (capacity 43, usable 40)?",["3","2","5","7"],"43 − 40 = 3 inutilizables."),
+// ===== POH.1.3 Pesos =====
+Q("w1","POH.1.3","p","wt","What are the MTOW and MLW of the Piper PA-28?",["2325 lbs for both","2300 lbs for both","2325 lbs and 2000 lbs","2550 lbs for both"],"Piper: MTOW = MLW = 2325 lbs."),
+Q("w1b","POH.1.3","p","wt","The maximum landing weight of the Piper PA-28 is:",["Equal to its MTOW, 2325 lbs","2000 lbs","2300 lbs","Lower than its MTOW"],"En el Piper MLW = MTOW = 2325 lbs."),
+Q("w2","POH.1.3","p","wt","What is the MTOW of the Cessna 172 in the normal category?",["2300 lbs","2325 lbs","2000 lbs","2550 lbs"],"Cessna normal: 2300 lbs."),
+Q("w2b","POH.1.3","p","wt","What is the MTOW of the Cessna 172 in the utility category?",["2000 lbs","2300 lbs","2325 lbs","1950 lbs"],"Cessna utility: 2000 lbs."),
+Q("w3","POH.1.3","p","wt","How does the Cessna 172 MLW compare with its MTOW?",["Equal in each category: 2300 normal, 2000 utility","2000 lbs in both categories","2325 lbs in both categories","Lower than MTOW in each category"],"En el Cessna MLW = MTOW: 2300 lbs normal y 2000 lbs utility."),
+// ===== POH.2.1 Velocidades =====
+Q("v1","POH.2.1","p","vne","Which limit is protected by the never-exceed speed VNE?",["Structural integrity","Flap structure","Engine overspeed","Stall margin"],"VNE protege la integridad estructural."),
+Q("v1b","POH.2.1","p","vne","Structural integrity is the reason for which speed limit?",["VNE","VNO","VA","VFE"],"VNE: Never Exceed, integridad estructural."),
+Q("v1c","POH.2.1","p","vne","What is the VNE of the Piper and of the Cessna?",["160 KIAS for both","160 KIAS and 126 KIAS","160 KIAS and 128 KIAS","126 KIAS for both"],"VNE = 160 KIAS en los dos aviones."),
+Q("v2","POH.2.1","p","vno","What is the normal operating speed VNO of the Piper PA-28?",["126 KIAS","128 KIAS","160 KIAS","103 KIAS"],"Piper: VNO 126."),
+Q("v2b","POH.2.1","p","vno","What is the normal operating speed VNO of the Cessna 172?",["128 KIAS","126 KIAS","160 KIAS","85 KIAS"],"Cessna: VNO 128."),
+Q("v2c","POH.2.1","p","vno","What may happen if you exceed VNO in turbulence?",["The structure might be overstressed","The flaps might be damaged","The stall speed increases","The engine might overspeed"],"Por encima de VNO la turbulencia puede sobrecargar la estructura."),
+Q("v3","POH.2.1","p","va","What is the maneuvering speed VA range of the Piper PA-28?",["88 to 111 KIAS","80 to 97 KIAS","103 to 126 KIAS","126 to 160 KIAS"],"Piper: VA de 88 a 111."),
+Q("v3b","POH.2.1","p","va","What is the maneuvering speed VA range of the Cessna 172?",["80 to 97 KIAS","88 to 111 KIAS","85 to 128 KIAS","41 to 85 KIAS"],"Cessna: VA de 80 a 97."),
+Q("v3c","POH.2.1","p","va","Above VA, what might full control deflection do?",["Overstress the aircraft","Stall the wing at once","Extend the flaps","Overheat the engine"],"Por encima de VA, la deflexión máxima puede sobrecargar el avión."),
+Q("v4","POH.2.1","p","vfe","What is the maximum flaps-extended speed VFE of the Piper PA-28?",["103 KIAS","85 KIAS","126 KIAS","88 KIAS"],"Piper: VFE 103."),
+Q("v4b","POH.2.1","p","vfe","What is the maximum flaps-extended speed VFE of the Cessna 172?",["85 KIAS","103 KIAS","128 KIAS","97 KIAS"],"Cessna: VFE 85."),
+Q("v4c","POH.2.1","p","vfe","Which speed must never be exceeded with the flaps down?",["VFE","VNO","VA","VNE"],"VFE: Flaps Extended."),
+Q("v5","POH.2.1","p","arcs","What does the white arc of the Cessna airspeed indicator span?",["41 to 85 KIAS","47 to 128 KIAS","41 to 128 KIAS","47 to 85 KIAS"],"Cessna: arco blanco de 41 a 85."),
+Q("v5b","POH.2.1","p","arcs","What does the green arc of the Cessna airspeed indicator span?",["47 to 128 KIAS","41 to 85 KIAS","85 to 128 KIAS","41 to 160 KIAS"],"Cessna: arco verde de 47 a 128."),
+Q("v5c","POH.2.1","p","arcs","What does the white arc of the Piper airspeed indicator span?",["44 to 103 KIAS","50 to 126 KIAS","44 to 126 KIAS","50 to 103 KIAS"],"Piper: arco blanco de 44 a 103; verde de 50 a 126."),
+Q("v6","POH.2.1","c","arcs","On an airspeed indicator, the yellow arc is the:",["Caution range, only in smooth air","Normal operating range","Flap operating range","Never-exceed line"],"Amarillo: de VNO a VNE, solo con aire en calma."),
+Q("v7","POH.2.1","p","glide","What is the power-off glide speed given for the Cessna 172?",["65 KIAS","60 KIAS","85 KIAS","97 KIAS"],"Planeo: Cessna 65 kt."),
+Q("v7b","POH.2.1","p","glide","Which glide speed was given for the Cruiser?",["60 KIAS","65 KIAS","80 KIAS","88 KIAS"],"Planeo: Cruiser 60 kt."),
+// ===== POH.2.2 Factor de carga =====
+Q("l1","POH.2.2","p","lf","What is the positive load factor limit, flaps up, in the normal category?",["+3.8 g","+4.4 g","+3.0 g","+2.5 g"],"Flaps arriba y normal: +3,8 g."),
+Q("l1b","POH.2.2","p","lf","A flaps-up limit of +3.8 g applies to which category?",["Normal category","Utility category","Both categories","Neither: it depends on weight"],"+3,8 g es el límite de la categoría normal."),
+Q("l2","POH.2.2","p","lf","What is the positive load factor limit, flaps up, in the utility category?",["+4.4 g","+3.8 g","+3.0 g","+5.0 g"],"Flaps arriba y utility: +4,4 g."),
+Q("l2b","POH.2.2","p","lf","A flaps-up limit of +4.4 g applies to which category?",["Utility category","Normal category","Both categories","Neither: it depends on weight"],"+4,4 g es el límite de utility."),
+Q("l3","POH.2.2","p","lf","What is the load factor limit with flaps down?",["+3.0 g in both categories","+3.8 g in normal, +4.4 g in utility","+2.0 g in both categories","+4.4 g in both categories"],"Con flaps abajo: +3,0 g en ambas categorías."),
+Q("l3b","POH.2.2","p","lf","Which category has the higher load factor limit with flaps down?",["Neither: both are +3.0 g","Normal category","Utility category","It depends on weight"],"Flaps abajo: +3,0 g igual en las dos."),
+Q("l4","POH.2.2","p","lf","What is the negative load factor limit of the Piper, flaps up, normal category?",["−1.52 g","−1.76 g","−3.0 g","−0.5 g"],"Piper, normal, flaps arriba: −1,52 g."),
+Q("l4b","POH.2.2","p","lf","What is the negative load factor limit of the Piper, flaps up, utility category?",["−1.76 g","−1.52 g","−3.8 g","−2.2 g"],"Piper, utility, flaps arriba: −1,76 g."),
+Q("l5","POH.2.2","p","lf","What does the load factor limit express?",["The g forces the aircraft can withstand","The maximum payload in lbs","The ratio of fuel to payload","The maximum bank angle allowed"],"El factor de carga son los G que puede asumir el avión."),
+// ===== POH.2.3 Aceite y combustible =====
+Q("o1","POH.2.3","p","oilp","What is the oil pressure limitation of the school aircraft?",["25 to 100 psi","5 to 8 psi","50 to 150 psi","10 to 60 psi"],"Presión de aceite: de 25 a 100 psi."),
+Q("o1b","POH.2.3","p","oilp","An oil pressure of 20 psi in flight is:",["Below the 25–100 psi limit","Inside the normal range","Above the limit","Normal only at idle"],"El rango es de 25 a 100 psi: 20 psi está por debajo."),
+Q("o2","POH.2.3","p","oilp","What is the maximum oil temperature?",["118 °C","98 °C","128 °C","150 °C"],"Temperatura máxima del aceite: 118 °C."),
+Q("o2b","POH.2.3","p","oilp","An oil temperature of 125 °C is:",["Above the maximum of 118 °C","Within normal limits","Below the minimum limit","Acceptable for short periods"],"El máximo es 118 °C: 125 °C lo supera."),
+Q("o3","POH.2.3","p","oilp","What is the fuel pressure limitation of the Piper?",["0.5 to 8 psi","5 to 8 psi","8 to 15 psi","25 to 100 psi"],"Piper: presión de combustible de 0,5 a 8 psi."),
+// ===== POH.2.4 Centro de gravedad =====
+Q("g1","POH.2.4","p","cg","What is the aft CG limit of the Piper?",["93 in at any weight","83 in at any weight","87 in at 1950 lbs","90 in at 2325 lbs"],"Piper: límite trasero 93 in con cualquier peso."),
+Q("g1b","POH.2.4","p","cg","What is the Piper forward CG limit at 1950 lbs or less?",["83 in","93 in","78 in","88 in"],"Piper: desde 83 in con 1950 lbs o menos."),
+Q("g2","POH.2.4","p","cg","Where is the datum of the Cessna 172?",["Lower part of the front of the firewall","Leading edge of the wing","Propeller plane","Tip of the spinner"],"Datum del Cessna: parte baja del frente del cortafuegos."),
+Q("g2b","POH.2.4","p","cg","What is the aft CG limit of the Cessna 172?",["47.3 in at any weight","31 in at any weight","93 in at any weight","35 in at 1950 lbs"],"Cessna: hasta 47,3 in con cualquier peso.")
+];
+const BANK2 = [
+// ===== POH.7.3 Annunciator panel y seis instrumentos =====
+Q("n1","POH.7.3","p","annun","What does the left light of the annunciator panel indicate?",["Vacuum (suction) pump failure","Alternator failure","Low oil pressure","Low fuel pressure"],"Izquierda: bomba de vacío."),
+Q("n1b","POH.7.3","p","annun","Which light of the annunciator panel signals a vacuum pump failure?",["The left light","The middle light","The right light","None: it is shown on a gauge"],"La bomba de vacío es la luz de la izquierda."),
+Q("n2","POH.7.3","p","annun","What does the middle light of the annunciator panel indicate?",["Alternator failure","Vacuum (suction) pump failure","Low oil pressure","Low fuel pressure"],"Centro: alternador."),
+Q("n2b","POH.7.3","p","annun","Which light of the annunciator panel signals an alternator failure?",["The middle light","The left light","The right light","None: it is shown on a gauge"],"El alternador es la luz del centro."),
+Q("n3","POH.7.3","p","annun","What does the right light of the annunciator panel indicate?",["Low oil pressure","Alternator failure","Vacuum (suction) pump failure","High oil temperature"],"Derecha: presión de aceite."),
+Q("n3b","POH.7.3","p","annun","Which light of the annunciator panel signals low oil pressure?",["The right light","The middle light","The left light","None: it is shown on a gauge"],"La presión de aceite es la luz de la derecha."),
+Q("n4","POH.7.3","p","annun","Which failures does the annunciator panel warn about, from left to right?",["Vacuum pump, alternator, oil pressure","Alternator, vacuum pump, oil pressure","Oil pressure, alternator, vacuum pump","Fuel pump, alternator, oil temperature"],"De izquierda a derecha: vacío, alternador y presión de aceite."),
+Q("n5","POH.7.3","p","annun","The middle annunciator light comes on in flight. What is the situation?",["Alternator failure: about 30 minutes of battery left","Vacuum pump failure: gyro instruments are lost","Low oil pressure: the engine may stop soon","Fuel pump failure: the engine will stop"],"Luz central = alternador; quedan unos 30 min de batería."),
+Q("n6","POH.7.3","p","six","In the six-pack, which instrument is at the top left?",["Airspeed indicator","Artificial horizon","Altimeter","Turn coordinator"],"Arriba a la izquierda: anemómetro."),
+Q("n6b","POH.7.3","p","six","In the six-pack, which instrument is at the top centre?",["Artificial horizon","Airspeed indicator","Altimeter","Directional gyro"],"Arriba al centro: horizonte artificial."),
+Q("n6c","POH.7.3","p","six","What is the bottom row of the six-pack, from left to right?",["Turn coordinator, directional gyro, VSI","Directional gyro, turn coordinator, VSI","VSI, directional gyro, turn coordinator","Turn coordinator, VSI, directional gyro"],"Fila de abajo: coordinador de virajes, DGI y VSI."),
+Q("n7","POH.7.3","p","six","Which instrument is at the top right of the six-pack?",["Altimeter","VSI","Directional gyro","Airspeed indicator"],"Arriba a la derecha: altímetro."),
+// ===== POH.7.2 Mandos, flaps y estabilator =====
+Q("k1","POH.7.2","p","flaps","What are the flap settings of the Piper PA-28?",["0°, 10°, 25°, 40°","0°, 15°, 30°, 45°","0°, 10°, 20°, 40°","0°, 20°, 30°, 40°"],"Flaps del Piper: 0°, 10°, 25° y 40°."),
+Q("k1b","POH.7.2","p","flaps","How are the flaps of the Piper PA-28 operated?",["Manually, in three notches","Electrically, continuously variable","Hydraulically, two settings","Electrically, in three notches"],"Flaps manuales de tres posiciones: 10°, 25° y 40°."),
+Q("k2","POH.7.2","p","stab","What kind of horizontal tail does the Piper have?",["A stabilator","A fixed stabilizer with elevator","A T-tail with trim tab","A V-tail"],"El Piper lleva un stabilator."),
+Q("k2b","POH.7.2","p","stab","Which description fits the horizontal tail of the Piper?",["The whole horizontal surface moves as one piece","A fixed surface with a hinged elevator","Two elevators with a fixed stabilizer","A fixed surface with a trim wheel only"],"Stabilator: toda la superficie horizontal se mueve."),
+Q("k3","POH.7.2","c","stab","What does the anti-balance tab of the stabilator do?",["It moves the same way as the trailing edge, reducing sensitivity","It moves opposite to the trailing edge to trim the aircraft","It acts as a flap during landing","It balances fuel between the tanks"],"Complemento: el anti-balance tab sigue al borde de salida y da tacto a los mandos."),
+Q("k4","POH.7.2","p","stab","How are the flight controls of the Piper connected to the cockpit?",["Dual controls with cables and pulleys","Hydraulic lines","Fly-by-wire","Push-pull rods only"],"Doble mando con cables y poleas."),
+Q("k4b","POH.7.2","p","stab","Which trims does the Piper have?",["Manual yaw and pitch trims","Electric pitch trim only","Manual pitch trim only","Automatic trims"],"Compensadores manuales de guiñada y cabeceo."),
+Q("k5","POH.7.2","p","stab","How far can the nose wheel of the Piper steer on the ground?",["±30°","±15°","±45°","±60°"],"Rueda de morro: ±30° en tierra."),
+// ===== POH.7.1 Estructura y motor =====
+Q("s1","POH.7.1","p","struct","What type of fuselage construction does the Piper have?",["Semi-monocoque","Monocoque","Welded steel truss only","Composite sandwich"],"Fuselaje semi-monocoque."),
+Q("s1b","POH.7.1","p","struct","In a semi-monocoque fuselage, loads are carried by:",["The skin and the internal reinforcements","The skin only","The internal frame only","The engine mount only"],"La piel soporta parte de las cargas y los refuerzos internos, el resto."),
+Q("s2","POH.7.1","p","struct","What are the engine mount and the landing gear of the Piper made of?",["Steel","Aluminium alloy","Glass fibre","Thermoplastic"],"Soporte del motor y tren de acero."),
+Q("s2b","POH.7.1","p","struct","What is the main material of the rest of the Piper fuselage?",["Aluminium alloy","Steel tubes","Carbon fibre","Titanium"],"El resto es aleación de aluminio (más fibra de vidrio y termoplásticos)."),
+Q("s3","POH.7.1","p","muff","What are the two mufflers of the Piper also used for?",["Heating the carburettor","Cooling the oil","Heating the fuel","Driving the alternator"],"Los dos mufflers calientan el carburador."),
+Q("s3b","POH.7.1","p","muff","How many mufflers does the Piper engine have?",["Two","One","Three","Four"],"Dos mufflers."),
+Q("s4","POH.7.1","p","muff","Which features are part of the Piper engine installation?",["Oil cooler and separate carburettor intake","Liquid radiator and turbocharger","Reduction gear and fuel injection","Constant-speed unit and intercooler"],"Enfriador de aceite y admisión de carburador separada."),
+// ===== POH.7.4 Tren (aún no dado) =====
+Q("r1","POH.7.4","a","gear","What landing gear does the Piper have?",["Fixed, tricycle","Retractable, tricycle","Fixed, tailwheel","Retractable, tailwheel"],"Tren fijo de triciclo."),
+Q("r1b","POH.7.4","a","gear","What type of suspension does the Piper landing gear use?",["Air-oil","Rubber bungee","Leaf spring","Hydraulic only"],"Suspensión aire-aceite."),
+Q("r2","POH.7.4","a","gear","What is the tyre pressure of the Piper main wheels?",["24 psi","30 psi","28 psi","35 psi"],"Ruedas principales: 24 psi."),
+Q("r2b","POH.7.4","a","gear","What is the tyre pressure of the Piper nose wheel?",["30 psi","24 psi","28 psi","35 psi"],"Rueda de morro: 30 psi."),
+Q("r3","POH.7.4","a","gear","Which wheels of the Piper have brakes?",["The main wheels only, parking brake included","The nose wheel only","All three wheels","Main wheels, with parking on the nose wheel"],"Frenos solo en las principales, incluido el de parking."),
+Q("r3b","POH.7.4","a","gear","How is the Piper steered on the ground?",["With the rudder pedals","With differential throttle","With a tiller","With the control column"],"En tierra se gira con los pedales."),
+Q("r4","POH.7.4","a","gear","What is the suspension elongation of the Piper main gear?",["4.5 in","3.25 in","6 in","2 in"],"Principal: 4,5 in; morro: 3,25 in."),
+// ===== POH.7.5 Combustible (aún no dado) =====
+Q("u1","POH.7.5","a","fsys","Which pumps feed fuel in the Piper?",["An electric pump and an engine-driven pump","Two electric pumps","An engine-driven pump only","A hydraulic pump and an electric pump"],"Bomba eléctrica y bomba del motor."),
+Q("u2","POH.7.5","a","fsys","How many fuel drain points does the Piper have?",["Three","One","Two","Four"],"Tres puntos de drenaje."),
+Q("u3","POH.7.5","a","fsys","How are the Piper fuel tanks arranged?",["Left and right main tanks with a selector valve","One central tank with no selector","Left and right tanks, no selector","Three tanks with a transfer pump"],"Dos depósitos principales con válvula selectora."),
+// ===== POH.7.6 Eléctrico (aún no dado) =====
+Q("e1","POH.7.6","a","elec","What battery does the Piper have?",["12 V lead-acid","24 V lead-acid","12 V nickel-cadmium","28 V lead-acid"],"Batería de plomo-ácido de 12 V."),
+Q("e2","POH.7.6","a","elec","What is the rating of the Piper alternator?",["14 V, 60 amp","28 V, 60 amp","14 V, 30 amp","14 V, 100 amp"],"Alternador de 14 V y 60 amp."),
+// ===== POH.7.7 Vacío y pitot-estática (aún no dado) =====
+Q("z1","POH.7.7","a","vac","Which instruments are driven by the vacuum system?",["Artificial horizon, DGI and turn coordinator","Airspeed indicator, altimeter and VSI","Artificial horizon, altimeter and DGI","Turn coordinator, VSI and altimeter"],"El vacío mueve horizonte, DGI y coordinador de virajes."),
+Q("z2","POH.7.7","a","vac","Low suction in the vacuum system might be due to:",["A blocked filter","A blocked pitot tube","Low fuel pressure","A failed alternator"],"Poca succión: filtro bloqueado."),
+Q("z3","POH.7.7","a","vac","When can low vacuum pressure occur?",["Above 12,000 ft or at low RPM","Below 5,000 ft at high RPM","Only during descents","With the flaps extended"],"Presión baja por encima de 12.000 ft o con pocas RPM."),
+Q("z4","POH.7.7","a","vac","Where are the total and static pressures taken on the Piper?",["On the left wing","On the right wing","On the nose cone","On the tail fin"],"Presión total y estática en el ala izquierda."),
+Q("z5","POH.7.7","a","vac","How do you use the alternate static source in the cabin for minimum error?",["Close windows, cabin heat and defroster on","Open windows, cabin heat off","Close windows, cabin heat off","Open vents, defroster off"],"Ventanas cerradas, calefacción y defroster encendidos."),
+// ===== POH.3.1 Fallo de alternador =====
+Q("x1","POH.3.1","p","alt","What is the first action of the alternator failure checklist?",["Reduce the electrical load to a minimum","Switch the master off","Shut the engine down","Land in the nearest field"],"Primero se reduce la carga eléctrica al mínimo."),
+Q("x1b","POH.3.1","p","alt","After an alternator failure, how long can the battery supply the aircraft?",["About 30 minutes","About 5 minutes","About 1 hour","As long as the engine runs"],"Quedan unos 30 minutos de batería."),
+Q("x1c","POH.3.1","p","alt","What is the effect of an alternator failure on the engine?",["It keeps running; radios and electrical instruments are lost","It stops at once","It runs rough at idle","It loses half of its power"],"El motor sigue dando potencia; fallan comunicaciones e instrumentos eléctricos."),
+Q("x2","POH.3.1","p","alt","After checking the alternator circuit breaker, what is the next step?",["Alternator switch OFF, wait 1 second, then ON","Master switch OFF, then ON","Pull the alternator breaker","Alternator switch ON, then OFF"],"Alternador OFF, esperar 1 s y volver a ponerlo ON."),
+Q("x3","POH.3.1","p","alt","Which action is correct after an alternator failure?",["Keep the engine running and reduce the electrical load","Shut the engine down and glide","Switch the master off immediately","Switch the magnetos off"],"No se apaga el motor: se reduce la carga eléctrica y se aterriza."),
+Q("x3b","POH.3.1","p","alt","The ammeter still shows no output after the ON/OFF reset. What do you do?",["Alternator switch OFF and land as soon as possible","Keep the alternator ON and continue","Shut the engine down","Switch the master off"],"Si sigue sin carga: alternador OFF y aterrizar cuanto antes."),
+// ===== POH.3.2 Aceite y otros fallos =====
+Q("x4","POH.3.2","p","oilf","What do you do after a partial loss of oil pressure?",["Land as soon as possible at the nearest airfield","Continue and monitor the gauge","Shut the engine down at once","Reduce power and continue to destination"],"Pérdida parcial: aterrizar en cuanto sea posible en el aeródromo más cercano."),
+Q("x4b","POH.3.2","p","oilf","Why must you land soon after a complete loss of oil pressure?",["The engine can stop suddenly","The propeller will overspeed","The alternator will fail","The fuel pressure will drop"],"Con pérdida total el motor puede pararse de golpe."),
+Q("x5","POH.3.2","p","oilf","A loss of oil pressure is usually accompanied by:",["An increase in oil temperature","A decrease in oil temperature","An increase in fuel flow","A drop in fuel pressure"],"La pérdida de presión suele ir con una subida de temperatura."),
+Q("x6","POH.3.2","p","oilf","Complete loss of oil pressure plus high oil temperature or smoke. What do you consider?",["An off-airfield landing while power is available","Continuing to the destination","Climbing to a safe altitude","Shutting down and restarting"],"Con temperatura alta o humo, plantéate aterrizar fuera mientras haya potencia."),
+Q("x7","POH.3.2","p","oilf","Engine roughness is usually due to carburettor ice. What is the first action?",["Carburettor heat ON","Mixture lean","Fuel pump OFF","Magnetos OFF"],"Calefacción de carburador ON; si no mejora en 1 minuto, OFF y buscar otras causas."),
+// ===== POH.4.1 Normales =====
+Q("h1","POH.4.1","p","norm","What is the maximum magneto drop in the Cessna ground check?",["175 RPM","75 RPM","125 RPM","300 RPM"],"Caída máxima de magnetos: 175 RPM."),
+Q("h1b","POH.4.1","p","norm","What is the maximum differential between magnetos in the Cessna ground check?",["75 RPM","175 RPM","125 RPM","200 RPM"],"Diferencia máxima entre magnetos: 75 RPM."),
+Q("h2","POH.4.1","p","norm","At what RPM is the magneto check done in the Cessna ground check?",["1700 RPM","1000 RPM","1500 RPM","2000 RPM"],"La prueba de magnetos se hace a 1700 RPM."),
+// ===== De otras asignaturas =====
+Q("q1","POH.5.1","p","conv","Convert 48 US gallons to litres (1 US gal = 3.78 L).",["≈ 181 L","≈ 218 L","≈ 12.7 L","≈ 227 L"],"US gal × 3,78: 48 × 3,78 ≈ 181 L."),
+Q("q2","POH.5.1","p","conv","Convert 100 Imperial gallons to US gallons.",["120 US gal","83 US gal","455 US gal","378 US gal"],"Imperial → US: × 1,2."),
+Q("q3","POH.5.1","p","conv","Convert 60 US gallons to Imperial gallons.",["50 Imperial gal","72 Imperial gal","13 Imperial gal","227 Imperial gal"],"US → Imperial: ÷ 1,2."),
+Q("q4","POH.5.1","p","conv","Convert 189 litres to US gallons (1 US gal = 3.78 L).",["50 US gal","714 US gal","41 US gal","227 US gal"],"Litros ÷ 3,78: 189 ÷ 3,78 = 50."),
+Q("q5","POH.5.1","p","conv","Convert 10 Imperial gallons to litres.",["45.46 L","37.8 L","2.2 L","12 L"],"Imperial → litros: × 4,546."),
+Q("q6","POH.6.1","c","dens","What is the mass of 100 litres of fuel with a density of 0.72 kg/L?",["72 kg","139 kg","7.2 kg","720 kg"],"Volumen × densidad: 100 × 0,72 = 72 kg.")
+];
+// preguntas que el profesor señaló expresamente
+const PROFE = new Set(["m1","m1b","m1c","m2","m2b","m8","v1","v1b","v1c","v2","v2b","v3","v3b","v3c","v4","v4b","v4c","v7","v7b","l1","l1b","l2","l2b","l3","l3b","l4","l4b","l5","n1","n1b","n2","n2b","n3","n3b","n4","n5","n6","n6b","n6c","n7","k1","k1b","k2","k2b","k3","s1","s1b","s3","s3b","x1","x1b","x1c","x2","x3","x3b","x4","x4b","x5","x6"]);
+const BASE = BANK1.concat(BANK2);
+const LO_REFS = {};
+BASE.forEach(q=>{ if(q[3]) (LO_REFS[q[1]]=LO_REFS[q[1]]||[]).includes(q[3]) || LO_REFS[q[1]].push(q[3]); });
+// ---------- estado y banco ----------
+const SEED = {"updatedAt": "2026-10-20T00:00:00.000Z", "attempts": [], "generated": [], "focus": [], "ignore": {}};
+let state = JSON.parse(JSON.stringify(SEED));
+let BANK = [], BYID = new Map();
+function buildBank(){
+  const gen = (state.generated||[]).map(g=>[g.id, SUBMAP[g.lo]?g.lo:"POH.2.1", "g", null, g.q, g.options, g.expl]);
+  BANK = BASE.concat(gen); BYID = new Map(BANK.map(q=>[q[0],q]));
+}
+const byId = id => BYID.get(id);
+const isIgnored = a => !!(a.ignore || (state.ignore||{})[a.id]);
+
+// ---------- estadísticas por pregunta, por pregunta original y por tema ----------
+function stats(){
+  const q = {}, base = {}, loHist = {};
+  const sorted = state.attempts.filter(a=>!isIgnored(a)).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  sorted.forEach(at=> (at.items||[]).forEach(it=>{
+    const s = q[it.q] || (q[it.q]={n:0,ok:0,streak:0,last:null});
+    s.n++; if(it.ok){s.ok++; s.streak++;} else s.streak=0; s.last = it.ok;
+    base[baseOf(it.q)] = {last:it.ok};
+    const qq = byId(it.q); if(!qq || at.partial) return;
+    (loHist[qq[1]] = loHist[qq[1]]||[]).push(it.ok);
+  }));
+  const lo = {};
+  Object.keys(loHist).forEach(k=>{ const r=loHist[k].slice(-10), pv=loHist[k].slice(-20,-10);
+    lo[k]={n:loHist[k].length, m:r.filter(Boolean).length/r.length, ok10:r.filter(Boolean).length, n10:r.length, prev: pv.length>=4 ? pv.filter(Boolean).length/pv.length : null}; });
+  return {q, base, lo};
+}
+// probabilidad de acierto por tema: últimas 10 respuestas; lo no practicado cuenta como azar (25 %)
+const pHat = l => l ? (l.ok10 + 0.25*2)/(l.n10 + 2) : 0.25;
+const groupSize = {}; BASE.forEach(q=>{ const b=baseOf(q[0]); groupSize[b]=(groupSize[b]||0)+1; });
+function focusActive(id, st){ return (state.focus||[]).includes(id) && !((st.q[id]||{}).streak>=2); }
+function pendingFromBase(q, st){ const b=baseOf(q[0]); return (groupSize[b]||0)>1 && !st.q[q[0]] && st.base[b] && st.base[b].last===false; }
+
+// ---------- motor adaptativo ----------
+function priority(q, st){
+  const s = st.q[q[0]], lo = st.lo[q[1]];
+  let p = 1;
+  if(!s) p += 3; else { if(s.last===false) p += 5; p -= Math.min(s.streak,3); }
+  if(pendingFromBase(q, st)) p += 4;
+  p += (1 - (lo ? lo.m : .5)) * 4;
+  p += Math.min(4, W[q[1]]||0) * 0.35;
+  if(focusActive(q[0], st)) p += 2.5;
+  if(q[2]==="g" && !s) p += 1;
+  if(PROFE.has(q[0])) p += 1.5;
+  return Math.max(.2,p) * (0.8 + Math.random()*0.4);
+}
+// reparto entero proporcional al peso, con tope por disponibilidad (resto mayor)
+function alloc(total, items){
+  const out = Object.fromEntries(items.map(i=>[i.k,0])); let left = total, act = items.filter(i=>i.cap>0 && i.w>0);
+  while(left>0 && act.length){
+    const sw = act.reduce((s,i)=>s+i.w,0), ideal = act.map(i=>({i, v:left*i.w/sw}));
+    let given = 0;
+    ideal.forEach(x=>{ const add = Math.min(Math.floor(x.v), x.i.cap-out[x.i.k]); out[x.i.k]+=add; given+=add; });
+    left -= given;
+    ideal.filter(x=>out[x.i.k]<x.i.cap).sort((a,b)=>(b.v-Math.floor(b.v))-(a.v-Math.floor(a.v)) || b.i.w-a.i.w)
+      .forEach(x=>{ if(left>0){ out[x.i.k]++; left--; given++; } });
+    act = act.filter(i=>out[i.k]<i.cap);
+    if(!given) break;
+  }
+  return out;
+}
+// capacidad real: cada pregunta original cuenta una vez (solo sale una variante)
+const capOf = qs => new Set(qs.map(q=>baseOf(q[0]))).size;
+// simulacro: reparto por capítulo (9 · 9 · 9 · 2 · 1) y, dentro, por el peso de cada subcapítulo
+function selectSenasa(lenKey, inc, atpl){
+  const st = stats(), N = SEN_LEN[lenKey].n;
+  const pool = BANK.filter(q=> inSim(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
+  const bySub = {}; pool.forEach(q=>(bySub[q[1]]=bySub[q[1]]||[]).push(q));
+  const subsOf = k => SUB.filter(s=>s[1]===k && bySub[s[0]]).map(s=>s[0]);
+  const bT = alloc(N, BLOCKS.map(b=>({k:b.k, w:b.n, cap:subsOf(b.k).reduce((a,s)=>a+capOf(bySub[s]),0)})));
+  const tgt = {};
+  BLOCKS.forEach(b=>Object.assign(tgt, alloc(bT[b.k], subsOf(b.k).map(s=>({k:s, w:W[s], cap:capOf(bySub[s])})))));
+  const usedB = new Set(), chosen = [], pr = new Map(pool.map(q=>[q[0], priority(q,st)]));
+  Object.keys(tgt).forEach(s=>{
+    const list = bySub[s].slice().sort((a,b)=>pr.get(b[0])-pr.get(a[0]));
+    let n=0; for(const q of list){ if(n>=tgt[s]) break; const b=baseOf(q[0]); if(usedB.has(b)) continue; usedB.add(b); chosen.push(q); n++; }
+  });
+  return BLOCKS.flatMap(b=>shuffle(chosen.filter(q=>blockOf(q)===b.k)));
+}
+function selectQuestions(mode, inc, lo, atpl){
+  if(mode==="senasa") return selectSenasa($("#senLen").value, inc, atpl);
+  const st = stats();
+  const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
+  if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
+  if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
+  if(mode==="all") return shuffle(pool);
+  // adaptativo: 20 por prioridad, como mucho 5 de un mismo tema y una sola variante por pregunta original
+  const N = Math.min(30, pool.length), MAXLO = 5;
+  const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
+  const chosen = [], usedB = new Set(), nLO = l => chosen.filter(q=>q[1]===l).length;
+  const take = (q, cap=true) => { const b=baseOf(q[0]); if(chosen.includes(q) || usedB.has(b) || (cap && nLO(q[1])>=MAXLO)) return; usedB.add(b); chosen.push(q); };
+  for(const x of scored){ if(chosen.length>=N) break; take(x.q); }
+  for(const x of scored){ if(chosen.length>=N) break; take(x.q,false); }
+  return shuffle(chosen);
+}
+
+// ---------- persistencia: progreso.json dentro del propio artefacto ----------
+// Nunca se descarta nada: copia local pendiente + progreso.json + sembrados, unidos por id. Sin comparar fechas.
+let artifactApi = null, canSave = true;
+const PKEY = "poh-pending";
+function mergeInto(base, other){
+  if(!other) return base;
+  const ids = new Set(base.attempts.map(a=>a.id));
+  (other.attempts||[]).forEach(a=>{ if(a && a.id && !ids.has(a.id)){ base.attempts.push(a); ids.add(a.id); } });
+  const gids = new Set(base.generated.map(g=>g.id));
+  (other.generated||[]).forEach(g=>{ if(g && !gids.has(g.id)){ base.generated.push(g); gids.add(g.id); } });
+  base.focus = [...new Set(base.focus.concat(other.focus||[]))];
+  Object.entries(other.ignore||{}).forEach(([k,v])=>{ if(!(k in base.ignore)) base.ignore[k]=v; });
+  return base;
+}
+async function loadState(){
+  state = {updatedAt:SEED.updatedAt, attempts:[], generated:[], focus:[], ignore:{}};
+  try{ const sp = sessionStorage.getItem(PKEY); if(sp) mergeInto(state, JSON.parse(sp)); }catch(e){}
+  try{ const r = await window.__hub.fetch("progreso.json", {cache:"no-store"}); if(r.ok) mergeInto(state, await r.json()); }catch(e){}
+  mergeInto(state, SEED);
+  buildBank();
+}
+async function saveState(msgEl){
+  state.updatedAt = new Date().toISOString();
+  try{ sessionStorage.setItem(PKEY, JSON.stringify(state)); }catch(e){}
+  if(!canSave){ msgEl && (msgEl.textContent = "Vista de solo lectura: el progreso no se guarda."); return false; }
+  if(!artifactApi){ try{ artifactApi = window.__hub ? await window.__hub.use("artifact") : null; }catch(e){} }
+  if(!artifactApi){ msgEl && (msgEl.textContent = "No se ha podido guardar aquí; se conserva mientras la pestaña siga abierta."); return false; }
+  try{
+    await artifactApi.publish({"progreso.json": {content: JSON.stringify(state, null, 1), contentType:"application/json"}});
+    try{ sessionStorage.removeItem(PKEY); }catch(e){}
+    msgEl && (msgEl.textContent = "Progreso guardado.");
+    return true;
+  }catch(e){
+    const c = e && e.code;
+    if(c==="not_writer"||c==="not_granted"||c==="capability_disabled"||c==="consent_required"){ canSave=false; msgEl && (msgEl.textContent="Vista de solo lectura: el progreso no se guarda."); }
+    else if(c==="conflict"){ msgEl && (msgEl.textContent="Había una versión más nueva; al recargar se une tu intento."); }
+    else msgEl && (msgEl.textContent = "No se pudo guardar (" + (c||"error") + "). Se conserva en esta pestaña.");
+    return false;
+  }
+}
+
+// ---------- pestañas ----------
+const TABS = ["notes","map","test","hist"];
+function showTab(t, init){
+  if(!TABS.includes(t)) t="notes";
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===t));
+  document.querySelectorAll("section").forEach(s=>s.hidden = s.id!=="p-"+t);
+  if(t==="map") renderMap();
+  if(t==="hist") renderHist();
+  if(t==="test") renderSetup();
+  if(!init) try{ history.replaceState(null,"","#"+t); }catch(e){}
+  window.scrollTo({top:0});
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+document.querySelector("nav").addEventListener("keydown",e=>{ if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
+  const cur=TABS.indexOf(document.querySelector('nav [aria-selected="true"]').dataset.tab), n=(cur+(e.key==="ArrowRight"?1:TABS.length-1))%TABS.length;
+  showTab(TABS[n]); document.querySelector(`nav [data-tab="${TABS[n]}"]`).focus(); });
+function openNotes(id){
+  showTab("notes"); const el=document.getElementById(id); if(!el) return;
+  let d = el.tagName==="DETAILS" ? el : el.closest("details"); while(d){ d.open=true; d=d.parentElement.closest("details"); }
+  setTimeout(()=>el.scrollIntoView({behavior:prefersReduced?"auto":"smooth",block:el.tagName==="DETAILS"?"start":"center"}),60);
+}
+const prefersReduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// ---------- apuntes: barra del examen y etiquetas ----------
+// azul = dado y ≥ 75 % · ámbar = dado, flojo o sin practicar · morado = aún no dado
+function segKind(l, st){ return SUBMAP[l].cov==="nd" ? "atpl" : (st.lo[l] && st.lo[l].m>=0.75) ? "full" : "part"; }
+function examBar(){
+  const st = stats(), maxN = Math.max(...BLOCKS.map(b=>b.n));
+  return BLOCKS.map(b=>`<div class="xrow"><div class="xlab"><b>${b.code}</b> ${b.n}</div><div class="xtrack"><div class="xsegs" style="width:${b.n/maxN*100}%">${
+    SUB.filter(s=>s[1]===b.k).map(s=>{ const l=s[0], x=st.lo[l];
+      return `<button class="seg ${segKind(l,st)}" style="flex:${W[l]}" data-go="lo-${l}" title="${l} · ${esc(s[3])} — ≈ ${fmt1(W[l])} preg. · ${x?pct1(x.m)+" %":"sin practicar"}" aria-label="${l} ${esc(s[3])}"></button>`; }).join("")}</div></div></div>`).join("")
+   + `<p class="xleg"><span><i class="seg full"></i>dado y por encima del 75 %</span><span><i class="seg part"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>aún no dado</span></p>`;
+}
+function renderNotesMeta(){
+  const st = stats();
+  $("#examBar").innerHTML = examBar();
+  const hot = topConcepts().filter(c=>!c.recent).slice(0,3);
+  $("#hotCard").hidden = !hot.length;
+  $("#hotFails").innerHTML = hot.map(c=>`<div class="hot"><div class="crow"><b>${esc(c.name)}</b><span class="fail">${c.fails} fallos de ${c.n}</span></div>
+     <p>${esc(REFS[c.ref]||"")}</p>
+     <div class="row">${c.vis?`<button class="btn sec sm" data-go="${c.vis}">Ver el visual</button>`:""}<button class="btn sec sm" data-go="lo-${[...c.lo][0]}">Ir al tema</button></div></div>`).join("");
+  document.querySelectorAll("#examBar [data-go], #hotFails [data-go]").forEach(b=>b.addEventListener("click",()=>openNotes(b.dataset.go)));
+  document.querySelectorAll("details.lo[data-lo]").forEach(d=>{
+    const l=d.dataset.lo, s=SUBMAP[l], x=st.lo[l]; if(!s) return;
+    const w = s.block==="X" ? "" : `<span class="pill wt">≈ ${fmt1(W[l])} preg.</span>`;
+    const cov = s.cov==="nd" ? '<span class="pill at">Aún no dado</span>' : "";
+    const dom = x ? `<span class="m ${mClass(x.m)}">${pct1(x.m)} %</span>` : "";
+    let m = d.querySelector(".lometa"); if(!m){ m=document.createElement("span"); m.className="lometa"; d.querySelector("summary").appendChild(m); }
+    m.innerHTML = `${w} ${cov} ${dom}`;
+  });
+}
+
+// ---------- evolución ----------
+function countedAttempts(){ return state.attempts.filter(a=>a.total && !isIgnored(a)).sort((a,b)=>new Date(a.date)-new Date(b.date)); }
+function evoChart(){
+  const list = countedAttempts();
+  if(!list.length) return '<p class="muted">Aún no hay intentos que cuenten.</p>';
+  const W_=700,H=250,L=40,Rr=112,T=16,B=48, n=list.length;
+  const x=i=> n===1 ? (L+W_-Rr)/2 : L + i*(W_-L-Rr)/(n-1), y=v=> T + (100-v)*(H-T-B)/100;
+  const avg = Math.round(list.reduce((a,b)=>a+b.pct,0)/n);
+  let run=0; const runAvg = list.map((a,i)=>{ run+=a.pct; return run/(i+1); });
+  let g = `<svg viewBox="0 0 ${W_} ${H}" role="img" aria-label="Evolución de las notas"><style>.ax{stroke:var(--line)} .tk{fill:var(--muted);font:400 11px Barlow,sans-serif} .pl{fill:none;stroke:var(--blue);stroke-width:2} .ra{fill:none;stroke:var(--magenta);stroke-width:1.5;stroke-dasharray:5 4} .av{fill:var(--magenta);font:700 15px "Barlow Condensed",sans-serif}</style>`;
+  [0,25,50,75,100].forEach(v=>{ g+=`<line class="ax" x1="${L}" x2="${W_-Rr}" y1="${y(v)}" y2="${y(v)}" ${v===75?'style="stroke:var(--ok)" stroke-dasharray="2 3"':''}/><text class="tk" x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}%</text>`; });
+  g += `<text class="tk" x="${L+4}" y="${y(75)-5}" style="fill:var(--ok)">apto 75 %</text>`;
+  if(n>1){ g += `<polyline class="pl" points="${list.map((a,i)=>`${x(i)},${y(a.pct)}`).join(" ")}"/>`;
+           g += `<polyline class="ra" points="${runAvg.map((v,i)=>`${x(i)},${y(v)}`).join(" ")}"/>`; }
+  list.forEach((a,i)=>{ const sn=a.mode==="senasa"; g+=`<circle cx="${x(i)}" cy="${y(a.pct)}" r="${sn?6:5}" fill="${sn?"var(--paper)":"var(--blue)"}" ${sn?'stroke="var(--magenta)" stroke-width="3"':''}><title>${fmtDate(a.date)} · ${sn?"simulacro":"test"} · ${a.score}/${a.total} (${a.pct} %)</title></circle>`;
+    if(n<=12 || i%2===0 || i===n-1) g+=`<text class="tk" x="${x(i)}" y="${H-B+16}" text-anchor="middle">${new Date(a.date).toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit"})}</text>`; });
+  g += `<line x1="${W_-Rr+6}" x2="${W_-Rr+14}" y1="${y(avg)}" y2="${y(avg)}" stroke="var(--magenta)" stroke-width="2"/><text class="av" x="${W_-Rr+18}" y="${y(avg)+5}">media ${avg} %</text>`;
+  g += `<text class="tk" x="${W_-Rr+18}" y="${y(avg)+20}">${n} test${n>1?'s':''} en total</text>`;
+  g += `<text class="tk" x="${L}" y="${H-6}">● test</text><text class="tk" x="${L+52}" y="${H-6}" style="fill:var(--magenta)">○ simulacro</text><text class="tk" x="${L+140}" y="${H-6}" style="fill:var(--magenta)">- - media acumulada</text></svg>`;
+  return g;
+}
+
+function mClass(m){ return m==null?"":m<.6?"lo":m<.75?"mid":"hi"; }
+// ---------- mi valoración por tema ----------
+function assess(l){
+  if(!l || l.n<5) return {k:"nd", t:"Pocos datos", d:`${l?l.n:0} respuestas: hacen falta al menos 5`};
+  const tr = l.prev==null ? 0 : l.m-l.prev;
+  if(l.m>=0.85 && l.n>=10 && tr>-0.05) return {k:"ok", t:"Preparado", d:"Mantenlo con repasos espaciados"};
+  if(l.m>=0.75) return {k:"mid", t:tr<-0.05?"Bajando":"Casi listo", d:tr<-0.05?"Por encima del 75 %, pero vas a peor":"Por encima del 75 %, falta consolidar"};
+  return {k:"lo", t:"Reforzar", d:tr>0.05?"Por debajo del 75 %, aunque mejorando":"Por debajo del 75 %: apuntes y visual"};
+}
+function trendHTML(l){ return l && l.prev!=null ? (l.m-l.prev>0.05?'<span class="pass">▲ mejora</span>':l.m-l.prev<-0.05?'<span class="fail">▼ baja</span>':'<span class="muted">= estable</span>') : '<span class="muted" title="Hacen falta más de 14 respuestas">–</span>'; }
+// preguntas que te juegas en cada tema: peso × probabilidad de fallo
+function atStake(st){
+  return SUB.filter(s=>s[1]!=="X").map(s=>({lo:s[0], w:W[s[0]], p:pHat(st.lo[s[0]]), l:st.lo[s[0]]}))
+    .map(x=>({...x, risk:x.w*(1-x.p)})).sort((a,b)=>b.risk-a.risk);
+}
+
+// ---------- conceptos más fallados ----------
+function conceptOf(q){ const c = REF_CONCEPT[q[3]]; return c ? [c[0], c[1]||null] : [loLabel(q[1]), null]; }
+function topConcepts(){
+  const agg = {};
+  countedAttempts().forEach(at=>(at.items||[]).forEach(it=>{
+    const q = byId(it.q); if(!q) return;
+    const c = conceptOf(q), k=c[0];
+    const a = agg[k] || (agg[k]={name:k, vis:c[1], ref:q[3], lo:new Set(), fails:0, n:0, last:[]});
+    a.n++; if(!it.ok) a.fails++; a.last.push(it.ok); a.lo.add(q[1]);
+  }));
+  return Object.values(agg).filter(a=>a.fails>0).map(a=>({...a, recent: a.last.length>=3 && a.last.slice(-3).every(Boolean)}))
+    .sort((a,b)=> (a.recent-b.recent) || (b.fails-a.fails) || (b.fails/b.n - a.fails/a.n));
+}
+
+// ---------- mapa ----------
+function renderMap(){
+  const st = stats(), stake = atStake(st);
+  $("#weakList").innerHTML = stake.slice(0,4).map(x=>{ const a=assess(x.l);
+    return `<li><button class="linkbtn" data-go="lo-${x.lo}">${esc(loLabel(x.lo))}</button> <span class="pill ${a.k}">${a.t}</span>${SUBMAP[x.lo].cov==="nd"?' <span class="pill at">Aún no dado</span>':''}<br><span class="muted">≈ ${fmt1(x.w)} preg. · aciertas ${pct1(x.p)} % · pierdes ≈ <b>${fmt1(x.risk)}</b></span></li>`; }).join("");
+  const pb = BLOCKS.map(b=>{ const subs=stake.filter(x=>SUBMAP[x.lo].block===b.k); const e=subs.reduce((s,x)=>s+x.w*x.p,0); return {b, e}; });
+  const tot = pb.reduce((s,x)=>s+x.e,0), tp = tot/TOTAL_N;
+  $("#forecast").innerHTML = `<div class="row" style="align-items:baseline"><span class="score ${tp>=.75?'pass':'fail'}" style="font-size:44px">${Math.round(tot)}/${TOTAL_N}</span><b>${pct1(tp)} % · ${tp>=.75?'aprobarías':'aún no aprobarías'}</b></div>
+    ${pb.map(x=>`<div class="lorow"><div style="display:flex;justify-content:space-between;gap:8px"><span><b>${x.b.code}</b> ${esc(x.b.name)}</span><span>${fmt1(x.e)} de ${x.b.n}</span></div><div class="bar"><i style="width:${pct1(x.e/x.b.n)}%;background:${x.e/x.b.n>=.75?'var(--ok)':'var(--bad)'}"></i></div></div>`).join("")}`;
+  $("#evoMap").innerHTML = evoChart();
+  const tc = topConcepts().slice(0,10), maxF = Math.max(1,...tc.map(c=>c.fails));
+  $("#failList").innerHTML = tc.length ? tc.map(c=>`<div class="concept ${c.recent?'fixed':''}">
+      <div class="crow"><b>${esc(c.name)}</b><span>${c.fails} de ${c.n}${c.recent?' · <span class="pass">superado</span>':''}</span></div>
+      <div class="bar"><i style="width:${Math.round(c.fails/maxF*100)}%;background:${c.recent?'var(--ok)':'var(--bad)'}"></i></div>
+      <div class="muted cmeta">${[...c.lo].map(l=>esc(loLabel(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
+    </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
+  let rows = `<tr><th title="Código del tema en el temario">LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media en el examen (estimadas)">≈ Preg.</th><th title="Dado en clase, aún no dado o de otra asignatura">Estado</th><th title="Preguntas del banco (+ las de temario aún no dado)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
+  const groups = BLOCKS.map(b=>({t:`${b.code} · ${b.name} · ${b.n} preguntas`, k:b.k})).concat([{t:"De otras asignaturas (032 · 031)", k:"X"}]);
+  groups.forEach(g=>{
+    rows += `<tr><th colspan="8" style="padding-top:14px">${esc(g.t)}</th></tr>`;
+    SUB.filter(s=>s[1]===g.k).forEach(s=>{
+      const l=s[0], x=st.lo[l], a=assess(x);
+      const n0=BANK.filter(q=>q[1]===l && isGiven(q)).length, na=BANK.filter(q=>q[1]===l && !isGiven(q)).length;
+      const pill = s[4]==="nd"?'<span class="pill at">Aún no dado</span>':s[4]==="out"?'<span class="pill">otra asignatura</span>':'<span class="pill done">dado</span>';
+      rows += `<tr><td class="lonum"><button class="linkbtn" data-go="lo-${l}">${l}</button></td><td>${esc(s[3])}</td><td>${s[1]==="X"?"–":fmt1(W[l])}</td><td>${pill}</td><td>${n0||na}</td><td>${x?`<span class="m ${mClass(x.m)}">${pct1(x.m)} %</span> <span class="muted">(${x.n})</span>`:'<span class="muted">–</span>'}</td><td>${trendHTML(x)}</td><td><span class="pill ${a.k}" title="${esc(a.d)}">${a.t}</span></td></tr>`;
+    });
+  });
+  $("#mapTable").innerHTML = rows;
+  $("#p-map").querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>openNotes(b.dataset.go)));
+}
+$("#goSim").addEventListener("click",()=>{ showTab("test"); document.querySelector('input[value=senasa]').checked=true; });
+
+// ---------- generación con Claude ----------
+let sampleApi = null;
+(async()=>{ try{ sampleApi = window.__hub ? await window.__hub.use("sample") : null; }catch(e){} if(sampleApi) $("#genCard").hidden=false; })();
+$("#genBtn").addEventListener("click", async ()=>{
+  const btn=$("#genBtn"), msg=$("#genMsg"); btn.disabled=true; msg.textContent="Redactando preguntas…";
+  const st = stats();
+  const weak = atStake(st).filter(x=>(LO_REFS[x.lo]||[]).length).slice(0,2).map(x=>x.lo);
+  const src = weak.map(l=>`${l} (${LO_NAME[l]}):\n`+(LO_REFS[l]||[]).map(r=>REFS[r]).filter(Boolean).map(t=>"- "+t).join("\n")).join("\n\n");
+  const existing = BANK.filter(q=>weak.includes(q[1])).map(q=>"- "+q[4]).join("\n");
+  const failed = BANK.filter(q=>(st.q[q[0]]||{}).last===false && weak.includes(q[1])).map(q=>"- "+q[4]).join("\n") || "(ninguna)";
+  const prompt = `You write multiple-choice exam questions on the Pilot Operating Handbook (POH) of the Cessna 172 and Piper PA-28 school aircraft, for a student.
+Write exactly 5 NEW multiple-choice questions for these topics: ${weak.join(", ")}.
+STRICT SOURCE RULE: every fact tested must come from the STUDENT NOTES below. Do not test anything not stated there. Wrong options must be plausible but clearly wrong according to the notes, and about as long as the correct one. Prefer reversed framings, "which is NOT", and concrete cases with numbers.
+STUDENT NOTES (Spanish):
+${src}
+
+Do not repeat these existing questions:
+${existing}
+
+The student recently failed these, so test the same concepts from a different angle:
+${failed}
+
+Questions and options in English, exam register. Explanation in Spanish, one sentence, citing the note.
+Respond ONLY with JSON, no markdown: {"questions":[{"lo":"POH.x.x","q":"...","correct":"...","wrong":["...","...","..."],"expl":"..."}]}`;
+  try{
+    const out = await sampleApi.json(prompt, {modelTier:"default"});
+    const list = (out && out.questions || []).filter(x=>x && weak.includes(x.lo) && x.q && x.correct && Array.isArray(x.wrong) && x.wrong.length===3);
+    if(!list.length){ msg.textContent="No han salido preguntas válidas. Prueba más tarde."; btn.disabled=false; return; }
+    const stamp = Date.now().toString(36);
+    list.forEach((x,i)=> state.generated.push({id:`g${stamp}${i}`, lo:x.lo, q:String(x.q), options:[String(x.correct),...x.wrong.map(String)], expl:String(x.expl||""), date:new Date().toISOString()}));
+    buildBank(); renderMap();
+    msg.textContent = `${list.length} preguntas añadidas a ${weak.map(loLabel).join(" y ")}. Guardando…`;
+    await saveState(msg);
+  }catch(e){
+    const c = e && e.code;
+    if(c==="not_granted"){ $("#genCard").hidden=true; }
+    else msg.textContent = c==="rate_limited" ? "Demasiadas peticiones seguidas; espera un poco." : "No se pudieron generar (" + (c||"error") + ").";
+  }
+  btn.disabled=false;
+});
+
+// ---------- test ----------
+function renderSetup(){
+  const st = stats();
+  const nw = BANK.filter(q=>((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
+  $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
+  $("#allCount").textContent = `${BANK.filter(isGiven).length} dadas + ${BANK.filter(q=>!isGiven(q)).length} aún no dadas`;
+  const selected = $("#loSel").value;
+  $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
+}
+let current = [], curMode = "senasa", curLen = null, tStart = 0, tLimit = 0, tTimer = null, finishing = false, askedUnanswered = false;
+function fmtMS(s){ s=Math.max(0,Math.round(s)); return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; }
+function tick(){
+  const el=$("#timerBar"); if(!tLimit){ el.hidden=true; return; }
+  const used=(Date.now()-tStart)/1000, left=tLimit-used, done=current.filter(q=>q.ans!==null).length, due=Math.min(current.length, Math.floor(used/tLimit*current.length));
+  el.hidden=false; el.className="timer"+(left<180?" late":left<360?" warn":"");
+  el.innerHTML=`⏱ <b>${fmtMS(left)}</b> · ${done>=due?`buen ritmo: ${done} respondidas (toca ${due})`:`vas lento: ${done} respondidas, toca ${due}`}`;
+  if(left<=0 && !finishing){ finishing=true; finishTest(true); }
+}
+const SRC_TAG = q => `${PROFE.has(q.id)?'<span class="tag pf">★ PROFE</span> ':''}${q.src==="a"?'<span class="tag at">NO DADO</span> ':''}${q.src==="c"?'<span class="tag">complemento</span> ':''}${q.src==="g"?'<span class="tag">generada</span> ':''}`;
+$("#startBtn").addEventListener("click",()=>{
+  curMode = document.querySelector('input[name=mode]:checked').value;
+  curLen = curMode==="senasa" ? $("#senLen").value : null;
+  const qs = selectQuestions(curMode, $("#incComp").checked, $("#loSel").value, $("#incTrial").checked);
+  if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
+  $("#startMsg").textContent = "";
+  const st = stats();
+  current = qs.map(q=>({id:q[0],lo:q[1],src:q[2],ref:q[3],text:q[4],expl:q[6],
+    opts:shuffle(q[5].map((t,i)=>({t,ok:i===0}))),ans:null,
+    tag: (st.q[q[0]]||{}).last===false ? "fallada antes" : pendingFromBase(q,st) ? "fallaste su variante" : focusActive(q[0],st) ? "refuerzo" : ""}));
+  $("#qlist").innerHTML = current.map((q,i)=>`
+    <div class="q ${q.tag?'focus':''}" id="q${i}">
+      <div class="qhead"><span>${i+1}/${current.length} · ${esc(loLabel(q.lo))}</span><span>${q.tag?`<span class="tag">${q.tag}</span> `:''}${SRC_TAG(q)}</span></div>
+      <div class="qtext">${esc(q.text)}</div>
+      ${q.opts.map((o,j)=>`<label class="choice"><input type="radio" name="r${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${esc(o.t)}</span></label>`).join("")}
+    </div>`).join("");
+  $("#qlist").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{ current[+e.target.name.slice(1)].ans = +e.target.value; askedUnanswered=false; $("#finishAsk").hidden=true; $("#finishBtn").textContent="Corregir"; updProg(); }));
+  $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBox").hidden=false; $("#finishBtn").disabled=false; $("#finishBtn").textContent="Corregir"; $("#finishAsk").hidden=true; askedUnanswered=false;
+  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : 0;
+  if(tLimit){ tTimer=setInterval(tick,1000); } tick();
+  updProg(); window.scrollTo({top:0});
+});
+function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${(curMode==="senasa"?`Simulacro ${SEN_LEN[curLen].label.toLowerCase()}`:{adaptive:"Adaptativo",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo"}[curMode])}`; }
+function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
+$("#finishBtn").addEventListener("click", ()=>finishTest(false));
+async function finishTest(timeout){
+  const un = current.filter(q=>q.ans===null).length;
+  if(!timeout && un && !askedUnanswered){ askedUnanswered=true; const a=$("#finishAsk"); a.hidden=false; a.textContent=`Te quedan ${un} sin responder. Pulsa de nuevo para corregir igualmente.`; $("#finishBtn").textContent="Corregir igualmente"; return; }
+  clearInterval(tTimer); const usedS = Math.round((Date.now()-tStart)/1000);
+  $("#finishBtn").disabled = true; $("#finishAsk").hidden=true;
+  const byLO = {}, byBlock = {}; let score=0, s0=0, n0=0; const items=[];
+  current.forEach((q,i)=>{
+    const ok = q.ans!==null && q.opts[q.ans].ok; if(ok) score++;
+    items.push({q:q.id, ok, a: q.ans===null?null:q.opts[q.ans].t});
+    (byLO[q.lo]=byLO[q.lo]||{ok:0,total:0}).total++; if(ok) byLO[q.lo].ok++;
+    const bk=blockOf([q.id,q.lo]); (byBlock[bk]=byBlock[bk]||{ok:0,total:0}).total++; if(ok) byBlock[bk].ok++;
+    if(q.src!=="a"){ n0++; if(ok) s0++; }
+    const box = $("#q"+i);
+    box.querySelectorAll(".choice").forEach((c,j)=>{ c.querySelector("input").disabled = true; if(q.opts[j].ok) c.classList.add("right"); else if(j===q.ans) c.classList.add("wrong"); });
+    box.insertAdjacentHTML("beforeend", `<div class="expl"><b class="${ok?'pass':'fail'}">${ok?'Correcta':(q.ans===null?'Sin responder':'Fallada')}</b> · <span class="es">${esc(q.expl)}</span>${ok?'':`<div class="ref"><b>Repasa:</b> ${esc(refText(q))}</div>`}</div>`);
+  });
+  const pct = Math.round(score/current.length*100), pass = pct>=75;
+  const rec = {id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:curMode, score, total:current.length, pct, byLO, items};
+  if(curMode==="senasa"){ Object.assign(rec,{len:curLen, limitS:tLimit, usedS, timeout:!!timeout, byBlock, score0:s0, total0:n0}); }
+  state.attempts.push(rec);
+  const realS = REAL_MIN*60/REAL_N, perQ = usedS/current.length;
+  const blockHTML = curMode!=="senasa" ? "" : `
+      <div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el real da ${Math.round(realS)} s). ${perQ<=realS?`En el real te sobrarían <b>${Math.max(0,Math.round((REAL_MIN*60-perQ*REAL_N)/60))} min</b> para repasar.`:`<span class="fail">A este ritmo no te daría tiempo a repasar en el real.</span>`}<br><b>Dado en clase:</b> ${s0}/${n0}${n0?` (${Math.round(s0/n0*100)} %)`:""}${current.length-n0?` · <b>Aún no dado:</b> ${score-s0}/${current.length-n0}`:""}</div>
+      <div class="scroll"><table style="margin-top:8px"><tr><th>Capítulo</th><th>Aciertos</th></tr>${BLOCKS.filter(b=>byBlock[b.k]).map(b=>{const x=byBlock[b.k], p=Math.round(x.ok/x.total*100); return `<tr><td><b>${b.code}</b> ${esc(b.name)}</td><td class="${p>=75?'pass':'fail'}">${x.ok}/${x.total} · ${p} %</td></tr>`;}).join("")}</table></div>`;
+  const st = stats(), next = atStake(st).slice(0,2), los = Object.keys(byLO).sort();
+  $("#result").innerHTML = `
+    <div class="card">
+      <div class="score ${pass?'pass':'fail'}">${score}/${current.length}</div>
+      <div><b>${pct} % · ${pass?'APTO':'NO APTO'}</b> <span class="muted">(mínimo 75 %)</span></div>${blockHTML}
+      <div style="margin-top:12px">${los.map(l=>{const p=Math.round(byLO[l].ok/byLO[l].total*100);
+        return `<div class="lorow"><div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(loLabel(l))}</span><span>${byLO[l].ok}/${byLO[l].total}</span></div><div class="bar"><i style="width:${p}%;background:${p>=75?'var(--ok)':'var(--bad)'}"></i></div></div>`}).join("")}</div>
+      <p style="margin:12px 0 4px"><b>Siguiente foco:</b> ${next.map(x=>esc(loLabel(x.lo))).join(" y ")}</p>
+      <p id="saveMsg" class="muted" style="font-size:14px">Guardando…</p>
+      <div class="row"><button class="btn" id="againBtn">${curMode==="senasa"?"Otro simulacro":"Otro adaptativo"}</button><button class="btn sec" id="mapBtn">Ver mapa</button></div>
+    </div>`;
+  $("#result").hidden = false; $("#finishBox").hidden = true;
+  const againMode = curMode==="senasa" ? "senasa" : "adaptive";
+  $("#againBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; document.querySelector(`input[value=${againMode}]`).checked=true; $("#startBtn").click(); });
+  $("#mapBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; showTab("map"); });
+  tLimit=0; tick();
+  window.scrollTo({top:0});
+  renderNotesMeta();
+  await saveState($("#saveMsg"));
+}
+
+// ---------- historial ----------
+function loSummary(at){
+  let b = null;
+  if(at.items && at.items.some(it=>byId(it.q))){ b={}; at.items.forEach(it=>{ const q=byId(it.q); if(!q) return; (b[q[1]]=b[q[1]]||{ok:0,total:0}).total++; if(it.ok) b[q[1]].ok++; }); }
+  else b = at.byLO || {};
+  return Object.keys(b).sort().map(l=>`${esc(loLabel(l))} ${b[l].ok}/${b[l].total}`).join(" · ");
+}
+function renderHist(){
+  const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const modeName = {adaptive:"Adaptativo",wrong:"Fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro"};
+  $("#histEvo").innerHTML = evoChart();
+  $("#histBody").innerHTML = list.length ? `<div class="card"><div class="scroll"><table class="hist"><tr><th>Fecha</th><th>Tipo</th><th>Nota</th><th></th><th></th></tr>${
+    list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${modeName[r.mode]||r.mode}${r.mode==="senasa"?` <span class="muted">${(SEN_LEN[r.len]||{}).label||""} · ${fmtMS(r.usedS||0)}</span>`:""}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Detalle</button>`:''}</td></tr>
+      <tr style="${ig?'opacity:.5':''}"><td colspan="5" class="los">${loSummary(r)}</td></tr>`; }).join("")
+  }</table></div></div>` : `<div class="card muted">Aún no hay intentos.</div>`;
+  $("#histBody").querySelectorAll("[data-id]").forEach(b=>b.addEventListener("click",()=>showDetail(b.dataset.id)));
+  $("#histDetail").innerHTML = "";
+}
+function showDetail(id){
+  const at = state.attempts.find(a=>a.id===id);
+  const wrong = (at.items||[]).filter(i=>!i.ok);
+  $("#histDetail").innerHTML = `<h2>Detalle del ${fmtDate(at.date)}</h2><p class="muted">${loSummary(at)}</p>${at.note?`<p class="muted">${esc(at.note)}</p>`:""}` + (wrong.length ? wrong.map(w=>{
+    const q = byId(w.q); if(!q) return "";
+    return `<div class="q"><div class="qhead"><span>${esc(loLabel(q[1]))}</span><span>${SRC_TAG({src:q[2], id:q[0]})}</span></div><div class="qtext">${esc(q[4])}</div>
+      ${w.a!==undefined?`<div class="choice wrong">${w.a===null?'Sin responder':esc(w.a)}</div>`:''}
+      <div class="choice right">${esc(q[5][0])}</div>
+      <div class="expl"><span class="es">${esc(q[6])}</span><div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
+  }).join("") : `<p class="muted">Sin fallos en este intento.</p>`);
+  $("#histDetail").scrollIntoView({behavior:prefersReduced?"auto":"smooth"});
+}
+
+// ---------- visuales ----------
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const btnRow = (items, cur, attr) => `<div class="visbtns">${items.map(([k,t])=>`<button class="btn sec sm ${k===cur?'on':''}" ${attr}="${k}">${esc(t)}</button>`).join("")}</div>`;
+
+// velocidades: arcos del anemómetro de cada avión, tócalas y ponte a prueba
+const SPD = {
+  piper:{name:"Piper PA-28", vs0:44, vs1:50, vfe:103, vno:126, vne:160, va:"88–111"},
+  cessna:{name:"Cessna 172", vs0:41, vs1:47, vfe:85, vno:128, vne:160, va:"80–97"}
+};
+const SPD_INFO = {
+  vne:["VNE · Never Exceed","Línea roja: integridad estructural. No se supera nunca."],
+  vno:["VNO · Normal Operating","Fin del arco verde: por encima, la turbulencia puede sobrecargar la estructura."],
+  va:["VA · Maneuvering","La deflexión máxima de mandos hacia arriba puede sobrecargar el avión."],
+  vfe:["VFE · Flaps Extended","Fin del arco blanco: no se supera con los flaps abajo."]
+};
+function initSpeeds(){
+  const el = $("#visSpeeds"); let ac="piper", sel="vfe", quiz=null;
+  const X = v => 20 + (v-30)/(170-30)*660;
+  function draw(){
+    const s = SPD[ac], q = quiz;
+    let g = `<svg viewBox="0 0 700 120" role="img" aria-label="Arcos del anemómetro del ${s.name}"><style>.t{fill:var(--muted);font:500 12px Barlow,sans-serif} .l{fill:var(--ink);font:700 14px "Barlow Condensed",sans-serif}</style>`;
+    g += `<rect x="${X(s.vs1)}" y="28" width="${X(s.vno)-X(s.vs1)}" height="22" fill="#2e9e5b"/>`;
+    g += `<rect x="${X(s.vno)}" y="28" width="${X(s.vne)-X(s.vno)}" height="22" fill="#e0b020"/>`;
+    g += `<rect x="${X(s.vs0)}" y="54" width="${X(s.vfe)-X(s.vs0)}" height="12" fill="#e8eef2" stroke="var(--line)"/>`;
+    g += `<rect x="${X(s.vne)-2}" y="22" width="4" height="50" fill="#d6362f"/>`;
+    const marks = [["vs0",s.vs0,"VS0"],["vs1",s.vs1,"VS1"],["vfe",s.vfe,"VFE"],["vno",s.vno,"VNO"],["vne",s.vne,"VNE"]];
+    marks.forEach(([k,v,n],i)=>{ const hide = q && k!=="vs0" && k!=="vs1"; const on = (k===sel && !q);
+      g += `<line x1="${X(v)}" x2="${X(v)}" y1="${i%2?72:18}" y2="${i%2?80:26}" stroke="var(--ink)"/>`;
+      g += `<text class="l" x="${X(v)}" y="${i%2?96:14}" text-anchor="middle" ${on?'style="fill:var(--magenta)"':''}>${hide?"?":n+" "+v}</text>`; });
+    g += `</svg>`;
+    let ui = btnRow([["piper","Piper"],["cessna","Cessna"]], ac, "data-ac");
+    if(!q){
+      ui += btnRow([["vne","VNE"],["vno","VNO"],["va","VA"],["vfe","VFE"]], sel, "data-sp");
+      const v = sel==="va" ? s.va : s[sel];
+      ui += `<div class="vismsg"><b>${SPD_INFO[sel][0]} · ${v} KIAS</b><br>${SPD_INFO[sel][1]}</div><button class="btn sm" data-q="1">Ponme a prueba</button>`;
+    } else {
+      ui += `<div class="vismsg"><b>${q.text}</b></div><div class="visbtns">${q.opts.map(o=>`<button class="btn sec sm" data-a="${o}">${o}</button>`).join("")}</div><div class="vismsg" id="spq">${q.msg||""}</div>`;
+    }
+    el.innerHTML = g + ui;
+    el.querySelectorAll("[data-ac]").forEach(b=>b.onclick=()=>{ ac=b.dataset.ac; quiz=null; draw(); });
+    el.querySelectorAll("[data-sp]").forEach(b=>b.onclick=()=>{ sel=b.dataset.sp; draw(); });
+    const qb = el.querySelector("[data-q]"); if(qb) qb.onclick=()=>{ const k=pick(["vne","vno","va","vfe"]); const right = k==="va"?s.va:String(s[k]);
+      const pool = [...new Set(["vne","vno","va","vfe"].flatMap(x=>["piper","cessna"].map(a=>x==="va"?SPD[a].va:String(SPD[a][x]))))]; const wrong = shuffle(pool.filter(x=>x!==right)).slice(0,3);
+      quiz = {text:`¿Cuál es la ${k.toUpperCase()} del ${s.name}?`, opts:shuffle([right,...wrong]), right, k}; draw(); };
+    el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ const ok = b.dataset.a===quiz.right; quiz.msg = ok ? `<span class="pass">Correcto.</span> ${SPD_INFO[quiz.k][1]}` : `<span class="fail">No.</span> La ${quiz.k.toUpperCase()} del ${s.name} es ${quiz.right} KIAS.`; const m=quiz.msg; draw(); el.querySelector("#spq").innerHTML=m; });
+  }
+  draw();
+}
+
+// factor de carga
+function initLoad(){
+  const el = $("#visLoad"); let cfg="n";
+  const C = {n:{t:"Flaps arriba · normal",pos:3.8,neg:-1.52,note:"+3,8 g y, en el Piper, −1,52 g."},
+             u:{t:"Flaps arriba · utility",pos:4.4,neg:-1.76,note:"+4,4 g y, en el Piper, −1,76 g."},
+             d:{t:"Flaps abajo · ambas",pos:3.0,neg:0,note:"+3,0 g en normal y en utility."}};
+  function draw(){
+    const c = C[cfg], sx = v => 160 + v*100;
+    let g = `<svg viewBox="0 0 700 90" role="img" aria-label="Factor de carga"><style>.t{fill:var(--muted);font:500 12px Barlow,sans-serif} .l{fill:var(--ink);font:700 15px "Barlow Condensed",sans-serif}</style>`;
+    for(let v=-2;v<=5;v++) g += `<line x1="${sx(v)}" x2="${sx(v)}" y1="26" y2="50" stroke="var(--line)"/><text class="t" x="${sx(v)}" y="64" text-anchor="middle">${v>0?'+':''}${v} g</text>`;
+    g += `<rect x="${sx(c.neg)}" y="30" width="${sx(c.pos)-sx(c.neg)}" height="16" rx="3" fill="var(--blue)"/><line x1="${sx(0)}" x2="${sx(0)}" y1="22" y2="54" stroke="var(--ink)" stroke-width="2"/>`;
+    g += `<text class="l" x="${sx(c.pos)+6}" y="43">+${String(c.pos).replace(".",",")} g</text>`;
+    if(c.neg) g += `<text class="l" x="${sx(c.neg)-6}" y="43" text-anchor="end">${String(c.neg).replace(".",",")} g</text>`;
+    g += `</svg>`;
+    el.innerHTML = g + btnRow([["n","Flaps arriba · normal"],["u","Flaps arriba · utility"],["d","Flaps abajo"]], cfg, "data-c") + `<div class="vismsg"><b>${c.t}</b>: ${c.note}</div><button class="btn sm" data-q="1">Ponme a prueba</button><div class="vismsg" id="lfq"></div>`;
+    el.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ cfg=b.dataset.c; draw(); });
+    el.querySelector("[data-q]").onclick=()=>{ const k=pick(["n","u","d"]), right=`+${String(C[k].pos).replace(".",",")} g`;
+      const q = $("#lfq"); q.innerHTML = `<b>${C[k].t}: ¿límite positivo?</b><div class="visbtns" style="margin-top:6px">${shuffle(["+3,8 g","+4,4 g","+3,0 g","+2,5 g"]).map(o=>`<button class="btn sec sm" data-a="${o}">${o}</button>`).join("")}</div><div id="lfa"></div>`;
+      q.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ $("#lfa").innerHTML = b.dataset.a===right ? '<span class="pass">Correcto.</span>' : `<span class="fail">No.</span> Es ${right}.`; }); };
+  }
+  draw();
+}
+
+// annunciator panel
+function initAnnun(){
+  const el = $("#visAnnun");
+  const L = [["Bomba de vacío","Fallan el horizonte artificial, el DGI y el coordinador de virajes si se pierde la succión."],["Alternador","Quedan unos 30 min de batería. El motor sigue dando potencia; fallan comunicaciones e instrumentos eléctricos."],["Presión de aceite","Contrástala con la temperatura. Aterriza en cuanto sea posible: el motor puede pararse."]];
+  let on=-1, quiz=null, msg="";
+  function draw(){
+    el.innerHTML = `<div class="lamps">${L.map((l,i)=>`<button class="lamp ${on===i?'on':''}" data-i="${i}" aria-label="Luz ${i+1}">${quiz?"?":l[0]}</button>`).join("")}</div>` +
+      `<div class="vismsg">${quiz?`<b>¿Qué luz se enciende si falla: ${quiz.name}?</b> ${msg}`:(on>=0?`<b>${L[on][0]}</b>: ${L[on][1]}`:"Toca una luz para encenderla.")}</div><button class="btn sm" data-q="1">${quiz?"Otra":"Ponme a prueba"}</button>${quiz?' <button class="btn sec sm" data-x="1">Salir</button>':''}`;
+    el.querySelectorAll(".lamp").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; if(quiz){ on=i; msg = i===quiz.i ? '<span class="pass">Correcto.</span>' : `<span class="fail">No: es la ${["izquierda","del centro","derecha"][quiz.i]}.</span>`; } else on = on===i?-1:i; draw(); });
+    el.querySelector("[data-q]").onclick=()=>{ const i=Math.floor(Math.random()*3); quiz={i,name:L[i][0].toLowerCase()}; on=-1; msg=""; draw(); };
+    const x=el.querySelector("[data-x]"); if(x) x.onclick=()=>{ quiz=null; on=-1; draw(); };
+  }
+  draw();
+}
+
+// seis instrumentos
+function initSix(){
+  const el = $("#visSix");
+  const S = [["Anemómetro","Pitot"],["Horizonte artificial","Vacío"],["Altímetro","Estática"],["Coordinador de virajes","Vacío"],["Giro direccional (DGI)","Vacío"],["VSI","Estática"]];
+  let sel=-1, quiz=null, msg="";
+  function draw(){
+    el.innerHTML = `<div class="six">${S.map((s,i)=>`<button class="${sel===i?'on':''}" data-i="${i}">${quiz?"?":s[0]}</button>`).join("")}</div>` +
+      `<div class="vismsg">${quiz?`<b>Toca: ${S[quiz.i][0]}</b> ${msg}`:(sel>=0?`<b>${S[sel][0]}</b> · se alimenta de: ${S[sel][1].toLowerCase()}.`:"Toca un instrumento.")}</div><button class="btn sm" data-q="1">${quiz?"Otro":"Ponme a prueba"}</button>${quiz?' <button class="btn sec sm" data-x="1">Salir</button>':''}`;
+    el.querySelectorAll(".six button").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; if(quiz){ sel=i; msg = i===quiz.i ? '<span class="pass">Correcto.</span>' : '<span class="fail">No es ese.</span>'; } else sel = sel===i?-1:i; draw(); });
+    el.querySelector("[data-q]").onclick=()=>{ quiz={i:Math.floor(Math.random()*6)}; sel=-1; msg=""; draw(); };
+    const x=el.querySelector("[data-x]"); if(x) x.onclick=()=>{ quiz=null; sel=-1; draw(); };
+  }
+  draw();
+}
+
+// checklist de fallo de alternador, paso a paso
+function initAlt(){
+  const el = $("#visAlt");
+  const ST = ["Carga eléctrica: <b>reducir al mínimo</b>","Breaker del alternador: <b>comprobar</b>","Interruptor del alternador: <b>OFF</b>","Esperar <b>1 segundo</b>","Interruptor del alternador: <b>ON</b>","Si el amperímetro sigue sin carga: alternador <b>OFF</b>","<b>Aterrizar</b> cuanto antes (unos 30 min de batería)"];
+  let i=0;
+  function draw(){
+    el.innerHTML = `<div class="steps">${ST.map((s,k)=>`<span class="${k===i?'on':k<i?'past':''}">${k+1}</span>`).join("")}</div><div class="vismsg" style="font-size:17px">${ST[i]}</div>` +
+      `<div class="row"><button class="btn sm" data-n="1" ${i>=ST.length-1?'disabled':''}>Siguiente</button><button class="btn sec sm" data-r="1">Reiniciar</button></div>`;
+    el.querySelector("[data-n]").onclick=()=>{ i=Math.min(ST.length-1,i+1); draw(); };
+    el.querySelector("[data-r]").onclick=()=>{ i=0; draw(); };
+  }
+  draw();
+}
+
+// stabilator y flaps
+function initCtrl(){
+  const el = $("#visCtrl"); let a=0, fl=0;
+  el.innerHTML = `<svg viewBox="0 0 700 150" role="img" aria-label="Stabilator y flaps"><style>.t{fill:var(--muted);font:500 12px Barlow,sans-serif}</style>
+      <path d="M20 80 Q120 60 330 75 L330 88 Q140 98 20 90 Z" fill="var(--line)" stroke="var(--ink)"/>
+      <g id="ctFlap" transform="translate(150 84)"><rect x="0" y="-3" width="90" height="6" fill="var(--blue)"/></g>
+      <text class="t" id="ctFlapT" x="150" y="116">flap 0°</text>
+      <path d="M330 78 L560 66 L560 90 L330 88 Z" fill="var(--line)" stroke="var(--ink)"/>
+      <g id="ctStab" transform="translate(560 76)"><rect x="0" y="-8" width="90" height="10" fill="var(--magenta)"/><g id="ctTab" transform="translate(90 -3)"><rect x="0" y="-2" width="22" height="4" fill="var(--ink)"/></g></g>
+      <text class="t" x="560" y="120">stabilator + anti-balance tab</text></svg>
+      <label class="muted small">Palanca: adelante ↔ atrás <input type="range" min="-1" max="1" step="0.1" value="0" id="stR" style="width:100%"></label>
+      ${btnRow([[0,"Flaps 0°"],[10,"10°"],[25,"25°"],[40,"40°"]], 0, "data-f")}
+      <div class="vismsg" id="ctMsg">Palanca neutra.</div>`;
+  function upd(){
+    $("#ctStab").setAttribute("transform",`translate(560 76) rotate(${-a*14})`);
+    $("#ctTab").setAttribute("transform",`translate(90 -3) rotate(${-a*22})`);
+    $("#ctFlap").setAttribute("transform",`translate(150 84) rotate(${fl*0.9})`);
+    $("#ctFlapT").textContent = `flap ${fl}°`;
+    $("#ctMsg").textContent = a>0.2?"Palanca atrás: el borde de salida del stabilator sube y el morro sube.":a<-0.2?"Palanca adelante: el borde de salida baja y el morro baja.":"Palanca neutra.";
+    el.querySelectorAll("[data-f]").forEach(b=>b.classList.toggle("on", +b.dataset.f===fl));
+  }
+  el.querySelector("#stR").oninput=e=>{ a=+e.target.value; upd(); };
+  el.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{ fl=+b.dataset.f; upd(); });
+  upd();
+}
+
+// ---------- arranque ----------
+[initSpeeds,initLoad,initAnnun,initSix,initAlt,initCtrl].forEach(f=>{ try{ f(); }catch(e){ console.error(f.name, e); } });
+buildBank();
+renderNotesMeta();
+showTab((location.hash||"").slice(1)||"notes", true);
+loadState().then(()=>{ renderSetup(); renderNotesMeta(); const t=document.querySelector('nav [aria-selected="true"]').dataset.tab; if(t==="map") renderMap(); if(t==="hist") renderHist(); });
+window.addEventListener("load",()=>{ if(TABS.includes((location.hash||"").slice(1))) window.scrollTo(0,0); });
+</script>
+
+<style id="f0-pub">details.lo>summary{cursor:pointer}:root{--magenta:#0E7C86;--accent:#0E7C86;--compbg:#E3F1F1;--f0none:#B9C7D2}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}}:root[data-theme="dark"]{--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}.seg.atpl{background:var(--f0none)!important}mark.f0hit{background:#FFE58A;color:#14304A;border-radius:2px;padding:0 1px}mark.f0hit.first{outline:2px solid #0E7C86;outline-offset:1px}</style>
+<script>/* órdenes de la app: abrir pestaña o modo de test */
+(function(){
+function go(tab,mode,start){
+  try{ var b=document.querySelector('nav [data-tab="'+tab+'"]'); if(b) b.click(); }catch(e){}
+  if(mode){ setTimeout(function(){
+    var q=document.getElementById("quiz"), s=document.getElementById("setup");
+    if(q&&!q.hidden&&s){ q.hidden=true; s.hidden=false; }
+    var r=document.querySelector('input[name=mode][value="'+mode+'"]'); if(r){ r.checked=true; r.dispatchEvent(new Event("change",{bubbles:true})); }
+    if(start&&r){ var sb=document.getElementById("startBtn"); if(sb) setTimeout(function(){ sb.click(); },40); }
+  },60); }
+  try{ window.scrollTo({top:0}); }catch(e){}
+}
+function fold(c){ return c.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase(); }
+function seek(out,t,p){ while((p=out.indexOf(t,p))>-1){ if(p===0||!/[a-z0-9ñç]/.test(out[p-1])) return p; p++; } return -1; }
+function find(f){
+  var root=document.getElementById("notes")||document.body, ds=root.querySelectorAll("details"), d=ds[f.i]; if(!d) return;
+  [].slice.call(document.querySelectorAll("mark.f0hit")).forEach(function(m){ var p=m.parentNode; p.replaceChild(document.createTextNode(m.textContent),m); p.normalize(); });
+  for(var x=d; x; x=x.parentElement){ if(x.tagName==="DETAILS") x.open=true; }
+  var ts=(f.terms||[]).filter(function(t){ return t&&t.length>1; }), first=null;
+  if(ts.length){
+    var w=document.createTreeWalker(d, NodeFilter.SHOW_TEXT, {acceptNode:function(n){ var p=n.parentElement; return (!p||/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName)||p.closest("svg"))?2:1; }}), nodes=[], n;
+    while((n=w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var str=node.nodeValue, out="", map=[], i, k;
+      for(i=0;i<str.length;i++){ var c=fold(str[i]); for(k=0;k<c.length;k++){ out+=c[k]; map.push(i); } } map.push(str.length);
+      var ms=[]; ts.forEach(function(t){ var p=0; while((p=seek(out,t,p))>-1){ ms.push([map[p],map[p+t.length]]); p+=t.length; } });
+      if(!ms.length) return; ms.sort(function(a,b){ return a[0]-b[0]; });
+      var frag=document.createDocumentFragment(), last=0;
+      ms.forEach(function(m){ if(m[0]<last) return; frag.appendChild(document.createTextNode(str.slice(last,m[0]))); var mk=document.createElement("mark"); mk.className="f0hit"; mk.textContent=str.slice(m[0],m[1]); frag.appendChild(mk); if(!first) first=mk; last=m[1]; });
+      frag.appendChild(document.createTextNode(str.slice(last))); node.parentNode.replaceChild(frag,node);
+    });
+  }
+  if(first) first.classList.add("first");
+  (first||d).scrollIntoView({block:first?"center":"start"});
+}
+addEventListener("message",function(e){ var d=e.data; if(d&&d.t==="f0-cmd"){ go(d.tab,d.mode,d.start); if(d.find) setTimeout(function(){ find(d.find); },150); } });
+function fromHash(){ var m=/(?:^|[#&])go=([a-z]+)(?:&mode=([a-z0-9]+))?/.exec(location.hash); if(m) go(m[1],m[2]); }
+addEventListener("load",function(){ setTimeout(fromHash,50); });
+try{ if(window.parent!==window) window.parent.postMessage({t:"f0-ready",k:"poh"},"*"); }catch(e){}
+})();</script></body></html>
