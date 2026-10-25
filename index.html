@@ -884,7 +884,6 @@ $("#sgForm").addEventListener("submit",async e=>{ e.preventDefault();
   msg.style.color="var(--ok)"; msg.textContent="¡Recibido! Gracias."; SG=null; setTimeout(()=>{ $("#sugBox").hidden=true; },1300);
 });
 const SG_KIND={pregunta:"Pregunta",correccion:"Corrección",otro:"Idea"};
-/* ===================== newsletter «NOTAM del Aviador» (admin) ===================== */
 async function drawInbox(){
   const el=$("#inbox"); if(!el||!sb) return;
   if(!SG){ const r=await sb.from("suggestions").select("*").order("created_at",{ascending:false}).limit(200);
