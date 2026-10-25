@@ -397,22 +397,22 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
 </div>
 </details>
 
-<details class="lo atpl" id="lo-090.01.01.03" data-lo="090.01.01.03">
+<details class="lo" id="lo-090.01.01.03" data-lo="090.01.01.03">
 <summary><span class="lonum">090.01.01.03</span><span class="lotitle">Q-code groups commonly used in RT air-ground communications</span></summary>
 <div class="body">
-  <div class="comp"><b>ATPL</b>
+  <div class="comp"><b>Dado en clase · entran los 4 y sale alguna pregunta en Fase 0 y en SENASA</b>
   <div class="scroll"><table>
     <tr><th>Q-code</th><th>Qué es</th><th>Referencia</th></tr>
     <tr><td class="n">QDM</td><td>Rumbo magnético a seguir (viento cero) <b>hacia</b> la estación</td><td>Magnético · hacia</td></tr>
     <tr><td class="n">QDR</td><td>Marcación magnética <b>desde</b> la estación</td><td>Magnético · desde</td></tr>
     <tr><td class="n">QUJ</td><td>Marcación verdadera <b>hacia</b> la estación</td><td>Verdadero · hacia</td></tr>
     <tr><td class="n">QTE</td><td>Marcación verdadera <b>desde</b> la estación</td><td>Verdadero · desde</td></tr>
-    <tr><td class="n">QNH</td><td>Reglaje para leer la <b>elevación</b> en tierra</td><td>Altitud</td></tr>
-    <tr><td class="n">QFE</td><td>Presión en la elevación del aeródromo (o umbral)</td><td>Altura</td></tr>
   </table></div>
   <ul>
-    <li>Clases de marcación VDF: <b>A ±2°</b> · <b>B ±5°</b> · <b>C ±10°</b> · <b>D</b> peor que C. QDR = QDM ± 180°.</li>
-    <li>Se pide con el Q-code y <b>se acaba con el indicativo</b>: «Request QDM, GBNKD» → «QDM 140 degrees, class Bravo».</li>
+    <li><b>Truco:</b> M y T = magnético y verdadero (true); «hacia» = QDM y QUJ, «desde» = QDR y QTE. QDR = QDM ± 180° y QTE = QUJ ± 180°.</li>
+    <li>Se pide en <b>inglés normal</b>, sin alfabeto aeronáutico («request QDM», «request true bearing»), y <b>el indicativo va siempre al final</b>: «Request QDM, GBNKD».</li>
+    <li>Clases de marcación VDF (ATPL, no entran en Fase 0): A ±2° · B ±5° · C ±10° · D peor que C.</li>
+    <li>QNH y QFE (ATPL): reglaje para leer la elevación (altitud) · presión en el aeródromo (altura).</li>
   </ul></div>
 </div>
 </details>
@@ -821,25 +821,31 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
 <!-- =================== 090.03 =================== -->
 <h2>090.03 · Relevant weather information <span class="wtag">2 preg. · 6 %</span></h2>
 
-<details class="lo atpl" id="lo-090.03.01.02" data-lo="090.03.01.02">
+<details class="lo" id="lo-090.03.01.02" data-lo="090.03.01.02">
 <summary><span class="lonum">090.03.01.02</span><span class="lotitle">Weather broadcast</span></summary>
 <div class="body">
-  <div class="comp"><b>ATPL</b><ul>
-    <li><b>ATIS</b> = <b>Automatic Terminal Information Service</b> (service, no system): información de llegada y salida en frecuencia propia o de VOR, para descargar la frecuencia.</li>
-    <li>Cada emisión lleva una <b>letra</b>; en la primera llamada dices que la tienes: «information Quebec». Se actualiza cada media hora (o al momento con un SPECI).</li>
-    <li>Contenido: aeródromo, letra, hora de observación, pista y aproximación, viento (°M), visibilidad/RVR, tiempo presente, nubes, temperatura y rocío, QNH, nivel de transición, tendencia.</li>
-    <li><b>D-ATIS</b>: el ATIS por enlace de datos. <b>VOLMET</b>: METAR de un grupo de aeródromos de la misma zona, en VHF o HF, para aviones <b>en ruta</b>.</li>
+  <div class="comp"><b>Dado en clase · ATIS, SPECI y VOLMET</b><ul>
+    <li><b>ATIS</b> = <b>Automatic Terminal Information Service</b>: información de llegada y salida <b>en bucle</b> (se repite sin parar) para descargar la frecuencia.</li>
+    <li><b>Validez:</b> hasta que haya un cambio; en las preguntas, <b>30 minutos</b> si no hay cambio significativo, igual que el METAR. Cada actualización lleva una <b>letra nueva</b> (en orden alfabético).</li>
+    <li>Si el mensaje es muy denso (<b>más de 30 segundos</b>) se divide en ATIS de <b>llegadas</b> y de <b>salidas</b>.</li>
+    <li><b>Frecuencia:</b> una dedicada; si no la hay, el canal de voz de una ayuda a la navegación (un VOR), <b>excepto el ILS</b>. Pregunta típica de SENASA y de Fase 0.</li>
+    <li><b>Primera llamada:</b> identificas la letra del ATIS: «…with information Kilo».</li>
+    <li>Contenido: aeródromo, letra, hora de observación, pista, viento (<b>°magnéticos</b>), visibilidad, tiempo presente, nubes, temperatura y rocío, QNH, tendencia.</li>
+    <li><b>SPECI</b>: METAR especial, emitido cuando hay un cambio significativo.</li>
+    <li><b>VOLMET</b>: como el ATIS, pero con el tiempo de <b>distintos aeródromos</b>, para aviones en ruta. <b>D-ATIS</b>: el ATIS por enlace de datos.</li>
+    <li>Entrena el oído en la pestaña Test: <b>«Escucha ATIS»</b>.</li>
   </ul></div>
 </div>
 </details>
 
-<details class="lo atpl" id="lo-090.03.01.01" data-lo="090.03.01.01">
+<details class="lo" id="lo-090.03.01.01" data-lo="090.03.01.01">
 <summary><span class="lonum">090.03.01.01</span><span class="lotitle">Aerodrome weather terms</span></summary>
 <div class="body">
-  <div class="comp"><b>ATPL · CAVOK</b> («cav-o-kay»)<ul>
-    <li>Visibilidad <b>10 km o más</b>.</li>
-    <li>Sin nubes por debajo de <b>1500 m (5000 ft)</b> o de la MSA, lo que sea mayor, y <b>sin CB</b>.</li>
-    <li>Sin tiempo significativo. El viento no entra.</li>
+  <div class="comp"><b>Dado en clase · CAVOK</b> («cav-o-kay») · importante<ul>
+    <li>Visibilidad de <b>10 km o más</b>.</li>
+    <li>Sin nubes por debajo de <b>5000 ft</b> o de la <b>MSA</b> (la mayor), y sin CB.</li>
+    <li>Sin <b>tiempo significativo</b>. El viento y la temperatura no entran.</li>
+    <li>Las tres a la vez: si falla una, no hay CAVOK (9 km, o una nube a 3000 ft, ya no lo es).</li>
   </ul></div>
 </div>
 </details>
@@ -948,6 +954,18 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
 
 <!-- =================== 090.06 =================== -->
 <h2>090.06 · VHF propagation and allocation of frequencies <span class="wtag">2 preg. · 6 %</span></h2>
+<div class="trap"><b>Ojo en Fase 0:</b> de este bloque caen <b>bastantes preguntas</b> (ondas, ionosfera, alcance VHF). Repasa la tabla y haz el examen: reparte al menos 4 de propagación.</div>
+<div class="scroll"><table class="deftable">
+  <tr><th>Onda</th><th>Frecuencias</th><th>Cómo viaja</th></tr>
+  <tr><td><b>Superficie</b> (ground)</td><td>LF/MF</td><td>Sigue la curvatura de la Tierra; el alcance baja al subir la frecuencia.</td></tr>
+  <tr><td><b>Ionosférica</b> (sky)</td><td>HF</td><td>Se refracta en la ionosfera y vuelve a tierra: largo alcance, con <b>distancia de salto</b> y <b>zona de silencio</b>.</td></tr>
+  <tr><td><b>Directa</b> (space)</td><td>VHF/UHF</td><td>Línea de vista; atraviesa la ionosfera. Alcance = 1,23 (√h1 + √h2).</td></tr>
+</table></div>
+<ul>
+  <li><b>Capa D:</b> absorbe de día y desaparece de noche. En HF: frecuencias más altas de día y más bajas de noche.</li>
+  <li>Más frecuencia → <b>mayor</b> distancia de salto. <b>Fading</b> = variación de la señal recibida.</li>
+</ul>
+
 
 <details class="lo" id="lo-090.06.01.01" data-lo="090.06.01.01">
 <summary><span class="lonum">090.06.01.01</span><span class="lotitle">Spectrum, bands, range</span></summary>
@@ -1032,7 +1050,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
     <path d="M60 158 L320 26 L580 158" class="ln cw dsh"/><text x="400" y="66" class="tw sm">sky wave: HF</text>
     <path d="M60 162 Q 320 118 580 162" class="ln cg dsh"/><text x="330" y="152" class="tg sm">surface wave: LF/MF</text>
   </svg>
-  <figcaption>Se falla mucho «por dónde llega la VHF». <b>Por encima de ~30 MHz, solo por la onda directa (space wave), en línea de vista.</b> La sky wave y la surface wave existen (PDF 4.16, 040.11, aún no explicado en clase), pero <b>no son de la VHF</b>.</figcaption>
+  <figcaption>Se falla mucho «por dónde llega la VHF». <b>Por encima de ~30 MHz, solo por la onda directa (space wave), en línea de vista.</b> La sky wave y la surface wave existen, pero <b>no son de la VHF</b>.</figcaption>
 </figure>
 </div>
 </details>
@@ -1136,7 +1154,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row" style="margin:10px 0 4px"><input type="checkbox" id="incTrial" checked> Incluir temario ATPL aún no dado</label>
+    <label class="row" style="margin:10px 0 4px"><input type="checkbox" id="incTrial"> Incluir temario ATPL aún no dado</label>
     <label class="row" style="margin:0 0 10px"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
@@ -2335,7 +2353,7 @@ const isIgnored = a => !!(a.ignore || (state.ignore||{})[a.id]);
 // ---------- estadísticas: por pregunta y por LO ----------
 function stats(){
   const q = {}, loHist = {};
-  const sorted = state.attempts.filter(a=>!isIgnored(a) && a.mode!=="voice").sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const sorted = state.attempts.filter(a=>!isIgnored(a) && a.mode!=="voice" && a.mode!=="atis").sort((a,b)=>new Date(a.date)-new Date(b.date));
   sorted.forEach(at=> (at.items||[]).forEach(it=>{
     const s = q[it.q] || (q[it.q]={n:0,ok:0,streak:0,last:null});
     s.n++; if(it.ok){s.ok++; s.streak++;} else s.streak=0; s.last = it.ok;
@@ -2528,7 +2546,7 @@ function renderNotesMeta(){
 
 // ---------- evolución ----------
 const isTrialAt = a => a.mode==="trial" || a.mode==="campus";
-function countedAttempts(){ return state.attempts.filter(a=>a.total && !isIgnored(a) && a.mode!=="voice").sort((a,b)=>new Date(a.date)-new Date(b.date)); }
+function countedAttempts(){ return state.attempts.filter(a=>a.total && !isIgnored(a) && a.mode!=="voice" && a.mode!=="atis").sort((a,b)=>new Date(a.date)-new Date(b.date)); }
 function evoChart(){
   const list = countedAttempts();
   if(!list.length) return '<p class="muted">Aún no hay intentos que cuenten.</p>';
@@ -2697,7 +2715,7 @@ $("#startBtn").addEventListener("click",()=>{
   $("#qlist").querySelectorAll("input,select").forEach(el=>el.addEventListener("change",updProg));
   $("#qlist").querySelectorAll("input.fillin").forEach(el=>el.addEventListener("input",updProg));
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBtn").hidden=false; $("#finishBtn").disabled=false;
-  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : 0;
+  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : (curMode==="adaptive" ? 45*60 : 0);
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
@@ -2740,7 +2758,7 @@ async function finishTest(timeout){
   if(curMode==="senasa"){ Object.assign(rec,{len:curLen, limitS:tLimit, timeout:!!timeout, byBlock, score0:s0, total0:n0}); }
   state.attempts.push(rec);
   const realS = 60*60/34, perQ = usedS/current.length;
-  const blockHTML = curMode!=="senasa" ? "" : `
+  const blockHTML = curMode==="adaptive" ? `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(usedS/current.length)} s por pregunta</div>` : curMode!=="senasa" ? "" : `
       <div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el real da ${Math.round(realS)} s). ${perQ<=realS?`En el real te sobrarían <b>${Math.max(0,Math.round((60*60-perQ*34)/60))} min</b> para repasar.`:`<span class="fail">A este ritmo no te daría tiempo a repasar en el real.</span>`}<br><b>Fase 0:</b> ${s0}/${n0}${n0?` (${Math.round(s0/n0*100)} %)`:""}${current.length-n0?` · <b>ATPL:</b> ${score-s0}/${current.length-n0}`:""}</div>
       <div class="scroll"><table style="margin-top:8px"><tr><th>Capítulo</th><th>Aciertos</th></tr>${BLOCKS.filter(b=>byBlock[b.k]).map(b=>{const x=byBlock[b.k], p=Math.round(x.ok/x.total*100); return `<tr><td><b>${b.code}</b> ${esc(b.name)}</td><td class="${p>=75?'pass':'fail'}">${x.ok}/${x.total} · ${p} %</td></tr>`;}).join("")}</table></div>`;
   const byK = {}; current.forEach((it,i)=>{ (byK[it.k]=byK[it.k]||{ok:0,total:0}).total++; if(items[i].ok) byK[it.k].ok++; });
@@ -2754,7 +2772,7 @@ async function finishTest(timeout){
         return `<div class="lorow"><div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(loLabel(l))}</span><span>${byLO[l].ok}/${byLO[l].total}</span></div><div class="bar"><i style="width:${p}%;background:${p>=75?'var(--ok)':'var(--bad)'}"></i></div></div>`}).join("")}</div>
       <p style="margin:12px 0 4px"><b>Siguiente foco:</b> ${next.map(x=>esc(loLabel(x.lo))).join(" y ")}</p>
       <p id="saveMsg" class="muted" style="font-size:14px">Guardando…</p>
-      <div class="row"><button class="btn" id="againBtn">${curMode==="senasa"?"Otro simulacro":"Otro adaptativo"}</button><button class="btn sec" id="mapBtn">Ver mapa</button></div>
+      <div class="row"><button class="btn" id="againBtn">${curMode==="senasa"?"Otro simulacro":"Otro examen"}</button><button class="btn sec" id="mapBtn">Ver mapa</button></div>
     </div>`;
   $("#result").hidden = false; $("#finishBtn").hidden = true;
   const againMode = curMode==="senasa" ? "senasa" : "adaptive";
@@ -2775,10 +2793,10 @@ function loSummary(at){
 }
 function renderHist(){
   const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const modeName = {adaptive:"Adaptativo",wrong:"Fallos",lo:"Un tema",all:"Banco completo",trial:"Simulacro del trial",campus:"Trial",senasa:"SENASA",slides:"Presentaciones",calc:"Números",voice:"Radio por voz"};
+  const modeName = {atis:"Escucha ATIS",adaptive:"Examen Fase 0",wrong:"Fallos",lo:"Un tema",all:"Banco completo",trial:"Simulacro del trial",campus:"Trial",senasa:"SENASA",slides:"Presentaciones",calc:"Números",voice:"Radio por voz"};
   $("#histEvo").innerHTML = evoChart();
   $("#histBody").innerHTML = list.length ? `<div class="card"><div class="scroll"><table class="hist"><tr><th>Fecha</th><th>Tipo</th><th>Nota</th><th></th><th></th></tr>${
-    list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${modeName[r.mode]||r.mode}${r.format==="prof"?' <span class="muted">formato profesor</span>':''}${r.mode==="senasa"?` <span class="muted">${(SEN_LEN[r.len]||{}).label||""} · ${fmtMS(r.usedS||0)}</span>`:""}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Detalle</button>`:''}${isTrialAt(r)?` · <button class="linkbtn" data-ig="${r.id}">${ig?'volver a contar':'no contar (al azar)'}</button>`:''}</td></tr>
+    list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${modeName[r.mode]||r.mode}${r.format==="prof"?' <span class="muted">formato profesor</span>':''}${r.mode==="senasa"?` <span class="muted">${(SEN_LEN[r.len]||{}).label||""} · ${fmtMS(r.usedS||0)}</span>`:""}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig||r.mode==='voice'||r.mode==='atis'?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Detalle</button>`:''}${isTrialAt(r)?` · <button class="linkbtn" data-ig="${r.id}">${ig?'volver a contar':'no contar (al azar)'}</button>`:''}</td></tr>
       <tr style="${ig?'opacity:.5':''}"><td colspan="5" class="los">${loSummary(r)}</td></tr>`; }).join("")
   }</table></div></div>` : `<div class="card muted">Aún no hay intentos.</div>`;
   $("#histBody").querySelectorAll("[data-id]").forEach(b=>b.addEventListener("click",()=>showDetail(b.dataset.id)));
@@ -3250,7 +3268,7 @@ function vBindPtt(it){
   let rec = null, chunks = [], alts = [], live = "", talking = false, gotAny = false;
   const begin = e => { if(e) e.preventDefault(); if(talking || it.done) return; talking = true; chunks=[]; alts=[]; live=""; gotAny=false;
     if(VTTS) VTTS.cancel();
-    rec = new VSR(); rec.lang = it.acc==="us" ? "en-US" : "en-GB"; rec.continuous = true; rec.interimResults = true; rec.maxAlternatives = 3;
+    rec = new VSR(); rec.lang = (window.__vRecLang && window.__vRecLang()) || (it.acc==="us" ? "en-US" : "en-GB"); rec.continuous = true; rec.interimResults = true; rec.maxAlternatives = 5;
     rec.onresult = ev => { let interim = ""; for(let i=ev.resultIndex;i<ev.results.length;i++){ const r=ev.results[i]; if(r.isFinal){ chunks.push([...r].map(a=>a.transcript)); gotAny=true; } else interim += r[0].transcript; }
       live = chunks.map(c=>c[0]).join(" ")+" "+interim; $("#vLive").textContent = "🎧 " + live.trim(); };
     rec.onerror = ev => { if(ev.error==="not-allowed"||ev.error==="service-not-allowed") $("#vLive").innerHTML = `<span class="fail">El micrófono está bloqueado en esta vista. Permítelo en el navegador, o abre la página fuera del visor (Chrome o Edge).</span>`;
@@ -3258,7 +3276,7 @@ function vBindPtt(it){
     rec.onend = () => { talking=false; btn.classList.remove("on"); $("#vPttT").textContent="Mantén pulsado para hablar"; if(it.stopped) vEval(it, chunks); };
     it.stopped = false;
     try{ rec.start(); btn.classList.add("on"); $("#vPttT").textContent="Transmitiendo… suelta al acabar"; $("#vLive").textContent="🎧 …"; }catch(err){ talking=false; } };
-  const end = e => { if(e) e.preventDefault(); if(!talking || !rec) return; it.stopped = true; setTimeout(()=>{ try{ rec.stop(); }catch(err){} }, 350); };
+  const end = e => { if(e) e.preventDefault(); if(!talking || !rec) return; it.stopped = true; setTimeout(()=>{ try{ rec.stop(); }catch(err){} }, 900); };
   btn.addEventListener("pointerdown", begin); btn.addEventListener("pointerup", end); btn.addEventListener("pointerleave", end); btn.addEventListener("pointercancel", end);
   btn.addEventListener("keydown", e=>{ if((e.key===" "||e.key==="Enter") && !e.repeat) begin(e); });
   btn.addEventListener("keyup", e=>{ if(e.key===" "||e.key==="Enter") end(e); });
@@ -3267,7 +3285,7 @@ function vBindPtt(it){
 function vEval(it, chunks){
   if(!chunks.length){ $("#vLive").innerHTML = `<span class="muted">No te he oído. Mantén pulsado el botón mientras hablas.</span>`; return; }
   // prueba la mejor combinación de alternativas del reconocedor
-  const cands = [0,1,2].map(k=>chunks.map(c=>c[Math.min(k,c.length-1)]).join(" "));
+  const cands = [0,1,2,3,4].map(k=>chunks.map(c=>c[Math.min(k,c.length-1)]).join(" "));
   const g = cands.map(c=>({c, g:vGrade(it.sc, c)})).sort((a,b)=>(b.g.ok-a.g.ok) || (b.g.score-a.g.score))[0];
   it.done = true; it.res = g.g; it.heard = g.c;
   const R = g.g, sc = it.sc;
@@ -3435,5 +3453,292 @@ function ui(){
   });
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",ui); else ui();
-})();</script><!--/f0dedup--></body>
+})();</script><!--/f0dedup--><!--f0com--><script>// ===== Comunicaciones (090): examen Fase 0 de 24 · ATIS por escucha · voz más tolerante · preguntas nuevas =====
+(function(){
+try{
+  const NEWQ_X = [["n9a01","090.03.01.02","n","atis","How is the ATIS message normally broadcast?",["As a continuous loop that is repeated","Only when a pilot requests it","Once every hour, on the hour","Only during take-off and landing peaks"],"El ATIS va en bucle, sin parar, para descargar la frecuencia de control."],["n9a02","090.03.01.02","n","atis","An ATIS with no significant change is normally valid for:",["About 30 minutes, like the METAR","About 5 minutes","Exactly 3 hours","Until the next sunrise"],"Vale hasta que hay un cambio; si no lo hay, lo normal (y lo que se pregunta) son 30 minutos, igual que el METAR."],["n9a03","090.03.01.02","n","atis","When must a new ATIS letter be issued?",["Whenever there is a significant change in the information","Only every 24 hours","Only when the runway is changed","Only when the controller on duty changes"],"Cada actualización lleva una letra nueva (siguiente del alfabeto) y se emite al haber un cambio significativo."],["n9a04","090.03.01.02","n","atis","If an ATIS message would last more than 30 seconds, it should be:",["Split into separate arrival and departure ATIS","Shortened by removing the weather","Transmitted twice as fast","Replaced by a NOTAM"],"Mensaje denso (más de 30 s): ATIS de llegadas y ATIS de salidas por separado."],["n9a05","090.03.01.02","n","atis","Where is the ATIS broadcast when there is no dedicated ATIS frequency?",["On the voice channel of a radio navigation aid, except the ILS","On the ILS localiser frequency","On the emergency frequency 121.5 MHz","On the tower frequency, every 5 minutes"],"Frecuencia propia; si no la hay, el canal de voz de una ayuda (VOR, por ejemplo), nunca el ILS."],["n9a06","090.03.01.02","n","atis","Which navigation aid channel must NOT be used to broadcast the ATIS?",["ILS","VOR","DVOR","NDB with voice"],"La excepción es el ILS: no se usa para el ATIS."],["n9a07","090.03.01.02","n","atis","On first contact with ATC, after listening to the ATIS, the pilot should:",["State the ATIS letter received","Read back the whole ATIS","Request the ATIS again","Say nothing about the ATIS"],"En la primera llamada se identifica la letra: «…information Kilo»."],["n9a08","090.03.01.02","n","atis","You hear ATIS information Delta and ATC later gives you a different QNH than the ATIS. The most likely reason is that:",["The ATIS has been updated and you should confirm the current letter","The ATIS was wrong from the beginning","ATC always uses a different QNH","ATIS never contains the QNH"],"Si lo que oye en frecuencia no coincide, hay un ATIS más nuevo: confirma la letra vigente."],["n9a09","090.03.01.02","n","atis","A SPECI is:",["A special report issued when the METAR changes significantly","A routine report issued every 30 minutes","A forecast for the next 24 hours","A warning of volcanic ash"],"SPECI = cambio en el METAR por cambios significativos, fuera del horario rutinario."],["n9a10","090.03.01.02","n","atis","VOLMET is similar to ATIS, but it:",["Provides weather for several different aerodromes","Gives only the weather of the departure airport","Provides clearances to aircraft on the ground","Gives only SIGMET information"],"VOLMET = como el ATIS, pero de distintos aeródromos."],["n9a11","090.03.01.02","n","atis","VOLMET broadcasts are mainly intended for:",["Aircraft in flight","Aircraft parked at the apron","Air traffic controllers only","Ground handling staff"],"El VOLMET es para aeronaves en vuelo (en ruta)."],["n9a12","090.03.01.02","n","atis","Which of the following is NOT normally part of an ATIS message?",["The estimated time of arrival of the pilot","The runway in use","The QNH","The surface wind"],"El ATIS lleva letra, hora, pista, viento, visibilidad, nubes, temperatura, rocío y QNH; no la ETA del piloto."],["n9a13","090.03.01.02","n","atis","The wind direction given in an ATIS is referred to:",["Magnetic north","True north","Grid north","Compass north"],"Viento del ATIS/torre: magnético. En el METAR va en verdadero."],["n9a14","090.03.01.02","n","atis","D-ATIS is:",["The ATIS delivered by data link","The ATIS broadcast only on HF","A daily ATIS issued at midnight","A distress ATIS for emergencies"],"D-ATIS = ATIS por enlace de datos (texto en pantalla)."],["n9a15","090.03.01.02","n","atis","The ATIS letters are allocated:",["In alphabetical order, one new letter for each update","At random by the controller","By the pilot on request","Only A, B and C are used"],"En orden alfabético: Alpha, Bravo, Charlie… una por cada actualización."],["n9a16","090.03.01.02","n","atis","A pilot received ATIS \"information Echo\". The correct way to report it to ATC on first contact is:",["\"…with information Echo\"","\"…ATIS received five by five\"","\"…Echo-Echo-Echo\"","\"…ATIS Echo, over\""],"Se dice la letra en alfabeto OACI: «with information Echo»."],["n9a17","090.03.01.02","n","atis","After a routine METAR with no significant change, an ATIS is usually kept for:",["30 minutes","10 minutes","2 hours","12 hours"],"Ritmo de los METAR: media hora si no hay cambios."],["n9c01","090.03.01.01","n","cavok","CAVOK is used when the visibility is:",["10 km or more","5 km or more","8 km or more","1,500 m or more"],"CAVOK: visibilidad de 10 km o más."],["n9c02","090.03.01.01","n","cavok","For CAVOK, there must be no cloud below:",["5,000 ft or the highest minimum sector altitude, whichever is greater","1,000 ft above the aerodrome","10,000 ft","3,000 ft or the MSA, whichever is lower"],"Sin nubes por debajo de 5000 ft o de la MSA (la mayor)."],["n9c03","090.03.01.01","n","cavok","Which condition must be met in addition to visibility and cloud for CAVOK?",["No significant weather","A wind of less than 5 knots","A QNH of 1013 hPa","A temperature above 0 °C"],"Tercera condición: sin tiempo significativo. El viento y la temperatura no cuentan."],["n9c04","090.03.01.01","n","cavok","Visibility 12 km, scattered cloud at 6,000 ft (MSA 4,000 ft), no significant weather. The report is:",["CAVOK","Not CAVOK, because of the cloud","Not CAVOK, because of the visibility","Not CAVOK, because of the MSA"],"10 km o más, ninguna nube por debajo de 5000 ft / MSA y sin fenómenos: CAVOK."],["n9c05","090.03.01.01","n","cavok","Visibility 9 km, no cloud, no weather. The report is:",["Not CAVOK, because the visibility is below 10 km","CAVOK","CAVOK, because there are no clouds","Not CAVOK, because of the lack of wind"],"Con 9 km no hay CAVOK: la visibilidad debe ser de 10 km o más."],["n9c06","090.03.01.01","n","cavok","Visibility more than 10 km, few clouds at 3,000 ft, MSA 2,500 ft. The report is:",["Not CAVOK, because there is cloud below 5,000 ft","CAVOK","CAVOK, because few clouds do not count","CAVOK, because the cloud is above the MSA"],"Hay nubes por debajo de 5000 ft: no es CAVOK, aunque estén sobre la MSA."],["n9c07","090.03.01.01","n","cavok","In which report may the term CAVOK appear?",["METAR, SPECI and ATIS","Only in the TAF","Only in the SIGMET","Only in the NOTAM"],"Se usa en METAR, SPECI y también en el ATIS."],["n9q01","090.01.01.03","n","qcode","QDR is:",["The magnetic bearing of the aircraft from the station","The magnetic heading to steer to the station","The true bearing of the aircraft from the station","The true track to the station"],"QDR = marcación magnética DESDE la estación."],["n9q02","090.01.01.03","n","qcode","QUJ is:",["The true track to the station","The true bearing of the aircraft from the station","The magnetic bearing from the station","The magnetic heading to the station"],"QUJ = verdadero HACIA la estación."],["n9q03","090.01.01.03","n","qcode","Which Q-code gives the magnetic heading to steer to the station (zero wind)?",["QDM","QDR","QUJ","QTE"],"QDM: magnético y hacia la estación."],["n9q04","090.01.01.03","n","qcode","Which Q-code gives the true bearing of the aircraft from the station?",["QTE","QUJ","QDM","QDR"],"QTE: verdadero y desde la estación."],["n9q05","090.01.01.03","n","qcode","The QDM is 080°. The QDR is:",["260°","080°","100°","170°"],"QDR = QDM ± 180°: 080 + 180 = 260."],["n9q06","090.01.01.03","n","qcode","The QUJ is 315°. The QTE is:",["135°","315°","045°","225°"],"QTE = QUJ ± 180°: 315 − 180 = 135."],["n9q07","090.01.01.03","n","qcode","Which pair of Q-codes refers to TRUE values?",["QUJ and QTE","QDM and QDR","QDM and QUJ","QDR and QTE"],"Los verdaderos son QUJ (hacia) y QTE (desde); los magnéticos, QDM y QDR."],["n9q08","090.01.01.03","n","qcode","A pilot asks for the magnetic heading to the station. The correct request is:",["\"Request QDM, G-BNKD\"","\"G-BNKD, request QDM\"","\"Request Quebec Delta Mike\"","\"Request direction, G-BNKD, over\""],"Se pide en inglés normal, con el Q-code (sin alfabeto) y el indicativo AL FINAL."],["n9q09","090.01.01.03","n","qcode","When requesting a Q-code, the call sign is:",["Said at the end of the request","Said at the beginning of the request","Omitted","Said twice, before and after"],"Al pedirlo, el indicativo va siempre al final."],["n9q10","090.01.01.03","n","qcode","The relation between QDM and QDR is:",["They differ by 180°","They are always equal","They differ by the magnetic variation","They differ by 90°"],"Uno es hacia la estación y el otro desde ella: 180° de diferencia."],["n9p01","090.06.01.01","n","propag","Radio waves that follow the curvature of the Earth's surface are called:",["Ground (surface) waves","Sky waves","Space waves","Satellite waves"],"La onda de superficie sigue la curvatura de la Tierra (LF/MF sobre todo)."],["n9p02","090.06.01.01","n","propag","Sky waves are radio waves that:",["Are refracted back to the Earth by the ionosphere","Travel only in a straight line to the receiver","Follow the surface of the Earth","Never come back to the Earth"],"La onda ionosférica se refracta/refleja en la ionosfera y vuelve a tierra: es lo que permite el largo alcance en HF."],["n9p03","090.06.01.01","n","propag","VHF communications normally use:",["Space (direct) waves","Sky waves","Ground waves","Waves reflected by the D layer"],"VHF: onda directa, por línea de vista; la ionosfera no la devuelve."],["n9p04","090.06.01.01","n","propag","VHF waves pass through the ionosphere instead of being reflected. Therefore, VHF range is limited by:",["The line of sight","The sunspot cycle","The time of day","The ionospheric layer in use"],"Atraviesan la ionosfera: el alcance depende de la línea de vista (altura, antena, potencia)."],["n9p05","090.06.01.01","n","propag","Which atmospheric layer absorbs HF waves during the day and practically disappears at night?",["D layer","F2 layer","Troposphere","Stratosphere"],"La capa D absorbe de día y desaparece de noche."],["n9p06","090.06.01.01","n","propag","The skip distance is:",["The distance from the transmitter to the point where the sky wave first returns to the Earth","The maximum range of the ground wave","The distance between two ionospheric layers","The range of a VHF transmitter"],"Distancia de salto: del transmisor al primer punto donde vuelve la onda ionosférica."],["n9p07","090.06.01.01","n","propag","The area between the end of the ground wave and the point where the sky wave first returns is called:",["The skip zone (dead zone)","The fading zone","The shadow of the D layer","The line of sight"],"Zona de silencio (skip zone): no se recibe ni la onda de superficie ni la ionosférica."],["n9p08","090.06.01.01","n","propag","If the transmission frequency in HF is increased, the skip distance:",["Increases","Decreases","Does not change","Becomes zero"],"A más frecuencia, la onda entra más en la ionosfera y vuelve más lejos: mayor distancia de salto."],["n9p09","090.06.01.01","n","propag","Which frequency band is normally used for long-range communications over the ocean?",["HF","VHF","UHF","SHF"],"HF: largo alcance, aunque con peor calidad."],["n9p10","090.06.01.01","n","propag","In HF communications, the best frequency to use is generally:",["Higher by day and lower by night","Lower by day and higher by night","The same all day","Always the highest available"],"De día, frecuencias más altas; de noche, más bajas."],["n9p11","090.06.01.01","n","propag","Fading is:",["A variation in the strength of the received signal","A permanent loss of the transmitter","An increase of the VHF range","A fault in the squelch"],"El desvanecimiento (fading) es la variación de la señal recibida, por ejemplo por interferencia entre ondas."],["n9p12","090.06.01.01","n","propag","Compared with HF, VHF communications are:",["Less affected by static and with better quality, but limited to line of sight","More affected by static and with longer range","Better at long range and worse in quality","Reflected by the ionosphere at night"],"VHF: poco ruido atmosférico y buena calidad, pero solo línea de vista."],["n9p13","090.06.01.01","n","range","Using R = 1.23 (√h1 + √h2), what is the VHF range between an aircraft at 3,600 ft and a ground station antenna at 900 ft?",["About 111 NM","About 80 NM","About 148 NM","About 62 NM"],"√3600 = 60; √900 = 30; 1,23 × 90 ≈ 111 NM."],["n9p14","090.06.01.01","n","range","Using R = 1.23 √h, what is the maximum VHF range of an aircraft at 10,000 ft to a station at sea level?",["About 123 NM","About 100 NM","About 246 NM","About 61 NM"],"√10 000 = 100; 1,23 × 100 = 123 NM."],["n9p15","090.06.01.01","n","range","The approximate rule R (NM) = 12 √FL gives, for FL 400, a range of about:",["240 NM","120 NM","480 NM","60 NM"],"√400 = 20 y 12 × 20 = 240 NM."],["n9p16","090.06.01.01","n","atten","If the transmitter power is multiplied by 4, the VHF range is multiplied by:",["2","4","16","1,4"],"El alcance es proporcional a la raíz de la potencia: √4 = 2."],["n9p17","090.06.01.01","n","lambda","The wavelength of a 150 MHz signal is:",["2 m","20 m","0,5 m","200 m"],"λ = 300 / f(MHz) = 300 / 150 = 2 m."],["n9p18","090.06.01.01","n","units","121.5 MHz is equal to:",["121 500 kHz","12 150 kHz","1 215 000 kHz","121 500 Hz"],"1 MHz = 1000 kHz: 121,5 × 1000 = 121 500 kHz."],["n9p19","090.06.01.01","n","c","The speed of radio waves in vacuum is about:",["3 × 10⁸ m/s","3 × 10⁶ m/s","3 × 10¹⁰ m/s","340 m/s"],"La de la luz: 300 000 km/s = 3 × 10⁸ m/s."],["n9p20","090.06.01.01","n","lambda","When the frequency of a radio wave increases, its wavelength:",["Decreases","Increases","Stays the same","Doubles"],"λ = c / f: a más frecuencia, menos longitud de onda."]], REFS_X = {"propag": "Ondas: de superficie (LF/MF, siguen la curvatura), ionosféricas (HF: se refractan en la ionosfera → largo alcance, con zona de silencio y distancia de salto) y directas (VHF/UHF: línea de vista, atraviesan la ionosfera). Capa D: absorbe de día y desaparece de noche. En HF, frecuencias más altas de día y más bajas de noche. Más frecuencia → mayor distancia de salto. Fading = variación de la señal recibida.", "speci": "SPECI = METAR especial, por cambio significativo. VOLMET = METAR/SPECI/TAF de varios aeródromos, en continuo, para aeronaves en vuelo."}, TOGIVEN = ["at1", "at2", "at3", "cv1", "cv2", "qc1", "qc2"];
+  Object.assign(REFS, REFS_X);
+  const have = new Set(ALLQ.map(q=>q[0]));
+  NEWQ_X.forEach(q=>{ if(!have.has(q[0])) ALLQ.push(q); });
+  ALLQ.forEach(q=>{ if(TOGIVEN.includes(q[0]) && q[2]==="a") q[2]="n"; });
+  const flip = (c,cls,cov)=>{ const s=SUB.find(x=>x[0]===c); if(s){ s[4]=cls; s[5]=cov; } if(SUBMAP[c]){ SUBMAP[c].cls=cls; SUBMAP[c].cov=cov; } };
+  flip("090.01.01.03","COM-2","part"); flip("090.03.01.02","COM-2","part"); flip("090.03.01.01","COM-2","part");
+}catch(e){ console.error("com_patch datos", e); }
+
+// ---------- 1 · Examen Fase 0 de Comunicaciones: 24 preguntas tipo test, 45 min, estilo trial ----------
+try{
+  const F0N = 24;
+  selectProf = function(){
+    const st = stats(), ok = q => isGiven(q) && q[2]!=="c" && q[2]!=="g" && in090(q);
+    const pool = BANK.filter(ok), pr = new Map(pool.map(q=>[q[0], priority(q,st)]));
+    const sorted = pool.slice().sort((a,b)=>pr.get(b[0])-pr.get(a[0]));
+    const out = [], per = {};
+    const cap = q => q[1]==="090.06.01.01" ? 6 : 3;
+    const take = q => { if(out.includes(q) || (per[q[1]]||0)>=cap(q)) return false; per[q[1]]=(per[q[1]]||0)+1; out.push(q); return true; };
+    const need = (f,n) => { let c = out.filter(f).length; for(const q of sorted){ if(c>=n) break; if(f(q) && take(q)) c++; } };
+    need(q=>q[1]==="090.06.01.01", 4);                                   // propagación: en Fase 0 pesa
+    need(q=>q[1]==="090.01.01.03", 1);                                   // algún código Q
+    need(q=>q[1]==="090.03.01.02" || q[1]==="090.03.01.01", 1);         // ATIS / CAVOK
+    need(isT, 10);                                                        // estilo de los trial
+    need(()=>true, F0N);
+    return shuffle(out).map(q=>({k:"mc", q}));
+  };
+  MODE_LABEL.adaptive = "Examen Fase 0 · 24 preguntas · 45 min";
+  const ad = document.querySelector('input[name=mode][value=adaptive]'), lab = ad && ad.closest("label");
+  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Examen Fase 0 · 24 preguntas · 45 min <small>El formato estándar del examen de Comunicaciones: solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
+    const sn = document.querySelector('input[name=mode][value=senasa]'); if(sn) sn.checked = false; }
+}catch(e){ console.error("com_patch examen", e); }
+
+// ---------- 2 · SENASA: siempre alguna pregunta de código Q y de ATIS/CAVOK ----------
+try{
+  const _sel = selectSenasa;
+  selectSenasa = function(lenKey, inc, atpl){
+    const out = _sel(lenKey, inc, atpl), pool = mcPool(inc, atpl).filter(in090);
+    const REQ = ["090.01.01.03","090.03.01.02","090.03.01.01"];
+    const ensure = (los) => { if(out.some(q=>los.includes(q[1]))) return;
+      const cand = pool.filter(q=>los.includes(q[1])); if(!cand.length) return;
+      const pick = shuffle(cand)[0], bk = blockOf(pick);
+      const idx = out.map((q,i)=>[q,i]).filter(([q])=>blockOf(q)===bk && !isT(q) && !REQ.includes(q[1])).map(x=>x[1]);
+      if(idx.length) out[idx[idx.length-1]] = pick; };
+    ensure(["090.01.01.03"]); ensure(["090.03.01.02","090.03.01.01"]);
+    return out;
+  };
+}catch(e){ console.error("com_patch senasa", e); }
+
+// ---------- 3 · Radio por voz: más tolerante con tu pronunciación ----------
+try{
+  const WORDS = "wilco roger affirm negative cleared runway heading descend descending climb climbing squawk ident approach tower ground radar control contact holding short line wait cross crossing vacated report final reading five transmitting blind receiver failure mayday pan altitude flight level speed knots taxi point information standby maintain expedite monitor request correction disregard say again decimal thousand hundred".split(" ");
+  const MAP = [[/\bwill (co|go|call|cope|coat|coal)\b/g,"wilco"],[/\bwill you (co|go)\b/g,"wilco"],[/\bmay ?day\b/g,"mayday"],[/\ba ?firm\b/g,"affirm"],[/\bcue (and|n) ?(h|age|each|eight)\b/g,"qnh"],[/\bq ?and ?(h|age)\b/g,"qnh"],
+    [/\b(when|ruin|run|rain) ?way\b/g,"runway"],[/\bsquad\b/g,"squawk"],[/\bsquark\b/g,"squawk"],[/\bsquach\b/g,"squawk"],[/\bi dent\b/g,"ident"],[/\bidentity\b/g,"ident"],[/\bdescent\b/g,"descend"],
+    [/\bhold(ing)? (in )?(sure|shot|shore|shirt|shot)\b/g,"holding short"],[/\btransmitted blind\b/g,"transmitting blind"],[/\bflight lever\b/g,"flight level"],[/\bhi dent\b/g,"ident"],
+    [/\bcross in\b/g,"crossing"],[/\bvacated\b/g,"vacated"],[/\bvac ate it\b/g,"vacated"],[/\bi beria\b/g,"iberia"],[/\bwaiting (two|2)\b/g,"vueling 2"],[/\bryan ?air\b/g,"ryanair"]];
+  const lev = (a,b)=>{ const m=a.length,n=b.length; if(!m||!n) return Math.max(m,n); let p=Array.from({length:n+1},(_,j)=>j);
+    for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c; } return p[n]; };
+  const sk = w => w[0]+w.slice(1).replace(/[aeiouy]/g,"").replace(/(.)\1+/g,"$1");
+  window.vFuzz = function(sc, raw){
+    const vocab = new Set(WORDS);
+    [sc.say, sc.show, sc.model, ...(sc.el||[]).map(e=>e.k)].forEach(s=>String(s||"").toLowerCase().replace(/[^a-z ]/g," ").split(/\s+/).forEach(w=>{ if(w.length>=4) vocab.add(w); }));
+    let s = " " + String(raw||"").toLowerCase() + " ";
+    MAP.forEach(([re,to])=>{ s = s.replace(re,to); });
+    const fix = t => { if(!/^[a-z]+$/.test(t) || t.length<4 || vocab.has(t)) return t; let best = null, bd = 9;
+      vocab.forEach(w=>{ if(Math.abs(w.length-t.length)>2) return; const d = lev(t,w), lim = w.length>=8 ? 2 : 1;
+        if(d<=lim && d<bd && (t[0]===w[0] || sk(t)===sk(w))){ best = w; bd = d; } });
+      return best || t; };
+    const tk = s.split(/\s+/).filter(Boolean), out = [];
+    for(let i=0;i<tk.length;i++){
+      const a = tk[i], b = tk[i+1];
+      if(b && /^[a-z]+$/.test(a) && /^[a-z]+$/.test(b)){ const j = a+b, f = fix(j); if(vocab.has(j) || (f!==j && vocab.has(f))){ out.push(vocab.has(j)?j:f); i++; continue; } }
+      out.push(fix(a));
+    }
+    return out.join(" ");
+  };
+  const _vGrade = vGrade;
+  vGrade = function(sc, raw){ return _vGrade(sc, window.vFuzz(sc, raw)); };
+  window.__vRecLang = () => { const el = document.getElementById("vRec"); const v = el ? el.value : "en-US"; return v==="auto" ? null : v; };
+  const row = document.getElementById("voiceOpts");
+  if(row && !document.getElementById("vRec")){
+    row.insertAdjacentHTML("beforeend", ' <select id="vRec" aria-label="Cómo entiende tu voz"><option value="en-US" selected>Entenderme como: americano (recomendado)</option><option value="en-GB">Entenderme como: británico</option><option value="en-IE">Entenderme como: irlandés</option><option value="auto">Entenderme como: igual que el ATC</option></select>');
+    const info = document.getElementById("voiceInfo");
+    if(info) info.insertAdjacentHTML("beforebegin", '<details id="vTips" style="margin-top:8px"><summary>Consejos para que te entienda mejor</summary><ul style="margin:6px 0 0 18px"><li><b>Auriculares</b>: si suena por el altavoz, el micrófono oye al ATC y se confunde.</li><li>Pulsa, <b>espera un segundo</b> y habla; suelta cuando acabes la última palabra (ahora sigue escuchando casi un segundo extra).</li><li>Di los números <b>uno a uno</b> y despacio: «one two seven decimal seven». El indicativo, entero.</li><li>Prueba «americano» y, si no, «británico»: con acento español suele entender mejor el americano.</li><li>Funciona en <b>Chrome o Edge</b> (ordenador o Android), con el micrófono permitido. En iPhone/Safari es poco fiable.</li><li>Si se equivoca, escribe lo que dijiste debajo de la respuesta y pulsa «Recalcular».</li></ul></details>');
+  }
+  const _vEval = vEval;
+  vEval = function(it, chunks){
+    _vEval(it, chunks);
+    try{
+      const old = document.getElementById("vFixRow"); if(old) old.remove();
+      const live = document.getElementById("vLive"); if(!live) return;
+      live.insertAdjacentHTML("afterend", `<div id="vFixRow" class="row" style="margin:8px 0"><input id="vFix" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="¿No era eso? Escribe lo que dijiste" value="${esc((it.heard||"").trim())}" style="flex:1;min-width:200px"><button class="btn sec sm" id="vFixBtn" type="button">Recalcular</button></div>`);
+      document.getElementById("vFixBtn").addEventListener("click", ()=>{ const t = document.getElementById("vFix").value.trim(); if(!t) return; it.done = false; it.typed = true; vEval(it, [[t]]); });
+    }catch(e){}
+  };
+}catch(e){ console.error("com_patch voz", e); }
+
+// ---------- 4 · Escucha ATIS: oyes un ATIS y rellenas lo que dice (no cuenta en la media) ----------
+try{
+  const AP = [
+    {n:"Madrid Barajas", acc:"gb", rw:["32L","32R","36L","36R","18L","18R","14L","14R"], u:"hpa", lat:"n"},
+    {n:"Barcelona El Prat", acc:"gb", rw:["25R","25L","07L","07R","02"], u:"hpa"},
+    {n:"Palma de Mallorca", acc:"gb", rw:["24L","24R","06L","06R"], u:"hpa"},
+    {n:"Malaga", acc:"gb", rw:["13","31"], u:"hpa"},
+    {n:"London Heathrow", acc:"gb", rw:["27L","27R","09L","09R"], u:"hpa"},
+    {n:"Dublin", acc:"ie", rw:["28L","10R","34","16"], u:"hpa"},
+    {n:"Sydney Kingsford Smith", acc:"au", rw:["34L","34R","16L","16R"], u:"hpa"},
+    {n:"Delhi Indira Gandhi", acc:"in", rw:["29L","29R","11L","11R"], u:"hpa"},
+    {n:"New York Kennedy", acc:"us", rw:["31L","31R","13L","13R","22L","04R"], u:"inhg"},
+    {n:"Chicago O'Hare", acc:"us", rw:["28R","28C","10L","22L","04R"], u:"inhg"},
+    {n:"Los Angeles International", acc:"us", rw:["25L","25R","24R","07L"], u:"inhg"}
+  ];
+  const LEVELS = {
+    easy:  {label:"Fácil",   rate:0.85, noise:0,    again:99, cx:0},
+    normal:{label:"Normal",  rate:1.0,  noise:0.05, again:3,  cx:1},
+    hard:  {label:"Difícil", rate:1.15, noise:0.11, again:2,  cx:2},
+    real:  {label:"Real",    rate:1.3,  noise:0.17, again:1,  cx:2}
+  };
+  const LANG = {gb:"en-GB", us:"en-US", au:"en-AU", in:"en-IN", ie:"en-IE"};
+  const PHON = ["Alpha","Bravo","Charlie","Delta","Echo","Foxtrot","Golf","Hotel","India","Juliett","Kilo","Lima","Mike","November","Oscar","Papa","Quebec","Romeo","Sierra","Tango","Uniform","Victor","Whiskey","X-ray","Yankee","Zulu"];
+  const WX = [["","Sin fenómenos",""],["light rain","Lluvia débil","light rain"],["rain","Lluvia","rain"],["heavy rain","Lluvia fuerte","heavy rain"],["showers","Chubascos","showers"],["drizzle","Llovizna","drizzle"],["mist","Neblina","mist"],["fog","Niebla","fog"],["thunderstorm","Tormenta","thunderstorm"],["snow","Nieve","snow"]];
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const rr = (a,b,s=1) => a + s*Math.floor(Math.random()*((b-a)/s+1));
+  const sayN = n => vDig(String(n).padStart(2,"0"));
+  const sayT = n => n<0 ? "minus "+vDig(String(-n).padStart(2,"0")) : vDig(String(n).padStart(2,"0"));
+  const sayRw = r => { const m = /^(\d\d)([LRC]?)$/.exec(r); return `${vDig(m[1])}${m[2]?" "+({L:"left",R:"right",C:"centre"})[m[2]]:""}`; };
+
+  function genAtis(L, ap){
+    const letter = rr(0,25), hh = rr(0,23), mm = pick([0,20,30,50,"r"]), time = String(hh).padStart(2,"0") + String(mm==="r"?rr(1,59):mm).padStart(2,"0");
+    const rwy = pick(ap.rw), dir = rr(10,360,10), spd = rr(3,L.cx>=1?22:12), gust = (L.cx>=1 && spd>=10 && Math.random()<.4) ? spd+rr(8,14) : 0;
+    const cavok = Math.random() < (L.cx===0?.35:.2);
+    const t = rr(-2,32), dd = Math.max(t - rr(2,12), t>30?12:-8);
+    let vis, wx = WX[0], cloud = {amt:"none", h:0}, cloudSay = "";
+    if(cavok){ vis = {say:"CAVOK", ans:["cavok"]}; }
+    else {
+      const k = pick([0,1,2]);
+      if(ap.u==="inhg"){ const v = pick([3,5,6,8,10]); vis = {say:`visibility ${vDig(v)} ${v===1?"mile":"miles"}`, ans:[v]}; }
+      else if(k===0 || L.cx===0){ const v = pick([6,7,8,9,10]); vis = v===10 ? {say:"visibility one zero kilometres or more", ans:[10,10000]} : {say:`visibility ${vDig(v)} kilometres`, ans:[v,v*1000]}; }
+      else { const v = pick([800,1200,1500,2000,3000,4000,4500,5000]); vis = {say:`visibility ${vAlt(v)} metres`, ans:[v, v/1000]}; }
+      if(L.cx>=1 && Math.random()<.6) wx = pick(WX.slice(1));
+      const amt = pick(["FEW","SCT","BKN","OVC"]), h = pick([500,800,1200,1500,2000,2500,3000,3500,4000,5000]);
+      cloud = {amt, h}; const nm = {FEW:"few clouds",SCT:"scattered",BKN:"broken",OVC:"overcast"}[amt];
+      cloudSay = `${nm} at ${vAlt(h)} feet`;
+      if(L.cx>=2 && Math.random()<.6){ const h2 = h + pick([1000,2000,3000]); cloudSay += `, ${pick(["broken","overcast"])} at ${vAlt(h2)} feet`; }
+    }
+    const qnh = ap.u==="inhg" ? rr(2960,3040) : rr(995,1030);
+    const trend = pick(["NOSIG","NOSIG","BECMG","TEMPO"]);
+    const trendSay = trend==="NOSIG" ? "no significant change" : trend==="BECMG" ? `becoming ${pick(["visibility four thousand metres","wind variable five knots","few clouds at three thousand feet"])}` : `temporarily ${pick(["showers","visibility two thousand metres in light rain","gusting three zero knots"])}`;
+    const say = `${ap.n} information ${PHON[letter]}. Time ${vDig(time)} U-T-C. Runway in use ${sayRw(rwy)}. Wind ${vDig(String(dir).padStart(3,"0"))} degrees, ${vDig(String(spd).padStart(2,"0"))} knots${gust?`, gusting ${vDig(gust)} knots`:""}. ` +
+      (cavok ? "CAVOK. " : `${vis.say}. ${wx[2]?wx[2][0].toUpperCase()+wx[2].slice(1)+". ":""}${cloudSay}. `) +
+      `Temperature ${sayT(t)}, dew point ${sayT(dd)}. ${ap.u==="inhg"?"Altimeter":"QNH"} ${vDig(qnh)}. Trend, ${trendSay}. Advise on initial contact you have information ${PHON[letter]}.`;
+    return {ap, say, L, f:{letter:PHON[letter][0], time, rwy, dir:String(dir).padStart(3,"0"), spd, gust, vis, wx:wx[0], cloud, t, dd, qnh, trend, cavok}};
+  }
+  const FIELDS = [
+    ["letter","Letra (information …)"],["time","Hora UTC (4 cifras)"],["rwy","Pista en uso"],["dir","Viento: dirección (°)"],["spd","Viento: velocidad (kt)"],["gust","Racha (kt, vacío si no hay)"],
+    ["vis","Visibilidad (km, m o CAVOK)"],["wx","Fenómeno"],["cloud","Nube más baja"],["t","Temperatura (°C)"],["dd","Punto de rocío (°C)"],["qnh","QNH / altímetro"],["trend","Tendencia"]];
+  const nrm = s => String(s||"").trim().toLowerCase();
+  const num = s => { const m = /-?\d+(\.\d+)?/.exec(String(s||"").replace(",",".").replace(/(minus|menos)\s*/i,"-")); return m ? parseFloat(m[0]) : NaN; };
+  function gradeAtis(a, v){
+    const f = a.f, r = {};
+    r.letter = [(()=>{ const l = nrm(v.letter); return !!l && l[0]===f.letter.toLowerCase() && (l.length===1 || PHON.some(p=>p.toLowerCase()===l)); })(), f.letter+" ("+PHON.find(p=>p[0]===f.letter)+")"];
+    r.time = [String(v.time||"").replace(/\D/g,"")===f.time, f.time];
+    const nr = x => nrm(x).replace(/left/,"l").replace(/right/,"r").replace(/cent(re|er)/,"c").replace(/[^0-9lrc]/g,"").replace(/^0/,"");
+    r.rwy = [nr(v.rwy)===nr(f.rwy), f.rwy];
+    r.dir = [num(v.dir)===+f.dir, f.dir];
+    r.spd = [num(v.spd)===f.spd, String(f.spd)];
+    r.gust = [(f.gust? num(v.gust)===f.gust : !String(v.gust||"").trim() || num(v.gust)===0), f.gust?String(f.gust):"sin racha"];
+    const vs = nrm(v.vis);
+    r.vis = [f.cavok ? /cavok/.test(vs) : (!/cavok/.test(vs) && f.vis.ans.some(x=>Math.abs(num(vs)-x)<0.001 || (x===10 && /10/.test(vs)))), f.cavok?"CAVOK":f.vis.say.replace(/^visibility /,"")];
+    r.wx = [(v.wx||"")===f.wx, (WX.find(x=>x[0]===f.wx)||WX[0])[1]];
+    r.cloud = [f.cavok ? (v.camt==="none"||!v.camt) : (v.camt===f.cloud.amt && Math.abs(num(v.ch)-f.cloud.h)<=0), f.cavok?"sin nubes (CAVOK)":`${f.cloud.amt} ${f.cloud.h} ft`];
+    r.t = [num(v.t)===f.t, String(f.t)];
+    r.dd = [num(v.dd)===f.dd, String(f.dd)];
+    r.qnh = [String(v.qnh||"").replace(/\D/g,"")===String(f.qnh), String(f.qnh)];
+    r.trend = [v.trend===f.trend, f.trend];
+    return r;
+  }
+  let AS = null; window.__atisState = () => AS;
+  async function aSpeak(a, lang, L){
+    if(!window.speechSynthesis) throw new Error("tts");
+    const all = await vVoices(), norm = s=>String(s||"").replace("_","-").toLowerCase();
+    let vs = all.filter(v=>norm(v.lang).startsWith(lang.toLowerCase()));
+    if(!vs.length) vs = all.filter(v=>norm(v.lang).startsWith("en"));
+    const u = new SpeechSynthesisUtterance(a.say.replace(/\. /g,".  ").replace(/, /g,",  "));
+    u.lang = lang; u.rate = L.rate;
+    if(vs.length) u.voice = a.voice = (a.voice && vs.includes(a.voice)) ? a.voice : (vs.find(v=>/google|natural|premium|enhanced/i.test(v.name)) || pick(vs));
+    speechSynthesis.cancel();
+    const nz = vNoise(L.noise);
+    await new Promise(res=>{ u.onend = res; u.onerror = res; speechSynthesis.speak(u); setTimeout(res, 60000); });
+    nz.stop();
+  }
+  function startAtis(){
+    const L = LEVELS[document.getElementById("aLevel").value], accSel = document.getElementById("aAccent").value, N = +document.getElementById("aCount").value;
+    const list = []; for(let i=0;i<N;i++){ const ap = pick(AP.filter(x=>accSel==="var"||x.acc===accSel).concat(accSel==="var"?[]:[])); const a = genAtis(L, ap||pick(AP)); a.lang = LANG[accSel==="var"?a.ap.acc:accSel] || "en-GB"; a.left = L.again; list.push(a); }
+    AS = {L, key:document.getElementById("aLevel").value, list, i:0, res:[], start:Date.now()};
+    document.getElementById("setup").hidden = true; document.getElementById("result").hidden = true; document.getElementById("quiz").hidden = false;
+    document.getElementById("finishBtn").hidden = true; document.getElementById("timerBar").hidden = true; curMode = "atis"; aRender(); window.scrollTo({top:0});
+  }
+  function aRender(){
+    const a = AS.list[AS.i];
+    document.getElementById("progress").textContent = `ATIS ${AS.i+1} de ${AS.list.length} · Escucha ATIS · ${AS.L.label} · ${a.lang.replace("en-","")}`;
+    const opt = (arr, cur) => arr.map(x=>`<option value="${esc(x[0])}">${esc(x[1])}</option>`).join("");
+    document.getElementById("qlist").innerHTML = `<div class="q">
+      <div class="qhead"><span>${AS.i+1}/${AS.list.length} · Weather broadcast</span><span><span class="tag">ATIS</span></span></div>
+      <div class="vatc"><span class="vled" id="aLed"></span><b>ATIS</b> <span class="muted small">escucha y rellena lo que dice; el texto se muestra al comprobar</span>
+        <div class="row" style="margin-top:6px"><button class="btn sec" id="aPlay" type="button">▶ Escuchar</button><button class="btn sec sm" id="aAgain" type="button">Otra vez (${a.left>8?"∞":a.left})</button></div></div>
+      <div id="aForm" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px">
+        <label>${FIELDS[0][1]}<input id="a_letter" maxlength="12" autocomplete="off" autocapitalize="off"></label>
+        <label>${FIELDS[1][1]}<input id="a_time" inputmode="numeric" maxlength="5" autocomplete="off"></label>
+        <label>${FIELDS[2][1]}<input id="a_rwy" maxlength="8" autocomplete="off" autocapitalize="characters"></label>
+        <label>${FIELDS[3][1]}<input id="a_dir" inputmode="numeric" maxlength="3" autocomplete="off"></label>
+        <label>${FIELDS[4][1]}<input id="a_spd" inputmode="numeric" maxlength="3" autocomplete="off"></label>
+        <label>${FIELDS[5][1]}<input id="a_gust" inputmode="numeric" maxlength="3" autocomplete="off"></label>
+        <label>${FIELDS[6][1]}<input id="a_vis" maxlength="12" autocomplete="off"></label>
+        <label>${FIELDS[7][1]}<select id="a_wx">${opt(WX)}</select></label>
+        <label>${FIELDS[8][1]}<span style="display:flex;gap:6px"><select id="a_camt"><option value="none">Sin nubes</option><option>FEW</option><option>SCT</option><option>BKN</option><option>OVC</option></select><input id="a_ch" inputmode="numeric" maxlength="5" placeholder="ft" autocomplete="off" style="width:90px"></span></label>
+        <label>${FIELDS[9][1]}<input id="a_t" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+        <label>${FIELDS[10][1]}<input id="a_dd" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+        <label>${FIELDS[11][1]}<input id="a_qnh" inputmode="numeric" maxlength="5" autocomplete="off"></label>
+        <label>${FIELDS[12][1]}<select id="a_trend"><option value="NOSIG">NOSIG (sin cambios)</option><option value="BECMG">BECMG (cambiando)</option><option value="TEMPO">TEMPO (temporal)</option></select></label>
+      </div>
+      <div id="aFb"></div></div>
+      <div class="row"><button class="btn" id="aCheck" type="button">Comprobar</button><button class="btn" id="aNext" type="button" hidden>${AS.i+1<AS.list.length?"Siguiente ATIS":"Ver resultado"}</button><button class="btn sec" id="aStop" type="button">Terminar</button></div>`;
+    document.querySelectorAll("#aForm input").forEach(i=>{ i.style.width = i.style.width || "100%"; });
+    const play = async again => {
+      if(again){ if(a.left<=0) return; a.left--; a.again = (a.again||0)+1; }
+      const led = document.getElementById("aLed"); if(led) led.classList.add("on");
+      try{ await aSpeak(a, a.lang, AS.L); }catch(e){ const f = document.getElementById("aFb"); if(f) f.innerHTML = '<span class="fail">Este navegador no puede leer el ATIS en voz alta.</span>'; }
+      if(led) led.classList.remove("on");
+      const b = document.getElementById("aAgain"); if(b){ b.disabled = a.left<=0; b.textContent = `Otra vez (${a.left>8?"∞":a.left})`; }
+    };
+    document.getElementById("aPlay").addEventListener("click", ()=>play(false));
+    document.getElementById("aAgain").addEventListener("click", ()=>play(true));
+    document.getElementById("aCheck").addEventListener("click", ()=>{
+      if(a.done) return; a.done = true; if(window.speechSynthesis) speechSynthesis.cancel();
+      const g = id => document.getElementById(id).value;
+      const v = {letter:g("a_letter"), time:g("a_time"), rwy:g("a_rwy"), dir:g("a_dir"), spd:g("a_spd"), gust:g("a_gust"), vis:g("a_vis"), wx:g("a_wx"), camt:g("a_camt"), ch:g("a_ch"), t:g("a_t"), dd:g("a_dd"), qnh:g("a_qnh"), trend:g("a_trend")};
+      const r = gradeAtis(a, v); a.v = v; a.r = r;
+      const ok = Object.values(r).filter(x=>x[0]).length, tot = Object.keys(r).length; a.score = ok; a.total = tot;
+      const mine = {letter:v.letter, time:v.time, rwy:v.rwy, dir:v.dir, spd:v.spd, gust:v.gust||"—", vis:v.vis, wx:(WX.find(x=>x[0]===v.wx)||WX[0])[1], cloud:v.camt==="none"?"sin nubes":v.camt+" "+v.ch+" ft", t:v.t, dd:v.dd, qnh:v.qnh, trend:v.trend};
+      document.getElementById("aFb").innerHTML = `<div class="expl vfb"><div class="vverd ${ok===tot?"pass":ok>=tot*0.75?"warn":"fail"}">${ok} de ${tot} campos bien</div>
+        <ul class="vchk">${FIELDS.map(([k,lbl])=>`<li class="${r[k][0]?"ok":"ko"}">${r[k][0]?"✓":"✗"} <b>${esc(lbl)}</b> · ${r[k][0]?esc(r[k][1]):`tú: «${esc(mine[k]||"—")}» · correcto: <b>${esc(r[k][1])}</b>`}</li>`).join("")}</ul>
+        <p style="margin:6px 0"><b>El ATIS decía:</b> «${esc(a.say)}»</p>
+        <div class="ref"><b>Recuerda:</b> primera llamada: «…with information ${esc(PHON.find(p=>p[0]===a.f.letter))}». Viento del ATIS en grados magnéticos. CAVOK = 10 km o más, sin nubes bajo 5000 ft/MSA y sin fenómenos. Vale unos 30 min si no hay cambios.</div></div>`;
+      document.getElementById("aCheck").hidden = true; document.getElementById("aNext").hidden = false;
+    });
+    document.getElementById("aNext").addEventListener("click", ()=>{ AS.i++; if(AS.i<AS.list.length) aRender(); else aFinish(); });
+    document.getElementById("aStop").addEventListener("click", ()=>aFinish());
+    setTimeout(()=>play(false), 300);
+  }
+  async function aFinish(){
+    if(window.speechSynthesis) speechSynthesis.cancel();
+    const done = AS.list.filter(x=>x.done);
+    document.getElementById("qlist").innerHTML = "";
+    if(!done.length){ document.getElementById("quiz").hidden = true; document.getElementById("setup").hidden = false; return; }
+    const score = done.reduce((s,x)=>s+x.score,0), total = done.reduce((s,x)=>s+x.total,0), pct = Math.round(score/total*100);
+    const items = []; const byF = {};
+    done.forEach(a=>FIELDS.forEach(([k,lbl])=>{ const ok = a.r[k][0]; (byF[lbl]=byF[lbl]||{ok:0,n:0}).n++; if(ok) byF[lbl].ok++; items.push({q:"at-"+k, ok, a:String(a.v[k]||""), v:`Escucha ATIS · ${lbl}`, c:a.r[k][1]}); }));
+    state.attempts.push({id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:"atis", level:AS.key, score, total, pct, items, usedS:Math.round((Date.now()-AS.start)/1000)});
+    const worst = Object.entries(byF).sort((x,y)=>(x[1].ok/x[1].n)-(y[1].ok/y[1].n)).slice(0,3).filter(x=>x[1].ok<x[1].n);
+    document.getElementById("result").innerHTML = `<div class="card"><div class="score ${pct>=75?"pass":"fail"}">${score}/${total}</div>
+      <div><b>${pct} % · escucha ATIS · ${AS.L.label}</b> <span class="muted">(no cuenta en la media ni en el ranking)</span></div>
+      <div style="margin-top:10px">${Object.entries(byF).map(([t,x])=>{ const p = Math.round(x.ok/x.n*100); return `<div class="lorow"><div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(t)}</span><span>${x.ok}/${x.n}</span></div><div class="bar"><i style="width:${p}%;background:${p>=75?"var(--ok)":"var(--bad)"}"></i></div></div>`; }).join("")}</div>
+      ${worst.length?`<p style="margin:10px 0 0">Lo que más se te escapa: <b>${worst.map(x=>esc(x[0])).join(" · ")}</b>. Prueba con la dificultad Fácil y sube poco a poco.</p>`:""}
+      <p id="saveMsg" class="muted" style="font-size:14px">Guardando…</p>
+      <div class="row"><button class="btn" id="againBtn">Otra tanda</button><button class="btn sec" id="mapBtn">Volver</button></div></div>`;
+    document.getElementById("result").hidden = false; window.scrollTo({top:0});
+    document.getElementById("againBtn").addEventListener("click", ()=>{ document.getElementById("quiz").hidden = true; document.getElementById("setup").hidden = false; startAtis(); });
+    document.getElementById("mapBtn").addEventListener("click", ()=>{ document.getElementById("quiz").hidden = true; document.getElementById("setup").hidden = false; renderSetup(); });
+    await saveState(document.getElementById("saveMsg"));
+  }
+  FIELDS.forEach(([k,lbl])=>VOICE_IDS.push(["at-"+k, "090.03.01.02", "v", "atis", `Escucha ATIS · ${lbl}`, ["(ver el ATIS)"], "Ejercicio de escucha de ATIS."]));
+  const vl = document.querySelector('input[name=mode][value=voice]'), vlab = vl && vl.closest("label");
+  if(vlab && !document.querySelector('input[name=mode][value=atis]')){
+    vlab.insertAdjacentHTML("afterend", `<label class="mode"><input type="radio" name="mode" value="atis"> Escucha ATIS · rellena lo que oyes <small>Oyes un ATIS en inglés (acentos británico, americano, irlandés, australiano e indio; con ruido y más rápido según la dificultad) y rellenas letra, hora, pista, viento, visibilidad, nubes, QNH… No cuenta en la media.
+      <span class="row" id="atisOpts" style="margin-top:6px"><select id="aLevel" aria-label="Dificultad"><option value="easy">Fácil · despacio y sin ruido</option><option value="normal" selected>Normal · algo de ruido</option><option value="hard">Difícil · rápido y con ruido</option><option value="real">Real · muy rápido, una sola escucha</option></select>
+      <select id="aAccent" aria-label="Acento"><option value="var" selected>Acento según el aeropuerto</option><option value="gb">Británico</option><option value="us">Americano</option><option value="ie">Irlandés</option><option value="au">Australiano</option><option value="in">Indio</option></select>
+      <select id="aCount" aria-label="Número de ATIS"><option value="1">1 ATIS</option><option value="3" selected>3 ATIS</option><option value="5">5 ATIS</option></select></span></small></label>`);
+    document.getElementById("startBtn").addEventListener("click", e=>{ const m = document.querySelector("input[name=mode]:checked"); if(m && m.value==="atis"){ e.stopImmediatePropagation(); e.preventDefault(); startAtis(); } }, true);
+  }
+}catch(e){ console.error("com_patch atis", e); }
+
+try{ buildBank(); renderSetup(); renderNotesMeta(); const t = document.querySelector('nav [aria-selected="true"]'); if(t && t.dataset.tab==="map") renderMap(); }catch(e){ console.error("com_patch refresco", e); }
+})();
+</script><!--/f0com--></body>
 </html>

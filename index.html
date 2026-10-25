@@ -397,8 +397,20 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
       <button class="btn" type="submit" id="lgIn">Entrar y despegar</button>
       <button class="btn sec" type="button" id="lgUp">Crear cuenta</button>
     </div>
-    <p class="muted">¿Olvidaste la contraseña? Escribe al contacto de la política de privacidad y te la restablecemos.</p>
+    <p class="muted" style="margin:0"><button type="button" id="lgForgot" style="background:none;border:0;padding:0;color:var(--accent);font:600 14px var(--body);text-decoration:underline;cursor:pointer">¿Olvidaste la contraseña? Te enviamos un email para cambiarla</button></p>
     <p class="msg" id="lgMsg" aria-live="polite"></p>
+  </form>
+</div>
+
+<div class="sheet" id="pwReset" hidden role="dialog" aria-modal="true" aria-labelledby="pwT">
+  <form class="box" id="pwForm" autocomplete="on">
+    <div class="rbf" aria-hidden="true"><span class="rbf-ring"></span><span class="rbf-txt">REMOVE OLD PASSWORD</span></div>
+    <h2 id="pwT">Elige tu nueva contraseña</h2>
+    <p class="muted">Con el enlace del email ya has demostrado que eres tú. Escribe la nueva y entras directamente.</p>
+    <label class="fld" for="pwNew">Nueva contraseña<input id="pwNew" type="password" autocomplete="new-password" minlength="6" required></label>
+    <label class="fld" for="pwNew2">Repítela<input id="pwNew2" type="password" autocomplete="new-password" minlength="6" required></label>
+    <div class="row"><button class="btn" type="submit">Guardar y despegar</button></div>
+    <p class="msg" id="pwMsg" aria-live="polite" style="color:var(--bad)"></p>
   </form>
 </div>
 
@@ -407,6 +419,7 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
     <h2 id="shT">Tu progreso</h2>
     <p id="shWhere"></p>
     <div class="row" id="acctMenu" hidden style="justify-content:space-between"><span class="muted" id="acctMail"></span><button class="btn ghost" id="outBtn" type="button">Cerrar sesión</button></div>
+    <label class="okline" id="nlRow" hidden for="nlOpt"><input type="checkbox" id="nlOpt" checked><span>Recibir por email el boletín de novedades (NOTAM del Aviador)</span></label>
     <p class="muted" id="codeHint">Para seguir en otro móvil u ordenador: copia el código aquí y pégalo allí con «Importar».</p>
     <div class="row">
       <button class="btn" id="copyBtn" type="button">Copiar código</button>
@@ -510,7 +523,7 @@ async function saveSubj(k,v){ STATE[k]=union(v,STATE[k]); lsSet(k,STATE[k]); awa
 function attemptsOf(k){
   const st=STATE[k]; if(!st||!Array.isArray(st.attempts)) return [];
   const ign=new Set([...(st.ignored||[]), ...Object.keys(st.ignore||{}).filter(x=>st.ignore[x])]);
-  return st.attempts.filter(a=>a&&a.total>0&&typeof a.pct==="number"&&!a.ignore&&!a.partial&&a.mode!=="voice"&&!ign.has(a.id))
+  return st.attempts.filter(a=>a&&a.total>0&&typeof a.pct==="number"&&!a.ignore&&!a.partial&&a.mode!=="voice"&&a.mode!=="atis"&&!ign.has(a.id))
     .sort((a,b)=>new Date(a.date)-new Date(b.date));
 }
 function summary(k){
@@ -637,7 +650,7 @@ function renderDash(){
       ${flight(m)}
       <div class="stats">${m.n?`<span>Último <b>${m.last} %</b></span><span>Media 5 últimos <b>${m.avg5} %</b></span><span><b>${m.n}</b> tests</span>`:`<span>Aún no has hecho ningún test</span>`}</div>
       <div class="acts">
-        <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo · 30</button>
+        <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">${s.k==="090"?"Examen Fase 0 · 24 preguntas":"Test adaptativo · 30"}</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Ir a la asignatura</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">Más tipos de test</button>
         ${s.k==="090"&&sbUser&&window.F0Radio?`<button class="btn ghost wide" type="button" data-radio="1">📻 Radio PTT · practicar en clase</button>`:""}
@@ -676,7 +689,7 @@ async function importText(txt){
 }
 let downloads=null;
 $("#saveBtn").addEventListener("click", async ()=>{
-  $("#acctMenu").hidden = !sbUser; if(sbUser) $("#acctMail").textContent = (MY.name?MY.name+" · ":"")+sbUser.email;
+  $("#acctMenu").hidden = !sbUser; $("#nlRow").hidden = !sbUser; if(sbUser) loadNl(); if(sbUser) $("#acctMail").textContent = (MY.name?MY.name+" · ":"")+sbUser.email;
   if(sbUser){ $("#shT").textContent="Tu cuenta"; $("#copyBtn").hidden=true; $("#codeHint").textContent="¿Tenías progreso en la versión de Claude? Pega aquí su código y pulsa Importar."; }
   $("#shWhere").textContent = sbUser ? "Tu progreso se guarda en tu cuenta: entra con tu email y contraseña desde cualquier móvil u ordenador y lo verás igual." : (remote||(owner&&db)) ? "Se guarda en tu cuenta y en este navegador: lo ves igual en cualquier dispositivo con tu sesión." : "Se guarda solo en este dispositivo y este navegador (la app de Claude cuenta como otro). Si cambias de dispositivo o borras los datos del navegador, llévatelo con el código.";
   $("#code").value = await exportCode(); $("#shMsg").textContent=""; $("#sheet").hidden=false; $("#copyBtn").focus();
@@ -686,6 +699,25 @@ $("#outBtn").addEventListener("click", ()=>{ $("#sheet").hidden=true; signOut();
 $("#acct").addEventListener("click", ()=>$("#saveBtn").click());
 $("#lgForm").addEventListener("submit", e=>{ e.preventDefault(); doAuth("in"); });
 $("#lgUp").addEventListener("click", ()=>doAuth("up"));
+$("#lgForgot").addEventListener("click", async ()=>{
+  const email=$("#lgEmail").value.trim().toLowerCase(), msg=$("#lgMsg");
+  if(!sb) return;
+  if(!/^\S+@\S+\.\S+$/.test(email)){ msg.style.color="var(--bad)"; msg.textContent="Escribe tu email arriba y pulsa otra vez."; $("#lgEmail").focus(); return; }
+  msg.style.color="var(--muted)"; msg.textContent="Enviando…";
+  try{ const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname}); if(r.error) throw r.error;
+    msg.style.color="var(--ok)"; msg.textContent="Listo. Si ese email tiene cuenta, te llega un correo con el enlace (mira también en spam)."; }
+  catch(e){ msg.style.color="var(--bad)"; msg.textContent=/rate|seconds|too many/i.test((e&&e.message)||"")?"Espera un minuto antes de pedir otro correo.":"No se ha podido enviar. Inténtalo en un rato."; }
+});
+$("#pwForm").addEventListener("submit", async e=>{
+  e.preventDefault(); const a=$("#pwNew").value, b=$("#pwNew2").value, m=$("#pwMsg"); m.style.color="var(--bad)";
+  if(a.length<6){ m.textContent="Mínimo 6 caracteres."; return; } if(a!==b){ m.textContent="Las dos contraseñas no coinciden."; return; }
+  m.style.color="var(--muted)"; m.textContent="Guardando…";
+  try{ const r=await sb.auth.updateUser({password:a}); if(r.error) throw r.error;
+    m.style.color="var(--ok)"; m.textContent="Contraseña cambiada. ¡A volar!"; try{ history.replaceState(null,"",location.pathname+location.search); }catch(_){}
+    setTimeout(()=>{ $("#pwReset").hidden=true; $("#pwNew").value=""; $("#pwNew2").value=""; setTimeout(showNews,300); },1100); }
+  catch(err){ m.style.color="var(--bad)"; m.textContent="No se ha podido: "+((err&&err.message)||"inténtalo de nuevo"); }
+});
+
 $("#sheet").addEventListener("click",e=>{ if(e.target.id==="sheet") $("#sheet").hidden=true; });
 addEventListener("keydown",e=>{ if(e.key==="Escape"){ $("#sheet").hidden=true; closeSearch(); } });
 $("#copyBtn").addEventListener("click", async ()=>{
@@ -790,11 +822,13 @@ if(h==="test") start="test"; else if(/^s\d{3}$/.test(h) && SUBJ.some(s=>"s"+s.k=
 else { try{ const t=localStorage.getItem("f0:tab"); if(t && (t==="test"||SUBJ.some(s=>s.k===t))) start=t; }catch(e){} }
 renderTabs(); renderDash(); show(start);
 /* ===================== web propia: cuenta obligatoria (Supabase) ===================== */
+let recovering=false;
 async function webBoot(cfg){
   sb = window.supabase.createClient(cfg.url, cfg.key, {auth:{persistSession:true, autoRefreshToken:true}});
+  if(sb.auth.onAuthStateChange) sb.auth.onAuthStateChange(ev=>{ if(ev==="PASSWORD_RECOVERY"){ recovering=true; $("#login").hidden=true; $("#pwReset").hidden=false; setTimeout(()=>$("#pwNew").focus(),40); } });
   $("#acct").hidden=false; $("#sugBtn").hidden=false; $("#privLink").hidden=false; $("#saveBtn").hidden=true;
   const { data } = await sb.auth.getSession();
-  if(data && data.session) await signedIn(data.session.user, false); else openLogin();
+  if(data && data.session) await signedIn(data.session.user, false); else if(!recovering) openLogin();
 }
 function webRemote(){
   return {
@@ -852,6 +886,60 @@ $("#sgForm").addEventListener("submit",async e=>{ e.preventDefault();
   msg.style.color="var(--ok)"; msg.textContent="¡Recibido! Gracias."; SG=null; setTimeout(()=>{ $("#sugBox").hidden=true; },1300);
 });
 const SG_KIND={pregunta:"Pregunta",correccion:"Corrección",otro:"Idea"};
+/* ===================== newsletter «NOTAM del Aviador» (admin) ===================== */
+const WEB_URL="https://atpl-fase0.atpl.workers.dev/";
+function nlHTML(items, o){
+  o=o||{}; const intro=o.intro||"Esto es lo nuevo a bordo desde el último vuelo. Dos minutos de lectura, cero turbulencias.";
+  const rows=items.map(x=>`<tr><td width="52" valign="top" style="padding:10px 0"><div style="width:42px;height:42px;line-height:42px;text-align:center;font-size:21px;background:#DFF1F1;border-radius:10px">${x.i}</div></td><td valign="top" style="padding:10px 0 10px 8px"><div style="font:700 16px/1.25 Arial,Helvetica,sans-serif;color:#14304A">${esc(x.t)}</div><div style="font:14px/1.5 Arial,Helvetica,sans-serif;color:#4B6073;margin-top:3px">${esc(x.d)}</div></td></tr>`).join("");
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NOTAM del Aviador</title></head>
+<body style="margin:0;padding:0;background:#EEF3F5"><div style="display:none;max-height:0;overflow:hidden;color:#EEF3F5">${esc(o.pre||"Novedades en ATPL Fase 0: más preguntas, nuevos tests y tu buzón de sugerencias.")}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EEF3F5"><tr><td align="center" style="padding:20px 10px">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#FFFFFF;border-radius:14px;overflow:hidden;border:1px solid #CBD8E0">
+<tr><td style="background:#14304A;padding:22px 26px 18px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+<td><div style="display:inline-block;background:#C8102E;color:#fff;font:900 12px Arial,Helvetica,sans-serif;letter-spacing:.14em;padding:6px 10px;border-radius:4px;border:1px dashed rgba(255,255,255,.7)">REMOVE BEFORE FLIGHT</div>
+<div style="font:900 30px/1.05 'Arial Narrow',Arial,Helvetica,sans-serif;color:#fff;margin-top:14px;letter-spacing:.01em">NOTAM del Aviador</div>
+<div style="font:600 13px Arial,Helvetica,sans-serif;color:#9FB6C8;letter-spacing:.12em;text-transform:uppercase;margin-top:6px">Boletín de a bordo · ATPL Fase 0</div></td>
+<td align="right" valign="top" style="font-size:44px;line-height:1">✈️</td></tr></table></td></tr>
+<tr><td style="height:6px;background:repeating-linear-gradient(90deg,#0E7C86 0 28px,#FFFFFF 28px 42px)"></td></tr>
+<tr><td style="padding:24px 26px 6px"><div style="font:800 22px/1.2 Arial,Helvetica,sans-serif;color:#14304A">${esc(o.title||"Nuevas novedades en cabina")}</div>
+<div style="font:15px/1.55 Arial,Helvetica,sans-serif;color:#4B6073;margin-top:8px">${esc(intro)}</div></td></tr>
+<tr><td style="padding:6px 26px 4px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table></td></tr>
+<tr><td align="center" style="padding:14px 26px 10px"><a href="${WEB_URL}" style="display:inline-block;background:#C8102E;color:#fff;text-decoration:none;font:800 16px Arial,Helvetica,sans-serif;letter-spacing:.04em;padding:14px 30px;border-radius:8px">Entrar y despegar →</a></td></tr>
+<tr><td style="padding:12px 26px 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF6DC;border:1px solid #E7BD55;border-radius:10px"><tr><td style="padding:14px 16px"><div style="font:800 16px Arial,Helvetica,sans-serif;color:#7A5200">✉️ El buzón es tuyo</div>
+<div style="font:14px/1.5 Arial,Helvetica,sans-serif;color:#6B5420;margin-top:4px">¿Falta una pregunta? ¿Hay una errata? ¿Se te ocurre algo que mejorar? Pulsa el icono <b>Buzón</b> (arriba a la derecha) y cuéntalo. Cada sugerencia se lee y las buenas entran a la web.</div></td></tr></table></td></tr>
+<tr><td style="padding:16px 26px 22px"><div style="font:14px/1.5 Arial,Helvetica,sans-serif;color:#4B6073">Consejo del comandante: haz un test cada día. Cinco minutos a diario valen más que tres horas la víspera.</div></td></tr>
+<tr><td style="background:#C8102E;padding:12px 26px;text-align:center"><div style="font:900 13px Arial,Helvetica,sans-serif;letter-spacing:.18em;color:#fff">REMOVE BEFORE FLIGHT · QUITA LA ETIQUETA Y DESPEGA</div></td></tr>
+<tr><td style="padding:14px 26px 20px;background:#F6F9FA"><div style="font:12px/1.5 Arial,Helvetica,sans-serif;color:#6B7F90">Recibes este correo porque tienes cuenta en ATPL Fase 0 (<a href="${WEB_URL}" style="color:#0E7C86">${WEB_URL.replace("https://","")}</a>). Si no quieres más boletines, desmárcalo en <b>Mi progreso → Recibir el boletín</b> o responde a este correo con «baja».</div></td></tr>
+</table></td></tr></table></body></html>`;
+}
+function nlItems(sel){
+  const wk=new Date(Date.now()-8*864e5).toISOString().slice(0,10);
+  const list = sel==="week" ? NEWS.filter(n=>n.id.slice(0,10)>=wk) : NEWS.filter(n=>n.id===sel);
+  return list.flatMap(n=>n.items).filter(x=>!x.nl_skip);
+}
+async function drawNewsletter(){
+  const box=$("#nlBox"); if(!box) return;
+  box.innerHTML=`<div class="st-box"><h2>Newsletter · NOTAM del Aviador</h2>
+    <p class="muted" style="margin:0 0 10px">Se genera con el mismo texto que la ventana «Novedades a bordo». Elige el contenido, revísalo y envíalo desde tu correo.</p>
+    <div class="rk-form"><label class="fld">Contenido<select id="nlSel" style="font:15px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:9px 10px"><option value="week">Resumen de los últimos 8 días</option>${NEWS.map(n=>`<option value="${n.id}">${n.id}</option>`).join("")}</select></label>
+    <label class="fld">Asunto<input id="nlSub" value="✈️ NOTAM del Aviador · Novedades en ATPL Fase 0"></label></div>
+    <p class="muted" id="nlCnt" style="margin:10px 0">Cargando destinatarios…</p>
+    <div class="row"><button class="btn" id="nlOpen" type="button">Abrir para copiar</button><button class="btn sec" id="nlHtml" type="button">Copiar HTML</button><button class="btn sec" id="nlTo" type="button">Copiar destinatarios</button><a class="btn ghost" id="nlMail" style="text-decoration:none" href="#">Abrir correo con destinatarios</a></div>
+    <p class="muted" id="nlMsg" style="margin:8px 0" aria-live="polite"></p>
+    <iframe id="nlPrev" title="Vista previa" style="width:100%;height:560px;border:1px solid var(--line);border-radius:8px;background:#fff"></iframe></div>`;
+  let emails=[]; const msg=$("#nlMsg");
+  const html=()=>nlHTML(nlItems($("#nlSel").value));
+  const draw=()=>{ $("#nlPrev").srcdoc=html(); };
+  $("#nlSel").addEventListener("change", draw); draw();
+  try{ const r=await sb.rpc("newsletter_emails"); if(r.error) throw r.error; emails=(r.data||[]).map(x=>x.email).filter(Boolean);
+    $("#nlCnt").textContent=emails.length+" destinatarios con el boletín activado."; }
+  catch(e){ $("#nlCnt").textContent="Aún no puedo leer los destinatarios: ejecuta update4.sql en Supabase."; }
+  const upd=()=>{ $("#nlMail").href="mailto:?bcc="+encodeURIComponent(emails.join(","))+"&subject="+encodeURIComponent($("#nlSub").value); }; upd(); $("#nlSub").addEventListener("input",upd);
+  const copy=async(t,ok)=>{ try{ await navigator.clipboard.writeText(t); msg.textContent=ok; }catch(e){ msg.textContent="No se ha podido copiar; usa «Abrir para copiar»."; } };
+  $("#nlOpen").addEventListener("click", ()=>{ const w=window.open("","_blank"); if(!w){ msg.textContent="El navegador ha bloqueado la pestaña."; return; } w.document.open(); w.document.write(html()); w.document.close(); msg.textContent="En la pestaña nueva: Ctrl/Cmd+A, Ctrl/Cmd+C y pega en el correo nuevo."; });
+  $("#nlHtml").addEventListener("click", ()=>copy(html(),"HTML copiado."));
+  $("#nlTo").addEventListener("click", ()=>copy(emails.join(", "),"Destinatarios copiados: pégalos en CCO."));
+}
 async function drawInbox(){
   const el=$("#inbox"); if(!el||!sb) return;
   if(!SG){ const r=await sb.from("suggestions").select("*").order("created_at",{ascending:false}).limit(200);
@@ -894,6 +982,8 @@ async function doAuth(mode){
   if(r.data && r.data.session){ pendingName=nm; await signedIn(r.data.session.user, mode==="up"); }
   else msg.textContent="Cuenta creada. Pulsa «Entrar».";
 }
+async function loadNl(){ try{ const {data}=await sb.from("profiles").select("newsletter").eq("user_id",sbUser.id).maybeSingle(); $("#nlOpt").checked = !(data && data.newsletter===false); }catch(e){} }
+$("#nlOpt").addEventListener("change", async e=>{ try{ await sb.rpc("set_newsletter",{p_on:e.target.checked}); }catch(_){ } });
 async function signOut(){
   beatFlush(); clearInterval(beatT);
   try{ await sb.auth.signOut(); }catch(e){}
@@ -903,7 +993,7 @@ async function signOut(){
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
-const MODE_ES = {voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas del profesor", notes:"Desde los apuntes"};
+const MODE_ES = {atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas del profesor", notes:"Desde los apuntes"};
 const uname = u => (u.full_name||"").trim() || String(u.email||"").split("@")[0];
 const fmtD = d => d ? new Date(d).toLocaleDateString("es-ES",{day:"numeric",month:"short"}) : "–";
 const fmtT = s => { s=s|0; const h=Math.floor(s/3600), m=Math.round((s%3600)/60); return h ? `${h} h ${m} min` : `${m} min`; };
@@ -939,7 +1029,7 @@ async function renderStats(){
     (b.data||[]).forEach(r=>{
       const s=SUBJ.find(x=>x.k===r.subject); if(!s) return;
       const u=per[r.user_id] || (per[r.user_id]={user_id:r.user_id,email:"(sin perfil)",visits:0,seconds:0,at:[]});
-      (r.state&&Array.isArray(r.state.attempts)?r.state.attempts:[]).filter(x=>x&&x.total>0&&typeof x.pct==="number"&&x.date)
+      (r.state&&Array.isArray(r.state.attempts)?r.state.attempts:[]).filter(x=>x&&x.total>0&&typeof x.pct==="number"&&x.date&&x.mode!=="voice"&&x.mode!=="atis")
         .forEach(x=>u.at.push({date:x.date, pct:x.pct, mode:x.mode, k:s.k, code:s.code, short:s.short, total:x.total}));
     });
     Object.values(per).forEach(u=>u.at.sort((x,y)=>new Date(x.date)-new Date(y.date)));
@@ -979,7 +1069,7 @@ function drawStats(){
   : `<div class="st-box"><h2>Usuarios</h2><div class="st-scroll"><table class="st-tbl"><thead><tr><th>Nombre</th><th>Email</th><th>Alta</th><th>Última visita</th><th class="n">Entradas</th><th class="n">Tiempo</th><th class="n">Tests</th><th class="n">Media</th></tr></thead><tbody>
       ${ST.map(u=>`<tr><td><button type="button" data-u="${esc(u.user_id)}" style="background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font:inherit">${esc(uname(u))}</button>${u.email===ADMIN_EMAIL?` <span class="muted">(tú)</span>`:""}</td><td>${esc(u.email)}</td><td>${fmtD(u.created_at)}</td><td>${fmtD(u.last_seen)}</td><td class="n">${u.visits||0}</td><td class="n">${fmtT(u.seconds)}</td><td class="n">${u.at.length}</td><td class="n">${avg(u.at)==null?"–":avg(u.at)+" %"}</td></tr>`).join("")}
       </tbody></table></div></div>`}`;
-  if(!one){ const d=document.createElement("div"); d.id="inbox"; box.querySelector(".st-grid").before(d); drawInbox(); }
+  if(!one){ const d=document.createElement("div"); d.id="inbox"; box.querySelector(".st-grid").before(d); drawInbox(); const n=document.createElement("div"); n.id="nlBox"; n.style.marginBottom="14px"; d.after(n); drawNewsletter(); }
   $("#stSel").addEventListener("change", e=>{ stUser=e.target.value; drawStats(); });
   box.querySelectorAll("button[data-u]").forEach(b=>b.addEventListener("click", ()=>{ stUser=b.dataset.u; drawStats(); $("#main").scrollTop=0; const v=$("#v-stats"); if(v) v.scrollTop=0; }));
 }
@@ -1007,11 +1097,9 @@ function drawRank(){
   const me=rows.find(x=>x.mine), shown=rows.slice(0,15); if(me&&me.pos>15){ shown.push(null,me); }
   const have=rkHave(rkSub);
   const status = have<5 ? `Llevas <b>${have}</b> de 5 tests en ${esc(s.short)}. Te faltan <b>${5-have}</b> para entrar en su ranking.`
-    : !MY.name ? `Ya cumples los 5 tests. Pon tu nombre arriba para entrar en el ranking.`
     : me ? `Vas el <b>nº ${me.pos}</b> de ${rows.length} en ${esc(s.short)} con <b>${me.pts.toFixed(1)}</b> puntos.` : `Tus tests se están contando; vuelve a abrir el ranking en unos segundos.`;
   const pd=n=>`<span class="pd ${n<=3?"p"+n:""}">${n}</span>`;
   box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1><p>Quién lleva mejor cada asignatura. Entras solo con hacer 5 tests de la asignatura.</p></div></div>
-  <form class="st-box rk-form" id="rkNick" style="margin-bottom:12px"><label class="fld">Tu nombre en el ranking<input id="rkNickIn" maxlength="70" autocomplete="name" value="${esc(MY.name)}" placeholder="Nombre y apellidos"></label><button class="btn" type="submit">Guardar</button></form>
   <div class="rk-chips" role="group" aria-label="Asignatura">${SUBJ.map(x=>`<button type="button" data-rk="${x.k}" aria-pressed="${x.k===rkSub}">${x.code} · ${esc(x.short)}</button>`).join("")}</div>
   <div class="st-box"><h2>${esc(s.code)} ${esc(s.short)}</h2><p style="margin:0 0 10px;font-size:15px">${status}</p>
     ${rows.length?`<div class="st-scroll"><table class="st-tbl rk-tbl"><thead><tr><th></th><th>Nombre</th><th class="n">Tests</th><th class="n">Nota</th><th class="n">Puntos</th></tr></thead><tbody>
@@ -1023,18 +1111,21 @@ function drawRank(){
     <ul><li>El factor sube del <b>75 %</b> (5 tests) al <b>100 %</b> (40 o más). Los primeros tests suben más que los últimos.</li>
     <li>Así, 5 tests perfectos (75 puntos) no superan a quien lleva 40 con un 80 % (80 puntos), y acumular tests sin acertar tampoco da la victoria.</li>
     <li>Ejemplos: 5 tests al 95 % → 71 · 10 al 90 % → 75 · 20 al 85 % → 78 · 40 al 80 % → 80.</li>
-    <li>Cuentan los tests de 10 o más preguntas. No cuentan «Radio por voz» ni los que ignoras. Empate: gana quien tenga más tests.</li></ul></details>`;
+    <li>Cuentan los tests de 10 o más preguntas. No cuentan «Radio por voz», «Escucha ATIS» ni los que ignoras. Empate: gana quien tenga más tests.</li></ul></details>`;
   box.querySelectorAll("[data-rk]").forEach(b=>b.addEventListener("click",()=>{ rkSub=b.dataset.rk; drawRank(); }));
   const cur=box.querySelector('[data-rk][aria-pressed="true"]'); if(cur&&cur.parentNode) cur.parentNode.scrollLeft=Math.max(0,cur.offsetLeft-cur.parentNode.offsetLeft-12);
-  const sync=async ()=>{ const v=$("#rkNickIn").value.trim().replace(/\s+/g," ");
-    if(v.length<3){ alert("Escribe tu nombre y apellidos."); return; }
-    try{ await saveName(v); renderRank(); }catch(e){ alert("No se ha podido guardar. Inténtalo en un rato."); } };
-  $("#rkNick").addEventListener("submit",e=>{ e.preventDefault(); sync(); });
 }
 
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-25", items:[
+    {i:"🎙️", t:"Examen de Comunicaciones", d:"24 preguntas tipo test en 45 minutos, estilo trial, con más peso en propagación y algún código Q."},
+    {i:"🎧", t:"Escucha ATIS", d:"Oye un ATIS en varios acentos y dificultades y rellena lo que dice. No cuenta para la media."},
+    {i:"📡", t:"Más Comunicaciones", d:"Preguntas nuevas de ATIS, SPECI, VOLMET, CAVOK, códigos Q (QDM, QDR, QUJ, QTE) y propagación."},
+    {i:"🔑", t:"Recuperar contraseña", d:"¿Te la olvidas? Pulsa «¿Olvidaste la contraseña?» al entrar y te llega un email.", web:true},
+    {i:"☑️", t:"Temario ATPL desmarcado", d:"Los tests parten solo del temario dado; marca la casilla si quieres incluir el ATPL."}
+  ]},
   {id:"2026-10-23e", items:[
     {i:"📻", t:"Radio con dos paneles", d:"Si eliges controlador ves una consola de posición ATC; si eliges piloto, el panel de audio de cabina con botón PTT. Incluye prueba en solitario.", web:true},
     {i:"🪪", t:"Nombre obligatorio", d:"Quien aún no haya puesto nombre y apellidos tendrá que hacerlo al volver a entrar."}
@@ -1069,7 +1160,7 @@ function showNews(){
   const seen=newsSeen(); if(seen==="~"||!$("#news").hidden) return;
   const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>!x.web||sb);
   if(!items.length){ if(NEWS.some(n=>n.id>seen) && !sb) newsMark(); return; }
-  if(!$("#devNote").hidden||!$("#login").hidden||!$("#nameAsk").hidden) return;
+  if(!$("#devNote").hidden||!$("#login").hidden||!$("#nameAsk").hidden||!$("#pwReset").hidden) return;
   $("#nwList").innerHTML=items.map(x=>`<li><span class="ni" aria-hidden="true">${x.i}</span><div><b>${esc(x.t)}</b><span class="t">${esc(x.d)}</span></div></li>`).join("");
   $("#news").hidden=false; $("#nwOk").focus();
 }
