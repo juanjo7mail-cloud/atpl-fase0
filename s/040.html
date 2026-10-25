@@ -2744,5 +2744,30 @@ function ui(){
   });
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",ui); else ui();
-})();</script><!--/f0dedup--></body>
+})();</script><!--/f0dedup--><!--f0rev--><script>/* Repaso espaciado: «Repasar hoy». Cajas 1-3-7-14 días sobre las preguntas falladas alguna vez. Lo activa el hub con review:true. */
+(function(){ try{
+  const IV=[1,3,7,14];
+  function dueSet(){
+    const by={};
+    [...state.attempts].filter(a=>a&&!a.ignore&&a.mode!=="voice"&&a.mode!=="atis").sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(a=>(a.items||[]).forEach(it=>{
+      if(!it||!it.q||!byId(it.q)) return;
+      const s=by[it.q]||(by[it.q]={box:0,fail:false,t:0});
+      if(it.ok){ if(s.fail) s.box=Math.min(4,s.box+1); } else { s.fail=true; s.box=0; }
+      s.t=new Date(a.date).getTime();
+    }));
+    const now=Date.now(), due=[];
+    Object.keys(by).forEach(id=>{ const s=by[id]; if(!s.fail||s.box>=4) return; if(now-s.t>=IV[s.box]*864e5-6*36e5) due.push(id); });
+    return due;
+  }
+  const mk=id=>{ const q=byId(id); return q?(typeof selectItems==="function"?{k:"mc",q}:q):null; };
+  const shuf=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  const o=window.F0DEDUP; if(typeof o!=="function") return;
+  window.F0DEDUP=function(list,mode){
+    if(window.__f0rev && mode==="wrong"){ window.__f0rev=false;
+      try{ const items=shuf(dueSet()).slice(0,20).map(mk).filter(Boolean); if(items.length) return items; }catch(e){ console.error("repaso",e); } }
+    return o(list,mode); };
+  addEventListener("message",function(e){ const d=e.data; if(d&&d.t==="f0-cmd") window.__f0rev=!!d.review; });
+  window.F0REVIEW={due:()=>dueSet().length};
+}catch(e){ console.error("review_patch",e); } })();
+</script><!--/f0rev--></body>
 </html>
