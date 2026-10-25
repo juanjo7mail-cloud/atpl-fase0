@@ -109,7 +109,7 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .dhead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px 28px;margin-bottom:18px}
 .dhead h1{font:700 clamp(30px,5vw,44px)/1 var(--display);margin:0;letter-spacing:-.3px;text-wrap:balance}
 .dhead p{margin:6px 0 0;color:var(--muted);max-width:56ch}
-.kpis{display:flex;gap:22px;margin-left:auto;flex-wrap:wrap}
+.kpis{display:flex;gap:22px 34px;flex-wrap:wrap}
 .kpi{min-width:0}
 .kpi b{display:block;font:700 30px/1 var(--display);font-variant-numeric:tabular-nums}
 .kpi span{font:600 11.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -265,7 +265,9 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
 /* ---- autor y aviso ---- */
 .credit{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
 .credit b{color:var(--ink)}
+.sheet.acctonly #shWhere,.sheet.acctonly #codeHint,.sheet.acctonly #code,.sheet.acctonly .row:has(#copyBtn),.sheet.acctonly #impBtn,.sheet.acctonly label[for=fileIn]{display:none}
 .credit a.btn{text-decoration:none;margin-left:auto}
+.credit #acct{margin-left:auto;color:var(--ink)}.credit #acctTxt{max-width:none}.credit a.btn~#acct{margin-left:0}
 .steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-size:15px}
 @media (max-width:560px){
   :root{--bar:96px}
@@ -297,7 +299,6 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
 #acctTxt{max-width:92px;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:560px){#acctTxt{max-width:64px}.top .row1{gap:8px}.sg-seg label{font-size:13px}.sheet.sg{place-items:start center;padding-top:max(12px,env(safe-area-inset-top,0px))}.sheet .box{max-height:92dvh}}
 .brand{min-width:0;flex:1 1 auto}.brand .bt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-@media (max-width:430px){.brand .bt{display:none}}
 @media (max-width:480px){.brand .bt small{display:none}.top .row1{gap:5px}.top .row1 .savepill{padding:4px 8px}#rankBtn svg{width:40px;height:18px}#acctTxt{max-width:44px;overflow:hidden;text-overflow:ellipsis}}
 @media (max-width:380px){.brand{font-size:16px;gap:6px}.brand svg{width:30px;height:30px}.brand small{font-size:8.5px}#acctTxt{max-width:50px}.top .row1{gap:6px}.iconbtn{padding:7px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -313,9 +314,8 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
     <button class="iconbtn" id="searchBtn" type="button" aria-haspopup="dialog" aria-label="Buscar en los apuntes"><svg viewBox="0 0 20 20" aria-hidden="true" style="transform:rotate(45deg)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z" fill="currentColor"/></svg><span>Buscar</span><kbd>/</kbd></button>
     <button class="iconbtn" id="sugBtn" type="button" hidden aria-haspopup="dialog" aria-label="Buzón de sugerencias"><svg viewBox="0 0 20 20" aria-hidden="true" width="18" height="18"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h11A1.5 1.5 0 0 1 17 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 14.5zm1.6.3 5.4 4.3 5.4-4.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Buzón</span></button>
     <button class="savepill" id="saveBtn" type="button" aria-haspopup="dialog"><i></i><span id="saveTxt">Mi progreso</span></button>
-    <button class="savepill" id="rankBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="gaPop" style="padding:3px 8px"></button>
     <button class="savepill" id="onBtn" type="button" hidden aria-haspopup="true" aria-expanded="false" aria-controls="onPop" title="Compañeros conectados ahora"><i class="ond"></i><span id="onN">1</span><span class="onw"> en línea</span></button>
-    <button class="savepill" id="acct" type="button" hidden aria-label="Cuenta"><span id="acctTxt">Cuenta</span></button>
+    <button class="savepill" id="rankBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="gaPop" style="padding:3px 8px"></button>
   </div>
   <div class="tabbar">
     <button class="mbtn" id="menuBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Menú de asignaturas"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button>
@@ -330,15 +330,11 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
   <section class="view" id="v-test" role="tabpanel">
     <div class="dash">
       <div class="dhead">
-        <div>
-          <h1>Hoy toca despegar</h1>
-          <p>Elige asignatura. El adaptativo son 30 preguntas que priorizan tus fallos, lo que más pesa en el examen y las variantes del trial.</p>
-        </div>
         <div class="kpis" id="kpis"></div>
       </div>
       <div class="grid" id="grid"></div>
       <p class="foot">Aprobado con 75 %. «Preparado» = media de tus 5 últimos tests ≥ 85 % · «Casi listo» ≥ 75 % · «Reforzar» por debajo.</p>
-      <div class="credit"><span>Creado por <b>Juanjo Ruano</b></span><a id="privLink" href="privacidad.html" target="_blank" rel="noopener" hidden>Privacidad (RGPD)</a><a class="btn sec" id="donate" target="_blank" rel="noopener" hidden>Invítame a un café</a></div>
+      <div class="credit"><span>Creado por <b>Juanjo Ruano</b></span><a id="privLink" href="privacidad.html" target="_blank" rel="noopener" hidden>Privacidad (RGPD)</a><button class="btn ghost" id="acct" type="button" hidden aria-label="Cuenta" style="padding:6px 12px"><span id="acctTxt">Cuenta</span></button><a class="btn sec" id="donate" target="_blank" rel="noopener" hidden>Invítame a un café</a></div>
     </div>
   </section>
   <section class="view" id="v-stats" role="tabpanel" hidden>
@@ -732,7 +728,7 @@ function renderDash(){
   const sums=SUBJ.map(s=>({s, m:summary(s.k)}));
   const tests=sums.reduce((a,x)=>a+x.m.n,0), readyN=sums.filter(x=>x.m.lvl==="ok").length;
   const started=sums.filter(x=>x.m.n), avg = started.length ? Math.round(started.reduce((a,x)=>a+x.m.avg5,0)/started.length) : null;
-  const _sk=streakInfo(); $("#kpis").innerHTML = `<div class="kpi" title="Días seguidos con un test de 10+ preguntas (1 descanso por semana)"><b>🔥 ${_sk.count}</b><span>racha · ${_sk.wk}/5 esta semana</span></div><div class="kpi"><b>${tests}</b><span>tests hechos</span></div><div class="kpi"><b>${avg==null?"–":avg+" %"}</b><span>media reciente</span></div><div class="kpi"><b>${readyN}/${SUBJ.length}</b><span>preparadas</span></div>`;
+  const _sk=streakInfo(); $("#kpis").innerHTML = `<div class="kpi" title="Días seguidos con un test de 10+ preguntas (1 descanso por semana). La semana va de lunes a domingo; la meta son 5 días."><b>🔥 ${_sk.count}</b><span>días de racha · ${Math.min(_sk.wk,5)}/5 esta semana${_sk.wk>=5?" ✓":""}</span></div><div class="kpi"><b>${tests}</b><span>tests hechos</span></div><div class="kpi"><b>${avg==null?"–":avg+" %"}</b><span>media reciente</span></div><div class="kpi"><b>${readyN}/${SUBJ.length}</b><span>preparadas</span></div>`;
   $("#grid").innerHTML = sums.map(({s,m})=>`
     <article class="card ${m.n?'':'empty'}" style="--scl:${s.c[0]};--scd:${s.c[1]}">
       <div class="chead"><span class="code">${s.code}</span><span class="nm">${esc(s.short)}${s.name!==s.short?`<small>${esc(s.name)}</small>`:""}</span><span class="chip ${m.lvl}">${m.label}</span></div>
@@ -781,6 +777,7 @@ async function importText(txt){
 let downloads=null;
 $("#saveBtn").addEventListener("click", async ()=>{
   $("#acctMenu").hidden = !sbUser; if(sbUser) $("#acctMail").textContent = (MY.name?MY.name+" · ":"")+sbUser.email;
+  $("#sheet").classList.toggle("acctonly",!!sbUser);
   if(sbUser){ $("#shT").textContent="Tu cuenta"; $("#copyBtn").hidden=true; $("#codeHint").textContent="¿Tenías progreso en la versión de Claude? Pega aquí su código y pulsa Importar."; }
   $("#shWhere").textContent = sbUser ? "Tu progreso se guarda en tu cuenta: entra con tu email y contraseña desde cualquier móvil u ordenador y lo verás igual." : (remote||(owner&&db)) ? "Se guarda en tu cuenta y en este navegador: lo ves igual en cualquier dispositivo con tu sesión." : "Se guarda solo en este dispositivo y este navegador (la app de Claude cuenta como otro). Si cambias de dispositivo o borras los datos del navegador, llévatelo con el código.";
   $("#code").value = await exportCode(); $("#shMsg").textContent=""; $("#sheet").hidden=false; $("#copyBtn").focus();
@@ -952,7 +949,7 @@ async function signedIn(user, consent){
 async function loadMine(){
   if(!sb||!sbUser) return;
   try{ const {data,error}=await sb.from("profiles").select("full_name,show_rank").eq("user_id",sbUser.id).maybeSingle(); if(error) throw error;
-    MY={name:(data&&data.full_name)||"", show:true, ok:true}; trackMe(); }catch(e){ if(!loadMine.retry){ loadMine.retry=1; setTimeout(loadMine,3000); } return; }
+    MY={name:(data&&data.full_name)||"", show:true, ok:true}; trackMe(); renderAcct(); }catch(e){ if(!loadMine.retry){ loadMine.retry=1; setTimeout(loadMine,3000); } return; }
   if(!MY.name) setTimeout(openNameAsk,700);
 }
 /* ===================== buzón de sugerencias (web) ===================== */
@@ -992,12 +989,12 @@ async function drawInbox(){
 }
 function openNameAsk(){ if(MY.name||!sbUser) return; if(!$("#login").hidden) return; $("#naMsg").textContent=""; $("#nameAsk").hidden=false; setTimeout(()=>$("#naFirst").focus(),30); }
 async function saveName(name){
-  const r=await sb.rpc("set_profile",{p_name:name,p_show:true}); if(r.error) throw r.error; MY={name:name.trim().replace(/\\s+/g," "),show:true}; trackMe();
+  const r=await sb.rpc("set_profile",{p_name:name,p_show:true}); if(r.error) throw r.error; MY={name:name.trim().replace(/\\s+/g," "),show:true}; trackMe(); renderAcct();
 }
 $("#naForm").addEventListener("submit",async e=>{ e.preventDefault();
   const f=$("#naFirst").value.trim(), l=$("#naLast").value.trim(); if(f.length<2||l.length<2){ $("#naMsg").textContent="Escribe tu nombre y tus apellidos."; return; }
   try{ await saveName(f+" "+l); $("#nameAsk").hidden=true; setTimeout(showNews,300); if(current==="rank") renderRank(); }catch(err){ $("#naMsg").textContent="No se ha podido guardar. Inténtalo en un rato."; } });
-function renderAcct(){ $("#acctTxt").textContent = sbUser ? sbUser.email.split("@")[0] : "Cuenta"; }
+function renderAcct(){ $("#acctTxt").textContent = sbUser ? "Mi cuenta · "+(MY.name||sbUser.email.split("@")[0]) : "Cuenta"; }
 function openLogin(){ $("#login").hidden=false; $("#lgMsg").textContent=""; setTimeout(()=>$("#lgEmail").focus(),30); }
 async function doAuth(mode){
   const email=$("#lgEmail").value.trim().toLowerCase(), pass=$("#lgPass").value, msg=$("#lgMsg");
