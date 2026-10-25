@@ -3466,9 +3466,9 @@ try{
   flip("090.01.01.03","COM-2","part"); flip("090.03.01.02","COM-2","part"); flip("090.03.01.01","COM-2","part");
 }catch(e){ console.error("com_patch datos", e); }
 
-// ---------- 1 · Examen Fase 0 de Comunicaciones: 24 preguntas tipo test, 45 min, estilo trial ----------
+// ---------- 1 · Examen Fase 0 de Comunicaciones: 30 preguntas tipo test, 45 min, estilo trial ----------
 try{
-  const F0N = 24;
+  const F0N = 30;
   selectProf = function(){
     const st = stats(), ok = q => isGiven(q) && q[2]!=="c" && q[2]!=="g" && in090(q);
     const pool = BANK.filter(ok), pr = new Map(pool.map(q=>[q[0], priority(q,st)]));
@@ -3484,9 +3484,9 @@ try{
     need(()=>true, F0N);
     return shuffle(out).map(q=>({k:"mc", q}));
   };
-  MODE_LABEL.adaptive = "Examen Fase 0 · 24 preguntas · 45 min";
+  MODE_LABEL.adaptive = "Examen Fase 0 · 30 preguntas · 45 min";
   const ad = document.querySelector('input[name=mode][value=adaptive]'), lab = ad && ad.closest("label");
-  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Examen Fase 0 · 24 preguntas · 45 min <small>El formato estándar del examen de Comunicaciones: solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
+  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Examen Fase 0 · 30 preguntas · 45 min <small>El formato estándar del examen de Comunicaciones: solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
     const sn = document.querySelector('input[name=mode][value=senasa]'); if(sn) sn.checked = false; }
 }catch(e){ console.error("com_patch examen", e); }
 
