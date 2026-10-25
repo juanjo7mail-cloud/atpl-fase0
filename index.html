@@ -52,6 +52,11 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 .brand{display:flex;align-items:center;gap:9px;font:700 21px/1 var(--display);letter-spacing:.3px;margin-right:auto;color:#fff}
 .brand svg{width:34px;height:34px;flex:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
 .brand small{font:600 12px var(--body);letter-spacing:.12em;text-transform:uppercase;color:#9FB6C8;margin-left:4px}
+.top .row1 .savepill,.top .row1 .iconbtn{background:color-mix(in srgb,var(--head) 78%,transparent);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.ond{width:8px;height:8px;border-radius:50%;background:#5CC98F;box-shadow:0 0 0 3px rgba(92,201,143,.28);flex:none}
+#onPop{position:fixed;top:54px;right:max(16px,env(safe-area-inset-right,0px));z-index:40;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-width:210px;max-width:min(320px,calc(100vw - 32px));max-height:60vh;overflow:auto;box-shadow:0 8px 24px rgba(10,23,36,.25)}
+#onPop[hidden]{display:none}#onPop h3{margin:0 0 6px;font:700 15px var(--body)}#onPop ul{list-style:none;margin:0;padding:0}#onPop li{padding:3px 0;font-size:15px}#onPop p{margin:6px 0 0;font-size:13px}
+@media (max-width:560px){#onBtn .onw{display:none}}
 .savepill{white-space:nowrap;display:flex;align-items:center;gap:6px;border:1px solid #3B5874;border-radius:20px;padding:4px 12px;background:transparent;color:#DCE6EE;font:600 13px var(--body);cursor:pointer}
 .savepill i{width:8px;height:8px;border-radius:50%;background:#8CA3B6}
 .savepill.cloud i{background:#5CC98F}
@@ -106,9 +111,12 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:12px;min-width:0;box-shadow:0 1px 2px rgba(20,48,74,.05)}
 .card .acts{align-self:end}
 .card .stats{align-self:center}
+.card{--sc:var(--scl);border-top:4px solid var(--sc,var(--line))}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .card{--sc:var(--scd)}}
+:root[data-theme="dark"] .card{--sc:var(--scd)}
 .chead{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto 1fr;align-items:center;align-content:start;gap:6px 12px;min-width:0}
 .chead .nm{grid-column:1/-1;align-self:start}
-.chead .code{font:700 26px/1 var(--display);color:var(--accent);letter-spacing:-.3px;flex:none}
+.chead .code{font:700 26px/1 var(--display);color:var(--sc,var(--accent));letter-spacing:-.3px;flex:none}
 .chead .nm{font:600 16px/1.25 var(--body);min-width:0}
 .chead .nm small{display:block;font:500 12.5px var(--body);color:var(--muted)}
 .chip{justify-self:end;grid-row:1;grid-column:2;font:600 12px var(--body);padding:2px 9px;border-radius:12px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
@@ -205,18 +213,18 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 /* ---- pista de aeropuerto en la cabecera ---- */
 .top .art{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block}
 .top .veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--head) 0,color-mix(in srgb,var(--head) 70%,transparent) 30%,color-mix(in srgb,var(--head) 30%,transparent) 100%),linear-gradient(180deg,transparent 38%,color-mix(in srgb,var(--head) 88%,transparent) 62%)}
-.art .rw{position:absolute;left:0;right:0;top:22px;height:40px;background:linear-gradient(#3A556B,#27415A);border-top:1.6px solid rgba(255,255,255,.5);border-bottom:1.6px solid rgba(255,255,255,.5)}
+.art .rw{position:absolute;left:0;right:0;top:5px;height:36px;background:linear-gradient(#3A556B,#27415A);border-top:1.6px solid rgba(255,255,255,.5);border-bottom:1.6px solid rgba(255,255,255,.5)}
 .art .edge{position:absolute;left:0;right:0;height:8px;background:radial-gradient(circle,#FFE08A 1.9px,transparent 2.5px) 10px 50%/38px 8px repeat-x;animation:twk 3.4s ease-in-out infinite}
 .art .e1{top:-11px}.art .e2{bottom:-11px;animation-delay:-1.7s}
 .art .thr{position:absolute;top:3px;bottom:3px;width:34px;background:repeating-linear-gradient(180deg,rgba(255,255,255,.6) 0 2.4px,transparent 2.4px 4.4px)}
 .art .tl{left:14px}.art .tr{right:14px}
-.art .cl{position:absolute;top:18px;height:2.4px;left:120px;right:120px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.65) 0 28px,transparent 28px 48px)}
+.art .cl{position:absolute;top:16.8px;height:2.4px;left:120px;right:120px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.65) 0 28px,transparent 28px 48px)}
 .art .tz{position:absolute;top:5px;bottom:5px;width:26px;background:repeating-linear-gradient(180deg,rgba(255,255,255,.55) 0 3px,transparent 3px 5px);-webkit-mask:linear-gradient(transparent 0 40%,#000 40% 60%,transparent 60%);mask:linear-gradient(#000 0 38%,transparent 38% 62%,#000 62%)}
 .art .z1{left:calc(50% - 20vw)}.art .z2{right:calc(50% - 20vw)}
 .art .num{position:absolute;top:50%;font:700 26px/1 "Barlow Condensed","Arial Narrow",sans-serif;color:rgba(255,255,255,.6)}
 .art .nl{left:62px;transform:translateY(-50%) rotate(90deg)}.art .nr{right:62px;transform:translateY(-50%) rotate(-90deg)}
-.art .twy{position:absolute;left:0;right:0;top:80px;height:2.4px;background:rgba(231,190,31,.6)}
-.art .rpl{position:absolute;top:8px;left:0;color:#fff;transform:scaleX(-1);animation:roll 18s linear infinite;will-change:left;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.art .twy{position:absolute;left:0;right:0;top:62px;height:2.4px;background:rgba(231,190,31,.6)}
+.art .rpl{position:absolute;top:6px;left:0;color:#fff;transform:scaleX(-1);animation:roll 18s linear infinite;will-change:left;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
 @keyframes roll{from{left:calc(100% + 30px)}to{left:-90px}}
 @keyframes twk{0%,100%{opacity:.25}50%{opacity:.95}}
 @media (prefers-reduced-motion:reduce){.art .edge{animation:none;opacity:.6}.art .rpl{animation:none;left:62%}}
@@ -287,6 +295,7 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="pl" viewBox="0 0 48 20"><path fill="currentColor" d="M3 10.5c0-2.2 2-3.6 5-3.6h27c6 0 10 2.2 11.5 3.6-1.5 1.4-5.5 3.6-11.5 3.6H8c-3 0-5-1.4-5-3.6z"/><path fill="currentColor" d="M3.5 7.2 1 1h6l5.5 6.2z"/><path fill="currentColor" d="M19 13.6 27.5 19.5h5L29 13.6z"/><path fill="#fff" fill-opacity=".85" d="M34.5 8.2h6c1.6.4 3 1.3 3.8 2.2H34.5z"/></symbol></defs></svg>
+<div id="onPop" hidden role="dialog" aria-label="Compañeros en línea"></div>
 <header class="top">
   <div class="art" aria-hidden="true"><div class="rw"><i class="edge e1"></i><i class="edge e2"></i><i class="thr tl"></i><i class="thr tr"></i><i class="cl"></i><i class="tz z1"></i><i class="tz z2"></i><b class="num nl">09</b><b class="num nr">27</b><svg class="rpl" viewBox="0 0 48 20" width="58" height="24"><use href="#pl"/></svg></div><i class="twy"></i></div><div class="veil"></div>
   <div class="row1">
@@ -294,6 +303,7 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
     <button class="iconbtn" id="searchBtn" type="button" aria-haspopup="dialog" aria-label="Buscar en los apuntes"><svg viewBox="0 0 20 20" aria-hidden="true" style="transform:rotate(45deg)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z" fill="currentColor"/></svg><span>Buscar</span><kbd>/</kbd></button>
     <button class="iconbtn" id="sugBtn" type="button" hidden aria-haspopup="dialog" aria-label="Buzón de sugerencias"><svg viewBox="0 0 20 20" aria-hidden="true" width="18" height="18"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h11A1.5 1.5 0 0 1 17 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 14.5zm1.6.3 5.4 4.3 5.4-4.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Buzón</span></button>
     <button class="savepill" id="saveBtn" type="button" aria-haspopup="dialog"><i></i><span id="saveTxt">Mi progreso</span></button>
+    <button class="savepill" id="onBtn" type="button" hidden aria-haspopup="true" aria-expanded="false" aria-controls="onPop" title="Compañeros conectados ahora"><i class="ond"></i><span id="onN">1</span><span class="onw"> en línea</span></button>
     <button class="savepill" id="acct" type="button" hidden aria-label="Cuenta"><span id="acctTxt">Cuenta</span></button>
   </div>
   <div class="tabbar">
@@ -449,16 +459,16 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
 <script>
 /* ===================== asignaturas ===================== */
 const SUBJ = [
-  {k:"010", code:"010", short:"Air Law", name:"Air Law", extra:[["fase0","Examen Fase 0"],["senasa","Simulacro SENASA"]]},
-  {k:"021", code:"021·022", short:"Aircraft General Knowledge", name:"Airframe, Systems, Power Plant · Instrumentation", extra:[["senasa","Simulacro SENASA"]]},
-  {k:"031", code:"031·032·033", short:"Performance", name:"Mass and Balance · Performance · Flight Planning", extra:[]},
-  {k:"040", code:"040", short:"Human Performance", name:"Human Performance and Limitations", extra:[]},
-  {k:"050", code:"050", short:"Meteorology", name:"Meteorology", extra:[["sim","Simulacro SENASA"],["foto","Nubes por foto"]]},
-  {k:"061", code:"061·062", short:"Navigation", name:"General Navigation · Radio Navigation", extra:[["senasa","Simulacro SENASA"]]},
-  {k:"070", code:"070", short:"Operational Procedures", name:"Operational Procedures", extra:[["senasa","Simulacro SENASA"]]},
-  {k:"081", code:"081", short:"Principles of Flight", name:"Principles of Flight", extra:[["examen","Simulacro SENASA"]]},
-  {k:"090", code:"090", short:"Communications", name:"Communications", extra:[["voice","Radio por voz"]]},
-  {k:"poh", code:"POH", short:"POH", name:"Pilot Operating Handbook · Cessna 172 y Piper PA-28", extra:[]},
+  {k:"010", c:["#4350B8","#9EA8F2"], code:"010", short:"Air Law", name:"Air Law", extra:[["fase0","Examen Fase 0"],["senasa","Simulacro SENASA"]]},
+  {k:"021", c:["#0B747E","#5CC8C8"], code:"021·022", short:"Aircraft General Knowledge", name:"Airframe, Systems, Power Plant · Instrumentation", extra:[["senasa","Simulacro SENASA"]]},
+  {k:"031", c:["#B8500A","#F2A16A"], code:"031·032·033", short:"Performance", name:"Mass and Balance · Performance · Flight Planning", extra:[]},
+  {k:"040", c:["#AB3573","#F29AC6"], code:"040", short:"Human Performance", name:"Human Performance and Limitations", extra:[]},
+  {k:"050", c:["#1D6FB0","#7DB8EC"], code:"050", short:"Meteorology", name:"Meteorology", extra:[["sim","Simulacro SENASA"],["foto","Nubes por foto"]]},
+  {k:"061", c:["#2A7A40","#7ACB8D"], code:"061·062", short:"Navigation", name:"General Navigation · Radio Navigation", extra:[["senasa","Simulacro SENASA"]]},
+  {k:"070", c:["#7A41A6","#CBA6EA"], code:"070", short:"Operational Procedures", name:"Operational Procedures", extra:[["senasa","Simulacro SENASA"]]},
+  {k:"081", c:["#5F720C","#B9CE4C"], code:"081", short:"Principles of Flight", name:"Principles of Flight", extra:[["examen","Simulacro SENASA"]]},
+  {k:"090", c:["#9A5F00","#EAB84F"], code:"090", short:"Communications", name:"Communications", extra:[["voice","Radio por voz"]]},
+  {k:"poh", c:["#4F6577","#A9BDCC"], code:"POH", short:"POH", name:"Pilot Operating Handbook · Cessna 172 y Piper PA-28", extra:[]},
 ];
 const DONATE_URL = "";   // enlace de donaciones (PayPal.me, Ko-fi…); vacío = sin botón
 const $ = s => document.querySelector(s);
@@ -655,7 +665,7 @@ function renderDash(){
   const started=sums.filter(x=>x.m.n), avg = started.length ? Math.round(started.reduce((a,x)=>a+x.m.avg5,0)/started.length) : null;
   $("#kpis").innerHTML = `<div class="kpi"><b>${tests}</b><span>tests hechos</span></div><div class="kpi"><b>${avg==null?"–":avg+" %"}</b><span>media reciente</span></div><div class="kpi"><b>${readyN}/${SUBJ.length}</b><span>preparadas</span></div>`;
   $("#grid").innerHTML = sums.map(({s,m})=>`
-    <article class="card ${m.n?'':'empty'}">
+    <article class="card ${m.n?'':'empty'}" style="--scl:${s.c[0]};--scd:${s.c[1]}">
       <div class="chead"><span class="code">${s.code}</span><span class="nm">${esc(s.short)}${s.name!==s.short?`<small>${esc(s.name)}</small>`:""}</span><span class="chip ${m.lvl}">${m.label}</span></div>
       ${flight(m)}
       <div class="stats">${m.n?`<span>Último <b>${m.last} %</b></span><span>Media 5 últimos <b>${m.avg5} %</b></span><span><b>${m.n}</b> tests</span>`:`<span>Aún no has hecho ningún test</span>`}</div>
@@ -862,7 +872,7 @@ async function signedIn(user, consent){
   if(pendingName){ try{ await sb.rpc("set_profile",{p_name:pendingName,p_show:true}); }catch(e){} pendingName=""; }
   loadMine();
   visStart = document.visibilityState==="visible"?Date.now():null; clearInterval(beatT); beatT=setInterval(beatFlush,60000);
-  $("#saveTxt").textContent="Mi progreso"; setSaveState("ok"); renderAcct(); renderDash(); renderTabs();
+  $("#saveTxt").textContent="Mi progreso"; setSaveState("ok"); renderAcct(); renderDash(); renderTabs(); startPresence();
   Object.entries(frames).forEach(([k,f])=>{ ready[k]=false; f.src=f.src; });
   if(consent) newsMark();
   setTimeout(showNews, 900);
@@ -870,7 +880,7 @@ async function signedIn(user, consent){
 async function loadMine(){
   if(!sb||!sbUser) return;
   try{ const {data,error}=await sb.from("profiles").select("full_name,show_rank").eq("user_id",sbUser.id).maybeSingle(); if(error) throw error;
-    MY={name:(data&&data.full_name)||"", show:true, ok:true}; }catch(e){ if(!loadMine.retry){ loadMine.retry=1; setTimeout(loadMine,3000); } return; }
+    MY={name:(data&&data.full_name)||"", show:true, ok:true}; trackMe(); }catch(e){ if(!loadMine.retry){ loadMine.retry=1; setTimeout(loadMine,3000); } return; }
   if(!MY.name) setTimeout(openNameAsk,700);
 }
 /* ===================== buzón de sugerencias (web) ===================== */
@@ -910,7 +920,7 @@ async function drawInbox(){
 }
 function openNameAsk(){ if(MY.name||!sbUser) return; if(!$("#login").hidden) return; $("#naMsg").textContent=""; $("#nameAsk").hidden=false; setTimeout(()=>$("#naFirst").focus(),30); }
 async function saveName(name){
-  const r=await sb.rpc("set_profile",{p_name:name,p_show:true}); if(r.error) throw r.error; MY={name:name.trim().replace(/\\s+/g," "),show:true};
+  const r=await sb.rpc("set_profile",{p_name:name,p_show:true}); if(r.error) throw r.error; MY={name:name.trim().replace(/\\s+/g," "),show:true}; trackMe();
 }
 $("#naForm").addEventListener("submit",async e=>{ e.preventDefault();
   const f=$("#naFirst").value.trim(), l=$("#naLast").value.trim(); if(f.length<2||l.length<2){ $("#naMsg").textContent="Escribe tu nombre y tus apellidos."; return; }
@@ -937,8 +947,24 @@ async function doAuth(mode){
   if(r.data && r.data.session){ pendingName=nm; await signedIn(r.data.session.user, mode==="up"); }
   else msg.textContent="Cuenta creada. Pulsa «Entrar».";
 }
+
+/* ===================== en línea (Supabase Realtime Presence) ===================== */
+let presCh=null;
+function onlineList(){ try{ const st=presCh?presCh.presenceState():{}; return Object.entries(st).map(([k,v])=>({id:k,n:String((v[v.length-1]||{}).n||"").slice(0,40)})); }catch(e){ return []; } }
+function fillOnPop(){ const l=onlineList(), named=l.filter(x=>x.n).sort((a,b)=>a.n.localeCompare(b.n,"es")), anon=l.length-named.length;
+  $("#onPop").innerHTML="<h3>En línea ahora · "+l.length+"</h3>"+(named.length?"<ul>"+named.map(x=>"<li>"+esc(x.n)+(sbUser&&x.id===sbUser.id?" <small class=\"muted\">(tú)</small>":"")+"</li>").join("")+"</ul>":"")+(anon?"<p class=\"muted\">+ "+anon+" sin nombre todavía</p>":""); }
+function drawOnline(){ const l=onlineList(); $("#onBtn").hidden=!sbUser||!l.length; $("#onN").textContent=l.length; if(!$("#onPop").hidden) fillOnPop(); }
+function trackMe(){ try{ if(presCh) presCh.track({n:MY.name||""}); }catch(e){} }
+function stopPresence(){ try{ if(presCh&&sb) sb.removeChannel(presCh); }catch(e){} presCh=null; $("#onBtn").hidden=true; $("#onPop").hidden=true; $("#onBtn").setAttribute("aria-expanded","false"); }
+function startPresence(){ stopPresence(); if(!sb||!sbUser||typeof sb.channel!=="function") return;
+  try{ presCh=sb.channel("f0:online",{config:{presence:{key:sbUser.id}}});
+    presCh.on("presence",{event:"sync"},drawOnline).subscribe(st=>{ if(st==="SUBSCRIBED") trackMe(); });
+  }catch(e){ presCh=null; } }
+$("#onBtn").addEventListener("click",e=>{ e.stopPropagation(); const p=$("#onPop"); p.hidden=!p.hidden; $("#onBtn").setAttribute("aria-expanded",String(!p.hidden)); if(!p.hidden) fillOnPop(); });
+document.addEventListener("click",e=>{ const p=$("#onPop"); if(p&&!p.hidden&&!e.target.closest("#onPop")){ p.hidden=true; $("#onBtn").setAttribute("aria-expanded","false"); } });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ const p=$("#onPop"); if(p&&!p.hidden){ p.hidden=true; $("#onBtn").focus(); } } });
 async function signOut(){
-  beatFlush(); clearInterval(beatT);
+  beatFlush(); clearInterval(beatT); stopPresence();
   try{ await sb.auth.signOut(); }catch(e){}
   sbUser=null; remote=null; isAdmin=false; MY={name:"",show:true};
   try{ SUBJ.forEach(s=>localStorage.removeItem("f0:"+s.k)); }catch(e){}
@@ -1072,6 +1098,12 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-25b", items:[
+    {i:"🟢", t:"Quién está en línea", d:"Arriba, junto a tu cuenta, ves cuántos compañeros hay conectados ahora; pulsa para ver sus nombres."},
+    {i:"🎨", t:"Un color por asignatura", d:"Cada asignatura tiene su color en las tarjetas y en sus páginas, para orientarte de un vistazo."},
+    {i:"🛬", t:"Pista 09/27 y avión rodando", d:"La cabecera ocupa todo el ancho y un avión rueda por la pista 27."},
+    {i:"🔧", t:"Dificultad extra, siempre desmarcada", d:"Ahora cada visita empieza sin ella; solo se activa si tú la marcas."}
+  ]},
   {id:"2026-10-25", items:[
     {i:"🎙️", t:"Examen de Comunicaciones", d:"24 preguntas tipo test en 45 minutos, estilo trial, con más peso en propagación y algún código Q."},
     {i:"🎧", t:"Escucha ATIS", d:"Oye un ATIS en varios acentos y dificultades y rellena lo que dice. No cuenta para la media."},
