@@ -908,7 +908,7 @@ function nlHTML(items, o){
 <tr><td style="padding:12px 26px 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF6DC;border:1px solid #E7BD55;border-radius:10px"><tr><td style="padding:14px 16px"><div style="font:800 16px Arial,Helvetica,sans-serif;color:#7A5200">✉️ El buzón es tuyo</div>
 <div style="font:14px/1.5 Arial,Helvetica,sans-serif;color:#6B5420;margin-top:4px">¿Falta una pregunta? ¿Hay una errata? ¿Se te ocurre algo que mejorar? Pulsa el icono <b>Buzón</b> (arriba a la derecha) y cuéntalo. Cada sugerencia se lee y las buenas entran a la web.</div></td></tr></table></td></tr>
 <tr><td style="padding:16px 26px 22px"><div style="font:14px/1.5 Arial,Helvetica,sans-serif;color:#4B6073">Consejo del comandante: haz un test cada día. Cinco minutos a diario valen más que tres horas la víspera.</div></td></tr>
-<tr><td style="background:#C8102E;padding:12px 26px;text-align:center"><div style="font:900 13px Arial,Helvetica,sans-serif;letter-spacing:.18em;color:#fff">REMOVE BEFORE FLIGHT · QUITA LA ETIQUETA Y DESPEGA</div></td></tr>
+<tr><td style="background:#C8102E;padding:12px 26px;text-align:center"><div style="font:900 13px Arial,Helvetica,sans-serif;letter-spacing:.18em;color:#fff">CHECKLIST COMPLETA · BUEN VUELO</div></td></tr>
 <tr><td style="padding:14px 26px 20px;background:#F6F9FA"><div style="font:12px/1.5 Arial,Helvetica,sans-serif;color:#6B7F90">Recibes este correo porque tienes cuenta en ATPL Fase 0 (<a href="${WEB_URL}" style="color:#0E7C86">${WEB_URL.replace("https://","")}</a>). Si no quieres más boletines, desmárcalo en <b>Mi progreso → Recibir el boletín</b> o responde a este correo con «baja».</div></td></tr>
 </table></td></tr></table></body></html>`;
 }
@@ -925,6 +925,7 @@ async function drawNewsletter(){
     <label class="fld">Asunto<input id="nlSub" value="✈️ NOTAM del Aviador · Novedades en ATPL Fase 0"></label></div>
     <p class="muted" id="nlCnt" style="margin:10px 0">Cargando destinatarios…</p>
     <div class="row"><button class="btn" id="nlOpen" type="button">Abrir para copiar</button><button class="btn sec" id="nlHtml" type="button">Copiar HTML</button><button class="btn sec" id="nlTo" type="button">Copiar destinatarios</button><a class="btn ghost" id="nlMail" style="text-decoration:none" href="#">Abrir correo con destinatarios</a></div>
+    <div class="row" style="margin-top:8px"><button class="btn sec" id="nlTest" type="button">Enviarme una prueba</button><button class="btn" id="nlSend" type="button">Enviar a todos desde la web</button></div>
     <p class="muted" id="nlMsg" style="margin:8px 0" aria-live="polite"></p>
     <iframe id="nlPrev" title="Vista previa" style="width:100%;height:560px;border:1px solid var(--line);border-radius:8px;background:#fff"></iframe></div>`;
   let emails=[]; const msg=$("#nlMsg");
@@ -938,6 +939,11 @@ async function drawNewsletter(){
   const copy=async(t,ok)=>{ try{ await navigator.clipboard.writeText(t); msg.textContent=ok; }catch(e){ msg.textContent="No se ha podido copiar; usa «Abrir para copiar»."; } };
   $("#nlOpen").addEventListener("click", ()=>{ const w=window.open("","_blank"); if(!w){ msg.textContent="El navegador ha bloqueado la pestaña."; return; } w.document.open(); w.document.write(html()); w.document.close(); msg.textContent="En la pestaña nueva: Ctrl/Cmd+A, Ctrl/Cmd+C y pega en el correo nuevo."; });
   $("#nlHtml").addEventListener("click", ()=>copy(html(),"HTML copiado."));
+  const send=async test=>{ if(!test && !confirm("¿Enviar el boletín a "+emails.length+" personas?")) return; msg.textContent="Enviando…";
+    try{ const r=await sb.functions.invoke("send-newsletter",{body:{subject:$("#nlSub").value,html:html(),test:!!test}});
+      if(r.error||(r.data&&r.data.error)) throw new Error((r.data&&r.data.error)||"error"); msg.textContent=test?"Prueba enviada a tu correo.":"Enviado: "+r.data.sent+" correos"+(r.data.failed?" ("+r.data.failed+" fallidos)":"")+"."; }
+    catch(e){ msg.textContent="No se ha podido enviar ("+(e.message||"error")+"). Revisa que el envío automático esté configurado."; } };
+  $("#nlTest").addEventListener("click",()=>send(true)); $("#nlSend").addEventListener("click",()=>send(false));
   $("#nlTo").addEventListener("click", ()=>copy(emails.join(", "),"Destinatarios copiados: pégalos en CCO."));
 }
 async function drawInbox(){
