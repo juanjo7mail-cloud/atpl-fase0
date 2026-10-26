@@ -1246,6 +1246,7 @@ details.lo .body > .formula{margin-top:10px}
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA · cronometrado <small><span class="row" style="margin-top:6px"><select id="senEx" aria-label="Examen"><option value="061">061 General Navigation · 55 preguntas</option><option value="062">062 Radio Navigation · 66 preguntas</option><option value="both">061 + 062 seguidos · 121 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>: tus fallos, lo flojo y lo que más pesa</small></label>
+      <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos · 20 preguntas <small>: QDM/QDR/QTE, RMI, VOR, DME, deriva, viento, tiempo, combustible… números nuevos cada vez</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel" aria-label="Tema"></select></small></label>
@@ -1352,7 +1353,7 @@ const BASE = [
  ["e9","090.1","s","seasons","The Earth's axis is inclined to the plane of its orbit by about:",["66.5°","23.5°","90°","45°"],"66,5° respecto al plano = 23,5° respecto a la perpendicular."],
  ["e10","090.1","n","orbit","The plane in which the Earth orbits the Sun is called:",["The plane of the ecliptic","The equatorial plane","The plane of the prime meridian","The celestial horizon"],"★ Plano de la eclíptica."],
  ["e11","090.1","s","orbit","The Earth rotates about its axis towards the:",["East","West","North","South"],"Hacia el este; por eso el Sol parece ir de este a oeste."],
- ["e12","090.1","s","seasons","Around 21 December, the Sun is overhead at noon:",["At the Tropic of Capricorn (about 23½°S)","At the Tropic of Cancer","At the equator","At the Antarctic Circle"],"Solsticio de diciembre: vertical sobre 23½°S."],
+ ["e12","090.1","s","seasons","Around 21 December, the Sun is overhead at noon:",["At the Tropic of Capricorn (about 23½°S)","At the Tropic of Cancer (about 23½°N)","At the equator (0°)","At the Antarctic Circle (about 66½°S)"],"Solsticio de diciembre: vertical sobre 23½°S."],
  ["e13","090.1","s","seasons","On about 21 March the Sun:",["Crosses the equator from south to north: spring equinox in the NH","Crosses the equator from north to south: autumn equinox in the NH","Is overhead the Tropic of Cancer","Is at aphelion"],"21 de marzo: de S a N, primavera del HN."],
  ["e14","090.1","c","seasons","During the northern hemisphere winter, compared with summer, the Earth is:",["Closer to the Sun","Farther from the Sun","At the same distance from the Sun","Not tilted relative to the Sun"],"En invierno del HN estamos más cerca (perihelio en enero). Prueba de que la distancia no causa las estaciones."],
  ["e15","090.1","s","orbit","Because the Earth rotates eastwards, the Sun appears to move:",["Westwards along a parallel of latitude","Eastwards along a parallel","Northwards along a meridian","Along the ecliptic in one day"],"De este a oeste por un paralelo."],
@@ -1377,7 +1378,7 @@ const BASE = [
  ["t3","090.2","s","days","The apparent solar day varies in length through the year because:",["The Earth's orbital speed is not constant","The Earth's rotation speed changes","The distance to the stars changes","Of the date line"],"La velocidad orbital cambia (Kepler 2)."],
  ["t4","090.2","s","days","Which day is constant in length AND linked to light and darkness?",["The mean solar day","The sidereal day","The apparent solar day","None of them"],"El día solar medio."],
  ["t5","090.2","s","days","Which is a requirement for a civil day?",["Its length must be constant","It must have 12 hours of daylight","It must be measured against a star","It must follow the real Sun exactly"],"Constante y ligado a la luz."],
- ["t6","090.2","s","eot","The equation of time is the difference between:",["Mean solar time and apparent solar time","UTC and standard time","LMT and UTC","Sidereal time and UTC"],"Hora media vs Sol real."],
+ ["t6","090.2","s","eot","The equation of time is the difference between:",["Mean solar time and apparent solar time","Universal time and local mean time at the observer","Local mean time and zone (standard) time","Sidereal time and mean solar time"],"Hora media vs Sol real."],
  ["t7","090.2","s","eot","A second maximum of the equation of time, about 14 minutes, occurs in:",["Mid-February","Mid-November","June","March"],"≈ 14 min a mediados de febrero."],
  ["t8","090.2","c","days","Near perihelion, the apparent solar day is:",["Slightly longer, because the Earth moves faster along its orbit","Slightly shorter, because the Earth is closer to the Sun","Exactly 24 hours","Slightly shorter, because the Earth rotates faster"],"Más rápido por la órbita → hay que girar más para ver el Sol en el meridiano → día aparente más largo."],
  ["t9","090.2","s","lmt","A difference of longitude of 1° corresponds to a difference of LMT of:",["4 minutes","1 minute","15 minutes","1 hour"],"1° = 4 min."],
@@ -1438,7 +1439,7 @@ const BASE = [
  ["tr5","090.5","e","turn","Northern hemisphere: you turn left from 060°M onto north using the magnetic compass. When you are actually heading 360°M, the compass:",["Still shows a heading short of north (about 020°), as if you had to keep turning","Already shows a heading past north (about 340°)","Shows exactly 360°","Shows 090° and then settles"],"La brújula se retrasa al virar hacia el norte en el HN: aún marca ≈ 020. Hay que sacar el viraje antes (Undershoot North)."],
  ["tr18","090.5","e","dip","A direct-reading magnetic compass gives its most reliable indications:",["Near the magnetic equator","Near the magnetic poles","Above 60° of latitude","Near the geographic poles"],"Cerca del ecuador magnético: dip 0 y H máxima."],
  ["tr19","090.2","e","st","The standard time kept in a country is:",["Set by its government, normally UTC plus or minus a fixed amount","The LMT of its capital city","The apparent solar time of its central meridian","Always the same as UTC"],"Decisión política: UTC ± una cantidad fija."],
- ["tr20","090.1","e","sc","Which of these is a great circle?",["A meridian together with its anti-meridian","The parallel of 45°N","The Tropic of Cancer","The Arctic Circle"],"Meridiano + antimeridiano pasa por el centro de la Tierra. Los paralelos (no ecuador) son small circles."],
+ ["tr20","090.1","e","sc","Which of these is a great circle?",["A meridian together with its anti-meridian","The parallel of 45°N, halfway between the equator and the pole","The Tropic of Cancer, at 23½°N","The Arctic Circle, at about 66½°N"],"Meridiano + antimeridiano pasa por el centro de la Tierra. Los paralelos (no ecuador) son small circles."],
  // ----- trial de LO aún no dados -----
  ["tr3","090.9","e","fut","At a ground speed of 120 kt, how long does it take to fly 50 NM?",["25 minutes","24 minutes","42 minutes","30 minutes"],"50 / 120 × 60 = 25 min."],
  ["tr4","090.9","e","fut","Flight time 1 h 15 min with a consumption of 36 litres per hour. Fuel used:",["45 litres","40.5 litres","36 litres","54 litres"],"36 × 1,25 = 45 L."],
@@ -3206,6 +3207,52 @@ BASE.push(
 
 Object.assign(GEN,{sx1:gDRpos, sx2:gGCinit, sx3:gChartTrack, sx4:gVORplot, sx5:gSunTable, sx6:gETA, sx7:gTOD, sx8:gLambert,
   sx9:gHSI, sx10:gILSind, sx11:gGPh, sx12:gRMI2, sx13:gIntercept, sx14:gPRF, sx15:gWX, sx16:gSats, sx17:gLeg, sx18:gFlyBy});
+// ---------- v9 · más cálculo puro: Q-codes con variación, relative bearing tras un viraje, radial ↔ QDM, GS y tiempo con DME ----------
+function gQvar(){
+  const vr=pick([-1,1])*rnd(2,12), q=rnd(1,36)*10+pick([0,5]), v=ew(vr), sg=vr>0?"+":"−", av=Math.abs(vr);
+  const k=pick(["qte","qdm","quj","qdr"]);
+  if(k==="qte"){ const r=norm(q+vr); return {text:`The QDR from a station is ${dg(q)}. The magnetic variation is ${v}. The QTE is:`,
+    opts:fill(r,[q-vr, q, q+180+vr, q+2*vr],dg), expl:`QDR es magnético y QTE verdadero: verdadero = magnético + E / − W. ${P3(q)} ${sg} ${av} = ${dg(r)}. Trampas: restar en vez de sumar (${dg(q-vr)}) o no corregir (${dg(q)}).`, v:true}; }
+  if(k==="qdm"){ const r=norm(q-vr); return {text:`The QUJ (true track to the station) is ${dg(q)}. The magnetic variation is ${v}. The QDM is:`,
+    opts:fill(r,[q+vr, q, q+180, q+180-vr],dg), expl:`QUJ es verdadero y QDM magnético: magnético = verdadero ${vr>0?"−":"+"} ${av} (${vr>0?"E: se resta":"W: se suma"}) → ${dg(r)}.`, v:true}; }
+  if(k==="quj"){ const r=norm(q+180); return {text:`The QTE is ${dg(q)}. The QUJ is:`,
+    opts:fill(r,[q, q+vr, q+180+vr],dg), expl:`QTE y QUJ son ambos VERDADEROS y recíprocos: QUJ = QTE ± 180 = ${dg(r)}. No hay que usar la variación.`, v:true}; }
+  const r=norm(q+vr-180); return {text:`The QDM is ${dg(q)}. The magnetic variation is ${v}. The QTE is:`,
+    opts:fill(r,[q+vr, q-180-vr, q+180, q-vr],dg), expl:`QDM magnético → QDR = QDM ± 180 = ${dg(q+180)}. QTE = QDR ${sg} ${av} (${vr>0?"E suma":"W resta"}) = ${dg(r)}.`, v:true};
+}
+function gRBturn(){
+  const h1=rnd(1,36)*10, rb=rnd(2,34)*10+pick([0,5]), d=pick([-1,1])*rnd(3,12)*10, h2=norm(h1+d), qdm=norm(h1+rb), n=norm(qdm-h2);
+  if(Math.abs(angd(n,0))<15||Math.abs(angd(n,180))<15) return gRBturn();
+  return {text:`Magnetic heading ${dg(h1)}, the RBI shows a relative bearing of ${dg(rb)} to an NDB far away. You turn ${d<0?"left":"right"} onto magnetic heading ${dg(h2)}. The new relative bearing is:`,
+    opts:fill(n,[rb+d, rb, norm(h2-qdm), qdm],dg), expl:`★ El QDM no cambia (estación lejana): QDM = ${P3(h1)} + ${P3(rb)} = ${dg(qdm)}. Nuevo RB = QDM − nuevo rumbo = ${P3(qdm)} − ${P3(h2)} = ${dg(n)}. Al virar ${d<0?"a la izquierda":"a la derecha"}, la aguja se desplaza ${d<0?"hacia la derecha":"hacia la izquierda"}.`, v:true};
+}
+function gRadQ(){
+  const r=rnd(1,36)*10, k=pick([0,1,2]);
+  if(k===0) return {text:`You fly inbound to a VOR with a QDM of ${dg(r)}, in zero wind. The radial you are on is:`,
+    opts:fill(norm(r+180),[r, r+90, r-90],dg), expl:`Vuelas HACIA la estación con QDM ${P3(r)}: estás en el radial recíproco (QDR) = ${dg(r+180)}.`, v:true};
+  if(k===1) return {text:`You are on the ${P3(r)} radial of a VOR. The QDM is:`,
+    opts:fill(norm(r+180),[r, r+90, r-90],dg), expl:`Radial = QDR (marcación desde la estación). QDM = QDR ± 180 = ${dg(r+180)}.`, v:true};
+  const hd=norm(r+180+pick([-1,1])*rnd(1,3)*10);
+  return {text:`You are on the ${P3(r)} radial of a VOR with a magnetic heading of ${dg(hd)}. The relative bearing of the station is:`,
+    opts:fill(norm(r+180-hd),[r-hd, hd-r, r+180],dg), expl:`QDM = ${dg(r+180)}. RB = QDM − rumbo = ${P3(r+180)} − ${P3(hd)} = ${dg(r+180-hd)}.`, v:true};
+}
+function gDMEgs(){
+  const gs=pick([90,120,150,180,210,240]), t=pick([4,5,6,8,10]), dd=Math.round(gs*t/60*10)/10, d1=rnd(Math.ceil(dd)+12,120), d2=Math.round((d1-dd)*10)/10;
+  const ask=pick(["gs","ttg"]);
+  if(ask==="gs") return {text:`Flying directly to a VOR/DME, the DME reads ${nf(d1,d1%1?1:0)} NM. ${t} minutes later it reads ${nf(d2,d2%1?1:0)} NM. The groundspeed is:`,
+    opts:fillN(gs,[gs*0.8,gs*1.25,gs/2,gs+30],x=>Math.round(x)+" kt",9), expl:`${nf(d1,d1%1?1:0)} − ${nf(d2,d2%1?1:0)} = ${nf(dd,dd%1?1:0)} NM en ${t} min → GS = ${nf(dd,dd%1?1:0)} × 60 ÷ ${t} = ${gs} kt.`, v:true};
+  const ttg=Math.round(d2/gs*60);
+  return {text:`Flying directly to a VOR/DME at a groundspeed of ${gs} kt, the DME reads ${nf(d2,d2%1?1:0)} NM. The time to the station is about:`,
+    opts:fillN(ttg,[ttg*1.5,ttg*0.6,ttg*2,ttg+7],x=>Math.round(x)+" min",2), expl:`Tiempo = distancia ÷ GS × 60 = ${nf(d2,d2%1?1:0)} ÷ ${gs} × 60 ≈ ${ttg} min. Cuidado: es la GS, no la TAS.`, v:true};
+}
+BASE.push(
+ ["cq1","090.12","n","rbi","Q-codes with variation (QDR, QTE, QUJ, QDM).",["",""," ",""],""],
+ ["cq2","090.12","n","rbi","Relative bearing after a turn.",["",""," ",""],""],
+ ["cq3","090.13","n","tofrom","Radial, QDM and relative bearing of a VOR.",["",""," ",""],""],
+ ["cq4","090.14","n","dme","DME: groundspeed and time to the station.",["",""," ",""],""]
+);
+Object.assign(GEN,{cq1:gQvar, cq2:gRBturn, cq3:gRadQ, cq4:gDMEgs});
+
 // las del PDF con números ya generados también cuentan como «con cálculo o figura»
 Object.assign(REFS,{
  chartplot:"Track y distancia con coordenadas: Δlat (′) = NM al norte o al sur · departure = Δlong (′) × cos lat media · track = arctan(departure ÷ Δlat) · distancia = √(Δlat² + departure²).",
@@ -3453,6 +3500,11 @@ function selectQuestions(mode, inc, lo, atpl){
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c")));
   if(mode==="all") return shuffle(pool);
+  if(mode==="calc"){ // un generador por tipo de ejercicio, máximo 3 por tema, priorizando lo flojo
+    const gen=pool.filter(isStyled), sc=gen.map(q=>({q,p:priority(q,st)+Math.random()*2})).sort((a,b)=>b.p-a.p), out=[], per={};
+    for(const x of sc){ if(out.length>=20) break; const l=x.q[1]; if((per[l]||0)>=3) continue; per[l]=(per[l]||0)+1; out.push(x.q); }
+    for(const x of sc){ if(out.length>=20) break; if(!out.includes(x.q)) out.push(x.q); }
+    return shuffle(out); }
   // adaptativo: 20 por prioridad, como mucho 5 del mismo tema y al menos 6 del trial
   const N = Math.min(30, pool.length), MAXLO = 5;
   const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
