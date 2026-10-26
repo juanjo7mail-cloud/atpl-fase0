@@ -1330,12 +1330,11 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
   {id:"2026-10-26b", items:[
-    {i:"🧮", t:"Navegación: «Solo cálculos»", d:"Nuevo modo en 061·062: 20 preguntas de puro cálculo (QDM/QDR, RMI, ADF, deriva, interceptaciones, DME, HSI, códigos Q con variación…). Los números cambian cada vez."},
-    {i:"🎯", t:"Preguntas más trampa", d:"Comunicaciones ya no da la fórmula en el enunciado y las respuestas se parecen más, como en el examen. Revisadas también otras asignaturas: menos pistas por la longitud de la respuesta."}
+    {i:"🧮", t:"Navegación: «Solo cálculos»", d:"Nuevo modo en 061·062: 20 preguntas de puro cálculo (QDM/QDR, RMI, ADF, deriva, interceptaciones, DME, HSI, códigos Q…). Los números cambian cada vez."},
+    {i:"🎯", t:"Preguntas más trampa", d:"En Comunicaciones el enunciado ya no da la fórmula y las respuestas se parecen más, como en el examen real. También hemos mejorado otras asignaturas."}
   ]},
   {id:"2026-10-26", items:[
-    {i:"🎛️", t:"Vista de instrumentos", d:"Arriba, junto al buscador, hay un interruptor: Tarjetas o Instrumentos. En el panel cada asignatura es un reloj cuya aguja marca la media de tus 5 últimos tests (verde = aprobado)."},
-    {i:"🛡️", t:"Qué se mide (transparencia)", d:"La web guarda cuánto tiempo pasas en cada asignatura o sección y cuál tienes abierta ahora, mientras la app está a la vista y la usas. Solo lo ve el administrador, para saber qué partes son más útiles. Detalles en Privacidad.", web:true}
+    {i:"🎛️", t:"Vista de instrumentos", d:"Arriba, junto al buscador, hay un interruptor: Tarjetas o Instrumentos. En el panel cada asignatura es un reloj cuya aguja marca la media de tus 5 últimos tests (verde = aprobado)."}
   ]},
   {id:"2026-10-25c", items:[
     {i:"🔥", t:"Racha diaria", d:"Cada día con un test de 10+ preguntas suma. Tienes un descanso por semana sin perder la racha. Arriba, en Inicio, ves tu racha y la meta de 5 días."},
@@ -1344,44 +1343,28 @@ const NEWS=[
     {i:"📲", t:"Instálala en el iPad o el iPhone", d:"En Safari: Compartir → Añadir a pantalla de inicio. Se abre como una app, a pantalla completa.", web:true}
   ]},
   {id:"2026-10-25b", items:[
-    {i:"🟢", t:"Quién está en línea", d:"Arriba, junto a tu cuenta, ves cuántos compañeros hay conectados ahora; pulsa para ver sus nombres."},
-    {i:"🎨", t:"Un color por asignatura", d:"Cada asignatura tiene su color en las tarjetas y en sus páginas, para orientarte de un vistazo."},
-    {i:"🛬", t:"Pista 09/27 y avión rodando", d:"La cabecera ocupa todo el ancho y un avión rueda por la pista 27."},
-    {i:"🔧", t:"Dificultad extra, siempre desmarcada", d:"Ahora cada visita empieza sin ella; solo se activa si tú la marcas."}
+    {i:"🟢", t:"Quién está en línea", d:"Arriba, junto a tu cuenta, ves cuántos compañeros hay conectados ahora; pulsa para ver sus nombres."}
   ]},
   {id:"2026-10-25", items:[
     {i:"🎙️", t:"Examen de Comunicaciones", d:"30 preguntas tipo test en 45 minutos, estilo trial, con más peso en propagación y algún código Q."},
     {i:"🎧", t:"Escucha ATIS", d:"Oye un ATIS en varios acentos y dificultades y rellena lo que dice. No cuenta para la media."},
-    {i:"📡", t:"Más Comunicaciones", d:"Preguntas nuevas de ATIS, SPECI, VOLMET, CAVOK, códigos Q (QDM, QDR, QUJ, QTE) y propagación."},
     {i:"🔑", t:"Recuperar contraseña", d:"¿Te la olvidas? Pulsa «¿Olvidaste la contraseña?» al entrar y te llega un email.", web:true},
     {i:"☑️", t:"Temario ATPL desmarcado", d:"Los tests parten solo del temario dado; marca la casilla si quieres incluir el ATPL."}
   ]},
-  {id:"2026-10-23e", items:[
-    {i:"📻", t:"Radio con dos paneles", d:"Si eliges controlador ves una consola de posición ATC; si eliges piloto, el panel de audio de cabina con botón PTT. Incluye prueba en solitario.", web:true},
-    {i:"🪪", t:"Nombre obligatorio", d:"Quien aún no haya puesto nombre y apellidos tendrá que hacerlo al volver a entrar."}
-  ]},
-  {id:"2026-10-23d", items:[
-    {i:"☰", t:"Menú y flechas", d:"Arriba a la izquierda, las 3 rayas abren la lista de todas las pestañas. En ordenador hay flechas a los lados (y la rueda del ratón) para moverse por ellas."}
-  ]},
   {id:"2026-10-23c", items:[
-    {i:"📻", t:"Radio PTT", d:"Pestaña RADIO: elige frecuencia, pulsa y habla; otra persona te escucha y responde, como en la radio de verdad (ATC–piloto, un solo emisor a la vez).", web:true},
-    {i:"🔥", t:"Dificultad extra", d:"En «Más tipos de test» de cada asignatura: más de 300 preguntas nuevas, más difíciles y rebuscadas sobre el temario. El tiempo no cambia."},
-    {i:"🧹", t:"Menos repetidas", d:"Los tests evitan preguntas del mismo concepto con otra redacción."}
+    {i:"📻", t:"Radio PTT", d:"Pestaña RADIO: elige frecuencia, pulsa y habla; otra persona te escucha y responde, como en la radio de verdad (ATC–piloto, un solo emisor a la vez). Como controlador ves una consola ATC; como piloto, el panel de audio con botón PTT.", web:true},
+    {i:"🔥", t:"Dificultad extra", d:"En «Más tipos de test» de cada asignatura: más de 300 preguntas nuevas, más difíciles y rebuscadas sobre el temario. El tiempo no cambia."}
   ]},
   {id:"2026-10-23b", items:[
     {i:"📘", t:"Nueva asignatura: POH", d:"Pilot Operating Handbook del Cessna 172 y el Piper PA-28: apuntes con esquemas interactivos y tests, incluido el simulacro cronometrado."},
     {i:"✉️", t:"Buzón de sugerencias", d:"Arriba a la derecha: propón preguntas nuevas o corrige errores.", web:true},
-    {i:"🏆", t:"Ranking para todos", d:"Con 5 tests de una asignatura entras solo en su ranking, con tu nombre.", web:true}
+    {i:"🏆", t:"Ranking por asignatura", d:"Con 5 tests de una asignatura entras en su ranking, con tu nombre. Mira la pestaña RANKING.", web:true}
   ]},
   {id:"2026-10-23", items:[
     {i:"⚖️", t:"Performance renovada", d:"Simulacros SENASA de 031, 032 y 033 con el reparto oficial y reloj, «Examen Fase 0» de 30 preguntas en 1 h, altimetría (PA, ISA y altitud de densidad) y muchas preguntas ATPL nuevas."}
   ]},
-  {id:"2026-10-22b", items:[
-    {i:"🛫", t:"Nuevo diseño de vuelo", d:"Pista de aeropuerto, un avión en cada asignatura (despega si vas bien, aterriza si toca reforzar) y cursor de avión."}
-  ]},
   {id:"2026-10-22", items:[
-    {i:"🎙️", t:"Radio por voz · Communications", d:"Practica el diálogo ATC–piloto hablando: ATC te habla en inglés y tú contestas por el micrófono."},
-    {i:"🏆", t:"Ranking por asignatura", d:"Compárate con la promoción: necesitas 5 tests en la asignatura. Mira la pestaña RANKING.", web:true}
+    {i:"🎙️", t:"Radio por voz · Communications", d:"Practica el diálogo ATC–piloto hablando: ATC te habla en inglés y tú contestas por el micrófono."}
   ]}
 ];
 function newsSeen(){ try{ return localStorage.getItem("f0:news")||""; }catch(e){ return "~"; } }
