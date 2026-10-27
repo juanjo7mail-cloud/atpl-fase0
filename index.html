@@ -1158,6 +1158,10 @@ async function signOut(){
 /* ===================== estadísticas (solo admin) ===================== */
 const MODE_ES = {atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas del profesor", notes:"Desde los apuntes"};
 const uname = u => (u.full_name||"").trim() || String(u.email||"").split("@")[0];
+const fmtDT = d => { if(!d) return "–"; const x=new Date(d), n=new Date(), hm=x.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
+  if(x.toDateString()===n.toDateString()) return "hoy · "+hm;
+  const y=new Date(n); y.setDate(n.getDate()-1); if(x.toDateString()===y.toDateString()) return "ayer · "+hm;
+  return x.toLocaleDateString("es-ES",{day:"numeric",month:"short",...(x.getFullYear()!==n.getFullYear()?{year:"numeric"}:{})})+" · "+hm; };
 const fmtD = d => d ? new Date(d).toLocaleDateString("es-ES",{day:"numeric",month:"short"}) : "–";
 const fmtT = s => { s=s|0; const h=Math.floor(s/3600), m=Math.round((s%3600)/60); return h ? `${h} h ${m} min` : `${m} min`; };
 function bars(rows){ return rows.map(r=>`<div class="hbar"><span>${r.label}</span><span class="tr"><i class="${r.low?"low":""}" style="width:${Math.max(2,r.w)}%"></i></span><b>${r.val}</b></div>`).join("") || `<p class="muted">Sin datos todavía.</p>`; }
@@ -1216,7 +1220,7 @@ function drawLive(){
   const one=stUser?ST.find(x=>x.user_id===stUser):null;
   el.innerHTML=`<h2>Ahora mismo · ${act.length} activo${act.length===1?"":"s"}</h2>`+(act.length
     ? `<ul class="live">${act.map(r=>`<li><i class="ond"></i><b>${esc(nameOf(r.user_id))}</b> <span>${esc(viewLabel(r.view))}</span> <small class="muted">${ago(r.updated_at)}</small></li>`).join("")}</ul>`
-    : `<p class="muted">${one?`${esc(uname(one))} no está activo ahora${one.last_seen?" · última visita "+fmtD(one.last_seen):""}.`:"Nadie activo en este momento."}</p>`)+`<p class="muted" style="font-size:12px;margin:8px 0 0">Activo = abierta la pestaña y con movimiento en los últimos 90 s. Se actualiza solo cada 15 s.</p>`;
+    : `<p class="muted">${one?`${esc(uname(one))} no está activo ahora${one.last_seen?" · última visita "+fmtDT(one.seen||one.last_seen):""}.`:"Nadie activo en este momento."}</p>`)+`<p class="muted" style="font-size:12px;margin:8px 0 0">Activo = abierta la pestaña y con movimiento en los últimos 90 s. Se actualiza solo cada 15 s.</p>`;
 }
 function drawHeat(){
   const el=$("#heatBox"); if(!el) return;
@@ -1247,11 +1251,14 @@ async function pollLive(){
 }
 function drawStats(){
   const box=$("#stats"), now=Date.now(), wk=7*864e5;
+  /* última actividad = lo más reciente entre la última visita guardada y el último latido en directo; la tabla va de más reciente a más antigua */
+  ST.forEach(u=>{ const l=(LN||[]).filter(r=>r.user_id===u.user_id).map(r=>+new Date(r.updated_at)); const t=Math.max(u.last_seen?+new Date(u.last_seen):0,...l); u.seen=t?new Date(t).toISOString():null; });
+  ST.sort((a,b)=>(b.seen?+new Date(b.seen):0)-(a.seen?+new Date(a.seen):0));
   const users = stUser ? ST.filter(u=>u.user_id===stUser) : ST, one = stUser ? users[0] : null;
   const all = users.flatMap(u=>u.at), avg = l => l.length ? Math.round(l.reduce((a,x)=>a+x.pct,0)/l.length) : null;
   const kp = one
-    ? [[fmtD(one.created_at),"alta"],[fmtD(one.last_seen),"última visita"],[one.visits||0,"entradas"],[fmtT(one.seconds),"tiempo de uso"],[all.length,"tests hechos"],[avg(all)==null?"–":avg(all)+" %","nota media"]]
-    : [[ST.length,"usuarios"],[ST.filter(u=>u.last_seen&&now-new Date(u.last_seen)<wk).length,"activos 7 días"],[ST.reduce((a,u)=>a+(u.visits||0),0),"entradas con cuenta"],[fmtT(ST.reduce((a,u)=>a+(u.seconds||0),0)),"tiempo de uso"],[all.length,"tests hechos"],[avg(all)==null?"–":avg(all)+" %","nota media"]];
+    ? [[fmtD(one.created_at),"alta"],[fmtDT(one.seen||one.last_seen),"última visita"],[one.visits||0,"entradas"],[fmtT(one.seconds),"tiempo de uso"],[all.length,"tests hechos"],[avg(all)==null?"–":avg(all)+" %","nota media"]]
+    : [[ST.length,"usuarios"],[ST.filter(u=>u.seen&&now-new Date(u.seen)<wk).length,"activos 7 días"],[ST.reduce((a,u)=>a+(u.visits||0),0),"entradas con cuenta"],[fmtT(ST.reduce((a,u)=>a+(u.seconds||0),0)),"tiempo de uso"],[all.length,"tests hechos"],[avg(all)==null?"–":avg(all)+" %","nota media"]];
   const bySub = SUBJ.map(s=>{ const l=all.filter(x=>x.k===s.k), a=avg(l); return {label:`<b>${s.code}</b> ${esc(s.short)}`, tests:l.length, avg:a, users:new Set(users.filter(u=>u.at.some(x=>x.k===s.k)).map(u=>u.user_id)).size, pass:l.length?Math.round(100*l.filter(x=>x.pct>=75).length/l.length):null, last5:avg(l.slice(-5))}; });
   const modes={}; all.forEach(x=>{ const m=modeName(x.mode); modes[m]=(modes[m]||0)+1; });
   const modeRows=Object.entries(modes).sort((a,b)=>b[1]-a[1]), maxM=Math.max(1,...modeRows.map(m=>m[1]));
@@ -1273,8 +1280,8 @@ function drawStats(){
   ${one ? `<div class="st-box"><h2>Últimos tests</h2><div class="st-scroll"><table class="st-tbl"><thead><tr><th>Fecha</th><th>Asignatura</th><th>Tipo</th><th class="n">Preguntas</th><th class="n">Nota</th></tr></thead><tbody>
       ${all.slice(-25).reverse().map(x=>`<tr><td>${new Date(x.date).toLocaleString("es-ES",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</td><td><b>${x.code}</b> ${esc(x.short)}</td><td>${esc(modeName(x.mode))}</td><td class="n">${x.total}</td><td class="n" style="color:${x.pct>=75?"var(--ok)":"var(--warn)"};font-weight:600">${x.pct} %</td></tr>`).join("") || `<tr><td colspan="5" class="muted">Aún no ha hecho tests.</td></tr>`}
       </tbody></table></div></div>`
-  : `<div class="st-box"><h2>Usuarios</h2><div class="st-scroll"><table class="st-tbl"><thead><tr><th>Nombre</th><th>Email</th><th>Alta</th><th>Última visita</th><th class="n">Entradas</th><th class="n">Tiempo</th><th class="n">Tests</th><th class="n">Media</th></tr></thead><tbody>
-      ${ST.map(u=>`<tr><td><button type="button" data-u="${esc(u.user_id)}" style="background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font:inherit">${esc(uname(u))}</button>${u.email===ADMIN_EMAIL?` <span class="muted">(tú)</span>`:""}</td><td>${esc(u.email)}</td><td>${fmtD(u.created_at)}</td><td>${fmtD(u.last_seen)}</td><td class="n">${u.visits||0}</td><td class="n">${fmtT(u.seconds)}</td><td class="n">${u.at.length}</td><td class="n">${avg(u.at)==null?"–":avg(u.at)+" %"}</td></tr>`).join("")}
+  : `<div class="st-box"><h2>Usuarios</h2><div class="st-scroll"><table class="st-tbl"><thead><tr><th>Nombre</th><th>Email</th><th>Alta</th><th>Última visita ↓</th><th class="n">Entradas</th><th class="n">Tiempo</th><th class="n">Tests</th><th class="n">Media</th></tr></thead><tbody>
+      ${ST.map(u=>`<tr><td><button type="button" data-u="${esc(u.user_id)}" style="background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font:inherit">${esc(uname(u))}</button>${u.email===ADMIN_EMAIL?` <span class="muted">(tú)</span>`:""}</td><td>${esc(u.email)}</td><td>${fmtD(u.created_at)}</td><td style="white-space:nowrap">${fmtDT(u.seen||u.last_seen)}</td><td class="n">${u.visits||0}</td><td class="n">${fmtT(u.seconds)}</td><td class="n">${u.at.length}</td><td class="n">${avg(u.at)==null?"–":avg(u.at)+" %"}</td></tr>`).join("")}
       </tbody></table></div></div>`}`;
   if(!one){ const d=document.createElement("div"); d.id="inbox"; box.querySelector(".st-grid").before(d); drawInbox(); }
   { const g=box.querySelector(".st-grid"), lv=document.createElement("div"); lv.id="liveBox"; lv.className="st-box"; lv.style.marginBottom="14px"; g.before(lv);
