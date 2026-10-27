@@ -6,7 +6,9 @@ async function load(){var v=await ask({t:"f0-load",k:K});if(v===undefined){try{v
 async function save(st){try{localStorage.setItem(LS,JSON.stringify(st))}catch(e){}await ask({t:"f0-save",k:K,v:st})}
 window.__hub={use:async function(n){return n==="artifact"?{publish:async function(f){var x=f&&f["progreso.json"];if(x){await save(JSON.parse(typeof x==="string"?x:x.content))}return{}}}:null},
 fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
-})();</script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+})();</script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+select{max-width:100%;text-overflow:ellipsis}
+</style></head><body>
 <title>050 Meteorology · Meteorología</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
 <style>
@@ -3185,7 +3187,7 @@ function gQFEpair(){
     opts:nvOpts(qfe,[q+elev/30, q, q-elev/8, q-elev/27],hp,2), expl:`${nvN(elev)} ÷ 30 = ${nvN(elev/30)} hPa, y subiendo del mar al campo la presión baja: ${q} − ${nvN(elev/30)} = ${nvN(qfe)} hPa. Comprobación: el QFE sale MENOR que el QNH en un aeródromo por encima del mar.`, v:true, p:{kind:"qfe",elev,q,ans:qfe}};
   const ans = `${hp(qfe)} and ${nvN(pa)} ft`;
   return {text:`An aerodrome has an elevation of ${nvN(elev)} ft and the QNH is ${q} hPa. The QFE and the pressure altitude respectively are: (1 hPa = 30 ft)`,
-    opts:[ans, `${hp(qfe)} and ${nvN(elev)} ft`, `${hp(q+elev/30)} and ${nvN(pa)} ft`, `${hp(qfe)} and ${nvN(elev+(q-1013)*30)} ft`].filter((x,i,a)=>a.indexOf(x)===i).concat([`${hp(qfe+10)} and ${nvN(pa)} ft`,`${hp(qfe-10)} and ${nvN(pa)} ft`]).slice(0,4),
+    opts:[ans, `${hp(qfe)} and ${nvN(elev)} ft`, `${hp(q+elev/30)} and ${nvN(pa)} ft`, `${hp(qfe)} and ${nvN(elev+(q-1013)*30)} ft`].concat([`${hp(qfe+10)} and ${nvN(pa)} ft`,`${hp(qfe-10)} and ${nvN(pa)} ft`,`${hp(qfe+20)} and ${nvN(pa)} ft`]).filter((x,i,a)=>a.indexOf(x)===i).slice(0,4),
     expl:`QFE = ${q} − ${nvN(elev/30)} = ${nvN(qfe)} hPa. Altitud de presión = ${nvN(elev)} + (1013 − ${q}) × 30 = ${nvN(pa)} ft. Trampa: suponer que la altitud de presión es la elevación (solo pasa con QNH 1013).`, v:true, p:{kind:"qfepa",elev,q,qfe,pa}};
 }
 function gMetricRule(){

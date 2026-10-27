@@ -271,10 +271,11 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .art .num{position:absolute;top:50%;font:700 26px/1 "Barlow Condensed","Arial Narrow",sans-serif;color:rgba(255,255,255,.6)}
 .art .nl{left:62px;transform:translateY(-50%) rotate(90deg)}.art .nr{right:62px;transform:translateY(-50%) rotate(-90deg)}
 .art .twy{position:absolute;left:0;right:0;top:62px;height:2.4px;background:rgba(231,190,31,.6)}
-.art .rpl{position:absolute;top:6px;left:0;color:#fff;transform:scaleX(-1);animation:roll 18s linear infinite;will-change:left;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
-@keyframes roll{from{left:calc(100% + 30px)}to{left:-90px}}
+.art .rpl{position:absolute;top:6px;left:0;color:#fff;transform:translate3d(-90px,0,0) scaleX(-1);-webkit-animation:roll 18s linear infinite;animation:roll 18s linear infinite;will-change:transform;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+@-webkit-keyframes roll{from{-webkit-transform:translate3d(calc(100vw + 30px),0,0) scaleX(-1)}to{-webkit-transform:translate3d(-90px,0,0) scaleX(-1)}}
+@keyframes roll{from{transform:translate3d(calc(100vw + 30px),0,0) scaleX(-1)}to{transform:translate3d(-90px,0,0) scaleX(-1)}}
 @keyframes twk{0%,100%{opacity:.25}50%{opacity:.95}}
-@media (prefers-reduced-motion:reduce){.art .edge{animation:none;opacity:.6}.art .rpl{animation:none;left:62%}}
+@media (prefers-reduced-motion:reduce){.art .edge{animation:none;opacity:.6}.art .rpl{-webkit-animation:none;animation:none;transform:translate3d(62vw,0,0) scaleX(-1)}}
 .tab.solo{justify-content:center}
 .savepill[hidden],.iconbtn[hidden]{display:none}
 /* ---- avión en cada asignatura ---- */
