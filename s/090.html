@@ -2213,6 +2213,44 @@ function gType(){
 }
 Object.assign(GEN, {k16:gWordScen, k17:gTimeCheck, k18:gType});
 
+// <<BEGIN gen090x>>
+// ===== 090: más variantes numéricas de fraseología (rumbo, FL, pista, QNH, frecuencia/hora en pronunciación ICAO) =====
+const nwd = n => { const O=["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"], T=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+  if(n<20) return O[n]; if(n<100) return T[Math.floor(n/10)]+(n%10?"-"+O[n%10]:""); return O[Math.floor(n/100)]+" hundred"+(n%100?" "+nwd(n%100):""); };
+const PHD = ["zero","wun","too","tree","fow-er","fife","six","sev-en","ait","nin-er"];
+const ph = s => String(s).split("").map(d=>PHD[+d]).join(" ");
+const cap = s => s[0].toUpperCase()+s.slice(1);
+function gNumTx(kind){
+  if(kind==="hdg"){ const h = rnd(1,36)*10, s = String(h).padStart(3,"0"), a = Math.floor(h/100), r = h%100;
+    const bad = [`Heading ${r? DW[a]+" hundred "+nwd(r) : DW[a]+" hundred"}`, `Heading ${nwd(h/10)} zero`, `Heading ${dig(s)} degrees`, `Heading ${DW[a]} ${nwd(r||0)}`];
+    return {text:pick([`Heading ${s} is transmitted as:`, `ATC instructs a heading of ${s}. It is transmitted as:`]), opts: uniq(`Heading ${dig(s)}`, bad), expl:"★ Los headings siempre dígito a dígito, nunca «hundred»."}; }
+  if(kind==="fl"){ const fl = pick([50,60,70,80,90,100,110,120,130,150,180,190,210,240,270,290,310,330,350,370,390,410]), s = String(fl), a = Math.floor(fl/100), r = fl%100;
+    const bad = [fl>=100? `Flight level ${DW[a]} hundred${r?" "+nwd(r):""}` : `Flight level ${nwd(fl)}`, `Flight level ${nwd(fl)}`, `${cap(dig(s))} flight level`, `Flight level ${dig(s)} hundred`];
+    return {text:pick([`FL ${s} is transmitted as:`, `Flight level ${s} is transmitted as:`]), opts: uniq(`Flight level ${dig(s)}`, bad), expl:"«Flight level» primero y después dígito a dígito (nunca centenas ni decenas)."}; }
+  if(kind==="rwy"){ const n = rnd(1,36), s = String(n).padStart(2,"0"), side = pick(["","","","L","R","C"]), sw = {L:" left",R:" right",C:" centre"}[side]||"", sl = side;
+    const bad = [`Runway ${nwd(n)}${sw}`, n%10? `Runway ${DW[Math.floor(n/10)]} ${nwd((n%10)*10)}${sw}`:`Runway ${nwd(n*10)}${sw}`, `Runway ${dig(s)} zero${sw}`, `Runway ${dig(s)} degrees${sw}`];
+    return {text:pick([`Runway ${s}${sl} is transmitted as:`, `ATC gives the runway in use: ${s}${sl}. It is transmitted as:`]), opts: uniq(`Runway ${dig(s)}${sw}`, bad), expl:"Pista dígito a dígito" + (side?" y la letra en palabra (left / right / centre).":".")}; }
+  const q = pick([1000,1000,995,998,1002,1005,1009,1013,1018,1021,1025,1030,1035]), s = String(q);
+  if(q===1000) return {text:pick([`A QNH of ${q} hPa is transmitted as:`, `QNH ${q}. How is it transmitted?`]), opts: uniq("One thousand", ["One zero zero zero","Ten hundred","Thousand","One thousand zero"]), expl:"Excepción: QNH 1000 se dice «one thousand»."};
+  return {text:pick([`A QNH of ${q} hPa is transmitted as:`, `QNH ${q}. How is it transmitted?`]), opts: uniq(cap(dig(s)), q>=1000? [`${cap(nwd(+s.slice(0,2)))} ${nwd(+s.slice(2))}`, `One thousand ${nwd(q-1000)}`, `${cap(dig(s.slice(0,2)))} ${nwd(+s.slice(2))}`, `${cap(dig(s.slice(1)))}`] : [cap(nwd(q)), `${cap(dig(s.slice(0,2)))} ${DW[+s[2]]} hundred`, `${cap(dig(s.slice(1)))}`]), expl:"Los números del QNH, dígito a dígito; solo el 1000 exacto se dice «one thousand»."};
+}
+function gTrFreq(){
+  const mhz = rnd(118,136), d = pick(mhz===136 ? ["000","100","500","975"] : DECS), four = d[1]==="0" && d[2]==="0", rest = four ? d[0] : d;
+  const good = `${cap(ph(mhz))} day-see-mal ${ph(rest)}`;
+  const cands = [`${cap(ph(mhz))} point ${ph(rest)}`, `${cap(ph(mhz))} ${ph(rest)}`, four? `${cap(ph(mhz))} day-see-mal ${ph(d)}` : `${cap(ph(mhz))} day-see-mal ${ph(d.slice(0,2))}`];
+  return {text:`The frequency ${mhz}.${d} is transmitted as:`, opts: uniq(good, cands), expl: four?"Cuatro dígitos si los dos últimos son cero; siempre con «day-see-mal».":"Seis dígitos con «day-see-mal»."};
+}
+function gTrHour(){
+  const h = String(rnd(0,23)).padStart(2,"0");
+  return {text:`ATC gives a time on the hour, ${h}00 UTC. How should it be transmitted?`, opts: uniq(`${cap(ph(h+"00"))}`, [`${cap(nwd(+h))} hundred`, `${cap(ph(h))} hundred`, "Zero zero", `${cap(ph(h))} o'clock`]), expl:"Hora completa para evitar confusión, dígito a dígito."};
+}
+function gTrMin(){
+  const h = String(rnd(0,23)).padStart(2,"0"), m = String(rnd(1,59)).padStart(2,"0");
+  return {text:`The time ${h}${m} UTC, with no risk of confusion, can be transmitted as:`, opts: uniq(cap(ph(m)), [`${cap(nwd(+m))}`, `${cap(ph(m))} hundred`, `${cap(nwd(+h))} ${nwd(+m)}`, `${cap(ph(h))} hundred`]), expl:"Solo los minutos, dígito a dígito."};
+}
+Object.assign(GEN, {a5:()=>gNumTx("hdg"), a6:()=>gNumTx("fl"), tr10:()=>gNumTx("fl"), a8:()=>gNumTx("rwy"), a9:()=>gNumTx("qnh"), a7:gAlt, f3:gFreqSay, tr17:gTrFreq, tr1:gTrHour, tr19:gTrMin, a16:gTimeCheck});
+// <<END gen090x>>
+
 // ---------- utilidades ----------
 const $ = s => document.querySelector(s);
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -2342,7 +2380,7 @@ function variantOf(q){
   const v = pool[i];
   return {text:v[0], opts:v[1], expl:v[2]||q[6], v: !v[3]};
 }
-const normA = s => String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\s+/g,"").replace(/(ft|nm|km|khz|mhz|seconds|second|sec|s|minutes|minute|min)$/,"").replace(/[^a-z0-9.,]/g,"").replace(/[.,]$/,"");
+const normA = s => String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"").replace(/(ft|nm|km|khz|mhz|seconds|second|sec|s|minutes|minute|min)$/,"").replace(/[^a-z0-9.,]/g,"").replace(/[.,]$/,"");
 function f0Prompt(f){ return f.t==="match" ? `${f.q} ${f.p.map(p=>p[0]).join(" · ")}` : f.q.replace("____","…"); }
 function f0Answer(f){ return f.t==="fill" ? f.s : f.t==="tf" ? (f.a?"Verdadero":"Falso") : f.p.map(p=>`${p[0]} → ${p[1]}`).join(" · "); }
 const F0BY = new Map(F0.map(f=>[f.id,f]));
@@ -2753,7 +2791,7 @@ async function finishTest(timeout){
       sels.forEach((s,j)=>{ const g = s.value===it.f.p[j][1]; if(g) good++; s.disabled=true; s.classList.add(g?"right":"wrong"); });
       ok = good===sels.length; a = sels.map((s,j)=>`${it.f.p[j][0]} → ${s.value||"—"}`).join(" · "); sol = it.f.p.map(p=>`${p[0]} → ${p[1]}`).join(" · ")+(ok?"":` (${good}/${sels.length} bien)`); x=it.f.x; }
     if(ok) score++;
-    const rec = {q:it.id, ok, a}; if(it.k==="mc" && it.variant) Object.assign(rec,{v:it.text, c:it.opts.find(o=>o.ok).t}); items.push(rec);
+    const rec = {q:it.id, ok, a}; if(it.k==="mc" && it.variant) Object.assign(rec,{v:it.text, c:it.opts.find(o=>o.ok).t, e:it.expl}); items.push(rec);
     (byLO[it.lo]=byLO[it.lo]||{ok:0,total:0}).total++; if(ok) byLO[it.lo].ok++;
     const bk=blockOf([it.id,it.lo]); (byBlock[bk]=byBlock[bk]||{ok:0,total:0}).total++; if(ok) byBlock[bk].ok++;
     if(it.src!=="a" && (SUBMAP[it.lo]||{}).cov!=="atpl"){ n0++; if(ok) s0++; }
@@ -2823,7 +2861,7 @@ function showDetail(id){
     return `<div class="q"><div class="qhead"><span>${esc(loLabel(q[1]))}</span><span>${SRC_TAG(q[2],q[0])}</span></div><div class="qtext">${esc(w.v||q[4])}</div>
       ${w.a!==undefined?`<div class="choice wrong">${w.a===null||w.a===""?'Sin responder':esc(w.a)}</div>`:''}
       <div class="choice right">${esc(w.c||q[5][0])}</div>
-      <div class="expl"><span class="es">${esc(q[6])}</span><div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
+      <div class="expl"><span class="es">${esc(w.e||q[6])}</span><div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
   }).join("") : `<p class="muted">Sin fallos en este intento.</p>`);
   $("#histDetail").scrollIntoView({behavior:"smooth"});
 }

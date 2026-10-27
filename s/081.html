@@ -2255,7 +2255,7 @@ function genParasite(){
     expl:`FUERZA → CUADRADO: parasite drag ∝ V², ${k}² = ${k*k}.`};
 }
 function genAR(){
-  const b = pick1([9,10,12,15]), ar = pick1([5,6,8]), c = b/ar, S = b*c;
+  const [b,ar] = pick1([[12,5],[12,6],[12,8],[10,5],[10,8],[16,8],[16,5],[20,5],[20,8],[15,5],[15,6],[9,6]]), c = b/ar, S = b*c;
   return {text:`A wing has a span of ${b} m and an average chord of ${fmtN(c)} m. Its aspect ratio is:`,
     opts:uniq4(ar, [fmtN(c/b), fmtN(S), ar*2, fmtN(b+c)]),
     expl:`AR = span / average chord = ${b} / ${fmtN(c)} = ${ar}. (${fmtN(S)} sería la superficie alar.)`};
@@ -2275,6 +2275,45 @@ const NUMGEN = {
  t1:genAR, r7:genAR,
  pr2:genWeightPct, es4:genWeightPct
 };
+
+// <<BEGIN gen081x>>
+// ===== 081: más variantes numéricas (planeo, factor de carga, VA, buffet, pérdida vs. masa) =====
+function genGlide(){
+  const ld = pick1([8,10,12,15,18,20]), alt = pick1([3000,6000,9000,12000,15000,18000,21000]), d = ld*alt/6000;
+  if(Math.random()<.5) return {text:`An aeroplane with an L/D of ${ld}:1 loses ${alt.toLocaleString("en-US")} ft. How far can it glide in still air?`,
+    opts:uniq4(d+" NM", [alt/ld/100+" NM", ld*alt/1000+" NM", (alt/6000)+" NM", ld*2+" NM", d*2+" NM"]),
+    expl:`6.000 ft ≈ 1 NM, así que ${alt.toLocaleString("en-US")} ft = ${alt/6000} NM de altura perdida; con L/D ${ld}: ${ld} × ${alt/6000} = ${d} NM. (Distancia = L/D × altura.)`};
+  const dist = ld*(alt/6000);
+  return {text:`An aeroplane with an L/D of ${ld}:1 glides ${dist} NM in still air. How much height does it lose?`,
+    opts:uniq4(alt.toLocaleString("en-US")+" ft", [(dist*ld*100).toLocaleString("en-US")+" ft", (dist*1000).toLocaleString("en-US")+" ft", (alt*2).toLocaleString("en-US")+" ft", (alt/2).toLocaleString("en-US")+" ft"]),
+    expl:`Altura = distancia ÷ (L/D) = ${dist} NM ÷ ${ld} = ${alt/6000} NM = ${alt.toLocaleString("en-US")} ft (1 NM ≈ 6.000 ft).`};
+}
+function genLoadBank(){
+  const b = pick1([30,45,60,65,70]), n = 1/Math.cos(b*Math.PI/180), r = x=>String(+x.toFixed(1));
+  return {text:pick1([`In a level turn at ${b}° of bank the load factor is approximately:`, `An aeroplane flies a coordinated level turn at ${b}° of bank. The load factor is approximately:`]),
+    opts:uniq4(r(n), [r(1/Math.sin(b*Math.PI/180)), r(Math.cos(b*Math.PI/180)), r(b/30), "1.0", r(n+1)]),
+    expl:`n = 1/cos ${b}° = ${n.toFixed(2)} ≈ ${r(n)}. Más alabeo, más factor de carga (y más velocidad de pérdida).`};
+}
+function genVA(){
+  const vs = pick1([50,55,60,65,70,75,80]), n = pick1([2.5,3.8,4.4,6]), va = Math.round(vs*Math.sqrt(n));
+  return {text:`An aeroplane with VS = ${vs} kt and a limit load factor of +${n} g has a design manoeuvring speed VA of approximately:`,
+    opts:uniq4(va+" kt", [Math.round(vs*n)+" kt", vs+" kt", Math.round(vs*n*n)+" kt", Math.round(vs*Math.sqrt(n)*1.3)+" kt"]),
+    expl:`VA = VS × √n = ${vs} × √${n} = ${vs} × ${fmtN(Math.sqrt(n))} ≈ ${va} kt. VELOCIDAD → RAÍZ.`};
+}
+function genBuffetBank(){
+  const n = pick1([1.2,1.3,1.4,1.5,1.6,1.8,2.0]), W = pick1([90,100,110,120,130,140]), FL = pick1([310,330,350,370,390]), M = pick1(["0.76","0.78","0.80","0.82"]), a = Math.round(Math.acos(1/n)*180/Math.PI);
+  return {text:`At ${W} t, FL${FL} and M ${M} a chart gives buffet onset at ${n} g. The corresponding bank angle in a level turn is about:`,
+    opts:uniq4(a+"°", [Math.round(Math.asin(1/n)*180/Math.PI)+"°", Math.round(Math.acos(1/n)*180/Math.PI/2)+"°", Math.round(n*30)+"°", (a+12)+"°"]),
+    expl:`n = 1/cos φ → cos φ = 1/${n} = ${fmtN(1/n)} → φ ≈ ${a}°. Es el cálculo del gráfico de buffet onset.`};
+}
+function genStallMass(){
+  const vs = pick1([90,100,110,120,130]), f = pick1([[0.81,.9],[0.64,.8],[1.21,1.1],[1.44,1.2]]), w1 = pick1([40000,50000,60000,70000]), w2 = Math.round(w1*f[0]), v2 = Math.round(vs*f[1]), k = x=>x.toLocaleString("en-US").replace(/,/g," ");
+  return {text:`An aeroplane stalls at ${vs} kt at ${k(w1)} kg. At ${k(w2)} kg it will stall at approximately:`,
+    opts:uniq4(v2+" kt", [Math.round(vs*f[0])+" kt", vs+" kt", Math.round(vs*f[1]*f[1])+" kt", (v2+10)+" kt"]),
+    expl:`Vs ∝ √peso: √(${k(w2)}/${k(w1)}) = ${f[1]} → ${vs} × ${f[1]} = ${v2} kt. VELOCIDAD → RAÍZ.`};
+}
+Object.assign(NUMGEN, {ex22:genGlide, ex24:genLoadBank, ex30:genAR, vn9:genVA, bo5:genBuffetBank, sx1:genStallMass});
+// <<END gen081x>>
 
 function variantOf(q, mode){
   const force = mode==="force";

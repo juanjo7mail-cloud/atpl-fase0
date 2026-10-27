@@ -2208,11 +2208,132 @@ function examMarks(){ document.querySelectorAll("#exNav .exn").forEach((b,j)=>b.
 function examOff(){ const ql=$("#qlist"); ql.classList.remove("exam"); const nav=document.getElementById("exNav"); if(nav) nav.hidden=true; }
 
 // ---- examen Fase 0 (formato del profesor): test, fotos, completar, verdadero/falso y relacionar ----
-const normA = s => String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\s+/g,"").replace(/(ft|nm|km|mhz|hours|hour|h|minutes|minute|min)$/,"").replace(/[^a-z0-9.,]/g,"").replace(/[.,]$/,"");
+const normA = s => String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"").replace(/(ft|nm|km|mhz|hours|hour|h|minutes|minute|min)$/,"").replace(/[^a-z0-9.,]/g,"").replace(/[.,]$/,"");
 function f0Prompt(f){ return f.t==="match" ? `${f.q} ${f.p.map(p=>p[0]).join(" · ")}` : f.q.replace("____","…"); }
 function f0Answer(f){ return f.t==="fill" ? f.s : f.t==="tf" ? (f.a?"Verdadero":"Falso") : f.p.map(p=>`${p[0]} → ${p[1]}`).join(" · "); }
 function f0Pick(list, n, st){ return list.map(f=>{ const s=st.q[f.id]; let p=1; if(!s) p+=3; else { if(s.last===false) p+=5; p-=Math.min(s.streak,3); } return {f, p:Math.max(.2,p)*(0.7+Math.random()*0.6)}; })
   .sort((a,b)=>b.p-a.p).slice(0,n).map(x=>x.f); }
+// <<BEGIN gen010x>>
+// ===== utilidades comunes de los generadores numéricos (nv*) =====
+const nvR = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const nvP = a => a[Math.floor(Math.random()*a.length)];
+const nvShuf = a => { a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const nvN = (x,d=0) => Number(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const nvH = x => String(((Math.round(x)%360)+360)%360 || 360).padStart(3,"0");
+// 4 opciones distintas, la correcta primero; cands = trampas numéricas (se descartan las repetidas o no finitas)
+function nvOpts(ok, cands, fmt, step){
+  const o = [fmt(ok)];
+  for(const c of cands){ if(c===undefined || c===null || !isFinite(c)) continue; const s = fmt(c); if(!o.includes(s) && o.length<4) o.push(s); }
+  let k = 1; while(o.length<4 && k<60){ const s = fmt(ok + (k%2?1:-1)*Math.ceil(k/2)*(step||1)); if(!o.includes(s)) o.push(s); k++; }
+  return o;
+}
+// lo mismo con textos ya formateados
+function nvStr(ok, cands, extra){
+  const o = [ok];
+  for(const c of cands){ if(c && !o.includes(c) && o.length<4) o.push(c); }
+  let k = 0; while(o.length<4 && k<60){ const c = extra(++k); if(!o.includes(c)) o.push(c); }
+  return o;
+}
+
+// ===== 010: variantes numéricas (certificados médicos, LPE, anexos OACI, semicirculares, esperas, VMC, SVFR, RVSM...) =====
+const mo = n => `${n} months`;
+function gMedical(){
+  const cls = nvP([1,1,2,2]);
+  if(cls===2){ const age = nvP([22,25,28,30,33,36,38,43,44,46,48,52,55,58,62,66]), m = age<40?60:age<50?24:12;
+    return {text:nvP([`A ${age}-year-old pilot holds a PPL. The validity of their Class 2 medical certificate is:`, `A ${age}-year-old PPL holder obtains a Class 2 medical certificate. Its validity is:`]),
+      opts:[mo(m),...[60,24,12,6].filter(x=>x!==m).map(mo)].slice(0,4), expl:`Class 2: hasta 39 años → 60 meses · 40–49 años → 24 meses · desde 50 años → 12 meses. A los ${age}: ${m} meses.`, v:true, p:{kind:"med2",age,ans:m}}; }
+  const age = nvP([24,29,34,38,42,45,49,53,57,61,63]), sp = Math.random()<.5, m = age>=60 ? 6 : (age>=40 && sp) ? 6 : 12;
+  const ops = age>=60 ? "as a member of a multi-pilot crew in commercial air transport" : sp ? "single-pilot commercial air transport carrying passengers" : "multi-pilot commercial air transport";
+  return {text:age>=60 ? nvP([`A ${age}-year-old pilot flies ${ops}. The validity of their Class 1 medical is:`, `A ${age}-year-old airline pilot (${ops}) holds a Class 1 medical. Its validity is:`]) : nvP([`A ${age}-year-old pilot flies ${ops}. The validity of their Class 1 medical is:`, `A ${age}-year-old pilot holds a Class 1 medical and works in ${ops}. Its validity is:`]),
+    opts:[mo(m),...[6,12,24,60].filter(x=>x!==m).map(mo)].slice(0,4), expl:`Class 1: 12 meses; se reduce a 6 meses a partir de los 60 años (transporte comercial) y a partir de los 40 años en transporte comercial monopiloto con pasajeros. Aquí: ${age} años, ${sp&&age<60?"monopiloto con pasajeros":"CAT"} → ${m} meses.`, v:true, p:{kind:"med1",age,sp,ans:m}};
+}
+function gLPE(){
+  const lv = nvP([4,5,6]), a = {4:"4 years",5:"6 years",6:"No limit: no revalidation needed"}[lv];
+  return {text:nvP([`A Language Proficiency Endorsement at Level ${lv} ${lv===6?"is valid for":"must be revalidated every"}:`, `A Level ${lv} language proficiency endorsement ${lv===6?"is valid for":"has a validity of"}:`]),
+    opts:[a,...["4 years","6 years","3 years","No limit: no revalidation needed","2 years"].filter(x=>x!==a)].slice(0,4), expl:`Nivel 4 (operacional): cada 4 años · nivel 5 (avanzado): cada 6 años · nivel 6 (experto): sin límite.`, v:true, p:{kind:"lpe",lv,ans:a}};
+}
+const ANNEX = {1:"Personnel Licensing",2:"Rules of the Air",3:"Meteorological Service for International Air Navigation",4:"Aeronautical Charts",5:"Units of Measurement to be Used in Air and Ground Operations",6:"Operation of Aircraft",7:"Aircraft Nationality and Registration Marks",8:"Airworthiness of Aircraft",9:"Facilitation",10:"Aeronautical Telecommunications",11:"Air Traffic Services",12:"Search and Rescue",13:"Aircraft Accident and Incident Investigation",14:"Aerodromes",15:"Aeronautical Information Services",16:"Environmental Protection",17:"Security",18:"The Safe Transport of Dangerous Goods by Air",19:"Safety Management"};
+function gAnnex(){
+  const n = nvP([1,2,6,7,8,9,11,12,13,14,15,17,18,19]);
+  if(Math.random()<.55) return {text:nvP([`ICAO Annex ${n} deals with:`, `Which subject does ICAO Annex ${n} cover?`]), opts:nvStr(ANNEX[n],nvShuf(Object.keys(ANNEX).filter(k=>+k!==n&&[1,2,6,7,8,9,11,12,13,14,15,17].includes(+k))).slice(0,3).map(k=>ANNEX[k]),i=>"Other "+i), expl:`Anexo ${n} = ${ANNEX[n]}. Los más preguntados: 1 licencias · 2 reglas del aire · 6 operaciones · 7 matrícula · 8 aeronavegabilidad · 11 ATS · 13 accidentes · 14 aeródromos · 15 AIS · 17 seguridad.`, v:true, p:{kind:"annex",n,ans:ANNEX[n]}};
+  return {text:nvP([`Which ICAO Annex deals with ${ANNEX[n]}?`, `${ANNEX[n]} is the subject of ICAO Annex:`]), opts:nvStr(`Annex ${n}`,nvShuf([1,2,6,7,8,9,11,12,13,14,15,17].filter(k=>k!==n)).slice(0,3).map(k=>`Annex ${k}`),i=>`Annex ${20+i}`), expl:`${ANNEX[n]} → Anexo ${n}.`, v:true, p:{kind:"annex2",n,ans:`Annex ${n}`}};
+}
+const STR = {18:4,23:6,30:8,45:12,60:16};
+function gStripes(){
+  const w = nvP([18,23,30,45,60]), n = STR[w];
+  if(Math.random()<.5) return {text:nvP([`A ${w} m wide runway has a threshold marking of:`, `A runway is ${w} m wide. How many threshold stripes does it have?`]), opts:nvStr(`${n} stripes`,Object.values(STR).filter(x=>x!==n).map(x=>`${x} stripes`),k=>`${n+k} stripes`), expl:`Anchura → franjas: 18 m→4 · 23 m→6 · 30 m→8 · 45 m→12 · 60 m→16.`, v:true, p:{kind:"stripes",w,ans:n}};
+  return {text:nvP([`See annex. The threshold marking has ${n} stripes. The runway width is:`, `The threshold marking shows ${n} stripes. The runway is:`]), opts:nvStr(`${w} m`,Object.keys(STR).filter(x=>+x!==w).map(x=>`${x} m`),k=>`${w+k} m`), expl:`18 m→4 · 23 m→6 · 30 m→8 · 45 m→12 · 60 m→16 franjas. ${n} franjas → ${w} m.`, v:true, p:{kind:"stripes2",w,n,ans:`${w} m`}};
+}
+function gStripesFig(){
+  const w = nvP([18,23,30,45,60]), n = STR[w], num = Math.random()<.5;
+  return {text: num ? nvP([`See annex. The threshold marking has ${n} stripes. The runway width is:`, `See annex. The threshold marking shows ${n} stripes. The runway is:`]) : nvP([`See annex. Judging by its threshold marking, the runway is:`, `See annex. According to the threshold marking, the runway width is:`]),
+    opts:nvStr(`${w} m wide`,Object.keys(STR).filter(x=>+x!==w).map(x=>`${x} m wide`),k=>`${w+k} m wide`), expl:`18 m→4 franjas · 23 m→6 · 30 m→8 · 45 m→12 · 60 m→16. ${n} franjas → ${w} m.`, fig:`thr:${n}`, v:true, p:{kind:"stripesfig",w,n,ans:`${w} m wide`}};
+}
+function gSquawk(){
+  const C = {7500:"Unlawful interference",7600:"Two-way radio communication failure",7700:"An emergency"}, k = nvP([7500,7600,7700]);
+  return {text:nvP([`Squawk ${k} indicates:`, `A transponder code of ${k} means:`]), opts:[C[k],...Object.values(C).filter(x=>x!==C[k]),"VFR conspicuity code"], expl:`7500 secuestro (unlawful interference) · 7600 fallo de comunicaciones · 7700 emergencia.`, v:true, p:{kind:"sq",k,ans:C[k]}};
+}
+function gWake010(){
+  const m = nvP([5700,7000,7000,6500,7001,12000,60000,78000,135999,136000,140000,250000]), cat = m<=7000?"Light (L)":m<136000?"Medium (M)":"Heavy (H)", f = x=>String(x).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+  return {text:nvP([`An aircraft with a maximum take-off mass of ${f(m)} kg is in wake turbulence category:`, `The wake turbulence category of an aircraft with an MTOM of ${f(m)} kg is:`]),
+    opts:[cat,...["Light (L)","Medium (M)","Heavy (H)","Super (J)"].filter(x=>x!==cat)], expl:`L = 7.000 kg o menos · M = más de 7.000 y menos de 136.000 kg · H = 136.000 kg o más · J = A380.`, v:true, p:{kind:"wake",m,ans:cat}};
+}
+const fl = n => `FL ${n}`;
+function gSemi(){
+  const east = Math.random()<.5, trk = east ? nvR(2,16)*10 + nvP([0,5]) : nvR(19,34)*10 + nvP([0,5]), kind = nvP(["ifr","ifr","vfr","rvsm","nonrvsm"]);
+  let ok, wrong, label;
+  if(kind==="ifr"){ const k = east ? nvP([7,9,11,13,15,17,19,21,23,25,27]) : nvP([8,10,12,14,16,18,20,22,24,26]); ok = fl(k*10); wrong = [fl((k+(east?-1:1))*10), fl((k+(east?-1:1))*10+5), fl(k*10+5), fl((k+(east?1:-1))*10)].filter(x=>x!==ok);
+    return {text:nvP([`An IFR flight on a magnetic track of ${trk}° below FL 290 should cruise at:`, `Below FL 290, an IFR flight is flying a magnetic track of ${trk}°. Which cruising level applies?`]), opts:nvStr(ok,wrong,i=>fl(k*10+20+i*10)), expl:`Regla semicircular IFR bajo FL 290: tracks magnéticos 000°–179° → niveles IMPARES de millares (FL 90, 110, 130…); 180°–359° → PARES (FL 80, 100, 120…). Track ${trk}° → ${east?"impares":"pares"}.`, v:true, p:{kind:"semi",mode:"ifr",trk,ans:ok}}; }
+  if(kind==="vfr"){ const k = east ? nvP([3,5,7,9,11,13]) : nvP([4,6,8,10,12]); ok = fl(k*10+5); wrong = [fl((k+(east?-1:1))*10+5), fl(k*10), fl((k+(east?1:-1))*10+5), fl((k+(east?-1:1))*10)];
+    return {text:nvP([`A VFR flight on a magnetic track of ${trk}° may cruise at:`, `A VFR flight above 3000 ft is flying a magnetic track of ${trk}°. It should cruise at:`]), opts:nvStr(ok,wrong,i=>fl(k*10+25+i*10)), expl:`VFR (por encima de 3.000 ft): 000°–179° → impares + 500 ft (FL 35, 55, 75…); 180°–359° → pares + 500 ft (FL 45, 65, 85…). Track ${trk}° → ${ok}.`, v:true, p:{kind:"semi",mode:"vfr",trk,ans:ok}}; }
+  if(kind==="rvsm"){ const k = east ? nvP([29,31,33,35,37,39]) : nvP([30,32,34,36,38,40]); ok = fl(k*10); wrong = nvShuf((east?[30,32,34,36,38,40]:[29,31,33,35,37,39]).map(x=>fl(x*10))).slice(0,3);
+    return {text:nvP([`In RVSM airspace, which level is correct for ${east?"an eastbound":"a westbound"} IFR flight on track ${trk}°?`, `In RVSM airspace, an IFR flight is on magnetic track ${trk}°. Which cruising level is correct?`]), opts:nvStr(ok,wrong,i=>fl(450+i*10)), expl:`RVSM (FL 290–410, 1.000 ft): tracks 000°–179° → niveles impares (FL 290, 310, 330…); 180°–359° → pares (FL 300, 320, 340…).`, v:true, p:{kind:"semi",mode:"rvsm",trk,ans:ok}}; }
+  const k = east ? nvP([29,33,37,41]) : nvP([31,35,39]); ok = fl(k*10); wrong = [fl((k+(east?2:-2))*10), fl((k+(east?1:-1))*10), fl((k+(east?-2:2))*10)].filter(x=>x!==ok);
+  return {text:nvP([`In non-RVSM airspace above FL 290, an IFR flight on track ${trk}° should use:`, `Above FL 290 outside RVSM airspace, ${east?"an eastbound":"a westbound"} IFR flight on magnetic track ${trk}° uses:`]), opts:nvStr(ok,wrong,i=>fl(250+i*10)), expl:`Sin RVSM por encima de FL 290 los niveles están separados 4.000 ft: hacia el este (000°–179°) FL 290, 330, 370, 410 · hacia el oeste (180°–359°) FL 310, 350, 390.`, v:true, p:{kind:"semi",mode:"nonrvsm",trk,ans:ok}};
+}
+function gHold(){
+  const right = Math.random()<.7, it = nvR(1,36)*10, bounds = [110,180,290];
+  let rr = nvR(0,359); while(bounds.some(b=>Math.min(Math.abs(rr-b),360-Math.abs(rr-b))<9)) rr = (rr+11)%360;
+  const r = right ? rr : (360-rr)%360, e = (rr>110 && rr<180) ? "Teardrop" : (rr>=180 && rr<290) ? "Parallel" : "Direct", h = (it+r)%360 || 360, H = String(h).padStart(3,"0"), IT = String(it).padStart(3,"0");
+  return {text:nvP([`${right?"Right":"Left"}-hand hold with inbound track ${IT}°. You reach the fix heading ${H}°. The entry is:`, `Holding pattern ${right?"right":"left"}-hand, inbound track ${IT}°. Arriving at the fix on heading ${H}°, the correct entry is:`]),
+    opts:[e,...["Direct","Parallel","Teardrop"].filter(x=>x!==e),"Any of them, at the pilot's choice"].slice(0,4), expl:`Rumbo relativo (heading − inbound track) = ${r}°${right?"":", que en una espera a izquierdas se refleja a "+rr+"°"}. Espera a derechas: DIRECT de 290° a 110° (pasando por 0°), TEARDROP de 110° a 180°, PARALLEL de 180° a 290°. Resultado: ${e}.`, v:true, p:{kind:"hold",right,it,h,ans:e}};
+}
+function gVMC(){
+  const cls = nvP(["D","E","G","C"]), q = nvP(["vis","hor","ver"]), hi = Math.random()<.3;
+  let ft, place;
+  if(hi){ const f = nvP([100,110,120,150,180]); place = `at FL ${f}`; var high = true; }
+  else if(cls==="G"){ ft = nvP([1500,2000,2500,3000,3500,4000,5000]); place = `at ${nvN(ft)} ft AMSL`; }
+  else { ft = null; const f = nvP([40,55,65,75,85,95]); place = `at FL ${String(f).padStart(3,"0")}`; var below = true; }
+  const hiAir = !!high, G = cls==="G", low = G && !hiAir && ft<=3000;
+  const spd = low ? nvP([80,90,100,120,130]) : null, fmtm = x=>x===8000?"8 km":x===5000?"5 km":`${nvN(x)} m`;
+  const vis = hiAir ? 8000 : low ? 1500 : 5000, hor = low ? null : 1500, ver = low ? null : 1000;
+  const ctx = low ? `In Class G airspace ${place}, flying at ${spd} kt IAS` : `In Class ${cls} airspace ${place}`;
+  if(q==="vis") return {text:`${ctx}, the VMC visibility minimum is:`, opts:nvStr(fmtm(vis),["8 km","5 km","1,500 m","800 m","10 km"].filter(x=>x!==fmtm(vis)),i=>`${i} km`), expl:hiAir?"A partir de FL 100 la visibilidad mínima VMC es 8 km.":low?"Clase G a 3.000 ft AMSL o menos (o 1.000 ft AGL), a 140 kt IAS o menos: 1.500 m, libre de nubes y con la superficie a la vista.":"Por debajo de FL 100 (y por encima de 3.000 ft en clase G): 5 km.", v:true, p:{kind:"vmc",q,ans:vis,low,hi:hiAir,cls}};
+  if(low) return {text:`${ctx}, the VMC cloud clearance required is:`, opts:["Clear of cloud and in sight of the surface","1,500 m horizontally and 1,000 ft vertically","600 m horizontally and 300 ft vertically","1,000 ft above cloud only"], expl:"Clase G a 3.000 ft AMSL o menos: libre de nubes y la superficie a la vista (sin distancias mínimas).", v:true, p:{kind:"vmc",q:"cc",low,cls}};
+  if(q==="hor") return {text:`${ctx}, the required horizontal distance from cloud for VMC is:`, opts:nvStr("1,500 m",["1,000 m","600 m","5 km","8 km"],i=>`${i} km`), expl:"Distancia horizontal a las nubes: 1.500 m (desde clase B hasta E y en G por encima de 3.000 ft).", v:true, p:{kind:"vmc",q,ans:1500,cls}};
+  return {text:`${ctx}, the required vertical distance from cloud for VMC is:`, opts:nvStr("1,000 ft",["500 ft","1,500 ft","300 ft","2,000 ft"],i=>`${i} ft`), expl:"Distancia vertical a las nubes: 1.000 ft.", v:true, p:{kind:"vmc",q,ans:1000,cls}};
+}
+function gSVFR(){
+  const night = Math.random()<.25, fail = nvP(["ceil","vis","none"]), ceil = fail==="ceil" ? nvP([300,400,500,550]) : nvP([700,800,1000,1200]), vis = fail==="vis" ? nvP([800,1000,1200,1400]) : nvP([1500,2000,3000,4000]);
+  const reason = night ? "No: SVFR is daytime only" : fail==="ceil" ? "No: the ceiling is below 600 ft" : fail==="vis" ? "No: visibility is below 1,500 m" : "Yes, in the daytime";
+  const vt = vis>=1500&&vis%1000===0 ? `${vis/1000} km` : `${nvN(vis)} m`;
+  const ok = night ? reason : reason;
+  return {text:nvP([`${night?"At night, reported":"Reported"} ceiling ${nvN(ceil)} ft and ground visibility ${vt} at an aerodrome in a CTR${night?"":", by day"}. Can an aeroplane be given a Special VFR clearance?`, `Aerodrome in a CTR, ${night?"at night":"daytime"}: ceiling ${nvN(ceil)} ft, ground visibility ${vt}. A Special VFR clearance for an aeroplane is:`]),
+    opts:[ok,...["Yes, in the daytime","No: the ceiling is below 600 ft","No: visibility is below 1,500 m","No: SVFR is daytime only"].filter(x=>x!==ok)].slice(0,4), expl:`Special VFR (avión): solo de día, techo de nubes de al menos 600 ft y visibilidad en tierra de al menos 1.500 m. ${night?"Aquí es de noche.":fail==="ceil"?`${ceil} ft < 600 ft.`:fail==="vis"?`${vt} < 1.500 m.`:"Cumple las tres condiciones."}`, v:true, p:{kind:"svfr",night,ceil,vis,ans:ok}};
+}
+function gMast(){
+  const H = nvP([100,150,200,250,300,400,500]), d = nvP([150,250,300,400,500,550]);
+  return {text:nvP([`A ${H} ft mast stands ${d} m from your track over a city. Your minimum VFR altitude above that mast's base is:`, `Flying VFR over a town, a ${H} ft mast stands ${d} m from your track. The minimum altitude above the base of the mast is:`]),
+    opts:nvOpts(H+1000,[1000,H+500,H+2000,H],x=>`${nvN(x)} ft`,200), expl:`Sobre ciudades, al menos 1.000 ft por encima del obstáculo más alto en un radio de 600 m: ${d} m < 600 m, así que cuenta. ${H} + 1.000 = ${nvN(H+1000)} ft.`, v:true, p:{kind:"mast",H,d,ans:H+1000}};
+}
+function gSep(){
+  const c = nvP([["below FL 290","1000 ft","non"],["between FL 290 and FL 410 in RVSM airspace","1000 ft","rvsm"],["above FL 290 without RVSM","2000 ft","non"],["above FL 410, even in RVSM airspace","2000 ft","rvsm"]]);
+  const t = c[0].startsWith("below")?nvP([`Below FL 290, the vertical separation minimum is:`]):c[0].includes("between")?`In RVSM airspace, the vertical separation minimum between FL 290 and FL 410 is:`:c[0].includes("without")?`Without RVSM, the vertical separation minimum above FL 290 is:`:`Above FL 410, even in RVSM airspace, the vertical separation minimum is:`;
+  return {text:t, opts:nvStr(c[1],["500 ft","1000 ft","2000 ft","4000 ft"].filter(x=>x!==c[1]),i=>`${i*1000} ft`), expl:"Separación vertical mínima: 1.000 ft por debajo de FL 290 y en RVSM (FL 290–410); 2.000 ft por encima de FL 290 sin RVSM y por encima de FL 410.", v:true, p:{kind:"sep",c0:c[0],ans:c[1]}};
+}
+const GEN_010 = {l09:gMedical,l10:gMedical,l11:gMedical,vl2:gMedical, l08:gLPE,vl4:gLPE, x1:gAnnex,x2:gAnnex,x7:gAnnex,x8:gAnnex,x9:gAnnex,x11:gAnnex,x12:gAnnex,x13:gAnnex,x14:gAnnex,x15:gAnnex,x17:gAnnex, "D4-23":gStripesFig,"D4-25":gStripesFig,"D4-24":gStripes, "D3-26":gSquawk,"D3-27":gSquawk,"D3-28":gSquawk, "D3-92":gWake010,"A07-12":gWake010,
+  "A05-01":gSemi,"A05-02":gSemi,"D4-83":gSemi,"D4-84":gSemi,"D4-85":gSemi,"D4-86":gSemi,"D4-87":gSemi,"D4-88":gSemi,"D4-89":gSemi, "A06-20":gHold,"A06-21":gHold, v01:gVMC,v02:gVMC,v03:gVMC,vv1:gVMC,vv4:gVMC,t4:gVMC, vs1:gSVFR,vs2:gSVFR,vs4:gSVFR, vh3:gMast, "D4-80":gSep,"D4-81":gSep,"D4-82":gSep,"A07-14":gSep};
+// <<END gen010x>>
 let f0Items = [], f0Start = 0;
 function startFase0(){
   const st=stats();
@@ -2225,14 +2346,14 @@ function startFase0(){
     perLO[q[1]]=(perLO[q[1]]||0)+1; mc.push(q); });
   const fill=f0Pick(F0.filter(f=>f.t==="fill"),5,st), tf=f0Pick(F0.filter(f=>f.t==="tf"),5,st), mt=f0Pick(F0.filter(f=>f.t==="match"),4,st);
   f0Items = [...shuffle(mc).map(q=>({k:"mc",q})), ...figs.map(q=>({k:"mc",q})), ...fill.map(f=>({k:"fill",f})), ...tf.map(f=>({k:"tf",f})), ...mt.map(f=>({k:"match",f}))];
-  f0Items.forEach(it=>{ if(it.k==="mc") it.opts=shuffle(it.q[5].map((t,i)=>({t,ok:i===0}))); if(it.k==="match") it.right=shuffle(it.f.p.map(p=>p[1])); });
+  f0Items.forEach(it=>{ if(it.k==="mc"){ const G=(typeof GEN_010!=="undefined")&&GEN_010[it.q[0]]; if(G) it.g=G(); it.opts=shuffle((it.g?it.g.opts:it.q[5]).map((t,i)=>({t,ok:i===0}))); } if(it.k==="match") it.right=shuffle(it.f.p.map(p=>p[1])); });
   const head = {mc:"Test", fill:"Completa", tf:"Verdadero o falso", match:"Relaciona"};
   let last="";
   $("#qlist").innerHTML = f0Items.map((it,i)=>{
     const lo = it.k==="mc" ? it.q[1] : it.f.lo, id = it.k==="mc" ? it.q[0] : it.f.id;
     const sec = it.k!==last ? `<h3 class="f0sec">${head[it.k]}${it.k==="mc"&&it.q[7]?"":""}</h3>` : ""; last=it.k;
     let body="";
-    if(it.k==="mc") body = `<div class="qtext">${esc(it.q[4])}</div>${figHTML(it.q[7])}${it.opts.map((o,j)=>`<label class="choice"><input type="radio" name="f${i}" value="${j}"><span>${String.fromCharCode(97+j)}) ${esc(o.t)}</span></label>`).join("")}`;
+    if(it.k==="mc") body = `<div class="qtext">${esc(it.g?it.g.text:it.q[4])}</div>${figHTML(it.g?it.g.fig:it.q[7])}${it.opts.map((o,j)=>`<label class="choice"><input type="radio" name="f${i}" value="${j}"><span>${String.fromCharCode(97+j)}) ${esc(o.t)}</span></label>`).join("")}`;
     if(it.k==="fill"){ const parts=esc(it.f.q).split("____"); body = `<div class="qtext">${parts[0]}<input type="text" class="fillin" data-i="${i}" autocomplete="off" spellcheck="false" aria-label="Respuesta">${parts[1]||""}</div>`; }
     if(it.k==="tf") body = `<div class="qtext">${esc(it.f.q)}</div><div class="row"><label class="choice tfc"><input type="radio" name="f${i}" value="1"><span>Verdadero</span></label><label class="choice tfc"><input type="radio" name="f${i}" value="0"><span>Falso</span></label></div>`;
     if(it.k==="match") body = `<div class="qtext">${esc(it.f.q)}</div><div class="mt">${it.f.p.map((p,j)=>`<div class="mtrow"><span class="mtl">${esc(p[0])}</span><select data-i="${i}" data-j="${j}"><option value="">—</option>${it.right.map(r=>`<option>${esc(r)}</option>`).join("")}</select></div>`).join("")}</div>`;
@@ -2257,7 +2378,7 @@ async function finishFase0(){
   f0Items.forEach((it,i)=>{
     const box=$("#q"+i); let ok=false, a=null, sol="", x="";
     if(it.k==="mc"){ const sel=document.querySelector(`input[name=f${i}]:checked`); const j=sel?+sel.value:null; ok = j!==null && it.opts[j].ok; a = j===null?null:it.opts[j].t;
-      box.querySelectorAll(".choice").forEach((c,k)=>{ c.querySelector("input").disabled=true; if(it.opts[k].ok) c.classList.add("right"); else if(k===j) c.classList.add("wrong"); }); x=it.q[6]; }
+      box.querySelectorAll(".choice").forEach((c,k)=>{ c.querySelector("input").disabled=true; if(it.opts[k].ok) c.classList.add("right"); else if(k===j) c.classList.add("wrong"); }); x=it.g?it.g.expl:it.q[6]; }
     if(it.k==="fill"){ const inp=box.querySelector("input.fillin"); a=inp.value.trim(); ok = !!a && it.f.a.some(v=>normA(v)===normA(a)); inp.disabled=true; inp.classList.add(ok?"right":"wrong"); sol=it.f.s; x=it.f.x; }
     if(it.k==="tf"){ const sel=document.querySelector(`input[name=f${i}]:checked`); const v=sel?sel.value==="1":null; ok = v!==null && v===it.f.a; a = v===null?null:(v?"Verdadero":"Falso");
       box.querySelectorAll(".choice").forEach(c=>{ const inp=c.querySelector("input"); inp.disabled=true; const val=inp.value==="1"; if(val===it.f.a) c.classList.add("right"); else if(inp.checked) c.classList.add("wrong"); }); x=it.f.x; }
@@ -2266,7 +2387,7 @@ async function finishFase0(){
       ok = good===sels.length; a = sels.map((s,j)=>`${it.f.p[j][0]} → ${s.value||"—"}`).join(" · "); sol = it.f.p.map(p=>`${p[0]} → ${p[1]}`).join(" · ") + (ok?"":` (${good}/${sels.length} bien)`); x=it.f.x; }
     if(ok) score++;
     const id = it.k==="mc" ? it.q[0] : it.f.id, lo = it.k==="mc" ? it.q[1] : it.f.lo, ref = it.k==="mc" ? it.q[3] : it.f.ref;
-    items.push({q:id, ok, a}); (byLO[lo]=byLO[lo]||{ok:0,total:0}).total++; if(ok) byLO[lo].ok++;
+    items.push(Object.assign({q:id, ok, a}, it.g?{v:it.g.text, c:it.opts.find(o=>o.ok).t, e:it.g.expl, f:it.g.fig||null}:{})); (byLO[lo]=byLO[lo]||{ok:0,total:0}).total++; if(ok) byLO[lo].ok++;
     box.insertAdjacentHTML("beforeend", `<div class="expl"><b class="${ok?'pass':'fail'}">${ok?'Correcta':(a===null||a===""?'Sin responder':'Fallada')}</b>${sol&&!ok?` · Solución: <b>${esc(sol)}</b>`:""} · <span class="es">${esc(x||"")}</span>${ok?'':`<div class="ref"><b>Repasa:</b> ${esc(REFS[ref]||"")}</div>`}</div>`);
   });
   const usedS=Math.round((Date.now()-f0Start)/1000), pct=Math.round(score/f0Items.length*100), pass=pct>=75;
@@ -3359,9 +3480,10 @@ $("#startBtn").addEventListener("click",()=>{
   if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
   $("#startMsg").textContent = "";
   const st = stats();
-  current = qs.map(q=>({id:q[0],lo:q[1],src:q[2],ref:q[3],text:q[4],expl:q[6],fig:q[7]||null,
-    opts:shuffle(q[5].map((t,i)=>({t,ok:i===0}))),ans:null,
-    tag: (st.q[q[0]]||{}).last===false ? "fallada antes" : pendingFromBase(q,st) ? "fallaste su original" : focusActive(q[0],st) ? "refuerzo" : ""}));
+  current = qs.map(q=>{ const G = (typeof GEN_010!=="undefined") && GEN_010[q[0]], g = G ? G() : null;
+    return {id:q[0],lo:q[1],src:q[2],ref:q[3],text:g?g.text:q[4],expl:g?g.expl:q[6],fig:g?(g.fig||null):(q[7]||null),gen:!!g,
+    opts:shuffle((g?g.opts:q[5]).map((t,i)=>({t,ok:i===0}))),ans:null,
+    tag: (st.q[q[0]]||{}).last===false ? "fallada antes" : pendingFromBase(q,st) ? "fallaste su original" : focusActive(q[0],st) ? "refuerzo" : ""}; });
   $("#qlist").innerHTML = current.map((q,i)=>`
     <div class="q ${q.tag?'focus':''}" id="q${i}">
       <div class="qhead"><span>${i+1}/${current.length} · ${esc(loLabel(q.lo))}</span><span>${q.tag?`<span class="tag">${q.tag}</span> `:''}${SRC_TAG(q)}</span></div>
@@ -3387,7 +3509,7 @@ async function finishTest(timeout){
   const byLO = {}, byBlock = {}; let score=0, s0=0, n0=0; const items=[];
   current.forEach((q,i)=>{
     const ok = q.ans!==null && q.opts[q.ans].ok; if(ok) score++;
-    items.push({q:q.id, ok, a: q.ans===null?null:q.opts[q.ans].t});
+    items.push(Object.assign({q:q.id, ok, a: q.ans===null?null:q.opts[q.ans].t}, q.gen?{v:q.text, c:q.opts.find(o=>o.ok).t, e:q.expl, f:q.fig||null}:{}));
     (byLO[q.lo]=byLO[q.lo]||{ok:0,total:0}).total++; if(ok) byLO[q.lo].ok++;
     const bk=blockOf([q.id,q.lo]); (byBlock[bk]=byBlock[bk]||{ok:0,total:0}).total++; if(ok) byBlock[bk].ok++;
     if(q.src!=="a"){ n0++; if(ok) s0++; }
@@ -3451,10 +3573,10 @@ function showDetail(id){
   const wrong = (at.items||[]).filter(i=>!i.ok);
   $("#histDetail").innerHTML = `<h2>Detalle del ${fmtDate(at.date)}</h2><p class="muted">${loSummary(at)}</p>${at.note?`<p class="muted">${esc(at.note)}</p>`:""}` + (wrong.length ? wrong.map(w=>{
     const q = byId(w.q); if(!q) return "";
-    return `<div class="q"><div class="qhead"><span>${esc(loLabel(q[1]))}</span><span>${SRC_TAG({src:q[2]==="o"?"t":q[2], id:q[0]})}${q[2]==="o"?' <span class="tag">original</span>':''}</span></div><div class="qtext">${esc(q[4])}</div>${figHTML(q[7])}
+    return `<div class="q"><div class="qhead"><span>${esc(loLabel(q[1]))}</span><span>${SRC_TAG({src:q[2]==="o"?"t":q[2], id:q[0]})}${q[2]==="o"?' <span class="tag">original</span>':''}</span></div><div class="qtext">${esc(w.v||q[4])}${w.v?' <span class="tag">variante</span>':''}</div>${figHTML(w.v?w.f:q[7])}
       ${w.a!==undefined?`<div class="choice wrong">${w.a===null?'Sin responder':esc(w.a)}</div>`:''}
-      <div class="choice right">${esc(q[5][0])}</div>
-      <div class="expl"><span class="es">${esc(q[6])}</span><div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
+      <div class="choice right">${esc(w.c||q[5][0])}</div>
+      <div class="expl"><span class="es">${esc(w.e||q[6])}</span><div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
   }).join("") : `<p class="muted">Sin fallos en este intento.</p>`);
   $("#histDetail").scrollIntoView({behavior:"smooth"});
 }

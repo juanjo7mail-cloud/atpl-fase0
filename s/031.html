@@ -1057,6 +1057,95 @@ Object.assign(GEN, {
 });
 Object.assign(GEN_NAMES, {k12:"Quitar motores (ejercicio de clase)",k13:"Carga por superficie",k14:"Carga lineal",k15:"Carga de pago máxima",k16:"Pesada del avión",k17:"Altitud de presión",k18:"Desviación ISA",k19:"Altitud de densidad",t10a:"Altitud de densidad (trial)",t10b:"DA desde PA y OAT",k20:"Pendiente de pista",k26:"Aterrizaje clase B",k27:"Despegue clase B",k21:"PET",k22:"PSR",k23:"Combustible mínimo CAT",k25:"Combustible de un tramo VFR",k28:"Consumo por hora",k29:"Regla 1 en 60"});
 
+// <<BEGIN gen031x>>
+// ===== utilidades comunes de los generadores numéricos (nv*) =====
+const nvR = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const nvP = a => a[Math.floor(Math.random()*a.length)];
+const nvShuf = a => { a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const nvN = (x,d=0) => Number(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const nvH = x => String(((Math.round(x)%360)+360)%360 || 360).padStart(3,"0");
+// 4 opciones distintas, la correcta primero; cands = trampas numéricas (se descartan las repetidas o no finitas)
+function nvOpts(ok, cands, fmt, step){
+  const o = [fmt(ok)];
+  for(const c of cands){ if(c===undefined || c===null || !isFinite(c)) continue; const s = fmt(c); if(!o.includes(s) && o.length<4) o.push(s); }
+  let k = 1; while(o.length<4 && k<60){ const s = fmt(ok + (k%2?1:-1)*Math.ceil(k/2)*(step||1)); if(!o.includes(s)) o.push(s); k++; }
+  return o;
+}
+// lo mismo con textos ya formateados
+function nvStr(ok, cands, extra){
+  const o = [ok];
+  for(const c of cands){ if(c && !o.includes(c) && o.length<4) o.push(c); }
+  let k = 0; while(o.length<4 && k<60){ const c = extra(++k); if(!o.includes(c)) o.push(c); }
+  return o;
+}
+
+// ===== 031: variantes numéricas de preguntas de trial / deberes que antes salían siempre iguales =====
+const nvAC = () => nvP(["Seneca","Warrior","Piper PA-34 Seneca","Piper PA-28 Warrior"]);
+function gCGmoment(){
+  const ac = nvP(["Seneca","Warrior"]), w = nvR(1500,4200), cg = nvR(8300,9000)/100, M = Math.round(w*cg*100)/100, cgr = Math.round(M/w*100)/100;
+  const kind = nvP(["bew","zfw","tow"]), lab = {bew:"the BEW is", zfw:"the zero fuel weight is", tow:"the take-off weight is"}[kind];
+  const f = x=>`${x.toFixed(2)} in`, Mf = nvN(Math.round(M),0);
+  return {text:nvP([`On the ${ac} load sheet, ${lab} ${nvN(w)} lb with a moment of ${Mf} lb·in. The CG is at:`, `${ac} load sheet: ${kind==="bew"?"basic empty weight":kind==="zfw"?"zero fuel weight":"take-off weight"} ${nvN(w)} lb, total moment ${Mf} lb·in. The CG position is:`]),
+    opts:nvOpts(Math.round(Math.round(M)/w*100)/100,[cgr+1, cgr-1, w/1000, Math.round(M)/(w/2.205)],f,0.5),
+    expl:`CG = momento total ÷ masa total = ${Mf} ÷ ${nvN(w)} = ${(Math.round(M)/w).toFixed(2)} in (detrás del datum). Trampas: dividir al revés o mezclar kg y lb.`, v:true, p:{kind:"cgm",w,M:Math.round(M),ans:Math.round(Math.round(M)/w*100)/100}};
+}
+function gFuelUS(){
+  const kind = nvP(["gal","gal","l"]);
+  if(kind==="gal"){ const g = nvP([20,25,30,40,48,52,60,75,93,100]), w = g*6, f = x=>`${nvN(x)} lb`;
+    return {text:nvP([`${g} US gallons of AVGAS weigh about:`, `On the load sheet the fuel is entered as '${g} × 6'. The fuel weighs about:`, `A tank holds ${g} US gallons of AVGAS. Using the weight given in class, that is about:`]),
+      opts:nvOpts(w,[g*7.1, Math.round(g/6), g*3.785, g*0.72],f,12), expl:`1 US gal de AVGAS ≈ 6 lb → ${g} × 6 = ${nvN(w)} lb. Trampas: 7,1 lb/gal es el queroseno; 3,785 son litros por galón.`, v:true, p:{kind:"fuelus",g,ans:w}}; }
+  const L = nvP([50,80,100,120,150,200]), kg = Math.round(L*0.72*10)/10, f = x=>`${nvN(x,x%1?1:0)} kg`;
+  return {text:nvP([`AVGAS density is about 0.72 kg/l. ${L} litres weigh about:`, `${L} litres of AVGAS (density 0.72 kg/l) weigh approximately:`]),
+    opts:nvOpts(kg,[Math.round(L/0.72*10)/10, L*0.8, L*0.72*2.2],f,Math.max(2,kg*0.1)), expl:`Masa = volumen × densidad = ${L} × 0,72 = ${kg} kg. Trampa: dividir entre la densidad.`, v:true, p:{kind:"fuelus",L,ans:kg}};
+}
+function gFuelMoment(){
+  const g = nvP([20,25,30,40,48,52,60,75]), a = nvP([95,95.0,92.5,100,85.5,118.1]), w = g*6, M = Math.round(w*a*10)/10, f = x=>`${nvN(x)} lb·in`;
+  return {text:nvP([`${nvP(["Warrior","Seneca","Piper"])} sheet: ${g} US gal of fuel at an arm of ${a.toFixed(1)} in. Its moment is:`, `The fuel load is ${g} US gallons and its arm is ${a.toFixed(1)} in. The fuel moment on the load sheet is:`]),
+    opts:nvOpts(Math.round(M),[Math.round(g*a), Math.round(w*a/10), Math.round(w*a*1.2)],f,Math.max(30,M*0.08)),
+    expl:`Peso del combustible = ${g} × 6 = ${w} lb. Momento = peso × brazo = ${w} × ${a.toFixed(1)} = ${nvN(Math.round(M))} lb·in. Trampa: olvidar pasar de galones a libras.`, v:true, p:{kind:"fuelm",g,a,ans:Math.round(M)}};
+}
+function gArmSign(){
+  const m = nvP([10,20,25,40,60,80]), a = nvP([0.5,0.8,1.2,1.5,2.0,2.5]), fwd = Math.random()<.5, kind = nvP(["arm","moment"]);
+  if(kind==="arm") return {text:nvP([`An item is ${a} m ${fwd?"FORWARD of":"AFT of"} the datum. Its arm is:`, `A baggage item sits ${a} m ${fwd?"in front of":"behind"} the datum. Its arm is:`]),
+    opts:nvStr(`${fwd?"−":"+"}${a} m`,[`${fwd?"+":"−"}${a} m`, "0 m", `${a} % MAC`], k=>`${fwd?"−":"+"}${(a+k).toFixed(1)} m`), expl:`Delante del datum el brazo es NEGATIVO; detrás, POSITIVO.`, v:true, p:{kind:"arm",fwd,a}};
+  const mo = m*a; const f = x=>`${x>0?"+":x<0?"−":""}${nvN(Math.abs(x),mo%1?1:0)} kg·m`;
+  return {text:nvP([`A ${m} kg item at an arm of ${fwd?"−":"+"}${a} m produces a moment of:`, `A ${m} kg item is placed ${a} m ${fwd?"forward of":"aft of"} the datum. Its moment is:`]),
+    opts:nvStr(f(fwd?-mo:mo),[f(fwd?mo:-mo), f(fwd?-mo*4:mo*4), f(fwd?mo*4:-mo*4)], k=>f((fwd?-1:1)*(mo+k*3))), expl:`Momento = masa × brazo = ${m} × (${fwd?"−":"+"}${a}) = ${fwd?"−":"+"}${nvN(mo,mo%1?1:0)} kg·m. Delante del datum el momento es negativo.`, v:true, p:{kind:"armm",m,a,fwd,ans:fwd?-mo:mo}};
+}
+function gISAtemp(){
+  const h = nvR(1,36)*1000, t = h<=36000 ? 15-2*h/1000 : -56.5, f = x=>`${x<0?"−":""}${Math.abs(x)} °C`;
+  return {text:nvP([`ISA temperature at ${nvN(h)} ft:`, `According to the course rule (2 °C per 1000 ft), the ISA temperature at ${nvN(h)} ft is:`]),
+    opts:nvOpts(t,[15+2*h/1000, -t, t+10, 15-h/1000],f,3), expl:`ISA: 15 °C a nivel del mar y −2 °C por cada 1.000 ft (regla del curso): 15 − 2 × ${h/1000} = ${t} °C. Trampa: sumar en vez de restar.`, v:true, p:{kind:"isat",h,ans:t}};
+}
+function gPistonFuel(){
+  const taxi = nvP([2,3,4,5]), ff = nvP([16,18,20,22,25,30]), th = nvP([1,1.5,2,2.5,3]), alt = nvP([20,30,40,50]), fr = nvP([30,45]), cp = nvP([5,10]);
+  const trip = ff*th, cont = trip*cp/100, res = ff*fr/60, tot = taxi+trip+cont+res+alt, f = x=>`${+x.toFixed(2)} kg`;
+  const hm = `${Math.floor(th)} h ${th%1?"30 min":"00 min"}`.replace(" 00 min","");
+  return {text:`Piston aeroplane: start-up and taxi ${taxi} kg, fuel flow ${ff} kg/h, trip time ${hm}, alternate fuel ${alt} kg, final reserve ${fr} minutes, contingency ${cp} % of trip fuel. The minimum block fuel is:`,
+    opts:nvOpts(tot,[tot-cont, tot-taxi, taxi+trip+cont+alt+ff*(fr===45?0.5:1), tot+cont],f,Math.max(2,tot*0.03)),
+    expl:`Taxi ${taxi} + trip ${trip} + contingencia ${cp} % (${+cont.toFixed(2)}) + reserva final ${fr} min (${res}) + alternativa ${alt} = ${+tot.toFixed(2)} kg.`, v:true, p:{kind:"piston",taxi,ff,th,alt,fr,cp,ans:tot}};
+}
+function gContingency(){
+  const t = nvP([60,80,120,150,200,300,450,600]), cp = nvP([5,5,10]), f = x=>`${nvN(x,x%1?1:0)} kg`, c = t*cp/100;
+  return {text:nvP([`Trip fuel is ${t} kg. Contingency fuel, as taught in class (${cp} % of trip), is:`, `The trip fuel is ${t} kg and the contingency is ${cp} % of the trip fuel. The contingency fuel is:`]),
+    opts:nvOpts(c,[c*2, c/2.5, t/2], f, Math.max(1,c*0.5)), expl:`Contingencia = ${cp} % × ${t} = ${nvN(c,c%1?1:0)} kg.`, v:true, p:{kind:"cont",t,cp,ans:c}};
+}
+function gMassMoment(){
+  const lb = Math.random()<.5, m = lb ? nvR(100,260) : nvR(10,90), a = lb ? nvP([85.5,86.0,95.0,142.8,118.1]) : nvP([1.2,2.3,3.0,3.4,4.3]), M = Math.round(m*a*10)/10, f = x=>lb?`${nvN(Math.round(x))} lb`:`${nvN(x,x%1?1:0)} kg`;
+  const Mt = lb?`${nvN(M,M%1?1:0)} lb·in`:`${nvN(M,M%1?1:0)} kg·m`, at = lb?`${a.toFixed(2)} in`:`${a} m`;
+  return {text:nvP([`${lb?"On the Seneca load sheet the":"The"} moment of an item is ${Mt} at an arm of ${at}. The ${lb?"pilot's weight":"mass"} is:`, `An item has a moment of ${Mt} and its arm is ${at}. Its ${lb?"weight":"mass"} is:`]),
+    opts:nvOpts(m,[Math.round(M*a), Math.round(M-a), Math.round(m*1.25)],f,Math.max(2,m*0.1)), expl:`Masa = momento ÷ brazo = ${Mt.split(" ")[0]} ÷ ${a} = ${m}. Trampa: multiplicar en vez de dividir.`, v:true, p:{kind:"massm",m,a,M,lb,ans:m}};
+}
+function gArmUnits(){
+  const a = nvP([50,80,100,120,142,200]), f = x=>`${nvN(x,2)} m`, m = a*0.0254;
+  return {text:nvP([`An arm of ${a} in expressed in metres is:`, `The arm of a seat is ${a} in. In metres that is:`]),
+    opts:nvOpts(Math.round(m*100)/100,[a*0.254, a*2.54, a/39.37*10, a*0.3048],f,0.3), expl:`1 in = 2,54 cm = 0,0254 m → ${a} × 0,0254 = ${m.toFixed(2)} m.`, v:true, p:{kind:"armu",a,ans:Math.round(m*100)/100}};
+}
+const GEN_031X = {p14:()=>GEN.k8(), p18:()=>GEN.k6(), p19:()=>GEN.k6(), p20:()=>GEN.k6(), p21:()=>GEN.k7(), p51:()=>GEN.t1c(), pa12:()=>GEN.k17(), pa13:()=>GEN.k17(), pa14:()=>GEN.k19(), n03:()=>GEN.k10(), n3a14:()=>GEN.k28(), n37:()=>GEN.k18(),
+  p47:gCGmoment, p48:gCGmoment, n30:gCGmoment, p49:gFuelUS, p50:gFuelUS, n07:gFuelUS, n32:gFuelMoment, n18:gArmSign, n17:gArmSign, n36:gISAtemp, n3a13:gPistonFuel, t12a:gContingency, t1e:gMassMoment, n3a10:gMassMoment, n05:gArmUnits};
+
+Object.assign(GEN, GEN_031X);
+// <<END gen031x>>
 // ---------- visuales ----------
 const ST = `<style>.bx{fill:var(--paper);stroke:var(--line)} .hd{fill:var(--ink);font:600 14px "Barlow Condensed",sans-serif} .tx{fill:var(--muted);font:400 12px Barlow,sans-serif} .tk{fill:var(--ink);font:500 12px Barlow,sans-serif} .ln{stroke:var(--line);fill:none} .ac{fill:var(--magenta)} .acs{stroke:var(--magenta)}</style>`;
 const PLANE = (x,y,s=1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M0,0 Q10,-14 40,-16 L300,-18 Q330,-18 350,-40 L372,-62 L388,-62 L380,-16 L392,-12 L392,-4 L300,6 L40,8 Q8,8 0,0Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/><path d="M60,-14 L78,-30 L120,-30 L130,-16Z" fill="color-mix(in srgb,var(--blue) 25%,transparent)" stroke="var(--ink)" stroke-width="1"/></g>`;

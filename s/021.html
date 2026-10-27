@@ -4186,6 +4186,69 @@ function gJet(){
 
 Object.assign(GEN, {k10:gPitot, k11:gElec, k12:gSlip, k13:gProp, k14:gMix, k15:gJet});
 
+// <<BEGIN gen021x>>
+// ===== utilidades comunes de los generadores numéricos (nv*) =====
+const nvR = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const nvP = a => a[Math.floor(Math.random()*a.length)];
+const nvShuf = a => { a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const nvN = (x,d=0) => Number(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const nvH = x => String(((Math.round(x)%360)+360)%360 || 360).padStart(3,"0");
+// 4 opciones distintas, la correcta primero; cands = trampas numéricas (se descartan las repetidas o no finitas)
+function nvOpts(ok, cands, fmt, step){
+  const o = [fmt(ok)];
+  for(const c of cands){ if(c===undefined || c===null || !isFinite(c)) continue; const s = fmt(c); if(!o.includes(s) && o.length<4) o.push(s); }
+  let k = 1; while(o.length<4 && k<60){ const s = fmt(ok + (k%2?1:-1)*Math.ceil(k/2)*(step||1)); if(!o.includes(s)) o.push(s); k++; }
+  return o;
+}
+// lo mismo con textos ya formateados
+function nvStr(ok, cands, extra){
+  const o = [ok];
+  for(const c of cands){ if(c && !o.includes(c) && o.length<4) o.push(c); }
+  let k = 0; while(o.length<4 && k<60){ const c = extra(++k); if(!o.includes(c)) o.push(c); }
+  return o;
+}
+
+// ===== 021·022: variantes numéricas de preguntas de trial / Senasa =====
+function gRate1(){
+  if(Math.random()<.5){
+    const tas = nvR(8,20)*10, b = Math.round(tas/10+7), f = x=>`${x}°`;
+    return {text:nvP([`The bank angle for a rate-1 turn at ${tas} kt TAS is about:`, `At ${tas} kt TAS, what bank angle gives a rate-1 turn (3°/s)?`, `A pilot wants a rate-1 turn at ${tas} kt. The bank angle needed is approximately:`]),
+      opts:nvOpts(b,[Math.round(tas/10), Math.round(tas/10+7)*2, Math.round(tas/10*3), 30],f,3),
+      expl:`Regla del curso: ángulo de alabeo ≈ TAS ÷ 10 + 7 = ${tas/10} + 7 = ${b}°. Más velocidad → más alabeo para el mismo régimen de giro.`, v:true, p:{kind:"rate1b",tas,ans:b}};
+  }
+  const deg = nvP([90,180,270,360,540,720]), s = deg/3, f = x=>x>=60?`${Math.floor(x/60)} min${x%60?" "+(x%60)+" s":""}`:`${x} s`;
+  return {text:nvP([`A rate-1 turn takes, for ${deg}°:`, `How long does a rate-1 turn take to change heading by ${deg}°?`]),
+    opts:nvOpts(s,[deg/6, deg/2, deg/1.5, deg],f,Math.max(10,s*0.5)), expl:`Rate 1 = 3°/s → ${deg} ÷ 3 = ${s} s${s>=60?" ("+(s/60)+" min)":""}. Trampa: confundirlo con el rate 2 (6°/s) o con 1°/s.`, v:true, p:{kind:"rate1t",deg,ans:s}};
+}
+function gSubscale(){
+  const a = nvR(995,1030), up = Math.random()<.5, d = nvP([3,5,8,10,12,15,20]), b = up ? a+d : a-d;
+  if(b<980||b>1040) return gSubscale();
+  const ft = d*30;
+  return {text:nvP([`Changing the subscale from ${a} to ${b} hPa makes the altimeter reading:`, `The pilot turns the altimeter subscale from ${a} hPa to ${b} hPa. The indication will:`]),
+    opts:nvStr(`${up?"Increase":"Decrease"} by about ${nvN(ft)} ft`,[`${up?"Decrease":"Increase"} by about ${nvN(ft)} ft`, `${up?"Increase":"Decrease"} by about ${nvN(d)} ft`, "Not change"].filter(x=>x!==`${up?"Increase":"Decrease"} by about ${nvN(ft)} ft`), k=>`${up?"Increase":"Decrease"} by about ${nvN(ft+k*30)} ft`),
+    expl:`1 hPa ≈ 30 ft. ${d} hPa × 30 = ${nvN(ft)} ft. Si se SUBE la presión del calaje, el altímetro marca MÁS; si se baja, marca menos (QNH alto → indicación alta).`, v:true, p:{kind:"subscale",a,b,ans:(b-a)*30}};
+}
+function gLimitLoad(){
+  const n = nvP([2.5,3,3.8,4,4.4,5,6]), f = x=>`${+x.toFixed(2)} G`, u = n*1.5;
+  return {text:nvP([`A structure has a limit load of ${n} G. With the minimum safety factor, it must withstand without collapse:`, `The limit load factor of an aeroplane is ${n} G. With the regulatory safety factor, the ultimate load it must withstand is:`]),
+    opts:nvOpts(u,[n, n*2, n*1.25, n*1.5+1],f,0.5), expl:`Carga última = carga límite × coeficiente de seguridad 1,5 = ${n} × 1,5 = ${+u.toFixed(2)} G. La estructura puede deformarse al llegar a la límite, pero no debe romperse hasta la última.`, v:true, p:{kind:"limit",n,ans:u}};
+}
+function gCatG(){
+  const C = {"Normal category":[3.8,-1.52],"Utility category":[4.4,-1.76],"Aerobatic category":[6,-3]}, k = nvP(Object.keys(C)), [p,m] = C[k];
+  return {text:nvP([`An aircraft limited to +${p} G and −${Math.abs(m)} G is in the:`, `The limit load factors +${p} G / −${Math.abs(m)} G correspond to the:`]),
+    opts:nvStr(k,Object.keys(C).filter(x=>x!==k).concat(["Commuter category"]),i=>"Transport category "+i), expl:`Normal +3,8/−1,52 · Utility +4,4/−1,76 · Aerobatic +6/−3 (negativa = −0,4 × positiva, en la acrobática −0,5). Más G permitidas, categoría más exigente.`, v:true, p:{kind:"catg",k}};
+}
+function gMixRatio(){
+  const n = nvP([10,12,13,15,16,18]), q = nvP(["air","fuel"]);
+  return {text:nvP([`A mixture of ${n}:1 means:`, `An air/fuel ratio of ${n}:1 means:`]),
+    opts:[`${n} kg of air for each kg of fuel`, `${n} litres of fuel for each litre of air`, `${n} % fuel in the air`, `${n} parts of fuel to 1 of air`],
+    expl:`La mezcla se expresa como masa de aire : masa de combustible. ${n}:1 = ${n} kg de aire por cada kg de combustible. La estequiométrica es ≈ 15:1; más combustible (p. ej. 12:1) = mezcla rica; menos (p. ej. 18:1) = pobre.`, v:true, p:{kind:"mixr",n}};
+}
+const GEN_021X = {p98:gRate1, p97:gRate1, p104:gSubscale, s11:gLimitLoad, p31:gCatG, x52:gMixRatio};
+
+Object.assign(GEN, GEN_021X);
+// <<END gen021x>>
+
 // ===== carburador: calefacción con y sin hielo =====
 function gCarb(){
   const c = pick([

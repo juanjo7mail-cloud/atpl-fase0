@@ -1713,6 +1713,131 @@ const loLabel = l => LO_NAME[l] ? `${dcode(l)} · ${LO_NAME[l]}` : LEGACY[l] ? `
 const baseOf = id => (String(id).match(/^(t\d+)/)||[id])[0];
 // toda la Fase 0 ya está dada (POP-1 y POP-2): «dado» = todo lo que no es ATPL
 const isGiven = q => q[2]!=="a";
+
+// <<BEGIN gen070x>>
+// ===== utilidades comunes de los generadores numéricos (nv*) =====
+const nvR = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const nvP = a => a[Math.floor(Math.random()*a.length)];
+const nvShuf = a => { a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const nvN = (x,d=0) => Number(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const nvH = x => String(((Math.round(x)%360)+360)%360 || 360).padStart(3,"0");
+// 4 opciones distintas, la correcta primero; cands = trampas numéricas (se descartan las repetidas o no finitas)
+function nvOpts(ok, cands, fmt, step){
+  const o = [fmt(ok)];
+  for(const c of cands){ if(c===undefined || c===null || !isFinite(c)) continue; const s = fmt(c); if(!o.includes(s) && o.length<4) o.push(s); }
+  let k = 1; while(o.length<4 && k<60){ const s = fmt(ok + (k%2?1:-1)*Math.ceil(k/2)*(step||1)); if(!o.includes(s)) o.push(s); k++; }
+  return o;
+}
+// lo mismo con textos ya formateados
+function nvStr(ok, cands, extra){
+  const o = [ok];
+  for(const c of cands){ if(c && !o.includes(c) && o.length<4) o.push(c); }
+  let k = 0; while(o.length<4 && k<60){ const c = extra(++k); if(!o.includes(c)) o.push(c); }
+  return o;
+}
+
+// ===== 070: variantes numéricas (distancias declaradas, cizalladura, combustible VFR, franjas, estela, crepúsculo...) =====
+const hm = m => `${Math.floor(m/60)} h ${String(m%60).padStart(2,"0")} min`;
+const clk = m => `${String(Math.floor(m/60)%24).padStart(2,"0")}:${String(m%60).padStart(2,"0")}`;
+function gDeclared(){
+  const rw = nvP(["09","27","12L","30R","06","18","24L","36"]), TORA = nvR(12,34)*100 + nvP([0,0,32,50,90]), swy = nvP([0,0,50,54,100,150,200,300]), cwy = nvP([0,0,60,150,200,300,500]);
+  const ASDA = TORA+swy, TODA = TORA+cwy, ask = nvP(["ASDA","TODA","swy","cwy"]), m = x=>`${nvN(x)} m`, st = nvP([`TORA ${nvN(TORA)} m, stopway ${swy} m, clearway ${cwy} m.`, `Runway ${rw}: TORA ${nvN(TORA)} m, stopway ${swy} m, clearway ${cwy} m.`]);
+  if(ask==="ASDA") return {text:`${st} The ASDA is:`, opts:nvOpts(ASDA,[TODA, TORA+swy+cwy, TORA, TORA-swy],m,50), expl:`ASDA = TORA + stopway = ${nvN(TORA)} + ${swy} = ${nvN(ASDA)} m. (Trampa: sumar el clearway, que es para el TODA.)`, v:true, p:{kind:"dd",ask,TORA,swy,cwy,ans:ASDA}};
+  if(ask==="TODA") return {text:`${st} The TODA is:`, opts:nvOpts(TODA,[ASDA, TORA+swy+cwy, TORA, TORA-cwy],m,50), expl:`TODA = TORA + clearway = ${nvN(TORA)} + ${cwy} = ${nvN(TODA)} m. (El stopway cuenta para el ASDA, no para el TODA.)`, v:true, p:{kind:"dd",ask,TORA,swy,cwy,ans:TODA}};
+  const val = ask==="swy"?swy:cwy, big = ask==="swy"?ASDA:TODA, name = ask==="swy"?"ASDA":"TODA", nm = ask==="swy"?"stopway":"clearway";
+  const none = "There is none";
+  return {text:nvP([`Runway ${rw}: TORA ${nvN(TORA)} m, ${name} ${nvN(big)} m. How long is the ${nm}?`, `Runway ${rw}: TORA ${nvN(TORA)} m, ${name} ${nvN(big)} m. The ${nm} is:`]),
+    opts: val===0 ? [none, m(50), m(100), m(TORA)] : nvStr(m(val), [m(big), m(TORA), none], k=>m(val+50*k)), expl:`${nm==="stopway"?"Stopway = ASDA − TORA":"Clearway = TODA − TORA"} = ${nvN(big)} − ${nvN(TORA)} = ${nvN(val)} m${val===0?" (no hay)":""}.`, v:true, p:{kind:"dd2",nm,TORA,big,ans:val}};
+}
+function gMaxTODA(){
+  const T = nvR(12,40)*100, f = x=>`${nvN(x)} m`;
+  return {text:nvP([`A runway has a TORA of ${nvN(T)} m. What is the maximum TODA it can normally declare?`, `With a TORA of ${nvN(T)} m, the largest TODA that can normally be declared is:`]),
+    opts:nvOpts(T*1.5,[T*2, T, T*1.25, T+T/4],f,100), expl:`Clearway máximo = mitad de la TORA = ${nvN(T/2)} m → TODA máximo = ${nvN(T)} + ${nvN(T/2)} = ${nvN(T*1.5)} m.`, v:true, p:{kind:"maxtoda",T,ans:T*1.5}};
+}
+function gShear(){
+  const rwy = nvP(["27","09","18","36","06","24"]), op = x=>((parseInt(rwy)+18)%36||36).toString().padStart(2,"0"), mode = nvP(["h2t","h2t","t2h","h2c"]);
+  const a = nvP([10,15,20,25]), b = nvP([5,10,15]), iasv = nvR(6,9)*10 ;
+  let d, txt;
+  if(mode==="h2t"){ d = -(a+b); txt = nvP([`Short final runway ${rwy} at ${iasv} kt IAS. The wind changes suddenly from ${rwy}0/${String(a).padStart(2,"0")} to ${op()}0/${String(b).padStart(2,"0")}.`, `On approach, a ${a} kt headwind suddenly becomes a ${b} kt tailwind.`]); }
+  else if(mode==="t2h"){ d = a+b; txt = nvP([`On approach, a ${a} kt tailwind suddenly becomes a ${b} kt headwind.`, `Runway ${rwy}, short final at ${iasv} kt IAS. The wind shifts from ${op()}0/${String(a).padStart(2,"0")} to ${rwy}0/${String(b).padStart(2,"0")}.`]); }
+  else { const A = nvP([70,80,90,100]), h1 = nvP([20,25,30,35]), h2 = nvP([0,5,10]); d = -(h1-h2);
+    return {text:nvP([`Airspeed ${A} kt with a ${h1} kt headwind. Descending into ${h2===0?"calm air":"a "+h2+" kt headwind"}, the airspeed momentarily becomes about:`, `TAS ${A} kt with a ${h1} kt headwind. The headwind drops to ${h2} kt. The TAS momentarily becomes about:`]),
+      opts:nvOpts(A+d,[A, A-h1, A+(h1-h2), A-(h1+h2)],x=>`${x} kt`,5), expl:`Por inercia la velocidad sobre el suelo no cambia de golpe: el viento de cara baja ${h1-h2} kt y la velocidad aerodinámica también: ${A} − ${h1-h2} = ${A+d} kt. Cuidado con la pérdida.`, v:true, p:{kind:"shear3",A,h1,h2,ans:A+d}}; }
+  const f = x=>`${x>0?"+":x<0?"−":""}${Math.abs(x)} kt`;
+  const words = d<0?"IAS drops":"IAS rises";
+  const s = (mode==="h2t")?`${a} kt de cara pasan a ${b} de cola: pierdes ${a+b} kt de golpe.`:`${a} de cola pasan a ${b} de cara: ganas ${a+b} kt de golpe.`;
+  return {text:`${txt} The immediate change in IAS is about:`, opts:nvOpts(d,[-d, Math.abs(a-b)*Math.sign(d), 0, Math.sign(d)*Math.max(a,b)],f,5), expl:`${s} El avión conserva su velocidad sobre el suelo un instante; la aerodinámica cambia lo que cambia el viento relativo. ${d<0?"Con la velocidad de aproximación, riesgo de pérdida.":""}`, v:true, p:{kind:"shear",mode,a,b,ans:d}};
+}
+function gVFRfuel(){
+  const night = Math.random()<.4, rate = nvP([12,18,24,30,36,42,48,60]), min = nvR(4,18)*10, res = night?45:30, f = nvN((min+res)*rate/60,0);
+  const fuel = (min+res)*rate/60;
+  return {text:nvP([`VFR ${night?"at night":"by day"}. Planned flight time ${hm(min)}, consumption ${rate} litres/hour, no allowance for delays. Minimum fuel at take-off (ignoring taxi):`, `A ${night?"night VFR":"day VFR"} flight is planned for ${hm(min)} at ${rate} litres/hour. Ignoring taxi and delays, the minimum fuel is:`]),
+    opts:nvOpts(fuel,[(min+(night?30:45))*rate/60, min*rate/60, (min+res+30)*rate/60, (min+60)*rate/60],x=>`${+x.toFixed(1)} litres`,rate/6), expl:`Tiempo de vuelo + reserva final: ${night?"VFR de noche → 45 min":"VFR de día → 30 min"}. ${hm(min)} + ${res} min = ${hm(min+res)} = ${+((min+res)/60).toFixed(3)} h × ${rate} = ${+fuel.toFixed(1)} L.`, v:true, p:{kind:"vfrfuel",night,rate,min,ans:fuel}};
+}
+function gOverWater(){
+  const v = nvP([60,70,80,90,100,110,120,130,140,160]), d = Math.min(50, v/2), f = x=>`${+x.toFixed(1)} NM`;
+  return {text:nvP([`An aeroplane cruises at ${v} kt. 'Extended flight over water' applies beyond what distance from land suitable for an emergency landing?`, `Cruise speed ${v} kt. Beyond what distance from land suitable for an emergency landing is a flight 'extended flight over water'? (30 minutes or 50 NM)`]),
+    opts:nvOpts(d,[50, v/2*2, 93, v], f, 5), expl:`El menor entre 30 min a la velocidad de crucero (${v} × 0,5 = ${v/2} NM) y 50 NM (93 km) → ${+d.toFixed(1)} NM. ${v/2<50?"Manda el tiempo.":v/2===50?"Coinciden.":"Manda la distancia: 50 NM."}`, v:true, p:{kind:"water",v,ans:d}};
+}
+function gWake(kind){
+  const edge = Math.random()<.35;
+  const m = edge ? nvP([7000,136000,7001,135999,5700]) : nvP([nvR(2,69)*100, nvR(8,135)*1000, nvR(137,560)*1000]);
+  const cat = m<=7000?"Light (L)":m<136000?"Medium (M)":"Heavy (H)", f = x=>String(x).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+  kind = kind || nvP(["mass","large"]);
+  if(kind==="large") { const mm = nvP([5700,5700,5699,5701,5800,5600,6000]); const yes = mm>5700;
+    return {text:nvP([`An aeroplane has a maximum certificated take-off mass of ${mm===5700?"exactly ":""}${f(mm)} kg. Is it a 'large aeroplane'?`, `MCTOM ${f(mm)} kg. Is the aeroplane a 'large aeroplane'?`]),
+      opts:yes?["Yes: it is OVER 5700 kg","No: a large aeroplane is 5700 kg or less","Only if it has more than one engine","Only if it carries passengers"]:[mm===5700?"No: a large aeroplane is OVER 5700 kg":"No: it is not over 5700 kg","Yes: 5700 kg or more","Yes, if it carries passengers","Only if it has more than one engine"],
+      expl:`Large aeroplane = MCTOM SUPERIOR a 5.700 kg (más de 5.700). ${mm} kg ${yes?"supera ese valor.":"no lo supera."}`, v:true, p:{kind:"large",mm,ans:yes}}; }
+  return {text:nvP([`An aircraft with a maximum certificated take-off mass of ${m===7000||m===136000?"exactly ":""}${f(m)} kg is in wake turbulence category:`, `An aircraft with an MTOM of ${f(m)} kg is in wake turbulence category:`]),
+    opts:[cat,...["Light (L)","Medium (M)","Heavy (H)","Super (J)"].filter(x=>x!==cat)], expl:`L = 7.000 kg o menos · M = más de 7.000 y menos de 136.000 kg · H = 136.000 kg o más · J = A380. ${f(m)} kg → ${cat}.`, v:true, p:{kind:"wake",m,ans:cat}};
+}
+function gTwilight(){
+  const d = nvP([1,2,3,4,5,7,8,9,10,12,14,17]), day = d<6;
+  return {text:nvP([`After sunset, the centre of the sun is ${d}° below the horizon. Legally it is:`, `The centre of the sun is ${d}° below the horizon after sunset. It is:`]),
+    opts:day?["Still day: evening civil twilight","Night","Nautical twilight, so night","Astronomical twilight, so day"]:["Night: civil twilight has ended","Day","Civil twilight, so still day","Nautical twilight, so still day"],
+    expl:`El crepúsculo civil acaba cuando el centro del sol está a 6° bajo el horizonte. ${d}° ${day?"< 6°: aún es de día legalmente.":"> 6°: ya es noche legal (aunque sea crepúsculo náutico)."}`, v:true, p:{kind:"twi",d,ans:day}};
+}
+function gFlightTime(){
+  const t0 = nvR(6,16)*60 + nvP([0,10,20,30,40,50]), mv = t0+nvR(3,12), to = mv+nvR(6,15), air = nvR(30,260), ld = to+air, st = ld+nvR(4,12), off = st+nvR(1,5);
+  const ft = st-mv, f = x=>hm(x);
+  return {text:`Engine start ${clk(t0)}, first moves to taxi ${clk(mv)}, take-off ${clk(to)}, landing ${clk(ld)}, comes to rest at the stand ${clk(st)}, engine off ${clk(off)}. Flight time is:`,
+    opts:nvOpts(ft,[air, off-t0, ld-mv, st-to],f,5), expl:`Flight time (tiempo de vuelo, como lo cuenta el curso) = desde que el avión se mueve por sí mismo para despegar hasta que se para: ${clk(mv)} → ${clk(st)} = ${hm(ft)}. No es el tiempo en el aire (${hm(air)}) ni el de motor en marcha.`, v:true, p:{kind:"ftime",mv,st,ans:ft}};
+}
+function gLoadFactor(){
+  const b = nvP([20,30,40,45,50,60,65,70,75]), n = 1/Math.cos(b*Math.PI/180), f = x=>`${(Math.round(x*10)/10).toFixed(1)} g`;
+  return {text:nvP([`In a level turn at ${b}° of bank, the load factor is about:`, `An aeroplane flies a coordinated level turn at ${b}° of bank. The load factor is about:`]),
+    opts:nvOpts(Math.round(n*10)/10,[1/Math.sin(b*Math.PI/180), Math.cos(b*Math.PI/180), b/30, 1+b/100, 1],f,0.3), expl:`n = 1 / cos ${b}° = ${n.toFixed(2)} ≈ ${(Math.round(n*10)/10).toFixed(1)} g. Más alabeo → más factor de carga (y más velocidad de pérdida).`, v:true, p:{kind:"nz",b,ans:Math.round(n*10)/10}};
+}
+const STR = {18:4,23:6,30:8,45:12,60:16};
+function gStripes(){
+  const w = nvP([18,23,30,45,60]), n = STR[w];
+  if(Math.random()<.5) return {text:nvP([`A runway is ${w} m wide. How many threshold stripes does it have?`, `A runway ${w} m wide has how many threshold stripes?`]),
+    opts:nvStr(String(n),Object.values(STR).filter(x=>x!==n).map(String),k=>String(n+k)), expl:`Anchura → franjas: 18 m→4 · 23 m→6 · 30 m→8 · 45 m→12 · 60 m→16. ${w} m → ${n}.`, v:true, p:{kind:"stripes",w,ans:n}};
+  return {text:nvP([`You count ${n} threshold stripes. The runway is:`, `A runway threshold has ${n} stripes. The runway width is:`]),
+    opts:nvStr(`${w} m wide`,Object.keys(STR).filter(x=>+x!==w).map(x=>`${x} m wide`),k=>`${w+k} m wide`), expl:`18 m→4 · 23 m→6 · 30 m→8 · 45 m→12 · 60 m→16. ${n} franjas → ${w} m.`, v:true, p:{kind:"stripes2",w,n,ans:`${w} m wide`}};
+}
+function gSquawk(){
+  const C = {7500:"Unlawful interference",7600:"Loss of communication",7700:"General emergency"}, k = nvP([7500,7600,7700]), rev = Math.random()<.5;
+  if(!rev) return {text:nvP([`Squawk ${k} indicates:`, `A transponder set to ${k} means:`]), opts:[C[k],...Object.values(C).filter(x=>x!==C[k]),"VFR conspicuity"], expl:`75 = secuestro (unlawful interference) · 76 = sin radio · 77 = emergencia general.`, v:true, p:{kind:"sq",k,ans:C[k]}};
+  return {text:nvP([`Which transponder code indicates ${C[k].toLowerCase()}?`, `The squawk for ${C[k].toLowerCase()} is:`]), opts:nvStr(String(k),Object.keys(C).filter(x=>+x!==k).concat(["7000"]),i=>String(7000+i)), expl:`7500 secuestro (unlawful interference) · 7600 sin radio · 7700 emergencia general.`, v:true, p:{kind:"sq2",k,ans:String(k)}};
+}
+function gBird(){
+  const v1 = nvP([100,120,140,160,200]), r = nvP([[.5,"A quarter"],[.7,"Half"],[.8,"Two thirds"]]), v2 = Math.round(v1*r[0]);
+  return {text:nvP([`Reducing speed from ${v1} kt to ${v2} kt reduces the energy of a bird impact to about:`, `Slowing from ${v1} to ${v2} kt, the impact energy of a bird strike falls to about:`]),
+    opts:[r[1],...["A quarter","Half","Two thirds","It does not change"].filter(x=>x!==r[1])].slice(0,4), expl:`La energía va con el cuadrado de la velocidad: (${v2}/${v1})² = ${(r[0]**2).toFixed(2)} → ${r[1].toLowerCase()}.`, v:true, p:{kind:"bird",v1,v2,ans:r[1]}};
+}
+function gHydro(){
+  const psi = nvP([81,100,121,144,169,196,225]), v = Math.round(7.7*Math.sqrt(psi)), vr = Math.round(9*Math.sqrt(psi));
+  return {text:nvP([`Tyre pressure ${psi} psi. On touchdown on a flooded runway (non-rotating tyre), dynamic hydroplaning may begin at about:`, `A tyre is inflated to ${psi} psi. On a flooded runway the non-rotating tyre (at touchdown) may hydroplane at about:`]),
+    opts:nvOpts(v,[vr, psi, Math.round(Math.sqrt(psi)*5)],x=>`${x} kt`,6), expl:`Rueda sin girar: 7,7 × √${psi} = 7,7 × ${Math.sqrt(psi)} ≈ ${v} kt. Rueda girando: 9 × √p = ${vr} kt (trampa).`, v:true, p:{kind:"hydro",psi,ans:v}};
+}
+function gFirstAid(){
+  const n = nvP([30,60,99,150,180,199,250,299,350,420]), k = Math.min(4,Math.floor(n/100)+1);
+  return {text:nvP([`A CAT aeroplane has ${n} passenger seats. The minimum number of first-aid kits is:`, `How many first-aid kits must a CAT aeroplane with ${n} passenger seats carry, as a minimum?`]),
+    opts:nvOpts(k,[k>1?k-1:null,k+1,k+2,Math.ceil(n/50)+1],String,1).map(String), expl:`0–99 asientos: 1 · 100–199: 2 · 200–299: 3 · 300 o más: 4. ${n} asientos → ${k}.`, v:true, p:{kind:"firstaid",n,ans:k}};
+}
+const GEN_070 = {t5a:gDeclared,t5b:gDeclared,dd07:gDeclared,dd08:gDeclared,dd09:gDeclared,dd10:gDeclared,dd12:gMaxTODA, t9a:gShear,t9c:gShear,t17a:gShear,t17c:gShear,ws08:gShear,ws09:gShear, gr19:gVFRfuel,gr20:gVFRfuel, d01:gOverWater,d02:gOverWater, wk07:()=>gWake("mass"),wk08:()=>gWake("mass"),wk08b:()=>gWake("mass"),d04:()=>gWake("large"), t18c:gTwilight,t18d:gTwilight, t20a:gFlightTime, t23b:gLoadFactor, dd18:gStripes,dd19:gStripes,dd19b:gStripes,dd19c:gStripes, pf4:gSquawk,pf5:gSquawk,pf6:gSquawk, bs20:gBird, "H-01":gHydro, "O-06":gFirstAid};
+// <<END gen070x>>
 const blockOf = q => (SUBMAP[q[1]]||{block:"X"}).block;
 const in070 = q => blockOf(q)!=="X";
 const SEN_LEN = {full:{n:42,min:60,label:"Completo"}, half:{n:21,min:30,label:"Exprés"}, real:{n:42,min:75,label:"Tiempo real"}};
@@ -3108,9 +3233,10 @@ $("#startBtn").addEventListener("click",()=>{
   if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
   $("#startMsg").textContent = "";
   const st = stats();
-  current = qs.map(q=>({id:q[0],lo:q[1],src:q[2],ref:q[3],text:q[4],expl:q[6],
-    opts:shuffle(q[5].map((t,i)=>({t,ok:i===0}))),ans:null,
-    tag: (st.q[q[0]]||{}).last===false ? "fallada antes" : pendingFromBase(q,st) ? "fallaste su original" : focusActive(q[0],st) ? "refuerzo" : ""}));
+  current = qs.map(q=>{ const G = (typeof GEN_070!=="undefined") && GEN_070[q[0]], g = G ? G() : null;
+    return {id:q[0],lo:q[1],src:q[2],ref:q[3],text:g?g.text:q[4],expl:g?g.expl:q[6],gen:!!g,
+    opts:shuffle((g?g.opts:q[5]).map((t,i)=>({t,ok:i===0}))),ans:null,
+    tag: (st.q[q[0]]||{}).last===false ? "fallada antes" : pendingFromBase(q,st) ? "fallaste su original" : focusActive(q[0],st) ? "refuerzo" : ""}; });
   $("#qlist").innerHTML = current.map((q,i)=>`
     <div class="q ${q.tag?'focus':''}" id="q${i}">
       <div class="qhead"><span>${i+1}/${current.length} · ${esc(loLabel(q.lo))}</span><span>${q.tag?`<span class="tag">${q.tag}</span> `:''}${SRC_TAG(q)}</span></div>
@@ -3134,7 +3260,7 @@ async function finishTest(timeout){
   const byLO = {}, byBlock = {}; let score=0, s0=0, n0=0; const items=[];
   current.forEach((q,i)=>{
     const ok = q.ans!==null && q.opts[q.ans].ok; if(ok) score++;
-    items.push({q:q.id, ok, a: q.ans===null?null:q.opts[q.ans].t});
+    items.push(Object.assign({q:q.id, ok, a: q.ans===null?null:q.opts[q.ans].t}, q.gen?{v:q.text, c:q.opts.find(o=>o.ok).t, e:q.expl}:{}));
     (byLO[q.lo]=byLO[q.lo]||{ok:0,total:0}).total++; if(ok) byLO[q.lo].ok++;
     const bk=blockOf([q.id,q.lo]); (byBlock[bk]=byBlock[bk]||{ok:0,total:0}).total++; if(ok) byBlock[bk].ok++;
     if(q.src!=="a"){ n0++; if(ok) s0++; }
@@ -3198,10 +3324,10 @@ function showDetail(id){
   const wrong = (at.items||[]).filter(i=>!i.ok);
   $("#histDetail").innerHTML = `<h2>Detalle del ${fmtDate(at.date)}</h2><p class="muted">${loSummary(at)}</p>${at.note?`<p class="muted">${esc(at.note)}</p>`:""}` + (wrong.length ? wrong.map(w=>{
     const q = byId(w.q); if(!q) return "";
-    return `<div class="q"><div class="qhead"><span>${esc(loLabel(q[1]))}</span><span>${SRC_TAG({src:q[2]==="o"?"t":q[2], id:q[0]})}${q[2]==="o"?' <span class="tag">original</span>':''}</span></div><div class="qtext">${esc(q[4])}</div>
+    return `<div class="q"><div class="qhead"><span>${esc(loLabel(q[1]))}</span><span>${SRC_TAG({src:q[2]==="o"?"t":q[2], id:q[0]})}${q[2]==="o"?' <span class="tag">original</span>':''}</span></div><div class="qtext">${esc(w.v||q[4])}${w.v?' <span class="tag">variante</span>':''}</div>
       ${w.a!==undefined?`<div class="choice wrong">${w.a===null?'Sin responder':esc(w.a)}</div>`:''}
-      <div class="choice right">${esc(q[5][0])}</div>
-      <div class="expl"><span class="es">${esc(q[6])}</span><div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
+      <div class="choice right">${esc(w.c||q[5][0])}</div>
+      <div class="expl"><span class="es">${esc(w.e||q[6])}</span><div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
   }).join("") : `<p class="muted">Sin fallos en este intento.</p>`);
   $("#histDetail").scrollIntoView({behavior:"smooth"});
 }

@@ -1156,6 +1156,98 @@ const isVar = q => String(q[0]).includes("~");
 // del trial y de temas dados en parte, lo que aún no se ha visto en clase
 const NOT_YET = new Set(["tr1", "tr4", "tr8", "tr16", "tr19", "tr2", "tr9", "tr18"]);
 const isGiven = q => q[2]!=="a" && (SUBMAP[q[1]]||{}).cov!=="atpl" && !NOT_YET.has(baseOf(q[0]));
+
+// <<BEGIN gen040x>>
+// ===== utilidades comunes de los generadores numéricos (nv*) =====
+const nvR = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const nvP = a => a[Math.floor(Math.random()*a.length)];
+const nvShuf = a => { a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const nvN = (x,d=0) => Number(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const nvH = x => String(((Math.round(x)%360)+360)%360 || 360).padStart(3,"0");
+// 4 opciones distintas, la correcta primero; cands = trampas numéricas (se descartan las repetidas o no finitas)
+function nvOpts(ok, cands, fmt, step){
+  const o = [fmt(ok)];
+  for(const c of cands){ if(c===undefined || c===null || !isFinite(c)) continue; const s = fmt(c); if(!o.includes(s) && o.length<4) o.push(s); }
+  let k = 1; while(o.length<4 && k<60){ const s = fmt(ok + (k%2?1:-1)*Math.ceil(k/2)*(step||1)); if(!o.includes(s)) o.push(s); k++; }
+  return o;
+}
+// lo mismo con textos ya formateados
+function nvStr(ok, cands, extra){
+  const o = [ok];
+  for(const c of cands){ if(c && !o.includes(c) && o.length<4) o.push(c); }
+  let k = 0; while(o.length<4 && k<60){ const c = extra(++k); if(!o.includes(c)) o.push(c); }
+  return o;
+}
+
+// ===== 040: variantes numéricas (ISA, atmósfera, Dalton, TUC, fases de hipoxia, oxígeno suplementario) =====
+const isaT = ft => ft>=36000 ? -56.5 : 15-2*ft/1000;
+const tF = x=>`${x<0?"−":"+"}${Math.abs(x)} °C`;
+const devF = x=>`ISA ${x>0?"+":x<0?"−":"±"}${Math.abs(x)}`.replace(/\.0$/,"");
+function gDev040(){
+  const hi = Math.random()<.22, ft = hi ? nvP([37,39,41,43,45])*1000 : nvR(2,35)*1000 + nvP([0,0,500]), isa = isaT(ft), mode = nvP(["dev","dev","dev","isa","cw"]);
+  const place = ft>=36000 && Math.random()<.5 ? `FL ${ft/100}` : `${nvN(ft)} ft`;
+  if(mode==="isa") return {text:nvP([`What ISA temperature should be used at ${place}?`, `In the ISA, the temperature at ${place} is:`]),
+    opts:nvOpts(isa,[isa<-56?-45:-isa, 15-ft/1000, 15-2*ft/1000-10, 15-2*ft/1000+10, -56.5],tF,5).map(x=>x),
+    expl:ft>=36000?`Por encima de 36.000 ft la ISA es fija: −56,5 °C.`:`ISA = 15 − 2 × ${ft/1000} = ${isa} °C (≈ 2 °C por cada 1.000 ft; por encima de 36.000 ft queda fija en −56,5 °C).`, v:true, p:{kind:"isat",ft,ans:isa}};
+  const dev = nvP([-12,-10,-8,-6,-4,-3,3,4,6,8,10,12,15]) + (Math.random()<.2?.5:0), oat = Math.round((isa+dev)*10)/10, d = Math.round((oat-isa)*10)/10;
+  const dlab = d===0?"ISA":devF(d);
+  if(mode==="cw") return {text:nvP([`At ${place} the temperature is ${tF(oat)}. Compared with ISA it is:`, `At ${place} the outside temperature is ${tF(oat)}. Relative to the ISA it is:`]),
+    opts:[`About ${Math.abs(d)} °C ${d<0?"colder":"warmer"} (${devF(d)})`, `About ${Math.abs(d)} °C ${d<0?"warmer":"colder"} (${devF(-d)})`, "Within ±2 °C of ISA", "Exactly ISA"].map(s=>s.replace("about","About")),
+    expl:`ISA a ${nvN(ft)} ft = ${isa} °C. ${oat} − (${isa}) = ${d}. ${d<0?"Más frío que la ISA → negativa.":"Más cálido que la ISA → positiva."}`, v:true, p:{kind:"isadev",ft,oat,ans:d}};
+  return {text:nvP([`At ${place} the outside air temperature is ${tF(oat)}. The ISA deviation is:`, `The OAT at ${place} is ${tF(oat)}. What is the ISA deviation?`]),
+    opts:nvOpts(d,[-d, oat-15, oat+isa, d+10, d-10],x=>x===0?"ISA":devF(x),2), expl:`ISA a ${nvN(ft)} ft = ${isa} °C${ft<36000?` (15 − 2 × ${ft/1000})`:""}. Desviación = OAT − ISA = ${oat} − (${isa}) = ${d}. Trampa: sumar los dos números en vez de restar.`, v:true, p:{kind:"isadev",ft,oat,ans:d}};
+}
+function gLapse(){
+  if(Math.random()<.5){ const h = nvP([2,3,4,5,6,8,10,12,15,20])*1000, d = h/500;
+    return {text:nvP([`In the ISA troposphere, climbing ${nvN(h)} ft lowers the temperature by about:`, `Climbing ${nvN(h)} ft in the ISA troposphere, the temperature falls by about:`]),
+      opts:nvOpts(d,[d/2, d*2, h/1000/2*5, h/100],x=>`${nvN(x)} °C`,2), expl:`≈ 2 °C por cada 1.000 ft: ${h/1000} × 2 = ${d} °C.`, v:true, p:{kind:"lapse",h,ans:d}}; }
+  const d = nvP([2,4,6,8,10,14,16]), h = d*500;
+  return {text:nvP([`In the ISA, a temperature decrease of about ${d} °C corresponds to a climb of:`, `In the ISA troposphere, the temperature drops ${d} °C after climbing:`]),
+    opts:nvOpts(h,[h/10, h*10, 27*d, h*2],x=>`${nvN(x)} ft`,500), expl:`2 °C cada 1.000 ft → ${d} ÷ 2 × 1.000 = ${nvN(h)} ft.`, v:true, p:{kind:"lapse2",d,ans:h}};
+}
+function gHpaFt(){
+  if(Math.random()<.5){ const h = nvP([1,2,5,8,10,15,20]), ft = h*27;
+    return {text:nvP([`In the ISA near sea level, climbing ${nvN(ft)} ft reduces the pressure by about:`, `Near sea level, a climb of ${nvN(ft)} ft lowers the pressure by about:`]),
+      opts:nvOpts(h,[h*10, h*27, h/10, h*3],x=>`${nvN(+x.toFixed(1),x%1?1:0)} hPa`,Math.max(1,h*.4)), expl:`1 hPa cada 27 ft → ${nvN(ft)} ÷ 27 = ${h} hPa. (Solo cerca del nivel del mar.)`, v:true, p:{kind:"hpaft",ft,ans:h}}; }
+  const h = nvP([3,5,6,8,12,15,25]), ft = h*27;
+  return {text:nvP([`Near sea level in the ISA, a pressure change of ${h} hPa corresponds to a height change of about:`, `${h} hPa of pressure difference near sea level are equivalent to about:`]),
+    opts:nvOpts(ft,[ft*10, ft/10, h*8*3.28, h*100],x=>`${nvN(Math.round(x))} ft`,27), expl:`1 hPa ≈ 27 ft (≈ 8 m) → ${h} × 27 = ${nvN(ft)} ft.`, v:true, p:{kind:"hpaft2",h,ans:ft}};
+}
+function gDalton(){
+  const gas = nvP(["oxygen","oxygen","oxygen","nitrogen"]), pct = gas==="oxygen"?21:78, P = nvP([760,700,600,500,400,380]), pp = Math.round(P*pct/100);
+  return {text:nvP([`The total pressure of the air is ${P} mmHg and it contains ${pct} % ${gas}. The partial pressure of ${gas} is about:`, `Air at ${P} mmHg total pressure (${pct} % ${gas}). By Dalton's law, the partial pressure of ${gas} is about:`]),
+    opts:nvOpts(pp,[pct, P, Math.round(P*(100-pct)/100), Math.round(P/pct)],x=>`${nvN(x)} mmHg`,Math.max(8,pp*.25)), expl:`Dalton: presión parcial = % del gas × presión total = ${pct} % × ${P} = ${pp} mmHg. A mayor altitud baja la presión total y con ella la del oxígeno, aunque siga siendo el ${pct} %.`, v:true, p:{kind:"dalton",P,pct,ans:pp}};
+}
+function gLitres(){
+  const L = nvP([100,250,500,1000,2000,5000]), gas = nvP(["oxygen","oxygen","nitrogen"]), pct = gas==="oxygen"?21:78, x = L*pct/100;
+  return {text:nvP([`In ${nvN(L)} litres of air, about how many litres are ${gas}?`, `A volume of ${nvN(L)} litres of dry air contains approximately how many litres of ${gas}?`]),
+    opts:nvOpts(x,[L*(gas==="oxygen"?.78:.21), L*.01, L*.5, L/2],y=>nvN(+y.toFixed(1),y%1?1:0),Math.max(5,x*.2)), expl:`Aire: 78 % nitrógeno, 21 % oxígeno, 1 % otros gases. ${pct} % de ${nvN(L)} = ${nvN(x)} litros.`, v:true, p:{kind:"litres",L,pct,ans:x}};
+}
+const TUC = [[22000,"5–10 minutes"],[25000,"3–5 minutes"],[28000,"2.5–3 minutes"],[30000,"1–2 minutes"],[35000,"30 seconds–1 minute"],[40000,"15–20 seconds"],[45000,"9–15 seconds"]];
+function gTUC(){
+  const i = nvR(0,TUC.length-1), [ft,t] = TUC[i], rev = Math.random()<.5;
+  if(!rev) return {text:nvP([`At ${nvN(ft)} ft the time of useful consciousness is about:`, `A pilot loses cabin pressure at ${nvN(ft)} ft (normal TUC, seated). The time of useful consciousness is about:`]),
+    opts:nvStr(t,nvShuf(TUC.filter((_,k)=>Math.abs(k-i)>0).map(x=>x[1])).slice(0,3),k=>"1 minute"), expl:`Tabla del curso: ${TUC.map(x=>x[0]/1000+"k "+x[1]).join(" · ")}. A más altitud, menos tiempo.`, v:true, p:{kind:"tuc",ft,ans:t}};
+  const ok = `${nvN(ft)} ft`; const others = nvShuf(TUC.filter((_,k)=>k!==i).map(x=>`${nvN(x[0])} ft`)).slice(0,3);
+  return {text:nvP([`A time of useful consciousness of ${t} corresponds to about:`, `At about which altitude is the time of useful consciousness ${t}?`]),
+    opts:[ok,...others], expl:`Tabla del curso: ${t} ↔ ${nvN(ft)} ft. A más altitud, menos tiempo útil.`, v:true, p:{kind:"tucrev",ft,ans:ok,t}};
+}
+const PH = [["Indifferent phase",1000,9000],["Compensatory phase",11000,14000],["Disturbance phase",16000,19000],["Critical phase",21000,24000]];
+function gPhase(){
+  const [n,a,b] = nvP(PH), ft = nvR(a/500,b/500)*500;
+  return {text:nvP([`At ${nvN(ft)} ft without oxygen, a healthy pilot is in which phase of hypoxia?`, `Flying at ${nvN(ft)} ft in an unpressurised aircraft without oxygen, the pilot is in the:`]),
+    opts:[n,...PH.map(x=>x[0]).filter(x=>x!==n)], expl:`Fases del curso: Indifferent 0–10.000 · Compensatory 10–15.000 · Disturbance 15–20.000 · Critical 20–25.000 ft. ${nvN(ft)} ft → ${n.replace(" phase","")}.`, v:true, p:{kind:"phase",ft,ans:n}};
+}
+function gO2rule(){
+  const night = Math.random()<.4, ft = nvP([4000,6000,7000,9000,11000,12000,13000,13500,15000,16000,18000]), min = nvP([10,20,45,60,90]);
+  const need = night ? ft>5000 : (ft>14000 || (ft>12500 && min>30));
+  const why = night ? `De noche se pide por encima de 5.000 ft.` : ft>14000?`Por encima de 14.000 ft, siempre.`:ft>12500?`Entre 12.500 y 14.000 ft solo si el vuelo pasa de 30 min (aquí ${min} min).`:`Por debajo de 12.500 ft, de día, no se pide.`;
+  const tx = night?`According to the course table, a night flight at ${nvN(ft)} ft`:`According to the course, a daytime flight at ${nvN(ft)} ft lasting ${min} minutes`;
+  return {text:`${tx}: supplemental oxygen is`+":",
+    opts:[need?"Required":"Not required", need?"Not required":"Required", "Required only if the flight lasts more than 60 minutes", "Required only above 20,000 ft"], expl:`Regla del curso: de noche por encima de 5.000 ft · de día por encima de 12.500 ft si dura más de 30 min · por encima de 14.000 ft siempre. ${why}`, v:true, p:{kind:"o2",night,ft,min,ans:need}};
+}
+const GEN_040 = {a9:gLapse, a10:gHpaFt, a11:gDev040, a12:gDev040, a13:gDev040, a14:gDev040, a15:gDev040, a16:gDev040, a17:gDev040, a18:gDev040, a19:gDev040, q13:gDev040, q14:gDev040, gl6:gDalton, h2:gDalton, tr13:gLitres, h24:gTUC, h25:gTUC, h26:gTUC, h27:gTUC, h29:gTUC, h15:gPhase, h16:gPhase, h17:gPhase, h18:gPhase, h21:gO2rule, h22:gO2rule, h23:gO2rule};
+// <<END gen040x>>
 const blockOf = q => (SUBMAP[q[1]]||{block:"X"}).block;
 const in040 = q => blockOf(q)!=="X";
 const SEN_LEN = {full:{n:48,min:72,label:"Completo"}, half:{n:24,min:36,label:"Exprés"}, real:{n:48,min:90,label:"Tiempo real"}};
@@ -2221,9 +2313,10 @@ $("#startBtn").addEventListener("click",()=>{
   if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
   $("#startMsg").textContent = "";
   const st = stats();
-  current = qs.map(q=>({id:q[0],lo:q[1],src:q[2],ref:q[3],text:q[4],expl:q[6],
-    opts:shuffle(q[5].map((t,i)=>({t,ok:i===0}))),ans:null,
-    tag: (st.q[q[0]]||{}).last===false ? "fallada antes" : pendingFromBase(q,st) ? "variante de una fallada" : focusActive(q[0],st) ? "refuerzo" : ""}));
+  current = qs.map(q=>{ const G = (typeof GEN_040!=="undefined") && GEN_040[baseOf(q[0])], g = G ? G() : null;
+    return {id:q[0],lo:q[1],src:q[2],ref:q[3],text:g?g.text:q[4],expl:g?g.expl:q[6],gen:!!g,
+    opts:shuffle((g?g.opts:q[5]).map((t,i)=>({t,ok:i===0}))),ans:null,
+    tag: (st.q[q[0]]||{}).last===false ? "fallada antes" : pendingFromBase(q,st) ? "variante de una fallada" : focusActive(q[0],st) ? "refuerzo" : ""}; });
   $("#qlist").innerHTML = current.map((q,i)=>`
     <div class="q ${q.tag?'focus':''}" id="q${i}">
       <div class="qhead"><span>${i+1}/${current.length} · ${esc(loLabel(q.lo))}</span><span>${q.tag?`<span class="tag">${q.tag}</span> `:''}${SRC_TAG(q)}</span></div>
@@ -2247,7 +2340,7 @@ async function finishTest(timeout){
   const byLO = {}, byBlock = {}; let score=0, s0=0, n0=0; const items=[];
   current.forEach((q,i)=>{
     const ok = q.ans!==null && q.opts[q.ans].ok; if(ok) score++;
-    items.push({q:q.id, ok, a: q.ans===null?null:q.opts[q.ans].t});
+    items.push(Object.assign({q:q.id, ok, a: q.ans===null?null:q.opts[q.ans].t}, q.gen?{v:q.text, c:q.opts.find(o=>o.ok).t, e:q.expl}:{}));
     (byLO[q.lo]=byLO[q.lo]||{ok:0,total:0}).total++; if(ok) byLO[q.lo].ok++;
     const bk=blockOf([q.id,q.lo]); (byBlock[bk]=byBlock[bk]||{ok:0,total:0}).total++; if(ok) byBlock[bk].ok++;
     if(q.src!=="a"){ n0++; if(ok) s0++; }
@@ -2311,10 +2404,10 @@ function showDetail(id){
   const wrong = (at.items||[]).filter(i=>!i.ok);
   $("#histDetail").innerHTML = `<h2>Detalle del ${fmtDate(at.date)}</h2><p class="muted">${loSummary(at)}</p>${at.note?`<p class="muted">${esc(at.note)}</p>`:""}` + (wrong.length ? wrong.map(w=>{
     const q = byId(w.q); if(!q) return "";
-    return `<div class="q"><div class="qhead"><span>${esc(loLabel(q[1]))}</span><span>${SRC_TAG({src:q[2], id:q[0]})}${q[2]==="o"?' <span class="tag">original</span>':''}</span></div><div class="qtext">${esc(q[4])}</div>
+    return `<div class="q"><div class="qhead"><span>${esc(loLabel(q[1]))}</span><span>${SRC_TAG({src:q[2], id:q[0]})}${q[2]==="o"?' <span class="tag">original</span>':''}</span></div><div class="qtext">${esc(w.v||q[4])}${w.v?' <span class="tag">variante</span>':''}</div>
       ${w.a!==undefined?`<div class="choice wrong">${w.a===null?'Sin responder':esc(w.a)}</div>`:''}
-      <div class="choice right">${esc(q[5][0])}</div>
-      <div class="expl"><span class="es">${esc(q[6])}</span><div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
+      <div class="choice right">${esc(w.c||q[5][0])}</div>
+      <div class="expl"><span class="es">${esc(w.e||q[6])}</span><div class="ref"><b>Repasa:</b> ${esc(refText({ref:q[3],lo:q[1]}))}</div></div></div>`;
   }).join("") : `<p class="muted">Sin fallos en este intento.</p>`);
   $("#histDetail").scrollIntoView({behavior:"smooth"});
 }

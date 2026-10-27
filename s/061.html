@@ -3252,6 +3252,484 @@ BASE.push(
  ["cq4","090.14","n","dme","DME: groundspeed and time to the station.",["",""," ",""],""]
 );
 Object.assign(GEN,{cq1:gQvar, cq2:gRBturn, cq3:gRadQ, cq4:gDMEgs});
+// ===== Ejercicios de clase (profe): hora UTC/LMT/ST, rutas con polo, escalas de carta y rumbos — varias redacciones, cifras nuevas cada vez =====
+const hc = m => { m = ((Math.round(m)%1440)+1440)%1440; return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0"); };
+const dayRel = m => Math.floor(Math.round(m)/1440);
+const dRel = m => { const d = dayRel(m); return d===0 ? "" : ` (Day ${d>0?"+":"−"}${Math.abs(d)})`; };
+const dAbs = m => `(Day ${dayRel(m)+1})`;
+const fmtHM = m => `${Math.floor(m/60)} h ${String(m%60).padStart(2,"0")} min`;
+function fillS(correct, cands, extra){
+  const o = [correct];
+  for(const c of cands){ if(c && !o.includes(c) && o.length<4) o.push(c); }
+  let k = 0; while(o.length<4){ const c = extra(++k); if(!o.includes(c)) o.push(c); }
+  return o;
+}
+const lonTxtP = (deg,min,W) => `${String(deg).padStart(3,"0")}°${String(min).padStart(2,"0")}′ ${W?"W":"E"}`;
+const lonTxtQ = (deg,min,W) => min ? lonTxtP(deg,min,W) : `${deg}°${W?"W":"E"}`;
+const zoneTxt = z => `UTC${z<0?"−":"+"}${Math.abs(z)}`;
+
+// 1) UTC ↔ LMT en un meridiano (con minutos de arco)
+function gPLMT(){
+  const deg = rnd(3,165), min = pick([0,0,15,30,45]), W = Math.random()<.5;
+  const arc = deg*4 + min/15, s = W ? -1 : 1, L = lonTxtP(deg,min,W), Lq = lonTxtQ(deg,min,W);
+  const toUTC = Math.random()<.4;
+  let base, ans, wrong;
+  do{ base = rnd(0,23)*60 + pick([0,5,10,15,20,25,30,35,40,45,50,55]);
+      ans = toUTC ? base - s*arc : base + s*arc; } while(ans<0 || ans>=1440);
+  const wrongSign = toUTC ? base + s*arc : base - s*arc;
+  const noMin = toUTC ? base - s*deg*4 : base + s*deg*4;
+  const tag = toUTC ? "UTC" : "LMT";
+  const cands = [wrongSign, ans+60, ans-60, min ? noMin : ans+Math.round(arc/2), ans+Math.max(5,Math.round(arc/3))].map(x=>x);
+  const opts = fill(ans, cands, x=>`${hc(x)} ${tag}`);
+  const T = toUTC ? pick([
+      `The LMT at a position located at ${L} is ${hc(base)}. What is the UTC?`,
+      `A ground station at ${Lq} reads ${hc(base)} LMT. The corresponding UTC is:`,
+      `At ${Lq} the local mean time is ${hc(base)}. At the same instant, the time at Greenwich (UTC) is:`
+    ]) : pick([
+      `If the UTC time is ${hc(base)}, what is the LMT at a position located at ${L}?`,
+      `At ${hc(base)} UTC, what is the local mean time at the point ${Lq}?`,
+      `A navigator on the ground at ${Lq} wants his LMT. The UTC is ${hc(base)}; the LMT there is:`,
+      `The UTC is ${hc(base)}. What does a clock set to local mean time show at ${L}?`
+    ]);
+  return {text:T, opts,
+    expl:`Arco en tiempo: ${deg}°${min?min+"′":""} × 4 min = ${arc} min (${fmtHM(arc)}). ${W?"West: la LMT va por detrás de la UTC":"East: la LMT va por delante de la UTC"}. ${toUTC?"De LMT a UTC":"De UTC a LMT"}: ${hc(base)} ${(toUTC?-s:s)>0?"+":"−"} ${fmtHM(arc)} = ${hc(ans)} ${tag}.`,
+    v:true, p:{kind:"lmt", deg, min, W, base, toUTC, ans}};
+}
+
+// 2) El mismo instante UTC visto desde dos meridianos cerca del 180 (cambio de día)
+function gPLMT2(){
+  const d1 = rnd(160,179), m1 = pick([0,0,0,30]), d2 = rnd(160,179), m2 = pick([0,0,0,30]);
+  const u = rnd(0,23)*60 + pick([0,10,15,20,30,40,45,50]);
+  const a1 = d1*4 + m1/15, a2 = d2*4 + m2/15;
+  const l1 = u + a1, l2 = u - a2;
+  const L1 = lonTxtQ(d1,m1,false), L2 = lonTxtQ(d2,m2,true);
+  const f = (x,y) => `Pos 1: ${hc(x)} LMT${dRel(x)} / Pos 2: ${hc(y)} LMT${dRel(y)}`;
+  const ok = f(l1,l2);
+  const anyTag = dayRel(l1)!==0 || dayRel(l2)!==0;
+  const noTag = `Pos 1: ${hc(l1)} LMT / Pos 2: ${hc(l2)} LMT`;
+  const extra = k => f(l1 + k*(k%2?20:-10), l2 + k*(k%2?-10:20));
+  const opts = fillS(ok, [
+      f(l2,l1),                                // intercambiadas
+      f(u - a1, u + a2),                       // signos al revés
+      anyTag ? noTag : `Pos 1: ${hc(l1)} LMT (Day +1) / Pos 2: ${hc(l2)} LMT`,   // sin día o día de más
+      f(l1 - 2, l2 + 2)
+    ], extra);
+  const T = pick([
+      `If the UTC time is ${hc(u)}, what is the LMT at a position located at ${L1} (Pos 1) and ${L2} (Pos 2)?`,
+      `Two aircraft report at the same instant, ${hc(u)} UTC: Pos 1 at ${L1} and Pos 2 at ${L2}. Their local mean times are:`,
+      `At ${hc(u)} UTC, the mean sun is observed from two places: Pos 1 (${L1}) and Pos 2 (${L2}). What LMT, and on which day relative to Greenwich, does each place have?`
+    ]);
+  return {text:T, opts,
+    expl:`Pos 1: ${d1}°${m1?m1+"′":""} E → +${fmtHM(a1)}: ${hc(u)} + ${fmtHM(a1)} = ${hc(l1)}${dRel(l1)||" (mismo día)"}. Pos 2: ${d2}°${m2?m2+"′":""} W → −${fmtHM(a2)}: ${hc(u)} − ${fmtHM(a2)} = ${hc(l2)}${dRel(l2)||" (mismo día)"}. El Este va por delante y el Oeste por detrás: junto al 180° hay casi 24 h de diferencia entre un lado y otro.`,
+    v:true, p:{kind:"lmt2", d1,m1,d2,m2,u, l1,l2}};
+}
+
+// 3) Vuelo: salida en LMT / ST y llegada en ST con día (incluye antimeridiano)
+function gPFlight(fam){
+  const kind = fam==="B" ? "B" : fam==="A" ? pick(["A","A","C"]) : pick(["A","A","B","B","C"]);
+  let tdep, G0, z, dur, extra;
+  dur = rnd(2,14)*60 + pick([0,15,30,45]);
+  tdep = rnd(0,23)*60 + pick([0,5,10,15,20,25,30,35,40,45,50,55]);
+  let text, arcS;
+  if(kind==="A"){
+    const deg = rnd(10,170), min = pick([0,30]), W = Math.random()<.5;
+    arcS = (W?-1:1)*(deg*4 + min/15); z = pick([-9,-8,-7,-6,-5,-4,-3,-1,1,2,3,4,5,6,7,8,9,10,11,12]);
+    const lonT = lonTxtP(deg,min,W);
+    text = pick([
+      `An aircraft departs from Airport A (${lonT}) when the Local Mean Time (LMT) is ${hc(tdep)} (Day 1). The flight duration is ${Math.floor(dur/60)} hours and ${dur%60} minutes. Determine the Standard Time (ST) of arrival, and the day, at Airport B, which operates in a ${zoneTxt(z)} time zone.`,
+      `Take-off from Airport A, located at ${lonT}, takes place at ${hc(tdep)} LMT (Day 1). After a flight of ${fmtHM(dur)} the aircraft lands at Airport B, whose official time is ${zoneTxt(z)}. What is the arrival time at B (ST) and the day?`,
+      `At ${lonT} the local mean time is ${hc(tdep)} (Day 1) as an aircraft takes off. It flies for ${Math.floor(dur/60)} h ${dur%60} min to an airport in the ${zoneTxt(z)} zone. The standard time and the day of arrival are:`
+    ]);
+    G0 = tdep - arcS;
+    extra = `Salida: ${hc(tdep)} LMT en ${deg}°${min?min+"′":""}${W?"W":"E"} → UTC = ${hc(tdep)} ${arcS<0?"+":"−"} ${fmtHM(Math.abs(arcS))} = ${hc(G0)}${dRel(G0)}.`;
+  }else if(kind==="B"){
+    const east = Math.random()<.5;
+    const d1 = rnd(165,179), m1 = pick([0,0,30]), d2 = rnd(165,179), m2 = pick([0,0,30]);
+    const lat = lonTxtP(d1,m1,!east), lar = lonTxtP(d2,m2,east);
+    arcS = (east?1:-1)*(d1*4 + m1/15);
+    z = east ? pick([-11,-12]) : pick([12,13]);
+    dur = rnd(2,9)*60 + pick([0,15,30,45]);
+    text = pick([
+      `An aircraft departs from Airport A (${lat}) at ${hc(tdep)} LMT (Day 1). It flies ${east?"east (to the right on the map)":"west (to the left on the map)"} for ${Math.floor(dur/60)} hours and ${dur%60} minutes, crossing the antimeridian bound for Airport B (${lar}), whose official time zone is ${zoneTxt(z)}. At what Standard Time (ST) and on which day does it arrive?`,
+      `Airport A is at ${lat}; an aircraft takes off at ${hc(tdep)} LMT (Day 1) and flies ${east?"eastbound":"westbound"}, crossing the 180° meridian, for ${fmtHM(dur)}. It lands at Airport B (${lar}), ${zoneTxt(z)}. The arrival ST and day are:`
+    ]);
+    G0 = tdep - arcS;
+    extra = `Salida: ${hc(tdep)} LMT en ${d1}°${m1?m1+"′":""}${east?"E":"W"} → UTC = ${hc(G0)}${dRel(G0)}. Cruza el antimeridiano: el calendario cambia de día, pero la UTC no se entera; por eso se trabaja siempre en UTC.`;
+  }else{
+    const a = pick([-8,-6,-5,-3,-1,0,1,2,3,5,8,9,10]); z = pick([-9,-7,-4,2,4,5,6,7,11,12].filter(x=>x!==a));
+    text = pick([
+      `An aeroplane departs at ${hc(tdep)} ST (${zoneTxt(a)}) on Day 1 and flies for ${fmtHM(dur)} to an airport that uses ${zoneTxt(z)}. The local standard time of arrival and the day are:`,
+      `Departure ${hc(tdep)} ST (${zoneTxt(a)}), Day 1. Flight time ${Math.floor(dur/60)} h ${dur%60} min. The destination is in the ${zoneTxt(z)} zone. What is the arrival ST and the day?`
+    ]);
+    G0 = tdep - 60*a; arcS = 60*a;
+    extra = `Salida: ${hc(tdep)} ST ${zoneTxt(a)} → UTC = ${hc(G0)}${dRel(G0)}.`;
+  }
+  const Garr = G0 + dur, ST = Garr + 60*z;
+  if(dayRel(ST)<0) return gPFlight(fam);
+  const fm = (m,dayShift=0) => `${hc(m)} ST (Day ${dayRel(m)+1+dayShift})`;
+  const ok = fm(ST);
+  const tr = [
+    fm(Garr),                                    // olvida la zona: da la UTC
+    fm(Garr - 60*z),                             // zona con el signo cambiado
+    fm((tdep + arcS) + dur + 60*z),              // longitud/zona de salida con signo cambiado
+    `${hc(ST)} ST (Day ${dayRel(ST)+1+(Math.random()<.5?1:-1)})`,   // día equivocado
+    Garr>=1440 ? `${Math.floor(Garr/60)}:${String(Garr%60).padStart(2,"0")} ST (Day ${dayRel(ST)+1})` : null   // horas sin pasar de 24
+  ];
+  const opts = fillS(ok, tr, k=>fm(ST + 60*(k%2?k:-k)));
+  return {text, opts,
+    expl:`${extra} Llegada UTC = ${hc(G0)} + ${fmtHM(dur)} = ${hc(Garr)}${dRel(Garr)}. ST = UTC ${z<0?"−":"+"} ${Math.abs(z)} h = ${hc(Garr)} ${z<0?"−":"+"} ${Math.abs(z)} h = ${hc(ST)}${dayRel(ST)!==dayRel(Garr)?" (cambia de día)":""}. Día ${dayRel(ST)+1} (Day 1 = fecha de salida).`,
+    v:true, p:{kind:"flight", variant:kind, tdep, arcS, z, dur, ST, G0}};
+}
+
+// 4) Ruta por rumbos cardinales: posiciones B, C, D (con paso por el polo)
+function gPRoute(){
+  const norm = x => { x = ((x+10800)%21600+21600)%21600 - 10800; return x===-10800 ? 10800 : x; };
+  const cosd = l => Math.cos(l/60*Math.PI/180);
+  const latS = v => { const a=Math.abs(v), d=Math.floor(a/60); return `${d}°${String(a-d*60).padStart(2,"0")}′${v>=0?"N":"S"}`; };
+  const lonS = v => { v = norm(v); const a=Math.abs(v), d=Math.floor(a/60); return `${d}°${String(a-d*60).padStart(2,"0")}′${v>=0?"E":"W"}`; };
+  const pos = (la,lo) => `${latS(la)}, ${lonS(lo)}`;
+  const pole = Math.random()<.55;
+  const A = {lat: pick([-1,1])*(rnd(5,50)*60 + pick([0,0,20,40,30])), lon: pick([-1,1])*(rnd(5,175)*60 + pick([0,0,30]))};
+  const legs = []; let cur = A;
+  const ns = (north,dist) => { let l = cur.lat + (north?1:-1)*dist, lo = cur.lon, cr = false;
+    if(l>5400){ l = 10800-l; lo += 10800; cr = true; } else if(l<-5400){ l = -10800-l; lo += 10800; cr = true; }
+    const to = {lat:l, lon:norm(lo)}; legs.push({t:"NS", north, dist, head: north?"360° (North)":"180° (South)", to, cr}); cur = to; };
+  const ew = (east,dist) => { const dl = Math.round(dist/cosd(cur.lat)), to = {lat:cur.lat, lon:norm(cur.lon+(east?1:-1)*dl)};
+    legs.push({t:"EW", east, dist, dl, head: east?"090° (East)":"270° (West)", to}); cur = to; };
+  const r10 = x => Math.round(x/10)*10;
+  const n1 = Math.random()<.5, d1 = r10(rnd(8,40)*60 + pick([0,0,20,40]));
+  const lat1 = A.lat + (n1?1:-1)*d1;
+  ns(n1, d1);
+  if(Math.abs(cur.lat)>4800 || Math.abs(cur.lat)<900 || legs[0].cr) return gPRoute();
+  ew(Math.random()<.5, r10(rnd(4,20)*60 + pick([0,0,30])));
+  if(pole){
+    const goN = cur.lat>=0, toPole = 5400 - Math.abs(cur.lat);
+    ns(goN, r10(toPole + rnd(10,50)*60));
+  }else if(Math.random()<.5){
+    const n3 = Math.random()<.5, d3 = r10(rnd(4,25)*60);
+    if(Math.abs(cur.lat + (n3?1:-1)*d3)>5000) return gPRoute();
+    ns(n3, d3);
+  }
+  const names = ["B","C","D"], n = legs.length;
+  const startTxt = `${latS(A.lat)} ${lonS(A.lon)}`;
+  const legTxt = legs.map((l,i)=>`${i+1}) Leg ${["A→B","B→C","C→D"][i]}: heading ${l.head} for ${l.dist} NM`).join("; ");
+  const askI = (n>=2 && Math.random()<.3) ? n-2 : n-1;
+  const T0 = pick([`An aircraft departs from Position A (${startTxt}) and executes the following route: `, `Starting at A (${startTxt}), an aircraft flies this route: `]);
+  const TQ = askI===n-1 ? pick([` Calculate the geographic coordinates (latitude and longitude) of the final position ${names[askI]}.`, ` The final position of ${names[askI]} is:`]) : ` The position of ${names[askI]} is:`;
+  const L = legs[askI], ans = L.to, prev = askI===0 ? A : legs[askI-1].to;
+  const correct = pos(ans.lat, ans.lon), cands = [];
+  if(L.cr){
+    cands.push(pos(ans.lat, ans.lon+10800));                                       // olvida pasar al meridiano opuesto
+    cands.push(pos(prev.lat, ans.lon));                                            // ignora el avance en latitud
+    const ex = prev.lat + (L.north?1:-1)*L.dist;
+    cands.push(pos(Math.sign(ex)*(Math.abs(ex)-5400), ans.lon));                   // resta 90° en vez de reflejar
+    cands.push(pos(-ans.lat, ans.lon+10800));                                      // hemisferio equivocado
+  }else if(L.t==="EW"){
+    const sg = L.east?1:-1;
+    cands.push(pos(ans.lat, prev.lon + sg*L.dist));                                // no corrige por cos(lat)
+    cands.push(pos(ans.lat, prev.lon + sg*Math.round(L.dist*cosd(prev.lat))));    // multiplica en vez de dividir
+    cands.push(pos(ans.lat, prev.lon - sg*L.dl));                                  // sentido contrario
+    cands.push(pos(-ans.lat, ans.lon));
+  }else{
+    cands.push(pos(prev.lat + (L.north?-1:1)*L.dist, ans.lon));                    // latitud en sentido contrario
+    cands.push(pos(ans.lat + 600, ans.lon));
+    cands.push(pos(ans.lat, ans.lon + 600));
+    cands.push(pos(ans.lat - 600, ans.lon));
+  }
+  const opts = fillS(correct, cands, k=>pos(ans.lat + (k%2?1:-1)*k*20, ans.lon + (k%2?-1:1)*k*35));
+  const expl = legs.slice(0,askI+1).map((l,i)=>{
+    const f = i===0 ? A : legs[i-1].to;
+    if(l.t==="NS") return `Etapa ${i+1} (${l.north?"N":"S"}, ${l.dist} NM = ${(l.dist/60).toFixed(2)}° de latitud): de ${latS(f.lat)} a ${l.cr?"más allá del polo → se refleja la latitud y la longitud cambia 180°: ":""}${pos(l.to.lat,l.to.lon)}.`;
+    return `Etapa ${i+1} (${l.east?"E":"W"}, ${l.dist} NM): sobre el paralelo ${latS(f.lat)} el apartamiento es ${l.dist} NM → cambio de longitud = ${l.dist} ÷ cos ${latS(f.lat).slice(0,-1)} = ${l.dl}′ → ${pos(l.to.lat,l.to.lon)}.`;
+  }).join(" ");
+  return {text:`${T0}${legTxt}.${TQ}`, opts, expl:`1 NM = 1′ de latitud. ${expl}`, v:true,
+    p:{kind:"route", A, legs:legs.map(l=>({t:l.t, n:l.north, e:l.east, d:l.dist})), ask:askI, ans:{lat:ans.lat,lon:ans.lon}}};
+}
+
+// 5) Rumbos: compás, magnético y verdadero (desvío y variación con E/W)
+function gPHdg(){
+  const ch = rnd(5,355), dv = pick([-1,1])*rnd(1,8), vr = pick([-1,1])*rnd(2,15);
+  const mh = ch+dv, th = mh+vr, S = x=>`${Math.abs(x)}° ${x>=0?"E":"W"}`;
+  const kind = pick(["th","th","ch","mh","var","dev"]);
+  const rule = "E suma, W resta (de C a M a T);  W suma, E resta (de T a M a C)";
+  if(kind==="th") return {text:pick([
+      `An aircraft is flying with a Compass Heading (CH) of ${h3(ch)}°. Given that the compass Deviation (DEV) is ${S(dv)} and the Magnetic Variation (VAR) is ${S(vr)}, calculate the True Heading (TH).`,
+      `CH ${h3(ch)}°, DEV ${S(dv)}, VAR ${S(vr)}. The true heading is:`,
+      `The compass reads ${h3(ch)}°. The deviation card says ${S(dv)} and the chart gives a local variation of ${S(vr)}. The aircraft is heading (true):`
+    ]), opts:fill(th,[ch-dv-vr, ch+dv-vr, ch-dv+vr, ch+Math.abs(dv)+Math.abs(vr)],x=>h3(x)+"°"),
+    expl:`C→M: ${h3(ch)} ${dv>=0?"+":"−"} ${Math.abs(dv)} (dev ${dv>=0?"E":"W"}) = M ${h3(mh)}. M→T: ${h3(mh)} ${vr>=0?"+":"−"} ${Math.abs(vr)} (var ${vr>=0?"E":"W"}) = T ${h3(th)}. Regla: en el sentido C→M→T, East suma y West resta.`, v:true, p:{kind:"hdg",sub:"th",ch,dv,vr,ans:norm(th)}};
+  if(kind==="ch") return {text:pick([
+      `The True Heading (TH) required is ${h3(th)}°. The Variation (VAR) is ${S(vr)} and the compass Deviation (DEV) on this heading is ${S(dv)}. Which Compass Heading (CH) must be flown?`,
+      `TH ${h3(th)}°, VAR ${S(vr)}, DEV ${S(dv)}. The compass heading to steer is:`
+    ]), opts:fill(ch,[th+vr+dv, th-vr+dv, th+vr-dv, th-dv],x=>h3(x)+"°"),
+    expl:`T→M: ${h3(th)} ${vr>=0?"−":"+"} ${Math.abs(vr)} = M ${h3(mh)}. M→C: ${h3(mh)} ${dv>=0?"−":"+"} ${Math.abs(dv)} = C ${h3(ch)}. Al ir hacia atrás se invierten los signos.`, v:true, p:{kind:"hdg",sub:"ch",th:norm(th),dv,vr,ans:norm(ch)}};
+  if(kind==="mh") return {text:pick([
+      `Compass heading ${h3(ch)}°, deviation ${S(dv)}. The magnetic heading is:`,
+      `An aircraft steers ${h3(ch)}° by compass. The deviation card shows ${S(dv)}. The aircraft is flying a magnetic heading of:`
+    ]), opts:fill(mh,[ch-dv, ch+2*dv, th, ch],x=>h3(x)+"°"),
+    expl:`M = C ${dv>=0?"+":"−"} ${Math.abs(dv)} = ${h3(mh)} (desvío ${dv>=0?"E suma":"W resta"}).`, v:true, p:{kind:"hdg",sub:"mh",ch,dv,ans:norm(mh)}};
+  if(kind==="var") return {text:`The true heading is ${h3(th)}° and the magnetic heading is ${h3(mh)}°. The variation is:`,
+    opts:fillS(S(vr), [S(-vr), `${Math.abs(vr)+Math.abs(dv)}° ${vr>=0?"E":"W"}`, `${Math.abs(th-ch)}° ${vr>=0?"W":"E"}`], k=>`${Math.abs(vr)+k}° ${vr>=0?"E":"W"}`),
+    expl:`Variación = T − M = ${h3(th)} − ${h3(mh)} = ${vr>=0?"+":"−"}${Math.abs(vr)}°: ${vr>=0?"East":"West"} (si T es mayor que M, la variación es Este).`, v:true, p:{kind:"hdg",sub:"var",th:norm(th),mh:norm(mh),ans:vr}};
+  return {text:`The magnetic heading is ${h3(mh)}° and the compass reads ${h3(ch)}°. The deviation is:`,
+    opts:fillS(S(dv), [S(-dv), `${Math.abs(dv)+Math.abs(vr)}° ${dv>=0?"E":"W"}`, `${Math.abs(vr)}° ${vr>=0?"E":"W"}`], k=>`${Math.abs(dv)+k}° ${dv>=0?"E":"W"}`),
+    expl:`Desvío = M − C = ${h3(mh)} − ${h3(ch)} = ${dv>=0?"+":"−"}${Math.abs(dv)}°: ${dv>=0?"East":"West"}.`, v:true, p:{kind:"hdg",sub:"dev",mh:norm(mh),ch,ans:dv}};
+}
+
+// 6) Escala de la carta: distancia real, distancia en la carta y escala según la latitud (Mercator/Lambert)
+function gPScale(fam){
+  const kind = fam==="d" ? pick(["dist","dist","back","cm"]) : fam==="l" ? pick(["lat","scale","scale"]) : pick(["dist","dist","back","lat","scale","cm"]);
+  const S0 = pick([500000,1000000,1000000,2000000,3000000,250000]), fmtS = s=>"1:"+Math.round(s).toLocaleString("en-US");
+  if(kind==="dist"){
+    const x = pick([4,5,6,8,10,12,15,18,20,25]), lat = pick([0,20,30,40,45,50,60]), km = x*S0/100000, nm = km/1.852;
+    const f = v=>`${v.toFixed(1)} NM`;
+    return {text:pick([
+        `On a chart with a scale of ${fmtS(S0)} at latitude ${lat}° ${pick(["N","S"])}, two points are separated by ${x} cm on the chart. Calculate the actual Earth distance between these two points in nautical miles.`,
+        `The chart scale is ${fmtS(S0)}. Two points measure ${x} cm apart on the chart. The real distance, in NM, is about:`,
+        `A line of ${x} cm is drawn on a chart of scale ${fmtS(S0)} (scale given at ${lat}° latitude). How long is it on the ground, in nautical miles?`
+      ]), opts:fillS(f(nm), [f(km), f(nm*Math.cos(lat*Math.PI/180)), f(nm/Math.cos(lat*Math.PI/180)), f(km/1.609)], k=>f(nm*(1+0.17*k))),
+      expl:`${x} cm × ${S0.toLocaleString("en-US")} = ${(x*S0).toLocaleString("en-US")} cm = ${km} km ÷ 1,852 = ${nm.toFixed(1)} NM. La escala ya es la de esa latitud: no se corrige por coseno. Trampas: km como NM (${km}), o multiplicar/dividir por cos ${lat}°.`, v:true, p:{kind:"scale",sub:"dist",x,S0,ans:nm}};
+  }
+  if(kind==="back"){
+    const nm = pick([20,25,30,40,50,60,75,100,120,150]), cm = nm*1.852*100000/S0, f = v=>`${v.toFixed(1)} cm`;
+    if(cm<1 || cm>60) return gPScale(fam);
+    return {text:pick([
+        `On a chart of scale ${fmtS(S0)}, how long (in cm) is a track of ${nm} NM?`,
+        `A leg of ${nm} NM is to be drawn on a ${fmtS(S0)} chart. Its length on the chart is:`
+      ]), opts:fillS(f(cm), [f(nm*100000/S0), f(cm*1.852), f(cm/1.852), f(cm*2)], k=>f(cm*(1+0.2*k))),
+      expl:`${nm} NM × 1,852 m = ${(nm*1852).toLocaleString("en-US")} m = ${(nm*185200).toLocaleString("en-US")} cm ÷ ${S0.toLocaleString("en-US")} = ${cm.toFixed(1)} cm.`, v:true, p:{kind:"scale",sub:"back",nm,S0,ans:cm}};
+  }
+  const tab = [[30,Math.cos(Math.PI/6)],[45,Math.SQRT1_2],[60,.5],[75,Math.cos(75*Math.PI/180)]];
+  if(kind==="lat"){
+    const [L,c] = pick(tab.slice(0,3)), Sl = Math.round(S0*c/1000)*1000;
+    const f = v=>`${v}°`, pool = [30,45,60,75].filter(x=>x!==L), cand = [90-L, ...pool.sort(()=>Math.random()-.5)];
+    return {text:pick([
+        `The scale of a Lambert/Mercator chart at the Equator (0°) is ${fmtS(S0)}. At what latitude B will the scale of the chart become ${fmtS(Sl)}?`,
+        `On a direct Mercator chart the scale at the equator is ${fmtS(S0)}. At which latitude does the scale reach ${fmtS(Sl)}?`
+      ]), opts:fillS(f(L), cand.map(f), k=>f(L+5*k)),
+      expl:`Mercator: escala ∝ 1/cos φ (crece hacia los polos). ${S0.toLocaleString("en-US")} / ${Sl.toLocaleString("en-US")} = ${(S0/Sl).toFixed(3)} = 1/cos φ → cos φ = ${(Sl/S0).toFixed(3)} → φ = ${L}°.`, v:true, p:{kind:"scale",sub:"lat",S0,Sl,ans:L}};
+  }
+  if(kind==="scale"){
+    const [L,c] = pick(tab), Sl = Math.round(S0*c/1000)*1000, SS0 = S0;
+    const f = v=>fmtS(v), eq = Math.random()<.5;
+    if(eq) return {text:`On a Mercator chart the scale at ${L}° of latitude is ${fmtS(Sl)}. The scale at the Equator is about:`,
+      opts:fillS(f(S0), [f(Sl*c), f(Sl*c*c), f(Sl*2), f(Sl/c/c)].filter(x=>x!==f(S0)), k=>f(S0*(1+0.1*k))),
+      expl:`Escala en φ = escala del ecuador × cos φ, o sea el denominador en φ es MENOR. Ecuador = ${Sl.toLocaleString("en-US")} ÷ cos ${L}° ≈ ${S0.toLocaleString("en-US")}.`, v:true, p:{kind:"scale",sub:"eq",L,Sl,ans:S0}};
+    return {text:pick([
+        `The scale of a Mercator chart at the Equator is ${fmtS(SS0)}. At latitude ${L}° the scale is about:`,
+        `A direct Mercator chart has a scale of ${fmtS(SS0)} at the equator. At ${L}°N the scale is:`
+      ]), opts:fillS(f(SS0*c), [f(SS0/c), f(SS0*c*c), f(SS0), f(SS0*Math.sin(L*Math.PI/180))].filter(x=>x!==f(SS0*c)), k=>f(SS0*c*(1+0.12*k))),
+      expl:`La escala Mercator crece con la latitud: 1:${Math.round(SS0).toLocaleString("en-US")} × cos ${L}° = 1:${Math.round(SS0*c).toLocaleString("en-US")} (el denominador es MENOR: la carta amplía).`, v:true, p:{kind:"scale",sub:"mer",S0:SS0,L,ans:SS0*c}};
+  }
+  // cm: la misma distancia medida en la carta a otra latitud
+  const [L,c] = pick(tab.slice(0,3)), cm = pick([5,8,10,12,15,20]), f = v=>`${v.toFixed(2)} cm`;
+  return {text:pick([
+      `On a Mercator chart a ground distance measures ${cm} cm at the equator. The same distance measured at latitude ${L}° appears on the chart as:`,
+      `A distance of ${cm.toFixed(2)} cm on the chart at the Equator is moved to ${L}° of latitude on the same Mercator chart. On the chart it measures:`
+    ]), opts:fillS(f(cm/c), [f(cm), f(cm*c), f(cm*2), f(cm/c/c)], k=>f(cm/c*(1+0.1*k))),
+    expl:`La escala aumenta con 1/cos φ: ${cm} cm ÷ cos ${L}° = ${(cm/c).toFixed(2)} cm.`, v:true, p:{kind:"scale",sub:"cm",cm,L,ans:cm/c}};
+}
+
+BASE.push(
+ ["pf1","061.05.01","n","time","★ Class exercise: UTC → LMT or LMT → UTC at a meridian (with minutes of arc).",["",""," ",""],""],
+ ["pf2","061.05.01","n","time","★ Class exercise: the same UTC instant at two meridians next to 180° (day changes).",["",""," ",""],""],
+ ["pf3","061.05.02","n","time","★ Class exercise: departure in LMT, arrival in standard time and day (Day 1, Day 2…).",["",""," ",""],""],
+ ["pf3b","061.05.02","n","time","★ Class exercise: flight crossing the antimeridian, arrival standard time and day.",["",""," ",""],""],
+ ["pf4","061.01.04","n","pos","★ Class exercise: route by cardinal headings, coordinates of B, C and D (pole crossing).",["",""," ",""],""],
+ ["pf4b","061.01.04","n","pos","★ Class exercise: position after N/S and E/W legs (change of longitude with cos φ).",["",""," ",""],""],
+ ["pf5","061.01.03","n","var","★ Class exercise: compass, magnetic and true heading with deviation and variation.",["",""," ",""],""],
+ ["pf6","061.04.01","n","scale","★ Class exercise: chart scale, distance on the chart and on the ground.",["",""," ",""],""],
+ ["pf6b","061.04.02","n","scale","★ Class exercise: Mercator/Lambert scale at a latitude.",["",""," ",""],""]
+);
+const GEN_PF = {pf1:gPLMT, pf2:gPLMT2, pf3:()=>gPFlight("A"), pf3b:()=>gPFlight("B"), pf4:gPRoute, pf4b:gPRoute, pf5:gPHdg, pf6:()=>gPScale("d"), pf6b:()=>gPScale("l")};
+Object.assign(GEN, GEN_PF);
+
+// <<BEGIN gen061x>>
+// ===== utilidades comunes de los generadores numéricos (nv*) =====
+const nvR = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const nvP = a => a[Math.floor(Math.random()*a.length)];
+const nvShuf = a => { a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const nvN = (x,d=0) => Number(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const nvH = x => String(((Math.round(x)%360)+360)%360 || 360).padStart(3,"0");
+// 4 opciones distintas, la correcta primero; cands = trampas numéricas (se descartan las repetidas o no finitas)
+function nvOpts(ok, cands, fmt, step){
+  const o = [fmt(ok)];
+  for(const c of cands){ if(c===undefined || c===null || !isFinite(c)) continue; const s = fmt(c); if(!o.includes(s) && o.length<4) o.push(s); }
+  let k = 1; while(o.length<4 && k<60){ const s = fmt(ok + (k%2?1:-1)*Math.ceil(k/2)*(step||1)); if(!o.includes(s)) o.push(s); k++; }
+  return o;
+}
+// lo mismo con textos ya formateados
+function nvStr(ok, cands, extra){
+  const o = [ok];
+  for(const c of cands){ if(c && !o.includes(c) && o.length<4) o.push(c); }
+  let k = 0; while(o.length<4 && k<60){ const c = extra(++k); if(!o.includes(c)) o.push(c); }
+  return o;
+}
+
+// ===== 061: variantes numéricas de preguntas de trial / Senasa que antes salían siempre iguales =====
+// 1) TAS ↔ IAS según la altitud de densidad (aire ISA)
+function gTASd(){
+  const da = nvP([2000,3000,4000,5000,6000,7000,8000,10000]), ias = nvR(16,50)*5;
+  const f = 1/Math.sqrt(Math.pow(1-6.8755856e-6*da, 4.2558797)), tas = Math.round(ias*f);
+  const kmt = x=>`${x} kt`, k = da/1000;
+  if(Math.random()<.3){
+    const back = Math.round(tas/f);
+    return {text:nvP([`TAS is ${tas} kt at a density altitude of ${nvN(da)} ft. The IAS on the airspeed indicator is about:`,
+        `An aeroplane flies at ${tas} kt TAS at a density altitude of ${nvN(da)} ft. Its indicated airspeed is approximately:`]),
+      opts:nvOpts(back,[tas, Math.round(tas*f), Math.round(tas/(1+0.08*k))],kmt,6),
+      expl:`En altura el aire es menos denso: TAS > IAS (≈ +2 % por cada 1.000 ft). Al revés, IAS < TAS: ${tas} ÷ ${f.toFixed(3)} ≈ ${back} kt. Trampa: sumar en vez de restar.`, v:true, p:{kind:"tas",sub:"ias",tas,da,ans:back}};
+  }
+  return {text:nvP([`Flying at a density altitude of about ${nvN(da)} ft with ${ias} kt indicated, the true airspeed will be about:`,
+      `IAS ${ias} kt at a density altitude of ${nvN(da)} ft. Which is the best estimate of TAS?`,
+      `An aeroplane indicates ${ias} kt at a density altitude of ${nvN(da)} ft. Its TAS is approximately:`,
+      `At ${nvN(da)} ft density altitude the ASI shows ${ias} kt. The true airspeed is about:`]),
+    opts:nvOpts(tas,[ias, Math.round(ias/f), Math.round(ias*(1+0.08*k))],kmt,6),
+    expl:`TAS = IAS ÷ √(densidad relativa) → ${ias} × ${f.toFixed(3)} ≈ ${tas} kt (regla de bolsillo: ≈ +2 % por cada 1.000 ft, parecido). Trampas: restar en vez de sumar (TAS menor que IAS) o pasarse con un 8 % por cada 1.000 ft.`, v:true, p:{kind:"tas",sub:"tas",ias,da,ans:tas}};
+}
+// 2) Línea de rumbo (loxodrómica) frente a círculo máximo
+function gRhumbDiff(){
+  const R = nvR(15,80)*100 + nvP([0,50,93]), pct = nvP([1.5,2,2.5,3,3.5,4,5,6]), G = Math.round(R/(1+pct/100)), d = R-G, p = Math.round(d/R*1000)/10;
+  const f = (n,q)=>`${nvN(n)} NM (about ${q} %)`;
+  return {text:nvP([`Rhumb line ${nvN(R)} NM, great circle ${nvN(G)} NM. The difference is about:`,
+      `Two airports are ${nvN(R)} NM apart along the rhumb line and ${nvN(G)} NM along the great circle. The great circle saves about:`]),
+    opts:nvStr(f(d,p), [f(d*10,Math.round(p*100)/10), f(Math.round(d/10),Math.round(p*10)/100), `Zero: the rhumb line is shorter`], k=>f(d+k*7,Math.round((d+k*7)/R*1000)/10)),
+    expl:`Diferencia = ${nvN(R)} − ${nvN(G)} = ${nvN(d)} NM (${p} %). La loxodrómica nunca es más corta que el círculo máximo: solo igual en meridianos y en el ecuador.`, v:true, p:{kind:"rl",R,G,ans:d}};
+}
+// 3) Distancia entre dos meridianos a una latitud
+function gMeridDist(){
+  const dl = nvP([5,10,15,20,30]), la = nvP([30,45,60,70,75]), eq = dl*60, at = Math.round(eq*Math.cos(la*Math.PI/180)), f = x=>`${nvN(x)} NM`;
+  return {text:nvP([`Two meridians ${dl}° apart are ${nvN(eq)} NM apart at the equator. At ${la}°N they are about:`,
+      `At the equator two meridians ${dl}° apart are ${nvN(eq)} NM apart. At latitude ${la}° that distance is about:`]),
+    opts:nvOpts(at,[eq, Math.round(eq/Math.cos(la*Math.PI/180)), Math.round(eq*Math.sin(la*Math.PI/180))],f,10),
+    expl:`Distancia = ${nvN(eq)} × cos ${la}° = ${nvN(eq)} × ${Math.cos(la*Math.PI/180).toFixed(3)} ≈ ${nvN(at)} NM. Los meridianos convergen: cuanto más al polo, más juntos.`, v:true, p:{kind:"merid",dl,la,ans:at}};
+}
+// 4) Deriva y ángulo de corrección de deriva
+function gDrift(){
+  const hd = nvR(1,36)*10, d = nvR(2,15), right = Math.random()<.5, tk = hd + (right?d:-d), side = s=>s?"right":"left";
+  const kind = nvP(["drift","wca","hdg"]);
+  if(kind==="drift") return {text:nvP([`Heading ${nvH(hd)}°T, track ${nvH(tk)}°T. The drift is:`, `The true heading is ${nvH(hd)}° and the aircraft is actually tracking ${nvH(tk)}°T. The drift is:`]),
+    opts:nvStr(`${d}° ${side(right)}`,[`${d}° ${side(!right)}`, `${nvH(tk)}°`, `${(d/2).toFixed(1).replace(".0","")}° ${side(right)}`], k=>`${d+k}° ${side(right)}`),
+    expl:`Deriva = track − rumbo = ${nvH(tk)} − ${nvH(hd)} = ${right?"+":"−"}${d}° → ${d}° a la ${right?"derecha":"izquierda"}.`, v:true, p:{kind:"drift",sub:"drift",hd,tk,right,d}};
+  if(kind==="wca") return {text:nvP([`Drift is ${d}° ${side(right)}. To maintain the desired track, the wind correction angle is:`, `The aircraft drifts ${d}° to the ${side(right)}. The wind correction angle needed is:`]),
+    opts:nvStr(`${d}° ${side(!right)}`,[`${d}° ${side(right)}`, `${2*d}° ${side(!right)}`, `0°`], k=>`${d+k}° ${side(!right)}`),
+    expl:`Para compensar la deriva se apunta al lado contrario: deriva ${d}° ${side(right)} → WCA ${d}° ${side(!right)}.`, v:true, p:{kind:"drift",sub:"wca",d,right}};
+  return {text:nvP([`The desired track is ${nvH(tk)}°T and the wind correction angle is ${d}° ${side(!right)}. The true heading to fly is:`, `To make good a track of ${nvH(tk)}°T you need ${d}° of wind correction to the ${side(!right)}. The heading is:`]),
+    opts:nvOpts(hd,[tk-(hd-tk), tk, hd+2*(right?-d:d)],x=>nvH(x)+"°",5),
+    expl:`El rumbo se corrige hacia el lado del viento: track ${nvH(tk)} ${right?"−":"+"} ${d} = ${nvH(hd)}°.`, v:true, p:{kind:"drift",sub:"hdg",tk,d,right,ans:((hd%360)+360)%360}};
+}
+// 5) ADF / NDB: rumbo magnético para seguir un rumbo con corrección de viento
+function gADFtrack(){
+  const T = nvR(1,36)*10 + nvP([0,0,6,3]), n = nvR(2,12), left = Math.random()<.5, M = T + (left?-n:n), f = x=>nvH(x);
+  return {text:nvP([`To track ${f(T)}°M inbound to an NDB with ${n}° ${left?"left":"right"} wind correction, the magnetic heading is:`,
+      `Inbound to an NDB on a track of ${f(T)}°M, the wind correction angle is ${n}° ${left?"left":"right"}. The magnetic heading to fly is:`]),
+    opts:nvOpts(M,[T+(left?n:-n), T, T+180],x=>f(x),5),
+    expl:`Corrección ${left?"a la izquierda":"a la derecha"} = el morro se apunta ${n}° ${left?"a la izquierda":"a la derecha"} del track: ${f(T)} ${left?"−":"+"} ${n} = ${f(M)}°.`, v:true, p:{kind:"adf",T,n,left,ans:((M%360)+360)%360}};
+}
+// 6) Alcance VHF en línea de vista: 1,23·(√h1 + √h2)
+function gVHFrange(){
+  const two = Math.random()<.5, h2 = nvP([1500,2500,3600,5000,7000,10000,15000,24000,33000]), h1 = nvP([0,100,200,500,1000]);
+  const r = h1? 1.23*(Math.sqrt(h1)+Math.sqrt(h2)) : 1.23*Math.sqrt(h2), ok = Math.round(r/5)*5, f = x=>`${nvN(x)} NM`;
+  if(!two || !h1) return {text:nvP([`The approximate VHF range at ${nvN(h2)} ft is:`, `An aircraft flying at ${nvN(h2)} ft is talking to a station at ground level. The approximate VHF range is:`, `The theoretical VHF line-of-sight range of an aircraft at ${nvN(h2)} ft AGL is about:`]),
+    opts:nvOpts(Math.round(1.23*Math.sqrt(h2)/5)*5,[Math.round(1.23*Math.sqrt(h2)*0.7/5)*5, Math.round(1.23*Math.sqrt(h2)*10/5)*5, Math.round(h2/100/5)*5],f,10),
+    expl:`Alcance ≈ 1,23 × √h (h en ft) = 1,23 × √${nvN(h2)} = ${nvN(Math.round(1.23*Math.sqrt(h2)))} NM. Trampas: pensar que el alcance crece con la altura (no con su raíz).`, v:true, p:{kind:"vhf",h1:0,h2,ans:Math.round(1.23*Math.sqrt(h2)/5)*5}};
+  return {text:nvP([`A VDF aerial is at ${nvN(h1)} ft and the aircraft at ${nvN(h2)} ft. The theoretical VHF range is about:`, `A ground station antenna is at ${nvN(h1)} ft and an aircraft is at ${nvN(h2)} ft. The maximum theoretical VHF range is about:`]),
+    opts:nvOpts(ok,[Math.round(1.23*Math.sqrt(h2)/5)*5, Math.round(1.23*Math.sqrt(h1+h2)/5)*5, Math.round(2*r/5)*5, Math.round(r/2/5)*5],f,10),
+    expl:`Alcance ≈ 1,23 × (√${nvN(h1)} + √${nvN(h2)}) = 1,23 × (${Math.sqrt(h1).toFixed(1)} + ${Math.sqrt(h2).toFixed(1)}) ≈ ${nvN(Math.round(r))} NM. Hay que sumar las DOS raíces: ni solo la del avión ni la raíz de la suma.`, v:true, p:{kind:"vhf",h1,h2,ans:ok}};
+}
+// 7) Regla 1 en 60 y recuperar el track
+function g1in60(){
+  const y = nvP([40,50,60,80,90,100,120]), x = nvP([1,2,3,4,5,6,8,10]), e = Math.round(x/y*600)/10;
+  const f = v=>`${v}°`;
+  return {text:nvP([`According to the 1 in 60 rule, an aircraft ${x} NM off track after ${y} NM has a track error of about:`, `After ${y} NM you find yourself ${x} NM off track. The track error is about:`]),
+    opts:nvOpts(e,[Math.round(x/y*100)/10, Math.round(y/x*10)/10, e*2, x],f,1),
+    expl:`Error de track ≈ (distancia fuera ÷ distancia volada) × 60 = ${x} ÷ ${y} × 60 = ${e}°.`, v:true, p:{kind:"r60",x,y,ans:e}};
+}
+function gRegain(){
+  const t0 = nvR(6,16)*100 + nvP([0,15,30,45]), dt = nvP([10,15,20,25,30]);
+  const T = (a)=>{ const m = (Math.floor(a/100)*60 + a%100); return m; }, back = m=>String(Math.floor(m/60)%24*100 + m%60).padStart(4,"0");
+  const m0 = T(t0), m1 = m0+dt, ans = m1+dt;
+  return {text:nvP([`You were on track at ${back(m0)} and find yourself off track at ${back(m1)}. Applying double the track error angle, you regain track at about:`, `The aircraft left its track at ${back(m0)} (on track) and at ${back(m1)} it is off track. Alter heading by twice the track error angle: you are back on track at about:`]),
+    opts:nvStr(back(ans),[back(m1+Math.round(dt/2)), back(m1+2*dt), back(m1)], k=>back(ans+5*k)),
+    expl:`Con el doble del error de track (1 en 60 doble) se vuelve al track en el mismo tiempo que se tardó en salirse: ${back(m1)} + ${dt} min = ${back(ans)}.`, v:true, p:{kind:"regain",m0,m1,ans:back(ans)}};
+}
+// 8) Tarjeta de desvíos: rumbo del compás → magnético
+function gDevCard(){
+  const c = nvR(1,36)*10, d = nvP([-1,1])*nvR(1,6), m = c + d;
+  return {text:nvP([`The deviation card shows ${d>0?"+":"−"}${Math.abs(d)}° for your heading. The compass reads ${nvH(c)}. The magnetic heading is:`, `On the deviation card the correction for this heading is ${d>0?"+":"−"}${Math.abs(d)}°. The compass heading is ${nvH(c)}°. The magnetic heading is:`]),
+    opts:nvOpts(m,[c-d, c, c+180],x=>nvH(x)+"°",2),
+    expl:`M = C ${d>0?"+":"−"} ${Math.abs(d)} = ${nvH(m)}°. Desvío ${d>0?"+ = E (suma)":"− = W (resta)"} al pasar de compás a magnético.`, v:true, p:{kind:"devcard",c,d,ans:((m%360)+360)%360}};
+}
+// 9) Cambio de longitud al volar por un paralelo
+function gDlon(){
+  const la = nvP([30,45,50,60,65,70,75,80]), D = nvP([200,300,400,500,600,800,900,1000]), east = Math.random()<.5, d = D/(60*Math.cos(la*Math.PI/180)), f = x=>`${(Math.round(x*10)/10).toFixed(1)}°`;
+  if(d>45) return gDlon();
+  return {text:nvP([`An aircraft flies ${D} NM due ${east?"east":"west"} along the parallel of ${la}°${nvP(["N","S"])}. Its change of longitude is about:`, `Flying ${D} NM ${east?"eastwards":"westwards"} along the ${la}° parallel, the aircraft changes its longitude by:`]),
+    opts:nvOpts(d,[D/60, D/60*Math.cos(la*Math.PI/180), D/(60*Math.sin(la*Math.PI/180))],f,0.6),
+    expl:`Apartamiento = ${D} NM → cambio de longitud = ${D} ÷ (60 × cos ${la}°) = ${D} ÷ ${(60*Math.cos(la*Math.PI/180)).toFixed(1)} = ${(Math.round(d*10)/10).toFixed(1)}°. Trampas: olvidar el coseno o multiplicar en vez de dividir.`, v:true, p:{kind:"dlon",la,D,ans:Math.round(d*10)/10}};
+}
+// 10) Conversión de unidades
+function gUnits(){
+  const T = nvP([
+    {a:"NM",b:"m",k:1852,v:()=>nvP([1,2,3,5,10]),tr:[1609,1000,1.15*1852]},
+    {a:"NM",b:"km",k:1.852,v:()=>nvP([10,20,50,100,250,400]),tr:[1.609,0.54]},
+    {a:"km",b:"NM",k:1/1.852,v:()=>nvP([50,100,200,300,500]),tr:[1/1.609,1.852]},
+    {a:"ft",b:"m",k:0.3048,v:()=>nvP([1000,3000,5000,6500,10000]),tr:[3.281,0.3,0.0328]},
+    {a:"m",b:"ft",k:3.2808,v:()=>nvP([300,500,1000,1500,2000]),tr:[0.3048,3.0,32.8]},
+    {a:"kt",b:"km/h",k:1.852,v:()=>nvP([90,120,150,250,450]),tr:[1.609,0.54,1.15]},
+    {a:"km/h",b:"kt",k:1/1.852,v:()=>nvP([100,200,500,800]),tr:[1.852,0.62,1.15]},
+    {a:"statute miles",b:"m",k:1609.34,v:()=>nvP([1,5,10,20]),tr:[1852,1000,1609.34/1.15]}]);
+  const x = T.v(), y = x*T.k, f = n=>{ const r = n>=1000?Math.round(n):n>=100?Math.round(n*10)/10:Math.round(n*100)/100; return `${nvN(r, n>=1000?0:(n>=100?1:2))} ${T.b}`; };
+  return {text:nvP([`${nvN(x)} ${T.a} is approximately equal to:`, `Convert ${nvN(x)} ${T.a} into ${T.b}:`, `${nvN(x)} ${T.a} expressed in ${T.b} is about:`]),
+    opts:nvOpts(y,T.tr.map(t=>x*t),f,y*0.12), expl:`Factor: 1 ${T.a} = ${nvN(T.k,T.k<10?4:1)} ${T.b} → ${nvN(x)} × ${nvN(T.k,T.k<10?4:1)} = ${f(y)}. Factores de memoria: 1 NM = 1.852 m = 1,852 km; 1 ft = 0,3048 m; 1 SM = 1.609 m.`, v:true, p:{kind:"units",x,a:T.a,b:T.b,ans:y}};
+}
+// 11) Distancia mínima entre dos puntos en el mismo meridiano / pasando por el polo
+function gGCsame(){
+  const l1 = nvR(30,70)+nvP([0,.25,.5]), l2 = nvR(15,60)+nvP([0,.25,.5]), lon = nvR(5,170), W = Math.random()<.5, d = Math.abs(l1-l2)*60;
+  const dm = v=>{ const a=Math.floor(v), m=Math.round((v-a)*60); return `${a}°${String(m).padStart(2,"0")}′`; }, f = x=>`${nvN(Math.round(x))} NM`;
+  if(l1===l2) return gGCsame();
+  const lt = `${String(lon).padStart(3,"0")}°00′${W?"W":"E"}`;
+  return {text:nvP([`A: ${dm(l1)}N ${lt}. B: ${dm(l2)}N ${lt}. Shortest distance A–B:`, `Point A is at ${dm(l1)}N ${lt}; point B is at ${dm(l2)}N on the same meridian. The shortest distance between them is:`]),
+    opts:nvOpts(d,[(l1+l2)*60, d*Math.cos((l1+l2)/2*Math.PI/180), (180-l1-l2)*60],f,60),
+    expl:`Mismo meridiano y mismo hemisferio: se restan las latitudes. ${dm(Math.max(l1,l2))} − ${dm(Math.min(l1,l2))} = ${dm(Math.abs(l1-l2))} = ${nvN(Math.round(d))}′ = ${nvN(Math.round(d))} NM (1′ = 1 NM).`, v:true, p:{kind:"gcsame",l1,l2,ans:Math.round(d)}};
+}
+function gGCpole(){
+  const l1 = nvR(40,75), l2 = nvR(30,70), lon = nvR(5,170), W = Math.random()<.5;
+  const lo1 = `${String(lon).padStart(3,"0")}°00′${W?"W":"E"}`, lo2 = `${String(180-lon).padStart(3,"0")}°00′${W?"E":"W"}`;
+  const over = (180-l1-l2)*60, south = (180+l1+l2)*60, par = Math.round(10800*Math.cos(Math.min(l1,l2)*Math.PI/180)), rh = Math.abs(l1-l2)*60;
+  const f = (kind,d)=>`${kind}: ${nvN(Math.round(d))} NM`;
+  return {text:nvP([`A: ${l1}°00′N ${lo1}. B: ${l2}°00′N ${lo2}. The shortest route between them:`, `Point A: ${l1}°N ${lo1}; point B: ${l2}°N ${lo2}. The shortest route between A and B:`]),
+    opts:[f("Passes over the North Pole",over), f("Passes over the South Pole",south), f("Follows the parallel",par), `Is a rhumb line of ${nvN(rh)} NM`],
+    expl:`Los dos puntos están en meridianos opuestos (180° de diferencia de longitud): el círculo máximo pasa por el polo. (90° − ${l1}°) + (90° − ${l2}°) = ${180-l1-l2}° = ${nvN(over)} NM. Seguir el paralelo es mucho más largo y la «loxodrómica» de solo la diferencia de latitud no llega a B.`, v:true, p:{kind:"gcpole",l1,l2,ans:over}};
+}
+// 12) Sol cenital según la fecha / cambio de fecha en el 180° / grados de longitud → minutos
+function gSunDate(){
+  const D = [["21 June","At the Tropic of Cancer (about 23½°N)"],["21 December","At the Tropic of Capricorn (about 23½°S)"],["21 March","At the equator (0°)"],["23 September","At the equator (0°)"]];
+  const places = ["At the Tropic of Capricorn (about 23½°S)","At the Tropic of Cancer (about 23½°N)","At the equator (0°)","At the Arctic Circle (about 66½°N)"];
+  const d = nvP(D);
+  if(Math.random()<.65) return {text:nvP([`Around ${d[0]}, the Sun is overhead at noon:`, `On about ${d[0]} the Sun is vertically overhead at local noon:`]),
+    opts:nvStr(d[1], nvShuf(places.filter(x=>x!==d[1])), k=>"Over the pole "+k), expl:`El Sol está en vertical en el ecuador en los equinoccios (21 mar y 23 sep), en el Trópico de Cáncer (23½°N) el 21 jun y en el de Capricornio (23½°S) el 21 dic.`, v:true, p:{kind:"sun",d:d[0]}};
+  const dates = ["Around 21 June","Around 21 December","Around 21 March or 23 September","Around 21 July"];
+  const want = d[1].includes("equator")?"Around 21 March or 23 September":"Around "+d[0];
+  const place = d[1];
+  return {text:nvP([`The Sun is overhead at noon ${place.replace("At","at").replace("the Tropic","the Tropic")}. This happens:`, `When does the Sun culminate vertically ${place.replace("At","at")}?`]),
+    opts:nvStr(want, nvShuf(dates.filter(x=>x!==want)), k=>"Around "+k+" July"), expl:`Equinoccios: ecuador. Solsticio de junio: Trópico de Cáncer. Solsticio de diciembre: Trópico de Capricornio.`, v:true, p:{kind:"sun2",place}};
+}
+function gDateLine(){
+  const n = nvR(10,27), west = Math.random()<.5, ans = west?n+1:n-1, ord = x=>`${x}${[1,21].includes(x)?"st":[2,22].includes(x)?"nd":[3,23].includes(x)?"rd":"th"}`;
+  const f = x=>`${ord(x)}`;
+  return {text:nvP([`Flying ${west?"westwards":"eastwards"} across the ${west?"180° meridian":"International Date Line"} on the ${ord(n)}, the date becomes the:`, `An aircraft crosses the date line ${west?"heading west":"heading east"} on the ${ord(n)}. The date on board becomes the:`]),
+    opts:nvOpts(ans,[west?n-1:n+1, n, ans+(west?1:-1)],f,1), expl:`Hacia el ${west?"oeste: se suma un día (se salta al día siguiente)":"este: se resta un día (se repite el día anterior)"}. ${ord(n)} → ${ord(ans)}.`, v:true, p:{kind:"dateline",n,west,ans}};
+}
+function gLonTime(){
+  const d = nvP([1,2,5,7.5,10,15,22.5,30,45]), m = d*4, fm = x=>x>=60?`${Math.floor(x/60)} h ${x%60?String(Math.round(x%60)).padStart(2,"0")+" min":""}`.trim():`${x} minutes`;
+  return {text:nvP([`A difference of longitude of ${d}° corresponds to a difference of LMT of:`, `Two places differ by ${d}° of longitude. Their local mean times differ by:`]),
+    opts:nvStr(fm(m),[fm(d*15), fm(Math.round(d/15*60)), fm(Math.round(m/2))], k=>fm(m+k*7)), expl:`1° = 4 minutos de tiempo (360° en 24 h → 15° por hora). ${d}° × 4 = ${m} min.`, v:true, p:{kind:"lontime",d,m}};
+}
+const GEN_061X = {tr6:gTASd, e29:gRhumbDiff, u19:gMeridDist, v5:gDrift, dw2:gDrift, nd15:gADFtrack, vo14:gVHFrange, ap75:gVHFrange, ie1:g1in60, ie5:gRegain, d13:gDevCard, u16:gDlon, u21:gDlon,
+  e12:gSunDate, e13:gSunDate, t18:gDateLine, t19:gDateLine, t9:gLonTime, u1:gUnits, u2:gUnits, u3:gUnits, u4:gUnits, u5:gUnits, u11:gGCsame, u12:gGCpole};
+
+Object.assign(GEN, GEN_061X);
+// <<END gen061x>>
 
 // las del PDF con números ya generados también cuentan como «con cálculo o figura»
 Object.assign(REFS,{
@@ -3513,6 +3991,14 @@ function selectQuestions(mode, inc, lo, atpl){
   for(const x of scored){ if(chosen.filter(isTrial).length>=6) break; if(isTrial(x.q)) take(x.q); }
   for(const x of scored){ if(chosen.length>=N) break; take(x.q); }
   for(const x of scored){ if(chosen.length>=N) break; take(x.q,false); }
+  // los ejercicios de clase (pf…) entran siempre: al menos 3 en cada test adaptativo, sustituyendo a los de menor prioridad
+  const prm = new Map(scored.map(x=>[x.q[0],x.p])), isEx = q=>/^pf/.test(q[0]);
+  shuffle(pool.filter(q=>isEx(q) && !chosen.includes(q))).forEach(q=>{
+    if(chosen.filter(isEx).length>=3) return;
+    const cand = chosen.filter(x=>!isEx(x) && !isTrial(x)).sort((a,b)=>(prm.get(a[0])||0)-(prm.get(b[0])||0));
+    const out = cand.find(x=>!isStyled(x)) || cand[0];
+    if(out) chosen.splice(chosen.indexOf(out),1,q);
+  });
   return shuffle(chosen);
 }
 
