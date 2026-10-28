@@ -206,6 +206,86 @@ table.t3 th:nth-child(5):last-child{width:24%}
 table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 @media (max-width:480px){table.t3{font-size:13px}table.t3 td,table.t3 th{padding:5px 3px}}
 
+/* ---- cockpits con rotulador ---- */
+.ckp{margin:12px 0}
+.ckp-stage{position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#111;line-height:0}
+.ckp-stage img{width:100%;height:auto;display:block}
+.ckp-ov{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ck-t{fill:#fff;font-family:"Barlow Condensed",Barlow,Arial,sans-serif;font-weight:700;paint-order:stroke;stroke:#0b141c;stroke-width:4.2px;stroke-linejoin:round;letter-spacing:.2px}
+.ck-n{fill:#fff;font-family:"Barlow Condensed",Barlow,Arial,sans-serif;font-weight:700;pointer-events:none}
+.ckp-g{cursor:pointer}
+.ck-dot{filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.ckp-g.hot .ck-dot{fill:#d4a017;stroke:#fff}
+.ckp-g:hover .ck-dot{stroke-width:3}
+.ck-pulse{animation:ckp 1.3s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes ckp{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.35);opacity:0}}
+.ck-new .ck-p{stroke-dasharray:1;stroke-dashoffset:1;animation:ckd .7s ease forwards}
+@keyframes ckd{to{stroke-dashoffset:0}}
+.ck-new .ck-t,.ck-new .ck-h{animation:ckf .5s .5s both}
+@keyframes ckf{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.ck-pulse,.ck-new .ck-p,.ck-new .ck-t,.ck-new .ck-h{animation:none}.ck-new .ck-p{stroke-dasharray:none}}
+.ckp-bar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.ckp-bar .btn.sec{border-color:var(--line)}
+.ckp-msg{min-height:20px;font-size:15px;margin:4px 0}
+.ckp-ans{margin-top:6px}
+.ckp-leg{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:2px 14px;font-size:14px}
+.ckp-leg li{display:flex;gap:7px;align-items:baseline;padding:3px 4px;border-bottom:1px dotted var(--line);cursor:pointer;border-radius:3px}
+.ckp-leg li b{flex:none;min-width:20px;height:20px;border-radius:10px;background:var(--ckc,var(--ink));color:var(--paper);font:700 12px/20px "Barlow Condensed",Barlow,sans-serif;text-align:center}
+.ck-cz{--ckc:var(--cz)} .ck-c1{--ckc:var(--c1)} .ck-pi{--ckc:var(--pi)}
+.ckp-leg li.on{background:color-mix(in srgb,var(--warn) 18%,transparent)}
+.ckp-leg li small{color:var(--muted)}
+.ckp-leg .hid{color:transparent!important;background:color-mix(in srgb,var(--ink) 16%,transparent);border-radius:3px;user-select:none}
+.ckp-steps{margin:8px 0 0;padding-left:0;list-style:none;font-size:14px}
+.chkview{margin-top:8px} .chkview[hidden]{display:none}
+.chkview-bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:8px 0 0}
+.chkview-bar .btn.on{background:var(--ink);color:var(--paper)!important}
+/* ---- anemómetro redondo ---- */
+.asiwrap{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:14px;align-items:center;margin:10px 0}
+@media (max-width:620px){.asiwrap{grid-template-columns:1fr}}
+.asi{width:100%;max-width:320px;height:auto;display:block;margin:0 auto}
+.asi-s{display:flex;flex-direction:column;gap:6px}
+.asi-s .row{display:flex;gap:8px;align-items:baseline;border-bottom:1px dotted var(--line);padding:3px 0;font-size:15px;cursor:pointer}
+.asi-s .row b{font-variant-numeric:tabular-nums;min-width:62px}
+.asi-s .row .sw{flex:none;width:14px;height:14px;border-radius:3px;align-self:center;border:1px solid var(--line)}
+.asi-s .row.on{background:color-mix(in srgb,var(--warn) 18%,transparent)}
+
+/* ---- dibujos propios ---- */
+.dgf{margin:12px 0}
+.dgf .dg{width:100%;height:auto;display:block;max-width:560px;margin:0 auto}
+.dgf.dgn .dg{max-width:440px}
+.dgtabs .visbtns{justify-content:center}
+.dgtabs .btn.on{background:var(--ink);color:var(--paper)!important}
+.dt{fill:var(--ink);font-family:Barlow,Arial,sans-serif;font-size:15px;font-weight:600}
+.dt.b{font-family:"Barlow Condensed",Barlow,sans-serif;font-size:17px;font-weight:700}
+.dt.s{font-size:13.5px;font-weight:500;fill:var(--muted);paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+.dt.c{font-family:"Barlow Condensed",Barlow,sans-serif;font-size:17px;font-weight:700;paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
+.dbox{fill:var(--paper);stroke-width:2.2}
+.plane .pl{fill:var(--paper);stroke:var(--pc,var(--ink));stroke-width:2.4;stroke-linejoin:round}
+.plane .fu{fill:color-mix(in srgb,var(--pc,var(--ink)) 9%,var(--paper))}
+.plane .cab{fill:color-mix(in srgb,var(--pc,var(--ink)) 28%,var(--paper));stroke:none}
+.plane .prop{stroke:var(--pc,var(--ink));stroke-width:5;stroke-linecap:round}
+.sf{fill-opacity:.55;stroke:var(--ink);stroke-width:1}
+.tab{fill:var(--bad);stroke:var(--ink);stroke-width:.8}
+.wh{fill:var(--ink);stroke:var(--paper);stroke-width:1}
+.pn{fill:var(--paper);font:700 13px "Barlow Condensed",Barlow,sans-serif}
+.pfdn{fill:#fff;font:700 15px "Barlow Condensed",Barlow,sans-serif}
+.pfdb{fill:#fff;font:700 20px "Barlow Condensed",Barlow,sans-serif}
+.pfds{fill:#cfd8df;font:600 12px Barlow,sans-serif;letter-spacing:1px}
+.figs3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+@media (max-width:760px){.figs3{grid-template-columns:1fr}}
+.figs3 .fig{margin:0}.dgt{font:700 18px "Barlow Condensed",Barlow,sans-serif;text-align:center;margin-bottom:2px}
+.extg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:center}
+@media (max-width:640px){.extg{grid-template-columns:1fr}}
+.extl{margin:0;padding-left:0;list-style:none;counter-reset:e;font-size:14.5px}
+.extl li{counter-increment:e;display:flex;gap:6px;flex-wrap:wrap;padding:4px 0 4px 30px;position:relative;border-bottom:1px dotted var(--line)}
+.extl li::before{content:counter(e);position:absolute;left:0;top:4px;width:21px;height:21px;border-radius:50%;background:var(--cz);color:var(--paper);font:700 13px/21px "Barlow Condensed",sans-serif;text-align:center}
+.extl li span{color:var(--muted);flex-basis:100%}
+
+.ckp-steps li{display:flex;gap:8px;align-items:baseline;padding:3px 0;border-bottom:1px dotted var(--line)}
+.ckp-steps li b{flex:none;min-width:22px;height:22px;border-radius:11px;background:var(--ckc,var(--ink));color:var(--paper);font:700 13px/22px "Barlow Condensed",sans-serif;text-align:center}
+.ckp-stage img{border:0!important;border-radius:0!important;background:#111!important}
+.ckfig{margin:12px 0}
+
 .t3bar{margin:6px 0 2px}.t3bar .visbtns{margin:0}
 .chips{margin-top:6px;line-height:2}
 </style>
@@ -223,7 +303,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 </nav>
 
 <section id="p-notes">
-<div class="card" id="cruCard"><b>Los 3 aviones, juntos</b><p class="muted small">Cada tabla lleva los tres aviones en el mismo orden y color: <span style="color:var(--cz);font-weight:700">Cruiser</span> · <span style="color:var(--c1);font-weight:700">C172</span> · <span style="color:var(--pi);font-weight:700">Piper</span>. Pulsa «Tapar valores» encima de cada tabla para memorizarla y «Ponme a prueba» para comprobarte. Los datos del <b>Cruiser</b> y del <b>Cessna</b> del PDF nuevo aún no se han dado en clase.</p><div class="chips"><button class="linkbtn" data-go="lo-POH.1.5">Tabla maestra de los 3 aviones</button> · <button class="linkbtn" data-go="lo-POH.1.4">Ficha del Cruiser</button> · <button class="linkbtn" data-go="lo-POH.2.5">Límites del Cruiser</button> · <button class="linkbtn" data-go="lo-POH.7.8">Sistemas del Cruiser</button> · <button class="linkbtn" data-go="lo-POH.3.3">Emergencias del Cruiser</button></div></div>
+<div class="card" id="cruCard"><b>Los 3 aviones, juntos</b><p class="muted small">Cada tabla lleva los tres aviones en el mismo orden y color: <span style="color:var(--cz);font-weight:700">Cruiser</span> · <span style="color:var(--c1);font-weight:700">C172</span> · <span style="color:var(--pi);font-weight:700">Piper</span>. Pulsa «Tapar valores» encima de cada tabla para memorizarla y «Ponme a prueba» para comprobarte.</p><div class="chips"><button class="linkbtn" data-go="lo-POH.1.5">Tabla maestra de los 3 aviones</button></div></div>
 <div class="card" id="hotCard" hidden><b>Lo que más fallas</b><div id="hotFails"></div></div>
 <h2>POH.1 · General <span class="wtag">9 preg. · 30 %</span></h2>
 
@@ -235,7 +315,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Modelo</b></td><td class="cz"><span class="va">Rotax 912 S2</span></td><td class="c1"><span class="va">Lycoming O-320-<b>H2AD</b></span></td><td class="pi"><span class="va">Lycoming O-320-<b>D2A/D3O</b></span></td></tr><tr><td><b>Potencia</b></td><td class="cz"><span class="va">100 HP</span></td><td class="c1"><span class="va">160 BHP a 2700 RPM</span></td><td class="pi"><span class="va">160 BHP a 2700 RPM</span></td></tr><tr><td><b>Cilindros</b></td><td class="cz"><span class="va">4, opuestos</span></td><td class="c1"><span class="va">4, opuestos</span></td><td class="pi"><span class="va">4, opuestos</span></td></tr><tr><td><b>Refrigeración</b></td><td class="cz"><span class="va">líquido y aire</span></td><td class="c1"><span class="va">aire</span></td><td class="pi"><span class="va">aire</span></td></tr><tr><td><b>Transmisión</b></td><td class="cz"><span class="va">con reductora</span></td><td class="c1"><span class="va">directo</span></td><td class="pi"><span class="va">directo</span></td></tr><tr><td><b>Hélice</b></td><td class="cz"><span class="va">Woodcomp Klassic · 3 palas</span></td><td class="c1"><span class="va">McCauley · 2 palas · 74–75 in</span></td><td class="pi"><span class="va">Sensenich · 2 palas · 72–74 in</span></td></tr><tr><td><b>Paso</b></td><td class="cz"><span class="va">fijo, ajustable en tierra</span></td><td class="c1"><span class="va">fijo</span></td><td class="pi"><span class="va">fijo</span></td></tr></table></div>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>160 = Piper y Cessna</b> (los dos Lycoming). <b>100 = Cruiser</b> (el único Rotax).</li><li>Hélices: Piper = <b>Sens</b>enich · Cessna = <b>Mc</b>Cauley (las dos de 2 palas) · Cruiser = <b>Wood</b>comp (3 palas).</li></ul></div>
 <div class="flag"><b>Trampa</b> «O» = cilindros <b>opuestos</b>; «320» = cilindrada; <b>IO</b> = inyección. Piper = <b>Sens</b>enich · Cessna = <b>Mc</b>Cauley. Ya no digas «los dos aviones tienen 160 HP»: ahora son <b>tres</b>.</div>
-<figure class="fig"><img loading="lazy" src="img/poh-cr-general.jpg" width="900" height="550" alt="PS-28 Cruiser: fuselaje, motor y hélice (diapositiva con foto real del avión de la escuela)."><figcaption>PS-28 Cruiser: fuselaje, motor y hélice (diapositiva con foto real del avión de la escuela).</figcaption></figure>
+<div class="figs3 ext3"><figure class="fig"><img loading="lazy" src="img/cruiser-ext.jpg" width="747" height="565" alt="PS-28 Cruiser"><figcaption style="color:var(--cz);font-weight:700">PS-28 Cruiser</figcaption></figure><figure class="fig"><img loading="lazy" src="img/c172-ext.jpg" width="1100" height="599" alt="Cessna 172"><figcaption style="color:var(--c1);font-weight:700">Cessna 172</figcaption></figure><figure class="fig"><img loading="lazy" src="img/pa28-ext.jpg" width="1100" height="669" alt="Piper PA-28"><figcaption style="color:var(--pi);font-weight:700">Piper PA-28</figcaption></figure></div>
 
 </div>
 </details>
@@ -266,7 +346,6 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <details class="lo atpl" id="lo-POH.1.4" data-lo="POH.1.4">
 <summary><span class="lonum">POH.1.4</span><span class="lotitle">PS-28 Cruiser: motor, combustible y pesos</span></summary>
 <div class="body">
-<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
 <div class="key"><b>Clave</b>Rotax 912 S2 de <b>100 HP</b> · hélice <b>Woodcomp de 3 palas</b> · <b>114 L</b> (113 útiles), MOGAS o AVGAS · <b>MTOW = MLW = 600 kg</b> · CG <b>28–35 % MAC</b>.</div>
 <h4>Motor y hélice</h4>
 <div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th></tr><tr><td>Potencia máxima</td><td class="cz"><span class="va">73,5 kW a 5800 RPM (máx. 5 min)</span></td></tr><tr><td>Potencia máxima continua (MCP)</td><td class="cz"><span class="va">69 kW a 5500 RPM</span></td></tr><tr><td>Autonomía / alcance a 3000 ft</td><td class="cz"><span class="va">5:26 h · 512 NM</span></td></tr></table></div>
@@ -274,7 +353,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th></tr><tr><td>Total / útil</td><td class="cz"><span class="va">114 L / 113 L</span></td></tr><tr><td>Combustible</td><td class="cz"><span class="va">MOGAS, AVGAS</span></td></tr><tr><td>Diferencia máx. entre depósitos</td><td class="cz"><span class="va">30 L</span></td></tr><tr><td>Masa máx. de combustible</td><td class="cz"><span class="va">82 kg (114 L × 0,72)</span></td></tr></table></div>
 <h4>Pesos y centrado</h4>
 <div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th></tr><tr><td>MTOW = MLW</td><td class="cz"><span class="va">600 kg</span></td></tr><tr><td>Peso vacío máx.</td><td class="cz"><span class="va">405 kg</span></td></tr><tr><td>Equipaje</td><td class="cz"><span class="va">18 kg atrás · 10 kg en cada wing locker</span></td></tr><tr><td>Asientos / tripulación</td><td class="cz"><span class="va">2 · 55–115 kg por asiento · piloto mínimo en el izquierdo</span></td></tr><tr><td>Datum</td><td class="cz"><span class="va">borde de ataque del ala, costilla 4</span></td></tr><tr><td>CG</td><td class="cz"><span class="va">28–35 % MAC (MAC 1500 mm: 420–525 mm)</span></td></tr></table></div>
-<figure class="fig"><img loading="lazy" src="img/poh-cr-weights.jpg" width="900" height="516" alt="Carga y centrado del Cruiser: pesos, tripulación, datum y rango del CG (diapositiva)."><figcaption>Carga y centrado del Cruiser: pesos, tripulación, datum y rango del CG (diapositiva).</figcaption></figure>
+<figure class="fig dgf dgn"><svg class="dg" viewBox="0 0 440 352" role="img" aria-label="Pesos y centrado del PS-28 Cruiser"><text x="14" y="22" class="dt b">MAC 1500 mm · datum: borde de ataque del ala</text><rect x="20" y="56" width="400" height="30" rx="4" class="dbox" style="stroke:var(--line)"/><rect x="132.0" y="56" width="28.0" height="30" rx="2" fill="var(--cz)"/><line x1="20.0" y1="86" x2="20.0" y2="94" stroke="var(--ink)"/><text x="20.0" y="110" text-anchor="middle" class="dt s">0</text><line x1="60.0" y1="86" x2="60.0" y2="94" stroke="var(--ink)"/><text x="60.0" y="110" text-anchor="middle" class="dt s">10</text><line x1="100.0" y1="86" x2="100.0" y2="94" stroke="var(--ink)"/><text x="100.0" y="110" text-anchor="middle" class="dt s">20</text><line x1="140.0" y1="86" x2="140.0" y2="94" stroke="var(--ink)"/><text x="140.0" y="110" text-anchor="middle" class="dt s">30</text><line x1="180.0" y1="86" x2="180.0" y2="94" stroke="var(--ink)"/><text x="180.0" y="110" text-anchor="middle" class="dt s">40</text><line x1="220.0" y1="86" x2="220.0" y2="94" stroke="var(--ink)"/><text x="220.0" y="110" text-anchor="middle" class="dt s">50</text><line x1="260.0" y1="86" x2="260.0" y2="94" stroke="var(--ink)"/><text x="260.0" y="110" text-anchor="middle" class="dt s">60</text><line x1="300.0" y1="86" x2="300.0" y2="94" stroke="var(--ink)"/><text x="300.0" y="110" text-anchor="middle" class="dt s">70</text><line x1="340.0" y1="86" x2="340.0" y2="94" stroke="var(--ink)"/><text x="340.0" y="110" text-anchor="middle" class="dt s">80</text><line x1="380.0" y1="86" x2="380.0" y2="94" stroke="var(--ink)"/><text x="380.0" y="110" text-anchor="middle" class="dt s">90</text><line x1="420.0" y1="86" x2="420.0" y2="94" stroke="var(--ink)"/><text x="420.0" y="110" text-anchor="middle" class="dt s">100</text><text x="146.0" y="48" text-anchor="middle" class="dt b" fill="var(--cz)">CG 28–35 % MAC</text><text x="146.0" y="134" text-anchor="middle" class="dt b" fill="var(--cz)">420 – 525 mm</text><text x="220" y="154" text-anchor="middle" class="dt s">% de la cuerda media aerodinámica (MAC)</text><rect x="14" y="176" width="150" height="46" rx="6" class="dbox " style="stroke:var(--cz)"/><text x="89.0" y="196.0" text-anchor="middle" class="dt b">Asientos</text><text x="89.0" y="213.0" text-anchor="middle" class="dt s">55–115 kg cada uno</text><rect x="14" y="234" width="150" height="46" rx="6" class="dbox " style="stroke:var(--cz)"/><text x="89.0" y="254.0" text-anchor="middle" class="dt b">Wing lockers</text><text x="89.0" y="271.0" text-anchor="middle" class="dt s">10 kg + 10 kg</text><rect x="14" y="292" width="150" height="46" rx="6" class="dbox " style="stroke:var(--cz)"/><text x="89.0" y="312.0" text-anchor="middle" class="dt b">Equipaje</text><text x="89.0" y="329.0" text-anchor="middle" class="dt s">18 kg atrás</text><rect x="190" y="176" width="236" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="308.0" y="204.0" text-anchor="middle" class="dt b">Peso vacío máx. 405 kg</text><rect x="190" y="234" width="236" height="46" rx="6" class="dbox " style="stroke:var(--cz)"/><text x="308.0" y="262.0" text-anchor="middle" class="dt b">MTOW = MLW = 600 kg</text><rect x="190" y="292" width="236" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="308.0" y="320.0" text-anchor="middle" class="dt b">Combustible 114 L ≈ 82 kg</text></svg><figcaption>Cruiser: rango del CG sobre la MAC y los pesos que hay que saber.</figcaption></figure>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>114 L × 0,72 = 82 kg</b>: el combustible máximo sale del depósito, no hace falta aprenderlo aparte.</li><li>Equipaje: <b>18 kg</b> en el fuselaje trasero y <b>10 + 10 kg</b> en los wing lockers (38 kg si llenas los tres).</li></ul></div>
 
 </div>
@@ -283,7 +362,6 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <details class="lo atpl" id="lo-POH.1.5" data-lo="POH.1.5">
 <summary><span class="lonum">POH.1.5</span><span class="lotitle">Tabla maestra: los 3 aviones juntos</span></summary>
 <div class="body">
-<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
 <div class="key"><b>Clave</b>Orden de menor a mayor en casi todo: <b>Cruiser &lt; Cessna &lt; Piper</b>. Las excepciones son las que preguntan: <b>VNO</b> (Cessna 128 &gt; Piper 126) y <b>VNE</b> (Cessna = Piper = 160).</div>
 <h4>Motor, combustible y pesos</h4>
 <div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>Motor</td><td class="cz"><span class="va">Rotax 912 S2 · 100 HP</span></td><td class="c1"><span class="va">Lycoming 160 BHP</span></td><td class="pi"><span class="va">Lycoming 160 BHP</span></td></tr><tr><td>Hélice</td><td class="cz"><span class="va">3 palas</span></td><td class="c1"><span class="va">2 palas</span></td><td class="pi"><span class="va">2 palas</span></td></tr><tr><td>Combustible útil</td><td class="cz"><span class="va">113 L</span></td><td class="c1"><span class="va">40 US gal</span></td><td class="pi"><span class="va">48 US gal</span></td></tr><tr><td>MTOW</td><td class="cz"><span class="va">600 kg</span></td><td class="c1"><span class="va">2300 lbs</span></td><td class="pi"><span class="va">2325 lbs</span></td></tr><tr><td>Unidades</td><td class="cz"><span class="va">métricas</span></td><td class="c1"><span class="va">US</span></td><td class="pi"><span class="va">US</span></td></tr></table></div>
@@ -314,7 +392,6 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>VFE: 75 – 85 – 103</b> (Cruiser, Cessna, Piper): crece con el tamaño del avión.</li><li><b>VNE: 138 · 160 · 160</b>: solo el Cruiser es distinto.</li><li><b>VNO: 108 · 128 · 126</b>: el Cessna es mayor que el Piper (única vez).</li></ul></div>
 <div class="flag"><b>Trampa</b> El Cessna tiene todo <b>más bajo</b> que el Piper salvo <b>VNO</b> (128 frente a 126): VFE 85 frente a 103 y VA 80–97 frente a 88–111. El <b>Cruiser</b> tiene todo más bajo que los dos.</div>
 <div class="comp"><b>Complemento</b><ul><li>Blanco = rango de flaps · verde = operación normal · amarillo = solo con aire en calma · rojo = VNE.</li><li>Según el SOP, el Piper (Archer III) lleva VFE 100 · VNO 122 · VNE 155: no coincide con el POH de esta tabla (103 · 126 · 160). Pregunta a tu instructor cuál usar.</li></ul></div>
-<figure class="fig"><img loading="lazy" src="img/poh-cr-speeds.jpg" width="925" height="494" alt="Anemómetro del Cruiser (arcos 31–75–108–138) y el avión real de la escuela, EC-NKO (diapositiva)."><figcaption>Anemómetro del Cruiser (arcos 31–75–108–138) y el avión real de la escuela, EC-NKO (diapositiva).</figcaption></figure>
 
 </div>
 </details>
@@ -356,7 +433,6 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <details class="lo atpl" id="lo-POH.2.5" data-lo="POH.2.5">
 <summary><span class="lonum">POH.2.5</span><span class="lotitle">PS-28 Cruiser: velocidades, arcos y límites</span></summary>
 <div class="body">
-<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
 <div class="key"><b>Clave</b><b>138 · 108 · 88 · 75</b> = VNE · VNO · VA · VFE. Arcos: <b>31–75</b> blanco · <b>37–108</b> verde · <b>108–138</b> amarillo. Carga: <b>+4/−2 g</b> flaps arriba · <b>+2/0 g</b> flaps abajo.</div>
 <div class="scroll"><table class="t3"><tr><th>Límite</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>VS0 · VS1</td><td class="cz"><span class="va">31 · 37</span></td><td class="c1"><span class="va">41 · 47</span></td><td class="pi"><span class="va">44 · 50</span></td></tr><tr><td>VFE · VNO · VNE</td><td class="cz"><span class="va">75 · 108 · 138</span></td><td class="c1"><span class="va">85 · 128 · 160</span></td><td class="pi"><span class="va">103 · 126 · 160</span></td></tr><tr><td>VA</td><td class="cz"><span class="va">88 kt a 600 kg</span></td><td class="c1"><span class="va">80–97</span></td><td class="pi"><span class="va">88–111</span></td></tr></table></div>
 <h4>Límites del motor (Cruiser)</h4>
@@ -368,7 +444,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <li>Permitidos: <b>lazy eights</b>, <b>chandelles</b> y pérdidas (sin «whip stall»).</li>
 </ul>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>El arco amarillo</b> mide 30 kt en el Cruiser (108 → 138), 32 en el Cessna (128 → 160) y 34 en el Piper (126 → 160).</li><li><b>Aceite del Cruiser ≥ 50 °C</b>: por eso en el SOP «no rodar hasta que el aceite llegue a 50 °C».</li></ul></div>
-<div class="comp"><b>Complemento</b><ul><li>El POH del Cruiser da una temperatura ambiente de operación del motor que se lee «N25–50 °C»; lo normal es −25 a 50 °C, pero no está claro en la diapositiva.</li></ul></div>
+<div class="comp"><b>Complemento</b><ul><li>El POH del Cruiser da una temperatura ambiente de operación del motor que se lee «N25–50 °C»; lo normal es −25 a 50 °C, pero no está claro en el documento.</li></ul></div>
 
 </div>
 </details>
@@ -388,9 +464,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
   <div id="visAnnun" class="vis"></div>
   <h4>Los seis instrumentos · tócalos</h4>
   <div id="visSix" class="vis"></div>
-<div class="figs"><figure class="fig"><img loading="lazy" src="img/sop-pi-runup-flow.jpg" width="900" height="509" alt="Panel real del Piper: el annunciator panel (19), el vacío (12) y los 6 instrumentos."><figcaption>Panel real del Piper: el annunciator panel (19), el vacío (12) y los 6 instrumentos.</figcaption></figure>
-<figure class="fig"><img loading="lazy" src="img/sop-pi-runup.jpg" width="900" height="505" alt="El mismo panel con la lista de run-up (SOP)."><figcaption>El mismo panel con la lista de run-up (SOP).</figcaption></figure>
-</div>
+<figure class="fig ckfig"><div class="ckp" data-ck="pi"></div><figcaption>Cabina de un Piper PA-28: toca un punto o usa «Rotulador», «Paso a paso» y «Ponme a prueba».</figcaption></figure>
   <div class="flag"><b>Trampa</b> Luz del <b>centro</b> = alternador: queda batería para unos <b>30 min</b>. La luz de la <b>izquierda</b> es el vacío, no el alternador.</div>
 </div>
 </details>
@@ -408,7 +482,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 </ul>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Piper = manual, Cessna y Cruiser = eléctrico</b>. El único con <b>stabilator</b> es el Piper.</li></ul></div>
 <div class="comp"><b>Complemento</b><ul><li>El anti-balance tab se mueve en el mismo sentido que el borde de salida del stabilator: reduce su sensibilidad y da tacto a los mandos.</li><li>El POH_2 del Cessna pone los flaps en 10° · 20° · Full; el SOP habla de 10° · 20° · 40°. Full = 40° según el SOP.</li></ul></div>
-<figure class="fig"><img loading="lazy" src="img/poh-cr-controls.jpg" width="900" height="505" alt="Cruiser: fuselaje, mandos, flaps y compensadores (diapositiva)."><figcaption>Cruiser: fuselaje, mandos, flaps y compensadores (diapositiva).</figcaption></figure>
+<figure class="fig dgf"><svg class="dg" viewBox="0 0 440 390" role="img" aria-label="PS-28 Cruiser visto desde arriba con sus superficies de mando"><g class="plane" style="--pc:var(--cz)"><polygon points="200,128 62,150 62,184 202,176" class="pl"/><polygon points="240,128 378,150 378,184 238,176" class="pl"/><polygon points="206,300 140,310 140,330 206,322" class="pl"/><polygon points="234,300 300,310 300,330 234,322" class="pl"/><path d="M220 50 C236 50 240 84 240 124 L236 262 L229 326 L211 326 L204 262 L200 124 C200 84 204 50 220 50Z" class="pl fu"/><path d="M205 104 C205 90 212 82 220 82 C228 82 235 90 235 104 L233 142 L207 142Z" class="cab"/><line x1="176" y1="47" x2="264" y2="47" class="prop"/><circle cx="220" cy="51" r="6" class="pl"/></g><polygon points="62,172 118,169 118,180.8 62,184" class="sf" style="fill:var(--cz)"/><polygon points="378,172 322,169 322,180.8 378,184" class="sf" style="fill:var(--cz)"/><polygon points="130,169 200,165 200,176 130,180.1" class="sf" style="fill:var(--warn)"/><polygon points="310,169 240,165 240,176 310,180.1" class="sf" style="fill:var(--warn)"/><polygon points="140,320 206,313.5 206,322 140,330" class="sf" style="fill:var(--cz)"/><polygon points="300,320 234,313.5 234,322 300,330" class="sf" style="fill:var(--cz)"/><polygon points="216,312 224,312 224,336 216,336" class="sf" style="fill:var(--cz)"/><rect x="372" y="177" width="10" height="9" class="tab"/><rect x="170" y="321" width="9" height="8" class="tab"/><rect x="214" y="80" width="12" height="2" class="tab" style="opacity:0"/><rect x="216" y="87" width="8" height="12" rx="2" class="wh"/><line x1="79.2" y1="115" x2="90" y2="178" stroke="var(--ink)" stroke-width="1.6"/><circle cx="90" cy="178" r="3.6" fill="var(--ink)"/><text x="10" y="120" class="dt c">Alerones</text><text x="10" y="138" class="dt s">palancas y poleas</text><line x1="313.4" y1="115" x2="377" y2="181" stroke="var(--ink)" stroke-width="1.6"/><circle cx="377" cy="181" r="3.6" fill="var(--ink)"/><text x="430" y="120" text-anchor="end" class="dt c">Trim de alabeo</text><text x="430" y="138" text-anchor="end" class="dt s">eléctrico · alerón derecho</text><line x1="55.5" y1="231" x2="165" y2="172" stroke="var(--ink)" stroke-width="1.6"/><circle cx="165" cy="172" r="3.6" fill="var(--ink)"/><text x="10" y="236" class="dt c">Flaps</text><text x="10" y="254" class="dt s">eléctricos: Up · 12° · 30°</text><line x1="79.2" y1="287" x2="175" y2="320" stroke="var(--ink)" stroke-width="1.6"/><circle cx="175" cy="320" r="3.6" fill="var(--ink)"/><text x="10" y="292" class="dt c">Elevador</text><text x="10" y="310" class="dt s">palancas y poleas</text><line x1="305.5" y1="287" x2="266" y2="322" stroke="var(--ink)" stroke-width="1.6"/><circle cx="266" cy="322" r="3.6" fill="var(--ink)"/><text x="430" y="292" text-anchor="end" class="dt c">Trim de cabeceo</text><text x="430" y="310" text-anchor="end" class="dt s">eléctrico · en el elevador</text><line x1="281.79999999999995" y1="347" x2="220" y2="330" stroke="var(--ink)" stroke-width="1.6"/><circle cx="220" cy="330" r="3.6" fill="var(--ink)"/><text x="430" y="352" text-anchor="end" class="dt c">Timón de dirección</text><text x="430" y="370" text-anchor="end" class="dt s">cables</text><line x1="126.60000000000001" y1="51" x2="220" y2="93" stroke="var(--ink)" stroke-width="1.6"/><circle cx="220" cy="93" r="3.6" fill="var(--ink)"/><text x="10" y="56" class="dt c">Rueda de morro</text><text x="10" y="74" class="dt s">libre: se gira con frenos</text></svg><figcaption>Cruiser: qué mueve cada mando. Amarillo = flaps; los dos trims son eléctricos.</figcaption></figure>
 
 </div>
 </details>
@@ -427,12 +501,9 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <details class="lo atpl" id="lo-POH.7.4" data-lo="POH.7.4">
 <summary><span class="lonum">POH.7.4</span><span class="lotitle">Tren de aterrizaje y frenos</span></summary>
 <div class="body">
-<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
 <div class="key"><b>Clave</b>Los tres: tren <b>fijo</b> de triciclo. Piper: suspensión <b>aire-aceite</b> y frenos <b>solo en las principales</b>. Cessna: frenos de disco hidráulicos. Cruiser: rueda de morro <b>libre</b>.</div>
 <div class="scroll"><table class="t3"><tr><th>Tren</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Principal</b></td><td class="cz"><span class="va">suspensión mecánica, doble muelle</span></td><td class="c1"><span class="va">frenos de disco hidráulicos · suspensión mecánica de muelle</span></td><td class="pi"><span class="va">suspensión aire-aceite · 24 psi · elongación 4,5 in</span></td></tr><tr><td><b>Morro</b></td><td class="cz"><span class="va">libre (free castering)</span></td><td class="c1"><span class="va">suspensión aire-aceite</span></td><td class="pi"><span class="va">30 psi · elongación 3,25 in</span></td></tr><tr><td><b>Frenos</b></td><td class="cz"><span class="va">frenado diferencial para girar</span></td><td class="c1"><span class="va">discos hidráulicos</span></td><td class="pi"><span class="va">solo en las principales (incluido el de parking)</span></td></tr><tr><td><b>En tierra</b></td><td class="cz"><span class="va">se gira con frenado diferencial</span></td><td class="c1"><span class="va">10° (hasta 30° con frenos)</span></td><td class="pi"><span class="va">se gira con los pedales</span></td></tr></table></div>
-<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-cr-gear.jpg" width="900" height="527" alt="Tren del Cruiser: triciclo, rueda de morro libre y frenado diferencial."><figcaption>Tren del Cruiser: triciclo, rueda de morro libre y frenado diferencial.</figcaption></figure>
-<figure class="fig"><img loading="lazy" src="img/poh-c172-gear.jpg" width="900" height="507" alt="Tren del Cessna: frenos de disco y suspensión (diapositiva)."><figcaption>Tren del Cessna: frenos de disco y suspensión (diapositiva).</figcaption></figure>
-</div>
+<figure class="fig dgf dgtabs"><div class="visbtns"><button type="button" class="btn sec sm on" data-t="cz" style="border-color:var(--cz);color:var(--cz)">PS-28 Cruiser</button><button type="button" class="btn sec sm" data-t="c1" style="border-color:var(--c1);color:var(--c1)">Cessna 172</button><button type="button" class="btn sec sm" data-t="pi" style="border-color:var(--pi);color:var(--pi)">Piper PA-28</button></div><div class="dgtab" data-t="cz"><svg class="dg" viewBox="0 0 440 350" role="img" aria-label="Tren de PS-28 Cruiser"><g class="plane" style="--pc:var(--cz)"><polygon points="200,128 62,150 62,184 202,176" class="pl"/><polygon points="240,128 378,150 378,184 238,176" class="pl"/><polygon points="206,300 140,310 140,330 206,322" class="pl"/><polygon points="234,300 300,310 300,330 234,322" class="pl"/><path d="M220 50 C236 50 240 84 240 124 L236 262 L229 326 L211 326 L204 262 L200 124 C200 84 204 50 220 50Z" class="pl fu"/><path d="M205 104 C205 90 212 82 220 82 C228 82 235 90 235 104 L233 142 L207 142Z" class="cab"/><line x1="176" y1="47" x2="264" y2="47" class="prop"/><circle cx="220" cy="51" r="6" class="pl"/></g><rect x="214.5" y="83.0" width="11" height="20" rx="3" class="wh"/><rect x="167.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="172" cy="168" r="3" fill="var(--bad)"/><rect x="263.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="268" cy="168" r="3" fill="var(--bad)"/><line x1="220" y1="103" x2="220" y2="160" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="172" y1="168" x2="268" y2="168" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="337.1" y1="57" x2="220" y2="93" stroke="var(--ink)" stroke-width="1.6"/><circle cx="220" cy="93" r="3.6" fill="var(--ink)"/><text x="430" y="62" text-anchor="end" class="dt c">Nariz libre</text><text x="430" y="80" text-anchor="end" class="dt s">free castering</text><line x1="87.10000000000001" y1="257" x2="172" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="172" cy="168" r="3.6" fill="var(--ink)"/><text x="10" y="262" class="dt c">Principal</text><text x="10" y="280" class="dt s">doble muelle mecánico</text><line x1="376.6" y1="257" x2="268" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="268" cy="168" r="3.6" fill="var(--ink)"/><text x="430" y="262" text-anchor="end" class="dt c">Frenos</text><text x="430" y="280" text-anchor="end" class="dt s">para girar: diferencial</text></svg></div><div class="dgtab" data-t="c1" hidden><svg class="dg" viewBox="0 0 440 350" role="img" aria-label="Tren de Cessna 172"><g class="plane" style="--pc:var(--c1)"><polygon points="200,128 62,150 62,184 202,176" class="pl"/><polygon points="240,128 378,150 378,184 238,176" class="pl"/><polygon points="206,300 140,310 140,330 206,322" class="pl"/><polygon points="234,300 300,310 300,330 234,322" class="pl"/><path d="M220 50 C236 50 240 84 240 124 L236 262 L229 326 L211 326 L204 262 L200 124 C200 84 204 50 220 50Z" class="pl fu"/><path d="M205 104 C205 90 212 82 220 82 C228 82 235 90 235 104 L233 142 L207 142Z" class="cab"/><line x1="176" y1="47" x2="264" y2="47" class="prop"/><circle cx="220" cy="51" r="6" class="pl"/></g><rect x="214.5" y="83.0" width="11" height="20" rx="3" class="wh"/><rect x="167.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="172" cy="168" r="3" fill="var(--bad)"/><rect x="263.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="268" cy="168" r="3" fill="var(--bad)"/><line x1="220" y1="103" x2="220" y2="160" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="172" y1="168" x2="268" y2="168" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="384.5" y1="57" x2="220" y2="93" stroke="var(--ink)" stroke-width="1.6"/><circle cx="220" cy="93" r="3.6" fill="var(--ink)"/><text x="430" y="62" text-anchor="end" class="dt c">Nariz</text><text x="430" y="80" text-anchor="end" class="dt s">aire-aceite · 10° (30° con frenos)</text><line x1="87.10000000000001" y1="257" x2="172" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="172" cy="168" r="3.6" fill="var(--ink)"/><text x="10" y="262" class="dt c">Principal</text><text x="10" y="280" class="dt s">muelle · frenos de disco</text><line x1="376.6" y1="257" x2="268" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="268" cy="168" r="3.6" fill="var(--ink)"/><text x="430" y="262" text-anchor="end" class="dt c">Frenos</text><text x="430" y="280" text-anchor="end" class="dt s">hidráulicos</text></svg></div><div class="dgtab" data-t="pi" hidden><svg class="dg" viewBox="0 0 440 350" role="img" aria-label="Tren de Piper PA-28"><g class="plane" style="--pc:var(--pi)"><polygon points="200,128 62,150 62,184 202,176" class="pl"/><polygon points="240,128 378,150 378,184 238,176" class="pl"/><polygon points="206,300 140,310 140,330 206,322" class="pl"/><polygon points="234,300 300,310 300,330 234,322" class="pl"/><path d="M220 50 C236 50 240 84 240 124 L236 262 L229 326 L211 326 L204 262 L200 124 C200 84 204 50 220 50Z" class="pl fu"/><path d="M205 104 C205 90 212 82 220 82 C228 82 235 90 235 104 L233 142 L207 142Z" class="cab"/><line x1="176" y1="47" x2="264" y2="47" class="prop"/><circle cx="220" cy="51" r="6" class="pl"/></g><rect x="214.5" y="83.0" width="11" height="20" rx="3" class="wh"/><rect x="167.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="172" cy="168" r="3" fill="var(--bad)"/><rect x="263.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="268" cy="168" r="3" fill="var(--bad)"/><line x1="220" y1="103" x2="220" y2="160" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="172" y1="168" x2="268" y2="168" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="384.5" y1="57" x2="220" y2="93" stroke="var(--ink)" stroke-width="1.6"/><circle cx="220" cy="93" r="3.6" fill="var(--ink)"/><text x="430" y="62" text-anchor="end" class="dt c">Nariz</text><text x="430" y="80" text-anchor="end" class="dt s">aire-aceite · 30 psi</text><line x1="87.10000000000001" y1="257" x2="172" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="172" cy="168" r="3.6" fill="var(--ink)"/><text x="10" y="262" class="dt c">Principal</text><text x="10" y="280" class="dt s">aire-aceite · 24 psi</text><line x1="376.6" y1="257" x2="268" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="268" cy="168" r="3.6" fill="var(--ink)"/><text x="430" y="262" text-anchor="end" class="dt c">Frenos</text><text x="430" y="280" text-anchor="end" class="dt s">solo en las principales · parking</text></svg></div><figcaption>Los tres tienen tren fijo de triciclo. Punto rojo = freno. Solo el Cruiser tiene la rueda de morro libre.</figcaption></figure>
 
 </div>
 </details>
@@ -440,7 +511,6 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <details class="lo atpl" id="lo-POH.7.5" data-lo="POH.7.5">
 <summary><span class="lonum">POH.7.5</span><span class="lotitle">Sistema de combustible</span></summary>
 <div class="body">
-<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
 <div class="key"><b>Clave</b>Piper: bomba <b>eléctrica</b> y bomba del <b>motor</b>; <b>tres</b> puntos de drenaje. Cruiser: bomba del motor (retorno) + eléctrica, con <b>gascolator</b>. Cessna: selector con posición <b>BOTH</b>.</div>
 <div class="scroll"><table class="t3"><tr><th>Combustible</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Depósitos</b></td><td class="cz"><span class="va">2, ventilados, con filtro, drenaje y flotador</span></td><td class="c1"><span class="va">2 (izquierdo y derecho)</span></td><td class="pi"><span class="va">2 principales (izquierdo y derecho)</span></td></tr><tr><td><b>Selector</b></td><td class="cz"><span class="va">Left · Right · Off</span></td><td class="c1"><span class="va">con posición <b>BOTH</b></span></td><td class="pi"><span class="va">con válvula selectora</span></td></tr><tr><td><b>Bombas</b></td><td class="cz"><span class="va">motor (retorno) + eléctrica auxiliar</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">eléctrica + del motor</span></td></tr><tr><td><b>Otros</b></td><td class="cz"><span class="va">gascolator · carburador · choke</span></td><td class="c1"><span class="va">primer y filtro (diagrama)</span></td><td class="pi"><span class="va">3 puntos de drenaje</span></td></tr></table></div>
 <ul>
@@ -448,9 +518,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <li>Cruiser: si se rompe la palanca del throttle, un muelle lo lleva a <b>full</b>. El choke da más combustible para el arranque en frío.</li>
 <li>Piper: después del selector van el filtro, las bombas y el carburador.</li>
 </ul>
-<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-cr-fuel.jpg" width="900" height="517" alt="Sistema de combustible del Cruiser y su selector (diapositiva)."><figcaption>Sistema de combustible del Cruiser y su selector (diapositiva).</figcaption></figure>
-<figure class="fig"><img loading="lazy" src="img/poh-c172-fuel.jpg" width="919" height="454" alt="Sistema de combustible del Cessna: el selector tiene BOTH."><figcaption>Sistema de combustible del Cessna: el selector tiene BOTH.</figcaption></figure>
-</div>
+<figure class="fig dgf dgtabs"><div class="visbtns"><button type="button" class="btn sec sm on" data-t="cz" style="border-color:var(--cz);color:var(--cz)">PS-28 Cruiser</button><button type="button" class="btn sec sm" data-t="c1" style="border-color:var(--c1);color:var(--c1)">Cessna 172</button><button type="button" class="btn sec sm" data-t="pi" style="border-color:var(--pi);color:var(--pi)">Piper PA-28</button></div><div class="dgtab" data-t="cz"><svg class="dg" viewBox="0 0 440 384" role="img" aria-label="Sistema de combustible del PS-28 Cruiser"><rect x="10" y="8" width="180" height="40" rx="6" class="dbox " style="stroke:var(--cz)"/><text x="100.0" y="33.0" text-anchor="middle" class="dt b">Depósito izquierdo</text><rect x="250" y="8" width="180" height="40" rx="6" class="dbox " style="stroke:var(--cz)"/><text x="340.0" y="33.0" text-anchor="middle" class="dt b">Depósito derecho</text><path d="M100 48 V74 H190 M340 48 V74 H250" fill="none" stroke="var(--ink)" stroke-width="2.4"/><rect x="110" y="74" width="220" height="46" rx="6" class="dbox " style="stroke:var(--cz)"/><text x="220.0" y="94.0" text-anchor="middle" class="dt b">Selector</text><text x="220.0" y="111.0" text-anchor="middle" class="dt s">LEFT · RIGHT · OFF</text><line x1="220" y1="120" x2="220.0" y2="132.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 138 L216.5 130.8 L223.5 130.8Z" fill="var(--ink)"/><rect x="110" y="138" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="158.0" text-anchor="middle" class="dt b">Bomba eléctrica</text><text x="220.0" y="175.0" text-anchor="middle" class="dt s">FUEL P · auxiliar</text><line x1="220" y1="184" x2="220.0" y2="196.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 202 L216.5 194.8 L223.5 194.8Z" fill="var(--ink)"/><rect x="110" y="202" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="222.0" text-anchor="middle" class="dt b">Gascolator</text><text x="220.0" y="239.0" text-anchor="middle" class="dt s">filtro y drenaje</text><line x1="220" y1="248" x2="220.0" y2="260.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 266 L216.5 258.8 L223.5 258.8Z" fill="var(--ink)"/><rect x="110" y="266" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="286.0" text-anchor="middle" class="dt b">Bomba del motor</text><text x="220.0" y="303.0" text-anchor="middle" class="dt s">con retorno al depósito</text><line x1="220" y1="312" x2="220.0" y2="324.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 330 L216.5 322.8 L223.5 322.8Z" fill="var(--ink)"/><rect x="110" y="330" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="350.0" text-anchor="middle" class="dt b">Carburadores</text><text x="220.0" y="367.0" text-anchor="middle" class="dt s">choke para el frío</text><path d="M330 268 H436 V28 H430" fill="none" stroke="var(--c1)" stroke-width="2" stroke-dasharray="5 4"/><text x="428" y="200" text-anchor="end" class="dt s" fill="var(--c1)">retorno</text></svg></div><div class="dgtab" data-t="c1" hidden><svg class="dg" viewBox="0 0 440 320" role="img" aria-label="Sistema de combustible del Cessna 172"><rect x="10" y="8" width="180" height="40" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="100.0" y="33.0" text-anchor="middle" class="dt b">Depósito izquierdo</text><rect x="250" y="8" width="180" height="40" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="340.0" y="33.0" text-anchor="middle" class="dt b">Depósito derecho</text><path d="M100 48 V74 H190 M340 48 V74 H250" fill="none" stroke="var(--ink)" stroke-width="2.4"/><rect x="110" y="74" width="220" height="46" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="220.0" y="94.0" text-anchor="middle" class="dt b">Selector</text><text x="220.0" y="111.0" text-anchor="middle" class="dt s">LEFT · BOTH · RIGHT · OFF</text><line x1="220" y1="120" x2="220.0" y2="132.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 138 L216.5 130.8 L223.5 130.8Z" fill="var(--ink)"/><rect x="110" y="138" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="158.0" text-anchor="middle" class="dt b">Colador</text><text x="220.0" y="175.0" text-anchor="middle" class="dt s">con drenaje</text><line x1="220" y1="184" x2="220.0" y2="196.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 202 L216.5 194.8 L223.5 194.8Z" fill="var(--ink)"/><rect x="110" y="202" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="222.0" text-anchor="middle" class="dt b">Cebador</text><text x="220.0" y="239.0" text-anchor="middle" class="dt s">primer</text><line x1="220" y1="248" x2="220.0" y2="260.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 266 L216.5 258.8 L223.5 258.8Z" fill="var(--ink)"/><rect x="110" y="266" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="294.0" text-anchor="middle" class="dt b">Carburador</text></svg></div><div class="dgtab" data-t="pi" hidden><svg class="dg" viewBox="0 0 440 320" role="img" aria-label="Sistema de combustible del Piper PA-28"><rect x="10" y="8" width="180" height="40" rx="6" class="dbox " style="stroke:var(--pi)"/><text x="100.0" y="33.0" text-anchor="middle" class="dt b">Depósito izquierdo</text><rect x="250" y="8" width="180" height="40" rx="6" class="dbox " style="stroke:var(--pi)"/><text x="340.0" y="33.0" text-anchor="middle" class="dt b">Depósito derecho</text><path d="M100 48 V74 H190 M340 48 V74 H250" fill="none" stroke="var(--ink)" stroke-width="2.4"/><rect x="110" y="74" width="220" height="46" rx="6" class="dbox " style="stroke:var(--pi)"/><text x="220.0" y="94.0" text-anchor="middle" class="dt b">Selector</text><text x="220.0" y="111.0" text-anchor="middle" class="dt s">LEFT · RIGHT · OFF</text><line x1="220" y1="120" x2="220.0" y2="132.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 138 L216.5 130.8 L223.5 130.8Z" fill="var(--ink)"/><rect x="110" y="138" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="158.0" text-anchor="middle" class="dt b">Bomba eléctrica</text><text x="220.0" y="175.0" text-anchor="middle" class="dt s">FUEL PUMP</text><line x1="220" y1="184" x2="220.0" y2="196.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 202 L216.5 194.8 L223.5 194.8Z" fill="var(--ink)"/><rect x="110" y="202" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="230.0" text-anchor="middle" class="dt b">Bomba del motor</text><line x1="220" y1="248" x2="220.0" y2="260.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 266 L216.5 258.8 L223.5 258.8Z" fill="var(--ink)"/><rect x="110" y="266" width="220" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="286.0" text-anchor="middle" class="dt b">Carburador</text><text x="220.0" y="303.0" text-anchor="middle" class="dt s">3 puntos de drenaje</text></svg></div><figcaption>Combustible: del depósito al motor, en orden. Esquema simplificado.</figcaption></figure>
 
 </div>
 </details>
@@ -458,13 +526,10 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <details class="lo atpl" id="lo-POH.7.6" data-lo="POH.7.6">
 <summary><span class="lonum">POH.7.6</span><span class="lotitle">Sistema eléctrico</span></summary>
 <div class="body">
-<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
 <div class="key"><b>Clave</b>Piper: batería <b>12 V</b> y alternador <b>14 V · 60 amp</b>. Cessna: batería <b>24 V</b> y alternador <b>28 V · 60 amp</b>. Cruiser: batería <b>12 V</b> y generador de <b>250 W</b>.</div>
 <div class="scroll"><table class="t3"><tr><th>Eléctrico</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Batería</b></td><td class="cz"><span class="va">12 V DC</span></td><td class="c1"><span class="va">24 V DC · 14 Amp/h</span></td><td class="pi"><span class="va">12 V plomo-ácido</span></td></tr><tr><td><b>Generación</b></td><td class="cz"><span class="va">generador 250 W AC → regulador-rectificador 12 V 20 A DC</span></td><td class="c1"><span class="va">alternador 28 V · 60 A</span></td><td class="pi"><span class="va">alternador 14 V · 60 A</span></td></tr><tr><td><b>Barras</b></td><td class="cz"><span class="va">una sola bus bar</span></td><td class="c1"><span class="va">primary bus y avionics bus</span></td><td class="pi"><span class="va">—</span></td></tr></table></div>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Cessna 24/28</b> · <b>Piper 12/14</b> (la batería y el alternador, un número por encima). <b>Cruiser 12</b>.</li></ul></div>
-<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-cr-elec.jpg" width="900" height="504" alt="Sistema eléctrico del Cruiser (diapositiva)."><figcaption>Sistema eléctrico del Cruiser (diapositiva).</figcaption></figure>
-<figure class="fig"><img loading="lazy" src="img/poh-c172-elec.jpg" width="919" height="492" alt="Sistema eléctrico del Cessna: esquema con las dos barras."><figcaption>Sistema eléctrico del Cessna: esquema con las dos barras.</figcaption></figure>
-</div>
+<figure class="fig dgf dgtabs"><div class="visbtns"><button type="button" class="btn sec sm on" data-t="cz" style="border-color:var(--cz);color:var(--cz)">PS-28 Cruiser</button><button type="button" class="btn sec sm" data-t="c1" style="border-color:var(--c1);color:var(--c1)">Cessna 172</button><button type="button" class="btn sec sm" data-t="pi" style="border-color:var(--pi);color:var(--pi)">Piper PA-28</button></div><div class="dgtab" data-t="cz"><svg class="dg" viewBox="0 0 440 262" role="img" aria-label="Sistema eléctrico del PS-28 Cruiser"><rect x="14" y="14" width="190" height="44" rx="6" class="dbox " style="stroke:var(--cz)"/><text x="109.0" y="41.0" text-anchor="middle" class="dt b">Batería 12 V DC</text><line x1="109" y1="58" x2="109.0" y2="82.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M109 88 L105.5 80.8 L112.5 80.8Z" fill="var(--ink)"/><rect x="14" y="88" width="190" height="40" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="109.0" y="113.0" text-anchor="middle" class="dt b">MASTER BAT</text><rect x="236" y="14" width="190" height="44" rx="6" class="dbox " style="stroke:var(--cz)"/><text x="331.0" y="41.0" text-anchor="middle" class="dt b">Generador 250 W (AC)</text><line x1="331" y1="58" x2="331.0" y2="78.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M331 84 L327.5 76.8 L334.5 76.8Z" fill="var(--ink)"/><rect x="236" y="84" width="190" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="331.0" y="104.0" text-anchor="middle" class="dt b">Regulador 12 V · 20 A</text><text x="331.0" y="121.0" text-anchor="middle" class="dt s">rectificador · DC</text><line x1="331" y1="130" x2="331.0" y2="150.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M331 156 L327.5 148.8 L334.5 148.8Z" fill="var(--ink)"/><line x1="109" y1="128" x2="109.0" y2="150.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M109 156 L105.5 148.8 L112.5 148.8Z" fill="var(--ink)"/><rect x="14" y="156" width="412" height="26" rx="5" fill="var(--cz)"/><text x="220" y="174" text-anchor="middle" class="dt b" fill="var(--paper)">Una sola bus bar</text><line x1="220" y1="182" x2="220.0" y2="200.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 206 L216.5 198.8 L223.5 198.8Z" fill="var(--ink)"/><rect x="40" y="206" width="360" height="44" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="225.0" text-anchor="middle" class="dt b">Cargas (a través de los breakers)</text><text x="220.0" y="242.0" text-anchor="middle" class="dt s">luces · bomba · aviónica · pantallas</text></svg></div><div class="dgtab" data-t="c1" hidden><svg class="dg" viewBox="0 0 440 372" role="img" aria-label="Sistema eléctrico del Cessna 172"><rect x="14" y="14" width="190" height="44" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="109.0" y="41.0" text-anchor="middle" class="dt b">Batería 24 V · 14 Amp/h</text><line x1="109" y1="58" x2="109.0" y2="82.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M109 88 L105.5 80.8 L112.5 80.8Z" fill="var(--ink)"/><rect x="14" y="88" width="190" height="40" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="109.0" y="113.0" text-anchor="middle" class="dt b">Master (BAT)</text><rect x="236" y="14" width="190" height="44" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="331.0" y="41.0" text-anchor="middle" class="dt b">Alternador 28 V · 60 A</text><line x1="331" y1="58" x2="331.0" y2="82.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M331 88 L327.5 80.8 L334.5 80.8Z" fill="var(--ink)"/><rect x="236" y="88" width="190" height="40" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="331.0" y="113.0" text-anchor="middle" class="dt b">Master (ALT)</text><line x1="331" y1="128" x2="331.0" y2="150.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M331 156 L327.5 148.8 L334.5 148.8Z" fill="var(--ink)"/><line x1="109" y1="128" x2="109.0" y2="150.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M109 156 L105.5 148.8 L112.5 148.8Z" fill="var(--ink)"/><rect x="14" y="156" width="412" height="26" rx="5" fill="var(--c1)"/><text x="220" y="174" text-anchor="middle" class="dt b" fill="var(--paper)">Primary bus</text><line x1="220" y1="182" x2="220.0" y2="200.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 206 L216.5 198.8 L223.5 198.8Z" fill="var(--ink)"/><rect x="110" y="206" width="220" height="40" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="231.0" text-anchor="middle" class="dt b">Interruptor de aviónica</text><line x1="220" y1="246" x2="220.0" y2="264.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 270 L216.5 262.8 L223.5 262.8Z" fill="var(--ink)"/><rect x="14" y="270" width="412" height="26" rx="5" fill="var(--c1)" fill-opacity=".75"/><text x="220" y="288" text-anchor="middle" class="dt b" fill="var(--paper)">Avionics bus</text><line x1="220" y1="296" x2="220.0" y2="314.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 320 L216.5 312.8 L223.5 312.8Z" fill="var(--ink)"/><rect x="60" y="320" width="320" height="40" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="345.0" text-anchor="middle" class="dt b">Radios · transpondedor · GPS</text></svg></div><div class="dgtab" data-t="pi" hidden><svg class="dg" viewBox="0 0 440 262" role="img" aria-label="Sistema eléctrico del Piper PA-28"><rect x="14" y="14" width="190" height="44" rx="6" class="dbox " style="stroke:var(--pi)"/><text x="109.0" y="41.0" text-anchor="middle" class="dt b">Batería 12 V plomo-ácido</text><line x1="109" y1="58" x2="109.0" y2="82.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M109 88 L105.5 80.8 L112.5 80.8Z" fill="var(--ink)"/><rect x="14" y="88" width="190" height="40" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="109.0" y="113.0" text-anchor="middle" class="dt b">Master BAT</text><rect x="236" y="14" width="190" height="44" rx="6" class="dbox " style="stroke:var(--pi)"/><text x="331.0" y="41.0" text-anchor="middle" class="dt b">Alternador 14 V · 60 A</text><line x1="331" y1="58" x2="331.0" y2="82.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M331 88 L327.5 80.8 L334.5 80.8Z" fill="var(--ink)"/><rect x="236" y="88" width="190" height="40" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="331.0" y="113.0" text-anchor="middle" class="dt b">Master ALT</text><line x1="331" y1="128" x2="331.0" y2="150.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M331 156 L327.5 148.8 L334.5 148.8Z" fill="var(--ink)"/><line x1="109" y1="128" x2="109.0" y2="150.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M109 156 L105.5 148.8 L112.5 148.8Z" fill="var(--ink)"/><rect x="14" y="156" width="412" height="26" rx="5" fill="var(--pi)"/><text x="220" y="174" text-anchor="middle" class="dt b" fill="var(--paper)">Bus bar</text><line x1="220" y1="182" x2="220.0" y2="200.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M220 206 L216.5 198.8 L223.5 198.8Z" fill="var(--ink)"/><rect x="40" y="206" width="360" height="44" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="220.0" y="225.0" text-anchor="middle" class="dt b">Cargas (a través de los breakers)</text><text x="220.0" y="242.0" text-anchor="middle" class="dt s">luces · bomba · aviónica · radios</text></svg></div><figcaption>Eléctrico: quién genera, el interruptor general y el bus.</figcaption></figure>
 
 </div>
 </details>
@@ -472,7 +537,6 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <details class="lo atpl" id="lo-POH.7.7" data-lo="POH.7.7">
 <summary><span class="lonum">POH.7.7</span><span class="lotitle">Vacío y pitot-estática</span></summary>
 <div class="body">
-<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
 <div class="key"><b>Clave</b>El vacío mueve el <b>horizonte artificial</b>, el <b>DGI</b> y el <b>coordinador de virajes</b>. Pitot en el <b>ala izquierda</b>: en el Cessna, la estática va a los lados del fuselaje.</div>
 <ul>
 <li><b>Poca succión</b>: puede ser un filtro bloqueado. <b>Presión baja</b> por encima de 12.000 ft o con pocas RPM.</li>
@@ -481,9 +545,8 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <li>Cruiser: pitot-estática bajo el <b>ala izquierda</b>; alimenta los instrumentos de reserva y las pantallas.</li>
 <li><b>Estática alterna</b> desde la cabina: ventanas cerradas, calefacción y defroster encendidos, para el mínimo error.</li>
 </ul>
-<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-c172-vac.jpg" width="924" height="517" alt="Sistema de vacío típico (diapositiva del Cessna)."><figcaption>Sistema de vacío típico (diapositiva del Cessna).</figcaption></figure>
-<figure class="fig"><img loading="lazy" src="img/poh-cr-pitot.jpg" width="900" height="514" alt="Pitot-estática del Cruiser, bajo el ala izquierda."><figcaption>Pitot-estática del Cruiser, bajo el ala izquierda.</figcaption></figure>
-</div>
+<figure class="fig dgf dgn"><svg class="dg" viewBox="0 0 440 240" role="img" aria-label="Sistema de vacío"><rect x="10" y="14" width="200" height="46" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="110.0" y="34.0" text-anchor="middle" class="dt b">Filtro de aire</text><text x="110.0" y="51.0" text-anchor="middle" class="dt s">si se tapa: poca succión</text><line x1="210" y1="37" x2="224.0" y2="37.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M230 37 L222.8 40.5 L222.8 33.5Z" fill="var(--ink)"/><rect x="230" y="14" width="200" height="46" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="330.0" y="34.0" text-anchor="middle" class="dt b">Instrumentos</text><text x="330.0" y="51.0" text-anchor="middle" class="dt s">horizonte · DGI</text><path d="M331 60 V92" stroke="var(--ink)" stroke-width="2.4"/><line x1="331" y1="80" x2="331.0" y2="102.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M331 108 L327.5 100.8 L334.5 100.8Z" fill="var(--ink)"/><rect x="230" y="108" width="200" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="330.0" y="128.0" text-anchor="middle" class="dt b">Válvula reguladora</text><text x="330.0" y="145.0" text-anchor="middle" class="dt s">mantiene la succión</text><line x1="331" y1="154" x2="331.0" y2="174.0" stroke="var(--ink)" stroke-width="2.4"/><path d="M331 180 L327.5 172.8 L334.5 172.8Z" fill="var(--ink)"/><rect x="230" y="180" width="200" height="46" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="330.0" y="200.0" text-anchor="middle" class="dt b">Bomba de vacío</text><text x="330.0" y="217.0" text-anchor="middle" class="dt s">la mueve el motor</text><rect x="10" y="108" width="200" height="46" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="110.0" y="128.0" text-anchor="middle" class="dt b">Vacuómetro</text><text x="110.0" y="145.0" text-anchor="middle" class="dt s">Piper 4,8–5,2 · C172 4–6</text><path d="M210 131 H230" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4"/></svg><figcaption>Vacío: el aire se aspira por el filtro, mueve los giroscopios y la bomba lo expulsa. Mueve el <b>horizonte artificial</b>, el <b>DGI</b> y el <b>coordinador de virajes</b> (según avión).</figcaption></figure>
+<figure class="fig dgf dgn"><svg class="dg" viewBox="0 0 440 242" role="img" aria-label="Pitot y estática"><rect x="14" y="14" width="170" height="52" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="99.0" y="37.0" text-anchor="middle" class="dt b">Tubo pitot</text><text x="99.0" y="54.0" text-anchor="middle" class="dt s">ala izquierda · presión total</text><rect x="14" y="130" width="170" height="52" rx="6" class="dbox " style="stroke:var(--c1)"/><text x="99.0" y="153.0" text-anchor="middle" class="dt b">Toma estática</text><text x="99.0" y="170.0" text-anchor="middle" class="dt s">lados del fuselaje</text><rect x="280" y="8" width="146" height="44" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="353.0" y="35.0" text-anchor="middle" class="dt b">Anemómetro</text><rect x="280" y="80" width="146" height="44" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="353.0" y="107.0" text-anchor="middle" class="dt b">Altímetro</text><rect x="280" y="152" width="146" height="44" rx="6" class="dbox " style="stroke:var(--ink)"/><text x="353.0" y="179.0" text-anchor="middle" class="dt b">Variómetro</text><path d="M184 40 H232 V30 H280" fill="none" stroke="var(--bad)" stroke-width="2.6"/><path d="M184 156 H232 V30" fill="none" stroke="var(--c1)" stroke-width="2.6"/><path d="M232 156 V102 H280 M232 156 V174 H280" fill="none" stroke="var(--c1)" stroke-width="2.6"/><path d="M232 30 H280" stroke="var(--c1)" stroke-width="2.6"/><text x="14" y="212" class="dt s">Rojo: presión total (solo el anemómetro).</text><text x="14" y="232" class="dt s">Azul: presión estática (los tres relojes).</text></svg><figcaption>Pitot-estática: el pitot solo alimenta el anemómetro; la estática alimenta los tres relojes.</figcaption></figure>
 
 </div>
 </details>
@@ -491,12 +554,10 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <details class="lo atpl" id="lo-POH.7.8" data-lo="POH.7.8">
 <summary><span class="lonum">POH.7.8</span><span class="lotitle">PS-28 Cruiser: aviónica, mandos y sistemas</span></summary>
 <div class="body">
-<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
 <div class="key"><b>Clave</b>Aviónica <b>Dynon SkyView SV-D1000</b> (páginas PFD y MAP) · flaps <b>eléctricos continuos</b> (Up · 12° · 30°) · rueda de morro <b>libre</b> · <b>una bus bar</b>, batería 12 V.</div>
-<div class="scroll"><table class="t3"><tr><th>Sistema</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Aviónica</b></td><td class="cz"><span class="va">Dynon SkyView SV-D1000 (PFD y MAP)</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">relojes analógicos (foto del panel)</span></td></tr><tr><td><b>Mandos</b></td><td class="cz"><span class="va">palancas y poleas (cabeceo y alabeo) · cables (guiñada)</span></td><td class="c1"><span class="va">cables</span></td><td class="pi"><span class="va">cables y poleas</span></td></tr><tr><td><b>Compensadores</b></td><td class="cz"><span class="va">eléctricos: alabeo en el alerón derecho, cabeceo en el elevador</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">manuales</span></td></tr><tr><td><b>Combustible</b></td><td class="cz"><span class="va">2 depósitos · Left · Right · Off · gascolator</span></td><td class="c1"><span class="va">BOTH</span></td><td class="pi"><span class="va">selector</span></td></tr><tr><td><b>Eléctrico</b></td><td class="cz"><span class="va">generador 250 W · 12 V 20 A · 1 bus bar</span></td><td class="c1"><span class="va">28 V · 60 A</span></td><td class="pi"><span class="va">14 V · 60 A</span></td></tr></table></div>
-<div class="figs"><figure class="fig"><img loading="lazy" src="img/sop-cr-afterstart-flow.jpg" width="900" height="502" alt="Cabina real del Cruiser (EC-NKO): las dos pantallas Dynon, mandos y paneles."><figcaption>Cabina real del Cruiser (EC-NKO): las dos pantallas Dynon, mandos y paneles.</figcaption></figure>
-<figure class="fig"><img loading="lazy" src="img/poh-cr-dynon.jpg" width="900" height="509" alt="Dynon SkyView SV-D1000: páginas PFD y MAP, batería Rotax y generador (diapositiva)."><figcaption>Dynon SkyView SV-D1000: páginas PFD y MAP, batería Rotax y generador (diapositiva).</figcaption></figure>
-</div>
+<div class="scroll"><table class="t3"><tr><th>Sistema</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Aviónica</b></td><td class="cz"><span class="va">Dynon SkyView SV-D1000 (PFD y MAP)</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">relojes analógicos</span></td></tr><tr><td><b>Mandos</b></td><td class="cz"><span class="va">palancas y poleas (cabeceo y alabeo) · cables (guiñada)</span></td><td class="c1"><span class="va">cables</span></td><td class="pi"><span class="va">cables y poleas</span></td></tr><tr><td><b>Compensadores</b></td><td class="cz"><span class="va">eléctricos: alabeo en el alerón derecho, cabeceo en el elevador</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">manuales</span></td></tr><tr><td><b>Combustible</b></td><td class="cz"><span class="va">2 depósitos · Left · Right · Off · gascolator</span></td><td class="c1"><span class="va">BOTH</span></td><td class="pi"><span class="va">selector</span></td></tr><tr><td><b>Eléctrico</b></td><td class="cz"><span class="va">generador 250 W · 12 V 20 A · 1 bus bar</span></td><td class="c1"><span class="va">28 V · 60 A</span></td><td class="pi"><span class="va">14 V · 60 A</span></td></tr></table></div>
+<figure class="fig ckfig"><div class="ckp" data-ck="cz"></div><figcaption>Cabina de un PS-28 Cruiser: toca un punto o usa «Rotulador», «Paso a paso» y «Ponme a prueba».</figcaption></figure>
+<figure class="fig dgf dgn"><svg class="dg" viewBox="0 0 440 300" role="img" aria-label="Réplica de la página PFD de una pantalla Dynon"><defs><clipPath id="pfdc"><rect x="0" y="0" width="440" height="300"/></clipPath></defs><g clip-path="url(#pfdc)"><rect width="440" height="300" fill="#2a6fb5"/><polygon points="-40,170 480,130 480,340 -40,340" fill="#8a5a2b"/><line x1="-40" y1="170" x2="480" y2="130" stroke="#fff" stroke-width="2"/><line x1="176" y1="106" x2="264" y2="106" stroke="#fff" stroke-width="2" transform="rotate(-5.5 220 150)"/><line x1="192" y1="128" x2="248" y2="128" stroke="#fff" stroke-width="2" transform="rotate(-5.5 220 150)"/><line x1="192" y1="172" x2="248" y2="172" stroke="#fff" stroke-width="2" transform="rotate(-5.5 220 150)"/><line x1="176" y1="194" x2="264" y2="194" stroke="#fff" stroke-width="2" transform="rotate(-5.5 220 150)"/></g><path d="M205 150 H190 M235 150 H250 M220 150 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0" stroke="#ffd34a" stroke-width="3.4" fill="none"/><path d="M130 70 A130 130 0 0 1 310 70" fill="none" stroke="#fff" stroke-width="2"/><path d="M220 21 l-6 -10 h12z" fill="#ffd34a"/><rect x="0" y="22" width="92" height="256" fill="#10161c" fill-opacity=".86"/><rect x="84" y="194.0" width="6" height="84.0" fill="#fff"/><rect x="78" y="121.4" width="6" height="156.20000000000002" fill="#2eaa55"/><rect x="78" y="55.39999999999999" width="6" height="66.00000000000001" fill="#e6b422"/><rect x="76" y="53.39999999999999" width="14" height="4" fill="#e5382f"/><line x1="62" y1="271.0" x2="76" y2="271.0" stroke="#fff" stroke-width="1.6"/><text x="56" y="276.0" text-anchor="end" class="dt pfdn">40</text><line x1="62" y1="249.0" x2="76" y2="249.0" stroke="#fff" stroke-width="1.6"/><text x="56" y="254.0" text-anchor="end" class="dt pfdn">50</text><line x1="62" y1="227.0" x2="76" y2="227.0" stroke="#fff" stroke-width="1.6"/><text x="56" y="232.0" text-anchor="end" class="dt pfdn">60</text><line x1="62" y1="205.0" x2="76" y2="205.0" stroke="#fff" stroke-width="1.6"/><text x="56" y="210.0" text-anchor="end" class="dt pfdn">70</text><line x1="62" y1="183.0" x2="76" y2="183.0" stroke="#fff" stroke-width="1.6"/><text x="56" y="188.0" text-anchor="end" class="dt pfdn">80</text><line x1="62" y1="161.0" x2="76" y2="161.0" stroke="#fff" stroke-width="1.6"/><line x1="62" y1="139.0" x2="76" y2="139.0" stroke="#fff" stroke-width="1.6"/><line x1="62" y1="117.0" x2="76" y2="117.0" stroke="#fff" stroke-width="1.6"/><text x="56" y="122.0" text-anchor="end" class="dt pfdn">110</text><line x1="62" y1="95.0" x2="76" y2="95.0" stroke="#fff" stroke-width="1.6"/><text x="56" y="100.0" text-anchor="end" class="dt pfdn">120</text><line x1="62" y1="73.0" x2="76" y2="73.0" stroke="#fff" stroke-width="1.6"/><text x="56" y="78.0" text-anchor="end" class="dt pfdn">130</text><line x1="62" y1="50.999999999999986" x2="76" y2="50.999999999999986" stroke="#fff" stroke-width="1.6"/><text x="56" y="55.999999999999986" text-anchor="end" class="dt pfdn">140</text><path d="M0 138 H62 L72 150 L62 162 H0Z" fill="#000" stroke="#fff" stroke-width="1.6"/><text x="52" y="157" text-anchor="end" class="dt pfdb">95</text><text x="46" y="17" text-anchor="middle" class="dt pfds">IAS KT</text><rect x="348" y="22" width="92" height="256" fill="#10161c" fill-opacity=".86"/><line x1="348" y1="264.0" x2="362" y2="264.0" stroke="#fff" stroke-width="1.6"/><text x="372" y="269.0" class="dt pfdn">1800</text><line x1="348" y1="226.0" x2="362" y2="226.0" stroke="#fff" stroke-width="1.6"/><text x="372" y="231.0" class="dt pfdn">1900</text><line x1="348" y1="188.0" x2="362" y2="188.0" stroke="#fff" stroke-width="1.6"/><text x="372" y="193.0" class="dt pfdn">2000</text><line x1="348" y1="150.0" x2="362" y2="150.0" stroke="#fff" stroke-width="1.6"/><text x="372" y="155.0" class="dt pfdn">2100</text><line x1="348" y1="112.0" x2="362" y2="112.0" stroke="#fff" stroke-width="1.6"/><text x="372" y="117.0" class="dt pfdn">2200</text><line x1="348" y1="74.0" x2="362" y2="74.0" stroke="#fff" stroke-width="1.6"/><text x="372" y="79.0" class="dt pfdn">2300</text><path d="M348 138 H416 V162 H348 L338 150Z" fill="#000" stroke="#fff" stroke-width="1.6"/><text x="412" y="157" text-anchor="end" class="dt pfdb">2100</text><text x="394" y="17" text-anchor="middle" class="dt pfds">ALT FT</text><rect x="100" y="262" width="240" height="30" fill="#10161c" fill-opacity=".86"/><line x1="112.0" y1="262" x2="112.0" y2="272" stroke="#fff"/><text x="112.0" y="287" text-anchor="middle" class="dt pfdn">24</text><line x1="148.0" y1="262" x2="148.0" y2="272" stroke="#fff"/><text x="148.0" y="287" text-anchor="middle" class="dt pfdn">25</text><line x1="184.0" y1="262" x2="184.0" y2="272" stroke="#fff"/><text x="184.0" y="287" text-anchor="middle" class="dt pfdn">26</text><line x1="220.0" y1="262" x2="220.0" y2="272" stroke="#fff"/><text x="220.0" y="287" text-anchor="middle" class="dt pfdn">27</text><line x1="256.0" y1="262" x2="256.0" y2="272" stroke="#fff"/><text x="256.0" y="287" text-anchor="middle" class="dt pfdn">28</text><line x1="292.0" y1="262" x2="292.0" y2="272" stroke="#fff"/><text x="292.0" y="287" text-anchor="middle" class="dt pfdn">29</text><path d="M220 262 l-6 -9 h12z" fill="#ffd34a"/></svg><figcaption>PFD de la pantalla (réplica): horizonte de fondo, cinta de velocidad con los arcos del Cruiser (blanco 31–75 · verde 37–108 · amarillo 108–138 · raya roja 138), altitud y rumbo.</figcaption></figure>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Cruiser</b> = pantallas Dynon y <b>todo eléctrico</b>: flaps, trims y generador. El Piper tiene relojes y sistema de vacío.</li></ul></div>
 
 </div>
@@ -539,7 +600,6 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <details class="lo atpl" id="lo-POH.3.3" data-lo="POH.3.3">
 <summary><span class="lonum">POH.3.3</span><span class="lotitle">PS-28 Cruiser: fallo de motor, arranque en vuelo y fuego</span></summary>
 <div class="body">
-<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
 <div class="key"><b>Clave</b><b>Planeo y fallo en vuelo: 60 KIAS</b>. Despegue abortado: <b>throttle idle · frenos · ignición OFF</b>. Fuego: <b>selector OFF · throttle MAX</b>.</div>
 <h4>Fallo de motor</h4>
 <div class="scroll"><table class="t3"><tr><th>Fallo</th><th class="cz">Cruiser</th></tr><tr><td><b>Durante la carrera de despegue</b></td><td class="cz"><span class="va">1 Throttle IDLE · 2 Frenos · 3 Ignición OFF</span></td></tr><tr><td><b>Tras el despegue</b></td><td class="cz"><span class="va">60 KIAS · flaps según haga falta · selector OFF · ignición OFF · MASTER GEN OFF · MASTER BAT OFF (antes de aterrizar) · aterrizar recto, girando solo para evitar obstáculos</span></td></tr><tr><td><b>Pérdida de potencia en vuelo</b></td><td class="cz"><span class="va">mantener 60 KIAS y, según la altitud: reiniciar o buscar campo</span></td></tr></table></div>
@@ -555,10 +615,10 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <h4>Fuego</h4>
 <div class="scroll"><table class="t3"><tr><th>Fuego</th><th class="cz">Cruiser</th></tr><tr><td><b>Durante el arranque</b></td><td class="cz"><span class="va">selector OFF · throttle MAX · ignición OFF · MASTER BAT y GEN OFF · abandonar el avión · apagarlo o llamar a bomberos</span></td></tr><tr><td><b>En vuelo</b></td><td class="cz"><span class="va">selector OFF · throttle MAX · cabin heater PUSH OFF · ignición OFF (cuando se consuma el combustible del carburador) · 60 KIAS · aterrizaje de emergencia · abandonar el avión</span></td></tr></table></div>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Fuego: SELECTOR → THROTTLE MAX</b>: primero cortas el combustible y luego gastas el que queda en los carburadores.</li><li><b>60 en todo</b>: planeo, fallo en vuelo, fuego en vuelo y tras el despegue, siempre <b>60 KIAS</b> en el Cruiser.</li></ul></div>
-<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-cr-emerg1.jpg" width="900" height="512" alt="Fallo de motor en el despegue y tras el despegue, con la cabina real del Cruiser."><figcaption>Fallo de motor en el despegue y tras el despegue, con la cabina real del Cruiser.</figcaption></figure>
-<figure class="fig"><img loading="lazy" src="img/poh-cr-emerg2.jpg" width="900" height="507" alt="Pérdida de potencia y arranque en vuelo."><figcaption>Pérdida de potencia y arranque en vuelo.</figcaption></figure>
-<figure class="fig"><img loading="lazy" src="img/poh-cr-emerg3.jpg" width="900" height="443" alt="Fuego en el arranque y en vuelo."><figcaption>Fuego en el arranque y en vuelo.</figcaption></figure>
-</div>
+<h4>Fuego en vuelo · los pasos sobre la cabina</h4>
+<figure class="fig ckfig"><div class="ckp" data-ck="cz" data-mode="flow" data-legend="1" data-steps="[[1, &quot;fsel&quot;, &quot;Selector de combustible: OFF&quot;], [2, &quot;thr&quot;, &quot;Throttle: MAX&quot;], [3, &quot;cabin&quot;, &quot;Cabin heater: PUSH OFF&quot;], [4, &quot;ign&quot;, &quot;Ignición: OFF (cuando se consuma el combustible del carburador)&quot;], [5, &quot;mbat&quot;, &quot;MASTER BAT y GEN: OFF&quot;]]"></div></figure>
+<h4>Arranque en vuelo · los pasos sobre la cabina</h4>
+<figure class="fig ckfig"><div class="ckp" data-ck="cz" data-mode="flow" data-legend="1" data-steps="[[1, &quot;mbat&quot;, &quot;MASTER BAT: ON&quot;], [2, &quot;mfd1&quot;, &quot;MFD 1: ON&quot;], [3, &quot;fuelp&quot;, &quot;FUEL P: ON&quot;], [4, &quot;fsel&quot;, &quot;Selector: LEFT o RIGHT, el de más combustible&quot;], [5, &quot;thr&quot;, &quot;Throttle: IDLE&quot;], [6, &quot;ign&quot;, &quot;Ignición: mantener START&quot;]]"></div></figure>
 
 </div>
 </details>
@@ -612,7 +672,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <section id="p-map" hidden>
   <div class="card"><b>Si el examen fuera hoy</b>
     <div id="forecast"></div>
-    <button class="btn" id="goSim" style="margin-top:10px">Hacer un simulacro</button>
+    <button class="btn" id="goSim" style="margin-top:10px">Hacer un test</button>
   </div>
   <div class="card"><b>Dónde te juegas más preguntas</b>
     <ul class="weak" id="weakList"><li class="muted">Calculando…</li></ul>
@@ -634,11 +694,9 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
   <div id="setup" class="card">
     <b>Elige el test</b>
     <div style="margin-top:8px">
-      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro cronometrado <small><span class="row" style="margin-top:6px"><select id="senLen"><option value="full">Completo · 30 preguntas en 36 min</option><option value="half">Exprés · 15 preguntas en 18 min</option><option value="real">Tiempo real · 30 preguntas en 45 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Tus fallos y lo que más pesa.</small></label>
-      <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
+      <label class="mode"><input type="radio" name="mode" value="plane" checked> Test por avión <small><span class="row" style="margin-top:6px"><select id="acSel"></select></span>Solo preguntas de ese avión: 30 por prioridad.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Tus fallos y lo que más pesa, de los tres aviones.</small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
-      <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
     <label class="row" style="margin:10px 0 4px"><input type="checkbox" id="incTrial"> Incluir temario aún no dado</label>
     <label class="row" style="margin:0 0 10px"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
@@ -1058,6 +1116,9 @@ Q("cm14","POH.1.5","a","tabla","Which aircraft does not use the 160 HP Lycoming 
 Q("cm15","POH.1.5","a","tabla","Which aircraft has a stabilator?",["The Piper PA-28", "The Cessna 172", "The PS-28 Cruiser", "All three"],"Stabilator (toda la cola horizontal se mueve): Piper. Cessna y Cruiser: elevador."),
 Q("cm16","POH.1.5","a","tabla","Best glide speed: which order is correct?",["Cruiser 60, Cessna 65, Piper 73", "Cruiser 65, Cessna 60, Piper 73", "Cruiser 73, Cessna 65, Piper 60", "Cruiser 60, Cessna 73, Piper 65"],"Planeo: Cruiser 60 < Cessna 65 < Piper 73 (de menor a mayor, igual que el VFE).")
 ];
+const ACQ = {"m1":"pi","m1b":"c1","m1c":"pi","m2":"c1 pi","m2b":"c1 pi","m3":"c1 pi","m3b":"c1 pi","m4":"c1 pi","m4b":"c1 pi","m5":"c1 pi","m5b":"c1 pi","m6":"pi","m6b":"c1","m6c":"pi","m7":"pi","m7b":"c1","m8":"cz c1 pi","f1":"pi","f1b":"c1","f1c":"c1","f2":"pi","f2b":"c1","f3":"pi","f3b":"c1","f3c":"c1","f4":"pi","f4b":"c1","w1":"pi","w1b":"pi","w2":"c1","w2b":"c1","w3":"c1","v1":"cz c1 pi","v1b":"cz c1 pi","v1c":"c1 pi","v2":"pi","v2b":"c1","v2c":"cz c1 pi","v3":"pi","v3b":"c1","v3c":"cz c1 pi","v4":"pi","v4b":"c1","v4c":"cz c1 pi","v5":"c1","v5b":"c1","v5c":"pi","v6":"cz c1 pi","v7":"c1","v7b":"cz","l1":"c1 pi","l1b":"c1 pi","l2":"c1 pi","l2b":"c1 pi","l3":"c1 pi","l3b":"c1 pi","l4":"pi","l4b":"pi","l5":"cz c1 pi","o1":"c1 pi","o1b":"c1 pi","o2":"c1 pi","o2b":"c1 pi","o3":"pi","g1":"pi","g1b":"pi","g2":"c1","g2b":"c1","n1":"pi","n1b":"pi","n2":"pi","n2b":"pi","n3":"pi","n3b":"pi","n4":"pi","n5":"pi","n6":"pi","n6b":"pi","n6c":"pi","n7":"pi","k1":"pi","k1b":"pi","k2":"pi","k2b":"pi","k3":"pi","k4":"pi","k4b":"pi","k5":"pi","s1":"pi","s1b":"cz c1 pi","s2":"pi","s2b":"pi","s3":"pi","s3b":"pi","s4":"pi","r1":"pi","r1b":"pi","r2":"pi","r2b":"pi","r3":"pi","r3b":"pi","r4":"pi","u1":"pi","u2":"pi","u3":"pi","e1":"pi","e2":"pi","z1":"c1 pi","z2":"c1 pi","z3":"c1 pi","z4":"pi","z5":"pi","x1":"c1 pi","x1b":"c1 pi","x1c":"c1 pi","x2":"c1 pi","x3":"c1 pi","x3b":"c1 pi","x4":"c1 pi","x4b":"c1 pi","x5":"c1 pi","x6":"c1 pi","x7":"cz c1 pi","h1":"c1","h1b":"c1","h2":"c1","q1":"cz c1 pi","q2":"cz c1 pi","q3":"cz c1 pi","q4":"cz c1 pi","q5":"cz c1 pi","q6":"cz c1 pi","ce1":"cz","ce1b":"cz","ce2":"cz","ce3":"cz","ce32":"cz","ce4":"cz","ce42":"cz","ce5":"cz","ce52":"cz","ce6":"cz","ce7":"cz","cf1":"cz","cf1b":"cz c1 pi","cf2":"cz","cf3":"cz","cf4":"cz","cf42":"c1 pi","cf5":"cz","cf6":"cz c1 pi","cf7":"cz","cf8":"cz","cw1":"cz","cw2":"cz","cw3":"cz","cw4":"cz","cw5":"cz","cw6":"cz","cw7":"cz","cw8":"cz","cw9":"cz","cv1":"cz","cv2":"cz","cv3":"cz","cv4":"cz","cv5":"cz","cv52":"cz","cv53":"cz","cv54":"cz","cv55":"cz","cv6":"cz c1 pi","cv62":"cz c1 pi","cv63":"cz c1 pi","cl1":"cz","cl2":"cz","cl3":"cz","cl4":"cz","cl5":"cz c1","cl6":"cz","co1":"cz","co1b":"cz","co2":"cz","co22":"cz","co23":"cz","co3":"cz","co4":"cz","co42":"cz","co5":"cz","co6":"cz","cs1":"cz","cs2":"cz","cs22":"cz","cs3":"cz","cs32":"cz","cs4":"cz","cs5":"cz","cs6":"cz","cs62":"cz","cs7":"cz","cs8":"cz","cs9":"cz","cs92":"cz","cs93":"cz","cs10":"cz","cs11":"cz","cs112":"cz","cx1":"cz","cx1b":"cz","cx2":"cz","cx3":"cz","cx32":"cz","cx4":"cz","cx5":"cz","cx52":"cz","cx53":"cz","cx54":"cz","cx6":"cz","cx62":"cz","cx7":"cz","cx72":"cz","cx73":"cz","cz2":"c1","cz3":"c1","cz32":"c1","cz33":"c1","cz4":"c1","cz5":"c1","cz52":"c1","cz53":"cz c1 pi","cz7":"c1","cz72":"c1","cz1":"c1","cz12":"cz c1 pi","cz6":"c1","cz9":"c1","cm1":"cz c1 pi","cm3":"cz","cm4":"cz c1 pi","cm5":"cz","cm6":"cz c1 pi","cm7":"cz c1 pi","cm8":"cz c1 pi","cm9":"cz c1 pi","cm10":"cz","cm11":"cz c1 pi","cm12":"cz","cm13":"cz c1 pi","cm14":"cz c1 pi","cm15":"pi","cm16":"cz c1 pi"};
+const AC_NAME = {cz:"PS-28 Cruiser", c1:"Cessna 172", pi:"Piper PA-28"};
+const acOf = q => ACQ[q[0]] || "cz c1 pi";
 const PROFE = new Set(["m1","m1b","m1c","m2","m2b","m8","v1","v1b","v1c","v2","v2b","v3","v3b","v3c","v4","v4b","v4c","v7","v7b","l1","l1b","l2","l2b","l3","l3b","l4","l4b","l5","n1","n1b","n2","n2b","n3","n3b","n4","n5","n6","n6b","n6c","n7","k1","k1b","k2","k2b","k3","s1","s1b","s3","s3b","x1","x1b","x1c","x2","x3","x3b","x4","x4b","x5","x6"]);
 const BASE = BANK1.concat(BANK2).concat(BANK3);
 ["cv3", "cv4", "cl1", "cl2", "cl5", "cv62", "cv1", "cv2"].forEach(i=>PROFE.add(i));
@@ -1143,14 +1204,11 @@ function selectSenasa(lenKey, inc, atpl){
   return BLOCKS.flatMap(b=>shuffle(chosen.filter(q=>blockOf(q)===b.k)));
 }
 function selectQuestions(mode, inc, lo, atpl){
-  if(mode==="senasa") return selectSenasa($("#senLen").value, inc, atpl);
-  const st = stats();
-  const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
-  if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
+  const st = stats(), plane = mode==="plane";
+  const pool = BANK.filter(q=> (inc || q[2]!=="c") && (plane ? acOf(q).includes($("#acSel").value) : (atpl || isGiven(q))));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
-  if(mode==="all") return shuffle(pool);
-  // adaptativo: 20 por prioridad, como mucho 5 de un mismo tema y una sola variante por pregunta original
-  const N = Math.min(30, pool.length), MAXLO = 5;
+  // por avión o adaptativo (30): por prioridad, como mucho 6 (o 5) de un mismo tema y una sola variante por pregunta original
+  const N = Math.min(30, pool.length), MAXLO = plane ? 6 : 5;
   const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
   const chosen = [], usedB = new Set(), nLO = l => chosen.filter(q=>q[1]===l).length;
   const take = (q, cap=true) => { const b=baseOf(q[0]); if(chosen.includes(q) || usedB.has(b) || (cap && nLO(q[1])>=MAXLO)) return; usedB.add(b); chosen.push(q); };
@@ -1324,7 +1382,7 @@ function renderMap(){
   $("#mapTable").innerHTML = rows;
   $("#p-map").querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>openNotes(b.dataset.go)));
 }
-$("#goSim").addEventListener("click",()=>{ showTab("test"); document.querySelector('input[value=senasa]').checked=true; });
+$("#goSim").addEventListener("click",()=>{ showTab("test"); document.querySelector('input[value=plane]').checked=true; });
 
 // ---------- generación con Claude ----------
 let sampleApi = null;
@@ -1370,13 +1428,12 @@ Respond ONLY with JSON, no markdown: {"questions":[{"lo":"POH.x.x","q":"...","co
 // ---------- test ----------
 function renderSetup(){
   const st = stats();
-  const nw = BANK.filter(q=>((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
-  $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
-  $("#allCount").textContent = `${BANK.filter(isGiven).length} dadas + ${BANK.filter(q=>!isGiven(q)).length} aún no dadas`;
+  const selAc = $("#acSel").value || "cz";
+  $("#acSel").innerHTML = ["cz","c1","pi"].map(a=>`<option value="${a}" ${a===selAc?"selected":""}>${AC_NAME[a]} · ${BANK.filter(q=>acOf(q).includes(a)).length} preguntas</option>`).join("");
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
 }
-let current = [], curMode = "senasa", curLen = null, tStart = 0, tLimit = 0, tTimer = null, finishing = false, askedUnanswered = false;
+let current = [], curMode = "plane", curAc = "cz", curLen = null, tStart = 0, tLimit = 0, tTimer = null, finishing = false, askedUnanswered = false;
 function fmtMS(s){ s=Math.max(0,Math.round(s)); return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; }
 function tick(){
   const el=$("#timerBar"); if(!tLimit){ el.hidden=true; return; }
@@ -1388,7 +1445,7 @@ function tick(){
 const SRC_TAG = q => `${PROFE.has(q.id)?'<span class="tag pf">★ PROFE</span> ':''}${q.src==="a"?'<span class="tag at">NO DADO</span> ':''}${q.src==="c"?'<span class="tag">complemento</span> ':''}${q.src==="g"?'<span class="tag">generada</span> ':''}`;
 $("#startBtn").addEventListener("click",()=>{
   curMode = document.querySelector('input[name=mode]:checked').value;
-  curLen = curMode==="senasa" ? $("#senLen").value : null;
+  curLen = null; curAc = $("#acSel").value;
   const qs = F0DEDUP(selectQuestions(curMode, $("#incComp").checked, $("#loSel").value, $("#incTrial").checked), curMode);
   if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
   $("#startMsg").textContent = "";
@@ -1408,7 +1465,7 @@ $("#startBtn").addEventListener("click",()=>{
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
-function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${(curMode==="senasa"?`Simulacro ${SEN_LEN[curLen].label.toLowerCase()}`:{adaptive:"Adaptativo",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo"}[curMode])}`; }
+function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="plane" ? "Test del "+AC_NAME[curAc] : {adaptive:"Adaptativo",lo:"Un tema"}[curMode]}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>finishTest(false));
 async function finishTest(timeout){
@@ -1428,7 +1485,7 @@ async function finishTest(timeout){
     box.insertAdjacentHTML("beforeend", `<div class="expl"><b class="${ok?'pass':'fail'}">${ok?'Correcta':(q.ans===null?'Sin responder':'Fallada')}</b> · <span class="es">${esc(q.expl)}</span>${ok?'':`<div class="ref"><b>Repasa:</b> ${esc(refText(q))}</div>`}</div>`);
   });
   const pct = Math.round(score/current.length*100), pass = pct>=75;
-  const rec = {id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:curMode, score, total:current.length, pct, byLO, items};
+  const rec = {id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:curMode, ac:curMode==="plane"?curAc:undefined, score, total:current.length, pct, byLO, items};
   if(curMode==="senasa"){ Object.assign(rec,{len:curLen, limitS:tLimit, usedS, timeout:!!timeout, byBlock, score0:s0, total0:n0}); }
   state.attempts.push(rec);
   const realS = REAL_MIN*60/REAL_N, perQ = usedS/current.length;
@@ -1444,11 +1501,11 @@ async function finishTest(timeout){
         return `<div class="lorow"><div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(loLabel(l))}</span><span>${byLO[l].ok}/${byLO[l].total}</span></div><div class="bar"><i style="width:${p}%;background:${p>=75?'var(--ok)':'var(--bad)'}"></i></div></div>`}).join("")}</div>
       <p style="margin:12px 0 4px"><b>Siguiente foco:</b> ${next.map(x=>esc(loLabel(x.lo))).join(" y ")}</p>
       <p id="saveMsg" class="muted" style="font-size:14px">Guardando…</p>
-      <div class="row"><button class="btn" id="againBtn">${curMode==="senasa"?"Otro simulacro":"Otro adaptativo"}</button><button class="btn sec" id="mapBtn">Ver mapa</button></div>
+      <div class="row"><button class="btn" id="againBtn">${curMode==="plane"?"Otro test del "+AC_NAME[curAc]:"Otro adaptativo"}</button><button class="btn sec" id="mapBtn">Ver mapa</button></div>
     </div>`;
   $("#result").hidden = false; $("#finishBox").hidden = true;
-  const againMode = curMode==="senasa" ? "senasa" : "adaptive";
-  $("#againBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; document.querySelector(`input[value=${againMode}]`).checked=true; $("#startBtn").click(); });
+  const againMode = curMode==="plane" ? "plane" : "adaptive", againAc = curAc;
+  $("#againBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; document.querySelector(`input[value=${againMode}]`).checked=true; $("#acSel").value = againAc; $("#startBtn").click(); });
   $("#mapBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; showTab("map"); });
   tLimit=0; tick();
   window.scrollTo({top:0});
@@ -1465,7 +1522,7 @@ function loSummary(at){
 }
 function renderHist(){
   const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const modeName = {adaptive:"Adaptativo",wrong:"Fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro"};
+  const modeName = {adaptive:"Adaptativo",wrong:"Fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro",plane:"Por avión"};
   $("#histEvo").innerHTML = evoChart();
   $("#histBody").innerHTML = list.length ? `<div class="card"><div class="scroll"><table class="hist"><tr><th>Fecha</th><th>Tipo</th><th>Nota</th><th></th><th></th></tr>${
     list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${modeName[r.mode]||r.mode}${r.mode==="senasa"?` <span class="muted">${(SEN_LEN[r.len]||{}).label||""} · ${fmtMS(r.usedS||0)}</span>`:""}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Detalle</button>`:''}</td></tr>
@@ -1491,7 +1548,168 @@ function showDetail(id){
 const pick = a => a[Math.floor(Math.random()*a.length)];
 const btnRow = (items, cur, attr) => `<div class="visbtns">${items.map(([k,t])=>`<button class="btn sec sm ${k===cur?'on':''}" ${attr}="${k}">${esc(t)}</button>`).join("")}</div>`;
 
-// velocidades: arcos del anemómetro de cada avión, tócalas y ponte a prueba
+// cabinas con rotulador y anemómetro redondo
+
+// ---------- cockpits: rotulador y pasos sobre la foto ----------
+const CKD = {"cz":{"img":"cruiser-cockpit-a","w":1100,"h":676,"name":"PS-28 Cruiser","col":"--cz","alt":"Cabina del PS-28 Cruiser: dos pantallas Dynon, consola central con selector de combustible y throttle.","spots":{"mfd1":{"en":"MFD 1 (Dynon SkyView)","es":"pantalla izquierda","x":27.5,"y":30,"sh":"MFD 1","lab":[14,4.2,"m"],"tip":"Pantalla izquierda: la que se enciende primero con la batería (MFD 1)."},"xpdr":{"en":"Transponder (XPDR)","es":"transpondedor","x":48.5,"y":27.5,"sh":"Transponder","lab":[34,4.2,"m"],"tip":"El código 7000 de la foto es el que se pone en VFR."},"g5":{"en":"Standby horizon","es":"horizonte de reserva (Garmin)","x":54.5,"y":21,"sh":"Standby horizon","lab":[64,4.2,"m"],"tip":"Instrumento de reserva: sigue funcionando si fallan las pantallas."},"mfd2":{"en":"MFD 2 (Dynon SkyView)","es":"pantalla derecha","x":72,"y":30,"sh":"MFD 2","lab":[88,4.2,"m"],"tip":"Pantalla derecha: se enciende después, con el generador (MFD 2)."},"plac":{"en":"Airspeed placard","es":"placa de velocidades","x":12,"y":30,"sh":"Speed placard","lab":[3,62,"s"],"tip":"Placa con VNE, VNO, VA y VFE junto a la pantalla izquierda."},"mbat":{"en":"Master BAT","es":"interruptor de batería","x":16,"y":54.2,"sh":"Master BAT","lab":[3,72,"s"],"tip":"Primer interruptor de la fila de la izquierda: da corriente de batería."},"swrow":{"en":"Switch row (BAT · GEN · MFD · AVIONICS · FUEL P · NAV · STROBE · LDG · INT)","es":"fila de interruptores","x":20.2,"y":54.2,"tip":"Fila de interruptores: BAT · GEN · MFD 1 · MFD 2 · AVIONICS · FUEL P · NAV · STROBE · LDG · INT. Los que quedan tapados por el stick no se ven en la foto."},"avi":{"en":"AVIONICS","es":"aviónica","x":24.2,"y":54.2},"fuelp":{"en":"FUEL P (fuel pump)","es":"bomba de combustible","x":26.3,"y":54.2,"sh":"Fuel pump","lab":[27,63,"m"],"tip":"Bomba eléctrica auxiliar: ON para arrancar, despegar y aterrizar; OFF en crucero."},"navl":{"en":"NAV L (nav lights)","es":"luces de navegación","x":28.3,"y":54.2},"strobe":{"en":"STROBE","es":"luz estroboscópica","x":30.2,"y":54.2},"ldg":{"en":"LDG L (landing light)","es":"luz de aterrizaje","x":32.3,"y":54.2},"intl":{"en":"INT L (interior light)","es":"luz interior","x":34.3,"y":54.2},"ign":{"en":"Ignition key","es":"llave de ignición","x":38.7,"y":52.6,"sh":"Ignition key","lab":[41,70,"m"],"tip":"OFF · R · L · BOTH · START."},"audio":{"en":"Intercom","es":"intercomunicador","x":47.5,"y":36,"tip":"Intercomunicador / panel de audio."},"com":{"en":"COM radio","es":"radio de comunicaciones","x":56,"y":44,"tip":"Radio COM: la frecuencia activa y la de reserva."},"hbrake":{"en":"Hand brake","es":"freno de parking","x":47.5,"y":50.5,"tip":"Palanca de freno de parking (PULL ON)."},"carb":{"en":"Carb heat","es":"calefacción del carburador","x":51.7,"y":50.5,"tip":"Calefacción del carburador (PULL ON)."},"cabin":{"en":"Cabin heat","es":"calefacción de cabina","x":55.6,"y":50.5,"tip":"En fuego en vuelo: CABIN HEATER, empujar a OFF."},"brk":{"en":"Breakers (COM · IC · NAV · XPNDR · GX · FLAPS · TRIM · INT.LIGHT · 12V)","es":"fusibles (breakers)","x":73,"y":53.7,"sh":"Breakers","lab":[88,66,"m"],"tip":"Fila de breakers de la derecha."},"elt":{"en":"ELT switch","es":"interruptor del ELT","x":93.2,"y":33.5,"lab":[92,16,"m"],"tip":"ELT en ARM antes de volar."},"flap":{"en":"Flap indicator (UP · 12° · 30°)","es":"indicador de flaps","x":53.8,"y":70,"sh":"Flap indicator","lab":[72,74,"s"],"tip":"Luces de posición de flaps: UP (0°), TO 12° y LDG 30°."},"fsel":{"en":"Fuel selector","es":"selector de combustible","x":55.5,"y":83,"lab":[72,86,"s"],"tip":"LEFT · RIGHT · OFF. Si el izquierdo está lleno, empieza con LEFT."},"thr":{"en":"Throttle","es":"palanca de gases","x":51.5,"y":92,"lab":[70,95,"s"],"tip":"Throttle: si se rompe la palanca, un muelle lo lleva a full."},"stick":{"en":"Control stick","es":"mando (stick)","x":19,"y":58,"tip":"Mandos de vuelo (stick): cabeceo y alabeo por palancas y poleas."}},"order":["mfd1","xpdr","g5","mfd2","plac","mbat","swrow","fuelp","ign","audio","com","hbrake","carb","cabin","brk","elt","flap","fsel","thr"]},"c1":{"img":"c172-cockpit","w":748,"h":445,"name":"Cessna 172","col":"--c1","alt":"Cabina de un Cessna 172 con relojes analógicos, radios a la derecha y mandos en forma de yugo.","spots":{"asi":{"en":"Airspeed indicator","es":"anemómetro","x":22,"y":17.5,"lab":[14,4,"m"],"tip":"Arco blanco, verde, amarillo y línea roja."},"ai":{"en":"Attitude indicator","es":"horizonte artificial","x":31,"y":17,"lab":[32,4,"m"],"tip":"Lo mueve el vacío."},"alt":{"en":"Altimeter","es":"altímetro","x":38.5,"y":17,"lab":[47,4,"m"],"tip":"Se ajusta con el QNH."},"tc":{"en":"Turn coordinator","es":"coordinador de virajes","x":23,"y":33.5,"tip":"Lo mueve el vacío en muchos modelos."},"radio":{"en":"COM / NAV / GPS stack","es":"radios y GPS","x":60,"y":28,"sh":"Radios · GPS","lab":[76,18,"s"],"tip":"Pila de radios: COM, NAV, transpondedor y GPS."},"ign":{"en":"Ignition key","es":"llave de ignición","x":9.5,"y":64.5,"lab":[3,84,"s"],"tip":"Magnetos: OFF · R · L · BOTH · START."},"mst":{"en":"Master switch (BAT · ALT)","es":"interruptor general","x":15.5,"y":64.5,"sh":"Master switch","lab":[14,90,"s"],"tip":"Interruptor rojo de dos mitades: BAT y ALT."},"sws":{"en":"Electrical switches","es":"interruptores eléctricos","x":26,"y":70,"sh":"Switches","lab":[28,86,"s"],"tip":"Luces, bomba y pitot heat."},"thr":{"en":"Throttle","es":"palanca de gases","x":52.5,"y":66.5,"lab":[40,90,"s"],"tip":"Throttle: empuja para más potencia."},"mix":{"en":"Mixture (red)","es":"mezcla","x":57.5,"y":67,"lab":[60,90,"s"],"tip":"Mezcla: FULL RICH (pomo rojo)."},"flaps":{"en":"Flap switch","es":"palanca de flaps","x":68.5,"y":65,"lab":[74,86,"s"],"tip":"Flaps eléctricos: 10° · 20° · Full."}},"order":["asi","ai","alt","tc","radio","ign","mst","sws","thr","mix","flaps"]},"pi":{"img":"pa28-cockpit-b","w":1100,"h":722,"name":"Piper PA-28","col":"--pi","alt":"Cabina de un Piper PA-28 con relojes analógicos, annunciator panel arriba, cuadrante de gases y yugos.","spots":{"annun":{"en":"Annunciator panel","es":"panel de alarmas","x":55,"y":8.5,"sh":"Annunciator panel","lab":[74,3.5,"m"],"tip":"Luces de aviso del panel superior; se prueban con «PRESS TO TEST»."},"asi":{"en":"Airspeed indicator","es":"anemómetro","x":23.5,"y":19.5,"lab":[13,3.5,"m"],"tip":"Arcos blanco, verde y amarillo y línea roja."},"ai":{"en":"Attitude indicator","es":"horizonte artificial","x":36.5,"y":19,"lab":[31,3.5,"m"]},"alt":{"en":"Altimeter","es":"altímetro","x":51,"y":19,"lab":[47,3.5,"m"]},"cdi":{"en":"VOR indicator (OBS)","es":"indicador VOR","x":62.5,"y":21,"tip":"Aguja del VOR: se centra con el OBS."},"tc":{"en":"Turn coordinator","es":"coordinador de virajes","x":24.5,"y":38,"tip":"Avioncito y bola: viraje coordinado."},"dg":{"en":"Directional gyro (DG)","es":"girodireccional","x":37.5,"y":38,"tip":"Hay que ponerlo en hora con la brújula."},"vsi":{"en":"Vertical speed indicator","es":"variómetro","x":50.5,"y":38,"tip":"Ritmo de ascenso o descenso en pies por minuto."},"gps":{"en":"GPS","es":"GPS","x":80,"y":24,"lab":[92,12,"e"]},"radio":{"en":"COM / NAV radios","es":"radios COM y NAV","x":77,"y":36,"lab":[94,45,"e"]},"sws":{"en":"Electrical switches (BAT/ALT · fuel pump · beacon…)","es":"interruptores eléctricos","x":74,"y":49.5,"sh":"Electrical switches","lab":[93,56,"e"],"tip":"Fila de interruptores eléctricos de la derecha del panel."},"eng":{"en":"Engine gauges (fuel · oil)","es":"relojes del motor","x":52,"y":52,"tip":"Combustible, presión y temperatura de aceite."},"tach":{"en":"Tachometer (RPM)","es":"tacómetro","x":51.5,"y":60.5,"tip":"RPM del motor."},"quad":{"en":"Throttle · Mixture","es":"gases y mezcla","x":72.5,"y":64.5,"sh":"Throttle · Mixture","lab":[84,76,"s"],"tip":"Throttle (negro) y mixture (rojo): hacia delante = más."},"fsel":{"en":"Fuel selector","es":"selector de combustible","x":16,"y":92,"lab":[27,96,"s"],"tip":"Selector de combustible en el lateral izquierdo."}},"order":["asi","ai","alt","tc","dg","vsi","cdi","annun","gps","radio","sws","quad","fsel"]}};
+const SVGNS = "http://www.w3.org/2000/svg";
+function svgEl(tag, attrs, parent){ const e = document.createElementNS(SVGNS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); if(parent) parent.appendChild(e); return e; }
+function mountCk(root){
+  if(root.dataset.on) return; root.dataset.on = "1";
+  const ac = root.dataset.ck, D = CKD[ac]; if(!D) return;
+  const flow = root.dataset.mode === "flow";
+  const steps = flow ? JSON.parse(root.dataset.steps || "[]") : [];       // [[n, clave], ...]
+  const keys = flow ? [...new Set(steps.map(s=>s[1]))] : D.order;
+  const num = {}; if(!flow) D.order.forEach((k,i)=>num[k]=[i+1]); else steps.forEach(s=>{ (num[s[1]] = num[s[1]] || []).push(s[0]); });
+  let shown = new Set(flow ? keys : D.order), blind = false, quiz = null, stepI = -1, hot = null, revealed = new Set(), fresh = null;
+  root.classList.add("ckp", "ck-" + ac);
+  root.innerHTML = `<div class="ckp-stage"><img src="img/${D.img}.jpg" width="${D.w}" height="${D.h}" alt="${esc(D.alt)}" loading="lazy"><svg class="ckp-ov" aria-hidden="true"></svg></div>` + (flow ? "" : `<div class="ckp-bar"></div><div class="ckp-msg" aria-live="polite"></div><ol class="ckp-leg"></ol>`);
+  const stage = root.querySelector(".ckp-stage"), ov = root.querySelector(".ckp-ov"), bar = root.querySelector(".ckp-bar"), msg = root.querySelector(".ckp-msg"), leg = root.querySelector(".ckp-leg");
+  const col = `var(${D.col})`;
+  function paint(){
+    const cw = stage.clientWidth || 600, ch = Math.round(cw * D.h / D.w), narrow = cw < 560, fs = Math.max(12, Math.min(17, cw / 50));
+    ov.setAttribute("viewBox", `0 0 ${cw} ${ch}`); ov.innerHTML = "";
+    const defs = svgEl("defs", {}, ov);
+    const P = k => [D.spots[k].x * cw / 100, D.spots[k].y * ch / 100];
+    // flechas entre pasos (solo en modo pasos)
+    if(flow && steps.length <= 7){
+      const order = []; steps.forEach(s=>{ if(!order.length || order[order.length-1] !== s[1]) order.push(s[1]); });
+      for(let i=1; i<order.length; i++){
+        const [x0,y0] = P(order[i-1]), [x1,y1] = P(order[i]); if(Math.hypot(x1-x0,y1-y0) < 14) continue;
+        const dx = x1-x0, dy = y1-y0, L = Math.hypot(dx,dy), nx = -dy/L, ny = dx/L, bend = Math.min(40, L*.18) * (i%2 ? 1 : -1);
+        const cx = (x0+x1)/2 + nx*bend, cy = (y0+y1)/2 + ny*bend, ex = x1 - (x1-cx)/Math.hypot(x1-cx,y1-cy)*13, ey = y1 - (y1-cy)/Math.hypot(x1-cx,y1-cy)*13, sx = x0 + (cx-x0)/Math.hypot(cx-x0,cy-y0)*13, sy = y0 + (cy-y0)/Math.hypot(cx-x0,cy-y0)*13;
+        const d = `M${sx} ${sy} Q${cx} ${cy} ${ex} ${ey}`;
+        svgEl("path", {d, fill:"none", stroke:"#0b141c", "stroke-opacity":".55", "stroke-width":4.4, "stroke-linecap":"round"}, ov);
+        svgEl("path", {d, fill:"none", stroke:"#fff", "stroke-width":2.2, "stroke-linecap":"round", "stroke-dasharray":"6 5"}, ov);
+        const a = Math.atan2(ey-cy, ex-cx), h = 8;
+        svgEl("path", {d:`M${ex} ${ey} L${ex - h*Math.cos(a-.5)} ${ey - h*Math.sin(a-.5)} M${ex} ${ey} L${ex - h*Math.cos(a+.5)} ${ey - h*Math.sin(a+.5)}`, fill:"none", stroke:"#fff", "stroke-width":2.2, "stroke-linecap":"round"}, ov);
+      }
+    }
+    keys.forEach(k=>{
+      const s = D.spots[k]; if(!s) return;
+      const [px,py] = P(k), isQ = quiz && quiz.k === k, show = shown.has(k) || revealed.has(k);
+      const g = svgEl("g", {"data-k":k, class:"ckp-g" + (hot===k ? " hot" : "") + (fresh===k ? " ck-new" : "")}, ov);
+      if(quiz && !isQ){ svgEl("circle", {cx:px, cy:py, r:5, fill:"#fff", "fill-opacity":.55, stroke:"#0b141c", "stroke-opacity":.5}, g); return; }
+      // rotulador: flecha + nombre
+      if(!flow && !narrow && s.lab && show && !blind && !quiz){
+        const [lx0,ly0,an] = s.lab, lx = lx0*cw/100, ly = ly0*ch/100, txt = s.sh || s.en, tw = txt.length * fs * .5, bx0 = an==="m" ? lx - tw/2 : an==="e" ? lx - tw : lx, bx1 = bx0 + tw, by0 = ly - fs*.7, by1 = ly + fs*.3;
+        const sx0 = Math.max(bx0, Math.min(bx1, px)), sy0 = Math.max(by0, Math.min(by1, py));
+        let dx = px - sx0, dy = py - sy0; const L = Math.hypot(dx,dy) || 1; dx /= L; dy /= L;
+        const sx = sx0 + dx*5 + (sy0===by1 || sy0===by0 ? 0 : 0), sy = sy0 + dy*5, ex = px - dx*13, ey = py - dy*13, nx = -dy, ny = dx, bend = Math.min(34, L*.16) * (keys.indexOf(k)%2 ? 1 : -1);
+        const cx = (sx+ex)/2 + nx*bend, cy = (sy+ey)/2 + ny*bend, d = `M${sx} ${sy} Q${cx} ${cy} ${ex} ${ey}`;
+        svgEl("path", {d, fill:"none", stroke:"#0b141c", "stroke-opacity":".6", "stroke-width":4.6, "stroke-linecap":"round", pathLength:1, class:"ck-p"}, g);
+        svgEl("path", {d, fill:"none", stroke:"#fff", "stroke-width":2.4, "stroke-linecap":"round", pathLength:1, class:"ck-p"}, g);
+        const a = Math.atan2(ey-cy, ex-cx), h = 9;
+        svgEl("path", {d:`M${ex} ${ey} L${ex - h*Math.cos(a-.5)} ${ey - h*Math.sin(a-.5)} M${ex} ${ey} L${ex - h*Math.cos(a+.5)} ${ey - h*Math.sin(a+.5)}`, fill:"none", stroke:"#fff", "stroke-width":2.4, "stroke-linecap":"round", class:"ck-h"}, g);
+        const t = svgEl("text", {x:lx, y:ly, "text-anchor":an==="m"?"middle":an==="e"?"end":"start", class:"ck-t", "font-size":fs}, g); t.textContent = txt;
+      }
+      // número (punto)
+      const r = narrow ? 10 : 9, nn = num[k]||[], label = flow && nn.length > 1 ? nn[0] + "+" : nn.join("·");
+      svgEl("circle", {cx:px, cy:py, r: label.length > 3 ? r + 4 : r, fill:col, stroke:"#fff", "stroke-width":2, class:"ck-dot", "data-k":k}, g);
+      const nt = svgEl("text", {x:px, y:py + 3.6, "text-anchor":"middle", class:"ck-n", "font-size": label.length > 3 ? 10 : 11.5}, g); nt.textContent = isQ ? "?" : label;
+      if(isQ) svgEl("circle", {cx:px, cy:py, r:r+8, fill:"none", stroke:"#ffd36e", "stroke-width":3, class:"ck-pulse"}, g);
+      else if(hot===k) svgEl("circle", {cx:px, cy:py, r:r+8, fill:"none", stroke:"#ffd36e", "stroke-width":3, class:"ck-pulse"}, g);
+    });
+    ov.querySelectorAll(".ckp-g").forEach(g=>{ g.addEventListener("click", ()=>focusK(g.dataset.k)); });
+  }
+  function focusK(k){ if(quiz) return; hot = k; if(blind) revealed.add(k); paint(); drawLeg(); const s = D.spots[k]; if(msg) msg.innerHTML = `<b>${esc(s.en)}</b> · ${esc(s.es)}${s.tip ? `<br><span class="muted">${esc(s.tip)}</span>` : ""}`; if(!flow) { const li = leg && leg.querySelector(`[data-k="${k}"]`); if(li) li.classList.add("on"); } }
+  function drawLeg(){
+    if(!leg) return;
+    leg.innerHTML = D.order.map((k,i)=>{ const s = D.spots[k], h = blind && !revealed.has(k); return `<li data-k="${k}" class="${hot===k ? "on" : ""}"><b>${i+1}</b><span class="en ${h ? "hid" : ""}">${esc(s.en)}</span> <small class="es ${h ? "hid" : ""}">${esc(s.es)}</small></li>`; }).join("");
+    leg.querySelectorAll("li").forEach(li=>li.addEventListener("click", ()=>focusK(li.dataset.k)));
+  }
+  function drawBar(){
+    if(!bar) return;
+    const m = quiz ? "q" : blind ? "b" : stepI >= 0 ? "s" : "a";
+    bar.innerHTML = `<button class="btn sm ${m==="a" ? "" : "sec"}" data-m="a">Rotulador</button><button class="btn sm ${m==="s" ? "" : "sec"}" data-m="s">${m==="s" ? (stepI + 1 < D.order.length ? `Siguiente · ${stepI + 1}/${D.order.length}` : "Reiniciar") : "Paso a paso"}</button><button class="btn sm ${m==="b" ? "" : "sec"}" data-m="b">Tapar nombres</button><button class="btn sm ${m==="q" ? "" : "sec"}" data-m="q">${m==="q" ? "Otra pregunta" : "Ponme a prueba"}</button>`;
+    bar.querySelectorAll("[data-m]").forEach(b=>b.onclick = ()=>{
+      const k = b.dataset.m; hot = null; fresh = null; revealed = new Set(); msg.innerHTML = "";
+      if(k === "a"){ quiz = null; blind = false; stepI = -1; shown = new Set(D.order); }
+      else if(k === "s"){ quiz = null; blind = false; if(stepI < 0 || stepI + 1 >= D.order.length){ stepI = 0; shown = new Set([D.order[0]]); } else { stepI++; shown.add(D.order[stepI]); } fresh = D.order[stepI]; hot = fresh; const s = D.spots[fresh]; msg.innerHTML = `<b>${esc(s.en)}</b> · ${esc(s.es)}${s.tip ? `<br><span class="muted">${esc(s.tip)}</span>` : ""}`; }
+      else if(k === "b"){ quiz = null; stepI = -1; blind = !blind; shown = new Set(D.order); if(!blind) revealed = new Set(); }
+      else if(k === "q"){ stepI = -1; blind = false; shown = new Set(D.order); const kk = pick(D.order), right = D.spots[kk].en, wrong = shuffle(D.order.filter(x=>x!==kk)).slice(0,3).map(x=>D.spots[x].en); quiz = {k:kk, opts:shuffle([right, ...wrong]), right};
+        msg.innerHTML = `<b>¿Qué es lo que marca el círculo con «?»</b><div class="visbtns" style="margin-top:6px">${quiz.opts.map(o=>`<button class="btn sec sm" data-a="${esc(o)}">${esc(o)}</button>`).join("")}</div><div class="ckp-ans"></div>`;
+        msg.querySelectorAll("[data-a]").forEach(bb=>bb.onclick = ()=>{ const ok = bb.dataset.a === quiz.right, s = D.spots[quiz.k]; msg.querySelector(".ckp-ans").innerHTML = (ok ? '<span class="pass">Correcto.</span> ' : `<span class="fail">No.</span> Es <b>${esc(s.en)}</b>. `) + esc(s.es) + (s.tip ? ` · ${esc(s.tip)}` : ""); const kq = quiz.k; quiz = null; hot = kq; revealed.add(kq); paint(); drawBar(); drawLeg(); });
+      }
+      paint(); drawBar(); drawLeg();
+    });
+  }
+  root.ckHighlight = nums => { hot = null; ov.querySelectorAll(".ckp-g").forEach(g=>{ const k = g.dataset.k; const on = nums && nums.some(n=>(num[k]||[]).includes(n)); g.classList.toggle("hot", !!on); }); };
+  const ro = new ResizeObserver(()=>paint()); ro.observe(stage);
+  paint(); drawBar(); drawLeg();
+  if(flow && root.dataset.legend){ const L = document.createElement("ol"); L.className = "ckp-steps"; L.innerHTML = steps.map(s=>`<li><b>${s[0]}</b>${s[2] || ""}</li>`).join(""); root.appendChild(L); }
+}
+function initCockpits(){ document.querySelectorAll(".ckp[data-ck]").forEach(mountCk); initChkView(); initDgTabs(); }
+// listas: botón «Ver en la cabina» bajo cada checklist
+function initChkView(){
+  document.querySelectorAll(".chk").forEach(blk=>{
+    if(blk.dataset.cv) return; blk.dataset.cv = "1";
+    const cols = [...blk.querySelectorAll(".chkcol")].filter(c=>CKD[c.dataset.ac] && c.querySelector("li[data-sp]"));
+    if(!cols.length) return;
+    const bar = document.createElement("div"); bar.className = "chkview-bar";
+    bar.innerHTML = `<span class="muted small">Ver en la cabina:</span> ` + cols.map(c=>`<button class="btn sec sm" data-ac="${c.dataset.ac}" style="border-color:var(${CKD[c.dataset.ac].col});color:var(${CKD[c.dataset.ac].col})">${CKD[c.dataset.ac].name}</button>`).join(" ");
+    const view = document.createElement("div"); view.className = "chkview"; view.hidden = true;
+    blk.appendChild(bar); blk.appendChild(view);
+    let cur = null;
+    bar.querySelectorAll("button").forEach(b=>b.onclick = ()=>{
+      const ac = b.dataset.ac; if(cur === ac){ view.hidden = true; view.innerHTML = ""; cur = null; bar.querySelectorAll("button").forEach(x=>x.classList.remove("on")); return; }
+      cur = ac; bar.querySelectorAll("button").forEach(x=>x.classList.toggle("on", x === b));
+      const col = cols.find(c=>c.dataset.ac === ac), lis = [...col.querySelectorAll("li")], steps = [];
+      lis.forEach((li,i)=>{ (li.dataset.sp || "").split(" ").filter(Boolean).forEach(k=>steps.push([i+1, k])); });
+      const miss = lis.length - new Set(steps.map(s=>s[0])).size;
+      view.hidden = false; view.innerHTML = `<div class="ckp" data-ck="${ac}" data-mode="flow" data-steps='${JSON.stringify(steps)}'></div><p class="muted small">${CKD[ac].name} · los números son los pasos de la lista.${miss ? ` ${miss} paso${miss>1?"s":""} no se ven en esta foto (están fuera de la cabina o no se distinguen).` : ""} Toca un paso de la lista para verlo.</p>`;
+      const root = view.querySelector(".ckp"); mountCk(root);
+      lis.forEach((li,i)=>{ li.onmouseenter = li.onclick = ()=>root.ckHighlight([i+1]); li.onmouseleave = ()=>root.ckHighlight(null); });
+    });
+  });
+}
+
+// pestañas de los dibujos (un avión cada vez)
+function initDgTabs(){
+  document.querySelectorAll(".dgtabs").forEach(f=>{
+    if(f.dataset.on) return; f.dataset.on = "1";
+    f.querySelectorAll("button[data-t]").forEach(b=>b.onclick = ()=>{
+      f.querySelectorAll("button[data-t]").forEach(x=>x.classList.toggle("on", x === b));
+      f.querySelectorAll(".dgtab").forEach(p=>p.hidden = p.dataset.t !== b.dataset.t);
+    });
+  });
+}
+// ---------- anemómetro redondo ----------
+const ASI_V0 = 30, ASI_V1 = 200;
+function asiAng(v){ return (v - ASI_V0) / (ASI_V1 - ASI_V0) * 335; }
+function asiPt(r, a, c=110){ const t = a * Math.PI / 180; return [c + r * Math.sin(t), c - r * Math.cos(t)]; }
+function asiArc(r, v0, v1, w, col){
+  const a0 = asiAng(v0), a1 = asiAng(v1), [x0,y0] = asiPt(r,a0), [x1,y1] = asiPt(r,a1);
+  return `<path d="M${x0.toFixed(2)} ${y0.toFixed(2)} A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}" fill="none" stroke="${col}" stroke-width="${w}"/>`;
+}
+// s = {vs0,vs1,vfe,vno,vne}; o = {needle, labels:[[clave, valor, texto]], hi, marks:[[valor, color, texto]]}
+function asiDial(s, o={}){
+  const c = 130, R = 100; o = Object.assign({needle:null, labels:true, hi:null, marks:[]}, o);
+  let g = `<svg class="asi" viewBox="0 0 260 260" role="img" aria-label="Anemómetro"><circle cx="${c}" cy="${c}" r="112" fill="#1b2128" stroke="#59646e" stroke-width="3"/><circle cx="${c}" cy="${c}" r="106" fill="#0a0e12"/>`;
+  const pt = (r,a)=>asiPt(r,a,c);
+  g += asiArc(98, s.vs1, s.vno, 8, "#2eaa55") + asiArc(98, s.vno, s.vne, 8, "#e6b422") + asiArc(89, s.vs0, s.vfe, 5, "#f2f4f6");
+  { const [x0,y0] = pt(81, asiAng(s.vne)), [x1,y1] = pt(103, asiAng(s.vne)); g += `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="#e5382f" stroke-width="3.6"/>`; }
+  for(let v = 40; v <= 200; v += 5){
+    const a = asiAng(v), big = v % 20 === 0, mid = v % 10 === 0, [x0,y0] = pt(big ? 72 : mid ? 76 : 80, a), [x1,y1] = pt(84, a);
+    g += `<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="#e8edf1" stroke-width="${big ? 2.2 : 1.2}"/>`;
+    if(big){ const [tx,ty] = pt(60, a); g += `<text x="${tx.toFixed(1)}" y="${(ty+4.5).toFixed(1)}" text-anchor="middle" fill="#e8edf1" font-size="13" font-weight="700" font-family="Barlow Condensed, Arial Narrow, sans-serif">${v}</text>`; }
+  }
+  g += `<text x="${c}" y="${c-22}" text-anchor="middle" fill="#cfd8df" font-size="10.5" letter-spacing="1.6" font-family="Barlow, Arial, sans-serif">AIRSPEED</text>${o.hi ? "" : `<text x="${c}" y="${c+34}" text-anchor="middle" fill="#cfd8df" font-size="10.5" letter-spacing="1.6" font-family="Barlow, Arial, sans-serif">KNOTS</text>`}`;
+  (o.marks||[]).forEach(m=>{ const a = asiAng(m[0]), [x,y] = pt(104, a), [x2,y2] = pt(95, a - 2.4), [x3,y3] = pt(95, a + 2.4); g += `<path d="M${x.toFixed(1)} ${y.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)} L${x3.toFixed(1)} ${y3.toFixed(1)}Z" fill="${m[1]}" stroke="#0a0e12" stroke-width=".8"/>`; });
+  if(o.needle != null){ const a = asiAng(o.needle), [x,y] = pt(88, a), [x2,y2] = pt(-18, a); g += `<line x1="${x2.toFixed(1)}" y1="${y2.toFixed(1)}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#f4f4f4" stroke-width="3.4" stroke-linecap="round"/><circle cx="${c}" cy="${c}" r="8" fill="#2b333a" stroke="#f4f4f4" stroke-width="1.6"/>`; }
+  else g += `<circle cx="${c}" cy="${c}" r="6" fill="#2b333a" stroke="#cfd8df"/>`;
+  if(o.labels){
+    const L = {vs0:"VS0", vs1:"VS1", vfe:"VFE", vno:"VNO", vne:"VNE"};
+    [["vs0",s.vs0],["vs1",s.vs1],["vfe",s.vfe],["vno",s.vno],["vne",s.vne]].forEach(([k,v])=>{
+      if(o.hi !== k) return; const a = asiAng(v), [x,y] = pt(104,a), [x2,y2] = pt(94,a-3), [x3,y3] = pt(94,a+3);
+      g += `<path d="M${x.toFixed(1)} ${y.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)} L${x3.toFixed(1)} ${y3.toFixed(1)}Z" fill="#ff4fd8" stroke="#0a0e12" stroke-width="1"/>`;
+      g += `<text x="${c}" y="${c+42}" text-anchor="middle" font-size="22" font-weight="700" font-family="Barlow Condensed, Arial Narrow, sans-serif" fill="#ff4fd8">${L[k]} ${o.hide && o.hide.includes(k) ? "?" : v}</text>`;
+    });
+  }
+  return g + `</svg>`;
+}
+
+// velocidades: anemómetro de cada avión, tócalas y ponte a prueba
 const SPD = {
   cruiser:{name:"PS-28 Cruiser", vs0:31, vs1:37, vfe:75, vno:108, vne:138, va:"88"},
   cessna:{name:"Cessna 172", vs0:41, vs1:47, vfe:85, vno:128, vne:160, va:"80–97"},
@@ -1501,32 +1719,27 @@ const SPD_INFO = {
   vne:["VNE · Never Exceed","Línea roja: integridad estructural. No se supera nunca."],
   vno:["VNO · Normal Operating","Fin del arco verde: por encima, la turbulencia puede sobrecargar la estructura."],
   va:["VA · Maneuvering","La deflexión máxima de mandos hacia arriba puede sobrecargar el avión. (Cruiser: 88 kt a 600 kg.)"],
-  vfe:["VFE · Flaps Extended","Fin del arco blanco: no se supera con los flaps abajo."]
+  vfe:["VFE · Flaps Extended","Fin del arco blanco: no se supera con los flaps abajo."],
+  vs0:["VS0 · Stall, landing config","Inicio del arco blanco: pérdida con flaps y tren en configuración de aterrizaje."],
+  vs1:["VS1 · Stall, clean","Inicio del arco verde: pérdida en configuración limpia."]
 };
 function initSpeeds(){
   const el = $("#visSpeeds"); let ac="cruiser", sel="vfe", quiz=null;
-  const X = v => 20 + (v-30)/(170-30)*660;
+  const SW = {vs0:"#f2f4f6", vs1:"#2eaa55", vfe:"#f2f4f6", vno:"#e6b422", vne:"#e5382f"};
   function draw(){
     const s = SPD[ac], q = quiz;
-    let g = `<svg viewBox="0 0 700 120" role="img" aria-label="Arcos del anemómetro del ${s.name}"><style>.t{fill:var(--muted);font:500 12px Barlow,sans-serif} .l{fill:var(--ink);font:700 14px "Barlow Condensed",sans-serif}</style>`;
-    g += `<rect x="${X(s.vs1)}" y="28" width="${X(s.vno)-X(s.vs1)}" height="22" fill="#2e9e5b"/>`;
-    g += `<rect x="${X(s.vno)}" y="28" width="${X(s.vne)-X(s.vno)}" height="22" fill="#e0b020"/>`;
-    g += `<rect x="${X(s.vs0)}" y="54" width="${X(s.vfe)-X(s.vs0)}" height="12" fill="#e8eef2" stroke="var(--line)"/>`;
-    g += `<rect x="${X(s.vne)-2}" y="22" width="4" height="50" fill="#d6362f"/>`;
-    const marks = [["vs0",s.vs0,"VS0"],["vs1",s.vs1,"VS1"],["vfe",s.vfe,"VFE"],["vno",s.vno,"VNO"],["vne",s.vne,"VNE"]];
-    marks.forEach(([k,v,n],i)=>{ const hide = q && k!=="vs0" && k!=="vs1"; const on = (k===sel && !q);
-      g += `<line x1="${X(v)}" x2="${X(v)}" y1="${i%2?72:18}" y2="${i%2?80:26}" stroke="var(--ink)"/>`;
-      g += `<text class="l" x="${X(v)}" y="${i%2?96:14}" text-anchor="middle" ${on?'style="fill:var(--magenta)"':''}>${hide?"?":n+" "+v}</text>`; });
-    g += `</svg>`;
+    const dial = asiDial(s, {hi: q ? q.k : sel, hide: q ? [q.k] : null, needle: (!q && sel !== "va") ? s[sel] : null});
     let ui = btnRow([["cruiser","Cruiser"],["cessna","Cessna"],["piper","Piper"]], ac, "data-ac");
+    let side = "";
     if(!q){
       ui += btnRow([["vne","VNE"],["vno","VNO"],["va","VA"],["vfe","VFE"]], sel, "data-sp");
       const v = sel==="va" ? s.va : s[sel];
-      ui += `<div class="vismsg"><b>${SPD_INFO[sel][0]} · ${v} KIAS</b><br>${SPD_INFO[sel][1]}</div><button class="btn sm" data-q="1">Ponme a prueba</button>`;
+      side = `<div class="asi-s">` + [["vs0","VS0 · stall, flaps out","Inicio del arco blanco"],["vs1","VS1 · stall, clean","Inicio del arco verde"],["vfe","VFE","Fin del arco blanco"],["vno","VNO","Fin del arco verde"],["vne","VNE","Línea roja"]].map(([k,n,d])=>`<div class="row ${k===sel?"on":""}" data-sp="${k}"><span class="sw" style="background:${SW[k]}"></span><b>${n.split(" ")[0]} ${s[k]}</b><span class="muted">${d}</span></div>`).join("") + `</div>`;
+      ui += `<div class="vismsg"><b>${SPD_INFO[sel] ? SPD_INFO[sel][0] : sel.toUpperCase()} · ${v} KIAS</b><br>${SPD_INFO[sel] ? SPD_INFO[sel][1] : ""}</div><button class="btn sm" data-q="1">Ponme a prueba</button>`;
     } else {
-      ui += `<div class="vismsg"><b>${q.text}</b></div><div class="visbtns">${q.opts.map(o=>`<button class="btn sec sm" data-a="${o}">${o}</button>`).join("")}</div><div class="vismsg" id="spq">${q.msg||""}</div>`;
+      side = `<div class="vismsg"><b>${q.text}</b></div><div class="visbtns">${q.opts.map(o=>`<button class="btn sec sm" data-a="${o}">${o}</button>`).join("")}</div><div class="vismsg" id="spq">${q.msg||""}</div>`;
     }
-    el.innerHTML = g + ui;
+    el.innerHTML = `<div class="asiwrap">${dial}<div>${q ? side : side}</div></div>` + ui;
     el.querySelectorAll("[data-ac]").forEach(b=>b.onclick=()=>{ ac=b.dataset.ac; quiz=null; draw(); });
     el.querySelectorAll("[data-sp]").forEach(b=>b.onclick=()=>{ sel=b.dataset.sp; draw(); });
     const qb = el.querySelector("[data-q]"); if(qb) qb.onclick=()=>{ const k=pick(["vne","vno","va","vfe"]); const right = k==="va"?s.va:String(s[k]);
@@ -1670,7 +1883,7 @@ function initCtrl(){
 }
 
 // ---------- arranque ----------
-[initSpeeds,initLoad,initAnnun,initSix,initAlt,initCtrl,initT3,initCru].forEach(f=>{ try{ f(); }catch(e){ console.error(f.name, e); } });
+[initSpeeds,initLoad,initAnnun,initSix,initAlt,initCtrl,initT3,initCru,initCockpits].forEach(f=>{ try{ f(); }catch(e){ console.error(f.name, e); } });
 buildBank();
 renderNotesMeta();
 showTab((location.hash||"").slice(1)||"notes", true);
