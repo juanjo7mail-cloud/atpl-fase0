@@ -7,7 +7,7 @@
 const MAXLEN=500, GAP=500, KEEP=200;
 const $=(s,r)=>(r||document).querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const C={deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null};
+const C={deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0};
 
 const PLANE='<path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z"/>';
 const ICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path class="bb" d="M16 3C8.8 3 3 8 3 14.2c0 3.3 1.7 6.3 4.4 8.3-.2 1.9-1 3.6-2.2 5 2.6-.3 4.8-1.3 6.4-2.6 1.4.4 2.9.6 4.4.6 7.200 0 13-5 13-11.300S23.200 3 16 3z"/><g class="pl" transform="translate(16 14) rotate(-45) scale(.82) translate(-10 -10)">'+PLANE+'</g></svg>';
@@ -27,7 +27,7 @@ function css(){
 .f0c-fab small{font:600 11px var(--body);opacity:.9;display:flex;align-items:center;gap:5px}
 .f0c-fab small i{width:8px;height:8px;border-radius:50%;background:#6ee7a1;box-shadow:0 0 0 2px rgba(110,231,161,.3)}
 .f0c-fab.off small i{background:#c0c9d0;box-shadow:none}
-.f0c-fab .n{position:absolute;top:-5px;right:-3px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#E5484D;color:#fff;font:700 12px/20px var(--body);text-align:center;border:2px solid var(--bg)}
+.f0c-fab .n{position:absolute;top:-7px;right:-4px;min-width:24px;height:24px;padding:0 6px;border-radius:12px;background:#FF3B30;color:#fff;font:700 14px/24px var(--body);text-align:center;border:2px solid var(--bg);box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .f0c.open .f0c-fab{display:none}
 .f0c-pan{display:none;flex-direction:column;width:min(360px,calc(100vw - 28px));height:min(520px,calc(100dvh - 90px));background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 44px rgba(10,23,36,.4);overflow:hidden}
 .f0c.open .f0c-pan{display:flex;animation:f0cin .18s ease-out}
@@ -52,7 +52,7 @@ function css(){
 .f0c-p.gone .av{opacity:.6}.f0c-p.gone .av i{display:none}
 .f0c-p .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .f0c-p small{display:block;font:500 12px var(--body);color:var(--muted);overflow:hidden;text-overflow:ellipsis}
-.f0c-p .u{flex:none;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#E5484D;color:#fff;font:700 12px/20px var(--body);text-align:center}
+.f0c-p .u{flex:none;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#FF3B30;color:#fff;font:700 13px/22px var(--body);text-align:center}
 .f0c-empty{margin:auto;text-align:center;padding:20px 22px;color:var(--muted);font:500 14px/1.5 var(--body)}
 .f0c-empty svg{width:54px;height:54px;display:block;margin:0 auto 8px;opacity:.55}.f0c-empty .bb{fill:none;stroke:currentColor;stroke-width:1.5}.f0c-empty .pl{fill:currentColor}
 .f0c-note{margin:0;padding:8px 12px 10px;border-top:1px solid var(--line);font:500 11.500px/1.4 var(--body);color:var(--muted)}
@@ -102,7 +102,8 @@ function syncPeers(){
   try{ const st=C.ch.presenceState(), o={}; Object.keys(st).forEach(k=>{ const m=st[k]&&st[k][0]; if(m&&k!==C.uid) o[k]={n:String(m.n||"Alumno").slice(0,60)}; }); C.peers=o; }catch(e){}
   update();
 }
-function total(){ return Object.values(C.unread).reduce((a,b)=>a+b,0); }
+function total(){ return Object.values(C.unread).filter(n=>n>0).length; }   // personas que te han escrito (como el globo de iPhone)
+function msgs(){ return Object.values(C.unread).reduce((a,b)=>a+b,0); }
 function clean(x){ return String(x==null?"":x).replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g,"").trim().slice(0,MAXLEN); }
 function viewing(room){ return C.open && C.active===room && document.visibilityState==="visible"; }
 function push(room,m){
@@ -159,8 +160,10 @@ function update(){
   const un=total(), n=online.length, on=C.status==="on";
   const fab=$(".f0c-fab",r);
   fab.className="f0c-fab"+(on?"":" off"); fab.setAttribute("aria-expanded",String(C.open));
-  fab.setAttribute("aria-label","Online pilots: "+(on?n+" en línea":"sin conexión")+(un?", "+un+" mensajes sin leer":""));
-  fab.innerHTML=ICON+`<span>Online pilots<small><i></i>${on?(n===1?"1 en línea":n+" en línea"):(C.status==="conn"?"conectando…":"sin conexión")}</small></span>${un?`<b class="n">${un>9?"9+":un}</b>`:""}`;
+  fab.setAttribute("aria-label","Online pilots: "+(on?n+" en línea":"sin conexión")+(un?", "+(un===1?"1 persona te ha escrito":un+" personas te han escrito"):""));
+  fab.innerHTML=ICON+`<span>Online pilots<small><i></i>${on?(n===1?"1 en línea":n+" en línea"):(C.status==="conn"?"conectando…":"sin conexión")}</small></span>${un?`<b class="n" data-k="${un}">${un>9?"9+":un}</b>`:""}`;
+  if(un>C.shown&&!matchMedia("(prefers-reduced-motion: reduce)").matches){ const b=$(".f0c-fab .n",r); if(b) b.animate([{transform:"scale(.3)"},{transform:"scale(1.3)"},{transform:"scale(1)"}],{duration:320,easing:"ease-out"}); }
+  C.shown=un;
   r.classList.toggle("open",C.open);
   const pan=$(".f0c-pan",r); if(!C.open){ pan.innerHTML=""; return; }
   const stTxt={on:n===1?"1 compañero en línea":n+" compañeros en línea",conn:"Conectando…",err:"Sin conexión. Reintentando…",off:"Desconectado"}[C.status];
