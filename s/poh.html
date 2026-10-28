@@ -6,10 +6,8 @@ async function load(){var v=await ask({t:"f0-load",k:K});if(v===undefined){try{v
 async function save(st){try{localStorage.setItem(LS,JSON.stringify(st))}catch(e){}await ask({t:"f0-save",k:K,v:st})}
 window.__hub={use:async function(n){return n==="artifact"?{publish:async function(f){var x=f&&f["progreso.json"];if(x){await save(JSON.parse(typeof x==="string"?x:x.content))}return{}}}:null},
 fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
-})();</script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
-select{max-width:100%;text-overflow:ellipsis}
-</style></head><body>
-<title>POH Piper y Cessna</title>
+})();</script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>POH Cruiser, Cessna y Piper</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -157,12 +155,65 @@ select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;b
 .gbar .tr i{position:absolute;top:0;bottom:0;border-radius:3px}
 @media (max-width:560px){details.lo summary{gap:4px 10px}.lometa{justify-content:flex-start;width:100%}.gbar span.l{width:96px}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* ---- 3 aviones, fotos, trucos, listas ---- */
+:root{--cz:#2E7D32;--c1:#1F6FB5;--pi:#C2610C;--kmem:#1F5FBF}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--cz:#7BD389;--c1:#7EB3DE;--pi:#F0A060;--kmem:#8FB5F2}}
+:root[data-theme="dark"]{--cz:#7BD389;--c1:#7EB3DE;--pi:#F0A060;--kmem:#8FB5F2}
+table.t3 th.cz,table.t3 td.cz{color:var(--cz)} table.t3 th.c1,table.t3 td.c1{color:var(--c1)} table.t3 th.pi,table.t3 td.pi{color:var(--pi)}
+table.t3 td.cz,table.t3 td.c1,table.t3 td.pi{font-weight:600;font-variant-numeric:tabular-nums}
+table.t3 th.cz,table.t3 th.c1,table.t3 th.pi{border-bottom:3px solid currentColor}
+.mnem{padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px;background:color-mix(in srgb,var(--warn) 10%,transparent);border-left:3px solid var(--warn)}
+.mnem > b:first-child{color:var(--warn);display:block;margin-bottom:2px}
+.mnem ul{margin:4px 0;padding-left:18px}
+.fig{margin:12px 0}
+.fig img{width:100%;height:auto;border-radius:6px;border:1px solid var(--line);display:block;background:#fff}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:4px}
+.figs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.figs .fig{margin:0}
+@media (max-width:560px){.figs{grid-template-columns:1fr}}
+.kind{font:600 13px "Barlow Condensed",Barlow,sans-serif;padding:1px 8px;border-radius:10px;border:1px solid var(--kmem);color:var(--kmem);background:transparent;white-space:nowrap}
+button.kind{cursor:pointer;padding:3px 9px;font-size:14px}
+.kind.mem{background:var(--kmem);color:var(--paper)}
+.kind.em{background:var(--bad);border-color:var(--bad);color:var(--paper)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chk{margin:14px 0}
+.chkhead{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-family:"Barlow Condensed",Barlow,sans-serif;font-size:19px}
+.chkgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:760px){.chkgrid{grid-template-columns:1fr}}
+.chkcol{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--cz);border-radius:6px;padding:4px 10px 8px}
+.chkcol.c1{border-top-color:var(--c1)} .chkcol.pi{border-top-color:var(--pi)}
+.chkcol h5{margin:4px 0;font:600 15px "Barlow Condensed",Barlow,sans-serif;color:var(--cz)}
+.chkcol.c1 h5{color:var(--c1)} .chkcol.pi h5{color:var(--pi)}
+.chkcol ol,.ckl{list-style:none;margin:0;padding:0;counter-reset:c}
+.chkcol li,.ckl li{display:flex;gap:6px;justify-content:space-between;align-items:baseline;counter-increment:c;font-size:14px;margin:2px 0;border-bottom:1px dotted var(--line);padding:1px 0}
+.chkcol li::before,.ckl li::before{content:counter(c);color:var(--muted);font-size:11px;min-width:16px}
+.chkcol .it,.ckl .it{flex:1}
+.chkcol .va,.ckl .va{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.chkcol li.red,.ckl li.red{color:var(--bad)}
+.va.hid{color:transparent!important;background:color-mix(in srgb,var(--ink) 18%,transparent);border-radius:3px;cursor:pointer;user-select:none;min-width:30px;display:inline-block}
+.mrow{display:flex;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px dotted var(--line);padding:4px 0;font-size:15px}
+.mrow select{min-width:76px}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 0}
+.mgrid label{display:flex;flex-direction:column;font-size:13px;color:var(--muted);gap:2px}
+.mgrid input{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);width:100%}
+.ordl{margin:6px 0;padding-left:22px;font-size:15px}
+.t3 td{vertical-align:middle}
+table.t3{table-layout:fixed;width:100%;font-size:14px}
+table.t3 td,table.t3 th{padding:6px 5px;overflow-wrap:break-word;hyphens:auto}
+table.t3 th:first-child{width:26%}
+table.t3 th:nth-child(5):last-child{width:24%}
+table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
+@media (max-width:480px){table.t3{font-size:13px}table.t3 td,table.t3 th{padding:5px 3px}}
+
+.t3bar{margin:6px 0 2px}.t3bar .visbtns{margin:0}
+.chips{margin-top:6px;line-height:2}
 </style>
 <div class="wrap">
 <header>
   <div class="code">POH</div>
-  <h1>Pilot Operating Handbook · Cessna 172 y Piper PA-28</h1>
-  <p><b title="Examen interno sin cifras publicadas: nº de preguntas, tiempo y reparto estimados">30 preguntas · 45 min · aprobado 75 %</b></p>
+  <h1>Pilot Operating Handbook · PS-28 Cruiser, Cessna 172 y Piper PA-28</h1>
+  <p><b title="Práctica interna sin cifras oficiales: el reparto de preguntas es una estimación">Práctica interna de Fase 0 · reparto estimado</b></p>
 </header>
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
@@ -172,57 +223,79 @@ select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;b
 </nav>
 
 <section id="p-notes">
-<div class="card"><b>Examen SENASA ATPL · dónde están las 30 preguntas</b>
-  <div id="examBar"></div>
-</div>
+<div class="card" id="cruCard"><b>Los 3 aviones, juntos</b><p class="muted small">Cada tabla lleva los tres aviones en el mismo orden y color: <span style="color:var(--cz);font-weight:700">Cruiser</span> · <span style="color:var(--c1);font-weight:700">C172</span> · <span style="color:var(--pi);font-weight:700">Piper</span>. Pulsa «Tapar valores» encima de cada tabla para memorizarla y «Ponme a prueba» para comprobarte. Los datos del <b>Cruiser</b> y del <b>Cessna</b> del PDF nuevo aún no se han dado en clase.</p><div class="chips"><button class="linkbtn" data-go="lo-POH.1.5">Tabla maestra de los 3 aviones</button> · <button class="linkbtn" data-go="lo-POH.1.4">Ficha del Cruiser</button> · <button class="linkbtn" data-go="lo-POH.2.5">Límites del Cruiser</button> · <button class="linkbtn" data-go="lo-POH.7.8">Sistemas del Cruiser</button> · <button class="linkbtn" data-go="lo-POH.3.3">Emergencias del Cruiser</button></div></div>
 <div class="card" id="hotCard" hidden><b>Lo que más fallas</b><div id="hotFails"></div></div>
 <h2>POH.1 · General <span class="wtag">9 preg. · 30 %</span></h2>
 
 <details class="lo" id="lo-POH.1.1" data-lo="POH.1.1">
 <summary><span class="lonum">POH.1.1</span><span class="lotitle">Motor y hélice</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
-    <li>El 90 % de las preguntas sale de las secciones <b>1, 2 y 7</b>. De General: aprender <b>todo de ambos aviones</b>.</li>
-    <li>La medida de la hélice es la <b>total</b>, de punta a punta, no solo la de las palas.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Los dos aviones llevan un Lycoming <b>O-320</b> de <b>160 BHP a 2700 RPM</b>, 4 cilindros, directo, opuestos, refrigerado por aire, con hélice de <b>paso fijo</b>.</div>
-  <div class="scroll"><table>
-   <tr><th></th><th>Piper PA-28</th><th>Cessna 172</th></tr>
-   <tr><td><b>Modelo</b></td><td>O-320-<b>D2A/D3O</b></td><td>O-320-<b>H2AD</b></td></tr>
-   <tr><td><b>Potencia</b></td><td colspan="2">160 BHP a 2700 RPM (los dos)</td></tr>
-   <tr><td><b>Hélice</b></td><td>Sensenich · 2 palas · 72–74 in</td><td>McCauley · 2 palas · 74–75 in</td></tr>
-  </table></div>
-  <div class="flag"><b>Trampa</b> «O» = cilindros <b>opuestos</b>; «320» = cilindrada; <b>IO</b> = inyección. Piper = <b>Sens</b>enich · Cessna = <b>Mc</b>Cauley.</div>
+<div class="profe"><b>★ Lo que remarcó el profesor</b><ul><li>El 90 % de las preguntas sale de las secciones <b>1, 2 y 7</b>. De General: aprender <b>todo de ambos aviones</b>.</li><li>La medida de la hélice es la <b>total</b>, de punta a punta, no solo la de las palas.</li></ul></div>
+<div class="key"><b>Clave</b><b>Piper y Cessna</b> llevan el mismo motor: Lycoming <b>O-320</b>, <b>160 BHP a 2700 RPM</b>, 4 cilindros, directo, refrigerado por aire, hélice de <b>paso fijo</b> de 2 palas. El <b>Cruiser</b> es otro mundo: Rotax <b>100 HP</b>, con reductora, líquido + aire, hélice de <b>3 palas</b>.</div>
+<div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Modelo</b></td><td class="cz"><span class="va">Rotax 912 S2</span></td><td class="c1"><span class="va">Lycoming O-320-<b>H2AD</b></span></td><td class="pi"><span class="va">Lycoming O-320-<b>D2A/D3O</b></span></td></tr><tr><td><b>Potencia</b></td><td class="cz"><span class="va">100 HP</span></td><td class="c1"><span class="va">160 BHP a 2700 RPM</span></td><td class="pi"><span class="va">160 BHP a 2700 RPM</span></td></tr><tr><td><b>Cilindros</b></td><td class="cz"><span class="va">4, opuestos</span></td><td class="c1"><span class="va">4, opuestos</span></td><td class="pi"><span class="va">4, opuestos</span></td></tr><tr><td><b>Refrigeración</b></td><td class="cz"><span class="va">líquido y aire</span></td><td class="c1"><span class="va">aire</span></td><td class="pi"><span class="va">aire</span></td></tr><tr><td><b>Transmisión</b></td><td class="cz"><span class="va">con reductora</span></td><td class="c1"><span class="va">directo</span></td><td class="pi"><span class="va">directo</span></td></tr><tr><td><b>Hélice</b></td><td class="cz"><span class="va">Woodcomp Klassic · 3 palas</span></td><td class="c1"><span class="va">McCauley · 2 palas · 74–75 in</span></td><td class="pi"><span class="va">Sensenich · 2 palas · 72–74 in</span></td></tr><tr><td><b>Paso</b></td><td class="cz"><span class="va">fijo, ajustable en tierra</span></td><td class="c1"><span class="va">fijo</span></td><td class="pi"><span class="va">fijo</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>160 = Piper y Cessna</b> (los dos Lycoming). <b>100 = Cruiser</b> (el único Rotax).</li><li>Hélices: Piper = <b>Sens</b>enich · Cessna = <b>Mc</b>Cauley (las dos de 2 palas) · Cruiser = <b>Wood</b>comp (3 palas).</li></ul></div>
+<div class="flag"><b>Trampa</b> «O» = cilindros <b>opuestos</b>; «320» = cilindrada; <b>IO</b> = inyección. Piper = <b>Sens</b>enich · Cessna = <b>Mc</b>Cauley. Ya no digas «los dos aviones tienen 160 HP»: ahora son <b>tres</b>.</div>
+<figure class="fig"><img loading="lazy" src="img/poh-cr-general.jpg" width="900" height="550" alt="PS-28 Cruiser: fuselaje, motor y hélice (diapositiva con foto real del avión de la escuela)."><figcaption>PS-28 Cruiser: fuselaje, motor y hélice (diapositiva con foto real del avión de la escuela).</figcaption></figure>
+
 </div>
 </details>
 
 <details class="lo" id="lo-POH.1.2" data-lo="POH.1.2">
 <summary><span class="lonum">POH.1.2</span><span class="lotitle">Combustible y aceite</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>Piper: <b>50</b> totales, <b>48</b> útiles, aceite <b>6 a 8 qts</b>. Cessna: <b>43</b> totales, <b>40</b> útiles, aceite <b>6 qts, mínimo 4</b>.</div>
-  <div class="scroll"><table>
-   <tr><th></th><th>Piper PA-28</th><th>Cessna 172</th></tr>
-   <tr><td><b>Capacidad</b></td><td>50</td><td>43</td></tr>
-   <tr><td><b>Utilizable</b></td><td>48</td><td>40</td></tr>
-   <tr><td><b>Combustible</b></td><td>100LL AVGAS</td><td>100 y 100LL AVGAS</td></tr>
-   <tr><td><b>Aceite</b></td><td>6 a 8 qts</td><td>capacidad 6 qts · mínimo 4 qts</td></tr>
-  </table></div>
-  <div class="comp"><b>Complemento</b><ul><li>Las capacidades son en galones US, la unidad estándar de estos POH.</li></ul></div>
-  <div class="flag"><b>Trampa</b> No confundas <b>capacidad</b> con <b>utilizable</b>: la diferencia es combustible que no puedes usar (2 en el Piper, 3 en el Cessna).</div>
+<div class="key"><b>Clave</b>Piper: <b>50</b> totales, <b>48</b> útiles, aceite <b>6 a 8 qts</b>. Cessna: <b>43</b> totales, <b>40</b> útiles, aceite <b>6 qts, mínimo 4</b>. Cruiser: <b>114 L</b> totales y <b>113 L</b> útiles.</div>
+<div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Capacidad</b></td><td class="cz"><span class="va">114 L</span></td><td class="c1"><span class="va">43 US gal</span></td><td class="pi"><span class="va">50 US gal</span></td></tr><tr><td><b>Utilizable</b></td><td class="cz"><span class="va">113 L</span></td><td class="c1"><span class="va">40 US gal</span></td><td class="pi"><span class="va">48 US gal</span></td></tr><tr><td><b>Utilizable en litros</b></td><td class="cz"><span class="va">113 L</span></td><td class="c1"><span class="va">≈ 151 L</span></td><td class="pi"><span class="va">≈ 181 L</span></td></tr><tr><td><b>Combustible</b></td><td class="cz"><span class="va">MOGAS y AVGAS</span></td><td class="c1"><span class="va">100 y 100LL AVGAS</span></td><td class="pi"><span class="va">100LL AVGAS</span></td></tr><tr><td><b>Aceite</b></td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">capacidad 6 qts · mínimo 4 qts</span></td><td class="pi"><span class="va">6 a 8 qts</span></td></tr></table></div>
+<div class="comp"><b>Complemento</b><ul><li>Piper y Cessna miden en <b>galones US</b>; el <b>Cruiser</b> en <b>litros</b>. 1 US gal = 3,78 L.</li></ul></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Cruiser = métrico</b> (litros, kg, bar). <b>Piper y Cessna = americano</b> (galones, lbs, psi).</li><li>Diferencia entre capacidad y útil: <b>Piper 2 · Cessna 3 · Cruiser 1</b>.</li></ul></div>
+<div class="flag"><b>Trampa</b> No confundas <b>capacidad</b> con <b>utilizable</b>: la diferencia es combustible que no puedes usar (2 en el Piper, 3 en el Cessna, 1 en el Cruiser).</div>
+
 </div>
 </details>
 
 <details class="lo" id="lo-POH.1.3" data-lo="POH.1.3">
 <summary><span class="lonum">POH.1.3</span><span class="lotitle">Pesos máximos</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>En ambos aviones <b>MLW = MTOW</b>. Piper <b>2325 lbs</b>. Cessna <b>2300 lbs</b> (normal) · <b>2000 lbs</b> (utility).</div>
-  <div class="scroll"><table>
-   <tr><th></th><th>MTOW</th><th>MLW</th></tr>
-   <tr><td><b>Piper PA-28</b></td><td>2325 lbs</td><td>2325 lbs</td></tr>
-   <tr><td><b>Cessna · normal</b></td><td>2300 lbs</td><td>2300 lbs</td></tr>
-   <tr><td><b>Cessna · utility</b></td><td>2000 lbs</td><td>2000 lbs</td></tr>
-  </table></div>
-  <div class="flag"><b>Trampa</b> Las fotos de mass &amp; balance no entran: se hacen en Mass &amp; Balance.</div>
+<div class="key"><b>Clave</b>En los tres aviones <b>MLW = MTOW</b>. Piper <b>2325 lbs</b>. Cessna <b>2300 lbs</b> (normal) · <b>2000 lbs</b> (utility). Cruiser <b>600 kg</b>.</div>
+<div class="scroll"><table class="t3"><tr><th>Peso</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>MTOW</b></td><td class="cz"><span class="va">600 kg</span></td><td class="c1"><span class="va">2300 lbs normal · 2000 lbs utility</span></td><td class="pi"><span class="va">2325 lbs</span></td></tr><tr><td><b>MLW</b></td><td class="cz"><span class="va">600 kg</span></td><td class="c1"><span class="va">= MTOW</span></td><td class="pi"><span class="va">= MTOW</span></td></tr><tr><td><b>MTOW en kg (aprox.)</b></td><td class="cz"><span class="va">600 kg</span></td><td class="c1"><span class="va">1043 kg · 907 kg</span></td><td class="pi"><span class="va">1055 kg</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li>600 kg ≈ <b>1323 lbs</b> (× 2,2046): el Cruiser es el <b>más ligero</b> con diferencia.</li></ul></div>
+<div class="flag"><b>Trampa</b> Las fotos de mass &amp; balance no entran: se hacen en Mass &amp; Balance.</div>
+
+</div>
+</details>
+
+<details class="lo atpl" id="lo-POH.1.4" data-lo="POH.1.4">
+<summary><span class="lonum">POH.1.4</span><span class="lotitle">PS-28 Cruiser: motor, combustible y pesos</span></summary>
+<div class="body">
+<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
+<div class="key"><b>Clave</b>Rotax 912 S2 de <b>100 HP</b> · hélice <b>Woodcomp de 3 palas</b> · <b>114 L</b> (113 útiles), MOGAS o AVGAS · <b>MTOW = MLW = 600 kg</b> · CG <b>28–35 % MAC</b>.</div>
+<h4>Motor y hélice</h4>
+<div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th></tr><tr><td>Potencia máxima</td><td class="cz"><span class="va">73,5 kW a 5800 RPM (máx. 5 min)</span></td></tr><tr><td>Potencia máxima continua (MCP)</td><td class="cz"><span class="va">69 kW a 5500 RPM</span></td></tr><tr><td>Autonomía / alcance a 3000 ft</td><td class="cz"><span class="va">5:26 h · 512 NM</span></td></tr></table></div>
+<h4>Combustible</h4>
+<div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th></tr><tr><td>Total / útil</td><td class="cz"><span class="va">114 L / 113 L</span></td></tr><tr><td>Combustible</td><td class="cz"><span class="va">MOGAS, AVGAS</span></td></tr><tr><td>Diferencia máx. entre depósitos</td><td class="cz"><span class="va">30 L</span></td></tr><tr><td>Masa máx. de combustible</td><td class="cz"><span class="va">82 kg (114 L × 0,72)</span></td></tr></table></div>
+<h4>Pesos y centrado</h4>
+<div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th></tr><tr><td>MTOW = MLW</td><td class="cz"><span class="va">600 kg</span></td></tr><tr><td>Peso vacío máx.</td><td class="cz"><span class="va">405 kg</span></td></tr><tr><td>Equipaje</td><td class="cz"><span class="va">18 kg atrás · 10 kg en cada wing locker</span></td></tr><tr><td>Asientos / tripulación</td><td class="cz"><span class="va">2 · 55–115 kg por asiento · piloto mínimo en el izquierdo</span></td></tr><tr><td>Datum</td><td class="cz"><span class="va">borde de ataque del ala, costilla 4</span></td></tr><tr><td>CG</td><td class="cz"><span class="va">28–35 % MAC (MAC 1500 mm: 420–525 mm)</span></td></tr></table></div>
+<figure class="fig"><img loading="lazy" src="img/poh-cr-weights.jpg" width="900" height="516" alt="Carga y centrado del Cruiser: pesos, tripulación, datum y rango del CG (diapositiva)."><figcaption>Carga y centrado del Cruiser: pesos, tripulación, datum y rango del CG (diapositiva).</figcaption></figure>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>114 L × 0,72 = 82 kg</b>: el combustible máximo sale del depósito, no hace falta aprenderlo aparte.</li><li>Equipaje: <b>18 kg</b> en el fuselaje trasero y <b>10 + 10 kg</b> en los wing lockers (38 kg si llenas los tres).</li></ul></div>
+
+</div>
+</details>
+
+<details class="lo atpl" id="lo-POH.1.5" data-lo="POH.1.5">
+<summary><span class="lonum">POH.1.5</span><span class="lotitle">Tabla maestra: los 3 aviones juntos</span></summary>
+<div class="body">
+<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
+<div class="key"><b>Clave</b>Orden de menor a mayor en casi todo: <b>Cruiser &lt; Cessna &lt; Piper</b>. Las excepciones son las que preguntan: <b>VNO</b> (Cessna 128 &gt; Piper 126) y <b>VNE</b> (Cessna = Piper = 160).</div>
+<h4>Motor, combustible y pesos</h4>
+<div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>Motor</td><td class="cz"><span class="va">Rotax 912 S2 · 100 HP</span></td><td class="c1"><span class="va">Lycoming 160 BHP</span></td><td class="pi"><span class="va">Lycoming 160 BHP</span></td></tr><tr><td>Hélice</td><td class="cz"><span class="va">3 palas</span></td><td class="c1"><span class="va">2 palas</span></td><td class="pi"><span class="va">2 palas</span></td></tr><tr><td>Combustible útil</td><td class="cz"><span class="va">113 L</span></td><td class="c1"><span class="va">40 US gal</span></td><td class="pi"><span class="va">48 US gal</span></td></tr><tr><td>MTOW</td><td class="cz"><span class="va">600 kg</span></td><td class="c1"><span class="va">2300 lbs</span></td><td class="pi"><span class="va">2325 lbs</span></td></tr><tr><td>Unidades</td><td class="cz"><span class="va">métricas</span></td><td class="c1"><span class="va">US</span></td><td class="pi"><span class="va">US</span></td></tr></table></div>
+<h4>Velocidades (KIAS)</h4>
+<div class="scroll"><table class="t3"><tr><th>Velocidad</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>VS0</td><td class="cz"><span class="va">31</span></td><td class="c1"><span class="va">41</span></td><td class="pi"><span class="va">44</span></td></tr><tr><td>VS1</td><td class="cz"><span class="va">37</span></td><td class="c1"><span class="va">47</span></td><td class="pi"><span class="va">50</span></td></tr><tr><td>VFE</td><td class="cz"><span class="va">75</span></td><td class="c1"><span class="va">85</span></td><td class="pi"><span class="va">103</span></td></tr><tr><td>VNO</td><td class="cz"><span class="va">108</span></td><td class="c1"><span class="va">128</span></td><td class="pi"><span class="va">126</span></td></tr><tr><td>VNE</td><td class="cz"><span class="va">138</span></td><td class="c1"><span class="va">160</span></td><td class="pi"><span class="va">160</span></td></tr><tr><td>VA</td><td class="cz"><span class="va">88 (600 kg)</span></td><td class="c1"><span class="va">80–97</span></td><td class="pi"><span class="va">88–111</span></td></tr><tr><td>Planeo</td><td class="cz"><span class="va">60</span></td><td class="c1"><span class="va">65</span></td><td class="pi"><span class="va">73</span></td></tr></table></div>
+<h4>Factor de carga y límites del motor</h4>
+<div class="scroll"><table class="t3"><tr><th>Límite</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>Flaps arriba · normal</td><td class="cz"><span class="va">+4 / −2 g</span></td><td class="c1"><span class="va">+3,8 g</span></td><td class="pi"><span class="va">+3,8 / −1,52 g</span></td></tr><tr><td>Flaps abajo</td><td class="cz"><span class="va">+2 / 0 g</span></td><td class="c1"><span class="va">+3,0 g</span></td><td class="pi"><span class="va">+3,0 g</span></td></tr><tr><td>Presión de aceite</td><td class="cz"><span class="va">0,8–7 bar</span></td><td class="c1"><span class="va">25–100 psi</span></td><td class="pi"><span class="va">25–100 psi</span></td></tr><tr><td>Temperatura de aceite</td><td class="cz"><span class="va">50–130 °C</span></td><td class="c1"><span class="va">máx. 118 °C</span></td><td class="pi"><span class="va">máx. 118 °C</span></td></tr></table></div>
+<h4>Sistemas</h4>
+<div class="scroll"><table class="t3"><tr><th>Sistema</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>Flaps</td><td class="cz"><span class="va">eléctricos, continuos: 0 · 12° · 30°</span></td><td class="c1"><span class="va">eléctricos: 10° · 20° · Full</span></td><td class="pi"><span class="va">manuales: 10° · 25° · 40°</span></td></tr><tr><td>Cola horizontal</td><td class="cz"><span class="va">elevador</span></td><td class="c1"><span class="va">elevador</span></td><td class="pi"><span class="va">stabilator</span></td></tr><tr><td>Rueda de morro</td><td class="cz"><span class="va">libre · frenado diferencial</span></td><td class="c1"><span class="va">10° (30° con frenos)</span></td><td class="pi"><span class="va">pedales</span></td></tr><tr><td>Selector de combustible</td><td class="cz"><span class="va">Left · Right · Off</span></td><td class="c1"><span class="va">con posición BOTH</span></td><td class="pi"><span class="va">con válvula selectora</span></td></tr><tr><td>Batería</td><td class="cz"><span class="va">12 V</span></td><td class="c1"><span class="va">24 V</span></td><td class="pi"><span class="va">12 V</span></td></tr><tr><td>Generación</td><td class="cz"><span class="va">generador 250 W → 12 V 20 A</span></td><td class="c1"><span class="va">alternador 28 V 60 A</span></td><td class="pi"><span class="va">alternador 14 V 60 A</span></td></tr><tr><td>Mufflers</td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">1</span></td><td class="pi"><span class="va">2</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>VFE sube con el avión</b>: <b>75 – 85 – 103</b>. El <b>planeo</b> también: <b>60 – 65 – 73</b>. Y VS0: <b>31 – 41 – 44</b>.</li><li><b>La excepción: VNO</b>. El Cessna (128) supera al Piper (126): es el único dato donde el orden se invierte.</li><li><b>Sorpresa del Cruiser</b>: siendo el más ligero, aguanta <b>más</b> G con flaps arriba (+4 g frente a +3,8 g) y <b>menos</b> con flaps abajo (+2 g frente a +3 g).</li><li><b>Cruiser = métrico + eléctrico</b> (L, kg, bar; flaps y trims eléctricos). <b>Piper y Cessna = US</b> (galones, lbs, psi).</li><li><b>Cessna = 24/28 V</b> (los dos números grandes); <b>Piper = 12/14 V</b>; <b>Cruiser = 12 V</b>.</li><li><b>Piper = 2 mufflers y flaps a mano; Cessna = 1 muffler, flaps eléctricos y BOTH</b>.</li></ul></div>
+<div class="flag"><b>Trampa</b> Las unidades son la trampa: <b>114 L</b> (Cruiser) no son 114 galones; <b>600 kg</b> no son 600 lbs; <b>0,8–7 bar</b> no son psi.</div>
+
 </div>
 </details>
 
@@ -231,80 +304,75 @@ select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;b
 <details class="lo" id="lo-POH.2.1" data-lo="POH.2.1">
 <summary><span class="lonum">POH.2.1</span><span class="lotitle">Velocidades: VNE · VNO · VA · VFE</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
-    <li><b>Muy importantes todas las velocidades</b>: VA y VFE sobre todo. Aprender las velocidades máximas de los flaps.</li>
-    <li>Velocidad de planeo: <b>Cruiser 60 kt</b> · <b>Cessna 65 kt</b>.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Los dos tienen <b>VNE 160</b>. Piper: VNO <b>126</b> · VA <b>88–111</b> · VFE <b>103</b>. Cessna: VNO <b>128</b> · VA <b>80–97</b> · VFE <b>85</b>.</div>
-  <h4>Velocidades · tócalas y ponte a prueba</h4>
-  <div id="visSpeeds" class="vis"></div>
-  <div class="scroll"><table>
-   <tr><th>Velocidad (KIAS)</th><th>Piper</th><th>Cessna</th><th>Qué protege</th></tr>
-   <tr><td><b>VNE</b> Never Exceed</td><td>160</td><td>160</td><td>integridad estructural</td></tr>
-   <tr><td><b>VNO</b> Normal Operating</td><td>126</td><td>128</td><td>la turbulencia puede sobrecargar</td></tr>
-   <tr><td><b>VA</b> Maneuvering</td><td>88–111</td><td>80–97</td><td>deflexión máxima hacia arriba puede sobrecargar</td></tr>
-   <tr><td><b>VFE</b> Flaps Extended</td><td>103</td><td>85</td><td>no superar con flaps abajo</td></tr>
-  </table></div>
-  <h4>Arcos del anemómetro</h4>
-  <div class="scroll"><table>
-   <tr><th></th><th>Piper</th><th>Cessna</th></tr>
-   <tr><td><b>Arco blanco</b></td><td>44 – 103</td><td>41 – 85</td></tr>
-   <tr><td><b>Arco verde</b></td><td>50 – 126</td><td>47 – 128</td></tr>
-   <tr><td><b>Arco amarillo</b></td><td>126 – 160</td><td>128 – 160</td></tr>
-   <tr><td><b>Línea roja</b></td><td>160</td><td>160</td></tr>
-  </table></div>
-  <div class="flag"><b>Trampa</b> El Cessna tiene todo <b>más bajo</b> que el Piper salvo VNE: VFE 85 frente a 103 y VA 80–97 frente a 88–111.</div>
-  <div class="comp"><b>Complemento</b><ul><li>Blanco = rango de flaps · verde = operación normal · amarillo = solo con aire en calma · rojo = VNE.</li></ul></div>
+<div class="profe"><b>★ Lo que remarcó el profesor</b><ul><li><b>Muy importantes todas las velocidades</b>: VA y VFE sobre todo. Aprender las velocidades máximas de los flaps.</li><li>Velocidad de planeo: <b>Cruiser 60 kt</b> · <b>Cessna 65 kt</b>.</li></ul></div>
+<div class="key"><b>Clave</b>VNE: <b>138 · 160 · 160</b> (Cruiser · C172 · Piper). VNO <b>108 · 128 · 126</b>. VA <b>88 · 80–97 · 88–111</b>. VFE <b>75 · 85 · 103</b>.</div>
+<h4>Velocidades · tócalas y ponte a prueba</h4>
+<div id="visSpeeds" class="vis"></div>
+<div class="scroll"><table class="t3"><tr><th>KIAS · qué protege</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th><th>Nota</th></tr><tr><td><b>VNE</b> Never Exceed</td><td class="cz"><span class="va">138</span></td><td class="c1"><span class="va">160</span></td><td class="pi"><span class="va">160</span></td><td>estructura</td></tr><tr><td><b>VNO</b> Normal Operating</td><td class="cz"><span class="va">108</span></td><td class="c1"><span class="va">128</span></td><td class="pi"><span class="va">126</span></td><td>turbulencia</td></tr><tr><td><b>VA</b> Maneuvering</td><td class="cz"><span class="va">88 (a 600 kg)</span></td><td class="c1"><span class="va">80–97</span></td><td class="pi"><span class="va">88–111</span></td><td>mandos a fondo</td></tr><tr><td><b>VFE</b> Flaps Extended</td><td class="cz"><span class="va">75</span></td><td class="c1"><span class="va">85</span></td><td class="pi"><span class="va">103</span></td><td>flaps abajo</td></tr></table></div>
+<h4>Arcos del anemómetro</h4>
+<div class="scroll"><table class="t3"><tr><th>Arco</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Arco blanco</b></td><td class="cz"><span class="va">31 – 75</span></td><td class="c1"><span class="va">41 – 85</span></td><td class="pi"><span class="va">44 – 103</span></td></tr><tr><td><b>Arco verde</b></td><td class="cz"><span class="va">37 – 108</span></td><td class="c1"><span class="va">47 – 128</span></td><td class="pi"><span class="va">50 – 126</span></td></tr><tr><td><b>Arco amarillo</b></td><td class="cz"><span class="va">108 – 138</span></td><td class="c1"><span class="va">128 – 160</span></td><td class="pi"><span class="va">126 – 160</span></td></tr><tr><td><b>Línea roja</b></td><td class="cz"><span class="va">138</span></td><td class="c1"><span class="va">160</span></td><td class="pi"><span class="va">160</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>VFE: 75 – 85 – 103</b> (Cruiser, Cessna, Piper): crece con el tamaño del avión.</li><li><b>VNE: 138 · 160 · 160</b>: solo el Cruiser es distinto.</li><li><b>VNO: 108 · 128 · 126</b>: el Cessna es mayor que el Piper (única vez).</li></ul></div>
+<div class="flag"><b>Trampa</b> El Cessna tiene todo <b>más bajo</b> que el Piper salvo <b>VNO</b> (128 frente a 126): VFE 85 frente a 103 y VA 80–97 frente a 88–111. El <b>Cruiser</b> tiene todo más bajo que los dos.</div>
+<div class="comp"><b>Complemento</b><ul><li>Blanco = rango de flaps · verde = operación normal · amarillo = solo con aire en calma · rojo = VNE.</li><li>Según el SOP, el Piper (Archer III) lleva VFE 100 · VNO 122 · VNE 155: no coincide con el POH de esta tabla (103 · 126 · 160). Pregunta a tu instructor cuál usar.</li></ul></div>
+<figure class="fig"><img loading="lazy" src="img/poh-cr-speeds.jpg" width="925" height="494" alt="Anemómetro del Cruiser (arcos 31–75–108–138) y el avión real de la escuela, EC-NKO (diapositiva)."><figcaption>Anemómetro del Cruiser (arcos 31–75–108–138) y el avión real de la escuela, EC-NKO (diapositiva).</figcaption></figure>
+
 </div>
 </details>
 
 <details class="lo" id="lo-POH.2.2" data-lo="POH.2.2">
 <summary><span class="lonum">POH.2.2</span><span class="lotitle">Factor de carga (los G que aguanta el avión)</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
-    <li><b>Load factor: muy importante</b>. Son los G que puede asumir el avión.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Flaps arriba: <b>+3,8 g</b> (normal) y <b>+4,4 g</b> (utility). Flaps abajo: <b>+3,0 g</b> en <b>ambas</b> categorías.</div>
-  <h4>Factor de carga · elige configuración</h4>
-  <div id="visLoad" class="vis"></div>
-  <div class="scroll"><table>
-   <tr><th>Configuración</th><th>Positivo</th><th>Negativo (Piper)</th></tr>
-   <tr><td>Flaps arriba · <b>normal</b></td><td>+3,8 g</td><td>−1,52 g</td></tr>
-   <tr><td>Flaps arriba · <b>utility</b></td><td>+4,4 g</td><td>−1,76 g</td></tr>
-   <tr><td>Flaps abajo · ambas</td><td>+3,0 g</td><td>–</td></tr>
-  </table></div>
-  <div class="flag"><b>Trampa</b> Con flaps abajo el límite baja a <b>+3,0 g</b> y es el mismo en normal y utility.</div>
+<div class="profe"><b>★ Lo que remarcó el profesor</b><ul><li><b>Load factor: muy importante</b>. Son los G que puede asumir el avión.</li></ul></div>
+<div class="key"><b>Clave</b><b>Cruiser</b>: flaps arriba <b>+4 / −2 g</b>, flaps abajo <b>+2 / 0 g</b>. <b>Cessna y Piper</b>: flaps arriba <b>+3,8 g</b> (normal) y <b>+4,4 g</b> (utility); flaps abajo <b>+3,0 g</b>.</div>
+<h4>Factor de carga · elige configuración</h4>
+<div id="visLoad" class="vis"></div>
+<div class="scroll"><table class="t3"><tr><th>Configuración</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>Flaps arriba · <b>normal</b></td><td class="cz"><span class="va">+4 / −2 g</span></td><td class="c1"><span class="va">+3,8 g</span></td><td class="pi"><span class="va">+3,8 / −1,52 g</span></td></tr><tr><td>Flaps arriba · <b>utility</b></td><td class="cz"><span class="va">no aprobado</span></td><td class="c1"><span class="va">+4,4 g</span></td><td class="pi"><span class="va">+4,4 / −1,76 g</span></td></tr><tr><td>Flaps abajo</td><td class="cz"><span class="va">+2 / 0 g</span></td><td class="c1"><span class="va">+3,0 g</span></td><td class="pi"><span class="va">+3,0 g</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Con flaps el límite baja</b>: Cruiser de +4 a +2 (la mitad); Cessna y Piper de +3,8 a +3,0.</li><li>El Cruiser solo tiene <b>categoría normal</b>; Cessna y Piper tienen normal y utility.</li></ul></div>
+<div class="flag"><b>Trampa</b> Con flaps abajo el límite baja a <b>+3,0 g</b> y es el mismo en normal y utility. Con flaps arriba el <b>Cruiser (+4)</b> aguanta más que el Cessna y el Piper en <b>normal (+3,8)</b>: la trampa es creer que el Cruiser, siendo el más ligero, aguanta menos.</div>
+
 </div>
 </details>
 
 <details class="lo" id="lo-POH.2.3" data-lo="POH.2.3">
 <summary><span class="lonum">POH.2.3</span><span class="lotitle">Aceite y presión de combustible</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>Aceite: presión <b>25–100 psi</b> y temperatura máxima <b>118 °C</b>. Piper: presión de combustible <b>0,5–8 psi</b>. Cessna: usar con más de <b>4 qts</b>.</div>
-  <div class="scroll"><table>
-   <tr><th>Límite</th><th>Valor</th></tr>
-   <tr><td>Presión de aceite</td><td>25 – 100 psi</td></tr>
-   <tr><td>Temperatura máxima del aceite</td><td>118 °C</td></tr>
-   <tr><td>Presión de combustible (Piper)</td><td>0,5 – 8 psi</td></tr>
-   <tr><td>Aceite mínimo (Cessna)</td><td>más de 4 qts</td></tr>
-  </table></div>
+<div class="key"><b>Clave</b>Aceite del <b>Piper y del Cessna</b>: presión <b>25–100 psi</b> y temperatura máxima <b>118 °C</b>. Aceite del <b>Cruiser</b>: <b>0,8–7 bar</b> y <b>50–130 °C</b>. Piper: presión de combustible <b>0,5–8 psi</b>. Cessna: usar con más de <b>4 qts</b>.</div>
+<div class="scroll"><table class="t3"><tr><th>Límite</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>Presión de aceite</td><td class="cz"><span class="va">0,8 – 7 bar</span></td><td class="c1"><span class="va">25 – 100 psi</span></td><td class="pi"><span class="va">25 – 100 psi</span></td></tr><tr><td>Temperatura del aceite</td><td class="cz"><span class="va">50 – 130 °C (mínimo 50)</span></td><td class="c1"><span class="va">máx. 118 °C</span></td><td class="pi"><span class="va">máx. 118 °C</span></td></tr><tr><td>Presión de combustible</td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">0,5 – 8 psi</span></td></tr><tr><td>Aceite mínimo</td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">más de 4 qts</span></td><td class="pi"><span class="va">—</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Cruiser: bar y 130</b>; <b>Piper y Cessna: psi y 118</b>. 0,8–7 bar ≈ 12–100 psi: el máximo (100 psi) es casi el mismo.</li></ul></div>
+
 </div>
 </details>
 
 <details class="lo" id="lo-POH.2.4" data-lo="POH.2.4">
 <summary><span class="lonum">POH.2.4</span><span class="lotitle">Centro de gravedad</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
-    <li>En el CG, <b>no es importante</b>; sí lo es el factor de carga.</li>
-  </ul></div>
-  <div class="scroll"><table>
-   <tr><th></th><th>Límite delantero</th><th>Límite trasero</th></tr>
-   <tr><td><b>Piper</b></td><td>83 in con 1950 lbs o menos</td><td>93 in con cualquier peso</td></tr>
-   <tr><td><b>Cessna</b></td><td>31 in con 1950 lbs o menos</td><td>47,3 in con cualquier peso</td></tr>
-  </table></div>
-  <p class="muted small">Datum del Cessna: parte baja del frente del cortafuegos.</p>
+<div class="profe"><b>★ Lo que remarcó el profesor</b><ul><li>En el CG, <b>no es importante</b>; sí lo es el factor de carga.</li></ul></div>
+<div class="scroll"><table class="t3"><tr><th>CG</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Límite delantero</b></td><td class="cz"><span class="va">28 % MAC</span></td><td class="c1"><span class="va">31 in con 1950 lbs o menos</span></td><td class="pi"><span class="va">83 in con 1950 lbs o menos</span></td></tr><tr><td><b>Límite trasero</b></td><td class="cz"><span class="va">35 % MAC</span></td><td class="c1"><span class="va">47,3 in con cualquier peso</span></td><td class="pi"><span class="va">93 in con cualquier peso</span></td></tr><tr><td><b>Datum</b></td><td class="cz"><span class="va">borde de ataque del ala, costilla 4</span></td><td class="c1"><span class="va">parte baja del frente del cortafuegos</span></td><td class="pi"><span class="va">—</span></td></tr></table></div>
+<p class="muted small">Cada avión usa unidades distintas: el Cruiser, % de la MAC; Piper y Cessna, pulgadas desde el datum.</p>
+
 </div>
 </details>
+
+<details class="lo atpl" id="lo-POH.2.5" data-lo="POH.2.5">
+<summary><span class="lonum">POH.2.5</span><span class="lotitle">PS-28 Cruiser: velocidades, arcos y límites</span></summary>
+<div class="body">
+<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
+<div class="key"><b>Clave</b><b>138 · 108 · 88 · 75</b> = VNE · VNO · VA · VFE. Arcos: <b>31–75</b> blanco · <b>37–108</b> verde · <b>108–138</b> amarillo. Carga: <b>+4/−2 g</b> flaps arriba · <b>+2/0 g</b> flaps abajo.</div>
+<div class="scroll"><table class="t3"><tr><th>Límite</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>VS0 · VS1</td><td class="cz"><span class="va">31 · 37</span></td><td class="c1"><span class="va">41 · 47</span></td><td class="pi"><span class="va">44 · 50</span></td></tr><tr><td>VFE · VNO · VNE</td><td class="cz"><span class="va">75 · 108 · 138</span></td><td class="c1"><span class="va">85 · 128 · 160</span></td><td class="pi"><span class="va">103 · 126 · 160</span></td></tr><tr><td>VA</td><td class="cz"><span class="va">88 kt a 600 kg</span></td><td class="c1"><span class="va">80–97</span></td><td class="pi"><span class="va">88–111</span></td></tr></table></div>
+<h4>Límites del motor (Cruiser)</h4>
+<div class="scroll"><table class="t3"><tr><th>Límite</th><th class="cz">Cruiser</th></tr><tr><td>Presión de aceite</td><td class="cz"><span class="va">0,8 – 7 bar</span></td></tr><tr><td>Temperatura del aceite</td><td class="cz"><span class="va">50 – 130 °C (mínimo 50)</span></td></tr><tr><td>Temperatura del refrigerante</td><td class="cz"><span class="va">máx. 120 °C</span></td></tr><tr><td>EGT</td><td class="cz"><span class="va">máx. 850 °C (880 °C en el despegue)</span></td></tr><tr><td>Con −0,5 g</td><td class="cz"><span class="va">solo 5 segundos</span></td></tr></table></div>
+<h4>Aprobado</h4>
+<ul>
+<li>Solo <b>categoría normal</b>.</li>
+<li>Virajes cerrados con menos de <b>60° de alabeo</b>.</li>
+<li>Permitidos: <b>lazy eights</b>, <b>chandelles</b> y pérdidas (sin «whip stall»).</li>
+</ul>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>El arco amarillo</b> mide 30 kt en el Cruiser (108 → 138), 32 en el Cessna (128 → 160) y 34 en el Piper (126 → 160).</li><li><b>Aceite del Cruiser ≥ 50 °C</b>: por eso en el SOP «no rodar hasta que el aceite llegue a 50 °C».</li></ul></div>
+<div class="comp"><b>Complemento</b><ul><li>El POH del Cruiser da una temperatura ambiente de operación del motor que se lee «N25–50 °C»; lo normal es −25 a 50 °C, pero no está claro en la diapositiva.</li></ul></div>
+
+</div>
+</details>
+
 <h2>POH.7 · Sistemas <span class="wtag">9 preg. · 30 %</span></h2>
 
 <details class="lo" id="lo-POH.7.3" data-lo="POH.7.3">
@@ -315,91 +383,122 @@ select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;b
     <li>Seis instrumentos, de izquierda a derecha: anemómetro (pitot), horizonte artificial, altímetro, coordinador de virajes, giro direccional y VSI.</li>
   </ul></div>
   <div class="key"><b>Clave</b>De izquierda a derecha: <b>bomba de vacío</b> · <b>alternador</b> · <b>presión de aceite</b>.</div>
+  <div class="flag"><b>Ojo</b> Este es el panel del <b>Piper</b>. El Cruiser tiene pantallas Dynon SkyView (ver POH.7.8).</div>
   <h4>Annunciator panel · enciende cada luz</h4>
   <div id="visAnnun" class="vis"></div>
   <h4>Los seis instrumentos · tócalos</h4>
   <div id="visSix" class="vis"></div>
+<div class="figs"><figure class="fig"><img loading="lazy" src="img/sop-pi-runup-flow.jpg" width="900" height="509" alt="Panel real del Piper: el annunciator panel (19), el vacío (12) y los 6 instrumentos."><figcaption>Panel real del Piper: el annunciator panel (19), el vacío (12) y los 6 instrumentos.</figcaption></figure>
+<figure class="fig"><img loading="lazy" src="img/sop-pi-runup.jpg" width="900" height="505" alt="El mismo panel con la lista de run-up (SOP)."><figcaption>El mismo panel con la lista de run-up (SOP).</figcaption></figure>
+</div>
   <div class="flag"><b>Trampa</b> Luz del <b>centro</b> = alternador: queda batería para unos <b>30 min</b>. La luz de la <b>izquierda</b> es el vacío, no el alternador.</div>
 </div>
 </details>
-
 <details class="lo" id="lo-POH.7.2" data-lo="POH.7.2">
 <summary><span class="lonum">POH.7.2</span><span class="lotitle">Mandos, flaps y estabilator</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
-    <li>Aprenderse los <b>flaps</b>, el <b>stabilator</b> y el <b>anti-balance tab</b>.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Flaps manuales: <b>0° · 10° · 25° · 40°</b>. Cola horizontal = <b>stabilator</b>, con <b>anti-balance tab</b>. En tierra, rueda de morro <b>±30°</b>.</div>
-  <h4>Stabilator · mueve la palanca</h4>
-  <div id="visCtrl" class="vis"></div>
-  <ul>
-    <li>Doble mando, con <b>cables y poleas</b>.</li>
-    <li>Compensadores manuales de <b>guiñada y cabeceo</b>.</li>
-    <li>Flaps manuales de tres posiciones: <b>10° · 25° · 40°</b>.</li>
-  </ul>
-  <div class="comp"><b>Complemento</b><ul><li>El anti-balance tab se mueve en el mismo sentido que el borde de salida del stabilator: reduce su sensibilidad y da tacto a los mandos.</li></ul></div>
+<div class="profe"><b>★ Lo que remarcó el profesor</b><ul><li>Aprenderse los <b>flaps</b>, el <b>stabilator</b> y el <b>anti-balance tab</b>.</li></ul></div>
+<div class="key"><b>Clave</b>Piper: flaps manuales <b>0° · 10° · 25° · 40°</b> y cola horizontal = <b>stabilator</b> con <b>anti-balance tab</b>. Cessna: flaps eléctricos <b>10° · 20° · Full</b>. Cruiser: flaps eléctricos continuos <b>Up · TO 12° · LDG 30°</b>.</div>
+<h4>Stabilator del Piper · mueve la palanca</h4>
+<div id="visCtrl" class="vis"></div>
+<div class="scroll"><table class="t3"><tr><th>Mandos</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Cola horizontal</b></td><td class="cz"><span class="va">elevador</span></td><td class="c1"><span class="va">elevador</span></td><td class="pi"><span class="va"><b>stabilator</b> + anti-balance tab</span></td></tr><tr><td><b>Flaps</b></td><td class="cz"><span class="va">eléctricos, continuos: Up · TO 12° · LDG 30°</span></td><td class="c1"><span class="va">eléctricos: 10° · 20° · Full</span></td><td class="pi"><span class="va">manuales: 10° · 25° · 40°</span></td></tr><tr><td><b>Compensadores</b></td><td class="cz"><span class="va">eléctricos (alabeo: alerón derecho; cabeceo: elevador)</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">manuales de guiñada y cabeceo</span></td></tr><tr><td><b>Mandos</b></td><td class="cz"><span class="va">palancas y poleas (cabeceo y alabeo); cables (guiñada)</span></td><td class="c1"><span class="va">cables</span></td><td class="pi"><span class="va">cables y poleas</span></td></tr><tr><td><b>Rueda de morro en tierra</b></td><td class="cz"><span class="va">libre: frenado diferencial</span></td><td class="c1"><span class="va">10° · hasta 30° con frenos</span></td><td class="pi"><span class="va">±30°</span></td></tr></table></div>
+<ul>
+<li>Piper: doble mando, con <b>cables y poleas</b>; compensadores manuales de <b>guiñada y cabeceo</b>.</li>
+<li>Piper: flaps manuales de tres posiciones: <b>10° · 25° · 40°</b>.</li>
+</ul>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Piper = manual, Cessna y Cruiser = eléctrico</b>. El único con <b>stabilator</b> es el Piper.</li></ul></div>
+<div class="comp"><b>Complemento</b><ul><li>El anti-balance tab se mueve en el mismo sentido que el borde de salida del stabilator: reduce su sensibilidad y da tacto a los mandos.</li><li>El POH_2 del Cessna pone los flaps en 10° · 20° · Full; el SOP habla de 10° · 20° · 40°. Full = 40° según el SOP.</li></ul></div>
+<figure class="fig"><img loading="lazy" src="img/poh-cr-controls.jpg" width="900" height="505" alt="Cruiser: fuselaje, mandos, flaps y compensadores (diapositiva)."><figcaption>Cruiser: fuselaje, mandos, flaps y compensadores (diapositiva).</figcaption></figure>
+
 </div>
 </details>
 
 <details class="lo" id="lo-POH.7.1" data-lo="POH.7.1">
-<summary><span class="lonum">POH.7.1</span><span class="lotitle">Estructura y motor del Piper</span></summary>
+<summary><span class="lonum">POH.7.1</span><span class="lotitle">Estructura y motor</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
-    <li>Parte de las cargas las soporta la <b>piel</b> y otra parte los <b>refuerzos internos</b> (semi-monocoque).</li>
-    <li>Los <b>dos mufflers</b> son tubos de escape que sirven para <b>calentar el carburador</b>.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Fuselaje <b>semi-monocoque</b>: soporte del motor y tren de <b>acero</b>, el resto <b>aleación de aluminio</b>.</div>
-  <div class="scroll"><table>
-   <tr><th>Parte</th><th>Dato</th></tr>
-   <tr><td><b>Soporte del motor</b></td><td>tubos de acero</td></tr>
-   <tr><td><b>Tren de aterrizaje</b></td><td>acero</td></tr>
-   <tr><td><b>Resto del fuselaje</b></td><td>aleación de aluminio, fibra de vidrio y termoplásticos</td></tr>
-   <tr><td><b>Motor</b></td><td>160 HP a 2700 RPM · directo · 4 cilindros</td></tr>
-   <tr><td><b>Instalación</b></td><td>2 mufflers · enfriador de aceite · entradas de aire · admisión de carburador separada</td></tr>
-  </table></div>
+<div class="profe"><b>★ Lo que remarcó el profesor</b><ul><li>Parte de las cargas las soporta la <b>piel</b> y otra parte los <b>refuerzos internos</b> (semi-monocoque).</li><li>Los <b>dos mufflers</b> son tubos de escape que sirven para <b>calentar el carburador</b>.</li></ul></div>
+<div class="key"><b>Clave</b>Fuselaje <b>semi-monocoque</b> en los tres. Piper: soporte del motor y tren de <b>acero</b>, el resto <b>aleación de aluminio</b>. Cessna: <b>alas con montantes</b>, un solo muffler.</div>
+<div class="scroll"><table class="t3"><tr><th>Parte</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Fuselaje</b></td><td class="cz"><span class="va">semi-monocoque, metal y fibra de vidrio</span></td><td class="c1"><span class="va">semi-monocoque, aluminio · alas con montantes</span></td><td class="pi"><span class="va">semi-monocoque, aleación de aluminio, fibra de vidrio y termoplásticos</span></td></tr><tr><td><b>Soporte del motor</b></td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">tubos de acero</span></td><td class="pi"><span class="va">tubos de acero</span></td></tr><tr><td><b>Tren</b></td><td class="cz"><span class="va">fijo, triciclo</span></td><td class="c1"><span class="va">fijo, triciclo</span></td><td class="pi"><span class="va">fijo, triciclo (acero)</span></td></tr><tr><td><b>Mufflers</b></td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">1</span></td><td class="pi"><span class="va">2 (calientan el carburador)</span></td></tr><tr><td><b>Instalación del motor</b></td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">enfriador de aceite · tomas de aire</span></td><td class="pi"><span class="va">enfriador de aceite · entradas de aire · admisión del carburador separada</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Piper = 2 mufflers</b> (lleva la calefacción del carburador); <b>Cessna = 1</b>.</li></ul></div>
+
 </div>
 </details>
 
 <details class="lo atpl" id="lo-POH.7.4" data-lo="POH.7.4">
 <summary><span class="lonum">POH.7.4</span><span class="lotitle">Tren de aterrizaje y frenos</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>Tren <b>fijo</b>, triciclo, suspensión <b>aire-aceite</b>. Frenos <b>solo en las ruedas principales</b>, incluido el de parking.</div>
-  <div class="scroll"><table>
-   <tr><th></th><th>Presión del neumático</th><th>Elongación de la suspensión</th></tr>
-   <tr><td><b>Principal</b></td><td>24 psi</td><td>4,5 in</td></tr>
-   <tr><td><b>Morro</b></td><td>30 psi</td><td>3,25 in</td></tr>
-  </table></div>
-  <p>En tierra se gira con los <b>pedales</b>.</p>
+<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
+<div class="key"><b>Clave</b>Los tres: tren <b>fijo</b> de triciclo. Piper: suspensión <b>aire-aceite</b> y frenos <b>solo en las principales</b>. Cessna: frenos de disco hidráulicos. Cruiser: rueda de morro <b>libre</b>.</div>
+<div class="scroll"><table class="t3"><tr><th>Tren</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Principal</b></td><td class="cz"><span class="va">suspensión mecánica, doble muelle</span></td><td class="c1"><span class="va">frenos de disco hidráulicos · suspensión mecánica de muelle</span></td><td class="pi"><span class="va">suspensión aire-aceite · 24 psi · elongación 4,5 in</span></td></tr><tr><td><b>Morro</b></td><td class="cz"><span class="va">libre (free castering)</span></td><td class="c1"><span class="va">suspensión aire-aceite</span></td><td class="pi"><span class="va">30 psi · elongación 3,25 in</span></td></tr><tr><td><b>Frenos</b></td><td class="cz"><span class="va">frenado diferencial para girar</span></td><td class="c1"><span class="va">discos hidráulicos</span></td><td class="pi"><span class="va">solo en las principales (incluido el de parking)</span></td></tr><tr><td><b>En tierra</b></td><td class="cz"><span class="va">se gira con frenado diferencial</span></td><td class="c1"><span class="va">10° (hasta 30° con frenos)</span></td><td class="pi"><span class="va">se gira con los pedales</span></td></tr></table></div>
+<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-cr-gear.jpg" width="900" height="527" alt="Tren del Cruiser: triciclo, rueda de morro libre y frenado diferencial."><figcaption>Tren del Cruiser: triciclo, rueda de morro libre y frenado diferencial.</figcaption></figure>
+<figure class="fig"><img loading="lazy" src="img/poh-c172-gear.jpg" width="900" height="507" alt="Tren del Cessna: frenos de disco y suspensión (diapositiva)."><figcaption>Tren del Cessna: frenos de disco y suspensión (diapositiva).</figcaption></figure>
+</div>
+
 </div>
 </details>
 
 <details class="lo atpl" id="lo-POH.7.5" data-lo="POH.7.5">
 <summary><span class="lonum">POH.7.5</span><span class="lotitle">Sistema de combustible</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>Bomba <b>eléctrica</b> y bomba del <b>motor</b>. <b>Tres</b> puntos de drenaje.</div>
-  <ul>
-    <li>Dos depósitos principales (izquierdo y derecho) con una <b>válvula selectora</b>.</li>
-    <li>Después del selector van el filtro, las bombas y el carburador.</li>
-  </ul>
+<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
+<div class="key"><b>Clave</b>Piper: bomba <b>eléctrica</b> y bomba del <b>motor</b>; <b>tres</b> puntos de drenaje. Cruiser: bomba del motor (retorno) + eléctrica, con <b>gascolator</b>. Cessna: selector con posición <b>BOTH</b>.</div>
+<div class="scroll"><table class="t3"><tr><th>Combustible</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Depósitos</b></td><td class="cz"><span class="va">2, ventilados, con filtro, drenaje y flotador</span></td><td class="c1"><span class="va">2 (izquierdo y derecho)</span></td><td class="pi"><span class="va">2 principales (izquierdo y derecho)</span></td></tr><tr><td><b>Selector</b></td><td class="cz"><span class="va">Left · Right · Off</span></td><td class="c1"><span class="va">con posición <b>BOTH</b></span></td><td class="pi"><span class="va">con válvula selectora</span></td></tr><tr><td><b>Bombas</b></td><td class="cz"><span class="va">motor (retorno) + eléctrica auxiliar</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">eléctrica + del motor</span></td></tr><tr><td><b>Otros</b></td><td class="cz"><span class="va">gascolator · carburador · choke</span></td><td class="c1"><span class="va">primer y filtro (diagrama)</span></td><td class="pi"><span class="va">3 puntos de drenaje</span></td></tr></table></div>
+<ul>
+<li>Cruiser: si el depósito <b>izquierdo</b> está lleno, empieza con LEFT. Diferencia máxima entre depósitos: 30 L.</li>
+<li>Cruiser: si se rompe la palanca del throttle, un muelle lo lleva a <b>full</b>. El choke da más combustible para el arranque en frío.</li>
+<li>Piper: después del selector van el filtro, las bombas y el carburador.</li>
+</ul>
+<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-cr-fuel.jpg" width="900" height="517" alt="Sistema de combustible del Cruiser y su selector (diapositiva)."><figcaption>Sistema de combustible del Cruiser y su selector (diapositiva).</figcaption></figure>
+<figure class="fig"><img loading="lazy" src="img/poh-c172-fuel.jpg" width="919" height="454" alt="Sistema de combustible del Cessna: el selector tiene BOTH."><figcaption>Sistema de combustible del Cessna: el selector tiene BOTH.</figcaption></figure>
+</div>
+
 </div>
 </details>
 
 <details class="lo atpl" id="lo-POH.7.6" data-lo="POH.7.6">
 <summary><span class="lonum">POH.7.6</span><span class="lotitle">Sistema eléctrico</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>Batería de plomo-ácido de <b>12 V</b> y alternador de <b>14 V · 60 amp</b>.</div>
+<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
+<div class="key"><b>Clave</b>Piper: batería <b>12 V</b> y alternador <b>14 V · 60 amp</b>. Cessna: batería <b>24 V</b> y alternador <b>28 V · 60 amp</b>. Cruiser: batería <b>12 V</b> y generador de <b>250 W</b>.</div>
+<div class="scroll"><table class="t3"><tr><th>Eléctrico</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Batería</b></td><td class="cz"><span class="va">12 V DC</span></td><td class="c1"><span class="va">24 V DC · 14 Amp/h</span></td><td class="pi"><span class="va">12 V plomo-ácido</span></td></tr><tr><td><b>Generación</b></td><td class="cz"><span class="va">generador 250 W AC → regulador-rectificador 12 V 20 A DC</span></td><td class="c1"><span class="va">alternador 28 V · 60 A</span></td><td class="pi"><span class="va">alternador 14 V · 60 A</span></td></tr><tr><td><b>Barras</b></td><td class="cz"><span class="va">una sola bus bar</span></td><td class="c1"><span class="va">primary bus y avionics bus</span></td><td class="pi"><span class="va">—</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Cessna 24/28</b> · <b>Piper 12/14</b> (la batería y el alternador, un número por encima). <b>Cruiser 12</b>.</li></ul></div>
+<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-cr-elec.jpg" width="900" height="504" alt="Sistema eléctrico del Cruiser (diapositiva)."><figcaption>Sistema eléctrico del Cruiser (diapositiva).</figcaption></figure>
+<figure class="fig"><img loading="lazy" src="img/poh-c172-elec.jpg" width="919" height="492" alt="Sistema eléctrico del Cessna: esquema con las dos barras."><figcaption>Sistema eléctrico del Cessna: esquema con las dos barras.</figcaption></figure>
+</div>
+
 </div>
 </details>
 
 <details class="lo atpl" id="lo-POH.7.7" data-lo="POH.7.7">
 <summary><span class="lonum">POH.7.7</span><span class="lotitle">Vacío y pitot-estática</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>El vacío mueve el <b>horizonte artificial</b>, el <b>DGI</b> y el <b>coordinador de virajes</b>.</div>
-  <ul>
-    <li><b>Poca succión</b>: puede ser un filtro bloqueado. <b>Presión baja</b> por encima de 12.000 ft o con pocas RPM.</li>
-    <li>Presión total y estática se toman en el <b>ala izquierda</b>.</li>
-    <li><b>Estática alterna</b> desde la cabina: ventanas cerradas, calefacción y defroster encendidos, para el mínimo error.</li>
-  </ul>
+<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
+<div class="key"><b>Clave</b>El vacío mueve el <b>horizonte artificial</b>, el <b>DGI</b> y el <b>coordinador de virajes</b>. Pitot en el <b>ala izquierda</b>: en el Cessna, la estática va a los lados del fuselaje.</div>
+<ul>
+<li><b>Poca succión</b>: puede ser un filtro bloqueado. <b>Presión baja</b> por encima de 12.000 ft o con pocas RPM.</li>
+<li>Piper: presión total y estática se toman en el <b>ala izquierda</b>.</li>
+<li>Cessna: tubo pitot bajo el <b>ala izquierda</b> (presión total) y estática a los <b>lados del fuselaje</b>.</li>
+<li>Cruiser: pitot-estática bajo el <b>ala izquierda</b>; alimenta los instrumentos de reserva y las pantallas.</li>
+<li><b>Estática alterna</b> desde la cabina: ventanas cerradas, calefacción y defroster encendidos, para el mínimo error.</li>
+</ul>
+<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-c172-vac.jpg" width="924" height="517" alt="Sistema de vacío típico (diapositiva del Cessna)."><figcaption>Sistema de vacío típico (diapositiva del Cessna).</figcaption></figure>
+<figure class="fig"><img loading="lazy" src="img/poh-cr-pitot.jpg" width="900" height="514" alt="Pitot-estática del Cruiser, bajo el ala izquierda."><figcaption>Pitot-estática del Cruiser, bajo el ala izquierda.</figcaption></figure>
+</div>
+
+</div>
+</details>
+
+<details class="lo atpl" id="lo-POH.7.8" data-lo="POH.7.8">
+<summary><span class="lonum">POH.7.8</span><span class="lotitle">PS-28 Cruiser: aviónica, mandos y sistemas</span></summary>
+<div class="body">
+<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
+<div class="key"><b>Clave</b>Aviónica <b>Dynon SkyView SV-D1000</b> (páginas PFD y MAP) · flaps <b>eléctricos continuos</b> (Up · 12° · 30°) · rueda de morro <b>libre</b> · <b>una bus bar</b>, batería 12 V.</div>
+<div class="scroll"><table class="t3"><tr><th>Sistema</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Aviónica</b></td><td class="cz"><span class="va">Dynon SkyView SV-D1000 (PFD y MAP)</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">relojes analógicos (foto del panel)</span></td></tr><tr><td><b>Mandos</b></td><td class="cz"><span class="va">palancas y poleas (cabeceo y alabeo) · cables (guiñada)</span></td><td class="c1"><span class="va">cables</span></td><td class="pi"><span class="va">cables y poleas</span></td></tr><tr><td><b>Compensadores</b></td><td class="cz"><span class="va">eléctricos: alabeo en el alerón derecho, cabeceo en el elevador</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">manuales</span></td></tr><tr><td><b>Combustible</b></td><td class="cz"><span class="va">2 depósitos · Left · Right · Off · gascolator</span></td><td class="c1"><span class="va">BOTH</span></td><td class="pi"><span class="va">selector</span></td></tr><tr><td><b>Eléctrico</b></td><td class="cz"><span class="va">generador 250 W · 12 V 20 A · 1 bus bar</span></td><td class="c1"><span class="va">28 V · 60 A</span></td><td class="pi"><span class="va">14 V · 60 A</span></td></tr></table></div>
+<div class="figs"><figure class="fig"><img loading="lazy" src="img/sop-cr-afterstart-flow.jpg" width="900" height="502" alt="Cabina real del Cruiser (EC-NKO): las dos pantallas Dynon, mandos y paneles."><figcaption>Cabina real del Cruiser (EC-NKO): las dos pantallas Dynon, mandos y paneles.</figcaption></figure>
+<figure class="fig"><img loading="lazy" src="img/poh-cr-dynon.jpg" width="900" height="509" alt="Dynon SkyView SV-D1000: páginas PFD y MAP, batería Rotax y generador (diapositiva)."><figcaption>Dynon SkyView SV-D1000: páginas PFD y MAP, batería Rotax y generador (diapositiva).</figcaption></figure>
+</div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Cruiser</b> = pantallas Dynon y <b>todo eléctrico</b>: flaps, trims y generador. El Piper tiene relojes y sistema de vacío.</li></ul></div>
+
 </div>
 </details>
 
@@ -419,7 +518,6 @@ select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;b
   <div class="flag"><b>Trampa</b> El motor <b>no</b> se para y el master <b>no</b> se apaga: el objetivo es alargar la batería y aterrizar cuanto antes.</div>
 </div>
 </details>
-
 <details class="lo" id="lo-POH.3.2" data-lo="POH.3.2">
 <summary><span class="lonum">POH.3.2</span><span class="lotitle">Pérdida de presión de aceite y otros fallos</span></summary>
 <div class="body">
@@ -436,6 +534,32 @@ select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;b
    <tr><td><b>Rugosidad del motor</b></td><td>Calefacción de carburador ON; si no mejora en 1 minuto, OFF y buscar otras causas (magnetos).</td></tr>
   </table></div>
   <div class="flag"><b>Trampa</b> Una pérdida de presión suele ir acompañada de una <b>subida de temperatura</b>.</div>
+</div>
+</details>
+<details class="lo atpl" id="lo-POH.3.3" data-lo="POH.3.3">
+<summary><span class="lonum">POH.3.3</span><span class="lotitle">PS-28 Cruiser: fallo de motor, arranque en vuelo y fuego</span></summary>
+<div class="body">
+<p class="muted small">El PS-28 Cruiser aún no se ha dado en clase: sus datos vienen del PDF.</p>
+<div class="key"><b>Clave</b><b>Planeo y fallo en vuelo: 60 KIAS</b>. Despegue abortado: <b>throttle idle · frenos · ignición OFF</b>. Fuego: <b>selector OFF · throttle MAX</b>.</div>
+<h4>Fallo de motor</h4>
+<div class="scroll"><table class="t3"><tr><th>Fallo</th><th class="cz">Cruiser</th></tr><tr><td><b>Durante la carrera de despegue</b></td><td class="cz"><span class="va">1 Throttle IDLE · 2 Frenos · 3 Ignición OFF</span></td></tr><tr><td><b>Tras el despegue</b></td><td class="cz"><span class="va">60 KIAS · flaps según haga falta · selector OFF · ignición OFF · MASTER GEN OFF · MASTER BAT OFF (antes de aterrizar) · aterrizar recto, girando solo para evitar obstáculos</span></td></tr><tr><td><b>Pérdida de potencia en vuelo</b></td><td class="cz"><span class="va">mantener 60 KIAS y, según la altitud: reiniciar o buscar campo</span></td></tr></table></div>
+<h4>Arranque en vuelo</h4>
+<ol>
+<li>Equipos eléctricos innecesarios <b>OFF</b></li>
+<li><b>MASTER BAT</b> ON · <b>MFD 1</b> ON · <b>FUEL P</b> ON</li>
+<li><b>Selector</b>: LEFT o RIGHT, el de más combustible (marca verde)</li>
+<li><b>Throttle</b> IDLE</li>
+<li><b>Ignición</b>: mantener START y, con el motor arrancando, BOTH</li>
+<li>Con el motor en marcha: <b>MASTER GEN</b> ON · <b>MFD 2</b> ON · <b>AVIONICS</b> ON · <b>FUEL P</b> OFF · otros interruptores ON</li>
+</ol>
+<h4>Fuego</h4>
+<div class="scroll"><table class="t3"><tr><th>Fuego</th><th class="cz">Cruiser</th></tr><tr><td><b>Durante el arranque</b></td><td class="cz"><span class="va">selector OFF · throttle MAX · ignición OFF · MASTER BAT y GEN OFF · abandonar el avión · apagarlo o llamar a bomberos</span></td></tr><tr><td><b>En vuelo</b></td><td class="cz"><span class="va">selector OFF · throttle MAX · cabin heater PUSH OFF · ignición OFF (cuando se consuma el combustible del carburador) · 60 KIAS · aterrizaje de emergencia · abandonar el avión</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Fuego: SELECTOR → THROTTLE MAX</b>: primero cortas el combustible y luego gastas el que queda en los carburadores.</li><li><b>60 en todo</b>: planeo, fallo en vuelo, fuego en vuelo y tras el despegue, siempre <b>60 KIAS</b> en el Cruiser.</li></ul></div>
+<div class="figs"><figure class="fig"><img loading="lazy" src="img/poh-cr-emerg1.jpg" width="900" height="512" alt="Fallo de motor en el despegue y tras el despegue, con la cabina real del Cruiser."><figcaption>Fallo de motor en el despegue y tras el despegue, con la cabina real del Cruiser.</figcaption></figure>
+<figure class="fig"><img loading="lazy" src="img/poh-cr-emerg2.jpg" width="900" height="507" alt="Pérdida de potencia y arranque en vuelo."><figcaption>Pérdida de potencia y arranque en vuelo.</figcaption></figure>
+<figure class="fig"><img loading="lazy" src="img/poh-cr-emerg3.jpg" width="900" height="443" alt="Fuego en el arranque y en vuelo."><figcaption>Fuego en el arranque y en vuelo.</figcaption></figure>
+</div>
+
 </div>
 </details>
 
@@ -457,7 +581,6 @@ select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;b
   </table></div>
 </div>
 </details>
-
 <h2>De otras asignaturas <span class="wtag">no entra en el simulacro</span></h2>
 
 <details class="lo out" id="lo-POH.5.1" data-lo="POH.5.1">
@@ -477,7 +600,6 @@ select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;b
   </table></div>
 </div>
 </details>
-
 <details class="lo out" id="lo-POH.6.1" data-lo="POH.6.1">
 <summary><span class="lonum">POH.6.1</span><span class="lotitle">Del volumen a la masa (031 Mass &amp; Balance)</span></summary>
 <div class="body">
@@ -560,25 +682,30 @@ const BLOCKS = [
  {k:"4",code:"POH.4",name:"Normales",n:1}
 ];
 const SUB = [
- ["POH.1.1","1",3.5,"Motor y hélice","given"],
- ["POH.1.2","1",3,"Combustible y aceite","given"],
- ["POH.1.3","1",2.5,"Pesos máximos","given"],
- ["POH.2.1","2",4,"Velocidades: VNE · VNO · VA · VFE","given"],
- ["POH.2.2","2",3,"Factor de carga","given"],
- ["POH.2.3","2",1.5,"Aceite y presión de combustible","given"],
- ["POH.2.4","2",0.5,"Centro de gravedad","given"],
- ["POH.7.3","7",2.5,"Annunciator panel y seis instrumentos","given"],
- ["POH.7.2","7",2,"Mandos, flaps y estabilator","given"],
- ["POH.7.1","7",1.5,"Estructura y motor del Piper","given"],
- ["POH.7.4","7",0.8,"Tren de aterrizaje y frenos","nd"],
- ["POH.7.5","7",0.8,"Sistema de combustible","nd"],
- ["POH.7.6","7",0.7,"Sistema eléctrico","nd"],
- ["POH.7.7","7",0.7,"Vacío y pitot-estática","nd"],
- ["POH.3.1","3",1.2,"Fallo de alternador","given"],
- ["POH.3.2","3",0.8,"Pérdida de presión de aceite y otros fallos","given"],
- ["POH.4.1","4",1,"Checklists normales","given"],
- ["POH.5.1","X",0,"Conversión de unidades de combustible (032)","out"],
- ["POH.6.1","X",0,"Del volumen a la masa (031)","out"]
+ ["POH.1.1", "1", 3, "Motor y hélice", "given"],
+ ["POH.1.2", "1", 2.5, "Combustible y aceite", "given"],
+ ["POH.1.3", "1", 2, "Pesos máximos", "given"],
+ ["POH.1.4", "1", 1, "PS-28 Cruiser: motor, combustible y pesos", "nd"],
+ ["POH.1.5", "1", 0.5, "Tabla maestra: los 3 aviones juntos", "nd"],
+ ["POH.2.1", "2", 4, "Velocidades: VNE · VNO · VA · VFE", "given"],
+ ["POH.2.2", "2", 2.5, "Factor de carga", "given"],
+ ["POH.2.3", "2", 1, "Aceite y presión de combustible", "given"],
+ ["POH.2.4", "2", 0.5, "Centro de gravedad", "given"],
+ ["POH.2.5", "2", 1, "PS-28 Cruiser: velocidades, arcos y límites", "nd"],
+ ["POH.7.3", "7", 2.5, "Annunciator panel y seis instrumentos", "given"],
+ ["POH.7.2", "7", 2, "Mandos, flaps y estabilator", "given"],
+ ["POH.7.1", "7", 1.5, "Estructura y motor", "given"],
+ ["POH.7.4", "7", 0.5, "Tren de aterrizaje y frenos", "nd"],
+ ["POH.7.5", "7", 0.5, "Sistema de combustible", "nd"],
+ ["POH.7.6", "7", 0.5, "Sistema eléctrico", "nd"],
+ ["POH.7.7", "7", 0.5, "Vacío y pitot-estática", "nd"],
+ ["POH.7.8", "7", 1, "PS-28 Cruiser: aviónica, mandos y sistemas", "nd"],
+ ["POH.3.1", "3", 1, "Fallo de alternador", "given"],
+ ["POH.3.2", "3", 0.6, "Pérdida de presión de aceite y otros fallos", "given"],
+ ["POH.3.3", "3", 0.4, "PS-28 Cruiser: fallo de motor, arranque en vuelo y fuego", "nd"],
+ ["POH.4.1", "4", 1, "Checklists normales", "given"],
+ ["POH.5.1", "X", 0, "Conversión de unidades de combustible (032)", "out"],
+ ["POH.6.1", "X", 0, "Del volumen a la masa (031)", "out"]
 ];
 const BLK = Object.fromEntries(BLOCKS.map(b=>[b.k,b]));
 const SUBMAP = Object.fromEntries(SUB.map(s=>[s[0],{code:s[0],block:s[1],w:s[2],name:s[3],cov:s[4]}]));
@@ -594,47 +721,64 @@ const isGiven = q => (SUBMAP[q[1]]||{}).cov!=="nd";
 
 // ---------- resúmenes de apuntes (salen en «Repasa» y en «Lo que más fallas») ----------
 const REFS = {
- eng:"Piper: Lycoming O-320-D2A/D3O. Cessna: Lycoming O-320-H2AD. Los dos: 160 BHP a 2700 RPM, 4 cilindros, directo, horizontalmente opuesto, refrigerado por aire. «O» = cilindros opuestos; IO = inyección.",
- prop:"Hélice de paso fijo y 2 palas en los dos aviones. Piper: Sensenich, 72–74 in. Cessna: McCauley, 74–75 in. La medida es la hélice entera, de punta a punta.",
- fuel:"Piper: capacidad 50, utilizable 48, 100LL AVGAS. Cessna: capacidad 43, utilizable 40, 100 y 100LL AVGAS. La diferencia es combustible inutilizable.",
- oil:"Aceite del Piper: 6 a 8 qts. Aceite del Cessna: capacidad 6 qts, mínimo 4 qts (se usa con más de 4 qts).",
- wt:"Piper: MTOW 2325 lbs y MLW 2325 lbs. Cessna: MTOW y MLW 2300 lbs en normal y 2000 lbs en utility.",
- vne:"VNE (Never Exceed) = 160 KIAS en los dos aviones: integridad estructural.",
- vno:"VNO (Normal Operating): Piper 126, Cessna 128. Por encima, la turbulencia puede sobrecargar la estructura.",
- va:"VA (Maneuvering): Piper 88–111, Cessna 80–97. Por encima, la deflexión máxima hacia arriba puede sobrecargar el avión.",
- vfe:"VFE (Flaps Extended): Piper 103, Cessna 85. No superar con flaps abajo.",
- arcs:"Anemómetro. Piper: blanco 44–103, verde 50–126, amarillo 126–160, rojo 160. Cessna: blanco 41–85, verde 47–128, amarillo 128–160, rojo 160.",
- glide:"Velocidad de planeo: Cessna 65 kt · Cruiser 60 kt.",
- lf:"Factor de carga (los G que aguanta el avión). Flaps arriba: +3,8 g normal y +4,4 g utility. Flaps abajo: +3,0 g en ambas. Piper, negativos: −1,52 g normal y −1,76 g utility.",
- oilp:"Aceite: presión 25–100 psi, temperatura máxima 118 °C. Piper: presión de combustible 0,5–8 psi.",
- cg:"Piper: 83 in con 1950 lbs o menos, hasta 93 in con cualquier peso. Cessna: 31 in con 1950 lbs o menos, hasta 47,3 in con cualquier peso; datum en la parte baja del frente del cortafuegos.",
- struct:"Piper: fuselaje semi-monocoque (la piel y los refuerzos internos soportan las cargas). Soporte del motor y tren de acero; el resto, aleación de aluminio, fibra de vidrio y termoplásticos.",
- muff:"El Piper lleva dos mufflers (tubos de escape) que se usan para calentar el carburador; enfriador de aceite, entradas de aire y admisión de carburador separada.",
- flaps:"Flaps manuales del Piper: 0°, 10°, 25° y 40° (tres posiciones).",
- stab:"El Piper lleva un stabilator (toda la superficie horizontal se mueve) con anti-balance tab. Doble mando con cables y poleas, compensadores manuales de guiñada y cabeceo; rueda de morro ±30° en tierra.",
- annun:"Annunciator panel, de izquierda a derecha: bomba de vacío (succión) · alternador · presión de aceite.",
- six:"Seis instrumentos. Fila de arriba: anemómetro, horizonte artificial, altímetro. Fila de abajo: coordinador de virajes, giro direccional (DGI) y VSI.",
- gear:"Tren fijo, triciclo, suspensión aire-aceite. Principal: 24 psi y 4,5 in de elongación. Morro: 30 psi y 3,25 in. Frenos solo en las principales (incluido el de parking). En tierra se gira con los pedales.",
- fsys:"Combustible del Piper: bomba eléctrica y bomba del motor, tres puntos de drenaje, dos depósitos con válvula selectora.",
- elec:"Batería de plomo-ácido de 12 V y alternador de 14 V y 60 amp.",
- vac:"El vacío mueve horizonte artificial, DGI y coordinador de virajes. Poca succión: filtro bloqueado; presión baja por encima de 12.000 ft o con pocas RPM. Presión total y estática en el ala izquierda; estática alterna desde la cabina con ventanas cerradas y calefacción y defroster encendidos.",
- alt:"Fallo de alternador: 1) carga eléctrica al mínimo, 2) revisar el breaker del alternador, 3) alternador OFF, esperar 1 s, 4) alternador ON, 5) si el amperímetro sigue sin carga, alternador OFF. Aterrizar cuanto antes. Quedan unos 30 min de batería; el motor sigue funcionando.",
- oilf:"Pérdida parcial de presión de aceite: aterrizar en cuanto sea posible. Pérdida total: ir al aeródromo más cercano, el motor puede pararse de golpe; con temperatura alta o humo, plantéate aterrizar fuera mientras haya potencia. La pérdida de presión suele ir con subida de temperatura.",
- norm:"Cessna, ground check: 1700 RPM, caída máxima de magnetos 175 RPM, diferencia máxima 75 RPM. Primer en frío: 6.",
- conv:"US gal → Imperial: ÷ 1,2. Imperial → US: × 1,2. Imperial → litros: × 4,546. US gal → litros: × 3,78. Litros → US gal: ÷ 3,78.",
- dens:"Volumen × densidad = masa. Densidad estándar del avgas: 0,72 kg/L."
+ "eng": "Piper: Lycoming O-320-D2A/D3O. Cessna: Lycoming O-320-H2AD. Los dos Lycoming: 160 BHP a 2700 RPM, 4 cilindros, directo, horizontalmente opuesto, refrigerado por aire. «O» = cilindros opuestos; IO = inyección. (El Cruiser lleva un Rotax 912 S2 de 100 HP.)",
+ "prop": "Hélice de paso fijo y 2 palas en el Piper y el Cessna. Piper: Sensenich, 72–74 in. Cessna: McCauley, 74–75 in. La medida es la hélice entera, de punta a punta. (Cruiser: Woodcomp de 3 palas.)",
+ "fuel": "Piper: capacidad 50, utilizable 48, 100LL AVGAS. Cessna: capacidad 43, utilizable 40, 100 y 100LL AVGAS. La diferencia es combustible inutilizable. Piper y Cessna miden en galones US; el Cruiser, en litros (114 y 113 L).",
+ "oil": "Aceite del Piper: 6 a 8 qts. Aceite del Cessna: capacidad 6 qts, mínimo 4 qts (se usa con más de 4 qts).",
+ "wt": "Piper: MTOW 2325 lbs y MLW 2325 lbs. Cessna: MTOW y MLW 2300 lbs en normal y 2000 lbs en utility. (Cruiser: 600 kg.)",
+ "vne": "VNE (Never Exceed): 160 KIAS en el Piper y el Cessna (138 en el Cruiser): integridad estructural.",
+ "vno": "VNO (Normal Operating): Piper 126, Cessna 128, Cruiser 108. Por encima, la turbulencia puede sobrecargar la estructura.",
+ "va": "VA (Maneuvering): Piper 88–111, Cessna 80–97, Cruiser 88 (a 600 kg). Por encima, la deflexión máxima hacia arriba puede sobrecargar el avión.",
+ "vfe": "VFE (Flaps Extended): Piper 103, Cessna 85, Cruiser 75. No superar con flaps abajo.",
+ "arcs": "Anemómetro. Piper: blanco 44–103, verde 50–126, amarillo 126–160, rojo 160. Cessna: blanco 41–85, verde 47–128, amarillo 128–160, rojo 160. Cruiser: blanco 31–75, verde 37–108, amarillo 108–138, rojo 138.",
+ "glide": "Velocidad de planeo: Cruiser 60 kt · Cessna 65 kt · Piper 73 kt (según el SOP).",
+ "lf": "Factor de carga (los G que aguanta el avión). Cessna y Piper, flaps arriba: +3,8 g normal y +4,4 g utility; flaps abajo: +3,0 g en ambas. Piper, negativos: −1,52 g normal y −1,76 g utility. Cruiser (solo normal): flaps arriba +4/−2 g; flaps abajo +2/0 g.",
+ "oilp": "Aceite del Piper y del Cessna: presión 25–100 psi, temperatura máxima 118 °C. Piper: presión de combustible 0,5–8 psi. (Cruiser: 0,8–7 bar y 50–130 °C.)",
+ "cg": "Piper: 83 in con 1950 lbs o menos, hasta 93 in con cualquier peso. Cessna: 31 in con 1950 lbs o menos, hasta 47,3 in con cualquier peso; datum en la parte baja del frente del cortafuegos. Cruiser: 28–35 % de la MAC; datum en el borde de ataque del ala, costilla 4.",
+ "struct": "Piper: fuselaje semi-monocoque (la piel y los refuerzos internos soportan las cargas). Soporte del motor y tren de acero; el resto, aleación de aluminio, fibra de vidrio y termoplásticos. (Cessna: semi-monocoque de aluminio con alas con montantes.)",
+ "muff": "El Piper lleva dos mufflers (tubos de escape) que se usan para calentar el carburador; enfriador de aceite, entradas de aire y admisión de carburador separada. (El Cessna lleva uno.)",
+ "flaps": "Flaps del Piper: manuales, 0°, 10°, 25° y 40° (tres posiciones). Cessna: eléctricos, 10°, 20° y Full. Cruiser: eléctricos continuos, Up, TO 12° y LDG 30°.",
+ "stab": "El Piper lleva un stabilator (toda la superficie horizontal se mueve) con anti-balance tab. Doble mando con cables y poleas, compensadores manuales de guiñada y cabeceo; rueda de morro ±30° en tierra.",
+ "annun": "Annunciator panel, de izquierda a derecha: bomba de vacío (succión) · alternador · presión de aceite.",
+ "six": "Seis instrumentos. Fila de arriba: anemómetro, horizonte artificial, altímetro. Fila de abajo: coordinador de virajes, giro direccional (DGI) y VSI.",
+ "gear": "Tren fijo, triciclo, suspensión aire-aceite. Principal: 24 psi y 4,5 in de elongación. Morro: 30 psi y 3,25 in. Frenos solo en las principales (incluido el de parking). En tierra se gira con los pedales.",
+ "fsys": "Combustible del Piper: bomba eléctrica y bomba del motor, tres puntos de drenaje, dos depósitos con válvula selectora.",
+ "elec": "Batería de plomo-ácido de 12 V y alternador de 14 V y 60 amp.",
+ "vac": "El vacío mueve horizonte artificial, DGI y coordinador de virajes. Poca succión: filtro bloqueado; presión baja por encima de 12.000 ft o con pocas RPM. Presión total y estática en el ala izquierda; estática alterna desde la cabina con ventanas cerradas y calefacción y defroster encendidos.",
+ "alt": "Fallo de alternador: 1) carga eléctrica al mínimo, 2) revisar el breaker del alternador, 3) alternador OFF, esperar 1 s, 4) alternador ON, 5) si el amperímetro sigue sin carga, alternador OFF. Aterrizar cuanto antes. Quedan unos 30 min de batería; el motor sigue funcionando.",
+ "oilf": "Pérdida parcial de presión de aceite: aterrizar en cuanto sea posible. Pérdida total: ir al aeródromo más cercano, el motor puede pararse de golpe; con temperatura alta o humo, plantéate aterrizar fuera mientras haya potencia. La pérdida de presión suele ir con subida de temperatura.",
+ "norm": "Cessna, ground check: 1700 RPM, caída máxima de magnetos 175 RPM, diferencia máxima 75 RPM. Primer en frío: 6.",
+ "conv": "US gal → Imperial: ÷ 1,2. Imperial → US: × 1,2. Imperial → litros: × 4,546. US gal → litros: × 3,78. Litros → US gal: ÷ 3,78.",
+ "dens": "Volumen × densidad = masa. Densidad estándar del avgas: 0,72 kg/L.",
+ "ceng": "PS-28 Cruiser: Rotax 912 S2 de 100 HP, con reductora («reduced RPMs»), refrigerado por líquido y aire, 4 cilindros opuestos. Potencia máxima 73,5 kW a 5800 RPM (5 minutos como máximo); máxima continua 69 kW a 5500 RPM.",
+ "cprop": "Hélice del Cruiser: Woodcomp Klassic 170/3/R, 3 palas, paso fijo y ajustable en tierra.",
+ "cfuel": "Combustible del Cruiser: total 114 L y utilizable 113 L; MOGAS y AVGAS; diferencia máxima entre depósitos 30 L; densidad 0,72 kg/L (114 L = 82 kg). A 3000 ft MSL: alcance 512 NM y autonomía 5:26 h.",
+ "cwt": "Pesos del Cruiser: MTOW = MLW = 600 kg; combustible máx. 82 kg; equipaje 18 kg en el fuselaje trasero y 10 kg en cada wing locker; peso vacío máx. 405 kg; 2 asientos; piloto mínimo en el asiento izquierdo, 55 kg mínimo y 115 kg máximo por asiento.",
+ "ccg": "Centro de gravedad del Cruiser: 28 % a 35 % de la MAC (MAC = 1500 mm: de 420 a 525 mm). Datum: borde de ataque del ala, costilla n.º 4.",
+ "cvs": "Velocidades del Cruiser (KIAS): VS0 31 · VS1 37 · VFE 75 · VNO 108 · VNE 138 · VA 88 a 600 kg. Arcos: blanco 31–75, verde 37–108, amarillo 108–138 (aire en calma), rojo 138.",
+ "clf": "Factor de carga del Cruiser (solo categoría normal): flaps arriba +4/−2 g; flaps abajo +2/0 g. Virajes cerrados con menos de 60° de alabeo; permitidos lazy eights, chandelles y pérdidas (sin «whip stall»).",
+ "coil": "Límites del motor del Cruiser: presión de aceite 0,8–7 bar · temperatura de aceite 50–130 °C (mínimo 50) · refrigerante máx. 120 °C · EGT máx. 850 °C (880 °C en el despegue). Con −0,5 g, solo 5 segundos.",
+ "cstruct": "Cruiser: fuselaje semi-monocoque de metal y fibra de vidrio; tren fijo de triciclo.",
+ "cctl": "Mandos del Cruiser: palancas y poleas para cabeceo y alabeo; cables para guiñada. Flaps eléctricos de movimiento continuo marcados Up (0°), TO (12°) y LDG (30°). Compensadores eléctricos: alabeo en el alerón derecho, cabeceo en el elevador.",
+ "cgear": "Tren del Cruiser: triciclo; principal con suspensión mecánica de doble muelle; rueda de morro libre («free castering»): se rueda con frenado diferencial.",
+ "cfsys": "Combustible del Cruiser: dos depósitos ventilados, con filtro, drenaje y flotador; selector Left · Right · Off (si el izquierdo está lleno, empezar con LEFT); gascolator; bomba del motor (de retorno) y bomba eléctrica auxiliar; carburador (si se rompe la palanca, un muelle lleva el throttle a full; el choke da más combustible en el arranque en frío).",
+ "celec": "Sistema eléctrico del Cruiser: generador de 250 W AC → regulador-rectificador a 12 V 20 A DC; una sola bus bar; batería de 12 V DC.",
+ "cavi": "Aviónica del Cruiser: Dynon SkyView SV-D1000 (páginas PFD y MAP). Pitot-estática bajo el ala izquierda; alimenta los instrumentos de reserva (standby) y las pantallas.",
+ "cemg1": "Cruiser, fallo de motor. En la carrera de despegue: throttle IDLE, frenos, ignición OFF. Tras el despegue: 60 KIAS, flaps según haga falta, selector OFF, ignición OFF, MASTER GEN OFF, MASTER BAT OFF (antes de aterrizar), aterrizar recto girando solo para evitar obstáculos.",
+ "cemg2": "Cruiser, pérdida de potencia en vuelo: mantener 60 KIAS y, según la altitud, reiniciar o buscar un campo. Arranque en vuelo: equipos eléctricos OFF, MASTER BAT ON, MFD 1 ON, FUEL P ON, selector en el depósito con más combustible, throttle IDLE, ignición: START y, con el motor arrancando, BOTH; ya en marcha: MASTER GEN, MFD 2 y AVIONICS ON, FUEL P OFF.",
+ "cemg3": "Cruiser, fuego. En el arranque: selector OFF, throttle MAX, ignición OFF, MASTER BAT y GEN OFF, abandonar el avión. En vuelo: selector OFF, throttle MAX, cabin heater PUSH OFF, ignición OFF (cuando se consuma el combustible del carburador), 60 KIAS, aterrizaje de emergencia, abandonar el avión.",
+ "cesf": "Cessna: flaps eléctricos (protegidos por breaker) de 10°, 20° y Full.",
+ "cesnw": "Cessna: en tierra la rueda de morro gira 10°; con frenos diferenciales, hasta 30°.",
+ "cesgear": "Cessna: tren principal con frenos de disco hidráulicos y suspensión mecánica de muelle; morro con suspensión aire-aceite.",
+ "cesfuel": "Cessna: el selector de combustible tiene posición BOTH.",
+ "ceselec": "Cessna: batería de 24 V DC (14 Amp/h) y alternador de 28 V y 60 A.",
+ "cesmuff": "Cessna: un solo muffler (el Piper lleva dos).",
+ "cespit": "Cessna: tubo pitot bajo el ala izquierda (presión total); la estática, a los lados del fuselaje.",
+ "cesstruct": "Cessna: semi-monocoque de aluminio; motor sobre tubos de acero; tren fijo; alas con montantes (braced wings).",
+ "tabla": "Los 3 aviones juntos (Cruiser · Cessna · Piper): VFE 75 · 85 · 103; VNO 108 · 128 · 126; VNE 138 · 160 · 160; planeo 60 · 65 · 73; MTOW 600 kg · 2300 lbs · 2325 lbs; combustible útil 113 L · 40 gal · 48 gal; el Cruiser va en unidades métricas y el Cessna y el Piper en unidades US; flaps eléctricos en Cruiser y Cessna, manuales en el Piper."
 };
 // concepto que agrupa los fallos: [nombre, id del visual en los apuntes]
-const REF_CONCEPT = {
- eng:["Motor Lycoming O-320"], prop:["Hélice de paso fijo"], fuel:["Combustible: capacidad y utilizable"], oil:["Aceite: cantidad"], wt:["Pesos máximos"],
- vne:["Velocidades VNE · VNO · VA · VFE","visSpeeds"], vno:["Velocidades VNE · VNO · VA · VFE","visSpeeds"], va:["Velocidades VNE · VNO · VA · VFE","visSpeeds"], vfe:["Velocidades VNE · VNO · VA · VFE","visSpeeds"],
- arcs:["Arcos del anemómetro","visSpeeds"], glide:["Velocidad de planeo","visSpeeds"],
- lf:["Factor de carga","visLoad"], oilp:["Límites de aceite y combustible"], cg:["Centro de gravedad"],
- struct:["Estructura semi-monocoque"], muff:["Mufflers y calefacción del carburador"], flaps:["Flaps manuales","visCtrl"], stab:["Stabilator y mandos","visCtrl"],
- annun:["Annunciator panel","visAnnun"], six:["Seis instrumentos","visSix"],
- gear:["Tren y frenos"], fsys:["Sistema de combustible"], elec:["Sistema eléctrico"], vac:["Vacío y pitot-estática"],
- alt:["Fallo de alternador","visAlt"], oilf:["Pérdida de presión de aceite"], norm:["Checklists normales"], conv:["Conversión de unidades"], dens:["Del volumen a la masa"]
-};
+const REF_CONCEPT = {"eng": ["Motor Lycoming O-320"], "prop": ["Hélice de paso fijo"], "fuel": ["Combustible: capacidad y utilizable"], "oil": ["Aceite: cantidad"], "wt": ["Pesos máximos"], "vne": ["Velocidades VNE · VNO · VA · VFE", "visSpeeds"], "vno": ["Velocidades VNE · VNO · VA · VFE", "visSpeeds"], "va": ["Velocidades VNE · VNO · VA · VFE", "visSpeeds"], "vfe": ["Velocidades VNE · VNO · VA · VFE", "visSpeeds"], "arcs": ["Arcos del anemómetro", "visSpeeds"], "glide": ["Velocidad de planeo", "visSpeeds"], "lf": ["Factor de carga", "visLoad"], "oilp": ["Límites de aceite y combustible"], "cg": ["Centro de gravedad"], "struct": ["Estructura semi-monocoque"], "muff": ["Mufflers y calefacción del carburador"], "flaps": ["Flaps manuales", "visCtrl"], "stab": ["Stabilator y mandos", "visCtrl"], "annun": ["Annunciator panel", "visAnnun"], "six": ["Seis instrumentos", "visSix"], "gear": ["Tren y frenos"], "fsys": ["Sistema de combustible"], "elec": ["Sistema eléctrico"], "vac": ["Vacío y pitot-estática"], "alt": ["Fallo de alternador", "visAlt"], "oilf": ["Pérdida de presión de aceite"], "norm": ["Checklists normales"], "conv": ["Conversión de unidades"], "dens": ["Del volumen a la masa"], "ceng": ["Cruiser: motor y hélice"], "cprop": ["Cruiser: motor y hélice"], "cfuel": ["Cruiser: combustible"], "cwt": ["Cruiser: pesos y centrado"], "ccg": ["Cruiser: pesos y centrado"], "cvs": ["Cruiser: velocidades y arcos", "visSpeeds"], "clf": ["Cruiser: factor de carga", "visLoad"], "coil": ["Cruiser: límites del motor"], "cstruct": ["Cruiser: fuselaje"], "cctl": ["Cruiser: mandos y flaps"], "cgear": ["Cruiser: tren"], "cfsys": ["Cruiser: combustible (sistema)"], "celec": ["Cruiser: sistema eléctrico"], "cavi": ["Cruiser: aviónica y pitot-estática"], "cemg1": ["Cruiser: fallo de motor"], "cemg2": ["Cruiser: fallo de motor"], "cemg3": ["Cruiser: fuego"], "cesf": ["Cessna: flaps"], "cesnw": ["Cessna: tren"], "cesgear": ["Cessna: tren"], "cesfuel": ["Cessna: combustible"], "ceselec": ["Cessna: sistema eléctrico"], "cesmuff": ["Cessna: estructura"], "cespit": ["Cessna: pitot-estática"], "cesstruct": ["Cessna: estructura"], "tabla": ["Comparación de los 3 aviones"]};
 // ---------- banco: [id, tema, origen, resumen, pregunta, opciones (la 1ª es la correcta), explicación] ----------
 // origen: p = diapositivas y apuntes · c = complemento · a = temario aún no dado. Las variantes de una misma pregunta comparten id base (m1, m1b, m1c).
 const Q = (id,lo,src,ref,text,opts,expl)=>[id,lo,src,ref,text,opts,expl];
@@ -642,25 +786,25 @@ const BANK1 = [
 // ===== POH.1.1 Motor y hélice =====
 Q("m1","POH.1.1","p","eng","Which engine powers the school's Piper PA-28?",["Lycoming O-320-D2A/D3O","Lycoming O-320-H2AD","Lycoming IO-360-L2A","Continental IO-240-B"],"El Piper lleva el Lycoming O-320-D2A/D3O; el H2AD es el del Cessna."),
 Q("m1b","POH.1.1","p","eng","Which engine powers the school's Cessna 172?",["Lycoming O-320-H2AD","Lycoming O-320-D2A/D3O","Lycoming IO-360-L2A","Continental O-200-A"],"El Cessna lleva el Lycoming O-320-H2AD."),
-Q("m1c","POH.1.1","p","eng","An O-320-D2A/D3O engine is fitted to which aircraft?",["The Piper PA-28","The Cessna 172","Both school aircraft","Neither of them"],"El D2A/D3O es del Piper; el Cessna monta el H2AD."),
+Q("m1c","POH.1.1","p","eng","An O-320-D2A/D3O engine is fitted to which aircraft?",["The Piper PA-28","The Cessna 172","The PS-28 Cruiser","None of the three"],"El D2A/D3O es del Piper; el Cessna monta el H2AD."),
 Q("m2","POH.1.1","p","eng","In an engine designation such as O-320, what does the letter O stand for?",["Horizontally opposed cylinders","Overhead camshaft layout","Oil-cooled cylinders","Overboosted induction"],"«O» = cilindros opuestos entre sí; 320 es la cilindrada."),
 Q("m2b","POH.1.1","p","eng","What does the prefix IO indicate in an engine designation?",["A fuel-injected opposed engine","A diesel engine with direct injection","An inline oil-cooled engine","An indirect-drive opposed engine"],"IO = inyección (injection) y cilindros opuestos."),
-Q("m3","POH.1.1","p","eng","What power do the engines of both school aircraft develop?",["160 BHP at 2700 RPM","180 BHP at 2700 RPM","160 BHP at 2400 RPM","150 BHP at 2500 RPM"],"Los dos O-320 dan 160 BHP a 2700 RPM."),
+Q("m3","POH.1.1","p","eng","What power do the engines of the Piper and the Cessna develop?",["160 BHP at 2700 RPM","180 BHP at 2700 RPM","160 BHP at 2400 RPM","150 BHP at 2500 RPM"],"Los dos O-320 dan 160 BHP a 2700 RPM."),
 Q("m3b","POH.1.1","p","eng","At what engine speed is the rated 160 BHP of the O-320 delivered?",["2700 RPM","2500 RPM","2400 RPM","2800 RPM"],"La potencia de 160 BHP se da a 2700 RPM."),
-Q("m4","POH.1.1","p","eng","How many cylinders do the school engines have, and how are they cooled?",["Four, air cooled","Four, liquid cooled","Six, air cooled","Six, liquid cooled"],"Son motores de 4 cilindros refrigerados por aire."),
+Q("m4","POH.1.1","p","eng","How many cylinders do the Piper and Cessna engines have, and how are they cooled?",["Four, air cooled","Four, liquid cooled","Six, air cooled","Six, liquid cooled"],"Son motores de 4 cilindros refrigerados por aire."),
 Q("m4b","POH.1.1","p","eng","Which description fits the O-320 engine?",["Four cylinders, direct drive, air cooled","Four cylinders, geared, liquid cooled","Six cylinders, direct drive, air cooled","Four cylinders, geared, air cooled"],"4 cilindros, directo (sin reductora), horizontalmente opuesto y refrigerado por aire."),
 Q("m5","POH.1.1","p","prop","What type of propeller do the Piper and the Cessna have?",["Fixed pitch, two blades","Constant speed, two blades","Fixed pitch, three blades","Variable pitch, three blades"],"Los dos llevan hélice de paso fijo con dos palas."),
-Q("m5b","POH.1.1","p","prop","Which statement about the school propellers is correct?",["The blade angle cannot be changed","The pilot selects the blade angle","The blade angle changes with RPM","They have three blades each"],"Paso fijo: no se puede variar el ángulo de las palas."),
+Q("m5b","POH.1.1","p","prop","Which statement about the Piper and Cessna propellers is correct?",["The blade angle cannot be changed","The pilot selects the blade angle","The blade angle changes with RPM","They have three blades each"],"Paso fijo: no se puede variar el ángulo de las palas."),
 Q("m6","POH.1.1","p","prop","Who manufactures the propeller of the Piper PA-28?",["Sensenich","McCauley","Hartzell","Lycoming"],"Piper = Sensenich."),
 Q("m6b","POH.1.1","p","prop","Who manufactures the propeller of the Cessna 172?",["McCauley","Sensenich","Hartzell","Lycoming"],"Cessna = McCauley."),
-Q("m6c","POH.1.1","p","prop","Sensenich propellers are fitted to which aircraft?",["The Piper PA-28","The Cessna 172","Both school aircraft","Neither of them"],"Sensenich es la hélice del Piper."),
+Q("m6c","POH.1.1","p","prop","Sensenich propellers are fitted to which aircraft?",["The Piper PA-28","The Cessna 172","The PS-28 Cruiser","None of the three"],"Sensenich es la hélice del Piper."),
 Q("m7","POH.1.1","p","prop","What is the propeller size of the Piper PA-28?",["72 to 74 inches","74 to 75 inches","68 to 70 inches","78 to 80 inches"],"El Piper lleva hélice de 72 a 74 pulgadas."),
 Q("m7b","POH.1.1","p","prop","What is the propeller size of the Cessna 172?",["74 to 75 inches","72 to 74 inches","68 to 70 inches","78 to 80 inches"],"El Cessna lleva hélice de 74 a 75 pulgadas."),
 Q("m8","POH.1.1","p","prop","The propeller size in the POH (for example 72 to 74 inches) refers to the:",["Total length of the propeller, tip to tip","Length of a single blade","Blade chord at the hub","Distance from hub to the spinner"],"La medida es la hélice entera, no solo las palas."),
 // ===== POH.1.2 Combustible y aceite =====
 Q("f1","POH.1.2","p","fuel","What are the total and usable fuel quantities of the Piper PA-28?",["50 total, 48 usable","43 total, 40 usable","50 total, 40 usable","48 total, 43 usable"],"Piper: capacidad 50 y utilizable 48."),
 Q("f1b","POH.1.2","p","fuel","What are the total and usable fuel quantities of the Cessna 172?",["43 total, 40 usable","50 total, 48 usable","50 total, 40 usable","48 total, 43 usable"],"Cessna: capacidad 43 y utilizable 40."),
-Q("f1c","POH.1.2","p","fuel","Which aircraft has 40 usable fuel?",["The Cessna 172","The Piper PA-28","Both school aircraft","Neither of them"],"El Cessna tiene 43 de capacidad y 40 utilizables."),
+Q("f1c","POH.1.2","p","fuel","Which aircraft has 40 usable fuel?",["The Cessna 172","The Piper PA-28","The PS-28 Cruiser","None of the three"],"El Cessna tiene 43 de capacidad y 40 utilizables."),
 Q("f2","POH.1.2","p","fuel","Which fuel grade does the Piper PA-28 use?",["100LL AVGAS","100 or 100LL AVGAS","Jet A-1","MOGAS 95"],"El Piper usa 100LL AVGAS."),
 Q("f2b","POH.1.2","p","fuel","Which fuel grades can the Cessna 172 use?",["100 and 100LL AVGAS","100LL AVGAS only","Jet A-1 only","Diesel or Jet A-1"],"El Cessna admite 100 y 100LL AVGAS."),
 Q("f3","POH.1.2","p","oil","What oil quantity does the Piper PA-28 carry?",["6 to 8 qts","4 to 6 qts","8 to 10 qts","2 to 4 qts"],"El Piper lleva de 6 a 8 qts de aceite."),
@@ -694,20 +838,20 @@ Q("v6","POH.2.1","c","arcs","On an airspeed indicator, the yellow arc is the:",[
 Q("v7","POH.2.1","p","glide","What is the power-off glide speed given for the Cessna 172?",["65 KIAS","60 KIAS","85 KIAS","97 KIAS"],"Planeo: Cessna 65 kt."),
 Q("v7b","POH.2.1","p","glide","Which glide speed was given for the Cruiser?",["60 KIAS","65 KIAS","80 KIAS","88 KIAS"],"Planeo: Cruiser 60 kt."),
 // ===== POH.2.2 Factor de carga =====
-Q("l1","POH.2.2","p","lf","What is the positive load factor limit, flaps up, in the normal category?",["+3.8 g","+4.4 g","+3.0 g","+2.5 g"],"Flaps arriba y normal: +3,8 g."),
-Q("l1b","POH.2.2","p","lf","A flaps-up limit of +3.8 g applies to which category?",["Normal category","Utility category","Both categories","Neither: it depends on weight"],"+3,8 g es el límite de la categoría normal."),
-Q("l2","POH.2.2","p","lf","What is the positive load factor limit, flaps up, in the utility category?",["+4.4 g","+3.8 g","+3.0 g","+5.0 g"],"Flaps arriba y utility: +4,4 g."),
-Q("l2b","POH.2.2","p","lf","A flaps-up limit of +4.4 g applies to which category?",["Utility category","Normal category","Both categories","Neither: it depends on weight"],"+4,4 g es el límite de utility."),
-Q("l3","POH.2.2","p","lf","What is the load factor limit with flaps down?",["+3.0 g in both categories","+3.8 g in normal, +4.4 g in utility","+2.0 g in both categories","+4.4 g in both categories"],"Con flaps abajo: +3,0 g en ambas categorías."),
-Q("l3b","POH.2.2","p","lf","Which category has the higher load factor limit with flaps down?",["Neither: both are +3.0 g","Normal category","Utility category","It depends on weight"],"Flaps abajo: +3,0 g igual en las dos."),
+Q("l1","POH.2.2","p","lf","What is the positive load factor limit, flaps up, in the normal category (Piper and Cessna)?",["+3.8 g","+4.4 g","+3.0 g","+2.5 g"],"Flaps arriba y normal: +3,8 g."),
+Q("l1b","POH.2.2","p","lf","A flaps-up limit of +3.8 g applies to which category (Piper and Cessna)?",["Normal category","Utility category","Both categories","Neither: it depends on weight"],"+3,8 g es el límite de la categoría normal."),
+Q("l2","POH.2.2","p","lf","What is the positive load factor limit, flaps up, in the utility category (Piper and Cessna)?",["+4.4 g","+3.8 g","+3.0 g","+5.0 g"],"Flaps arriba y utility: +4,4 g."),
+Q("l2b","POH.2.2","p","lf","A flaps-up limit of +4.4 g applies to which category (Piper and Cessna)?",["Utility category","Normal category","Both categories","Neither: it depends on weight"],"+4,4 g es el límite de utility."),
+Q("l3","POH.2.2","p","lf","What is the load factor limit with flaps down (Piper and Cessna)?",["+3.0 g in both categories","+3.8 g in normal, +4.4 g in utility","+2.0 g in both categories","+4.4 g in both categories"],"Con flaps abajo: +3,0 g en ambas categorías."),
+Q("l3b","POH.2.2","p","lf","Which category has the higher load factor limit with flaps down (Piper and Cessna)?",["Neither: both are +3.0 g","Normal category","Utility category","It depends on weight"],"Flaps abajo: +3,0 g igual en las dos."),
 Q("l4","POH.2.2","p","lf","What is the negative load factor limit of the Piper, flaps up, normal category?",["−1.52 g","−1.76 g","−3.0 g","−0.5 g"],"Piper, normal, flaps arriba: −1,52 g."),
 Q("l4b","POH.2.2","p","lf","What is the negative load factor limit of the Piper, flaps up, utility category?",["−1.76 g","−1.52 g","−3.8 g","−2.2 g"],"Piper, utility, flaps arriba: −1,76 g."),
 Q("l5","POH.2.2","p","lf","What does the load factor limit express?",["The g forces the aircraft can withstand","The maximum payload in lbs","The ratio of fuel to payload","The maximum bank angle allowed"],"El factor de carga son los G que puede asumir el avión."),
 // ===== POH.2.3 Aceite y combustible =====
-Q("o1","POH.2.3","p","oilp","What is the oil pressure limitation of the school aircraft?",["25 to 100 psi","5 to 8 psi","50 to 150 psi","10 to 60 psi"],"Presión de aceite: de 25 a 100 psi."),
-Q("o1b","POH.2.3","p","oilp","An oil pressure of 20 psi in flight is:",["Below the 25–100 psi limit","Inside the normal range","Above the limit","Normal only at idle"],"El rango es de 25 a 100 psi: 20 psi está por debajo."),
-Q("o2","POH.2.3","p","oilp","What is the maximum oil temperature?",["118 °C","98 °C","128 °C","150 °C"],"Temperatura máxima del aceite: 118 °C."),
-Q("o2b","POH.2.3","p","oilp","An oil temperature of 125 °C is:",["Above the maximum of 118 °C","Within normal limits","Below the minimum limit","Acceptable for short periods"],"El máximo es 118 °C: 125 °C lo supera."),
+Q("o1","POH.2.3","p","oilp","What is the oil pressure limitation of the Piper and the Cessna?",["25 to 100 psi","5 to 8 psi","50 to 150 psi","10 to 60 psi"],"Presión de aceite: de 25 a 100 psi."),
+Q("o1b","POH.2.3","p","oilp","An oil pressure of 20 psi in flight in the Piper or the Cessna is:",["Below the 25–100 psi limit","Inside the normal range","Above the limit","Normal only at idle"],"El rango es de 25 a 100 psi: 20 psi está por debajo."),
+Q("o2","POH.2.3","p","oilp","What is the maximum oil temperature of the Piper and the Cessna?",["118 °C","98 °C","128 °C","150 °C"],"Temperatura máxima del aceite: 118 °C."),
+Q("o2b","POH.2.3","p","oilp","An oil temperature of 125 °C in the Piper or the Cessna is:",["Above the maximum of 118 °C","Within normal limits","Below the minimum limit","Acceptable for short periods"],"El máximo es 118 °C: 125 °C lo supera."),
 Q("o3","POH.2.3","p","oilp","What is the fuel pressure limitation of the Piper?",["0.5 to 8 psi","5 to 8 psi","8 to 15 psi","25 to 100 psi"],"Piper: presión de combustible de 0,5 a 8 psi."),
 // ===== POH.2.4 Centro de gravedad =====
 Q("g1","POH.2.4","p","cg","What is the aft CG limit of the Piper?",["93 in at any weight","83 in at any weight","87 in at 1950 lbs","90 in at 2325 lbs"],"Piper: límite trasero 93 in con cualquier peso."),
@@ -735,12 +879,12 @@ Q("k1b","POH.7.2","p","flaps","How are the flaps of the Piper PA-28 operated?",[
 Q("k2","POH.7.2","p","stab","What kind of horizontal tail does the Piper have?",["A stabilator","A fixed stabilizer with elevator","A T-tail with trim tab","A V-tail"],"El Piper lleva un stabilator."),
 Q("k2b","POH.7.2","p","stab","Which description fits the horizontal tail of the Piper?",["The whole horizontal surface moves as one piece","A fixed surface with a hinged elevator","Two elevators with a fixed stabilizer","A fixed surface with a trim wheel only"],"Stabilator: toda la superficie horizontal se mueve."),
 Q("k3","POH.7.2","c","stab","What does the anti-balance tab of the stabilator do?",["It moves the same way as the trailing edge, reducing sensitivity","It moves opposite to the trailing edge to trim the aircraft","It acts as a flap during landing","It balances fuel between the tanks"],"Complemento: el anti-balance tab sigue al borde de salida y da tacto a los mandos."),
-Q("k4","POH.7.2","p","stab","How are the flight controls of the Piper connected to the cockpit?",["Dual controls with cables and pulleys","Dual controls with hydraulic lines and actuators","Dual controls with electric servos (fly-by-wire)","Dual controls with push-pull rods only"],"Doble mando con cables y poleas."),
+Q("k4","POH.7.2","p","stab","How are the flight controls of the Piper connected to the cockpit?",["Dual controls with cables and pulleys","Hydraulic lines","Fly-by-wire","Push-pull rods only"],"Doble mando con cables y poleas."),
 Q("k4b","POH.7.2","p","stab","Which trims does the Piper have?",["Manual yaw and pitch trims","Electric pitch trim only","Manual pitch trim only","Automatic trims"],"Compensadores manuales de guiñada y cabeceo."),
 Q("k5","POH.7.2","p","stab","How far can the nose wheel of the Piper steer on the ground?",["±30°","±15°","±45°","±60°"],"Rueda de morro: ±30° en tierra."),
 // ===== POH.7.1 Estructura y motor =====
 Q("s1","POH.7.1","p","struct","What type of fuselage construction does the Piper have?",["Semi-monocoque","Monocoque","Welded steel truss only","Composite sandwich"],"Fuselaje semi-monocoque."),
-Q("s1b","POH.7.1","p","struct","In a semi-monocoque fuselage, loads are carried by:",["The skin and the internal reinforcements","The skin only, with no internal structure","The internal frame only, as in a truss","The engine mount only"],"La piel soporta parte de las cargas y los refuerzos internos, el resto."),
+Q("s1b","POH.7.1","p","struct","In a semi-monocoque fuselage, loads are carried by:",["The skin and the internal reinforcements","The skin only","The internal frame only","The engine mount only"],"La piel soporta parte de las cargas y los refuerzos internos, el resto."),
 Q("s2","POH.7.1","p","struct","What are the engine mount and the landing gear of the Piper made of?",["Steel","Aluminium alloy","Glass fibre","Thermoplastic"],"Soporte del motor y tren de acero."),
 Q("s2b","POH.7.1","p","struct","What is the main material of the rest of the Piper fuselage?",["Aluminium alloy","Steel tubes","Carbon fibre","Titanium"],"El resto es aleación de aluminio (más fibra de vidrio y termoplásticos)."),
 Q("s3","POH.7.1","p","muff","What are the two mufflers of the Piper also used for?",["Heating the carburettor","Cooling the oil","Heating the fuel","Driving the alternator"],"Los dos mufflers calientan el carburador."),
@@ -770,7 +914,7 @@ Q("z5","POH.7.7","a","vac","How do you use the alternate static source in the ca
 // ===== POH.3.1 Fallo de alternador =====
 Q("x1","POH.3.1","p","alt","What is the first action of the alternator failure checklist?",["Reduce the electrical load to a minimum","Switch the master off","Shut the engine down","Land in the nearest field"],"Primero se reduce la carga eléctrica al mínimo."),
 Q("x1b","POH.3.1","p","alt","After an alternator failure, how long can the battery supply the aircraft?",["About 30 minutes","About 5 minutes","About 1 hour","As long as the engine runs"],"Quedan unos 30 minutos de batería."),
-Q("x1c","POH.3.1","p","alt","What is the effect of an alternator failure on the engine?",["It keeps running; radios and electrical instruments are lost","It stops at once, as the magnetos need the alternator","It runs rough at idle and loses half of its power","It keeps running, but the mixture becomes lean"],"El motor sigue dando potencia; fallan comunicaciones e instrumentos eléctricos."),
+Q("x1c","POH.3.1","p","alt","What is the effect of an alternator failure on the engine?",["It keeps running; radios and electrical instruments are lost","It stops at once","It runs rough at idle","It loses half of its power"],"El motor sigue dando potencia; fallan comunicaciones e instrumentos eléctricos."),
 Q("x2","POH.3.1","p","alt","After checking the alternator circuit breaker, what is the next step?",["Alternator switch OFF, wait 1 second, then ON","Master switch OFF, then ON","Pull the alternator breaker","Alternator switch ON, then OFF"],"Alternador OFF, esperar 1 s y volver a ponerlo ON."),
 Q("x3","POH.3.1","p","alt","Which action is correct after an alternator failure?",["Keep the engine running and reduce the electrical load","Shut the engine down and glide","Switch the master off immediately","Switch the magnetos off"],"No se apaga el motor: se reduce la carga eléctrica y se aterriza."),
 Q("x3b","POH.3.1","p","alt","The ammeter still shows no output after the ON/OFF reset. What do you do?",["Alternator switch OFF and land as soon as possible","Keep the alternator ON and continue","Shut the engine down","Switch the master off"],"Si sigue sin carga: alternador OFF y aterrizar cuanto antes."),
@@ -793,12 +937,134 @@ Q("q5","POH.5.1","p","conv","Convert 10 Imperial gallons to litres.",["45.46 L",
 Q("q6","POH.6.1","c","dens","What is the mass of 100 litres of fuel with a density of 0.72 kg/L?",["72 kg","139 kg","7.2 kg","720 kg"],"Volumen × densidad: 100 × 0,72 = 72 kg.")
 ];
 // preguntas que el profesor señaló expresamente
+const BANK3 = [
+Q("ce1","POH.1.4","a","ceng","Which engine powers the PS-28 Cruiser?",["Rotax 912 S2", "Lycoming O-320-H2AD", "Lycoming O-320-D2A/D3O", "Continental O-200-A"],"El Cruiser lleva un Rotax 912 S2; los Lycoming son del Cessna y del Piper."),
+Q("ce1b","POH.1.4","a","ceng","A Rotax 912 S2 engine is fitted to which aircraft?",["The PS-28 Cruiser", "The Cessna 172", "The Piper PA-28", "Both the Cessna and the Piper"],"El Rotax 912 S2 es del Cruiser."),
+Q("ce2","POH.1.4","a","ceng","What power does the Rotax 912 S2 of the Cruiser develop?",["100 HP", "160 HP", "80 HP", "120 HP"],"El Cruiser tiene 100 HP; Piper y Cessna, 160 BHP."),
+Q("ce3","POH.1.4","a","ceng","Which description fits the Rotax 912 S2 of the Cruiser?",["Four opposed cylinders, geared, liquid and air cooled", "Four opposed cylinders, direct drive, air cooled", "Six opposed cylinders, geared, liquid cooled", "Four in-line cylinders, direct drive, liquid cooled"],"4 cilindros opuestos, con reductora («reduced RPMs») y refrigeración por líquido y por aire."),
+Q("ce32","POH.1.4","a","ceng","What does «reduced RPMs» mean for the Cruiser engine?",["The propeller turns slower than the engine, through a reduction gear", "The engine has been derated to a low power", "The engine only runs at idle on the ground", "The propeller is driven directly at engine speed"],"El motor gira rápido y una reductora hace girar la hélice más despacio."),
+Q("ce4","POH.1.4","a","cprop","Which propeller does the Cruiser have?",["Woodcomp Klassic: three blades, fixed pitch, ground adjustable", "Woodcomp: two blades, constant speed", "Sensenich: two blades, fixed pitch", "McCauley: three blades, constant speed"],"Woodcomp Klassic 170/3/R: 3 palas, paso fijo y ajustable en tierra."),
+Q("ce42","POH.1.4","a","cprop","What does «ground adjustable» mean for the Cruiser propeller?",["The blade pitch can only be adjusted on the ground", "The pilot adjusts the pitch in flight", "The pitch changes automatically with RPM", "The blades fold on the ground"],"Es de paso fijo: solo se puede ajustar con el avión en tierra."),
+Q("ce5","POH.1.4","a","ceng","What is the maximum engine power of the Cruiser, and for how long may it be used?",["73.5 kW at 5800 RPM, 5 minutes", "69 kW at 5500 RPM, 5 minutes", "73.5 kW at 5800 RPM, continuous", "69 kW at 5500 RPM, continuous"],"Máxima: 73,5 kW a 5800 RPM durante 5 minutos como máximo."),
+Q("ce52","POH.1.4","a","ceng","What is the maximum continuous power of the Cruiser engine?",["69 kW at 5500 RPM", "73.5 kW at 5800 RPM", "69 kW at 5800 RPM", "73.5 kW at 5500 RPM"],"Máxima continua (MCP): 69 kW a 5500 RPM."),
+Q("ce6","POH.1.4","a","cfuel","What are the range and the endurance of the Cruiser at 3000 ft MSL?",["512 NM and 5:26 h", "512 NM and 4:00 h", "410 NM and 5:26 h", "600 NM and 6:30 h"],"A 3000 ft MSL: alcance 512 NM y autonomía 5:26 h."),
+Q("ce7","POH.1.4","a","cstruct","What fuselage and landing gear does the PS-28 Cruiser have?",["Semi-monocoque, metal and glass fibre, fixed tricycle gear", "Steel-tube truss, fixed tailwheel", "Carbon monocoque, retractable tricycle gear", "Fabric-covered frame, fixed tailwheel"],"Fuselaje semi-monocoque de metal y fibra de vidrio, con tren fijo de triciclo."),
+Q("cf1","POH.1.4","a","cfuel","What are the total and usable fuel quantities of the Cruiser?",["114 and 113 litres", "114 and 113 US gallons", "50 and 48 litres", "43 and 40 litres"],"El Cruiser: 114 L totales y 113 L utilizables. ¡En litros, no en galones!"),
+Q("cf1b","POH.1.4","a","cfuel","Which aircraft has 113 litres of usable fuel?",["The PS-28 Cruiser", "The Cessna 172", "The Piper PA-28", "All three"],"113 L utilizables es el Cruiser (Piper 48 y Cessna 40 son galones US)."),
+Q("cf2","POH.1.4","a","cfuel","Which fuels can the Cruiser use?",["MOGAS and AVGAS", "100LL AVGAS only", "Jet A-1", "100 and 100LL AVGAS only"],"El Cruiser admite MOGAS y AVGAS."),
+Q("cf3","POH.1.4","a","cfuel","What is the maximum fuel difference allowed between the two Cruiser tanks?",["30 L", "10 L", "50 L", "5 L"],"Máxima diferencia entre depósitos: 30 L."),
+Q("cf4","POH.1.4","a","cfuel","In which unit is the fuel quantity of the Cruiser given in its POH?",["Litres", "US gallons", "Imperial gallons", "Kilograms"],"El Cruiser va en métrico: litros."),
+Q("cf42","POH.1.4","a","cfuel","In which unit are the fuel quantities of the Piper and the Cessna given?",["US gallons", "Litres", "Imperial gallons", "Pounds"],"Piper y Cessna: galones US."),
+Q("cf5","POH.1.4","a","cfuel","What is the maximum fuel weight of the Cruiser (114 L at 0.72 kg/L)?",["82 kg", "114 kg", "72 kg", "600 kg"],"114 L × 0,72 kg/L = 82 kg."),
+Q("cf6","POH.1.4","a","cfuel","Which aircraft carries the least usable fuel? (Cruiser 113 L, Cessna 40 US gal, Piper 48 US gal)",["The Cruiser (about 30 US gal)", "The Cessna 172 (about 151 L)", "The Piper PA-28 (about 181 L)", "They carry the same"],"113 L son unos 30 US gal; el Cessna lleva unos 151 L y el Piper unos 181 L."),
+Q("cf7","POH.1.4","a","cfsys","The left tank of the Cruiser is full. Which selector position do you start with?",["LEFT", "RIGHT", "OFF", "BOTH"],"Si el izquierdo está lleno, se empieza con LEFT."),
+Q("cf8","POH.1.4","a","cfsys","Which positions does the Cruiser fuel selector have?",["Left, Right and Off", "Left, Right and Both", "Left, Right, Both and Off", "Left, Right and Auxiliary"],"El Cruiser: Left, Right y Off (no tiene BOTH)."),
+Q("cw1","POH.1.4","a","cwt","What are the MTOW and the MLW of the Cruiser?",["600 kg for both", "600 kg and 550 kg", "650 kg for both", "750 kg for both"],"MTOW = MLW = 600 kg."),
+Q("cw2","POH.1.4","a","cwt","What is the maximum empty weight of the Cruiser?",["405 kg", "450 kg", "360 kg", "495 kg"],"Peso vacío máximo: 405 kg."),
+Q("cw3","POH.1.4","a","cwt","What baggage may be carried in the Cruiser?",["18 kg in the rear fuselage and 10 kg in each wing locker", "10 kg in the rear fuselage and 18 kg in each wing locker", "18 kg in total", "25 kg in each wing locker"],"Equipaje: 18 kg en el fuselaje trasero y 10 kg en cada wing locker."),
+Q("cw4","POH.1.4","a","cwt","What crew weights are allowed in the Cruiser?",["Minimum 55 kg, maximum 115 kg on each seat", "Minimum 45 kg, maximum 100 kg on each seat", "Minimum 55 kg, maximum 95 kg on each seat", "Minimum 60 kg, maximum 120 kg on each seat"],"Tripulación: mínimo 55 kg y máximo 115 kg en cada asiento."),
+Q("cw5","POH.1.4","a","cwt","From which seat must a single pilot fly the Cruiser?",["The left seat", "The right seat", "Either seat", "The rear seat"],"El piloto mínimo (1) va en el asiento izquierdo."),
+Q("cw6","POH.1.4","a","cwt","How many seats has the Cruiser?",["Two", "Three", "Four", "One"],"El Cruiser tiene 2 asientos."),
+Q("cw7","POH.1.4","a","ccg","Where is the datum of the Cruiser for arm measurements?",["On the wing leading edge, rib No. 4", "At the firewall", "At the propeller plane", "At the tip of the spinner"],"Datum: borde de ataque del ala, costilla n.º 4."),
+Q("cw8","POH.1.4","a","ccg","What is the CG range of the Cruiser?",["28 % to 35 % of the MAC", "20 % to 30 % of the MAC", "25 % to 40 % of the MAC", "35 % to 45 % of the MAC"],"CG entre el 28 % y el 35 % de la MAC (MAC = 1500 mm)."),
+Q("cw9","POH.1.4","a","cfuel","Which fuel density is used in the Cruiser POH?",["0.72 kg/L", "0.84 kg/L", "0.80 kg/L", "1.00 kg/L"],"Densidad del combustible: 0,72 kg/L."),
+Q("cv1","POH.2.5","a","cvs","What is the VNE of the PS-28 Cruiser?",["138 KIAS", "160 KIAS", "126 KIAS", "108 KIAS"],"VNE del Cruiser: 138 KIAS (línea roja)."),
+Q("cv2","POH.2.5","a","cvs","What is the VNO of the PS-28 Cruiser?",["108 KIAS", "128 KIAS", "138 KIAS", "88 KIAS"],"VNO del Cruiser: 108 KIAS (fin del arco verde)."),
+Q("cv3","POH.2.5","a","cvs","What is the maneuvering speed VA of the PS-28 Cruiser?",["88 KIAS at 600 kg", "108 KIAS at 600 kg", "75 KIAS at 600 kg", "98 KIAS at 600 kg"],"VA del Cruiser: 88 kt a 600 kg."),
+Q("cv4","POH.2.5","a","cvs","What is the maximum flaps-extended speed VFE of the PS-28 Cruiser?",["75 KIAS", "85 KIAS", "103 KIAS", "88 KIAS"],"VFE del Cruiser: 75 KIAS (fin del arco blanco)."),
+Q("cv5","POH.2.5","a","cvs","What does the white arc of the Cruiser airspeed indicator span?",["31 to 75 KIAS", "37 to 108 KIAS", "108 to 138 KIAS", "41 to 85 KIAS"],"Arco blanco del Cruiser: VS0 a VFE, 31–75 (configuración de aterrizaje)."),
+Q("cv52","POH.2.5","a","cvs","What does the green arc of the Cruiser airspeed indicator span?",["37 to 108 KIAS", "31 to 75 KIAS", "108 to 138 KIAS", "47 to 128 KIAS"],"Arco verde del Cruiser: VS a VNO, 37–108 (crucero normal)."),
+Q("cv53","POH.2.5","a","cvs","What does the yellow arc of the Cruiser airspeed indicator span?",["108 to 138 KIAS", "75 to 108 KIAS", "37 to 108 KIAS", "128 to 160 KIAS"],"Arco amarillo: VNO a VNE, 108–138, solo en aire en calma."),
+Q("cv54","POH.2.5","a","cvs","What is the stall speed in landing configuration (VS0) of the Cruiser?",["31 KIAS", "37 KIAS", "41 KIAS", "44 KIAS"],"VS0 del Cruiser: 31 KIAS (inicio del arco blanco)."),
+Q("cv55","POH.2.5","a","cvs","What is the VS1 (start of the green arc) of the Cruiser?",["37 KIAS", "31 KIAS", "47 KIAS", "50 KIAS"],"VS1 del Cruiser: 37 KIAS (inicio del arco verde)."),
+Q("cv6","POH.2.5","a","cvs","Which aircraft has the lowest VNE?",["The PS-28 Cruiser (138)", "The Cessna 172 (160)", "The Piper PA-28 (160)", "All three have the same"],"VNE: Cruiser 138; Cessna y Piper 160."),
+Q("cv62","POH.2.5","a","cvs","Which aircraft has the highest VFE?",["The Piper PA-28 (103)", "The Cessna 172 (85)", "The PS-28 Cruiser (75)", "All three have the same"],"VFE: Cruiser 75 < Cessna 85 < Piper 103."),
+Q("cv63","POH.2.5","a","cvs","Which aircraft has the highest VNO?",["The Cessna 172 (128)", "The Piper PA-28 (126)", "The PS-28 Cruiser (108)", "The Cessna and the Piper are equal"],"VNO: Cessna 128 > Piper 126 > Cruiser 108. Es la única vez que el Cessna supera al Piper."),
+Q("cl1","POH.2.5","a","clf","What are the load factor limits of the Cruiser with flaps up?",["+4 g and −2 g", "+3.8 g and −1.52 g", "+4.4 g and −1.76 g", "+2 g and 0 g"],"Cruiser flaps arriba: +4 g y −2 g."),
+Q("cl2","POH.2.5","a","clf","What are the load factor limits of the Cruiser with flaps down?",["+2 g and 0 g", "+4 g and −2 g", "+3 g and 0 g", "+2 g and −2 g"],"Cruiser flaps abajo: +2 g y 0 g."),
+Q("cl3","POH.2.5","a","clf","In which category is the Cruiser approved?",["Normal category only", "Utility category only", "Normal and utility categories", "Aerobatic category"],"El Cruiser solo está aprobado en categoría normal."),
+Q("cl4","POH.2.5","a","clf","Steep turns in the Cruiser are approved with a bank angle of less than:",["60°", "45°", "75°", "90°"],"Virajes cerrados con menos de 60° de alabeo."),
+Q("cl5","POH.2.5","a","clf","Which statement about the load factor with flaps down is correct?",["The Cruiser limit (+2 g) is lower than the Cessna's (+3.0 g)", "The Cruiser limit (+4 g) is higher than the Cessna's (+3.0 g)", "The Cruiser limit is equal to the Cessna's (+3.0 g)", "The Cruiser has no limit with flaps down"],"Con flaps abajo el Cruiser baja a +2 g; el Cessna mantiene +3,0 g."),
+Q("cl6","POH.2.5","a","clf","Which of these manoeuvres is approved in the Cruiser?",["Lazy eights", "Spins", "Whip stalls", "Loops"],"Se aprueban lazy eights, chandelles y pérdidas (sin «whip stall»)."),
+Q("co1","POH.2.5","a","coil","What is the oil pressure range of the Cruiser?",["0.8 to 7 bar", "25 to 100 psi", "2 to 10 bar", "0.5 to 8 bar"],"Presión de aceite del Cruiser: 0,8–7 bar (en bar, no en psi)."),
+Q("co1b","POH.2.5","a","coil","An oil pressure of 0.5 bar in flight in the Cruiser is:",["Below the 0.8–7 bar limit", "Inside the normal range", "Above the limit", "Normal only at idle"],"El mínimo es 0,8 bar: 0,5 bar está por debajo."),
+Q("co2","POH.2.5","a","coil","What oil temperature range applies to the Cruiser?",["50 to 130 °C", "0 to 118 °C", "80 to 150 °C", "50 to 100 °C"],"Temperatura del aceite: de 50 a 130 °C."),
+Q("co22","POH.2.5","a","coil","What is the minimum oil temperature of the Cruiser?",["50 °C", "30 °C", "70 °C", "15 °C"],"Mínimo 50 °C (por eso no se rueda hasta que el aceite llega a 50 °C)."),
+Q("co23","POH.2.5","a","coil","An oil temperature of 135 °C in the Cruiser is:",["Above the 130 °C maximum", "Within normal limits", "Below the minimum limit", "Acceptable for short periods"],"El máximo es 130 °C."),
+Q("co3","POH.2.5","a","coil","What is the maximum coolant temperature of the Cruiser?",["120 °C", "130 °C", "100 °C", "118 °C"],"Refrigerante: máximo 120 °C."),
+Q("co4","POH.2.5","a","coil","What is the maximum EGT of the Cruiser engine, apart from take-off?",["850 °C", "880 °C", "750 °C", "950 °C"],"EGT máxima: 850 °C."),
+Q("co42","POH.2.5","a","coil","What EGT is allowed at take-off in the Cruiser?",["880 °C", "850 °C", "950 °C", "800 °C"],"En el despegue se permite hasta 880 °C."),
+Q("co5","POH.2.5","a","coil","For how long can the Cruiser engine run with −0.5 g?",["5 seconds", "5 minutes", "30 seconds", "1 minute"],"Con −0,5 g, solo 5 segundos."),
+Q("co6","POH.2.5","a","coil","In which unit is the oil pressure of the Cruiser given?",["Bar", "psi", "kPa", "inHg"],"El Cruiser usa bar; Piper y Cessna usan psi."),
+Q("cs1","POH.7.8","a","cctl","How are the flight controls of the Cruiser connected to the cockpit?",["Levers and pulleys for pitch and roll; cables for yaw", "Cables for all three axes", "Hydraulics for pitch and roll; cables for yaw", "Electric servos for all three axes"],"Cabeceo y alabeo con palancas y poleas; guiñada con cables."),
+Q("cs2","POH.7.8","a","cctl","What are the markings of the Cruiser flaps?",["Up (0°), TO (12°) and LDG (30°)", "0°, 10°, 25° and 40°", "Up, 10°, 20° and Full", "0°, 15° and 30°"],"Flaps del Cruiser: Up 0°, TO 12° y LDG 30°."),
+Q("cs22","POH.7.8","a","cctl","How are the Cruiser flaps operated?",["Electrically, with continuous movement", "Manually, in three positions", "Electrically, in fixed steps of 10°", "Hydraulically"],"Flaps eléctricos de movimiento continuo."),
+Q("cs3","POH.7.8","a","cctl","Where is the roll trim of the Cruiser and how is it operated?",["Electric, at the right aileron", "Electric, at the left aileron", "Manual, at the rudder", "Electric, on the elevator"],"Compensador de alabeo eléctrico en el alerón derecho."),
+Q("cs32","POH.7.8","a","cctl","Where is the pitch trim of the Cruiser and how is it operated?",["Electric, on the elevator", "Electric, at the right aileron", "Manual, on the stabilator", "Electric, on the rudder"],"Compensador de cabeceo eléctrico en el elevador."),
+Q("cs4","POH.7.8","a","cgear","How is the Cruiser steered on the ground?",["With differential braking (the nose wheel is free castering)", "With the rudder pedals linked to the nose wheel", "With a tiller on the nose wheel", "With differential throttle"],"Rueda de morro libre («free castering»): se rueda con frenado diferencial."),
+Q("cs5","POH.7.8","a","cgear","What suspension do the main gear legs of the Cruiser have?",["Mechanical, double spring type", "Air-oil", "Rubber bungee", "Hydraulic"],"Tren principal con suspensión mecánica de doble muelle."),
+Q("cs6","POH.7.8","a","cfsys","Which pumps feed fuel in the Cruiser?",["An engine-driven (return) pump and an electric auxiliary pump", "Two electric pumps", "An engine-driven pump only", "A hydraulic pump and an electric pump"],"Bomba del motor (de retorno) y bomba eléctrica auxiliar."),
+Q("cs62","POH.7.8","a","cfsys","Which components does the Cruiser fuel system have?",["Two vented tanks, a selector, a gascolator and a carburettor", "One central tank, a selector and fuel injection", "Two pressurised tanks and a transfer pump", "Three tanks and an electric selector"],"Dos depósitos ventilados, selector, gascolator, bombas y carburador."),
+Q("cs7","POH.7.8","a","cfsys","What happens to the throttle of the Cruiser if its lever breaks?",["A spring takes it to full throttle", "It goes to idle", "It stays where it was", "The engine stops"],"Un muelle lleva el throttle a full si se rompe la palanca."),
+Q("cs8","POH.7.8","a","cfsys","What is the choke used for in the Cruiser?",["Cold start: it gives more fuel to the carburettor", "To heat the carburettor", "To lean the mixture in cruise", "To reduce the RPM on descent"],"El choke da más combustible al carburador para el arranque en frío."),
+Q("cs9","POH.7.8","a","celec","How does the Cruiser generate electrical power?",["A 250 W AC generator and a rectifier-regulator giving 12 V, 20 A DC", "A 28 V, 60 A alternator", "A 14 V, 60 A alternator", "The battery only"],"Generador de 250 W AC → regulador-rectificador a 12 V 20 A DC."),
+Q("cs92","POH.7.8","a","celec","What battery does the Cruiser have?",["12 V DC", "24 V DC", "28 V DC", "14 V DC"],"Batería de 12 V DC."),
+Q("cs93","POH.7.8","a","celec","How many bus bars does the Cruiser electrical system have?",["One", "Two", "Three", "None"],"Una única bus bar."),
+Q("cs10","POH.7.8","a","cavi","Which avionics system does the Cruiser have?",["Dynon SkyView SV-D1000", "Garmin G1000", "Garmin G3X", "Avidyne Entegra"],"El Cruiser lleva Dynon SkyView SV-D1000 (páginas PFD y MAP)."),
+Q("cs11","POH.7.8","a","cavi","Where is the pitot-static probe of the Cruiser?",["Under the left wing", "Under the right wing", "On the nose", "On the fin"],"Pitot-estática bajo el ala izquierda."),
+Q("cs112","POH.7.8","a","cavi","What does the pitot-static system of the Cruiser feed?",["The standby instruments and the screens", "Only the airspeed indicator", "The vacuum instruments", "The engine instruments"],"Alimenta los instrumentos de reserva (standby) y las pantallas."),
+Q("cx1","POH.3.3","a","cemg1","Engine failure during the take-off run in the Cruiser: what is the first action?",["Throttle IDLE", "Brakes apply", "Ignition OFF", "Fuel selector OFF"],"Orden: 1 throttle IDLE, 2 frenos, 3 ignición OFF."),
+Q("cx1b","POH.3.3","a","cemg1","Engine failure during the take-off run in the Cruiser. Which is the correct order?",["Throttle idle, brakes, ignition OFF", "Brakes, throttle idle, ignition OFF", "Ignition OFF, brakes, throttle idle", "Fuel selector OFF, throttle idle, brakes"],"Throttle IDLE → frenos → ignición OFF."),
+Q("cx2","POH.3.3","a","cemg1","Engine failure after take-off in the Cruiser: which airspeed do you maintain?",["60 KIAS", "65 KIAS", "70 KIAS", "55 KIAS"],"Mantener 60 KIAS (la misma que la velocidad de planeo del Cruiser)."),
+Q("cx3","POH.3.3","a","cemg1","Engine failure after take-off in the Cruiser: where do you land?",["Straight ahead, turning only to avoid obstacles", "Back to the runway with a 180° turn", "On the nearest road to the side", "Into the wind, whatever the direction"],"Aterrizar recto, girando solo para evitar obstáculos."),
+Q("cx32","POH.3.3","a","cemg1","Engine failure after take-off in the Cruiser: when do you switch MASTER BAT off?",["Before landing", "Immediately after the failure", "After touchdown", "Never: it stays on"],"MASTER BAT OFF, antes de aterrizar."),
+Q("cx4","POH.3.3","a","cemg2","Loss of engine power in flight in the Cruiser: which airspeed do you maintain?",["60 KIAS", "65 KIAS", "70 KIAS", "75 KIAS"],"Mantener 60 KIAS y decidir: reiniciar o buscar campo."),
+Q("cx5","POH.3.3","a","cemg2","In-flight engine starting in the Cruiser: where do you set the throttle?",["IDLE", "MAX", "Half", "Full"],"Throttle a IDLE."),
+Q("cx52","POH.3.3","a","cemg2","In-flight engine starting in the Cruiser: which tank do you select?",["The tank with more fuel (LEFT or RIGHT)", "BOTH", "OFF", "Always LEFT"],"El depósito con más combustible, en la marca verde."),
+Q("cx53","POH.3.3","a","cemg2","In-flight engine starting in the Cruiser: what do you do with the ignition switch?",["Hold START and, when the engine starts, set BOTH", "Set BOTH and wait", "Set LEFT only", "Leave it OFF"],"Mantener START y, con el motor arrancando, BOTH."),
+Q("cx54","POH.3.3","a","cemg2","In-flight engine starting in the Cruiser: what happens with FUEL P once the engine is running?",["It is switched OFF", "It stays ON until landing", "It is set to AUTO", "It is pulled out"],"Con el motor en marcha, FUEL P pasa a OFF."),
+Q("cx6","POH.3.3","a","cemg3","Engine fire during start in the Cruiser: what is the first action?",["Fuel selector OFF", "Throttle MAX", "Ignition OFF", "MASTER BAT and GEN OFF"],"Orden: selector OFF, throttle MAX, ignición OFF, master BAT y GEN OFF, abandonar."),
+Q("cx62","POH.3.3","a","cemg3","Engine fire during start in the Cruiser: where do you set the throttle?",["MAX", "IDLE", "Half", "It stays where it is"],"Throttle MAX (para consumir el combustible)."),
+Q("cx7","POH.3.3","a","cemg3","Engine fire in flight in the Cruiser: which control do you push off?",["The cabin heater", "The master GEN", "The fuel pump", "The avionics"],"En fuego en vuelo: selector OFF, throttle MAX y cabin heater PUSH OFF."),
+Q("cx72","POH.3.3","a","cemg3","Engine fire in flight in the Cruiser: when do you switch the ignition OFF?",["After the fuel in the carburettors is consumed and the engine shuts down", "Immediately, as the first action", "Only on final", "Never"],"Ignición OFF cuando se consuma el combustible de los carburadores y el motor se pare."),
+Q("cx73","POH.3.3","a","cemg3","Engine fire in flight in the Cruiser: which airspeed do you maintain?",["60 KIAS", "65 KIAS", "70 KIAS", "80 KIAS"],"Mantener 60 KIAS y hacer un aterrizaje de emergencia cuanto antes."),
+Q("cz2","POH.7.4","a","cesnw","How far does the nose wheel of the Cessna 172 turn on the ground?",["10°, up to 30° with differential brakes", "±30° with the pedals alone", "5°, up to 10° with brakes", "45° with a tiller"],"Cessna: 10° con la rueda; con frenos diferenciales, hasta 30°."),
+Q("cz3","POH.7.4","a","cesgear","What brakes does the main gear of the Cessna 172 have?",["Hydraulic disc brakes", "Drum brakes", "Pneumatic brakes", "Mechanical cable brakes"],"Frenos de disco accionados hidráulicamente."),
+Q("cz32","POH.7.4","a","cesgear","What suspension does the nose gear of the Cessna 172 have?",["Oil-air", "Rubber bungee", "Mechanical spring", "Leaf spring"],"Morro con suspensión aire-aceite (oil-air)."),
+Q("cz33","POH.7.4","a","cesgear","What suspension do the main gear legs of the Cessna 172 have?",["Mechanical, spring type", "Air-oil", "Rubber bungee", "Hydraulic only"],"Principal con suspensión mecánica de muelle."),
+Q("cz4","POH.7.5","a","cesfuel","Which aircraft has a BOTH position on its fuel selector?",["The Cessna 172", "The Piper PA-28", "The PS-28 Cruiser", "All three"],"Solo el selector del Cessna tiene BOTH; por eso en la aproximación es BOTH en el Cessna y FULLEST en los otros."),
+Q("cz5","POH.7.6","a","ceselec","What battery does the Cessna 172 have?",["24 V DC", "12 V DC", "28 V DC", "14 V DC"],"Batería de 24 V DC (14 Amp/h)."),
+Q("cz52","POH.7.6","a","ceselec","What is the alternator of the Cessna 172?",["28 V, 60 A", "14 V, 60 A", "28 V, 14 A", "12 V, 20 A"],"Alternador de 28 V y 60 A."),
+Q("cz53","POH.7.6","a","ceselec","Which aircraft has a 28 V alternator?",["The Cessna 172", "The Piper PA-28", "The PS-28 Cruiser", "All three"],"Cessna 28 V · Piper 14 V · Cruiser 12 V con generador."),
+Q("cz7","POH.7.7","a","cespit","Where is the pitot tube of the Cessna 172?",["Under the left wing", "Under the right wing", "On the nose", "On the fin"],"Tubo pitot bajo el ala izquierda (presión total)."),
+Q("cz72","POH.7.7","a","cespit","Where are the static ports of the Cessna 172?",["At the sides of the fuselage", "Under the left wing", "In the pitot tube", "On the fin"],"La estática, a los lados del fuselaje."),
+Q("cz1","POH.1.5","a","cesf","How are the flaps of the Cessna 172 actuated?",["Electrically, in 10°, 20° and Full", "Manually, with a lever, in three positions", "Hydraulically", "By cables from a handwheel"],"Flaps eléctricos (protegidos por breaker): 10°, 20° y Full."),
+Q("cz12","POH.1.5","a","cesf","Which aircraft has manually operated flaps?",["The Piper PA-28", "The Cessna 172", "The PS-28 Cruiser", "All three"],"Piper: manuales. Cessna y Cruiser: eléctricos."),
+Q("cz6","POH.1.5","a","cesmuff","How many mufflers has the Cessna 172?",["One", "Two", "Three", "None"],"El Cessna lleva un muffler; el Piper, dos."),
+Q("cz9","POH.1.5","a","cesstruct","Which aircraft has braced (strut) wings?",["The Cessna 172", "The Piper PA-28", "The PS-28 Cruiser", "All three"],"El Cessna es de ala alta con montantes (braced wings)."),
+Q("cm1","POH.1.5","a","tabla","Which aircraft carries the most usable fuel? (Cruiser 113 L, Cessna 40 US gal, Piper 48 US gal)",["The Piper PA-28 (about 181 L)", "The Cessna 172 (about 151 L)", "The PS-28 Cruiser (113 L)", "They carry the same"],"Piper 48 × 3,78 ≈ 181 L > Cessna ≈ 151 L > Cruiser 113 L."),
+Q("cm3","POH.1.5","a","tabla","Which units does the Cruiser POH use?",["Metric: kg, litres and bar", "US: lbs, US gallons and psi", "Imperial: lbs, Imperial gallons and bar", "Only knots and feet"],"Cruiser: kg, L y bar. Piper y Cessna: lbs, galones US y psi."),
+Q("cm4","POH.1.5","a","tabla","Which aircraft has the highest MTOW? (Cruiser 600 kg, Cessna 2300 lbs, Piper 2325 lbs)",["The Piper PA-28", "The Cessna 172", "The PS-28 Cruiser", "All three are equal"],"600 kg ≈ 1323 lbs < 2300 lbs < 2325 lbs."),
+Q("cm5","POH.1.5","a","tabla","The MTOW of the Cruiser, 600 kg, is about:",["1323 lbs", "1210 lbs", "2300 lbs", "660 lbs"],"600 kg × 2,2046 ≈ 1323 lbs."),
+Q("cm6","POH.1.5","a","tabla","113 litres of usable fuel are about (1 US gal = 3.78 L):",["30 US gal", "43 US gal", "48 US gal", "21 US gal"],"113 ÷ 3,78 ≈ 30 US gal."),
+Q("cm7","POH.1.5","a","tabla","Which aircraft has the highest VS0 (start of the white arc)?",["The Piper PA-28 (44)", "The Cessna 172 (41)", "The PS-28 Cruiser (31)", "All three have the same"],"VS0: Cruiser 31 < Cessna 41 < Piper 44."),
+Q("cm8","POH.1.5","a","tabla","Which aircraft has the highest positive load factor, flaps up, in the normal category?",["The PS-28 Cruiser (+4 g)", "The Cessna 172 (+3.8 g)", "The Piper PA-28 (+3.8 g)", "All three are equal"],"Normal, flaps arriba: Cruiser +4 g; Cessna y Piper +3,8 g."),
+Q("cm9","POH.1.5","a","tabla","Which is the correct order of VFE from lowest to highest?",["Cruiser 75, Cessna 85, Piper 103", "Cessna 85, Cruiser 75, Piper 103", "Piper 103, Cessna 85, Cruiser 75", "Cruiser 75, Piper 103, Cessna 85"],"VFE de menor a mayor: Cruiser 75 < Cessna 85 < Piper 103."),
+Q("cm10","POH.1.5","a","tabla","Which aircraft has a minimum oil temperature of 50 °C before taxiing?",["The PS-28 Cruiser", "The Cessna 172", "The Piper PA-28", "All three"],"Cruiser: no se rueda hasta oil temp 50 °C."),
+Q("cm11","POH.1.5","a","tabla","Which aircraft have electrically operated flaps?",["The Cruiser and the Cessna", "The Piper only", "All three", "The Cessna only"],"Eléctricos: Cruiser (continuos) y Cessna (10/20/Full). El Piper es manual."),
+Q("cm12","POH.1.5","a","tabla","Which aircraft has a free-castering nose wheel steered with differential braking?",["The PS-28 Cruiser", "The Cessna 172", "The Piper PA-28", "All three"],"Solo el Cruiser: rueda de morro libre y frenado diferencial."),
+Q("cm13","POH.1.5","a","tabla","Which aircraft has a three-blade propeller?",["The PS-28 Cruiser", "The Cessna 172", "The Piper PA-28", "All three"],"Cruiser: 3 palas (Woodcomp). Cessna y Piper: 2 palas."),
+Q("cm14","POH.1.5","a","tabla","Which aircraft does not use the 160 HP Lycoming O-320?",["The PS-28 Cruiser", "The Cessna 172", "The Piper PA-28", "All three use it"],"Piper y Cessna: Lycoming O-320 de 160 BHP. Cruiser: Rotax de 100 HP."),
+Q("cm15","POH.1.5","a","tabla","Which aircraft has a stabilator?",["The Piper PA-28", "The Cessna 172", "The PS-28 Cruiser", "All three"],"Stabilator (toda la cola horizontal se mueve): Piper. Cessna y Cruiser: elevador."),
+Q("cm16","POH.1.5","a","tabla","Best glide speed: which order is correct?",["Cruiser 60, Cessna 65, Piper 73", "Cruiser 65, Cessna 60, Piper 73", "Cruiser 73, Cessna 65, Piper 60", "Cruiser 60, Cessna 73, Piper 65"],"Planeo: Cruiser 60 < Cessna 65 < Piper 73 (de menor a mayor, igual que el VFE).")
+];
 const PROFE = new Set(["m1","m1b","m1c","m2","m2b","m8","v1","v1b","v1c","v2","v2b","v3","v3b","v3c","v4","v4b","v4c","v7","v7b","l1","l1b","l2","l2b","l3","l3b","l4","l4b","l5","n1","n1b","n2","n2b","n3","n3b","n4","n5","n6","n6b","n6c","n7","k1","k1b","k2","k2b","k3","s1","s1b","s3","s3b","x1","x1b","x1c","x2","x3","x3b","x4","x4b","x5","x6"]);
-const BASE = BANK1.concat(BANK2);
+const BASE = BANK1.concat(BANK2).concat(BANK3);
+["cv3", "cv4", "cl1", "cl2", "cl5", "cv62", "cv1", "cv2"].forEach(i=>PROFE.add(i));
 const LO_REFS = {};
 BASE.forEach(q=>{ if(q[3]) (LO_REFS[q[1]]=LO_REFS[q[1]]||[]).includes(q[3]) || LO_REFS[q[1]].push(q[3]); });
 // ---------- estado y banco ----------
-const SEED = {"updatedAt": "2026-10-20T00:00:00.000Z", "attempts": [], "generated": [], "focus": [], "ignore": {}};
+const SEED = {"updatedAt": "2026-10-28T00:00:00.000Z", "attempts": [], "generated": [], "focus": [], "ignore": {}};
 let state = JSON.parse(JSON.stringify(SEED));
 let BANK = [], BYID = new Map();
 function buildBank(){
@@ -957,25 +1223,15 @@ function openNotes(id){
 }
 const prefersReduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// ---------- apuntes: barra del examen y etiquetas ----------
-// azul = dado y ≥ 75 % · ámbar = dado, flojo o sin practicar · morado = aún no dado
-function segKind(l, st){ return SUBMAP[l].cov==="nd" ? "atpl" : (st.lo[l] && st.lo[l].m>=0.75) ? "full" : "part"; }
-function examBar(){
-  const st = stats(), maxN = Math.max(...BLOCKS.map(b=>b.n));
-  return BLOCKS.map(b=>`<div class="xrow"><div class="xlab"><b>${b.code}</b> ${b.n}</div><div class="xtrack"><div class="xsegs" style="width:${b.n/maxN*100}%">${
-    SUB.filter(s=>s[1]===b.k).map(s=>{ const l=s[0], x=st.lo[l];
-      return `<button class="seg ${segKind(l,st)}" style="flex:${W[l]}" data-go="lo-${l}" title="${l} · ${esc(s[3])} — ≈ ${fmt1(W[l])} preg. · ${x?pct1(x.m)+" %":"sin practicar"}" aria-label="${l} ${esc(s[3])}"></button>`; }).join("")}</div></div></div>`).join("")
-   + `<p class="xleg"><span><i class="seg full"></i>dado y por encima del 75 %</span><span><i class="seg part"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>aún no dado</span></p>`;
-}
+// ---------- apuntes: etiquetas ----------
 function renderNotesMeta(){
   const st = stats();
-  $("#examBar").innerHTML = examBar();
   const hot = topConcepts().filter(c=>!c.recent).slice(0,3);
   $("#hotCard").hidden = !hot.length;
   $("#hotFails").innerHTML = hot.map(c=>`<div class="hot"><div class="crow"><b>${esc(c.name)}</b><span class="fail">${c.fails} fallos de ${c.n}</span></div>
      <p>${esc(REFS[c.ref]||"")}</p>
      <div class="row">${c.vis?`<button class="btn sec sm" data-go="${c.vis}">Ver el visual</button>`:""}<button class="btn sec sm" data-go="lo-${[...c.lo][0]}">Ir al tema</button></div></div>`).join("");
-  document.querySelectorAll("#examBar [data-go], #hotFails [data-go]").forEach(b=>b.addEventListener("click",()=>openNotes(b.dataset.go)));
+  document.querySelectorAll("#hotFails [data-go]").forEach(b=>b.addEventListener("click",()=>openNotes(b.dataset.go)));
   document.querySelectorAll("details.lo[data-lo]").forEach(d=>{
     const l=d.dataset.lo, s=SUBMAP[l], x=st.lo[l]; if(!s) return;
     const w = s.block==="X" ? "" : `<span class="pill wt">≈ ${fmt1(W[l])} preg.</span>`;
@@ -1080,7 +1336,7 @@ $("#genBtn").addEventListener("click", async ()=>{
   const src = weak.map(l=>`${l} (${LO_NAME[l]}):\n`+(LO_REFS[l]||[]).map(r=>REFS[r]).filter(Boolean).map(t=>"- "+t).join("\n")).join("\n\n");
   const existing = BANK.filter(q=>weak.includes(q[1])).map(q=>"- "+q[4]).join("\n");
   const failed = BANK.filter(q=>(st.q[q[0]]||{}).last===false && weak.includes(q[1])).map(q=>"- "+q[4]).join("\n") || "(ninguna)";
-  const prompt = `You write multiple-choice exam questions on the Pilot Operating Handbook (POH) of the Cessna 172 and Piper PA-28 school aircraft, for a student.
+  const prompt = `You write multiple-choice exam questions on the Pilot Operating Handbook (POH) of the PS-28 Cruiser, Cessna 172 and Piper PA-28 school aircraft, for a student.
 Write exactly 5 NEW multiple-choice questions for these topics: ${weak.join(", ")}.
 STRICT SOURCE RULE: every fact tested must come from the STUDENT NOTES below. Do not test anything not stated there. Wrong options must be plausible but clearly wrong according to the notes, and about as long as the correct one. Prefer reversed framings, "which is NOT", and concrete cases with numbers.
 STUDENT NOTES (Spanish):
@@ -1237,17 +1493,18 @@ const btnRow = (items, cur, attr) => `<div class="visbtns">${items.map(([k,t])=>
 
 // velocidades: arcos del anemómetro de cada avión, tócalas y ponte a prueba
 const SPD = {
-  piper:{name:"Piper PA-28", vs0:44, vs1:50, vfe:103, vno:126, vne:160, va:"88–111"},
-  cessna:{name:"Cessna 172", vs0:41, vs1:47, vfe:85, vno:128, vne:160, va:"80–97"}
+  cruiser:{name:"PS-28 Cruiser", vs0:31, vs1:37, vfe:75, vno:108, vne:138, va:"88"},
+  cessna:{name:"Cessna 172", vs0:41, vs1:47, vfe:85, vno:128, vne:160, va:"80–97"},
+  piper:{name:"Piper PA-28", vs0:44, vs1:50, vfe:103, vno:126, vne:160, va:"88–111"}
 };
 const SPD_INFO = {
   vne:["VNE · Never Exceed","Línea roja: integridad estructural. No se supera nunca."],
   vno:["VNO · Normal Operating","Fin del arco verde: por encima, la turbulencia puede sobrecargar la estructura."],
-  va:["VA · Maneuvering","La deflexión máxima de mandos hacia arriba puede sobrecargar el avión."],
+  va:["VA · Maneuvering","La deflexión máxima de mandos hacia arriba puede sobrecargar el avión. (Cruiser: 88 kt a 600 kg.)"],
   vfe:["VFE · Flaps Extended","Fin del arco blanco: no se supera con los flaps abajo."]
 };
 function initSpeeds(){
-  const el = $("#visSpeeds"); let ac="piper", sel="vfe", quiz=null;
+  const el = $("#visSpeeds"); let ac="cruiser", sel="vfe", quiz=null;
   const X = v => 20 + (v-30)/(170-30)*660;
   function draw(){
     const s = SPD[ac], q = quiz;
@@ -1261,7 +1518,7 @@ function initSpeeds(){
       g += `<line x1="${X(v)}" x2="${X(v)}" y1="${i%2?72:18}" y2="${i%2?80:26}" stroke="var(--ink)"/>`;
       g += `<text class="l" x="${X(v)}" y="${i%2?96:14}" text-anchor="middle" ${on?'style="fill:var(--magenta)"':''}>${hide?"?":n+" "+v}</text>`; });
     g += `</svg>`;
-    let ui = btnRow([["piper","Piper"],["cessna","Cessna"]], ac, "data-ac");
+    let ui = btnRow([["cruiser","Cruiser"],["cessna","Cessna"],["piper","Piper"]], ac, "data-ac");
     if(!q){
       ui += btnRow([["vne","VNE"],["vno","VNO"],["va","VA"],["vfe","VFE"]], sel, "data-sp");
       const v = sel==="va" ? s.va : s[sel];
@@ -1273,7 +1530,7 @@ function initSpeeds(){
     el.querySelectorAll("[data-ac]").forEach(b=>b.onclick=()=>{ ac=b.dataset.ac; quiz=null; draw(); });
     el.querySelectorAll("[data-sp]").forEach(b=>b.onclick=()=>{ sel=b.dataset.sp; draw(); });
     const qb = el.querySelector("[data-q]"); if(qb) qb.onclick=()=>{ const k=pick(["vne","vno","va","vfe"]); const right = k==="va"?s.va:String(s[k]);
-      const pool = [...new Set(["vne","vno","va","vfe"].flatMap(x=>["piper","cessna"].map(a=>x==="va"?SPD[a].va:String(SPD[a][x]))))]; const wrong = shuffle(pool.filter(x=>x!==right)).slice(0,3);
+      const pool = [...new Set(["vne","vno","va","vfe"].flatMap(x=>["cruiser","cessna","piper"].map(a=>x==="va"?SPD[a].va:String(SPD[a][x]))))]; const wrong = shuffle(pool.filter(x=>x!==right)).slice(0,3);
       quiz = {text:`¿Cuál es la ${k.toUpperCase()} del ${s.name}?`, opts:shuffle([right,...wrong]), right, k}; draw(); };
     el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ const ok = b.dataset.a===quiz.right; quiz.msg = ok ? `<span class="pass">Correcto.</span> ${SPD_INFO[quiz.k][1]}` : `<span class="fail">No.</span> La ${quiz.k.toUpperCase()} del ${s.name} es ${quiz.right} KIAS.`; const m=quiz.msg; draw(); el.querySelector("#spq").innerHTML=m; });
   }
@@ -1283,25 +1540,64 @@ function initSpeeds(){
 // factor de carga
 function initLoad(){
   const el = $("#visLoad"); let cfg="n";
-  const C = {n:{t:"Flaps arriba · normal",pos:3.8,neg:-1.52,note:"+3,8 g y, en el Piper, −1,52 g."},
-             u:{t:"Flaps arriba · utility",pos:4.4,neg:-1.76,note:"+4,4 g y, en el Piper, −1,76 g."},
-             d:{t:"Flaps abajo · ambas",pos:3.0,neg:0,note:"+3,0 g en normal y en utility."}};
+  const C = {cu:{t:"Cruiser · flaps arriba",pos:4,neg:-2,note:"+4 g y −2 g (solo categoría normal)."},
+             cd:{t:"Cruiser · flaps abajo",pos:2,neg:0,note:"+2 g y 0 g: con flaps el límite baja a la mitad."},
+             n:{t:"Cessna / Piper · flaps arriba · normal",pos:3.8,neg:-1.52,note:"+3,8 g y, en el Piper, −1,52 g."},
+             u:{t:"Cessna / Piper · flaps arriba · utility",pos:4.4,neg:-1.76,note:"+4,4 g y, en el Piper, −1,76 g."},
+             d:{t:"Cessna / Piper · flaps abajo",pos:3.0,neg:0,note:"+3,0 g en normal y en utility."}};
+  const fm = v => (v>0?'+':'')+String(v).replace(".",",")+" g";
   function draw(){
     const c = C[cfg], sx = v => 160 + v*100;
     let g = `<svg viewBox="0 0 700 90" role="img" aria-label="Factor de carga"><style>.t{fill:var(--muted);font:500 12px Barlow,sans-serif} .l{fill:var(--ink);font:700 15px "Barlow Condensed",sans-serif}</style>`;
     for(let v=-2;v<=5;v++) g += `<line x1="${sx(v)}" x2="${sx(v)}" y1="26" y2="50" stroke="var(--line)"/><text class="t" x="${sx(v)}" y="64" text-anchor="middle">${v>0?'+':''}${v} g</text>`;
     g += `<rect x="${sx(c.neg)}" y="30" width="${sx(c.pos)-sx(c.neg)}" height="16" rx="3" fill="var(--blue)"/><line x1="${sx(0)}" x2="${sx(0)}" y1="22" y2="54" stroke="var(--ink)" stroke-width="2"/>`;
-    g += `<text class="l" x="${sx(c.pos)+6}" y="43">+${String(c.pos).replace(".",",")} g</text>`;
-    if(c.neg) g += `<text class="l" x="${sx(c.neg)-6}" y="43" text-anchor="end">${String(c.neg).replace(".",",")} g</text>`;
+    g += `<text class="l" x="${sx(c.pos)+6}" y="43">${fm(c.pos)}</text>`;
+    if(c.neg) g += `<text class="l" x="${sx(c.neg)-6}" y="43" text-anchor="end">${fm(c.neg)}</text>`;
     g += `</svg>`;
-    el.innerHTML = g + btnRow([["n","Flaps arriba · normal"],["u","Flaps arriba · utility"],["d","Flaps abajo"]], cfg, "data-c") + `<div class="vismsg"><b>${c.t}</b>: ${c.note}</div><button class="btn sm" data-q="1">Ponme a prueba</button><div class="vismsg" id="lfq"></div>`;
+    el.innerHTML = g + btnRow([["cu","Cruiser · arriba"],["cd","Cruiser · abajo"],["n","Normal · arriba"],["u","Utility · arriba"],["d","Flaps abajo"]], cfg, "data-c") + `<div class="vismsg"><b>${c.t}</b>: ${c.note}</div><button class="btn sm" data-q="1">Ponme a prueba</button><div class="vismsg" id="lfq"></div>`;
     el.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ cfg=b.dataset.c; draw(); });
-    el.querySelector("[data-q]").onclick=()=>{ const k=pick(["n","u","d"]), right=`+${String(C[k].pos).replace(".",",")} g`;
-      const q = $("#lfq"); q.innerHTML = `<b>${C[k].t}: ¿límite positivo?</b><div class="visbtns" style="margin-top:6px">${shuffle(["+3,8 g","+4,4 g","+3,0 g","+2,5 g"]).map(o=>`<button class="btn sec sm" data-a="${o}">${o}</button>`).join("")}</div><div id="lfa"></div>`;
+    el.querySelector("[data-q]").onclick=()=>{ const k=pick(["cu","cd","n","u","d"]), right=fm(C[k].pos);
+      const pool = uniq(Object.values(C).map(x=>fm(x.pos))), wrong = shuffle(pool.filter(x=>x!==right)).slice(0,3);
+      const q = $("#lfq"); q.innerHTML = `<b>${C[k].t}: ¿límite positivo?</b><div class="visbtns" style="margin-top:6px">${shuffle([right,...wrong]).map(o=>`<button class="btn sec sm" data-a="${o}">${o}</button>`).join("")}</div><div id="lfa"></div>`;
       q.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ $("#lfa").innerHTML = b.dataset.a===right ? '<span class="pass">Correcto.</span>' : `<span class="fail">No.</span> Es ${right}.`; }); };
   }
   draw();
 }
+
+
+// ---------- tablas de los 3 aviones: tapar los valores y ponerse a prueba ----------
+const ACN3 = {cz:"el Cruiser", c1:"el Cessna 172", pi:"el Piper PA-28"};
+function initT3(){
+  document.querySelectorAll("table.t3").forEach((tb,ti)=>{
+    const wrap = tb.closest(".scroll"); if(!wrap || wrap.dataset.t3) return; wrap.dataset.t3 = "1";
+    const bar = document.createElement("div"); bar.className = "t3bar"; wrap.parentNode.insertBefore(bar, wrap);
+    const cols = ["cz","c1","pi"].filter(c=>tb.querySelector("td."+c));
+    const cells = () => [...tb.querySelectorAll("td .va")];
+    let hide=false, quiz=null;
+    const rows = () => [...tb.querySelectorAll("tr")].slice(1).map(tr=>({tr, label:(tr.cells[0].textContent||"").trim(), vals:Object.fromEntries(cols.map(c=>[c,(tr.querySelector("td."+c)||{}).textContent]))}))
+       .filter(r=>cols.some(c=>r.vals[c] && r.vals[c].trim() && r.vals[c].trim()!=="—"));
+    function paint(){ cells().forEach(s=>{ s.classList.toggle("hid", hide && s.textContent.trim()!=="—"); s.onclick=()=>s.classList.remove("hid"); }); }
+    function draw(){
+      let h = `<div class="visbtns"><button class="btn sec sm ${hide?'on':''}" data-h="1">${hide?'Mostrar valores':'Tapar valores'}</button><button class="btn sm" data-q="1">${quiz?'Otra pregunta':'Ponme a prueba'}</button>${quiz?'<button class="btn sec sm" data-x="1">Salir</button>':''}</div>`;
+      if(hide && !quiz) h += `<p class="muted small">Toca un valor tapado para verlo.</p>`;
+      if(quiz) h += `<div class="vismsg"><b>${esc(quiz.t)}</b></div><div class="visbtns">${quiz.o.map(o=>`<button class="btn sec sm" data-a="${esc(o)}">${esc(o)}</button>`).join("")}</div><div class="vismsg" data-m="1">${quiz.m||""}</div>`;
+      bar.innerHTML = h; paint();
+      bar.querySelector("[data-h]").onclick = ()=>{ hide=!hide; draw(); };
+      bar.querySelector("[data-q]").onclick = ()=>{
+        const R = rows(); if(!R.length) return; const r = pick(R), usable = cols.filter(c=>r.vals[c] && r.vals[c].trim() && r.vals[c].trim()!=="—"), c = pick(usable);
+        const right = r.vals[c].trim();
+        const same = cols.map(k=>(r.vals[k]||"").trim()).filter(v=>v && v!=="—" && v!==right);
+        const other = R.filter(x=>x!==r).flatMap(x=>cols.map(k=>(x.vals[k]||"").trim())).filter(v=>v && v!=="—" && v!==right && !same.includes(v));
+        const wrong = uniq([...same, ...shuffle(uniq(other))]).slice(0,3);
+        quiz = {t:`${r.label.replace(/\s+/g," ")} · ${ACN3[c]}: ¿cuál es?`, o:shuffle([right,...wrong]), v:right, m:""}; draw(); };
+      const x = bar.querySelector("[data-x]"); if(x) x.onclick=()=>{ quiz=null; draw(); };
+      bar.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ const ok = b.dataset.a===quiz.v; quiz.m = ok?'<span class="pass">Correcto.</span>':`<span class="fail">No.</span> Es ${esc(quiz.v)}.`; bar.querySelector("[data-m]").innerHTML = quiz.m; });
+    }
+    draw();
+  });
+}
+const uniq = a => a.filter((x,i)=>a.indexOf(x)===i);
+function initCru(){ document.querySelectorAll("#cruCard [data-go]").forEach(b=>b.addEventListener("click",()=>openNotes(b.dataset.go))); }
 
 // annunciator panel
 function initAnnun(){
@@ -1374,7 +1670,7 @@ function initCtrl(){
 }
 
 // ---------- arranque ----------
-[initSpeeds,initLoad,initAnnun,initSix,initAlt,initCtrl].forEach(f=>{ try{ f(); }catch(e){ console.error(f.name, e); } });
+[initSpeeds,initLoad,initAnnun,initSix,initAlt,initCtrl,initT3,initCru].forEach(f=>{ try{ f(); }catch(e){ console.error(f.name, e); } });
 buildBank();
 renderNotesMeta();
 showTab((location.hash||"").slice(1)||"notes", true);

@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: barra fija con las pestañas (Test + 10 asignaturas); cada asignatura ocupa el resto de la pantalla. */
+/* Layout: barra fija con las pestañas (Test + 11 asignaturas); cada asignatura ocupa el resto de la pantalla. */
 :root{
   --bg:#EEF3F5; --paper:#FFFFFF; --ink:#14304A; --muted:#5A6F82; --line:#CBD8E0;
   --accent:#0E7C86; --blue:#2F6FA3; --ok:#1F7A4D; --warn:#9A6A00; --bad:#B3302C;
@@ -521,7 +521,8 @@ const SUBJ = [
   {k:"070", c:["#7A41A6","#CBA6EA"], code:"070", short:"Operational Procedures", name:"Operational Procedures", extra:[["senasa","Simulacro SENASA"]]},
   {k:"081", c:["#5F720C","#B9CE4C"], code:"081", short:"Principles of Flight", name:"Principles of Flight", extra:[["examen","Simulacro SENASA"]]},
   {k:"090", c:["#9A5F00","#EAB84F"], code:"090", short:"Communications", name:"Communications", extra:[["voice","Radio por voz"]]},
-  {k:"poh", c:["#4F6577","#A9BDCC"], code:"POH", short:"POH", name:"Pilot Operating Handbook · Cessna 172 y Piper PA-28", extra:[]},
+  {k:"poh", c:["#4F6577","#A9BDCC"], code:"POH", short:"POH", name:"Pilot Operating Handbook · PS-28 Cruiser, Cessna 172 y Piper PA-28", extra:[]},
+  {k:"sop", c:["#B23A48","#F0929E"], code:"SOP", short:"SOP", name:"Standard Operating Procedures · PS-28 Cruiser, Cessna 172, Piper PA-28", extra:[]},
 ];
 const DONATE_URL = "";   // enlace de donaciones (PayPal.me, Ko-fi…); vacío = sin botón
 const $ = s => document.querySelector(s);
@@ -954,7 +955,7 @@ function hl(str, ts){
 }
 function runSearch(){
   const q=$("#q").value, ts=terms(q), box=$("#qRes"), meta=$("#qMeta");
-  if(!ts.length){ box.innerHTML=""; meta.textContent="Busca una palabra o un código (p. ej. 040.02) en los apuntes de las 10 asignaturas."; return; }
+  if(!ts.length){ box.innerHTML=""; meta.textContent="Busca una palabra o un código (p. ej. 040.02) en los apuntes de las 11 asignaturas."; return; }
   if(!IDX){ meta.textContent="Cargando…"; loadIdx().then(runSearch, ()=>{ meta.textContent="No se ha podido cargar el buscador. Recarga la página."; }); return; }
   const hits=[];
   for(const e of IDX){
@@ -1337,6 +1338,10 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-28", items:[
+    {i:"🛩️", t:"Nueva asignatura: SOP", d:"Procedimientos estándar de los 3 aviones: velocidades en tablas, listas de memoria (azules y rojas), planificación y límites, y tests. Con fotos reales del cockpit y deberes (ATIS, WANT y briefings).", web:false},
+    {i:"📖", t:"POH con el PS-28 Cruiser", d:"El tercer avión ya está: tablas con los 3 aviones juntos, reglas para memorizar y fotos reales."}
+  ]},
   {id:"2026-10-27c", items:[
     {i:"📡", t:"Navegación: SSR y GNSS completos", d:"Modos A, C y S del transpondedor, comparación radar primario/secundario, GPS y GNSS con sus tres segmentos y la trilateración dibujada. Con 20 preguntas nuevas."}
   ]},
