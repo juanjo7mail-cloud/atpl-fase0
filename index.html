@@ -390,9 +390,6 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
   <section class="view" id="v-radio" role="tabpanel" hidden>
     <div class="dash" id="radio"></div>
   </section>
-  <section class="view" id="v-chat" role="tabpanel" hidden>
-    <div class="dash" id="chat"></div>
-  </section>
   <section class="view" id="v-rank" role="tabpanel" hidden>
     <div class="dash" id="rank"></div>
   </section>
@@ -657,13 +654,12 @@ function renderTabs(){
     `<button class="tab test solo" role="tab" data-v="test" aria-selected="${current==="test"}"><b>INICIO</b></button>` +
     (sbUser?`<button class="tab test solo" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b></button>`:"") +
     (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
-    (sbUser&&window.F0Chat?`<button class="tab test solo" role="tab" data-v="chat" aria-selected="${current==="chat"}"><b>CHAT${chatN()?`<i class="chb">${chatN()}</i>`:""}</b></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
   drawMenu(); tabArrows();
 }
 function drawMenu(){
   const lv = k => summary(k).lvl, it=(v,c,n,d)=>`<button role="menuitem" data-v="${v}" aria-current="${current===v}"><span class="mc">${c}</span><span class="mn">${esc(n)}</span><i class="md ${d||""}"></i></button>`;
-  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+(sbUser&&window.F0Chat?it("chat","CHAT","Chat con compañeros en línea"):"")+"<hr>"+
+  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+"<hr>"+
     SUBJ.map(s=>it(s.k,s.code,s.short,lv(s.k))).join("");
 }
 function tabArrows(){
@@ -681,7 +677,6 @@ function show(v, cmd){
   document.querySelectorAll(".view").forEach(el=>el.hidden = el.id!=="v-"+v);
   if(v==="stats"){ renderStats(); }
   else if(v==="rank"){ renderRank(); }
-  else if(v==="chat"){ if(window.F0Chat&&sbUser){ window.F0Chat.start(chatDeps()); window.F0Chat.render($("#chat")); } }
   else if(v==="radio"){ if(window.F0Radio&&sbUser) window.F0Radio.render($("#radio"),{sb,user:sbUser,name:()=>MY.name||(sbUser.email||"alumno").split("@")[0]}); }
   else if(v!=="test"){
     let view=$("#v-"+v);
@@ -714,7 +709,7 @@ document.addEventListener("click",e=>{ if(!$("#menu").hidden && !e.target.closes
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#menu").hidden) menuOpen(false); });
 $("#tabs").addEventListener("keydown",e=>{
   if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
-  const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser?["rank"]:[]),...(sbUser&&window.F0Radio?["radio"]:[]),...(sbUser&&window.F0Chat?["chat"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
+  const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser?["rank"]:[]),...(sbUser&&window.F0Radio?["radio"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
   show(n); document.querySelector(`.tab[data-v="${n}"]`).focus();
 });
 
@@ -1058,7 +1053,7 @@ async function signedIn(user, consent){
 async function loadMine(){
   if(!sb||!sbUser) return;
   try{ const {data,error}=await sb.from("profiles").select("full_name,show_rank").eq("user_id",sbUser.id).maybeSingle(); if(error) throw error;
-    MY={name:(data&&data.full_name)||"", show:true, ok:true}; trackMe(); renderAcct(); }catch(e){ if(!loadMine.retry){ loadMine.retry=1; setTimeout(loadMine,3000); } return; }
+    MY={name:(data&&data.full_name)||"", show:true, ok:true}; trackMe(); try{ if(window.F0Chat) window.F0Chat.retrack(); }catch(e){} renderAcct(); }catch(e){ if(!loadMine.retry){ loadMine.retry=1; setTimeout(loadMine,3000); } return; }
   if(!MY.name) setTimeout(openNameAsk,700);
 }
 /* ===================== buzón de sugerencias (web) ===================== */
@@ -1148,8 +1143,7 @@ function fillOnPop(){ const l=onlineList(), named=l.filter(x=>x.n).sort((a,b)=>a
 function drawOnline(){ const l=onlineList(); $("#onBtn").hidden=!sbUser||!l.length; $("#onN").textContent=l.length; if(!$("#onPop").hidden) fillOnPop(); }
 function trackMe(){ try{ if(presCh) presCh.track({n:MY.name||""}); }catch(e){} }
 function stopPresence(){ try{ if(presCh&&sb) sb.removeChannel(presCh); }catch(e){} presCh=null; $("#onBtn").hidden=true; $("#onPop").hidden=true; $("#onBtn").setAttribute("aria-expanded","false"); }
-function chatN(){ try{ return window.F0Chat?window.F0Chat.unread():0; }catch(e){ return 0; } }
-function chatDeps(){ return {sb,user:sbUser,name:()=>MY.name||(sbUser.email||"alumno").split("@")[0],onBadge:()=>{ if(sbUser) renderTabs(); }}; }
+function chatDeps(){ return {sb,user:sbUser,name:()=>MY.name||(sbUser.email||"alumno").split("@")[0]}; }
 function startPresence(){ stopPresence(); try{ if(window.F0Chat&&sb&&sbUser) window.F0Chat.start(chatDeps()); }catch(e){} if(!sb||!sbUser||typeof sb.channel!=="function") return;
   try{ presCh=sb.channel("f0:online",{config:{presence:{key:sbUser.id}}});
     presCh.on("presence",{event:"sync"},drawOnline).subscribe(st=>{ if(st==="SUBSCRIBED") trackMe(); });
@@ -1162,7 +1156,7 @@ async function signOut(){
   try{ await sb.auth.signOut(); }catch(e){}
   sbUser=null; remote=null; isAdmin=false; MY={name:"",show:true};
   try{ SUBJ.forEach(s=>localStorage.removeItem("f0:"+s.k)); }catch(e){}
-  loadAllLocal(); try{ if(window.F0Radio) window.F0Radio.leave(); }catch(e){} try{ if(window.F0Chat) window.F0Chat.leave(); }catch(e){} if(current==="stats"||current==="rank"||current==="radio"||current==="chat") show("test"); renderAcct(); renderDash(); renderTabs(); openLogin();
+  loadAllLocal(); try{ if(window.F0Radio) window.F0Radio.leave(); }catch(e){} try{ if(window.F0Chat) window.F0Chat.leave(); }catch(e){} if(current==="stats"||current==="rank"||current==="radio") show("test"); renderAcct(); renderDash(); renderTabs(); openLogin();
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
@@ -1218,7 +1212,7 @@ async function renderStats(){
 }
 
 /* ---- mapa de calor y "quién está dónde" ---- */
-const VIEW_ES={test:"Inicio",rank:"Ranking",radio:"Radio",chat:"Chat",stats:"Stats"};
+const VIEW_ES={test:"Inicio",rank:"Ranking",radio:"Radio",stats:"Stats"};
 function viewLabel(v){ const s=SUBJ.find(x=>x.k===v); return s?`${s.code} ${s.short}`:(VIEW_ES[v]||v); }
 function ago(t){ const sec=Math.max(0,Math.round((Date.now()-new Date(t))/1000)); return sec<60?`hace ${sec} s`:sec<3600?`hace ${Math.round(sec/60)} min`:`hace ${Math.round(sec/3600)} h`; }
 function fmtM(sec){ const m=Math.round(sec/60); return m>=60?`${Math.floor(m/60)} h ${String(m%60).padStart(2,"0")} min`:`${m} min`; }
@@ -1242,7 +1236,7 @@ function drawHeat(){
   const sel=`<select id="heatSel" style="font:14px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:5px 8px;margin-left:auto">${[["7","7 días"],["30","30 días"],["all","Todo"]].map(([v,l])=>`<option value="${v}" ${v===heatDays?"selected":""}>${l}</option>`).join("")}</select>`;
   const head=`<div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0">Dónde pasa el tiempo${stUser?"":" · todos"}</h2>${sel}</div>`;
   if(!all){ el.innerHTML=head+`<p class="muted">Sin datos todavía en este periodo. La web empezó a medir cuando se activó update5.sql.</p>`; $("#heatSel").onchange=e=>{ heatDays=e.target.value; drawHeat(); }; return; }
-  const order=[...SUBJ.map(s=>s.k),"test","rank","radio","chat","stats"], vs=order.filter(v=>tot[v]).concat(Object.keys(tot).filter(v=>!order.includes(v)));
+  const order=[...SUBJ.map(s=>s.k),"test","rank","radio","stats"], vs=order.filter(v=>tot[v]).concat(Object.keys(tot).filter(v=>!order.includes(v)));
   const mx=Math.max(...Object.values(tot));
   const barsH=`<p class="muted" style="margin:10px 0 6px">Total medido: <b>${fmtM(all)}</b></p>`+vs.sort((a,b)=>tot[b]-tot[a]).map(v=>`<div class="hbar"><span>${esc(viewLabel(v))}</span><span class="tr"><i style="width:${Math.max(2,100*tot[v]/mx)}%"></i></span><b>${fmtM(tot[v])} · ${Math.round(100*tot[v]/all)} %</b></div>`).join("");
   let mat="";
@@ -1250,7 +1244,7 @@ function drawHeat(){
     const us=Object.keys(byU).sort((a,b)=>Object.values(byU[b]).reduce((x,y)=>x+y,0)-Object.values(byU[a]).reduce((x,y)=>x+y,0)).slice(0,15);
     const cols=order.filter(v=>tot[v]); const cm=Math.max(...us.flatMap(u=>cols.map(v=>byU[u][v]||0)));
     const nameOf=id=>{ const u=ST.find(x=>x.user_id===id); return u?uname(u):"(usuario)"; };
-    mat=`<h3 style="font:700 14px var(--body);margin:16px 0 6px">Mapa de calor por persona (15 con más tiempo)</h3><div class="st-scroll"><table class="st-tbl heat"><thead><tr><th>Persona</th>${cols.map(v=>`<th class="n" title="${esc(viewLabel(v))}">${esc((SUBJ.find(x=>x.k===v)||{}).code?v.toUpperCase():({test:"Inicio",rank:"Rank",radio:"Radio",chat:"Chat",stats:"Stats"}[v]||v))}</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>${us.map(u=>`<tr><td>${esc(nameOf(u))}</td>${cols.map(v=>{ const x=byU[u][v]||0; return `<td class="n hc" style="${x?`background:color-mix(in srgb,var(--accent) ${Math.round(10+75*x/cm)}%,transparent)`:""}" title="${esc(viewLabel(v))}: ${fmtM(x)}">${x?fmtM(x).replace(" min","'").replace(" h ","h"):""}</td>`; }).join("")}<td class="n"><b>${fmtM(Object.values(byU[u]).reduce((a,b)=>a+b,0))}</b></td></tr>`).join("")}</tbody></table></div>`;
+    mat=`<h3 style="font:700 14px var(--body);margin:16px 0 6px">Mapa de calor por persona (15 con más tiempo)</h3><div class="st-scroll"><table class="st-tbl heat"><thead><tr><th>Persona</th>${cols.map(v=>`<th class="n" title="${esc(viewLabel(v))}">${esc((SUBJ.find(x=>x.k===v)||{}).code?v.toUpperCase():({test:"Inicio",rank:"Rank",radio:"Radio",stats:"Stats"}[v]||v))}</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>${us.map(u=>`<tr><td>${esc(nameOf(u))}</td>${cols.map(v=>{ const x=byU[u][v]||0; return `<td class="n hc" style="${x?`background:color-mix(in srgb,var(--accent) ${Math.round(10+75*x/cm)}%,transparent)`:""}" title="${esc(viewLabel(v))}: ${fmtM(x)}">${x?fmtM(x).replace(" min","'").replace(" h ","h"):""}</td>`; }).join("")}<td class="n"><b>${fmtM(Object.values(byU[u]).reduce((a,b)=>a+b,0))}</b></td></tr>`).join("")}</tbody></table></div>`;
   }
   el.innerHTML=head+barsH+mat;
   $("#heatSel").onchange=e=>{ heatDays=e.target.value; drawHeat(); };
@@ -1347,7 +1341,7 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
   {id:"2026-10-28b", items:[
-    {i:"💬", t:"Chat entre compañeros", d:"Pestaña CHAT: ves quién está en línea, hablas en la sala general o por mensaje privado para comentar dudas en tiempo real. No se guarda nada: al recargar se borra todo. No compartas datos personales ni claves.", web:true}
+    {i:"💬", t:"Online pilots", d:"Burbuja de chat abajo a la derecha: ves qué compañeros están en línea y les escribes en privado para comentar dudas en tiempo real. No se guarda nada: al recargar se borra todo. No compartas datos personales ni claves.", web:true}
   ]},
   {id:"2026-10-28", items:[
     {i:"🛩️", t:"Nueva asignatura: SOP", d:"Procedimientos estándar de los 3 aviones: velocidades en tablas, listas de memoria (azules y rojas), planificación y límites, y tests. Con fotos reales del cockpit y deberes (ATIS, WANT y briefings).", web:false},
