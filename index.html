@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="c528a4f25c91";</script>
+<script>window.F0_BUILD="c0bd2f39fa49";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1432,14 +1432,14 @@ boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); });
 </script>
 <!--stall:start-->
 <style>
-#stall{position:static;order:-1;align-self:stretch;flex:none;z-index:9000;display:flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;padding:max(6px,env(safe-area-inset-top,0px)) 10px 6px;border:0;color:#fff;background:#c1121f;font:700 15px/1.15 var(--display,system-ui,sans-serif);letter-spacing:.5px;text-transform:uppercase;box-shadow:0 2px calc(4px + var(--si,1)*16px) rgba(255,40,40,calc(.3 + var(--si,1)*.6));animation:stallflash var(--sd,.7s) ease-in-out infinite}
+#stall{position:static;order:-1;align-self:stretch;flex:none;z-index:9000;display:flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;padding:2px 10px;border:0;color:#fff;background:#c1121f;font:700 15px/1 var(--display,system-ui,sans-serif);letter-spacing:.5px;text-transform:uppercase;box-shadow:0 2px calc(4px + var(--si,1)*16px) rgba(255,40,40,calc(.3 + var(--si,1)*.6));animation:stallflash var(--sd,.7s) ease-in-out infinite}
 #stall[hidden]{display:none}
-#stall .sn{font-size:22px;font-variant-numeric:tabular-nums;line-height:1}
+#stall .sn{font-size:20px;font-variant-numeric:tabular-nums;line-height:1}
 #stall .sp{font-weight:600;font-size:12px;opacity:.95;letter-spacing:.2px}
-#stall button{font:inherit;font-size:14px;line-height:1;padding:5px 9px;border:1px solid rgba(255,255,255,.8);border-radius:6px;background:rgba(0,0,0,.3);color:#fff;cursor:pointer;text-transform:none}
+#stall button{font:inherit;font-size:14px;line-height:1;padding:1px 8px;border:1px solid rgba(255,255,255,.8);border-radius:6px;background:rgba(0,0,0,.3);color:#fff;cursor:pointer;text-transform:none}
 #stall.calm{background:#1b7f3b;animation:none;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 @keyframes stallflash{0%,100%{background:#e0101f;filter:brightness(1.15)}50%{background:#4a070d;filter:brightness(.85)}}
-@media (max-width:520px){#stall{font-size:12.5px;gap:6px}#stall .sp{display:none}#stall .sn{font-size:19px}}
+@media (max-width:520px){#stall{font-size:12.5px;gap:6px}#stall .sp{display:none}#stall .sn{font-size:18px}}
 </style>
 <div id="stall" role="status" aria-live="off" hidden><span>⚠ STALL</span><span class="sn" id="stallN">–</span><span id="stallT">días para el examen</span><span class="sp" id="stallP"></span><button type="button" id="stallM" aria-label="Silenciar alarma" title="Silenciar / activar sonido">🔊</button></div>
 <script>
