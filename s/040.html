@@ -351,7 +351,7 @@ details.lo.out{border-left-color:var(--line)}
 <details class="lo" id="lo-040.01.04" data-lo="040.01.04">
 <summary><span class="lonum">040.01.04</span><span class="lotitle">Safety culture</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
     <li>El <b>modelo del queso suizo</b> (James Reason).</li>
   </ul></div>
   <div class="key"><b>Clave</b>Cada loncha es una <b>defensa</b> con agujeros: el accidente pasa cuando se <b>alinean</b>, y basta <b>cerrar uno</b> para pararlo. Se notifica para <b>aprender</b>, no para culpar.</div>
@@ -429,8 +429,8 @@ details.lo.out{border-left-color:var(--line)}
 <details class="lo" id="lo-040.02.01" data-lo="040.02.01">
 <summary><span class="lonum">040.02.01</span><span class="lotitle">Basics of flight physiology</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
-    <li>«La descompensación de <b>CO₂</b> es lo que nos lleva a respirar más o menos.» <b>Pregunta de examen.</b></li>
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>«La descompensación de <b>CO₂</b> es lo que nos lleva a respirar más o menos.»</li>
     <li>Saber las <b>fases de la hipoxia</b> con sus alturas y qué pasa en el cuerpo en cada una.</li>
     <li>Saber los <b>tiempos (TUC)</b> y a qué altura corresponden.</li>
     <li>Las <b>venas llegan</b> al corazón y las <b>arterias salen</b> de él.</li>
@@ -743,7 +743,7 @@ details.lo.out{border-left-color:var(--line)}
 <details class="lo" id="lo-040.02.02" data-lo="040.02.02">
 <summary><span class="lonum">040.02.02</span><span class="lotitle">People and the environment: the sensory system</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
     <li>El oído tiene <b>3 partes</b>: externa y media con <b>aire</b>, interna con <b>líquido</b>.</li>
     <li>Del oído interno viene el <b>equilibrio</b>.</li>
   </ul></div>
@@ -944,7 +944,7 @@ details.lo.out{border-left-color:var(--line)}
 <details class="lo" id="lo-040.03.02" data-lo="040.03.02">
 <summary><span class="lonum">040.03.02</span><span class="lotitle">Human error and reliability</span></summary>
 <div class="body">
-  <div class="profe"><b>★ Lo que remarcó el profesor</b><ul>
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
     <li>Los factores humanos están detrás de alrededor del <b>80 %</b> de los accidentes.</li>
     <li>Los tipos de <b>error involuntario</b>.</li>
   </ul></div>
@@ -2305,7 +2305,7 @@ function tick(){
   el.innerHTML=`⏱ <b>${fmtMS(left)}</b> · ${done>=due?`buen ritmo: ${done} respondidas (toca ${due})`:`vas lento: ${done} respondidas, toca ${due}`}`;
   if(left<=0 && !finishing){ finishing=true; finishTest(true); }
 }
-const SRC_TAG = q => `${q.src==="t"?'<span class="tag tr">TRIAL</span> ':''}${PROFE.has(baseOf(q.id))?'<span class="tag pf">★ PROFE</span> ':''}${q.src==="a"?'<span class="tag at">ATPL</span> ':''}${q.src==="c"?'<span class="tag">complemento</span> ':''}${q.src==="g"?'<span class="tag g">generada</span> ':''}`;
+const SRC_TAG = q => `${q.src==="t"?'<span class="tag tr">TRIAL</span> ':''}${PROFE.has(baseOf(q.id))?'<span class="tag pf">★ OJO</span> ':''}${q.src==="a"?'<span class="tag at">ATPL</span> ':''}${q.src==="c"?'<span class="tag">complemento</span> ':''}${q.src==="g"?'<span class="tag g">generada</span> ':''}`;
 $("#startBtn").addEventListener("click",()=>{
   curMode = document.querySelector('input[name=mode]:checked').value;
   curLen = curMode==="senasa" ? $("#senLen").value : null;

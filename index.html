@@ -17,6 +17,8 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
+<script>window.F0_BUILD="798faa003aca";</script>
+<script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
 <script src="radio.js"></script>
@@ -1160,7 +1162,7 @@ async function signOut(){
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
-const MODE_ES = {atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas del profesor", notes:"Desde los apuntes"};
+const MODE_ES = {atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas clave", notes:"Desde los apuntes"};
 const uname = u => (u.full_name||"").trim() || String(u.email||"").split("@")[0];
 const fmtDT = d => { if(!d) return "–"; const x=new Date(d), n=new Date(), hm=x.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
   if(x.toDateString()===n.toDateString()) return "hoy · "+hm;
@@ -1341,7 +1343,7 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
   {id:"2026-10-29b", items:[
-    {i:"🎯", t:"SOP · Estilo Kahoot y Taller WANT", d:"Nuevo modo de test «Estilo Kahoot» (20 preguntas rápidas de tus notas de clase) y el Taller WANT: 10 escenarios inventados con METAR, TAF, NOTAM y amenazas para rellenar tu WANT y tus briefings y ver al momento si vuelas o no. Tabla de mínimos tal cual."},
+    {i:"🎯", t:"SOP · Taller WANT y 50 preguntas nuevas", d:"Taller WANT: 10 escenarios inventados con METAR, TAF, NOTAM y amenazas para rellenar tu WANT y tus briefings y ver al momento si vuelas o no. Las 50 preguntas nuevas ya están dentro de todos los tests (simulacro, adaptativo…). Tabla de mínimos tal cual."},
     {i:"📷", t:"Fotos reales en Derecho Aéreo y Meteorología", d:"Marcas de pista, punto de espera, luces de aproximación, umbral desplazado, nubes lenticulares, mammatus, Cb y una carta SIGWX real para tocar y leer."}
   ]},
   {id:"2026-10-29", items:[
