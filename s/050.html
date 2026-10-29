@@ -8,6 +8,18 @@ window.__hub={use:async function(n){return n==="artifact"?{publish:async functio
 fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
 })();</script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 select{max-width:100%;text-overflow:ellipsis}
+</style><!--ph:css--><style>
+.swx{margin:12px 0}.swxbox{position:relative;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
+.swxbox img{display:block;width:100%;height:auto}
+.swxbox .hs{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:#c1121f;color:#fff;border:2px solid #fff;font:700 15px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.45);padding:0}
+.swxbox .hs.on{background:#0b5cad;transform:translate(-50%,-50%) scale(1.18)}
+.swxbtns{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.swxbtns button{font:inherit;font-size:14px;padding:5px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}
+.swxbtns button.on{background:var(--ink);color:var(--paper)}
+.swxmsg{min-height:4.4em;padding:8px 10px;border-left:3px solid #0b5cad;background:color-mix(in srgb,#0b5cad 8%,transparent);border-radius:4px;font-size:15px}
+.swx .src{font-size:12.5px;color:var(--muted);margin-top:4px}
+figure.mfig{margin:10px 0;max-width:460px}figure.mfig img{display:block;width:100%;height:auto;border-radius:6px;border:1px solid var(--line)}
+figure.mfig figcaption{font-size:13.5px;color:var(--muted);margin-top:4px}
 </style></head><body>
 <title>050 Meteorology · Meteorología</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
@@ -1213,7 +1225,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
     <li>La intensidad <strong>aumenta con la altura</strong>, y lo más fuerte está <strong>sobre la cima y en la primera ondulación</strong> a sotavento.</li>
     <li>La firma visible son el <strong><span class="en">cap cloud</span></strong> sobre la cima —la «nube de boina»— y los <strong>altocúmulos lenticulares</strong> en las crestas de la onda.</li>
     <li>Dentro de la onda en sí el aire va <strong>liso</strong>: el avión sube y baja sin zarandeo. La turbulencia de verdad está <strong>debajo</strong>, en el rotor, y es la que puede ser severa.</li>
-  </ul>
+  </ul><!--ph:fuji--><figure class="mfig"><img src="img/ph-fuji.jpg" alt="Lenticulares apiladas sobre una cima" loading="lazy"><figcaption>Lenticulares <strong>apiladas sobre una cima</strong>: lentes lisas e inmóviles. Aire estable y viento fuerte cruzando la montaña: onda de montaña.</figcaption></figure>
     </div>
   </details>
   <details class="lo atpl" id="lo-050.02.07" data-lo="050.02.07">
@@ -2467,6 +2479,29 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </div>
 
 
+<!--ph:sigwx--><h2>Un SIGWX real de alto nivel</h2>
+<p>Complemento: así es una carta <strong>SIGWX de alto nivel</strong> (FL250–630). La de baja cota (SFC/150), la de los doce símbolos de arriba, usa los mismos símbolos para fenómenos y nubes. Toca los círculos rojos.</p>
+<div class="swx" id="swxReal"><div class="swxbox"><img src="img/ph-sigwx.jpg" alt="Carta SIGWX real de alto nivel, FL250-630" loading="lazy">
+<button class="hs" data-k="0" style="left:69.8%;top:44.5%" aria-label="Jet stream">1</button>
+<button class="hs" data-k="1" style="left:52.8%;top:27.5%" aria-label="CB">2</button>
+<button class="hs" data-k="2" style="left:60%;top:30.5%" aria-label="CAT">3</button>
+<button class="hs" data-k="3" style="left:60.5%;top:23.5%" aria-label="Tropopausa">4</button>
+<button class="hs" data-k="4" style="left:70.8%;top:63.2%" aria-label="Volcán">5</button>
+<button class="hs" data-k="5" style="left:79.2%;top:19.2%" aria-label="Leyenda">6</button></div>
+<div class="swxbtns" id="swxBtns"></div><div class="swxmsg" id="swxMsg">Toca un círculo numerado.</div>
+<div class="src">Carta real de WAFC London, válida 06 UTC del 18-oct-2019 (ejemplo para aprender a leerla).</div></div>
+<script>(function(){var T=[
+["Jet stream","Flecha gruesa. <b>FL350</b> = nivel del viento máximo; <b>250/420</b> = de qué nivel a qué nivel llega el chorro (FL250 a FL420). Las banderas dan la velocidad: banderín 50 kt, barra larga 10 kt, barra corta 5 kt. Solo se dibuja con 80 kt o más."],
+["CB","<b>ISOL EMBD CB 400 XXX</b>: ISOL = aislados (OCNL = ocasionales, FRQ = frecuentes); EMBD = embebidos en otras nubes; tope en <b>FL400</b>; <b>XXX</b> = la base está por debajo del límite inferior de la carta (FL250). La nube se encierra con el contorno festoneado."],
+["CAT","Turbulencia en aire claro: zona encerrada por una <b>línea discontinua</b>. El número del recuadro remite a la tabla <b>CAT AREAS</b> de arriba (símbolo = intensidad, tope y base). No hace falta nube para tenerla."],
+["Tropopausa","Número en un recuadro = <b>nivel de vuelo de la tropopausa</b> (550, 450, 400…). Con <b>L</b> o <b>H</b>: mínimo o máximo local (300 L)."],
+["Volcán","Triángulo con la erupción: nombre y coordenadas del volcán activo (ETNA 37.7N 15.0E). Se acompaña de SIGMET o ASHTAM de ceniza."],
+["Leyenda","<b>CB implies TS, GR, MOD or SEV TURB and ICE</b>: un CB en la carta implica tormenta, granizo, turbulencia moderada o fuerte y engelamiento. Las alturas van en niveles de vuelo."]];
+var r=document.getElementById("swxReal"); if(!r) return; var hs=r.querySelectorAll(".hs"), bx=document.getElementById("swxBtns"), m=document.getElementById("swxMsg");
+function sel(k){ hs.forEach(function(x,i){x.classList.toggle("on",i===k)}); bx.querySelectorAll("button").forEach(function(x,i){x.classList.toggle("on",i===k)}); m.innerHTML="<b>"+(k+1)+" · "+T[k][0]+"</b><br>"+T[k][1]; }
+T.forEach(function(t,i){ var b=document.createElement("button"); b.type="button"; b.textContent=(i+1)+" "+t[0]; b.onclick=function(){sel(i)}; bx.appendChild(b); });
+hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
+})();</script>
 <h2>Atlas de nubes <span class="wtag">050.04.01</span></h2>
   <p>Lo que hay que mirar en este orden: <strong>a qué altura está</strong>, <strong>cómo es la base</strong> (plana o difusa),
   <strong>cómo crece</strong> (a lo ancho o a lo alto) y <strong>si precipita</strong>. Con esas cuatro cosas salen todas.
@@ -2531,7 +2566,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
       <figcaption class="nb"><h5>Cumulonimbus <span class="ab">CB</span></h5>
         <span class="lv">Desarrollo vertical</span>
         <p>Del suelo a la tropopausa. Base oscura, cuerpo de coliflor, cortina de precipitación y <strong>yunque</strong> arriba, donde ya no puede subir más.</p><p class="wx">Tormenta, granizo, rayos y turbulencia muy fuerte. La nube a evitar.</p></figcaption>
-    </figure>
+    </figure><!--ph:mamma--><figure class="nub"><img src="img/ph-mamma.jpg" alt="Fotografía de Mammatus" loading="lazy"><figcaption class="nb"><h5>Mammatus <span class="ab">MAM</span></h5><span class="lv">Bajo el yunque de un Cb</span><p>Bolsas colgantes bajo la base del <strong>yunque</strong>. Es una nube <strong>accesoria</strong> del Cb, no un tipo aparte.</p><p class="wx">Se asocia a Cb muy desarrollados: <strong>turbulencia fuerte</strong> cerca. Mantente lejos.</p></figcaption></figure>
     <figure class="nub">
       <img src="img/len1.jpg" alt="Fotografía de Lenticularis" loading="lazy">
       <figcaption class="nb"><h5>Lenticularis <span class="ab">ACSL</span></h5>
