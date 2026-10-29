@@ -983,7 +983,7 @@ Object.assign(GEN, {
      steps:[`Masa vacía = suma de lecturas: <b>${W} kg</b>.`, `Momentos: ${n} × ${fe(an,2)} + ${l+r} × ${fe(am,2)} = <b>${fe(n*an+(l+r)*am,1)} kg·m</b>.`, `CG = ${fe(n*an+(l+r)*am,1)} ÷ ${W} = <b>${fe(ans,3)} m</b>.`]}; },
  // 050.01.06 · altimetría (reglas del PDF: 27 ft/hPa, ISA −2 °C/1000 ft, 1000 ft por 8,5 °C)
  k17(){ const el=R(0,6000,50), q=pick([R(985,1010,1),R(1016,1038,1)]), ans=el+(1013-q)*27;
-   return {text:`Aerodrome elevation ${el} ft, QNH ${q} hPa. Using 27 ft per hPa, what is the pressure altitude?`,
+   return {text:`Aerodrome elevation ${el} ft, QNH ${q} hPa. What is the pressure altitude?`,
      opts:mkOpts(ans,[el-(1013-q)*27, el+(1013-q)*30, el],0,"ft"), ans, unit:"ft", d:0,
      expl:`PA = ${el} + (1013 − ${q}) × 27 = ${fe(ans,0)} ft. QNH ${q>1013?"alto: la PA queda por debajo de la elevación":"bajo: la PA queda por encima de la elevación"}.`,
      steps:[`Diferencia con la estándar: 1013 − ${q} = <b>${1013-q} hPa</b>.`, `× 27 ft = <b>${(1013-q)*27} ft</b>.`, `PA = ${el} ${q>1013?"−":"+"} ${Math.abs((1013-q)*27)} = <b>${fe(ans,0)} ft</b>. Más presión = más abajo.`]}; },
@@ -993,7 +993,7 @@ Object.assign(GEN, {
      expl:`ISA a ${h} ft = 15 − 2 × ${h/1000} = ${fe(isaT(h),0)} °C. Desviación = ${oat} − (${fe(isaT(h),0)}) = ${ans>0?"+":""}${fe(ans,0)} °C.`,
      steps:[`ISA = 15 − 2 × (${h} ÷ 1000) = <b>${fe(isaT(h),0)} °C</b>.`, `Desviación = OAT − ISA = ${oat} − (${fe(isaT(h),0)}) = <b>${ans>0?"ISA +":"ISA "}${fe(ans,0)}</b>.`]}; },
  k19(){ const el=R(0,6000,100), q=R(990,1035,1), pa=el+(1013-q)*27, oat=Math.round(isaT(pa)+R(-12,25,1)), ans=daOf(pa,oat), daEl=daOf(el,oat), dev=oat-isaT(pa);
-   return {text:`Aerodrome elevation ${el} ft, QNH ${q} hPa, OAT ${oat} °C. Using the course rules (27 ft/hPa, 2 °C per 1000 ft, 1000 ft per 8.5 °C), the density altitude is about:`,
+   return {text:`Aerodrome elevation ${el} ft, QNH ${q} hPa, OAT ${oat} °C. The density altitude is about:`,
      opts:mkOpts(ans,[daEl, pa-(dev/8.5*1000), pa],0,"ft"), ans, unit:"ft", d:0,
      expl:`PA = ${fe(pa,0)} ft; ISA ahí ${fe(isaT(pa),1)} °C; desviación ${fe(dev,1)} °C → ${fe(dev/8.5*1000,0)} ft → DA ≈ ${fe(ans,0)} ft.`,
      steps:[`1 · PA = ${el} + (1013 − ${q}) × 27 = <b>${fe(pa,0)} ft</b>. Empieza siempre por la PA, no por la elevación.`, `2 · ISA a ${fe(pa,0)} ft = 15 − 2 × ${fe(pa/1000,2)} = <b>${fe(isaT(pa),1)} °C</b>.`, `3 · Desviación = ${oat} − ${fe(isaT(pa),1)} = <b>${fe(dev,1)} °C</b>.`, `4 · ${fe(dev,1)} ÷ 8,5 × 1000 = <b>${fe(dev/8.5*1000,0)} ft</b> → DA = ${fe(pa,0)} ${dev>=0?"+":"−"} ${fe(Math.abs(dev/8.5*1000),0)} = <b>${fe(ans,0)} ft</b>.`]}; },
@@ -1114,7 +1114,7 @@ function gArmSign(){
 }
 function gISAtemp(){
   const h = nvR(1,36)*1000, t = h<=36000 ? 15-2*h/1000 : -56.5, f = x=>`${x<0?"−":""}${Math.abs(x)} °C`;
-  return {text:nvP([`ISA temperature at ${nvN(h)} ft:`, `According to the course rule (2 °C per 1000 ft), the ISA temperature at ${nvN(h)} ft is:`]),
+  return {text:nvP([`ISA temperature at ${nvN(h)} ft:`, `The ISA temperature at ${nvN(h)} ft is:`]),
     opts:nvOpts(t,[15+2*h/1000, -t, t+10, 15-h/1000],f,3), expl:`ISA: 15 °C a nivel del mar y −2 °C por cada 1.000 ft (regla del curso): 15 − 2 × ${h/1000} = ${t} °C. Trampa: sumar en vez de restar.`, v:true, p:{kind:"isat",h,ans:t}};
 }
 function gPistonFuel(){
@@ -1868,8 +1868,8 @@ const ALTQ = [
  ["pa11","050.01.06.01","p","pa","High air pressure at the aerodrome means:",["Low pressure altitude","High pressure altitude","High density altitude","No change in pressure altitude"],"PDF: alta presión = baja altitud de presión."],
  ["pa12","050.01.06.03","p","pa","Local QNH 1030 hPa, aerodrome elevation 2000 ft. Pressure altitude?",["1541 ft","2459 ft","2000 ft","1983 ft"],"2000 − 17 × 27 = 1541 ft."],
  ["pa13","050.01.06.03","p","pa","Local QNH 1002 hPa, aerodrome elevation 2000 ft. Pressure altitude?",["2297 ft","1703 ft","2000 ft","2011 ft"],"2000 + 11 × 27 = 2297 ft."],
- ["pa14","050.01.06.03","p","dacalc","Elevation 2000 ft, pressure altitude 2297 ft, OAT 27 °C. Using the course rules, density altitude?",["4179 ft","3709 ft","415 ft","2297 ft"],"ISA a 2000 ft = 11 °C → ISA +16 → +1882 ft → 4179 ft (ejemplo del PDF)."],
- ["pa15","050.01.06.03","p","dacalc","Course rule: for every 8.5 °C above ISA:",["Add 1000 ft to the pressure altitude","Subtract 1000 ft from it","Add 100 ft to it","Add 1000 ft to the elevation"],"PDF: 1000 ft por cada 8,5 °C."],
+ ["pa14","050.01.06.03","p","dacalc","Elevation 2000 ft, pressure altitude 2297 ft, OAT 27 °C. What is the density altitude?",["4179 ft","3709 ft","415 ft","2297 ft"],"ISA a 2000 ft = 11 °C → ISA +16 → +1882 ft → 4179 ft (ejemplo del PDF)."],
+ ["pa15","050.01.06.03","p","dacalc","For every 8.5 °C above ISA:",["Add 1000 ft to the pressure altitude","Subtract 1000 ft from it","Add 100 ft to it","Add 1000 ft to the elevation"],"PDF: 1000 ft por cada 8,5 °C."],
  ["pa16","050.01.06.01","p","da","If the OAT is lower than ISA:",["DA is lower than PA","DA is higher than PA","DA equals PA","DA equals elevation"],"OAT < ISA → DA < PA."],
  ["pa17","032.01.02.03","p","daperf","High density altitude affects the ceiling:",["It lowers it","It raises it","It has no effect","It raises the service ceiling only"],"PDF: el techo baja."],
  ["pa18","050.01.06.01","p","defs","'Cruising level' is:",["Height, altitude or flight level, as set","Always a flight level","Always an altitude","The most efficient engine level"],"Término genérico según el reglaje."],
@@ -1887,7 +1887,7 @@ const PFP2Q = [
  ["n32","031.05.02.02","n","cgcalc","Warrior sheet: 40 US gal of fuel at an arm of 95.0 in. Its moment is:",["22,800 lb·in","3,800 lb·in","2,280 lb·in","4,000 lb·in"],"40 × 6 = 240 lb × 95 = 22 800 lb·in."],
  ["n33","031.05.02.02","n","envelope","Warrior envelope: 2300 lb with the CG at 85.0 in is:",["Outside, forward of the forward limit","Inside the normal category","Inside the utility category","Outside, aft of the aft limit"],"A 2300 lb el límite delantero está en ≈ 86,7 in."],
  ["n34","031.05.02.02","n","envelope","Warrior envelope: 1900 lb with the CG at 86.0 in is:",["Inside both normal and utility categories","Inside the normal category only","Outside the envelope","Inside the utility category only"],"Por debajo de 2020 lb y entre 83 y 87,4 in."],
- ["n35","050.01.05.01","n","isa","ISA, course rule: sea-level temperature and lapse rate are:",["15 °C, falling 2 °C per 1000 ft","15 °C, falling 1 °C per 1000 ft","20 °C, falling 2 °C per 1000 ft","0 °C, falling 6.5 °C per 1000 ft"],"15 − 2 × altitud ÷ 1000."],
+ ["n35","050.01.05.01","n","isa","ISA: sea-level temperature and lapse rate are:",["15 °C, falling 2 °C per 1000 ft","15 °C, falling 1 °C per 1000 ft","20 °C, falling 2 °C per 1000 ft","0 °C, falling 6.5 °C per 1000 ft"],"15 − 2 × altitud ÷ 1000."],
  ["n36","050.01.05.01","n","isa","ISA temperature at 5000 ft:",["5 °C","25 °C","10 °C","−5 °C"],"15 − 10 = 5 °C."],
  ["n37","050.01.05.01","n","isa","At 4000 ft the OAT is +17 °C. The ISA deviation is:",["ISA +10","ISA +2","ISA −10","ISA +17"],"ISA a 4000 ft = 7 °C → +10."],
  ["n38","050.01.05.01","n","isa","What is the ISA used for?",["As a reference to compare real conditions","It is the actual atmosphere most days","It is a weather forecast model","It describes sea-level weather only"],"Sirve para compararnos."]
