@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="86b732373958";</script>
+<script>window.F0_BUILD="7ccb235d222f";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -324,7 +324,7 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
   .iconbtn span,.iconbtn kbd{display:none}.iconbtn{padding:8px}
   .tab{padding:7px 10px 9px}
   .kpis{margin-left:0;gap:18px}
-@media (max-width:640px){.kpis{flex:1 1 100%;width:100%;gap:12px}.kpi{display:flex;flex-direction:column;justify-content:center;align-items:center}}
+@media (max-width:640px){.kpis{flex:1 1 100%;width:100%;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.kpi{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:6px 2px;border-radius:8px}.kpi b{font-size:21px}.kpi span{font-size:8.5px;letter-spacing:.04em;line-height:1.15}.kpi em{display:none}}
   .grid{grid-template-columns:1fr}
 }
 /* ---- buzón de sugerencias ---- */
@@ -1471,17 +1471,17 @@ boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); });
   var ctx=null, last=0;
   function testRunning(){ try{ var f=document.querySelectorAll("iframe"); for(var i=0;i<f.length;i++){ var q=f[i].contentDocument&&f[i].contentDocument.getElementById("quiz"); if(q&&!q.hidden) return true; } }catch(e){} return false; }
   function horn(i){   // aviso de pérdida: zumbido pulsante, más largo y más fuerte con i
-    if(!ctx) return; var t0=ctx.currentTime, dur=0.7+2.6*i, g=ctx.createGain(), vol=0.03+0.32*i;
+    if(!ctx) return; var t0=ctx.currentTime, dur=1.5+6.5*i, g=ctx.createGain(), vol=0.03+0.32*i;
     g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(vol,t0+0.03); g.gain.setValueAtTime(vol,t0+dur-0.08); g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
     var lp=ctx.createBiquadFilter(); lp.type="peaking"; lp.frequency.value=2400; lp.gain.value=8; g.connect(lp); lp.connect(ctx.destination);
-    var trem=ctx.createGain(); trem.gain.value=0.5; trem.connect(g);
-    var lfo=ctx.createOscillator(); lfo.type="square"; lfo.frequency.value=7+6*i; var lg=ctx.createGain(); lg.gain.value=0.5; lfo.connect(lg); lg.connect(trem.gain);
+    var trem=ctx.createGain(); trem.gain.value=0.78; trem.connect(g);
+    var lfo=ctx.createOscillator(); lfo.type="square"; lfo.frequency.value=7+6*i; var lg=ctx.createGain(); lg.gain.value=0.22; lfo.connect(lg); lg.connect(trem.gain);
     [[880,"sawtooth"],[1318,"square"],[1760,"sawtooth"]].forEach(function(o){ var x=ctx.createOscillator(); x.type=o[1]; x.frequency.setValueAtTime(o[0],t0); x.frequency.linearRampToValueAtTime(o[0]*(1+0.06*i),t0+dur); var xg=ctx.createGain(); xg.gain.value=0.33; x.connect(xg); xg.connect(trem); x.start(t0); x.stop(t0+dur+0.05); });
     lfo.start(t0); lfo.stop(t0+dur+0.05);
   }
   function tick(){
     if(muted||level===0||el.hidden||document.hidden||!ctx||testRunning()) return;
-    var gap=(240-195*level)*1000;                                   // 45 s si 0 % · ~4 min si casi preparado
+    var dur=1.5+6.5*level, gap=(dur+6+110*(1-level))*1000;          // casi seguido si 0 % (8 s de aviso, 6 s de pausa) · espaciado si casi preparado
     if(Date.now()-last>=gap){ last=Date.now(); horn(level); }
   }
   var EVS=["pointerdown","mousedown","click","keydown","touchstart","touchend"];
@@ -1497,7 +1497,7 @@ boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); });
   EVS.forEach(function(e){ addEventListener(e,unlock,{capture:true,passive:true}); });
   try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); if(ctx.state==="running"){ armed=true; last=Date.now(); setTimeout(function(){ paint(); if(!muted&&level>0&&!testRunning()) horn(level); },300); } }catch(e){}
   M.addEventListener("click",function(ev){ ev.stopPropagation(); muted=!muted; try{ localStorage.setItem("f0:stallMute",muted?"1":"0"); }catch(e){} paint(); if(!muted){ unlock(); last=Date.now(); if(level>0) horn(level); } });
-  paint(); update(); setInterval(update,15000); setInterval(tick,5000);
+  paint(); update(); setInterval(update,15000); setInterval(tick,2000);
   try{ var _show=show; show=function(){ var r=_show.apply(this,arguments); try{ update(); }catch(e){} return r; }; }catch(e){}
   window.F0Stall={update:update};
 })();
