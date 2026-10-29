@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="7101631252db";</script>
+<script>window.F0_BUILD="05ce9888dc93";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1448,7 +1448,8 @@ boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); });
   var EXAM="2026-11-17", el=document.getElementById("stall"); if(!el) return;
   var N=document.getElementById("stallN"), T=document.getElementById("stallT"), P=document.getElementById("stallP"), M=document.getElementById("stallM");
   var muted=false; try{ muted=localStorage.getItem("f0:stallMute")==="1"; }catch(e){}
-  function paint(){ M.textContent=muted?"🔇":"🔊"; }
+  var armed=false;
+  function paint(){ M.textContent=muted?"🔇":(armed?"🔊":"🔊 activar"); }
   function today(){ var s=new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Madrid"}); return Date.UTC(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10)); }
   function days(){ var e=EXAM.split("-"); return Math.round((Date.UTC(+e[0],+e[1]-1,+e[2])-today())/864e5); }
   function prep(){ try{ var t=0,n=0; SUBJ.forEach(function(s){ var m=summary(s.k); t+=(m&&m.avg5!=null)?m.avg5:0; n++; }); return n?Math.round(t/n):0; }catch(e){ return 0; } }
@@ -1480,8 +1481,8 @@ boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); });
     var gap=(240-195*level)*1000;                                   // 45 s si 0 % · ~4 min si casi preparado
     if(Date.now()-last>=gap){ last=Date.now(); horn(level); }
   }
-  function unlock(){ try{ ctx=ctx||new (window.AudioContext||window.webkitAudioContext)(); if(ctx.state==="suspended") ctx.resume(); }catch(e){ return; } if(!last){ last=Date.now(); if(!muted&&level>0&&!testRunning()) horn(level); } }
-  ["pointerdown","keydown","touchstart"].forEach(function(e){ addEventListener(e,unlock,{once:true,passive:true}); });
+  function unlock(){ try{ ctx=ctx||new (window.AudioContext||window.webkitAudioContext)(); if(ctx.state==="suspended") ctx.resume(); }catch(e){ return; } armed=true; paint(); if(!last){ last=Date.now(); if(!muted&&level>0&&!testRunning()) horn(level); } }
+  ["pointerdown","mousedown","click","keydown","touchstart","touchend"].forEach(function(e){ addEventListener(e,unlock,{once:true,passive:true}); });
   M.addEventListener("click",function(ev){ ev.stopPropagation(); muted=!muted; try{ localStorage.setItem("f0:stallMute",muted?"1":"0"); }catch(e){} paint(); if(!muted){ unlock(); last=Date.now(); if(level>0) horn(level); } });
   paint(); update(); setInterval(update,15000); setInterval(tick,5000);
   window.F0Stall={update:update};
