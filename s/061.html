@@ -3765,6 +3765,395 @@ const GEN_061X = {tr6:gTASd, e29:gRhumbDiff, u19:gMeridDist, v5:gDrift, dw2:gDri
 
 Object.assign(GEN, GEN_061X);
 // <<END gen061x>>
+// <<BEGIN navexam>>
+// ===== 061 / 062: preguntas del examen de navegación (Partes 1–6) + variantes con cifras nuevas =====
+// Cada familia nx* (y las pf* ya existentes) sirve: (a) la pregunta original, literal, 1 de cada 4 veces; (b) una variante numérica nueva.
+const xR = d => d*Math.PI/180, xD = r => r*180/Math.PI;
+const xCos = lat => Math.cos(xR(lat/60));                         // lat en minutos de arco
+const xNL = x => { x = ((x+10800)%21600+21600)%21600 - 10800; return x===-10800 ? 10800 : x; };
+const xDM = m => { const a = Math.abs(Math.round(m)), d = Math.floor(a/60); return [d, a-d*60]; };
+const xA = m => { const [d,mm] = xDM(m); return `${d}°${String(mm).padStart(2,"0")}′`; };
+const xLat = v => { const [d,m] = xDM(v); return `${String(d).padStart(2,"0")}°${String(m).padStart(2,"0")}′${Math.round(v)>=0?"N":"S"}`; };
+const xLon = v => { v = xNL(v); const [d,m] = xDM(v); return `${String(d).padStart(3,"0")}°${String(m).padStart(2,"0")}′${Math.round(v)>=0?"E":"W"}`; };
+const xPos = (la,lo) => `${xLat(la)}, ${xLon(lo)}`;
+const xNum = (x,d=2) => Number.isInteger(x) ? nvN(x) : nvN(x,d);
+const xVar = x => `${Math.abs(x)}° ${x>=0?"E":"W"}`;
+const xSh = a => nvShuf(a);
+
+// ---------- Parte 1: distancia sobre un meridiano / pasando por el polo ----------
+function gXdist(kind){
+  const mins = [0,5,10,15,20,25,30,35,40,45,50,55], hemi = pick([1,-1]);
+  const l1 = rnd(30,75)*60 + pick(mins);
+  let l2; do{ l2 = rnd(12,70)*60 + pick(mins); }while(Math.abs(l1-l2)<180);
+  const sameH = kind==="same" || kind==="poleS", la = hemi*l1, lb = (sameH?hemi:-hemi)*l2;
+  const lo = pick([-1,1])*(rnd(5,170)*60 + pick([0,0,30])), anti = kind==="poleS" || kind==="poleD", lob = anti ? xNL(lo+10800) : lo;
+  const A = `${xLat(la)} ${xLon(lo)}`, B = `${xLat(lb)} ${xLon(lob)}`, f = x=>`${nvN(x)} NM`;
+  let d, opts, expl, text;
+  if(kind==="same"){
+    d = Math.abs(l1-l2);
+    text = pick([`Both positions are in the same hemisphere. What is the shortest distance between A (${A}) and B (${B})?`,
+      `A (${A}) and B (${B}) are on the same meridian and in the same hemisphere. The shortest distance A–B is:`]);
+    opts = nvOpts(d, xSh([-60,-40,-20,20,40,60]).slice(0,3).map(o=>d+o), f, 20);
+    expl = `Mismo meridiano y mismo hemisferio: se RESTAN las latitudes. ${xA(Math.max(l1,l2))} − ${xA(Math.min(l1,l2))} = ${xA(d)} = ${nvN(d)}′ → ${nvN(d)} NM (1′ de latitud = 1 NM).`;
+  }else if(kind==="diff"){
+    d = l1+l2;
+    text = pick([`Both positions are in different hemispheres. What is the shortest distance between A (${A}) and B (${B})?`,
+      `A (${A}) and B (${B}) are on the same meridian, one in each hemisphere. The shortest distance A–B is:`]);
+    opts = nvOpts(d, xSh([-25,-15,-10,-5,5,10,15,25]).slice(0,3).map(o=>d+o), f, 5);
+    expl = `Mismo meridiano y hemisferios distintos: se SUMAN las latitudes (se cruza el ecuador). ${xA(l1)} + ${xA(l2)} = ${xA(d)} = ${nvN(d)}′ → ${nvN(d)} NM.`;
+  }else if(kind==="poleS"){
+    const dA = 5400-l1, dB = 5400-l2; d = dA+dB;
+    text = pick([`Both positions on the meridian and anti-meridian in the same hemisphere. What is the shortest distance between A (${A}) and B (${B})?`,
+      `A (${A}) and B (${B}) lie on a meridian and its anti-meridian, in the same hemisphere. The shortest distance A–B is:`]);
+    opts = nvOpts(d, [dA, dB, Math.abs(l1-l2), l1+l2], f, 60);
+    expl = `Meridiano y antimeridiano en el mismo hemisferio: el camino más corto pasa por el polo ${hemi>0?"Norte":"Sur"}. Se SUMAN las distancias de A y B al polo: (90° − ${xA(l1)}) + (90° − ${xA(l2)}) = ${xA(dA)} + ${xA(dB)} = ${xA(d)} = ${nvN(d)} NM. Seguir el meridiano hasta el otro polo sería mucho más largo.`;
+  }else{
+    d = 10800 - Math.abs(l1-l2); const other = 10800 + Math.abs(l1-l2), polD = (l1>l2 ? hemi : -hemi)>0 ? "Norte" : "Sur";
+    text = pick([`Both positions on the meridian and anti-meridian in different hemispheres. What is the shortest distance between A (${A}) and B (${B})?`,
+      `A (${A}) and B (${B}) lie on a meridian and its anti-meridian, one in each hemisphere. The shortest distance A–B is:`]);
+    opts = nvOpts(d, [other, 10800, d+600, d-600], f, 60);
+    expl = `Meridiano y antimeridiano en hemisferios distintos: se va por el polo del hemisferio con MÁS latitud (polo ${polD}). Distancia = (90° − ${xA(Math.max(l1,l2))}) + (90° + ${xA(Math.min(l1,l2))}) = ${xA(5400-Math.max(l1,l2))} + ${xA(5400+Math.min(l1,l2))} = ${xA(d)} = ${nvN(d)} NM. Por el otro polo serían ${xA(other)} = ${nvN(other)} NM.`;
+  }
+  return {text, opts, expl, v:true, p:{kind:"xdist", sub:kind, la, lb, lo, lob, ans:d}};
+}
+
+// ---------- Parte 1: ruta por rumbos cardinales ----------
+function gXroute(pat){
+  const dn = x => Number.isInteger(x) ? nvN(x) : nvN(x,2);
+  const head = (t,dir) => t==="NS" ? (dir>0 ? "360° (North)" : "180° (South)") : (dir>0 ? "090° (East)" : "270° (West)");
+  for(let tries=0; tries<400; tries++){
+    let lat0, lon0, legs = [], lat, lon;
+    if(pat==="A"){
+      const eq = Math.random()<.45;
+      lat0 = eq ? 0 : pick([-1,1])*(rnd(10,50)*60);
+      lon0 = eq ? 0 : pick([-1,1])*(rnd(100,178)*60);
+      lat = lat0; lon = lon0;
+      const e1 = pick([1,-1]); let d1, dl1;
+      if(lat===0){ d1 = pick([600,900,1200,1500,1800,2100,2400,3000]); dl1 = d1; }
+      else{ dl1 = rnd(6,25)*60; d1 = Math.round(dl1*xCos(lat)*100)/100; }
+      legs.push({t:"EW",dir:e1,dist:d1,dl:dl1,from:{lat,lon},to:{lat,lon:lon+e1*dl1}}); lon += e1*dl1;
+      const n2 = pick([1,-1]), dg2 = rnd(8,48), nl = lat + n2*dg2*60;
+      if(Math.abs(nl)>4200 || Math.abs(nl)<300) continue;
+      legs.push({t:"NS",dir:n2,dist:dg2*60,from:{lat,lon},to:{lat:nl,lon}}); lat = nl;
+      const e3 = Math.random()<.75 ? -e1 : e1; let d3, dl3;
+      if(Math.random()<.5){ dl3 = rnd(5,30)*60; d3 = Math.round(dl3*xCos(lat)*100)/100; }
+      else{ d3 = pick([600,900,1200,1500,1800,2100,2400]); dl3 = d3/xCos(lat); }
+      legs.push({t:"EW",dir:e3,dist:d3,dl:dl3,from:{lat,lon},to:{lat,lon:lon+e3*dl3}}); lon += e3*dl3;
+    }else{
+      lat0 = pick([-1,1])*(rnd(10,40)*60 + pick([0,0,0,20,40])); lon0 = pick([-1,1])*(rnd(5,178)*60);
+      lat = lat0; lon = lon0;
+      const n1 = pick([1,-1]), d1 = pick([600,900,1200,1500,1800,2100,2300,2400,2700,3000]), nl = lat + n1*d1;
+      if(Math.abs(nl)>3600 || Math.abs(nl)<300) continue;
+      legs.push({t:"NS",dir:n1,dist:d1,from:{lat,lon},to:{lat:nl,lon}}); lat = nl;
+      const e2 = pick([1,-1]), d2 = pick([300,600,900,1200]), dl2 = d2/xCos(lat);
+      legs.push({t:"EW",dir:e2,dist:d2,dl:dl2,from:{lat,lon},to:{lat,lon:lon+e2*dl2}}); lon += e2*dl2;
+      const n3 = lat>=0 ? 1 : -1, toP = 5400 - Math.abs(lat), d3 = Math.round((toP + rnd(15,55)*60)/100)*100, over = d3 - toP;
+      if(over<600 || over>4500) continue;
+      legs.push({t:"NS",dir:n3,dist:d3,from:{lat,lon},to:{lat:n3*(5400-over),lon:xNL(lon+10800)},pole:true,over}); lat = n3*(5400-over); lon = xNL(lon+10800);
+    }
+    if(legs.some(l=>l.t==="EW" && l.dl>5400)) continue;
+    const D = {lat, lon:xNL(lon)};
+    const startTxt = (lat0===0 && lon0===0 && Math.random()<.5) ? "00°00′N/S 000°00′W/E" : `${xLat(lat0)} ${xLon(lon0)}`;
+    const legTxt = legs.map((l,i)=>`${i+1}) Leg ${["A→B","B→C","C→D"][i]}: Heading ${head(l.t,l.dir)} for ${dn(l.dist)} NM`).join("; ");
+    const text = `${pick([`An aircraft departs from Position A (${startTxt}) and executes the following route: `, `Starting at Position A (${startTxt}), an aircraft flies this route: `])}${legTxt}. Calculate the geographic coordinates (Latitude and Longitude) for positions B, C, and D. ${pick(["The final position of D is:","The final position D is:"])}`;
+    const c = [], last = legs[2], prev = legs[1];
+    if(pat==="A"){
+      c.push(xPos(D.lat, prev.to.lon + last.dir*last.dist));                        // sin dividir por cos
+      c.push(xPos(D.lat, prev.to.lon + last.dir*last.dist*xCos(D.lat)));           // multiplica en vez de dividir
+      c.push(xPos(D.lat, prev.to.lon - last.dir*last.dl));                          // sentido contrario
+      c.push(xPos(D.lat, prev.to.lon + last.dir*last.dist/xCos(lat0)));             // cos de la latitud de salida
+      c.push(xPos(-D.lat, D.lon));
+    }else{
+      c.push(xPos(D.lat, prev.to.lon));                                              // olvida pasar al meridiano opuesto
+      c.push(xPos(-D.lat, D.lon));                                                   // hemisferio equivocado
+      const naive = prev.to.lat + last.dir*last.dist - last.dir*5400;
+      if(Math.abs(naive)<5400) c.push(xPos(naive, D.lon));                          // resta 90° en vez de reflejar
+      c.push(xPos(D.lat, xNL(legs[0].to.lon + legs[1].dir*legs[1].dist + 10800)));  // longitud sin cos
+    }
+    const correct = xPos(D.lat, D.lon);
+    const opts = nvStr(correct, c.filter(x=>x!==correct), k=>xPos(D.lat + (k%2?1:-1)*k*20, D.lon + (k%2?-1:1)*k*35));
+    const ex = legs.map((l,i)=>{
+      const nm = ["B","C","D"][i];
+      if(l.t==="NS"){
+        if(l.pole){ const rest = l.over; return `Etapa ${i+1} (${l.dir>0?"N":"S"}, ${nvN(l.dist)} NM = ${xA(l.dist)}): desde ${xLat(l.from.lat)} faltan ${xA(5400-Math.abs(l.from.lat))} hasta el polo; el resto, ${xA(rest)}, baja por el otro lado: latitud = 90° − ${xA(rest)} = ${xLat(l.to.lat)} y la longitud cambia 180° → ${xLon(l.to.lon)}. ${nm} = ${xPos(l.to.lat,l.to.lon)}.`; }
+        return `Etapa ${i+1} (${l.dir>0?"N":"S"}): 1 NM = 1′ de latitud → ${nvN(l.dist)} NM = ${xNum(l.dist/60)}° → ${nm} = ${xPos(l.to.lat,l.to.lon)}.`;
+      }
+      return `Etapa ${i+1} (${l.dir>0?"E":"W"}, ${dn(l.dist)} NM): a ${xA(Math.abs(l.from.lat))}${l.from.lat>=0?"N":"S"} el apartamiento NO es el cambio de longitud: Δlong = ${dn(l.dist)} ÷ (60 × cos ${xA(Math.abs(l.from.lat))}) = ${xNum(l.dl/60)}° (${xA(l.dl)}) → ${nm} = ${xPos(l.to.lat,l.to.lon)}.`;
+    }).join(" ");
+    return {text, opts, expl:`${ex} Solución: D = ${correct}.`, v:true,
+      p:{kind:"xroute", pat, lat0, lon0, legs:legs.map(l=>({t:l.t,dir:l.dir,dist:l.dist})), ans:{lat:D.lat,lon:D.lon}}};
+  }
+  return gXroute(pat);
+}
+
+// ---------- Parte 2: LMT de una ciudad a otra ----------
+function gXlmt(){
+  let dA, dB, t0, ans, tries = 0;
+  do{ dA = pick([-1,1])*(rnd(10,170)*60 + pick([0,0,0,30])); dB = pick([-1,1])*(rnd(10,170)*60 + pick([0,0,0,30])); t0 = rnd(0,23)*60 + pick([0,0,15,30,45]);
+      ans = t0 + (dB-dA)/15; tries++; }while((Math.abs(dB-dA)<300 || ans<0 || ans>=1440) && tries<2000);
+  const Lq = v => `${String(Math.floor(Math.abs(v)/60)).padStart(3,"0")}°${Math.abs(v)%60?" "+String(Math.abs(v)%60).padStart(2,"0")+"′":""} ${v>=0?"E":"W"}`;
+  const utc = t0 - dA/15, dif = (dB-dA)/60, mm = Math.round((dB-dA)/15), f = m=>`${hc(m)} LMT`;
+  const opts = nvStr(f(ans), [f(t0-(dB-dA)/15), f(utc), f(t0+dB/15), f(ans+60), f(ans-60)].filter(x=>x!==f(ans)), k=>f(ans+30*k));
+  return {text:pick([`If the Local Mean Time (LMT) at City A (${Lq(dA)}) is ${hc(t0)}, calculate the LMT at City B (${Lq(dB)}).`,
+      `It is ${hc(t0)} LMT at City A (${Lq(dA)}). What is the LMT at City B (${Lq(dB)}) at the same instant?`,
+      `At the same instant, the LMT at City A (${Lq(dA)}) is ${hc(t0)}. The LMT at City B (${Lq(dB)}) is:`]),
+    opts, expl:`Diferencia de longitud A→B = ${xNum(Math.abs(dif))}° ${dif>0?"(B está al ESTE de A)":"(B está al OESTE de A)"} → ${xNum(Math.abs(dif))}° × 4 min = ${Math.abs(mm)} min (${fmtHM(Math.abs(mm))}). Al este la hora local va por DELANTE, al oeste por detrás: ${hc(t0)} ${dif>0?"+":"−"} ${fmtHM(Math.abs(mm))} = ${hc(ans)} LMT. (Trampa: dar la UTC, ${hc(utc)}, en vez de la LMT de B.)`,
+    v:true, p:{kind:"xlmt", dA, dB, t0, ans}};
+}
+
+// ---------- Parte 3: del track verdadero al rumbo del compás (con deriva) y al revés ----------
+function gXhdg(kind){
+  const d = rnd(2,12), right = Math.random()<.5, vr = pick([-1,1])*rnd(2,15), dv = pick([-1,1])*rnd(1,6);
+  const dr = right ? "starboard drift (Right Drift)" : "port drift (Left Drift)", sd = right ? d : -d;
+  if(kind==="ch"){
+    const tt = rnd(1,36)*10, th = tt - sd, mh = th - vr, ch = mh - dv;
+    const text = pick([`An aircraft is flying along a True Track (TT) of ${h3(tt)}°. The wind causes a ${dr} of ${d}°. The Magnetic Variation (VAR) is ${xVar(vr)} and the compass Deviation (DEV) is ${xVar(dv)}. Calculate the Compass Heading (CH).`,
+      `To fly a True Track (TT) of ${h3(tt)}° with a ${dr} of ${d}°, VAR ${xVar(vr)} and DEV ${xVar(dv)}, the Compass Heading (CH) to steer is:`]);
+    const opts = nvOpts(ch, [tt+sd-vr-dv, th-vr+dv, th+vr-dv, tt], x=>h3(x)+"°", 3);
+    return {text, opts, expl:`Del track al compás se va hacia atrás. TT ${h3(tt)} → TH: el track está a la ${right?"derecha":"izquierda"} del rumbo, luego TH = TT ${right?"−":"+"} ${d} = ${h3(th)}. TH → MH: VAR ${xVar(vr)} → MH = TH ${vr>=0?"−":"+"} ${Math.abs(vr)} = ${h3(mh)}. MH → CH: DEV ${xVar(dv)} → CH = MH ${dv>=0?"−":"+"} ${Math.abs(dv)} = ${h3(ch)}°. Regla: de C a T, E suma y W resta; de T a C, al revés.`,
+      v:true, p:{kind:"xhdg", sub:"ch", tt, d, right, vr, dv, ans:norm(ch)}};
+  }
+  const ch = rnd(1,36)*10, mh = ch + dv, th = mh + vr, tt = th + sd;
+  const text = pick([`An aircraft flies on a Compass Heading (CH) of ${h3(ch)}°. The compass Deviation (DEV) is ${xVar(dv)} and the Magnetic Variation (VAR) is ${xVar(vr)}. If the aircraft experiences a ${dr} of ${d}°, what is the True Track (TT)?`,
+    `CH ${h3(ch)}°, DEV ${xVar(dv)}, VAR ${xVar(vr)}, ${dr} of ${d}°. The True Track (TT) is:`]);
+  const opts = nvOpts(tt, [th-sd, mh-vr+sd, ch-dv+vr+sd, th], x=>h3(x)+"°", 3);
+  return {text, opts, expl:`Del compás al track se va hacia delante. CH ${h3(ch)} → MH: DEV ${xVar(dv)} → MH = CH ${dv>=0?"+":"−"} ${Math.abs(dv)} = ${h3(mh)}. MH → TH: VAR ${xVar(vr)} → TH = MH ${vr>=0?"+":"−"} ${Math.abs(vr)} = ${h3(th)}. TH → TT: deriva a la ${right?"derecha":"izquierda"} → TT = TH ${right?"+":"−"} ${d} = ${h3(tt)}°.`,
+    v:true, p:{kind:"xhdg", sub:"tt", ch, d, right, vr, dv, ans:norm(tt)}};
+}
+
+// ---------- Parte 4: escalas ----------
+function gXscale1(){
+  for(;;){
+    const X = pick([4,5,6,8,10,12,15,20,25]), D = pick([20,30,40,50,60,75,80,100,120,150,200,240,300,400]);
+    const N = Math.round(D*185200/X/1000)*1000, f = n => "1:"+nvN(Math.round(n/1000)*1000);
+    if(N<100000 || N>12000000) continue;
+    const c = [D*100000/X, N*1.852, D*160934/X, N/2.54].map(n=>Math.round(n/1000)*1000);
+    const all = [N].concat(c); if(all.some((a,i)=>all.some((b,j)=>i<j && Math.abs(a-b)/Math.max(a,b)<.04))) continue;
+    return {text:pick([`On a navigation chart, the measured distance between two waypoints is ${X} cm. If the actual distance on the surface of the Earth is ${D} NM, what is the scale of the chart?`,
+        `Two waypoints are ${X} cm apart on a chart. The real distance between them is ${D} NM. The scale of the chart is:`]),
+      opts:[f(N)].concat(xSh(c).slice(0,3).map(f)), expl:`Escala = distancia en la carta ÷ distancia real. ${D} NM × 1.852 m = ${nvN(D*1852)} m = ${nvN(D*185200)} cm. ${X} cm ÷ ${nvN(D*185200)} cm = 1 : ${nvN(Math.round(D*185200/X))} ≈ ${f(N)}. Trampas: tomar las NM como km, convertir dos veces, o usar millas terrestres (1.609 m).`,
+      v:true, p:{kind:"xscale1", X, D, ans:N}};
+  }
+}
+function gXscale2(){   // escala Mercator en otra latitud
+  for(;;){
+    const lats = [0,15,20,25,30,35,40,45,50,55,60,65,70], A = pick(lats), B = pick(lats);
+    if(A===B) continue;
+    const S0 = pick([500000,1000000,2000000,2500000,3000000,4000000]), cA = Math.cos(xR(A)), cB = Math.cos(xR(B)), N = S0*cB/cA, hs = Math.random()<.7?"N":"S";
+    const r = n => Math.round(n/100)*100, f = n => "1:"+nvN(r(n));
+    if(r(N)<100000) continue;
+    const cands = [S0*cA/cB, A?S0*B/A:null, B?S0*A/B:null, S0*Math.pow(cB/cA,2)].filter(x=>x && isFinite(x) && x>0);
+    const opts = nvStr(f(N), cands.map(f).filter(x=>x!==f(N)), k=>f(N*(1+0.18*k)));
+    const ok = opts.map(o=>Number(o.slice(2).replace(/,/g,""))); if(ok.some((a,i)=>ok.some((b,j)=>i<j && Math.abs(a-b)/Math.max(a,b)<.04))) continue;
+    return {text:pick([`The scale of a Direct Mercator chart is 1:${nvN(S0)} at Latitude A = ${A}° ${hs}. What is the chart scale at Latitude B = ${B}° ${hs}?`,
+        `On a Direct Mercator chart the scale is 1:${nvN(S0)} at ${A}° ${hs}. At ${B}° ${hs} the scale is:`]),
+      opts, expl:`En Mercator la escala es proporcional a 1/cos φ (la carta amplía hacia los polos): el denominador es proporcional a cos φ. Denominador en B = ${nvN(S0)} × cos ${B}° ÷ cos ${A}° = ${nvN(S0)} × ${cB.toFixed(3)} ÷ ${cA.toFixed(3)} = ${nvN(r(N))} → ${f(N)}. ${B>A?"Más cerca del polo: la escala es MAYOR (denominador menor).":"Más cerca del ecuador: la escala es MENOR (denominador mayor)."} Trampa: usar la proporción de grados (${B}/${A}) en vez de los cosenos.`,
+      v:true, p:{kind:"xscale2", S0, A, B, ans:r(N)}};
+  }
+}
+function gXscale3(){   // la misma distancia en cm a otra latitud
+  for(;;){
+    const lats = [0,0,20,30,40,45,50,60], A = pick(lats), B = pick([20,30,40,45,50,60,65]);
+    if(A===B) continue;
+    const D = pick([50,80,100,120,150,200]), cmA = pick([4,5,8,10,12,15]), cA = Math.cos(xR(A)), cB = Math.cos(xR(B)), cmB = cmA*cA/cB, hs = Math.random()<.7?"N":"S";
+    const f = x => `${x.toFixed(2)} cm`, cands = [cmA*cB/cA, cmA, cmA*Math.pow(cA/cB,2), cmA*2];
+    const opts = nvStr(f(cmB), cands.map(f).filter(x=>x!==f(cmB)), k=>f(cmB*(1+0.15*k)));
+    const v = opts.map(o=>parseFloat(o)); if(v.some((a,i)=>v.some((b,j)=>i<j && Math.abs(a-b)<0.05*Math.max(a,b)))) continue;
+    return {text:pick([`A distance on the Earth's surface of ${D} NM is represented by ${cmA} cm on a Mercator chart at Latitude A = ${A}°${A?" "+hs:" (Equator)"}. How many centimeters will represent the same ${D} NM Earth distance at Latitude B = ${B}° ${hs}?`,
+        `On a Mercator chart a ground distance of ${D} NM measures ${cmA} cm at latitude ${A}°${A?" "+hs:" (Equator)"}. At ${B}° ${hs} the same ${D} NM measure, on the chart:`]),
+      opts, expl:`La escala Mercator crece con 1/cos φ, así que la misma distancia ocupa MÁS centímetros al subir de latitud: cm en B = cm en A × cos A ÷ cos B = ${cmA} × ${cA.toFixed(3)} ÷ ${cB.toFixed(3)} = ${cmB.toFixed(2)} cm. (Trampa: multiplicar por cos B en vez de dividir: daría ${(cmA*cB/cA).toFixed(2)} cm.)`,
+      v:true, p:{kind:"xscale3", cmA, A, B, ans:cmB}};
+  }
+}
+
+// ---------- Parte 5: triángulo de velocidades ----------
+const xTri = (hdg,tas,wd,ws) => {                       // wd = viento DESDE
+  const wt = xR(wd+180), h = xR(hdg), N = tas*Math.cos(h)+ws*Math.cos(wt), E = tas*Math.sin(h)+ws*Math.sin(wt);
+  let trk = xD(Math.atan2(E,N)); if(trk<0) trk += 360;
+  return {trk, gs:Math.hypot(N,E), drift:((trk-hdg+540)%360)-180};
+};
+const xWind = (th,tas,trk,gs) => {
+  const N = gs*Math.cos(xR(trk)) - tas*Math.cos(xR(th)), E = gs*Math.sin(xR(trk)) - tas*Math.sin(xR(th));
+  let to = xD(Math.atan2(E,N)); if(to<0) to += 360; return {from:(to+180)%360, spd:Math.hypot(N,E)};
+};
+const xAmb = x => Math.abs(((x%1)+1)%1 - 0.5) < 0.17;
+const xDS = d => `${Math.abs(d)}°${d>=0?"R":"L"}`;
+const xr1 = x => Math.round(x*10)/10;
+function gXhw(){
+  for(;;){
+    const tas = pick([90,100,110,120,130,140,150,160]), w = pick([10,15,20,25,30,35,40]), th = pick([20,30,40,50,60,70]);
+    const hw = w*Math.cos(xR(th)), xw = w*Math.sin(xR(th)), dr = xw/tas*60;
+    if(Math.abs(hw-xw)<1.5 || dr<2) continue;
+    const f = (a,b)=>`Headwind = ${xr1(a).toFixed(1)} kt, Drift Angle = ${xr1(b).toFixed(1)}°`;
+    const okS = f(hw,dr), cands = [f(xw,hw/tas*60), f(hw,w/tas*60), f(xw,dr), f(hw*1.5,dr*0.75), f(hw,dr*1.4)].filter(x=>x!==okS);
+    return {text:pick([`An aircraft is on final approach at a TAS of ${tas} kt. The reported wind is ${w} kt with an angle (θ) of ${th}° relative to the runway heading. Calculate the headwind component and the drift angle (Drift Angle).`,
+        `On final approach the TAS is ${tas} kt. The wind is ${w} kt at ${th}° to the runway heading. What are the headwind component and the drift angle?`]),
+      opts:nvStr(okS, cands, k=>f(hw+k,dr+0.7*k)), expl:`Componente de cara = viento × cos θ = ${w} × cos ${th}° = ${xr1(hw).toFixed(1)} kt. Viento cruzado = viento × sin θ = ${w} × sin ${th}° = ${xr1(xw).toFixed(1)} kt. Deriva (regla 1 en 60) = cruzado ÷ TAS × 60 = ${xr1(xw).toFixed(1)} ÷ ${tas} × 60 = ${xr1(dr).toFixed(1)}°. Trampa: confundir cos (cara) con sin (cruzado).`,
+      v:true, p:{kind:"xhw", tas, w, th, hw:xr1(hw), dr:xr1(dr)}};
+  }
+}
+function gXgs(){
+  for(;;){
+    const tas = pick([120,140,150,160,180,200,220,250]), w = pick([20,30,40,50,60]), th = pick([20,30,40,50,60,70]), tail = Math.random()<.55;
+    const hw = w*Math.cos(xR(th)), xw = w*Math.sin(xR(th)), s = tail?1:-1, gs = tas + s*hw, dr = xw/tas*60;
+    if(Math.abs(hw-xw)<1.5 || dr<2) continue;
+    const f = (a,b)=>`GS = ${xr1(a).toFixed(1)} kt, Drift Angle = ${xr1(b).toFixed(1)}°`, okS = f(gs,dr);
+    const cands = [f(tas+s*xw, hw/tas*60), f(tas+s*w, w/tas*60), f(gs, hw/tas*60), f(gs, dr/2)].filter(x=>x!==okS);
+    return {text:pick([`An aircraft cruises at a TAS of ${tas} kt. The wind velocity is ${w} kt at an angle (θ) of ${th}° ${tail?"from behind (tailwind)":"from ahead (headwind)"}. Calculate the Groundspeed (GS = TAS ${tail?"+ Tailwind":"− Headwind"}) and the Drift Angle (Drift Angle).`,
+        `TAS ${tas} kt; wind ${w} kt at ${th}° ${tail?"from behind":"from ahead"}. Using GS = TAS ${tail?"+ tailwind":"− headwind"} and the 1 in 60 rule for the drift, GS and drift are:`]),
+      opts:nvStr(okS, cands, k=>f(gs+k*3,dr+0.8*k)), expl:`${tail?"Cola":"Cara"} = ${w} × cos ${th}° = ${xr1(hw).toFixed(1)} kt → GS = ${tas} ${tail?"+":"−"} ${xr1(hw).toFixed(1)} = ${xr1(gs).toFixed(1)} kt. Cruzado = ${w} × sin ${th}° = ${xr1(xw).toFixed(1)} kt → deriva = ${xr1(xw).toFixed(1)} ÷ ${tas} × 60 = ${xr1(dr).toFixed(1)}°. Trampa: usar sin donde va cos (o al revés).`,
+      v:true, p:{kind:"xgs", tas, w, th, tail, gs:xr1(gs), dr:xr1(dr)}};
+  }
+}
+function gXtrkgs(){      // rumbo + TAS + W/V → track y GS
+  for(let i=0;i<600;i++){
+    const th = rnd(1,36)*10, tas = rnd(10,26)*10 + pick([0,4,5,6]), wd = rnd(1,36)*10, W = rnd(3,12)*5;
+    const t = xTri(th,tas,wd,W); if(Math.abs(t.drift)<4 || Math.abs(t.gs-tas)<6 || xAmb(t.trk) || xAmb(t.gs)) continue;
+    const trk = Math.round(t.trk), gs = Math.round(t.gs), f = (a,b)=>`${h3(a)}/${b}`;
+    const okS = f(trk,gs), cands = [f(2*th-trk,gs), f(trk,2*tas-gs), f(2*th-trk,2*tas-gs), f(th,gs)].filter(x=>x!==okS);
+    return {text:pick([`Your heading is ${h3(th)}, your TAS is ${tas} kts and the wind is ${h3(wd)}/${W}. What is your track and GS?`,
+        `Given: heading ${h3(th)}° (T), TAS ${tas} kt, W/V ${h3(wd)}/${W}. The track and groundspeed are:`]),
+      opts:nvStr(okS,cands,k=>f(trk+3*k,gs+4*k)), expl:`Vector: el viento ${h3(wd)}/${W} sopla hacia ${h3(wd+180)}°. Componentes N/E: aeroplano (${(tas*Math.cos(xR(th))).toFixed(1)}; ${(tas*Math.sin(xR(th))).toFixed(1)}) + viento (${(W*Math.cos(xR(wd+180))).toFixed(1)}; ${(W*Math.sin(xR(wd+180))).toFixed(1)}) → track ${h3(trk)}° (deriva ${xDS(Math.round(t.drift))}), GS ≈ ${gs} kt. Con el ordenador de vuelo sale ±1. Trampas: deriva hacia el lado contrario (track ${h3(2*th-trk)}) o GS con el componente de cola/cara cambiado (${2*tas-gs}).`,
+      v:true, p:{kind:"xtrkgs", th, tas, wd, ws:W, trk, gs}};
+  }
+  return gXtrkgs();
+}
+function gXwv(style){     // W/V a partir de rumbo, track, TAS y GS
+  for(let i=0;i<2000;i++){
+    const th = rnd(1,36)*10 + pick([0,0,4,5]), tas = rnd(10,26)*10 + pick([0,5,0,5]), wd = rnd(1,36)*10, W = rnd(5,12)*5;
+    const t = xTri(th,tas,wd,W), trk = Math.round(t.trk), gs = Math.round(t.gs), w2 = xWind(th,tas,trk,gs);
+    const dd = Math.abs(((w2.from-wd+540)%360)-180);
+    if(Math.abs(t.drift)<5 || Math.abs(gs-tas)<6 || dd>2 || Math.abs(w2.spd-W)>1.5) continue;
+    const f = (a,b)=>`${h3(a)}/${b} kts`, okS = f(wd,W), pairs = [];
+    xSh([-10,-5,0,5,10]).forEach(a=>xSh([-10,-5,0,5,10]).forEach(b=>{ if(a||b) pairs.push([a,b]); }));
+    const c = xSh(pairs).slice(0,3).map(([a,b])=>f(wd+a,W+b));
+    const text = style==="list"
+      ? `Given: TH ${h3(th)} and Tr ${h3(trk)} (T); TAS ${tas} kts; GS ${gs} kts. Calculate the W/V:`
+      : pick([`The aircraft heading is ${h3(th)} to maintain the required track of ${h3(trk)}. If the TAS is ${tas} KTS and GS is ${gs} kts, what is the wind velocity?`,
+              `To maintain a track of ${h3(trk)} the aircraft heads ${h3(th)}. TAS ${tas} kt, GS ${gs} kt. The wind velocity is:`]);
+    return {text, opts:nvStr(okS,c,k=>f(wd+5*k,W+5)), expl:`Deriva = track − rumbo = ${h3(trk)} − ${h3(th)} = ${xDS(Math.round(t.drift))}. Viento = vector GS − vector TAS: N = ${gs}·cos ${h3(trk)}° − ${tas}·cos ${h3(th)}° = ${(gs*Math.cos(xR(trk))-tas*Math.cos(xR(th))).toFixed(1)}; E = ${gs}·sin ${h3(trk)}° − ${tas}·sin ${h3(th)}° = ${(gs*Math.sin(xR(trk))-tas*Math.sin(xR(th))).toFixed(1)} → ese vector apunta hacia ${h3(w2.from+180)}° con ${Math.round(w2.spd)} kt, y el viento se da DESDE donde sopla: ${h3(wd)}/${W} (con el ordenador de vuelo, ±5° y ±2 kt). Trampa: dar la dirección hacia donde va el viento.`,
+      v:true, p:{kind:"xwv", style, th, tas, trk, gs, wd, ws:W}};
+  }
+  return gXwv(style);
+}
+function gXdrgs(){      // deriva y GS a partir de rumbo, TAS y W/V
+  for(let i=0;i<600;i++){
+    const th = rnd(1,72)*5, tas = rnd(10,26)*10 + pick([0,0,5]), wd = rnd(1,36)*10 + pick([0,5]), W = rnd(3,10)*5;
+    const t = xTri(th,tas,wd,W); if(Math.abs(t.drift)<4 || Math.abs(t.gs-tas)<6 || xAmb(t.drift) || xAmb(t.gs)) continue;
+    const dr = Math.round(t.drift), gs = Math.round(t.gs), f = (d,g)=>`${xDS(d)}/${g} kts`, okS = f(dr,gs);
+    const c = [f(-dr,gs), f(dr+2,gs), f(dr,2*tas-gs), f(dr-2,2*tas-gs)].filter(x=>x!==okS);
+    return {text:pick([`Given: TAS ${tas} kts; HDG ${h3(th)} (T); W/V ${h3(wd)}/${W} kts. Calculate the drift and GS:`,
+        `TAS ${tas} kt, true heading ${h3(th)}°, wind ${h3(wd)}/${W} kt. Drift and groundspeed are:`]),
+      opts:nvStr(okS,c,k=>f(dr+k,gs+4*k)), expl:`El viento sopla hacia ${h3(wd+180)}°. Vector: aeroplano (${(tas*Math.cos(xR(th))).toFixed(1)}; ${(tas*Math.sin(xR(th))).toFixed(1)}) + viento (${(W*Math.cos(xR(wd+180))).toFixed(1)}; ${(W*Math.sin(xR(wd+180))).toFixed(1)}) → track ${h3(t.trk)}° → deriva ${Math.abs(dr)}° a la ${dr>=0?"derecha (R)":"izquierda (L)"} del rumbo, GS ≈ ${gs} kt. Con el ordenador de vuelo, ±1. Trampas: deriva hacia el otro lado o GS con el componente de cola/cara cambiado.`,
+      v:true, p:{kind:"xdrgs", th, tas, wd, ws:W, dr, gs}};
+  }
+  return gXdrgs();
+}
+
+// ---------- Parte 6: radioayudas (NDB y VOR) ----------
+function gXndb(kind){
+  const R = pick([10,20,25,30,40,50,60,75,80,100,120,150]), P = R*R, fw = x=>`${nvN(x)} W`, fn = x=>`${nvN(x,Number.isInteger(x)?0:1)} NM`;
+  if(kind==="range") return {text:pick([`An NDB transmitter operates with a total output power of ${nvN(P)} W. What is the maximum theoretical range of this NDB beacon?`,
+      `The output power of an NDB is ${nvN(P)} W. Its maximum theoretical range is:`]),
+    opts:nvOpts(R,[P/10,2*R,R/2,R*1.5,3*R],fn,Math.max(5,Math.round(R*.25/5)*5)), expl:`Alcance del NDB (NM) ≈ √potencia (W) = √${nvN(P)} = ${nvN(R)} NM. Trampa: pensar que el alcance es proporcional a la potencia (va con su raíz).`, v:true, p:{kind:"xndb", sub:"range", P, ans:R}};
+  return {text:pick([`An air traffic authority requires an NDB station to cover a range of ${nvN(R)} NM. What transmitter power output in Watts (W) is needed to achieve this operational range?`,
+      `To cover ${nvN(R)} NM an NDB needs an output power of:`]),
+    opts:nvOpts(P,[R*10,R*20,R*2,P/2,P*2],fw,Math.max(50,Math.round(P*.2/50)*50)), expl:`Alcance (NM) ≈ √P (W) → P = alcance² = ${nvN(R)}² = ${nvN(P)} W. Trampa: multiplicar el alcance por una constante en vez de elevarlo al cuadrado.`, v:true, p:{kind:"xndb", sub:"power", R, ans:P}};
+}
+function gXndbF(){
+  const R1 = pick([10,20,30,40,50,60]), k = pick([2,2,2,3,1.5,4,0.5]), R2 = R1*k, fct = k*k;
+  const f = x=>`${nvN(x,Number.isInteger(x)?0:2)} times`;
+  return {text:pick([`An NDB currently has an operational range of ${R1} NM. If the station engineer wants to ${k>1?"increase":"reduce"} the reception range to ${xNum(R2,1)} NM, by what factor must the transmitter power output be ${k>1?"increased":"changed"}?`,
+      `The operational range of an NDB is ${R1} NM. To make it ${xNum(R2,1)} NM the transmitter power must be multiplied by:`]),
+    opts:nvOpts(fct,[k,k*k*k,Math.pow(k,4),2*k*k,k*2],f,k>1?2:0.25), expl:`Alcance ∝ √P → P ∝ alcance². Factor de potencia = (${xNum(R2,1)} ÷ ${R1})² = ${xNum(k,1)}² = ${nvN(fct,Number.isInteger(fct)?0:2)}. Duplicar el alcance cuesta ×4 de potencia; triplicarlo, ×9.`, v:true, p:{kind:"xndbf", R1, R2, ans:fct}};
+}
+function gXvor(kind){
+  const sq = [100,400,900,1600,2500], ac = [2500,3600,4900,6400,8100,10000,12100,14400,19600,25600,32400,36100];
+  const h1 = pick(sq), h2 = pick(ac), R = Math.round(1.23*(Math.sqrt(h1)+Math.sqrt(h2))*10)/10, r1 = x=>(Math.round(x*10)/10).toFixed(1);
+  if(kind==="range"){
+    const f = x=>`${r1(x)} NM`;
+    return {text:pick([`A VOR ground station is located at an elevation of ${nvN(h1)} ft above sea level. An aircraft is cruising at an altitude of ${nvN(h2)} ft. What is the maximum VOR reception range for this aircraft?`,
+        `The VOR station is ${nvN(h1)} ft above sea level and the aircraft flies at ${nvN(h2)} ft. The maximum reception range is about:`]),
+      opts:nvOpts(R,[1.23*Math.sqrt(h2),1.23*Math.sqrt(h1+h2),1.23*(Math.sqrt(h2)-Math.sqrt(h1)),R*1.15],f,5), expl:`Alcance en línea de vista ≈ 1,23 × (√h estación + √h avión) = 1,23 × (√${nvN(h1)} + √${nvN(h2)}) = 1,23 × (${Math.sqrt(h1)} + ${Math.sqrt(h2)}) = ${r1(R)} NM. Hay que sumar LAS DOS raíces (ni solo la del avión, ni la raíz de la suma).`, v:true, p:{kind:"xvor", sub:"range", h1, h2, ans:R}};
+  }
+  const f = x=>`${nvN(x)} ft`, q = R/1.23;
+  return {text:pick([`A pilot wants to receive a signal from a VOR ground station located at an elevation of ${nvN(h1)} ft at a distance of ${r1(R)} NM. What is the minimum altitude at which the aircraft must fly to receive the signal?`,
+      `A VOR station sits at ${nvN(h1)} ft. To receive it ${r1(R)} NM away, the minimum altitude of the aircraft is:`]),
+    opts:nvOpts(h2,[q*q,q*100,h2-h1,h2+h1,h2*0.8],f,Math.max(500,Math.round(h2*.15/500)*500)), expl:`R = 1,23 × (√h estación + √h avión) → √h avión = R ÷ 1,23 − √h estación = ${r1(R)} ÷ 1,23 − √${nvN(h1)} = ${Math.round(q)} − ${Math.sqrt(h1)} = ${Math.round(Math.sqrt(h2))} → h = ${Math.round(Math.sqrt(h2))}² = ${nvN(h2)} ft. Trampa: olvidar la antena de la estación (daría ${nvN(Math.round(q*q))} ft).`, v:true, p:{kind:"xvor", sub:"alt", h1, R, ans:h2}};
+}
+
+// ---------- las preguntas originales, literales (la correcta, primero) ----------
+const NX_LIT = {
+ nx1:[{text:"Both positions are in the same hemisphere. What is the shortest distance between A (64° 35'N 010° 00'W) and B (53° 15'N 010° 00'W).",opts:["680 nm","700 nm","640 nm","620 nm"],expl:"Mismo meridiano y mismo hemisferio: se RESTAN las latitudes. 64°35′ − 53°15′ = 11°20′ = 680′ → 680 NM (1′ de latitud = 1 NM)."}],
+ nx2:[{text:"Both positions are in different hemispheres. What is the shortest distance between A (64° 35'N 010° 00'W) and B (53° 15'S 010° 00'W).",opts:["7070 nm","7085 nm","7080 nm","7045 nm"],expl:"Mismo meridiano y hemisferios distintos: se SUMAN las latitudes. 64°35′ + 53°15′ = 117°50′ = 7.070′ → 7.070 NM."}],
+ nx3:[{text:"Both positions on the meridian and anti-meridian in the same hemisphere. What is the shortest distance between A (64°35'N 010°00'W) and B (53°15'N 170°00'E)?",opts:["3730 nm","2205 nm","2020 nm","1525 nm"],expl:"Meridiano y antimeridiano en el mismo hemisferio: el camino más corto pasa por el polo Norte. (90° − 64°35′) + (90° − 53°15′) = 25°25′ + 36°45′ = 62°10′ = 3.730 NM."}],
+ nx4:[{text:"Both positions on the meridian and anti-meridian in different hemispheres. What is the shortest distance between A (64°35'N 010°00'W) and B (53°15'S 170°00'E)?",opts:["10120 nm","11120 nm","10210 nm","11000 nm"],expl:"Meridiano y antimeridiano en hemisferios distintos: por el polo del hemisferio con más latitud (Norte). (90° − 64°35′) + (90° + 53°15′) = 25°25′ + 143°15′ = 168°40′ = 10.120 NM. Por el otro polo serían 191°20′ = 11.480 NM."}],
+ nx5:[{text:"An aircraft departs from Position A (00°00'N/S 000°00'W/E) and executes the following route: 1) Leg A → B: Heading 090° (East) for 1500 NM; 2) Leg B → C: Heading 000° (North) for 2400 NM; 3) Leg C → D: Heading 270° (West) for 1500 NM. Calculate the geographic coordinates (Latitude and Longitude) for positions B, C, and D. The final position of D is:",opts:["40°00′ N, 007°38′ W","40°00′ N, 000°00′ W/E","40°00′ N, 010°00′ W","40°00′ N, 025°00′ W"],expl:"B: 1.500 NM al E sobre el ecuador = 25° → 00°00′N 025°00′E. C: 2.400 NM al N = 40° → 40°00′N 025°00′E. D: a 40°N, 1.500 NM al W → Δlong = 1.500 ÷ (60 × cos 40°) = 1.500 ÷ 45,96 = 32,64° = 32°38′ → 025°00′E − 32°38′ = 007°38′W. D = 40°00′N 007°38′W (no 025°W: hay que dividir por cos)."},
+  {text:"An aircraft departs from Position A (30°00′ N, 178°00′ W) and executes the following route: 1) Leg A → B: Heading 270° (West) for 623.54 NM; 2) Leg B → C: Heading 180° (South) for 2400 NM; 3) Leg C → D: Heading 090° (East) for 1477.21 NM. Calculate the geographic coordinates (Latitude and Longitude) for positions B, C, and D. The final position of D is:",opts:["10°00′ S, 165°00′ W","20°00′ S, 155°00′ W","10°00′ S, 175°00′ E","10°00′ N, 165°00′ W"],expl:"B: a 30°N, 623,54 NM al W → Δlong = 623,54 ÷ (60 × cos 30° = 51,96) = 12° → 178°W + 12° = 190°W = 170°E. C: 2.400 NM al S = 40° → 30°N − 40° = 10°S 170°E. D: a 10°S, 1.477,21 NM al E → Δlong = 1.477,21 ÷ (60 × cos 10° = 59,09) = 25° → 170°E + 25° = 195°E = 165°W. D = 10°S 165°W."}],
+ nx6:[{text:"An aircraft departs from Position A (25°00'S 175°00'W) and executes the following route: 1) Leg A → B: Heading 360° (North) for 2300 NM; 2) Leg B → C: Heading 270° (West) for 900 NM; 3) Leg C → D: Heading 360° (North) for 7200 NM. Calculate the geographic coordinates (Latitude and Longitude) for positions B, C, and D. The final position of D is:",opts:["46°40′ N, 10°25′ W","83°20′ N, 169°35′ E","46°40′ N, 169°35′ E","13°20′ N, 10°25′ W"],expl:"B: 2.300 NM al N = 38°20′ → 25°S + 38°20′ = 13°20′N 175°W. C: 900 NM al W a 13°20′N: Δlong = 900 ÷ (60 × cos 13°20′ = 58,38) = 15,42° = 15°25′ → 175°W + 15°25′ = 190°25′W = 169°35′E. D: 7.200 NM = 120° al N: hasta el polo hay 76°40′; el resto, 43°20′, baja por el otro lado → latitud 90° − 43°20′ = 46°40′N y la longitud cambia 180°: 169°35′E → 010°25′W. D = 46°40′N 010°25′W."}],
+ nx8:[{text:"If the Local Mean Time (LMT) at City A (075° W) is 14:00, calculate the LMT at City B (045° E).",opts:["22:00 LMT","16:00 LMT","19:00 LMT","06:00 LMT"],expl:"Diferencia de longitud: 45°E − (75°W) = 120° → 120 × 4 min = 8 h. B está al ESTE de A: su hora local va por delante → 14:00 + 8 h = 22:00 LMT. (19:00 es la UTC: no es lo que se pide.)"}],
+ pf1:[{text:"If the Local Mean Time (LMT) at a position located at 055° E is 10:30, what is the UTC?",opts:["06:50 UTC","14:10 UTC","07:10 UTC","13:50 UTC"],expl:"55° × 4 = 220 min = 3 h 40. Este: la LMT va por delante de la UTC → UTC = 10:30 − 3:40 = 06:50."},
+  {text:"If the UTC time is 08:15, what is the LMT at a position located at 022°30′ E?",opts:["09:45 LMT","06:45 LMT","09:30 LMT","07:15 LMT"],expl:"22°30′ = 22,5° × 4 = 90 min = 1 h 30. Este: LMT = UTC + 1:30 = 09:45."}],
+ pf3:[{text:"An aircraft depart from Airport A (082°30′ W) when the Local Mean Time (LMT) is 15:10. The flight duration is 8 hours and 45 minutes. Determine the Standard Time (ST) of arrival at Airport B, which operates in a UTC+4 time zone.",opts:["09:25 ST (Day 2)","05:25 ST (Day 2)","20:40 ST (Day 1)","13:25 ST (Day 2)"],expl:"82°30′ W = 82,5° × 4 = 330 min = 5 h 30 → UTC de salida = 15:10 + 5:30 = 20:40 (Day 1). Llegada = 20:40 + 8:45 = 05:25 UTC (Day 2). ST = UTC + 4 = 09:25 (Day 2). (05:25 es la UTC: falta sumar la zona.)"}],
+ pf3b:[{text:"An aircraft depart from Airport A (172°30′ W) at 22:40 LMT (Day 1). It flies for 7 hours and 15 minutes, crossing the antimeridian bound for Airport B (175°00′ E), whose official time zone is UTC+12. At what Standard Time (ST) and on which day does it arrive?",opts:["05:25 ST (Day 3)","17:25 ST (Day 2)","29:25 ST (Day 2)","05:25 ST (Day 2)"],expl:"172°30′ W = 11 h 30 → UTC salida = 22:40 + 11:30 = 10:10 (Day 2). Llegada = 10:10 + 7:15 = 17:25 UTC (Day 2). ST = UTC + 12 = 29:25 → 05:25 del día siguiente = Day 3. Nunca se escribe 29:25."},
+  {text:"An aircraft departs from Airport A (175°00′ E) at 23:15 LMT (Day 1). It flies to the left on the map for 6 hours and 30 minutes, crossing the antimeridian bound for Airport B (170°00′ W), whose official time zone is UTC-11. At what Standard Time (ST) and on which day does it arrive?",opts:["07:05 ST (Day 1)","18:05 ST (Day 1)","07:05 ST (Day 2)","19:05 ST (Day 1)"],expl:"175° E = 11 h 40 → UTC salida = 23:15 − 11:40 = 11:35 (Day 1). Llegada = 11:35 + 6:30 = 18:05 UTC (Day 1). ST = UTC − 11 = 07:05 (Day 1). Cruzar el antimeridiano no cambia la UTC: se trabaja siempre en UTC y al final se pasa a la zona."}],
+ pf5:[{text:"An aircraft is flying with a Compass Heading (CH) of 215°. Given that the compass Deviation (DEV) is 3° E and the Magnetic Variation (VAR) is 7° W, calculate the True Heading (TH).",opts:["211°","225°","218°","205°"],expl:"C → M: 215 + 3 (DEV E suma) = MH 218. M → T: 218 − 7 (VAR W resta) = TH 211°."},
+  {text:"An aircraft is required to maintain a True Heading (TH) of 045°. The Magnetic Variation (VAR) is 10° W and the compass Deviation (DEV) is 2° E. What is the required Compass Heading (CH)?",opts:["053°","037°","057°","050°"],expl:"T → M (hacia atrás): VAR W suma → MH = 045 + 10 = 055. M → C: DEV E resta → CH = 055 − 2 = 053°."}],
+ nx9:[{text:"An aircraft is flying along a True Track (TT) of 180°. The wind causes a starboard drift (Right Drift) of 8°. The Magnetic Variation (VAR) is 5° E and the compass Deviation (DEV) is 3° W. Calculate the Compass Heading (CH).",opts:["170°","164°","176°","180°"],expl:"TT 180 con deriva a la derecha 8° → TH = 180 − 8 = 172. VAR 5°E: MH = 172 − 5 = 167. DEV 3°W: CH = 167 + 3 = 170°."}],
+ nx10:[{text:"An aircraft flies on a Compass Heading (CH) of 310°. The compass Deviation (DEV) is 4° E and the Magnetic Variation (VAR) is 12° W. If the aircraft experiences a port drift (Left Drift) of 6°, what is the True Track (TT)?",opts:["296°","308°","302°","298°"],expl:"CH 310 + DEV 4°E = MH 314. MH 314 − VAR 12°W = TH 302. Deriva a la izquierda 6° → TT = 302 − 6 = 296°."}],
+ nx11:[{text:"On a navigation chart, the measured distance between two waypoints is 12 cm. If the actual distance on the surface of the Earth is 240 NM, what is the scale of the chart?",opts:["1:3,704,000","1:1,000,000","1:2,000,000","1:5,000,000"],expl:"Escala = distancia en la carta ÷ distancia real. 240 NM × 1.852 m = 444.480 m = 44.448.000 cm. 12 cm ÷ 44.448.000 cm = 1 : 3.704.000."}],
+ nx12:[{text:"The scale of a Direct Mercator chart is 1:2,000,000 at Latitude A = 30° N. What is the chart scale at Latitude B = 60° N?",opts:["1:1,154,700","1:1,000,000","1:4,000,000","1:3,464,100"],expl:"Mercator: escala ∝ 1/cos φ → denominador ∝ cos φ. 2.000.000 × cos 60° ÷ cos 30° = 2.000.000 × 0,5 ÷ 0,866 = 1.154.700 → 1:1.154.700 (más grande al subir de latitud)."}],
+ nx13:[{text:"A distance on the Earth's surface of 100 NM is represented by 10 cm on a Mercator chart at Latitude A = 0° (Equator). How many centimeters will represent the same 100 NM Earth distance at Latitude B = 45° N?",opts:["14.14 cm","7.07 cm","10.00 cm","20.00 cm"],expl:"La escala Mercator crece con 1/cos φ: la misma distancia ocupa más cm. 10 cm ÷ cos 45° = 10 × 1,414 = 14,14 cm."}],
+ pf6:[{text:"On a chart with a scale of 1:1,000,000 at Latitude A = 40° S, two points are separated by 15 cm on the chart. Calculate the actual Earth distance between these two points in nautical miles.",opts:["81.0 NM","150.0 NM","114.9 NM","62.0 NM"],expl:"15 cm × 1.000.000 = 15.000.000 cm = 150 km ÷ 1,852 = 81,0 NM. La escala ya vale a esa latitud: no se corrige por coseno."}],
+ pf6b:[{text:"The scale of a Lambert/Mercator chart at the Equator (0°) is 1:3,000,000. At what Latitude B will the scale of the chart become 1:1,500,000?",opts:["60°","30°","45°","75°"],expl:"Escala ∝ 1/cos φ: 3.000.000 ÷ 1.500.000 = 2 = 1/cos φ → cos φ = 0,5 → φ = 60°."}],
+ nx14:[{text:"An aircraft is on final approach at a TAS of 120 kt. The reported wind is 20 kt with an angle (θ) of 60° relative to the runway heading. Calculate the headwind component and the drift angle (Drift Angle).",opts:["Headwind = 10.0 kt, Drift Angle = 8.7°","Headwind = 17.3 kt, Drift Angle = 5.0°","Headwind = 10.0 kt, Drift Angle = 12.0°","Headwind = 15.0 kt, Drift Angle = 6.5°"],expl:"Cara = 20 × cos 60° = 10,0 kt. Cruzado = 20 × sin 60° = 17,3 kt. Deriva (regla 1 en 60) = 17,3 ÷ 120 × 60 = 8,7°."}],
+ nx15:[{text:"An aircraft cruises at a TAS of 200 kt. The wind velocity is 50 kt at an angle (θ) of 30° from behind (tailwind). Calculate the Groundspeed (GS = TAS + Tailwind) and the Drift Angle (Drift Angle).",opts:["GS = 243.3 kt, Drift Angle = 7.5°","GS = 225.0 kt, Drift Angle = 5.0°","GS = 250.0 kt, Drift Angle = 10.0°","GS = 243.3 kt, Drift Angle = 12.5°"],expl:"Cola = 50 × cos 30° = 43,3 kt → GS = 200 + 43,3 = 243,3 kt. Cruzado = 50 × sin 30° = 25 kt → deriva = 25 ÷ 200 × 60 = 7,5°."}],
+ nx16:[{text:"Your heading is 010, your TAS is 134 kts and the wind is 230/26. What is your track and GS?",opts:["016/154","006/154","016/114","006/114"],expl:"El viento 230/26 sopla hacia 050°: de cola y por la izquierda → deriva a la DERECHA. N = 134 cos 10° + 26 cos 50° = 148,7; E = 134 sin 10° + 26 sin 50° = 43,2 → track 016°, GS ≈ 155 kt (con el ordenador de vuelo, 154): la opción más próxima es 016/154."}],
+ nx17:[{text:"Given: TH: 035 and Tr: 046 (T); TAS: 245 kts; GS: 209 kts. Calculate the W/V:",opts:["350/55 kts","335/45 kts","340/50 kts","340/45 kts"],expl:"Deriva = 046 − 035 = 11° a la derecha. Viento = vector GS − vector TAS: N = 209 cos 46° − 245 cos 35° = −55,5; E = 209 sin 46° − 245 sin 35° = 9,8 → apunta hacia 170° con 56 kt; el viento se da DESDE: 350°, ≈ 55 kt → 350/55."}],
+ nx18:[{text:"Given: TAS: 140 kts; HDG: 005 (T); W/V: 265/25 kts. Calculate the drift and GS:",opts:["10°R/146 kts","11°R/140 kts","11°R/142 kts","9°/140 kts"],expl:"Viento 265/25 sopla hacia 085°, 80° a la derecha del rumbo. Cruzado = 25 × sin 80° = 24,6 kt → deriva ≈ 24,6 ÷ 140 × 60 ≈ 10° a la derecha. GS = 140 × cos 10° + 25 × cos 70° ≈ 146 kt → 10°R/146."}],
+ nx19:[{text:"The aircraft heading is 304 to maintain the required track of 325. If the TAS is 145 KTS and GS is 137 kts, what is the wind velocity?",opts:["235°/52 kts","245°/52 kts","055°/35 kts","065°/52 kts"],expl:"Deriva = 325 − 304 = 21° a la derecha. Viento = vector GS − vector TAS: N = 137 cos 325° − 145 cos 304° = 31,1; E = 137 sin 325° − 145 sin 304° = 41,6 → apunta hacia 053° con 52 kt → viento DESDE 233°, ≈ 52 kt → la opción más próxima es 235/52."}],
+ nx20:[{text:"An NDB transmitter operates with a total output power of 1600 W. What is the maximum theoretical range of this NDB beacon?",opts:["40 NM","160 NM","80 NM","20 NM"],expl:"Alcance del NDB (NM) ≈ √potencia (W) = √1.600 = 40 NM."}],
+ nx21:[{text:"An air traffic authority requires an NDB station to cover a range of 50 NM. What transmitter power output in Watts (W) is needed to achieve this operational range?",opts:["2500 W","100 W","500 W","1000 W"],expl:"Alcance ≈ √P → P = alcance² = 50² = 2.500 W."}],
+ nx22:[{text:"A VOR ground station is located at an elevation of 900 ft above sea level. An aircraft is cruising at an altitude of 10000 ft. What is the maximum VOR reception range for this aircraft?",opts:["159.9 NM","123.0 NM","135.3 NM","180.0 NM"],expl:"Alcance ≈ 1,23 × (√h estación + √h avión) = 1,23 × (√900 + √10.000) = 1,23 × (30 + 100) = 159,9 NM. (123 NM sería solo el avión, sin la antena.)"}],
+ nx23:[{text:"A pilot wants to receive a signal from a VOR ground station located at an elevation of 400 ft at a distance of 147.6 NM. What is the minimum altitude at which the aircraft must fly to receive the signal?",opts:["10000 ft","8000 ft","12000 ft","14400 ft"],expl:"147,6 ÷ 1,23 = 120 = √400 + √h → √h = 120 − 20 = 100 → h = 10.000 ft. (14.400 ft sería olvidar la antena de la estación.)"}],
+ nx24:[{text:"An NDB currently has an operational range of 30 NM. If the station engineer wants to double the reception range to 60 NM, by what factor must the transmitter power output be increased?",opts:["4 times","2 times","8 times","16 times"],expl:"Alcance ∝ √P → P ∝ alcance². Duplicar el alcance requiere 2² = 4 veces la potencia."}]
+};
+BASE.push(
+ ["nx1","061.01.04","n","nx","★ Exam style: shortest distance on a meridian, same hemisphere (subtract latitudes).",["",""," ",""],""],
+ ["nx2","061.01.04","n","nx","★ Exam style: shortest distance on a meridian, different hemispheres (add latitudes).",["",""," ",""],""],
+ ["nx3","061.01.04","n","nx","★ Exam style: meridian and anti-meridian, same hemisphere (over the pole).",["",""," ",""],""],
+ ["nx4","061.01.04","n","nx","★ Exam style: meridian and anti-meridian, different hemispheres (over the pole).",["",""," ",""],""],
+ ["nx5","061.01.04","n","nx","★ Exam style: route East/West – North/South – East/West; coordinates of D (cos φ).",["",""," ",""],""],
+ ["nx6","061.01.04","n","nx","★ Exam style: route North – West – North across the pole; coordinates of D.",["",""," ",""],""],
+ ["nx8","061.05.01","n","nx","★ Exam style: LMT at city A → LMT at city B.",["",""," ",""],""],
+ ["nx9","061.01.03","n","nx","★ Exam style: true track → compass heading (drift, variation, deviation).",["",""," ",""],""],
+ ["nx10","061.01.03","n","nx","★ Exam style: compass heading → true track (deviation, variation, drift).",["",""," ",""],""],
+ ["nx11","061.04.01","n","nx","★ Exam style: scale of the chart from cm on the chart and NM on the ground.",["",""," ",""],""],
+ ["nx12","061.04.02","n","nx","★ Exam style: Mercator scale at another latitude.",["",""," ",""],""],
+ ["nx13","061.04.02","n","nx","★ Exam style: the same distance in cm at another latitude (Mercator).",["",""," ",""],""],
+ ["nx14","061.01.06","n","nx","★ Exam style: headwind component and drift on final approach.",["",""," ",""],""],
+ ["nx15","061.01.06","n","nx","★ Exam style: groundspeed and drift with a head/tail wind at an angle.",["",""," ",""],""],
+ ["nx16","061.01.06","n","nx","★ Exam style: track and GS from heading, TAS and W/V.",["",""," ",""],""],
+ ["nx17","061.01.06","n","nx","★ Exam style: W/V from TH, track, TAS and GS (list format).",["",""," ",""],""],
+ ["nx18","061.01.06","n","nx","★ Exam style: drift and GS from heading, TAS and W/V.",["",""," ",""],""],
+ ["nx19","061.01.06","n","nx","★ Exam style: W/V from heading, track, TAS and GS.",["",""," ",""],""],
+ ["nx20","062.02.02","n","nx","★ Exam style: NDB range from transmitter power (√P).",["",""," ",""],""],
+ ["nx21","062.02.02","n","nx","★ Exam style: NDB power needed for a given range (R²).",["",""," ",""],""],
+ ["nx22","062.02.03","n","nx","★ Exam style: VOR range with station elevation and aircraft altitude.",["",""," ",""],""],
+ ["nx23","062.02.03","n","nx","★ Exam style: minimum altitude to receive a VOR at a given distance.",["",""," ",""],""],
+ ["nx24","062.02.02","n","nx","★ Exam style: by what factor must NDB power increase to change the range.",["",""," ",""],""]
+);
+const NX_GEN = {nx1:()=>gXdist("same"), nx2:()=>gXdist("diff"), nx3:()=>gXdist("poleS"), nx4:()=>gXdist("poleD"), nx5:()=>gXroute("A"), nx6:()=>gXroute("B"),
+  nx8:gXlmt, nx9:()=>gXhdg("ch"), nx10:()=>gXhdg("tt"), nx11:gXscale1, nx12:gXscale2, nx13:gXscale3, nx14:gXhw, nx15:gXgs, nx16:gXtrkgs, nx17:()=>gXwv("list"), nx18:gXdrgs, nx19:()=>gXwv("prose"),
+  nx20:()=>gXndb("range"), nx21:()=>gXndb("power"), nx22:()=>gXvor("range"), nx23:()=>gXvor("alt"), nx24:gXndbF};
+// una de cada cuatro veces sale la pregunta original tal cual; las demás, una variante nueva
+function xWithLit(id, gen){
+  return () => { const L = NX_LIT[id]; if(L && L.length && Math.random()<0.25){ const o = pick(L); return {text:o.text, opts:o.opts.slice(), expl:o.expl, v:false, p:{kind:"xlit", id}}; } return gen(); };
+}
+Object.keys(NX_GEN).forEach(id => { GEN[id] = xWithLit(id, NX_GEN[id]); });
+["pf1","pf3","pf3b","pf5","pf6","pf6b"].forEach(id => { if(GEN[id]) GEN[id] = xWithLit(id, GEN[id]); });
+// <<END navexam>>
+
 
 // las del PDF con números ya generados también cuentan como «con cálculo o figura»
 Object.assign(REFS,{
@@ -4026,10 +4415,10 @@ function selectQuestions(mode, inc, lo, atpl){
   for(const x of scored){ if(chosen.filter(isTrial).length>=6) break; if(isTrial(x.q)) take(x.q); }
   for(const x of scored){ if(chosen.length>=N) break; take(x.q); }
   for(const x of scored){ if(chosen.length>=N) break; take(x.q,false); }
-  // los ejercicios de clase (pf…) entran siempre: al menos 3 en cada test adaptativo, sustituyendo a los de menor prioridad
-  const prm = new Map(scored.map(x=>[x.q[0],x.p])), isEx = q=>/^pf/.test(q[0]);
+  // los ejercicios de clase y de examen (pf…, nx…) entran siempre: al menos 6 en cada test adaptativo, sustituyendo a los de menor prioridad
+  const prm = new Map(scored.map(x=>[x.q[0],x.p])), isEx = q=>/^(pf|nx)/.test(q[0]);
   shuffle(pool.filter(q=>isEx(q) && !chosen.includes(q))).forEach(q=>{
-    if(chosen.filter(isEx).length>=3) return;
+    if(chosen.filter(isEx).length>=6) return;
     const cand = chosen.filter(x=>!isEx(x) && !isTrial(x)).sort((a,b)=>(prm.get(a[0])||0)-(prm.get(b[0])||0));
     const out = cand.find(x=>!isStyled(x)) || cand[0];
     if(out) chosen.splice(chosen.indexOf(out),1,q);

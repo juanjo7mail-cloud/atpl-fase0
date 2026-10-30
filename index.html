@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="7ccb235d222f";</script>
+<script>window.F0_BUILD="3b128dbbd135";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1343,6 +1343,9 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-30", items:[
+    {i:"🧭", t:"Navegación · preguntas del examen con variantes", d:"Las 34 preguntas tipo examen (distancias por el polo, rutas con coordenadas, hora LMT/UTC/ST, rumbos con deriva, escalas Mercator, triángulo de velocidades, NDB y VOR) ya están en Navegación: salen tal cual y, sobre todo, con cifras nuevas cada vez en el simulacro, el adaptativo, solo cálculos y el banco completo."}
+  ]},
   {id:"2026-10-29b", items:[
     {i:"🎯", t:"SOP · Taller WANT y 50 preguntas nuevas", d:"Taller WANT: 10 escenarios inventados con METAR, TAF, NOTAM y amenazas para rellenar tu WANT y tus briefings y ver al momento si vuelas o no. Las 50 preguntas nuevas ya están dentro de todos los tests (simulacro, adaptativo…). Tabla de mínimos tal cual."},
     {i:"📷", t:"Fotos reales en Derecho Aéreo y Meteorología", d:"Marcas de pista, punto de espera, luces de aproximación, umbral desplazado, nubes lenticulares, mammatus, Cb y una carta SIGWX real para tocar y leer."}
