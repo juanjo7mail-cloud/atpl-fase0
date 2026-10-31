@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="fb301ab095b3";</script>
+<script>window.F0_BUILD="c62e98d9eb09";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1345,6 +1345,10 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-31b", items:[
+    {i:"🛩️", t:"SOP y Operational Procedures · más preguntas", d:"Nuevas preguntas, con variantes, en el simulacro, el adaptativo, por tema, fallos y banco completo: velocidades y listas del SOP, mínimos y briefings, entrada en pista, motor y al aire, señales, planes de vuelo, estela y cizalladura. Las que más se repiten salen con más frecuencia."},
+    {i:"📘", t:"Performance · AIP", d:"Las preguntas de GEN y AD piden ahora la palabra completa."}
+  ]},
   {id:"2026-10-31", items:[
     {i:"⚖️", t:"Performance y planificación · apuntes de las últimas clases", d:"Factor de carga y velocidades (Va, arcos del velocímetro), ISA, PA y DA, despegue y aterrizaje, ascenso y planeo, AIP, NOTAM, meteorología y combustible. Más las 20 preguntas de clase y 7 cálculos nuevos, en todos los tipos de test."},
     {i:"💬", t:"Chat · sigues en línea 1 minuto más", d:"Si sales un momento de la pestaña (por ejemplo a otra app), tu chat sigue conectado 1 minuto: te pueden escribir y los mensajes te llegan al volver.", web:true}
