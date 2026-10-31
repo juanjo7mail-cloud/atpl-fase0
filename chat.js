@@ -4,10 +4,10 @@
    API: F0Chat.start({sb,user,name}) · F0Chat.leave() · F0Chat.unread() · F0Chat.state() */
 (function(){
 "use strict";
-const MAXLEN=500, GAP=500, KEEP=200, TTL=60*60*1000;   // los mensajes duran 60 min (solo en este dispositivo)
+const MAXLEN=500, GAP=500, KEEP=200, TTL=60*60*1000, GRACE=60*1000, RESEND=4000;   // gracia: tras desconectarse, un compañero sigue «en línea» 60 s y le llegan los mensajes al volver   // los mensajes duran 60 min (solo en este dispositivo)
 const $=(s,r)=>(r||document).querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const C={deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0};
+const C={deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0};
 
 const PLANE='<path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z"/>';
 const ICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path class="bb" d="M16 3C8.8 3 3 8 3 14.2c0 3.3 1.7 6.3 4.4 8.3-.2 1.9-1 3.6-2.2 5 2.6-.3 4.8-1.3 6.4-2.6 1.4.4 2.9.6 4.4.6 7.200 0 13-5 13-11.300S23.200 3 16 3z"/><g class="pl" transform="translate(16 14) rotate(-45) scale(.82) translate(-10 -10)">'+PLANE+'</g></svg>';
@@ -117,7 +117,7 @@ function join(priv){
   try{ ch=d.sb.channel("f0:chat",{config:{broadcast:{self:false,ack:false},presence:{key:C.uid},private:!!priv}}); }
   catch(e){ C.status="err"; update(); return; }
   C.ch=ch;
-  ch.on("broadcast",{event:"m"},m=>onMsg(m.payload||m)).on("presence",{event:"sync"},syncPeers);
+  ch.on("broadcast",{event:"m"},m=>onMsg(m.payload||m)).on("broadcast",{event:"a"},m=>onAck(m.payload||m)).on("presence",{event:"sync"},syncPeers);
   ch.subscribe(st=>{
     if(C.ch!==ch) return;
     if(st==="SUBSCRIBED"){ C.status="on"; C.retry=0; try{ ch.track({n:myName()}); }catch(e){} update(); }
@@ -130,9 +130,30 @@ function join(priv){
 }
 function leaveChannel(){ if(C.ch){ try{ C.deps.sb.removeChannel(C.ch); }catch(e){} C.ch=null; } C.peers={}; }
 function syncPeers(){
-  try{ const st=C.ch.presenceState(), o={}; Object.keys(st).forEach(k=>{ const m=st[k]&&st[k][0]; if(m&&k!==C.uid) o[k]={n:String(m.n||"Alumno").slice(0,60)}; }); C.peers=o; }catch(e){}
-  update();
+  const now=Date.now(), cur={}; let back=[];
+  try{ const st=C.ch.presenceState(); Object.keys(st).forEach(k=>{ const m=st[k]&&st[k][0]; if(m&&k!==C.uid) cur[k]={n:String(m.n||"Alumno").slice(0,60)}; }); }catch(e){}
+  const o=Object.assign({},cur);
+  Object.keys(C.peers).forEach(k=>{
+    const p=C.peers[k];
+    if(cur[k]){ if(p.away) back.push(k); return; }
+    if(p.away){ if(p.until>now) o[k]=p; }                                   // sigue en su minuto de gracia
+    else o[k]={n:p.n,away:true,until:now+GRACE};                              // acaba de desaparecer: gracia de 60 s
+  });
+  C.peers=o; back.forEach(flush); update();
 }
+function expire(){   // quita a los que han agotado la gracia y gestiona el reenvío de pendientes
+  const now=Date.now(); let ch=false;
+  Object.keys(C.peers).forEach(k=>{ const p=C.peers[k]; if(p.away&&p.until<=now){ delete C.peers[k]; ch=true; } });
+  Object.keys(C.out).forEach(id=>{
+    const e=C.out[id], p=C.peers[e.to];
+    if(now-e.t0>GRACE+30000){ delete C.out[id]; mark(e.to,id,2); ch=true; return; }   // no se ha podido entregar
+    if(p&&!p.away&&now-e.last>=RESEND){ e.last=now; xmit(e.m); }
+  });
+  if(ch){ save(); update(); }
+}
+function xmit(m){ try{ C.ch&&C.ch.send({type:"broadcast",event:"m",payload:m}); }catch(e){} }
+function flush(k){ const now=Date.now(); Object.keys(C.out).forEach(id=>{ const e=C.out[id]; if(e.to===k){ e.last=now; xmit(e.m); } }); }
+function mark(room,id,v){ const a=C.rooms[room]; if(!a) return; const m=a.find(x=>x.id===id); if(m){ if(v) m.p=v; else delete m.p; } }
 function total(){ return Object.values(C.unread).filter(n=>n>0).length; }   // personas que te han escrito (como el globo de iPhone)
 function msgs(){ return Object.values(C.unread).reduce((a,b)=>a+b,0); }
 function clean(x){ return String(x==null?"":x).replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g,"").trim().slice(0,MAXLEN); }
@@ -142,22 +163,26 @@ function push(room,m){
   if(!m.me && !viewing(room)) C.unread[room]=(C.unread[room]||0)+1;
   save();
 }
+function ack(p){ try{ C.ch&&C.ch.send({type:"broadcast",event:"a",payload:{id:p.id,to:p.f}}); }catch(e){} }
+function onAck(p){ if(!p||p.to!==C.uid||!C.out[p.id]) return; const e=C.out[p.id]; delete C.out[p.id]; mark(e.to,p.id,0); save(); update(); }
 function onMsg(p){
-  if(!p||!p.id||!p.to||p.to!==C.uid||p.f===C.uid||C.seen.has(p.id)) return;   // solo mensajes privados dirigidos a mí
+  if(!p||!p.id||!p.to||p.to!==C.uid||p.f===C.uid) return;   // solo mensajes privados dirigidos a mí
+  if(C.seen.has(p.id)){ ack(p); return; }                    // reenvío: ya lo tengo, solo confirmo
   const x=clean(p.x); if(!x) return;
   C.seen.add(p.id); if(C.seen.size>2000) C.seen=new Set([...C.seen].slice(-500));
   const room=String(p.f);
   C.names[room]=String(p.n||"Alumno").slice(0,60);
   if(!C.peers[room]) C.peers[room]={n:C.names[room]};
   push(room,{id:p.id,n:String(p.n||"Alumno").slice(0,60),t:+p.t||Date.now(),x,me:false});
-  update();
+  ack(p); update();
 }
 function send(text){
   const to=C.active, x=clean(text); if(!x||!to||C.status!=="on"||!C.peers[to]) return false;
   const now=Date.now(); if(now-C.last<GAP) return false; C.last=now;
   const m={id:C.uid.slice(0,6)+now.toString(36)+Math.random().toString(36).slice(2,6),f:C.uid,n:myName(),to,t:now,x};
   try{ C.ch.send({type:"broadcast",event:"m",payload:m}); }catch(e){ return false; }
-  C.seen.add(m.id); C.names[to]=nameOf(to); push(to,{id:m.id,n:m.n,t:now,x,me:true}); update(); return true;
+  C.out[m.id]={m,to,t0:now,last:now};                                      // se reenvía hasta que el otro confirme (o pasen ~90 s)
+  C.seen.add(m.id); C.names[to]=nameOf(to); push(to,{id:m.id,n:m.n,t:now,x,me:true,p:1}); update(); return true;
 }
 
 /* ---------- interfaz ---------- */
@@ -209,13 +234,13 @@ function update(){
   if(!room){
     const gone=Object.keys(C.rooms).filter(k=>!C.peers[k]);
     const row=(k,sub,isOn)=>`<button class="f0c-p${isOn?"":" gone"}" data-room="${esc(k)}"><span class="av">${esc(ini(nameOf(k)))}<i></i></span><span class="nm">${esc(nameOf(k))}<small>${esc(sub)}</small></span>${C.unread[k]?`<b class="u">${C.unread[k]}</b>`:""}</button>`;
-    const list=(online.length||gone.length)?`<div class="f0c-list">${online.length?"<h3>En línea</h3>"+online.map(k=>row(k,C.unread[k]?"mensaje nuevo":"toca para escribir",true)).join(""):""}${gone.length?"<h3>Conversaciones</h3>"+gone.map(k=>row(k,"ya no está en línea",false)).join(""):""}</div>`
+    const list=(online.length||gone.length)?`<div class="f0c-list">${online.length?"<h3>En línea</h3>"+online.map(k=>row(k,C.unread[k]?"mensaje nuevo":(C.peers[k].away?"ausente un momento · le llegará al volver":"toca para escribir"),true)).join(""):""}${gone.length?"<h3>Conversaciones</h3>"+gone.map(k=>row(k,"ya no está en línea",false)).join(""):""}</div>`
       :`<div class="f0c-empty">${ICON}${on?"Ahora mismo no hay nadie más conectado.<br>Cuando entre un compañero aparecerá aquí.":"No se ha podido conectar el chat."}</div>`;
     pan.innerHTML=`<header class="f0c-hd ${C.status}">${ICON}<h2>Online pilots<small><i></i>${esc(stTxt)}</small></h2><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos solo en este dispositivo (por si cierras la web sin querer) y luego se borran. No compartas datos personales ni claves.</p></div>`;
   } else {
     const off=!C.peers[room]||!on;
-    const msgs=(C.rooms[room]||[]).map(m=>`<div class="f0c-m${m.me?" me":""}">${esc(m.x)}<time>${hhmm(m.t)}</time></div>`).join("");
-    pan.innerHTML=`<header class="f0c-hd ${C.peers[room]?C.status:"off"}"><button id="f0cBack" type="button" aria-label="Volver a la lista">‹</button><h2>${esc(nameOf(room))}<small><i></i>${C.peers[room]?"en línea":"no está en línea"}</small></h2><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body"><div class="f0c-msgs" id="f0cMsgs" role="log" aria-live="polite"><div class="f0c-sys">Chat privado con ${esc(nameOf(room))}. Solo se entrega si está en línea. Los mensajes se borran a los 60 minutos.</div>${msgs}</div><form class="f0c-form" id="f0cForm" autocomplete="off"><input id="f0cIn" maxlength="${MAXLEN}" placeholder="${off?"No está en línea":"Escribe un mensaje…"}" aria-label="Mensaje" ${off?"disabled":""}><button type="submit" aria-label="Enviar" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></form></div>`;
+    const msgs=(C.rooms[room]||[]).map(m=>`<div class="f0c-m${m.me?" me":""}">${esc(m.x)}<time>${hhmm(m.t)}${m.p===1?" · enviando…":m.p===2?" · no entregado":""}</time></div>`).join("");
+    pan.innerHTML=`<header class="f0c-hd ${C.peers[room]?C.status:"off"}"><button id="f0cBack" type="button" aria-label="Volver a la lista">‹</button><h2>${esc(nameOf(room))}<small><i></i>${C.peers[room]?(C.peers[room].away?"ausente un momento":"en línea"):"no está en línea"}</small></h2><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body"><div class="f0c-msgs" id="f0cMsgs" role="log" aria-live="polite"><div class="f0c-sys">Chat privado con ${esc(nameOf(room))}. Se entrega si está en línea o vuelve en menos de 1 minuto. Los mensajes se borran a los 60 minutos.</div>${msgs}</div><form class="f0c-form" id="f0cForm" autocomplete="off"><input id="f0cIn" maxlength="${MAXLEN}" placeholder="${off?"No está en línea":"Escribe un mensaje…"}" aria-label="Mensaje" ${off?"disabled":""}><button type="submit" aria-label="Enviar" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></form></div>`;
     const ni=$("#f0cIn",r); if(keep&&ni){ ni.value=keep.v; if(keep.f&&!ni.disabled) ni.focus(); }
     const nm=$("#f0cMsgs",r); if(nm&&(atEnd||!keep)) nm.scrollTop=nm.scrollHeight;
   }
@@ -223,15 +248,20 @@ function update(){
 function start(deps){
   const fresh=C.status==="off"||C.uid!==deps.user.id;
   C.deps=deps; build();
-  if(fresh){ C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.uid=deps.user.id; load(); clearInterval(C.pruneT); C.pruneT=setInterval(tick,30000); join(false); }
+  if(fresh){ C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.uid=deps.user.id; load(); clearInterval(C.pruneT); C.pruneT=setInterval(tick,30000); clearInterval(C.outT); C.outT=setInterval(expire,2000); C.out={}; join(false); }
 }
 function leave(){
   try{ if(C.uid) localStorage.removeItem(SK()); }catch(e){}   // al cerrar sesión se borra el chat de este dispositivo
-  clearInterval(C.pruneT); try{ if(C.title) document.title=C.title; }catch(e){}
+  clearInterval(C.pruneT); clearInterval(C.outT); C.out={}; try{ if(C.title) document.title=C.title; }catch(e){}
   leaveChannel(); C.status="off"; C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.deps=null; C.uid="";
   if(C.root){ C.root.remove(); C.root=null; }
 }
-document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&C.active&&C.unread[C.active]){ C.unread[C.active]=0; save(); update(); } });
+function wake(){   // al volver a la pestaña (o recuperar red): si el canal se cayó, se reconecta; si no, se vuelve a anunciar la presencia
+  if(!C.deps) return;
+  if(!C.ch||C.status==="err"||C.status==="off"){ C.retry=0; join(false); } else retrack();
+}
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ wake(); if(C.active&&C.unread[C.active]){ C.unread[C.active]=0; save(); update(); } } });
+addEventListener("pageshow",wake); addEventListener("online",wake);
 function retrack(){ if(C.ch&&C.status==="on"){ try{ C.ch.track({n:myName()}); }catch(e){} } }
-window.F0Chat={start, leave, retrack, unread:total, state:()=>({status:C.status,peers:C.peers,active:C.active,open:C.open,rooms:Object.fromEntries(Object.entries(C.rooms).map(([k,v])=>[k,v.length]))}), _send:send, _open:openRoom, _toggle:setOpen};
+window.F0Chat={start, leave, retrack, unread:total, _drop(){ if(C.ch){ try{ C.deps.sb.removeChannel(C.ch); }catch(e){} C.ch=null; C.status="err"; update(); } }, _wake:wake, _expire:expire, _peers:()=>C.peers, _out:()=>Object.keys(C.out).length, _setGrace(ms){ Object.keys(C.peers).forEach(k=>{ if(C.peers[k].away) C.peers[k].until=Date.now()+ms; }); }, state:()=>({status:C.status,peers:C.peers,active:C.active,open:C.open,rooms:Object.fromEntries(Object.entries(C.rooms).map(([k,v])=>[k,v.length]))}), _send:send, _open:openRoom, _toggle:setOpen};
 })();

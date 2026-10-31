@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="72b49f2d940a";</script>
+<script>window.F0_BUILD="fb301ab095b3";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1019,7 +1019,9 @@ renderTabs(); renderDash(); show(start);
 /* ===================== web propia: cuenta obligatoria (Supabase) ===================== */
 let recovering=false;
 async function webBoot(cfg){
-  sb = window.supabase.createClient(cfg.url, cfg.key, {auth:{persistSession:true, autoRefreshToken:true}});
+  // el latido del tiempo real va en un Web Worker (no lo frena el navegador con la pestaña en segundo plano) y más frecuente: así la conexión del chat aguanta un rato al cambiar de app
+  const rtOpt = (typeof Worker!=="undefined" && typeof Blob!=="undefined") ? {worker:true, heartbeatIntervalMs:15000} : {heartbeatIntervalMs:15000};
+  sb = window.supabase.createClient(cfg.url, cfg.key, {auth:{persistSession:true, autoRefreshToken:true}, realtime:rtOpt});
   if(sb.auth.onAuthStateChange) sb.auth.onAuthStateChange(ev=>{ if(ev==="PASSWORD_RECOVERY"){ recovering=true; $("#login").hidden=true; $("#pwReset").hidden=false; setTimeout(()=>$("#pwNew").focus(),40); } });
   $("#acct").hidden=false; $("#sugBtn").hidden=false; $("#privLink").hidden=false; $("#saveBtn").hidden=true;
   const { data } = await sb.auth.getSession();
@@ -1343,8 +1345,12 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-31", items:[
+    {i:"⚖️", t:"Performance y planificación · apuntes de las últimas clases", d:"Factor de carga y velocidades (Va, arcos del velocímetro), ISA, PA y DA, despegue y aterrizaje, ascenso y planeo, AIP, NOTAM, meteorología y combustible. Más las 20 preguntas de clase y 7 cálculos nuevos, en todos los tipos de test."},
+    {i:"💬", t:"Chat · sigues en línea 1 minuto más", d:"Si sales un momento de la pestaña (por ejemplo a otra app), tu chat sigue conectado 1 minuto: te pueden escribir y los mensajes te llegan al volver.", web:true}
+  ]},
   {id:"2026-10-30", items:[
-    {i:"🧭", t:"Navegación · preguntas del examen con variantes", d:"Las 34 preguntas tipo examen (distancias por el polo, rutas con coordenadas, hora LMT/UTC/ST, rumbos con deriva, escalas Mercator, triángulo de velocidades, NDB y VOR) ya están en Navegación: salen tal cual y, sobre todo, con cifras nuevas cada vez en el simulacro, el adaptativo, solo cálculos y el banco completo. Nuevo Trial de Navegación: 54 preguntas = las 20 del trial + las 34 del examen (cada una en variante, o la original con más frecuencia)."}
+    {i:"🧭", t:"Navegación · más ejercicios con variantes", d:"Nuevos ejercicios de cálculo en Navegación (distancias por el polo, rutas con coordenadas, hora LMT/UTC/ST, rumbos con deriva, escalas Mercator, triángulo de velocidades, NDB y VOR): salen con cifras nuevas cada vez en el simulacro, el adaptativo, solo cálculos y el banco completo."}
   ]},
   {id:"2026-10-29b", items:[
     {i:"🎯", t:"SOP · Taller WANT y 50 preguntas nuevas", d:"Taller WANT: 10 escenarios inventados con METAR, TAF, NOTAM y amenazas para rellenar tu WANT y tus briefings y ver al momento si vuelas o no. Las 50 preguntas nuevas ya están dentro de todos los tests (simulacro, adaptativo…). Tabla de mínimos tal cual."},
