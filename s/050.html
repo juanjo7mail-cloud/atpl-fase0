@@ -2593,7 +2593,6 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="foto"> Nubes por foto <small id="fotoCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="simb"> Símbolos del mapa <small id="simbCount"></small></label>
-      <label class="mode"><input type="radio" name="mode" value="ofi"> Preguntas oficiales <small id="ofiCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema concreto <small><select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
@@ -3211,33 +3210,33 @@ function gStrongWind(){
 function gPAlt(){
   const elev = nvP([0,200,500,800,1000,1200,1500,2000,2400,3000,3500]), q = Math.random()<.12?1013:nvR(985,1040), pa = elev+(1013-q)*27;
   const alt = pa>=0?nvFt(pa):`−${nvFt(-pa)}`;
-  return {text:nvP([`An aerodrome has an elevation of ${nvN(elev)} ft and the QNH is ${q} hPa. The pressure altitude is:`, `Aerodrome elevation ${nvN(elev)} ft, QNH ${q} hPa. Using 1 hPa = 27 ft, the pressure altitude is:`]),
+  return {text:nvP([`An aerodrome has an elevation of ${nvN(elev)} ft and the QNH is ${q} hPa. The pressure altitude is:`, `Aerodrome elevation ${nvN(elev)} ft, QNH ${q} hPa. The pressure altitude is:`]),
     opts:nvOpts(pa,[elev+(q-1013)*27, elev, (1013-q)*27, elev+(1013-q)*30, elev+(1013-q)*8],x=>x<0?`−${nvFt(-x)}`:nvFt(x),100),
     expl:`Altitud de presión = elevación + (1013 − QNH) × 27 = ${nvN(elev)} + (${1013-q}) × 27 = ${nvN(pa)} ft. ${q>1013?"QNH alto → la altitud de presión queda por DEBAJO de la elevación.":q<1013?"QNH bajo → queda por ENCIMA de la elevación.":"Con QNH 1013 coincide con la elevación."}`, v:true, p:{kind:"pa",elev,q,ans:pa}};
 }
 function gQFEpair(){
   const k = nvR(2,40)*30, elev = k*(nvP([1,1,2.5,5])), q = nvR(990,1032), qfe = q - elev/30, pa = elev + (1013-q)*30;
   const hp = x=>`${nvN(x)} hPa`;
-  if(Math.random()<.5) return {text:nvP([`An aerodrome is at an elevation of ${nvN(elev)} ft and the QNH is ${q} hPa. The QFE is: (1 hPa = 30 ft)`, `Elevation ${nvN(elev)} ft, QNH ${q} hPa, 1 hPa = 30 ft. The QFE is:`]),
+  if(Math.random()<.5) return {text:nvP([`An aerodrome is at an elevation of ${nvN(elev)} ft and the QNH is ${q} hPa. The QFE is:`, `Elevation ${nvN(elev)} ft, QNH ${q} hPa. The QFE is:`]),
     opts:nvOpts(qfe,[q+elev/30, q, q-elev/8, q-elev/27],hp,2), expl:`${nvN(elev)} ÷ 30 = ${nvN(elev/30)} hPa, y subiendo del mar al campo la presión baja: ${q} − ${nvN(elev/30)} = ${nvN(qfe)} hPa. Comprobación: el QFE sale MENOR que el QNH en un aeródromo por encima del mar.`, v:true, p:{kind:"qfe",elev,q,ans:qfe}};
   const ans = `${hp(qfe)} and ${nvN(pa)} ft`;
-  return {text:`An aerodrome has an elevation of ${nvN(elev)} ft and the QNH is ${q} hPa. The QFE and the pressure altitude respectively are: (1 hPa = 30 ft)`,
+  return {text:`An aerodrome has an elevation of ${nvN(elev)} ft and the QNH is ${q} hPa. The QFE and the pressure altitude respectively are:`,
     opts:[ans, `${hp(qfe)} and ${nvN(elev)} ft`, `${hp(q+elev/30)} and ${nvN(pa)} ft`, `${hp(qfe)} and ${nvN(elev+(q-1013)*30)} ft`].concat([`${hp(qfe+10)} and ${nvN(pa)} ft`,`${hp(qfe-10)} and ${nvN(pa)} ft`,`${hp(qfe+20)} and ${nvN(pa)} ft`]).filter((x,i,a)=>a.indexOf(x)===i).slice(0,4),
     expl:`QFE = ${q} − ${nvN(elev/30)} = ${nvN(qfe)} hPa. Altitud de presión = ${nvN(elev)} + (1013 − ${q}) × 30 = ${nvN(pa)} ft. Trampa: suponer que la altitud de presión es la elevación (solo pasa con QNH 1013).`, v:true, p:{kind:"qfepa",elev,q,qfe,pa}};
 }
 function gMetricRule(){
   const d = nvR(2,9)*5, up = Math.random()<.5, q = nvR(995,1025);
-  if(up){ const m = d*8; return {text:nvP([`At an aerodrome the QNH is ${q} hPa and the QFE is ${q-d} hPa. The elevation is: (1 hPa = 8 m)`, `QNH ${q} hPa, QFE ${q-d} hPa. Using the metric rule of 8 m per hPa, the elevation is:`]),
+  if(up){ const m = d*8; return {text:nvP([`At an aerodrome the QNH is ${q} hPa and the QFE is ${q-d} hPa. The elevation is:`, `QNH ${q} hPa, QFE ${q-d} hPa. The elevation is:`]),
     opts:nvOpts(m,[d, d*30, m*3.28, d*27],x=>`${nvN(Math.round(x))} m`,40), expl:`${q} − ${q-d} = ${d} hPa y ${d} × 8 = ${m} m. Trampas: quedarse en hPa sin convertir, o usar los 27-30 ft/hPa como si fueran metros.`, v:true, p:{kind:"metric",d,ans:m}}; }
   const m = d*8;
-  return {text:nvP([`An aerodrome is ${nvN(m)} m above mean sea level. With the metric rule (1 hPa ≈ 8 m), the QNH minus the QFE is about:`, `The elevation of an aerodrome is ${nvN(m)} m. Using 8 m per hPa, QNH − QFE is approximately:`]),
+  return {text:nvP([`An aerodrome is ${nvN(m)} m above mean sea level. The QNH minus the QFE is about:`, `The elevation of an aerodrome is ${nvN(m)} m. QNH − QFE is approximately:`]),
     opts:nvOpts(d,[m, d*3, d/2, Math.round(m/27)],x=>`${nvN(Math.round(x))} hPa`,2), expl:`${nvN(m)} ÷ 8 = ${d} hPa. En metros la regla es 8 m por hectopascal (en pies, 27-30 ft).`, v:true, p:{kind:"metric2",d,m,ans:d}};
 }
 function gTrueAlt(){
   const fl = nvP([50,70,80,90,100,110,120,150]), q = nvR(990,1034), dev = nvP([-20,-15,-12,-10,10,12,15,20]), h = fl*100;
   const cp = (q-1013)*27, ct = h*0.04*dev/10, ta = h+cp+ct, f = x=>`${nvN(Math.round(x))} ft`;
   const dv = `ISA ${dev>0?"+":"−"} ${Math.abs(dev)}`;
-  return {text:nvP([`An aircraft maintains FL${m3(fl)} with 1013 hPa set. The area QNH is ${q} hPa and the air is ${dv}. The true altitude is approximately: (1 hPa = 27 ft; 4 % per 10 °C)`, `Flying at FL${m3(fl)} (1013 set), area QNH ${q} hPa, temperature ${dv}. Applying both corrections, the true altitude is about:`]),
+  return {text:nvP([`An aircraft maintains FL${m3(fl)} with 1013 hPa set. The area QNH is ${q} hPa and the air is ${dv}. The true altitude is approximately:`, `Flying at FL${m3(fl)} (1013 set), area QNH ${q} hPa, temperature ${dv}. Applying both corrections, the true altitude is about:`]),
     opts:nvOpts(ta,[h+cp, h+ct, h-cp+ct, h+cp-ct],f,150), expl:`Dos correcciones, cada una con su signo. Presión: (${q} − 1013) × 27 = ${cp>=0?"+":""}${cp} ft. Temperatura: ${nvN(h)} × 4 % × ${dev/10} = ${ct>=0?"+":""}${Math.round(ct)} ft. Verdadera = ${nvN(h)} ${cp>=0?"+":"−"} ${Math.abs(cp)} ${ct>=0?"+":"−"} ${Math.abs(Math.round(ct))} = ${nvN(Math.round(ta))} ft. Aplicar solo UNA de las dos es el error clásico.`, v:true, p:{kind:"ta",fl,q,dev,ans:Math.round(ta)}};
 }
 function gSubChange(){
@@ -4135,10 +4134,9 @@ function selectSim(n, incAtpl, incComp){
 function selectQuestions(mode, lo, incAtpl, incComp, simLen){
   const st = stats();
   if(mode==="sim")   return selectSim(simLen==="half"?42:EXAM_N, incAtpl, incComp);
-  if(mode==="trial") return shuffle(BANK.filter(q=>q[2]==="t"));
+  if(mode==="trial") return shuffle(BANK.filter(q=>q[2]==="t"||q[2]==="m"||q[2]==="s"));
   if(mode==="foto")  return shuffle(BANK.filter(q=>q[2]==="p"));
   if(mode==="simb")  return shuffle(BANK.filter(q=>q[2]==="y"));
-  if(mode==="ofi")   return shuffle(BANK.filter(q=>q[2]==="m"||q[2]==="s"));
   let pool = poolFor(incAtpl, incComp);
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo));
@@ -4463,10 +4461,9 @@ function renderSetup(){
   const nfw = BANK.filter(q=>q[2]==="p" && (st.q[q[0]]||{}).last===false).length;
   $("#fotoCount").textContent = `Identificar la nube en la foto. La imagen cambia cada vez.`;
   $("#simbCount").textContent = `Los doce del SIGWX que entran.`;
-  $("#ofiCount").textContent = `Las literales de los PDF y de las diapositivas, con su respuesta oficial.`;
-  const nt = BANK.filter(q=>q[2]==="t").length;
-  const ntw = BANK.filter(q=>q[2]==="t" && (st.q[q[0]]||{}).last===false).length;
-  $("#trialCount").textContent = `Las ${nt} del trial, cada una con una variante al azar${ntw?`. ${ntw} aún falladas`:""}.`;
+  const nt = BANK.filter(q=>q[2]==="t"||q[2]==="m"||q[2]==="s").length;
+  const ntw = BANK.filter(q=>(q[2]==="t"||q[2]==="m"||q[2]==="s") && (st.q[q[0]]||{}).last===false).length;
+  $("#trialCount").textContent = `Las ${nt} del trial y de los ejercicios de clase, cada una con una variante al azar${ntw?`. ${ntw} aún falladas`:""}.`;
   const los = [...new Set(BANK.map(q=>q[1]))].sort((a,b)=>SUBORDER.indexOf(a)-SUBORDER.indexOf(b));
   const sel = $("#loSel").value;
   $("#loSel").innerHTML = los.map(l=>`<option value="${l}" ${l===sel?'selected':''}>${esc(loLabelEs(l))}</option>`).join("");

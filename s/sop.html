@@ -723,6 +723,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro cronometrado <small><span class="row" style="margin-top:6px"><select id="senLen"><option value="full">Completo · 30 preguntas en 36 min</option><option value="half">Exprés · 15 preguntas en 18 min</option><option value="real">Tiempo real · 30 preguntas en 45 min</option></select></span></small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
@@ -1444,6 +1445,10 @@ function selectSenasa(lenKey, inc, atpl){
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senLen").value, inc, atpl);
   const st = stats();
+  if(mode==="trial"){   // preguntas de los trials y ejercicios de clase, una variante al azar de cada una
+    const g = {}; BANK.filter(q=>HOT3.has(q[0])).forEach(q=>{ const k=baseOf(q[0]); (g[k]=g[k]||[]).push(q); });
+    return shuffle(Object.values(g).map(a=>a[Math.floor(Math.random()*a.length)]).map(q=>({q,p:priority(q,st)})).sort((x,y)=>y.p-x.p).slice(0,40).map(x=>x.q));   // las 40 más flojas
+  }
   const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
@@ -1671,6 +1676,7 @@ function renderSetup(){
   const st = stats();
   const nw = BANK.filter(q=>((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
+  $("#trialCount").textContent = `${new Set(BANK.filter(q=>HOT3.has(q[0])).map(q=>baseOf(q[0]))).size} preguntas de los trials y de los ejercicios de clase (salen 40, las más flojas), en variante`;
   $("#allCount").textContent = `${BANK.filter(isGiven).length} dadas + ${BANK.filter(q=>!isGiven(q)).length} aún no dadas`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
@@ -1764,7 +1770,7 @@ function loSummary(at){
 }
 function renderHist(){
   const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const modeName = {adaptive:"Adaptativo",wrong:"Fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro"};
+  const modeName = {adaptive:"Adaptativo",trial:"Trial",wrong:"Fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro"};
   $("#histEvo").innerHTML = evoChart();
   $("#histBody").innerHTML = list.length ? `<div class="card"><div class="scroll"><table class="hist"><tr><th>Fecha</th><th>Tipo</th><th>Nota</th><th></th><th></th></tr>${
     list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${modeName[r.mode]||r.mode}${r.mode==="senasa"?` <span class="muted">${(SEN_LEN[r.len]||{}).label||""} · ${fmtMS(r.usedS||0)}</span>`:""}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Detalle</button>`:''}</td></tr>

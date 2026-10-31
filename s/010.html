@@ -1339,7 +1339,6 @@ input.fillin.right{border-bottom-color:var(--ok);color:var(--ok)} input.fillin.w
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small><span class="row" style="margin-top:6px"><select id="senLen"><option value="full">Completo · 44 preguntas en 48 min (el real da 60)</option><option value="half">Exprés · 22 preguntas en 24 min</option><option value="real">Tiempo real · 44 preguntas en 60 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="fase0"> Examen Fase 0 · formato de examen interno <small>25 preguntas: test, fotos, completar, verdadero o falso y relacionar. Solo temario dado.</small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
@@ -2337,14 +2336,13 @@ const GEN_010 = {l09:gMedical,l10:gMedical,l11:gMedical,vl2:gMedical, l08:gLPE,v
 let f0Items = [], f0Start = 0;
 function startFase0(){
   const st=stats();
-  const ok = q => servable(q) && isGiven(q) && q[2]!=="c" && q[2]!=="g" && !F0_EXCL.includes(q[0]);
-  const figs = BANK.filter(q=>ok(q) && q[7]).map(q=>({q,p:priority(q,st)})).sort((a,b)=>b.p-a.p).slice(0,2).map(x=>x.q);
-  const mc=[], usedB=new Set(), perLO={};
+  // Trial: preguntas del trial (en variante) + ejercicios de clase (completar, verdadero o falso, relacionar); lo más flojo primero
+  const ok = q => servable(q) && q[2]==="t" && !F0_EXCL.includes(q[0]);
+  const figs = BANK.filter(q=>ok(q) && q[7]).map(q=>({q,p:priority(q,st)})).sort((a,b)=>b.p-a.p).slice(0,3).map(x=>x.q);
+  const mc=[], usedB=new Set(); figs.forEach(q=>usedB.add(baseOf(q[0])));
   BANK.filter(q=>ok(q) && !q[7]).map(q=>({q,p:priority(q,st)})).sort((a,b)=>b.p-a.p).forEach(({q})=>{
-    if(mc.length>=9) return; if((perLO[q[1]]||0)>=2) return;
-    if(q[2]==="t"){ const b=baseOf(q[0]); if(usedB.has(b)) return; usedB.add(b); }
-    perLO[q[1]]=(perLO[q[1]]||0)+1; mc.push(q); });
-  const fill=f0Pick(F0.filter(f=>f.t==="fill"),5,st), tf=f0Pick(F0.filter(f=>f.t==="tf"),5,st), mt=f0Pick(F0.filter(f=>f.t==="match"),4,st);
+    if(mc.length>=15) return; const b=baseOf(q[0]); if(usedB.has(b)) return; usedB.add(b); mc.push(q); });
+  const fill=f0Pick(F0.filter(f=>f.t==="fill"),6,st), tf=f0Pick(F0.filter(f=>f.t==="tf"),6,st), mt=f0Pick(F0.filter(f=>f.t==="match"),4,st);
   f0Items = [...shuffle(mc).map(q=>({k:"mc",q})), ...figs.map(q=>({k:"mc",q})), ...fill.map(f=>({k:"fill",f})), ...tf.map(f=>({k:"tf",f})), ...mt.map(f=>({k:"match",f}))];
   f0Items.forEach(it=>{ if(it.k==="mc"){ const G=(typeof GEN_010!=="undefined")&&GEN_010[it.q[0]]; if(G) it.g=G(); it.opts=shuffle((it.g?it.g.opts:it.q[5]).map((t,i)=>({t,ok:i===0}))); } if(it.k==="match") it.right=shuffle(it.f.p.map(p=>p[1])); });
   const head = {mc:"Test", fill:"Completa", tf:"Verdadero o falso", match:"Relaciona"};
@@ -2369,7 +2367,7 @@ function f0Answered(it,i){
   if(it.k==="match") return [...document.querySelectorAll(`select[data-i="${i}"]`)].every(s=>s.value);
   return !!document.querySelector(`input[name=f${i}]:checked`);
 }
-function f0Prog(){ $("#progress").textContent = `Respondidas ${f0Items.filter((it,i)=>f0Answered(it,i)).length} de ${f0Items.length} · Examen Fase 0`; }
+function f0Prog(){ $("#progress").textContent = `Respondidas ${f0Items.filter((it,i)=>f0Answered(it,i)).length} de ${f0Items.length} · Trial`; }
 async function finishFase0(){
   const un=f0Items.filter((it,i)=>!f0Answered(it,i)).length;
   if(un && !confirm(`Te quedan ${un} sin responder. ¿Corregir igualmente?`)) return;
@@ -2391,15 +2389,15 @@ async function finishFase0(){
     box.insertAdjacentHTML("beforeend", `<div class="expl"><b class="${ok?'pass':'fail'}">${ok?'Correcta':(a===null||a===""?'Sin responder':'Fallada')}</b>${sol&&!ok?` · Solución: <b>${esc(sol)}</b>`:""} · <span class="es">${esc(x||"")}</span>${ok?'':`<div class="ref"><b>Repasa:</b> ${esc(REFS[ref]||"")}</div>`}</div>`);
   });
   const usedS=Math.round((Date.now()-f0Start)/1000), pct=Math.round(score/f0Items.length*100), pass=pct>=75;
-  state.attempts.push({id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:"fase0", score, total:f0Items.length, pct, byLO, items, usedS});
+  state.attempts.push({id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:"trial", score, total:f0Items.length, pct, byLO, items, usedS});
   const los=Object.keys(byLO).sort();
   $("#result").innerHTML = `<div class="card"><div class="score ${pass?'pass':'fail'}">${score}/${f0Items.length}</div>
     <div><b>${pct} % · ${pass?'APTO':'NO APTO'}</b> <span class="muted">(mínimo 75 %) · ${fmtMS(usedS)}</span></div>
     <div style="margin-top:12px">${los.map(l=>{const p=Math.round(byLO[l].ok/byLO[l].total*100); return `<div class="lorow"><div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(loLabel(l))}</span><span>${byLO[l].ok}/${byLO[l].total}</span></div><div class="bar"><i style="width:${p}%;background:${p>=75?'var(--ok)':'var(--bad)'}"></i></div></div>`;}).join("")}</div>
     <p id="saveMsg" class="muted" style="font-size:14px">Guardando…</p>
-    <div class="row"><button class="btn" id="againBtn">Otro examen Fase 0</button><button class="btn sec" id="mapBtn">Ver mapa</button></div></div>`;
+    <div class="row"><button class="btn" id="againBtn">Otro Trial</button><button class="btn sec" id="mapBtn">Ver mapa</button></div></div>`;
   $("#result").hidden=false; $("#finishBtn").hidden=true;
-  $("#againBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; document.querySelector('input[value=fase0]').checked=true; $("#startBtn").click(); });
+  $("#againBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; document.querySelector('input[value=trial]').checked=true; $("#startBtn").click(); });
   $("#mapBtn").addEventListener("click",()=>{ $("#quiz").hidden=true; $("#setup").hidden=false; showTab("map"); });
   window.scrollTo({top:0}); renderNotesMeta();
   await saveState($("#saveMsg"));
@@ -3458,7 +3456,7 @@ function renderSetup(){
   $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
   $("#allCount").textContent = `${BANK.filter(q=>servable(q) && isGiven(q)).length} + ${BANK.filter(q=>q[2]==="a").length} ATPL`;
   const groups = new Set(BANK.filter(q=>q[2]==="t").map(q=>baseOf(q[0])));
-  $("#trialCount").textContent = `${groups.size} preguntas, en variante`;
+  $("#trialCount").textContent = `${groups.size} preguntas en variante + ejercicios: test, fotos, completar, verdadero o falso y relacionar`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
 }
@@ -3474,7 +3472,7 @@ function tick(){
 const SRC_TAG = q => `${q.src==="t"?'<span class="tag tr">TRIAL</span> ':''}${PROFE.has(q.id)?'<span class="tag pf">★ OJO</span> ':''}${q.src==="a"?'<span class="tag at">ATPL</span> ':''}${q.src==="c"?'<span class="tag">complemento</span> ':''}${q.src==="g"?'<span class="tag g">generada</span> ':''}`;
 $("#startBtn").addEventListener("click",()=>{
   examOff(); curMode = document.querySelector('input[name=mode]:checked').value;
-  if(curMode==="fase0"){ startFase0(); return; }
+  if(curMode==="trial"){ startFase0(); return; }
   curLen = curMode==="senasa" ? $("#senLen").value : null;
   const qs = F0DEDUP(selectQuestions(curMode, $("#incComp").checked, $("#loSel").value, $("#incTrial").checked), curMode);
   if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
@@ -3499,7 +3497,7 @@ $("#startBtn").addEventListener("click",()=>{
 });
 function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${(curMode==="senasa"?`Simulacro SENASA ${SEN_LEN[curLen].label.toLowerCase()}`:{adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un LO",all:"Banco completo",fase0:"Examen Fase 0"}[curMode])}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
-$("#finishBtn").addEventListener("click", ()=> curMode==="fase0" ? finishFase0() : finishTest(false));
+$("#finishBtn").addEventListener("click", ()=> curMode==="trial" ? finishFase0() : finishTest(false));
 async function finishTest(timeout){
   const un = current.filter(q=>q.ans===null).length;
   if(!timeout && un && !confirm(`Te quedan ${un} sin responder. ¿Corregir igualmente?`)) return;

@@ -1229,7 +1229,6 @@ details.lo.atpl{border-left-color:var(--magenta)}
           <button type="button" data-len="real" aria-pressed="false">Tiempo real · 46 en 90 min</button>
         </span></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small> con el reparto del examen de SENASA. Al menos 6 de las preguntas de clase y 6 de los trials; dentro de cada bloque entran primero tus fallos, lo marcado ★ OJO y tus subcapítulos flojos. Como mucho 5 por subcapítulo. Sin reloj.</small></label>
-      <label class="mode"><input type="radio" name="mode" value="profe"> Preguntas clave <small id="profeCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema concreto <small><select id="loSel"></select></small></label>
@@ -2509,8 +2508,7 @@ function selectQuestions(mode, inc, lo){
   const xEl=$("#incX");
   if(mode!=="examen" && xEl && xEl.checked===false) pool=pool.filter(q=>q[2]!=="x");
   if(mode==="slides") return shuffle(pool.filter(q=>q[2]==="s"||q[2]==="e"));
-  if(mode==="profe") return shuffle(pool.filter(isExam));
-  if(mode==="trial") return shuffle(pool.filter(isTrial));
+  if(mode==="trial") return shuffle(pool.filter(q=>isTrial(q)||isExam(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo")    return shuffle(pool.filter(q=>subOf(q).slice(0,6)===lo || q[1]===lo));
   if(mode==="all")   return shuffle(pool);
@@ -2837,8 +2835,7 @@ function renderSetup(){
   $("#wrongCount").textContent = nw ? `${nw} preguntas cuya última respuesta fue incorrecta.` : "Ahora mismo no tienes fallos pendientes.";
   $("#allCount").textContent = `${BANK.length} preguntas.`;
   $("#examCount").textContent = `Reparto oficial de EASA: 46 preguntas por los ocho capítulos 081.01 a 081.08, ordenadas por capítulo como en el examen. Incluye el temario ATPL que aún no has dado.`;
-  $("#trialCount").textContent = `Las ${BANK.filter(isTrial).length} preguntas de los trials, cada una con una variante al azar.`;
-  $("#profeCount").innerHTML = `Las ${BANK.filter(isExam).length} diapositivas de clase (las 30 numeradas más 2 de verdadero/falso), <b>tal cual</b> y con las opciones barajadas. Una de cada cinco sale como variante para que razones en vez de memorizar la letra.`;
+  $("#trialCount").textContent = `Las ${BANK.filter(q=>isTrial(q)||isExam(q)).length} preguntas de los trials y de los ejercicios de clase, cada una con una variante al azar.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = ECQB.map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.id} · ${c.es}</option>`).join("");
 }

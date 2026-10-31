@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="c62e98d9eb09";</script>
+<script>window.F0_BUILD="993268eb0959";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -274,11 +274,24 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .art .num{position:absolute;top:50%;font:700 26px/1 "Barlow Condensed","Arial Narrow",sans-serif;color:rgba(255,255,255,.6)}
 .art .nl{left:62px;transform:translateY(-50%) rotate(90deg)}.art .nr{right:62px;transform:translateY(-50%) rotate(-90deg)}
 .art .twy{position:absolute;left:0;right:0;top:62px;height:2.4px;background:rgba(231,190,31,.6)}
-.art .rpl{position:absolute;top:6px;left:0;color:#fff;transform:translate3d(-90px,0,0) scaleX(-1);-webkit-animation:roll 18s linear infinite;animation:roll 18s linear infinite;will-change:transform;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
-@-webkit-keyframes roll{from{-webkit-transform:translate3d(calc(100vw + 30px),0,0) scaleX(-1)}to{-webkit-transform:translate3d(-90px,0,0) scaleX(-1)}}
-@keyframes roll{from{transform:translate3d(calc(100vw + 30px),0,0) scaleX(-1)}to{transform:translate3d(-90px,0,0) scaleX(-1)}}
+/* avión de la cabecera: rueda por la pista, gira, despega por la izquierda y desaparece */
+.art .fly{position:absolute;top:6px;left:0;width:72px;height:26px;transform:translate3d(calc(100vw - 108px),0,0);-webkit-animation:tkx 17s infinite;animation:tkx 17s infinite;will-change:transform;pointer-events:none}
+.art .sh{position:absolute;left:5px;top:21px;width:60px;height:5px;border-radius:50%;background:rgba(0,0,0,.42);filter:blur(1.2px);opacity:0;-webkit-animation:tks 17s linear infinite;animation:tks 17s linear infinite}
+.art .rpl{position:absolute;left:0;top:0;width:72px;height:24.5px;overflow:visible;opacity:0;transform-origin:50% 86%;filter:drop-shadow(0 1px 1.4px rgba(0,0,0,.45));-webkit-animation:tkp 17s linear infinite;animation:tkp 17s linear infinite}
+.art .rpl .gear{-webkit-animation:tkg 17s linear infinite;animation:tkg 17s linear infinite}
+.art .rpl .stb{-webkit-animation:tkb 1.3s linear infinite;animation:tkb 1.3s linear infinite}
+@-webkit-keyframes tkx{0%,16%{-webkit-transform:translate3d(calc(100vw - 108px),0,0);-webkit-animation-timing-function:cubic-bezier(.55,.085,.68,.53)}80%,100%{-webkit-transform:translate3d(-96px,0,0)}}
+@keyframes tkx{0%,16%{transform:translate3d(calc(100vw - 108px),0,0);animation-timing-function:cubic-bezier(.55,.085,.68,.53)}80%,100%{transform:translate3d(-96px,0,0)}}
+@-webkit-keyframes tkp{0%{opacity:0}4%{opacity:1;-webkit-transform:none}66%{-webkit-transform:none}71%{-webkit-transform:translateY(-1px) rotate(7deg)}76%{opacity:1;-webkit-transform:translateY(-12px) rotate(12deg) scale(.88)}80%,100%{opacity:0;-webkit-transform:translateY(-27px) rotate(14deg) scale(.65)}}
+@keyframes tkp{0%{opacity:0}4%{opacity:1;transform:none}66%{transform:none}71%{transform:translateY(-1px) rotate(7deg)}76%{opacity:1;transform:translateY(-12px) rotate(12deg) scale(.88)}80%,100%{opacity:0;transform:translateY(-27px) rotate(14deg) scale(.65)}}
+@-webkit-keyframes tks{0%,3%{opacity:0}7%,66%{opacity:.9;-webkit-transform:none}76%,100%{opacity:0;-webkit-transform:scale(.55,.5) translateY(3px)}}
+@keyframes tks{0%,3%{opacity:0}7%,66%{opacity:.9;transform:none}76%,100%{opacity:0;transform:scale(.55,.5) translateY(3px)}}
+@-webkit-keyframes tkg{0%,70%{opacity:1}74%,100%{opacity:0}}
+@keyframes tkg{0%,70%{opacity:1}74%,100%{opacity:0}}
+@-webkit-keyframes tkb{0%,12%{opacity:1}13%,100%{opacity:.08}}
+@keyframes tkb{0%,12%{opacity:1}13%,100%{opacity:.08}}
 @keyframes twk{0%,100%{opacity:.25}50%{opacity:.95}}
-@media (prefers-reduced-motion:reduce){.art .edge{animation:none;opacity:.6}.art .rpl{-webkit-animation:none;animation:none;transform:translate3d(62vw,0,0) scaleX(-1)}}
+@media (prefers-reduced-motion:reduce){.art .edge{animation:none;opacity:.6}.art .fly{-webkit-animation:none;animation:none;transform:translate3d(62vw,0,0)}.art .rpl,.art .rpl .gear,.art .rpl .stb{-webkit-animation:none;animation:none;opacity:1}.art .sh{-webkit-animation:none;animation:none;opacity:.9}}
 .tab.solo{justify-content:center}
 .savepill[hidden],.iconbtn[hidden]{display:none}
 /* ---- avión en cada asignatura ---- */
@@ -356,7 +369,7 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 <div id="gaPop" class="pop" hidden role="dialog" aria-label="Galones"></div>
 <div id="onPop" hidden role="dialog" aria-label="Compañeros en línea"></div>
 <header class="top">
-  <div class="art" aria-hidden="true"><div class="rw"><i class="edge e1"></i><i class="edge e2"></i><i class="thr tl"></i><i class="thr tr"></i><i class="cl"></i><i class="tz z1"></i><i class="tz z2"></i><b class="num nl">09</b><b class="num nr">27</b><svg class="rpl" viewBox="0 0 48 20" width="58" height="24"><use href="#pl"/></svg></div><i class="twy"></i></div><div class="veil"></div>
+  <div class="art" aria-hidden="true"><div class="rw"><i class="edge e1"></i><i class="edge e2"></i><i class="thr tl"></i><i class="thr tr"></i><i class="cl"></i><i class="tz z1"></i><i class="tz z2"></i><b class="num nl">09</b><b class="num nr">27</b><div class="fly"><i class="sh"></i><svg class="rpl" viewBox="0 0 100 34" width="72" height="24.5"><g class="gear"><path d="M52 21.5v6.2M16 21.5v5.6" stroke="#9FB0BF" stroke-width="1.6" stroke-linecap="round"/><circle cx="52" cy="28.8" r="2.5" fill="#0F2233"/><circle cx="16" cy="28.3" r="2.1" fill="#0F2233"/></g><path d="M84 13.6 99.5 15.2 98.8 17.4 83 16.6z" fill="#B8C7D4"/><path d="M79.5 11.4 89 1.2H96.2L93.8 11.4z" fill="#C8102E"/><path d="M4.5 17.8c0-5.2 5.1-7.6 12.5-7.6h60c8 0 15.5 1.2 21 3.4v4.2c0 3.2-3.5 5-9 5H15c-6.500 0-10.500-1.200-10.500-5z" fill="#fff"/><path d="M5.200 19.500H97.800v1.700H5.700z" fill="#C8102E"/><path d="M9.400 12.600q3.200-1.900 8.200-1.900v3.500H8.300z" fill="#14304A"/><path d="M23 14.400H76" stroke="#14304A" stroke-width="1.9" stroke-dasharray="1.700 2.800" stroke-linecap="round"/><path d="M37 17.400H60L68 27.800H59.500z" fill="#DCE5EC" stroke="#9FB3C4" stroke-width=".6" stroke-linejoin="round"/><rect x="41" y="21.600" width="14" height="6.200" rx="3.100" fill="#8FA5B8"/><ellipse cx="42.200" cy="24.700" rx="1.600" ry="2.900" fill="#14304A"/><circle class="stb" cx="93.500" cy="2" r="1.400" fill="#fff"/><circle class="stb" cx="46" cy="22.800" r="1.100" fill="#FF4D4D"/></svg></div></div><i class="twy"></i></div><div class="veil"></div>
   <div class="row1">
     <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(-7 32 32)"><rect x="3" y="18" width="58" height="32" rx="7" fill="#8E0B20"/><rect x="3" y="14" width="58" height="32" rx="7" fill="#C8102E"/><rect x="8" y="19" width="48" height="22" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="1.6" stroke-dasharray="3.2 2.4"/><circle cx="15" cy="30" r="5" fill="#fff"/><circle cx="15" cy="30" r="2.4" fill="#8E0B20"/><text x="39" y="37" font-family="Arial Black,Impact,Arial,sans-serif" font-weight="900" font-size="15.5" letter-spacing=".5" text-anchor="middle" fill="#fff">SBF</text></g></svg><span class="bt">ATPL Fase 0<small>por Juanjo Ruano</small></span></div>
     <button class="vsw" id="vsw" type="button" role="switch" aria-checked="false" aria-label="Vista de Inicio: tarjetas o instrumentos" title="Cambiar la vista de Inicio"><span class="tgl"><i class="nut"></i><i class="lev"></i></span><span class="lbs"><span class="lb on">Instrumentos</span><span class="lb off">Tarjetas</span></span></button>
@@ -1345,6 +1358,12 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-10-31c", items:[
+    {i:"🎯", t:"Un solo Trial por asignatura", d:"El Trial junta ahora las preguntas de los trials y los ejercicios de clase, siempre en variante. Desaparecen los modos sueltos de preguntas de clase: menos modos, lo mismo de contenido. Nuevo Trial en el SOP."},
+    {i:"🛫", t:"Cabecera con avión nuevo", d:"Rueda por la pista, levanta el morro y despega hasta desaparecer."},
+    {i:"🔄", t:"Aviso de versión nueva más fiable", d:"Solo avisa cuando de verdad hay algo que actualizar, y la recarga ya no vuelve a mostrar la versión vieja.", web:true},
+    {i:"✍️", t:"Cálculos sin chuleta", d:"Los enunciados de conversiones (lb, kg, hPa y ft…) ya no traen la equivalencia: se explica al corregir."}
+  ]},
   {id:"2026-10-31b", items:[
     {i:"🛩️", t:"SOP y Operational Procedures · más preguntas", d:"Nuevas preguntas, con variantes, en el simulacro, el adaptativo, por tema, fallos y banco completo: velocidades y listas del SOP, mínimos y briefings, entrada en pista, motor y al aire, señales, planes de vuelo, estela y cizalladura. Las que más se repiten salen con más frecuencia."},
     {i:"📘", t:"Performance · AIP", d:"Las preguntas de GEN y AD piden ahora la palabra completa."}

@@ -1711,6 +1711,7 @@ const LEGACY = {"060.1":"Definitions and Annex 6","060.2":"Noise abatement","060
 const dcode = l => OUT[l] ? OUT[l].d : l;
 const loLabel = l => LO_NAME[l] ? `${dcode(l)} · ${LO_NAME[l]}` : LEGACY[l] ? `${l} · ${LEGACY[l]}` : l;
 const baseOf = id => (String(id).match(/^(t\d+)/)||[id])[0];
+const isTrialX = q => q[2]==="t" || /^(xo|pf)\d/.test(q[0]);
 // toda la Fase 0 ya está dada (POP-1 y POP-2): «dado» = todo lo que no es ATPL
 const isGiven = q => q[2]!=="a";
 
@@ -2971,9 +2972,9 @@ function selectSenasa(lenKey, inc, atpl){
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senLen").value, inc, atpl);
   const st = stats();
-  if(mode==="trial"){
+  if(mode==="trial"){   // trial + ejercicios de clase
     const groups = {};
-    BANK.filter(q=>q[2]==="t").forEach(q=>{ const k=baseOf(q[0]); (groups[k]=groups[k]||[]).push(q); });
+    BANK.filter(isTrialX).forEach(q=>{ const k=baseOf(q[0]); (groups[k]=groups[k]||[]).push(q); });
     return shuffle(Object.values(groups).map(g=>g[Math.floor(Math.random()*g.length)]));
   }
   const pool = BANK.filter(q=> servable(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
@@ -3235,7 +3236,7 @@ function renderSetup(){
   $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
   $("#allCount").textContent = `${BANK.filter(q=>servable(q) && isGiven(q)).length} + ${BANK.filter(q=>q[2]==="a").length} ATPL`;
   const groups = new Set(BANK.filter(q=>q[2]==="t").map(q=>baseOf(q[0])));
-  $("#trialCount").textContent = `${groups.size} preguntas, en variante`;
+  $("#trialCount").textContent = `${new Set(BANK.filter(isTrialX).map(q=>baseOf(q[0]))).size} preguntas del trial y de los ejercicios de clase, en variante`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
 }

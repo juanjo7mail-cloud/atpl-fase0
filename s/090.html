@@ -2840,7 +2840,7 @@ function loSummary(at){
 }
 function renderHist(){
   const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const modeName = {atis:"Escucha ATIS",adaptive:"Examen Fase 0",wrong:"Fallos",lo:"Un tema",all:"Banco completo",trial:"Simulacro del trial",campus:"Trial",senasa:"SENASA",slides:"Presentaciones",calc:"Números",voice:"Radio por voz"};
+  const modeName = {atis:"Escucha ATIS",adaptive:"Adaptativo",wrong:"Fallos",lo:"Un tema",all:"Banco completo",trial:"Simulacro del trial",campus:"Trial",senasa:"SENASA",slides:"Presentaciones",calc:"Números",voice:"Radio por voz"};
   $("#histEvo").innerHTML = evoChart();
   $("#histBody").innerHTML = list.length ? `<div class="card"><div class="scroll"><table class="hist"><tr><th>Fecha</th><th>Tipo</th><th>Nota</th><th></th><th></th></tr>${
     list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${modeName[r.mode]||r.mode}${r.format==="prof"?' <span class="muted">formato Fase 0</span>':''}${r.mode==="senasa"?` <span class="muted">${(SEN_LEN[r.len]||{}).label||""} · ${fmtMS(r.usedS||0)}</span>`:""}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig||r.mode==='voice'||r.mode==='atis'?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Detalle</button>`:''}${isTrialAt(r)?` · <button class="linkbtn" data-ig="${r.id}">${ig?'volver a contar':'no contar (al azar)'}</button>`:''}</td></tr>
@@ -3531,9 +3531,9 @@ try{
     need(()=>true, F0N);
     return shuffle(out).map(q=>({k:"mc", q}));
   };
-  MODE_LABEL.adaptive = "Examen Fase 0 · 30 preguntas · 45 min";
+  MODE_LABEL.adaptive = "Adaptativo · 30 preguntas · 45 min";
   const ad = document.querySelector('input[name=mode][value=adaptive]'), lab = ad && ad.closest("label");
-  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Examen Fase 0 · 30 preguntas · 45 min <small>El formato estándar del examen de Comunicaciones: solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
+  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Adaptativo · 30 preguntas · 45 min <small>Solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
     const sn = document.querySelector('input[name=mode][value=senasa]'); if(sn) sn.checked = false; }
 }catch(e){ console.error("com_patch examen", e); }
 

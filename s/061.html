@@ -2441,7 +2441,7 @@ function gDME(){
       expl:`★ El DME mide la slant range: encima de la estación marca tu altura → ${nf(h)} ÷ ≈ 6.000 ft/NM ≈ ${n} NM, nunca 0.`, v:true};
   }
   const t=pick([[3,4,5],[4,3,5],[6,8,10],[5,12,13],[6,4.5,7.5]]), hf=t[0]*6000;
-  return {text:`An aircraft at ${nf(hf)} ft (≈ ${t[0]} NM) reads ${t[2]} NM on the DME. Its horizontal distance from the station is about:`,
+  return {text:`An aircraft at ${nf(hf)} ft reads ${t[2]} NM on the DME. Its horizontal distance from the station is about:`,
     opts:fillN(t[1],[t[2], t[2]-t[0], t[2]+t[0]],x=>nf(x,x%1?1:0)+" NM",.4),
     expl:`El DME da la hipotenusa: horizontal = √(${t[2]}² − ${t[0]}²) = ${nf(t[1],t[1]%1?1:0)} NM. La diferencia es mayor cuanto más alto y más cerca.`, v:true};
 }
@@ -2450,7 +2450,7 @@ BASE.push(
  ["vo15","090.13","g","tofrom","The CDI is centred with OBS 120 and a TO flag. You are on the radial:",["300","120","210","030"],"TO → el recíproco del OBS."],
  ["vo16","090.13","g","cdi","An aircraft is on the 090 radial with the OBS set to 094. The CDI shows:",["FROM, needle 2 dots right","TO, needle 2 dots right","FROM, needle 2 dots left","TO, needle 2 dots left"],"FROM, 4° = 2 puntos."],
  ["ie9","090.9","g","dblte","You were on track at 1000; at 1020 you are 3 NM left of track after 30 NM. Double track error method:",["12° right, regaining track at 1040","6° right, regaining track at 1040","12° right, regaining track at 1030","12° left, regaining track at 1040"],"TKE 6° → 12° derecha; mismo tiempo."],
- ["dm9","090.14","g","dme","An aircraft at 18,000 ft (≈ 3 NM) reads 5 NM on the DME. Horizontal distance:",["4 NM","5 NM","2 NM","8 NM"],"√(25 − 9) = 4."],
+ ["dm9","090.14","g","dme","An aircraft at 18,000 ft reads 5 NM on the DME. Horizontal distance:",["4 NM","5 NM","2 NM","8 NM"],"√(25 − 9) = 4."],
  ["rd18","090.15","g","psr","A radar echo is received 494 µs after transmission. Range of the target:",["40 NM","80 NM","20 NM","400 NM"],"c × t ÷ 2."]
 );
 Object.assign(GEN,{dw1:gDriftHdg, ie2:gTKE, ie3:gTKECA, ie9:gDbl, nd7:gQDM, nd17:gADFinstr, vo10:gVORcenter, vo15:gVORread, vo16:gVORflag,
@@ -4291,6 +4291,9 @@ const blockOf = q => (SUBMAP[q[1]]||{block:"X"}).block;
 const examOf = q => (BLK[blockOf(q)]||{}).ex || null;
 const isGiven = q => q[2]!=="a";
 const isTrial = q => q[2]==="e";
+// Trial = trial + ejercicios de clase (diapositivas, prácticas de rumbo y distancia); las gemelas (b) cuentan como una
+const isTrialX = q => isTrial(q) || q[2]==="x" || /^(nx|pf)\d/.test(q[0]);
+const trialBase = id => String(id).replace(/b+$/,"");
 const PROFE = new Set(BASE.filter(q=>/★/.test(q[6])||/★/.test(q[4])).map(q=>q[0]).concat(["m17","m19","m12","m13","m15"]));
 let lastVar = {};
 try{ lastVar = JSON.parse(sessionStorage.getItem("nav090-lastvar")||"{}"); }catch(e){}
@@ -4407,7 +4410,8 @@ const STYLE_SHARE = {"061":0.45, "062":0.2};
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senEx").value, $("#senLen").value, inc, atpl);
   const st = stats();
-  if(mode==="trial") return shuffle(BANK.filter(isTrial));
+  if(mode==="trial"){ const g={}; BANK.filter(isTrialX).forEach(q=>{ const k=trialBase(q[0]); (g[k]=g[k]||[]).push(q); });
+    return shuffle(Object.values(g).map(a=>a[Math.floor(Math.random()*a.length)])); }
   const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c")));
@@ -4689,7 +4693,7 @@ function renderSetup(){
   const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas` : "sin fallos pendientes";
   $("#allCount").textContent = `${BANK.length} preguntas`;
-  $("#trialCount").textContent = `${BANK.filter(isTrial).length} preguntas, cada una en variante`;
+  $("#trialCount").textContent = `${new Set(BANK.filter(isTrialX).map(q=>trialBase(q[0]))).size} preguntas del trial y de los ejercicios de clase, cada una en variante`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
   renderSenOpts();

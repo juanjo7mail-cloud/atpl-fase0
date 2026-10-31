@@ -802,7 +802,6 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small><span class="row" style="margin-top:6px"><select id="senSubj" aria-label="Asignatura"><option value="031">031 Mass and Balance · 25 preguntas</option><option value="032">032 Performance · 45 preguntas</option><option value="033">033 Flight Planning · 42 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="fase0"> Examen Fase 0 · 30 preguntas en 1 h <small>Solo temario dado.</small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos · 15 preguntas <small>Números nuevos cada vez.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
@@ -2378,17 +2377,14 @@ function pickAdaptive(pool, N, st){
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senSubj").value, $("#senLen").value, inc, atpl);
   const st = stats();
-  if(mode==="trial"){
-    const groups = {};
-    BANK.filter(q=>q[2]==="t").forEach(q=>{ const k=baseOf(q[0]); (groups[k]=groups[k]||[]).push(q); });
-    return shuffle(Object.values(groups).map(g=>g[Math.floor(Math.random()*g.length)]));
+  if(mode==="trial"){   // trial + ejercicios de clase: 30 preguntas, lo más flojo primero
+    return pickAdaptive(BANK.filter(q=>servable(q) && (q[2]==="t" || q[2]==="p" || PROFE.has(q[0]))), 30, st);
   }
   const pool = BANK.filter(q=> servable(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
   if(mode==="lo") return shuffle(pool.filter(q=>subOf(q[1])===lo));
   if(mode==="all") return shuffle(pool);
   if(mode==="calc"){ const c=pool.filter(q=>isGen(q) && isGiven(q)); return shuffle(c.map(q=>({q,p:priority(q,st)})).sort((a,b)=>b.p-a.p).slice(0,15).map(x=>x.q)); }
-  if(mode==="fase0") return pickAdaptive(BANK.filter(q=>servable(q) && isGiven(q) && (inc || q[2]!=="c")), 30, st);
   return pickAdaptive(pool, Math.min(30, pool.length), st);
 }
 
@@ -2619,8 +2615,7 @@ function renderSetup(){
   const nw = BANK.filter(q=>servable(q) && ((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
   $("#allCount").textContent = `${BANK.filter(q=>servable(q) && isGiven(q)).length} + ${BANK.filter(q=>q[2]==="a").length} ATPL`;
-  const groups = new Set(BANK.filter(q=>q[2]==="t").map(q=>baseOf(q[0])));
-  $("#trialCount").textContent = `${groups.size} preguntas, en variante`;
+  $("#trialCount").textContent = `30 preguntas en 1 h: trial y ejercicios de clase, en variante`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}${s[4]==="atpl"?" · ATPL":""}</option>`).join("");
 }
@@ -2659,11 +2654,11 @@ $("#startBtn").addEventListener("click",()=>{
   $("#qlist").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{ current[+e.target.name.slice(1)].ans = +e.target.value; finishArmed=false; $("#finishMsg").textContent=""; updProg(); }));
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBtn").hidden=false; $("#finishBtn").disabled=false;
   clearInterval(tTimer); finishing=false; tStart=Date.now();
-  tLimit = curMode==="senasa" ? SEN_LEN(curSubj)[curLen].min*60 : curMode==="fase0" ? 3600 : 0;
+  tLimit = curMode==="senasa" ? SEN_LEN(curSubj)[curLen].min*60 : curMode==="trial" ? 3600 : 0;
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
-const MODE_NAME = {adaptive:"Adaptativo",fase0:"Examen Fase 0",calc:"Solo cálculos",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"SENASA"};
+const MODE_NAME = {adaptive:"Adaptativo",fase0:"Fase 0",calc:"Solo cálculos",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"SENASA"};
 function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curSubj} ${SEN_LEN(curSubj)[curLen].label.toLowerCase()}`:MODE_NAME[curMode]}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[subOf(q.lo)]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>{
@@ -2690,14 +2685,14 @@ async function finishTest(timeout){
   const pct = Math.round(score/current.length*100), pass = pct>=75;
   const rec = {id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:curMode, score, total:current.length, pct, secs:usedS, byLO, items};
   if(curMode==="senasa"){ Object.assign(rec,{subj:curSubj, len:curLen, limitS:tLimit, usedS, timeout:!!timeout, byBlock, score0:s0, total0:n0}); }
-  if(curMode==="fase0"){ Object.assign(rec,{limitS:tLimit, timeout:!!timeout}); }
+  if(curMode==="trial"){ Object.assign(rec,{limitS:tLimit, timeout:!!timeout}); }
   state.attempts.push(rec);
   let blockHTML = "";
   if(curMode==="senasa"){
     const S=SUBJ[curSubj], realS = S.min*60/S.n, perQ = usedS/current.length;
     blockHTML = `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el real da ${Math.round(realS)} s). ${perQ<=realS?`En el real te sobrarían <b>${Math.max(0,Math.round((S.min*60-perQ*S.n)/60))} min</b> para repasar.`:`<span class="fail">A este ritmo no te daría tiempo a repasar en el real.</span>`}<br><b>Fase 0:</b> ${s0}/${n0}${n0?` (${Math.round(s0/n0*100)} %)`:""}${current.length-n0?` · <b>ATPL:</b> ${score-s0}/${current.length-n0}`:""}</div>
       <div class="scroll"><table style="margin-top:8px"><tr><th>Capítulo</th><th>Aciertos</th></tr>${BLOCKS.filter(b=>byBlock[b.k]).map(b=>{const x=byBlock[b.k], p=Math.round(x.ok/x.total*100); return `<tr><td><b>${b.code}</b> ${esc(b.name)}</td><td class="${p>=75?'pass':'fail'}">${x.ok}/${x.total} · ${p} %</td></tr>`;}).join("")}</table></div>`;
-  } else if(curMode==="fase0"){
+  } else if(curMode==="trial"){
     blockHTML = `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de 60:00${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(usedS/current.length)} s por pregunta (tienes 120 s).</div>`;
   }
   const st = stats(), next = atStake(st).filter(x=>SUBMAP[x.lo].cov!=="atpl").slice(0,2), los = Object.keys(byLO).sort();
