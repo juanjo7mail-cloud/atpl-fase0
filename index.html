@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="f35179d8caa3";</script>
+<script>window.F0_BUILD="d39d2e9efd16";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1402,6 +1402,9 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-11-01b", items:[
+    {i:"🛫", t:"Dos avisos para empezar", d:"Ahora también te felicitamos por tu primer test y por tu segundo día seguido de racha."}
+  ]},
   {id:"2026-11-01", items:[
     {i:"🎉", t:"Avisos de logros", d:"Te felicitamos cuando consigues un galón, cada 10 horas de estudio, cada 15 tests, 7, 14 y 30 días de racha, una asignatura preparada y (en la web) cuando subes en el ranking. Solo salen cosas buenas, de una en una."}
   ]},
@@ -1497,28 +1500,31 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#news").hidden
 
 /* ===================== logros: avisos de celebración ===================== */
 // galón nuevo · cada 10 h de estudio · cada 15 tests · racha (7, 14, 30…) · asignatura preparada · subes en el ranking
-const MS_KEY="f0:ms", MS_HOURS=10, MS_TESTS=15, MS_STREAK=[7,14,30,60,100];
+const MS_KEY="f0:ms", MS_HOURS=10, MS_TESTS=15, MS_STREAK=[2,7,14,30,60,100];   // el 2 es excepcional: motivar al empezar
 let MS=null, msReady=false, msQueue=[], msBusy=false, msRankAt=0, msSecsDirty=0;
 try{ MS=JSON.parse(localStorage.getItem(MS_KEY)||"null"); }catch(e){ MS=null; }
 if(!MS||typeof MS!=="object") MS=null;
 const msSave=()=>{ try{ localStorage.setItem(MS_KEY,JSON.stringify(MS)); }catch(e){} };
 function msTests(){ return SUBJ.reduce((a,s)=>a+attemptsOf(s.k).filter(x=>x.total>=10).length,0); }
-function msStreakIdx(n){ let r=0; MS_STREAK.forEach((m,i)=>{ if(n>=m) r=i+1; }); return r; }
+function msStreakVal(n){ let r=0; MS_STREAK.forEach(m=>{ if(n>=m) r=m; }); return r; }
+function msFirst(){ for(const x of SUBJ.map(s=>attemptsOf(s.k)).flat().sort((a,b)=>new Date(a.date)-new Date(b.date))) return x; return null; }
 function msNow(){
   const ri=ranksInfo(), sums=ri.sums, ready={}; SUBJ.forEach((s,i)=>{ if(sums[i].lvl==="ok") ready[s.k]=1; });
-  return {g:ri.g, pass:ri.pass, t:Math.floor(msTests()/MS_TESTS), h:Math.floor(((MS&&MS.secs)||0)/(3600*MS_HOURS)), r:msStreakIdx(streakInfo().count), l:ready};
+  return {g:ri.g, pass:ri.pass, t:Math.floor(msTests()/MS_TESTS), h:Math.floor(((MS&&MS.secs)||0)/(3600*MS_HOURS)), rd:msStreakVal(streakInfo().count), f:msFirst()?1:0, l:ready};
 }
 function msCheck(){
   if(!msReady) return;
   const n=msNow();
-  if(!MS||!MS.seen){ MS=Object.assign(MS||{},{secs:(MS&&MS.secs)||0, seen:{g:n.g,t:n.t,h:n.h,r:n.r,l:n.l,p:{}}}); msSave(); return; }   // primera vez en este dispositivo: sin avisos de lo que ya tenías
+  if(!MS||!MS.seen){ MS=Object.assign(MS||{},{secs:(MS&&MS.secs)||0, seen:{g:n.g,t:n.t,h:n.h,rd:n.rd,f:n.f,l:n.l,p:{}}}); msSave(); return; }   // primera vez en este dispositivo: sin avisos de lo que ya tenías
   const s=MS.seen, ev=[];
+  if(s.rd===undefined){ s.rd=n.rd; } if(s.f===undefined){ s.f=n.f; }   // versiones anteriores: sin avisos de lo que ya tenías
+  if(n.f>s.f){ const a=msFirst(); ev.push({id:"primero",pct:a?a.pct:null}); }
   if(n.g>s.g){ ev.push({id:"galon",g:n.g,pass:n.pass}); }
   if(n.h>s.h){ ev.push({id:"horas",h:n.h*MS_HOURS}); }
   if(n.t>s.t){ ev.push({id:"tests",n:n.t*MS_TESTS}); }
-  if(n.r>s.r){ ev.push({id:"racha",d:MS_STREAK[n.r-1],next:MS_STREAK[n.r]||null}); }
+  if(n.rd>s.rd){ ev.push({id:"racha",d:n.rd,next:MS_STREAK.find(m=>m>n.rd)||null}); }
   SUBJ.forEach(x=>{ if(n.l[x.k]&&!(s.l||{})[x.k]) ev.push({id:"lista",k:x.k,avg:summary(x.k).avg5,ready:Object.keys(n.l).length}); });
-  s.g=Math.max(s.g,n.g); s.h=Math.max(s.h,n.h); s.t=Math.max(s.t,n.t); s.r=Math.max(s.r,n.r); s.l=Object.assign(s.l||{},n.l);
+  s.g=Math.max(s.g,n.g); s.h=Math.max(s.h,n.h); s.t=Math.max(s.t,n.t); s.rd=Math.max(s.rd,n.rd); s.f=Math.max(s.f,n.f); s.l=Object.assign(s.l||{},n.l);
   msSave(); ev.forEach(msPush);
 }
 function msPush(e){ msQueue.push(e); msNext(); }
@@ -1567,11 +1573,12 @@ const msTick='<circle cx="130" cy="132" r="17" fill="#3FBF86"/><path d="M121 132
 function msData(e){
   const pl=(n,a,b)=>n===1?a:b;
   if(e.id==="galon"){ const ri=ranksInfo(); return {k:"Ascenso",h:msPilot(e.g),t:e.g===1?"¡Tu primer galón!":"¡Nuevo galón!",s:`Ya eres <b>${esc(RANKS[e.g])}</b>`,c:[`<b>${e.g}</b> ${pl(e.g,"galón","galones")}`,`<b>${e.pass}</b> ${pl(e.pass,"asignatura aprobada","asignaturas aprobadas")}`],b:"¡Seguir volando!"}; }
+  if(e.id==="primero"){ return {k:"Primer test",h:msMedal(`<g transform="translate(-4 -12)"><path d="M60 126l30-12-8-32 10-4 18 30 28-8c6-2 12 3 10 9s-8 8-14 10l-24 8 6 24-9 4-18-24-24 8z" fill="#E3ECF2" stroke="#8FB3D1" stroke-width="2" stroke-linejoin="round"/></g><path d="M52 160h96" stroke="#8FB3D1" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 8"/>`),t:"¡Primer test hecho!",s:"El primero es el más difícil: <b>ya has despegado</b>",c:[e.pct!=null?`Resultado: <b>${e.pct} %</b>`:"Primer vuelo completado"],b:"¡Seguimos!"}; }
   if(e.id==="horas"){ const off=Math.round(352*(1-0.82)); return {k:"Constancia",h:msMedal(`<circle class="msring" style="--off:${off}" cx="100" cy="116" r="56" transform="rotate(-90 100 116)" fill="none" stroke="#E8BF45" stroke-width="7" stroke-linecap="round"/><text x="100" y="${e.h>=100?122:124}" text-anchor="middle" font-size="${e.h>=100?34:40}" font-weight="800" fill="#fff" font-family="system-ui">${e.h}</text><text x="100" y="146" text-anchor="middle" font-size="15" font-weight="700" fill="#E8BF45" font-family="system-ui">HORAS</text>`),t:`${e.h} horas de estudio`,s:"Tiempo real con la app abierta y en marcha",c:[`Siguiente meta: <b>${e.h+MS_HOURS} h</b>`],b:"Seguir estudiando"}; }
   if(e.id==="tests"){ return {k:"Entrenamiento",h:msMedal(`<path d="M72 92h56M72 112h56M72 132h36" stroke="#8FB3D1" stroke-width="6" stroke-linecap="round"/>${msTick}`),t:`¡${e.n} tests hechos!`,s:"Cada test cuenta: <b>vas en serio</b>",c:[`Siguiente meta: <b>${e.n+MS_TESTS}</b>`],b:`¡A por los ${e.n+MS_TESTS}!`}; }
   if(e.id==="rank"){ const s=SUBJ.find(x=>x.k===e.k), d=e.from-e.to; return {k:"Ranking · "+s.short,h:msMedal(`<path d="M62 150v-26h24v26zM88 150V94h24v56zM114 150v-40h24v40z" fill="#8FB3D1"/><path d="M88 150V94h24v56z" fill="url(#msg)"/><g class="msup"><path d="M100 36l22 26h-14v16H92V62H78z" fill="#3FBF86" stroke="#0E5A3A" stroke-width="2" stroke-linejoin="round" transform="translate(0 -6) scale(.9) translate(11 4)"/></g><text x="100" y="168" text-anchor="middle" font-size="15" font-weight="800" fill="#fff" font-family="system-ui">Nº ${e.to}</text>`),t:"¡Subes en el ranking!",s:`Del puesto ${e.from} al <b>${e.to} en ${esc(s.short)}</b>`,c:[`Has adelantado a <b>${d}</b> ${pl(d,"compañero","compañeros")}`],b:"Ver ranking",go:()=>{ rkSub=e.k; show("rank"); }}; }
   if(e.id==="lista"){ const s=SUBJ.find(x=>x.k===e.k); return {k:"Asignatura preparada",h:msMedal(`<path d="M60 126l30-12-8-32 10-4 18 30 28-8c6-2 12 3 10 9s-8 8-14 10l-24 8 6 24-9 4-18-24-24 8z" fill="#E3ECF2" stroke="#8FB3D1" stroke-width="2" stroke-linejoin="round" transform="translate(-6 -8) scale(1.05)"/><circle cx="142" cy="146" r="18" fill="#3FBF86" stroke="#14304A" stroke-width="3"/><path d="M133 146l7 7 12-14" stroke="#fff" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),t:`${esc(s.short)}, preparada`,s:`Media de los últimos 5 tests: <b>${e.avg} %</b>`,c:[`<b>${e.ready}</b> de <b>${SUBJ.length}</b> asignaturas listas`],b:"¡Siguiente asignatura!"}; }
-  return {k:"Racha",h:msMedal(`<g class="msflame"><path d="M100 60c4 18 26 28 26 52a26 26 0 0 1-52 0c0-12 6-20 12-26 2 8 6 12 10 12-2-14 0-28 4-38z" fill="#FF8A1F"/><path d="M100 92c3 10 14 16 14 28a14 14 0 0 1-28 0c0-8 4-12 8-16 2 5 4 6 6 6-1-7-1-12 0-18z" fill="#FFD25A"/></g><text x="100" y="156" text-anchor="middle" font-size="24" font-weight="800" fill="#fff" font-family="system-ui">${e.d} días</text>`),t:`¡${e.d} días de racha!`,s:e.d===7?"Una semana <b>sin fallar</b>":"Constancia de <b>piloto</b>",c:[e.next?`Siguiente meta: <b>${e.next} días</b>`:"¡Nivel máximo!"],b:e.next?`¡A por ${e.next}!`:"¡Seguir volando!"};
+  return {k:"Racha",h:msMedal(`<g class="msflame"><path d="M100 60c4 18 26 28 26 52a26 26 0 0 1-52 0c0-12 6-20 12-26 2 8 6 12 10 12-2-14 0-28 4-38z" fill="#FF8A1F"/><path d="M100 92c3 10 14 16 14 28a14 14 0 0 1-28 0c0-8 4-12 8-16 2 5 4 6 6 6-1-7-1-12 0-18z" fill="#FFD25A"/></g><text x="100" y="156" text-anchor="middle" font-size="24" font-weight="800" fill="#fff" font-family="system-ui">${e.d} días</text>`),t:`¡${e.d} días de racha!`,s:e.d===2?"Dos días seguidos: <b>así se crea el hábito</b>":e.d===7?"Una semana <b>sin fallar</b>":"Constancia de <b>piloto</b>",c:[e.next?`Siguiente meta: <b>${e.next} días</b>`:"¡Nivel máximo!"],b:e.next?`¡A por ${e.next}!`:"¡Seguir volando!"};
 }
 function msClose(go){
   const ov=document.getElementById("msOv"); if(ov) ov.remove(); msBusy=false; if(typeof go==="function") try{ go(); }catch(e){}
@@ -1589,7 +1596,7 @@ function msShow(e){
   ov.addEventListener("keydown",x=>{ if(x.key==="Escape"){ x.stopPropagation(); msClose(); } });
   ov.querySelector(".msgo").focus();
 }
-window.F0Logros={demo:id=>{ const s=SUBJ[0].k, E={galon:{id:"galon",g:Math.max(1,ranksInfo().g)||2,pass:3},horas:{id:"horas",h:10},tests:{id:"tests",n:15},racha:{id:"racha",d:7,next:14},lista:{id:"lista",k:s,avg:87,ready:2},rank:{id:"rank",k:s,from:4,to:3}}; if(E[id]) msPush(E[id]); }};
+window.F0Logros={demo:id=>{ const s=SUBJ[0].k, E={galon:{id:"galon",g:Math.max(1,ranksInfo().g)||2,pass:3},horas:{id:"horas",h:10},tests:{id:"tests",n:15},racha:{id:"racha",d:7,next:14},primero:{id:"primero",pct:72},racha2:{id:"racha",d:2,next:7},lista:{id:"lista",k:s,avg:87,ready:2},rank:{id:"rank",k:s,from:4,to:3}}; if(E[id]) msPush(E[id]); }};
 try{ const m=/^#logro-(\w+)$/.exec(location.hash); if(m) setTimeout(()=>window.F0Logros.demo(m[1]),1500); }catch(e){}
 
 const boot = (async ()=>{
