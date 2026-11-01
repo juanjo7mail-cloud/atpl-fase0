@@ -3792,26 +3792,54 @@ function gXdist(kind){
   if(kind==="same"){
     d = Math.abs(l1-l2);
     text = pick([`Both positions are in the same hemisphere. What is the shortest distance between A (${A}) and B (${B})?`,
-      `A (${A}) and B (${B}) are on the same meridian and in the same hemisphere. The shortest distance A–B is:`]);
+      `A (${A}) and B (${B}) are on the same meridian and in the same hemisphere. The shortest distance A–B is:`,
+      `Position A is ${A} and position B is ${B}, both in the same hemisphere. What is the shortest distance from A to B?`,
+      `An aircraft flies the shortest route from A (${A}) to B (${B}); both points are in the same hemisphere. The distance flown is:`,
+      `Two points on the same meridian and in the same hemisphere: A (${A}) and B (${B}). How far apart are they?`,
+      `Given A (${A}) and B (${B}), both in the same hemisphere, the shortest distance between the two positions is:`]);
     opts = nvOpts(d, xSh([-60,-40,-20,20,40,60]).slice(0,3).map(o=>d+o), f, 20);
     expl = `Mismo meridiano y mismo hemisferio: se RESTAN las latitudes. ${xA(Math.max(l1,l2))} − ${xA(Math.min(l1,l2))} = ${xA(d)} = ${nvN(d)}′ → ${nvN(d)} NM (1′ de latitud = 1 NM).`;
   }else if(kind==="diff"){
     d = l1+l2;
     text = pick([`Both positions are in different hemispheres. What is the shortest distance between A (${A}) and B (${B})?`,
-      `A (${A}) and B (${B}) are on the same meridian, one in each hemisphere. The shortest distance A–B is:`]);
+      `A (${A}) and B (${B}) are on the same meridian, one in each hemisphere. The shortest distance A–B is:`,
+      `Position A is ${A} and position B is ${B}, in different hemispheres. What is the shortest distance from A to B?`,
+      `An aircraft flies the shortest route from A (${A}) to B (${B}); the two points are in different hemispheres. The distance flown is:`,
+      `Two points on the same meridian, one north and one south of the Equator: A (${A}) and B (${B}). How far apart are they?`,
+      `Given A (${A}) and B (${B}), in different hemispheres, the shortest distance between the two positions is:`]);
     opts = nvOpts(d, xSh([-25,-15,-10,-5,5,10,15,25]).slice(0,3).map(o=>d+o), f, 5);
     expl = `Mismo meridiano y hemisferios distintos: se SUMAN las latitudes (se cruza el ecuador). ${xA(l1)} + ${xA(l2)} = ${xA(d)} = ${nvN(d)}′ → ${nvN(d)} NM.`;
   }else if(kind==="poleS"){
     const dA = 5400-l1, dB = 5400-l2; d = dA+dB;
     text = pick([`Both positions on the meridian and anti-meridian in the same hemisphere. What is the shortest distance between A (${A}) and B (${B})?`,
-      `A (${A}) and B (${B}) lie on a meridian and its anti-meridian, in the same hemisphere. The shortest distance A–B is:`]);
+      `A (${A}) and B (${B}) lie on a meridian and its anti-meridian, in the same hemisphere. The shortest distance A–B is:`,
+      `Position A is ${A} and position B is ${B}: opposite meridians, same hemisphere. What is the shortest distance from A to B?`,
+      `An aircraft flies the shortest route from A (${A}) to B (${B}). The two positions are on a meridian and its anti-meridian, in the same hemisphere. The distance flown is:`,
+      `A (${A}) and B (${B}) are on opposite meridians (meridian and anti-meridian) and in the same hemisphere. How far apart are they along the shortest route?`,
+      `Given A (${A}) and B (${B}), on a meridian and its anti-meridian in the same hemisphere, the shortest distance between the two positions is:`]);
     opts = nvOpts(d, [dA, dB, Math.abs(l1-l2), l1+l2], f, 60);
+    if(Math.random()<0.3){   // variante: qué polo y qué distancia
+      const pn = hemi>0?"North":"South", po = hemi>0?"South":"North", dOther = 21600-d;
+      text = pick([`A (${A}) and B (${B}) lie on a meridian and its anti-meridian, in the same hemisphere. Over which pole does the shortest route from A to B pass, and how long is it?`,
+        `Position A is ${A} and position B is ${B}: opposite meridians, same hemisphere. Which pole does the shortest route pass over, and what is its length?`]);
+      opts = [`${pn} Pole, ${f(d)}`, `${po} Pole, ${f(dOther)}`, `${pn} Pole, ${f(dOther)}`, `${po} Pole, ${f(d)}`];
+    }
     expl = `Meridiano y antimeridiano en el mismo hemisferio: el camino más corto pasa por el polo ${hemi>0?"Norte":"Sur"}. Se SUMAN las distancias de A y B al polo: (90° − ${xA(l1)}) + (90° − ${xA(l2)}) = ${xA(dA)} + ${xA(dB)} = ${xA(d)} = ${nvN(d)} NM. Seguir el meridiano hasta el otro polo sería mucho más largo.`;
   }else{
     d = 10800 - Math.abs(l1-l2); const other = 10800 + Math.abs(l1-l2), polD = (l1>l2 ? hemi : -hemi)>0 ? "Norte" : "Sur";
     text = pick([`Both positions on the meridian and anti-meridian in different hemispheres. What is the shortest distance between A (${A}) and B (${B})?`,
-      `A (${A}) and B (${B}) lie on a meridian and its anti-meridian, one in each hemisphere. The shortest distance A–B is:`]);
+      `A (${A}) and B (${B}) lie on a meridian and its anti-meridian, one in each hemisphere. The shortest distance A–B is:`,
+      `Position A is ${A} and position B is ${B}: opposite meridians, different hemispheres. What is the shortest distance from A to B?`,
+      `An aircraft flies the shortest route from A (${A}) to B (${B}). The two positions are on a meridian and its anti-meridian, one in each hemisphere. The distance flown is:`,
+      `A (${A}) and B (${B}) are on opposite meridians (meridian and anti-meridian), one north and one south of the Equator. How far apart are they along the shortest route?`,
+      `Given A (${A}) and B (${B}), on a meridian and its anti-meridian in different hemispheres, the shortest distance between the two positions is:`]);
     opts = nvOpts(d, [other, 10800, d+600, d-600], f, 60);
+    if(Math.random()<0.3){   // variante: qué polo y qué distancia
+      const pn = polD==="Norte"?"North":"South", po = pn==="North"?"South":"North";
+      text = pick([`A (${A}) and B (${B}) lie on a meridian and its anti-meridian, one in each hemisphere. Over which pole does the shortest route from A to B pass, and how long is it?`,
+        `Position A is ${A} and position B is ${B}: opposite meridians, different hemispheres. Which pole does the shortest route pass over, and what is its length?`]);
+      opts = [`${pn} Pole, ${f(d)}`, `${po} Pole, ${f(other)}`, `${pn} Pole, ${f(other)}`, `${po} Pole, ${f(d)}`];
+    }
     expl = `Meridiano y antimeridiano en hemisferios distintos: se va por el polo del hemisferio con MÁS latitud (polo ${polD}). Distancia = (90° − ${xA(Math.max(l1,l2))}) + (90° + ${xA(Math.min(l1,l2))}) = ${xA(5400-Math.max(l1,l2))} + ${xA(5400+Math.min(l1,l2))} = ${xA(d)} = ${nvN(d)} NM. Por el otro polo serían ${xA(other)} = ${nvN(other)} NM.`;
   }
   return {text, opts, expl, v:true, p:{kind:"xdist", sub:kind, la, lb, lo, lob, ans:d}};
@@ -4151,9 +4179,9 @@ BASE.push(
 const NX_GEN = {nx1:()=>gXdist("same"), nx2:()=>gXdist("diff"), nx3:()=>gXdist("poleS"), nx4:()=>gXdist("poleD"), nx5:()=>gXroute("A"), nx6:()=>gXroute("B"),
   nx8:gXlmt, nx9:()=>gXhdg("ch"), nx10:()=>gXhdg("tt"), nx11:gXscale1, nx12:gXscale2, nx13:gXscale3, nx14:gXhw, nx15:gXgs, nx16:gXtrkgs, nx17:()=>gXwv("list"), nx18:gXdrgs, nx19:()=>gXwv("prose"),
   nx20:()=>gXndb("range"), nx21:()=>gXndb("power"), nx22:()=>gXvor("range"), nx23:()=>gXvor("alt"), nx24:gXndbF};
-// una de cada cuatro veces sale la pregunta original tal cual; las demás, una variante nueva
+// una de cada diez veces sale la pregunta original tal cual; las demás, una variante nueva (para no memorizar la respuesta)
 function xWithLit(id, gen){
-  return () => { const L = NX_LIT[id]; if(L && L.length && Math.random()<0.25){ const o = pick(L); return {text:o.text, opts:o.opts.slice(), expl:o.expl, v:false, p:{kind:"xlit", id}}; } return gen(); };
+  return () => { const L = NX_LIT[id]; if(L && L.length && Math.random()<0.10){ const o = pick(L); return {text:o.text, opts:o.opts.slice(), expl:o.expl, v:false, p:{kind:"xlit", id}}; } return gen(); };
 }
 // gemelas: misma familia de generador que su hermana, pero con su propio literal (una ranura por cada pregunta del examen)
 NX_GEN.nx5b = NX_GEN.nx5;
