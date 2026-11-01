@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="993268eb0959";</script>
+<script>window.F0_BUILD="f35179d8caa3";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -363,9 +363,53 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 @media (max-width:480px){.brand .bt small{display:none}.top .row1{gap:5px}.top .row1 .savepill{padding:4px 8px}#rankBtn svg{width:40px;height:18px}#acctTxt{max-width:44px;overflow:hidden;text-overflow:ellipsis}}
 @media (max-width:380px){.brand{font-size:16px;gap:6px}.brand svg{width:30px;height:30px}.brand small{font-size:8.5px}#acctTxt{max-width:50px}.top .row1{gap:6px}.iconbtn{padding:7px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* logros */
+#msOv{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:rgba(5,12,19,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);z-index:3000;-webkit-animation:msfade .25s both;animation:msfade .25s both}
+@keyframes msfade{from{opacity:0}}
+#msOv .mscard{position:relative;width:min(360px,100%);max-height:calc(100vh - 24px);overflow:hidden;border-radius:26px;background:linear-gradient(180deg,#1E3448 0%,#14263A 62%,#101F2E 100%);border:1.5px solid #3B5874;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 6px rgba(232,191,69,.08);text-align:center;color:#E3ECF2;-webkit-animation:mspop .55s cubic-bezier(.2,1.4,.4,1) both;animation:mspop .55s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes mspop{from{transform:translateY(40px) scale(.82);opacity:0}}
+#msOv .msrays{position:absolute;left:50%;top:128px;width:560px;height:560px;margin:-280px 0 0 -280px;background:repeating-conic-gradient(from 0deg,rgba(232,191,69,.20) 0 7deg,transparent 7deg 20deg);-webkit-mask:radial-gradient(circle,#000 8%,transparent 62%);mask:radial-gradient(circle,#000 8%,transparent 62%);-webkit-animation:msspin 28s linear infinite;animation:msspin 28s linear infinite}
+@keyframes msspin{to{transform:rotate(360deg)}}
+#msOv .msglow{position:absolute;left:50%;top:128px;width:240px;height:240px;margin:-120px 0 0 -120px;border-radius:50%;background:radial-gradient(circle,rgba(232,191,69,.38),transparent 68%)}
+#msOv .mskick,#msOv .mshero,#msOv h2,#msOv .mssub,#msOv .mschips,#msOv .msgo,#msOv .mslater{position:relative;z-index:1}
+#msOv .mskick{margin:20px 0 0;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:#E8BF45;font-weight:700}
+#msOv .mshero{height:236px;display:grid;place-items:center}
+#msOv .mshero svg{overflow:visible}
+#msOv h2{margin:0;padding:0 20px;font-size:27px;line-height:1.1;letter-spacing:-.01em;color:#E3ECF2;font-weight:800}
+#msOv .mssub{margin:6px 20px 0;color:#94A9BA;font-size:15px}
+#msOv .mssub b{color:#E3ECF2}
+#msOv .mschips{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 16px 0}
+#msOv .mschip{font-size:13px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid #31485C;color:#CFE0EC}
+#msOv .mschip b{color:#E8BF45}
+#msOv .msgo{margin:18px 20px 6px;display:block;width:calc(100% - 40px);font:inherit;font-weight:800;font-size:17px;color:#14304A;background:linear-gradient(180deg,#F4D26A,#E0AD2A);border:0;border-radius:16px;min-height:52px;cursor:pointer;box-shadow:0 5px 0 #9B7410,0 10px 24px rgba(232,191,69,.25)}
+#msOv .msgo:active{transform:translateY(3px);box-shadow:0 2px 0 #9B7410}
+#msOv .msgo:focus-visible,#msOv .mslater:focus-visible{outline:3px solid #fff;outline-offset:2px}
+#msOv .mslater{display:block;margin:0 auto 12px;background:none;border:0;color:#94A9BA;font:inherit;font-size:13px;cursor:pointer;min-height:40px;padding:0 14px}
+#msOv .mscf{position:absolute;top:-14px;z-index:0;width:8px;height:14px;border-radius:2px;opacity:0;-webkit-animation:msfall linear both;animation:msfall linear both;pointer-events:none}
+@keyframes msfall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:.9;transform:translateY(520px) rotate(720deg)}}
+#msOv .msblink{transform-box:fill-box;transform-origin:50% 50%;animation:msblink 3.4s infinite}
+@keyframes msblink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+#msOv .mspilot{animation:msbob 3s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes msbob{50%{transform:translateY(-3px)}}
+#msOv .msnew{animation:msdrop 1.1s .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes msdrop{0%{transform:translateY(-120px) rotate(-18deg);opacity:0}30%{opacity:1}100%{transform:none;opacity:1}}
+#msOv .msflash{animation:msflash 1s 1.35s ease-out both;transform-box:fill-box;transform-origin:50% 50%}
+@keyframes msflash{0%{opacity:0;transform:scale(.2)}35%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.7)}}
+#msOv .msspk{transform-box:fill-box;transform-origin:50% 50%;animation:msspk 1.6s 1.4s ease-out both}
+@keyframes msspk{0%{opacity:0;transform:scale(0) rotate(0)}40%{opacity:1;transform:scale(1) rotate(90deg)}100%{opacity:0;transform:scale(.4) rotate(180deg)}}
+#msOv .msemb{animation:msembin .8s .15s cubic-bezier(.2,1.5,.4,1) both;transform-box:fill-box;transform-origin:50% 50%}
+@keyframes msembin{from{transform:scale(.3) rotate(-14deg);opacity:0}}
+#msOv .msring{stroke-dasharray:352;stroke-dashoffset:352;animation:msring 1.4s .5s ease-out forwards}
+@keyframes msring{to{stroke-dashoffset:var(--off)}}
+#msOv .msflame{transform-box:fill-box;transform-origin:50% 100%;animation:msfl .9s ease-in-out infinite alternate}
+@keyframes msfl{from{transform:scale(1) rotate(-2deg)}to{transform:scale(1.07,1.12) rotate(2deg)}}
+#msOv .msup{animation:msup 1.2s .6s ease-out both}
+@keyframes msup{from{transform:translateY(34px);opacity:0}}
+@media (prefers-reduced-motion:reduce){#msOv *{animation:none!important}#msOv .msring{stroke-dashoffset:var(--off)}}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="pl" viewBox="0 0 48 20"><path fill="currentColor" d="M3 10.5c0-2.2 2-3.6 5-3.6h27c6 0 10 2.2 11.5 3.6-1.5 1.4-5.5 3.6-11.5 3.6H8c-3 0-5-1.4-5-3.6z"/><path fill="currentColor" d="M3.5 7.2 1 1h6l5.5 6.2z"/><path fill="currentColor" d="M19 13.6 27.5 19.5h5L29 13.6z"/><path fill="#fff" fill-opacity=".85" d="M34.5 8.2h6c1.6.4 3 1.3 3.8 2.2H34.5z"/></symbol></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="msg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE08A"/><stop offset=".55" stop-color="#E8BF45"/><stop offset="1" stop-color="#B98A14"/></linearGradient><linearGradient id="msn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#25496B"/><stop offset="1" stop-color="#14304A"/></linearGradient><symbol id="msstar" viewBox="-10 -10 20 20"><path d="M0-10 2.6-2.6 10 0 2.6 2.6 0 10-2.6 2.6-10 0-2.6-2.6z" fill="#FFF3B8"/></symbol></defs></svg>
 <div id="gaPop" class="pop" hidden role="dialog" aria-label="Galones"></div>
 <div id="onPop" hidden role="dialog" aria-label="Compañeros en línea"></div>
 <header class="top">
@@ -608,7 +652,7 @@ function setSaveState(st){
   b.classList.toggle("cloud", st!=="err" && !!(remote||(owner&&db)));
   if(st==="err") $("#saveTxt").textContent="Sin conexión: guardado aquí";
 }
-async function saveSubj(k,v){ STATE[k]=union(v,STATE[k]); lsSet(k,STATE[k]); await cloudSet(k,STATE[k]); renderDash(); renderTabs(); }
+async function saveSubj(k,v){ STATE[k]=union(v,STATE[k]); lsSet(k,STATE[k]); await cloudSet(k,STATE[k]); renderDash(); renderTabs(); try{ msCheck(); setTimeout(msRank,1500); }catch(e){} }
 
 /* ===================== estadísticas ===================== */
 function attemptsOf(k){
@@ -1358,6 +1402,9 @@ function drawRank(){
 /* ===================== novedades a bordo ===================== */
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 const NEWS=[
+  {id:"2026-11-01", items:[
+    {i:"🎉", t:"Avisos de logros", d:"Te felicitamos cuando consigues un galón, cada 10 horas de estudio, cada 15 tests, 7, 14 y 30 días de racha, una asignatura preparada y (en la web) cuando subes en el ranking. Solo salen cosas buenas, de una en una."}
+  ]},
   {id:"2026-10-31c", items:[
     {i:"🎯", t:"Un solo Trial por asignatura", d:"El Trial junta ahora las preguntas de los trials y los ejercicios de clase, siempre en variante. Desaparecen los modos sueltos de preguntas de clase: menos modos, lo mismo de contenido. Nuevo Trial en el SOP."},
     {i:"🛫", t:"Cabecera con avión nuevo", d:"Rueda por la pista, levanta el morro y despega hasta desaparecer."},
@@ -1448,6 +1495,103 @@ function closeNews(){ newsMark(); $("#news").hidden=true; }
 $("#nwOk").addEventListener("click",closeNews);
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#news").hidden) closeNews(); });
 
+/* ===================== logros: avisos de celebración ===================== */
+// galón nuevo · cada 10 h de estudio · cada 15 tests · racha (7, 14, 30…) · asignatura preparada · subes en el ranking
+const MS_KEY="f0:ms", MS_HOURS=10, MS_TESTS=15, MS_STREAK=[7,14,30,60,100];
+let MS=null, msReady=false, msQueue=[], msBusy=false, msRankAt=0, msSecsDirty=0;
+try{ MS=JSON.parse(localStorage.getItem(MS_KEY)||"null"); }catch(e){ MS=null; }
+if(!MS||typeof MS!=="object") MS=null;
+const msSave=()=>{ try{ localStorage.setItem(MS_KEY,JSON.stringify(MS)); }catch(e){} };
+function msTests(){ return SUBJ.reduce((a,s)=>a+attemptsOf(s.k).filter(x=>x.total>=10).length,0); }
+function msStreakIdx(n){ let r=0; MS_STREAK.forEach((m,i)=>{ if(n>=m) r=i+1; }); return r; }
+function msNow(){
+  const ri=ranksInfo(), sums=ri.sums, ready={}; SUBJ.forEach((s,i)=>{ if(sums[i].lvl==="ok") ready[s.k]=1; });
+  return {g:ri.g, pass:ri.pass, t:Math.floor(msTests()/MS_TESTS), h:Math.floor(((MS&&MS.secs)||0)/(3600*MS_HOURS)), r:msStreakIdx(streakInfo().count), l:ready};
+}
+function msCheck(){
+  if(!msReady) return;
+  const n=msNow();
+  if(!MS||!MS.seen){ MS=Object.assign(MS||{},{secs:(MS&&MS.secs)||0, seen:{g:n.g,t:n.t,h:n.h,r:n.r,l:n.l,p:{}}}); msSave(); return; }   // primera vez en este dispositivo: sin avisos de lo que ya tenías
+  const s=MS.seen, ev=[];
+  if(n.g>s.g){ ev.push({id:"galon",g:n.g,pass:n.pass}); }
+  if(n.h>s.h){ ev.push({id:"horas",h:n.h*MS_HOURS}); }
+  if(n.t>s.t){ ev.push({id:"tests",n:n.t*MS_TESTS}); }
+  if(n.r>s.r){ ev.push({id:"racha",d:MS_STREAK[n.r-1],next:MS_STREAK[n.r]||null}); }
+  SUBJ.forEach(x=>{ if(n.l[x.k]&&!(s.l||{})[x.k]) ev.push({id:"lista",k:x.k,avg:summary(x.k).avg5,ready:Object.keys(n.l).length}); });
+  s.g=Math.max(s.g,n.g); s.h=Math.max(s.h,n.h); s.t=Math.max(s.t,n.t); s.r=Math.max(s.r,n.r); s.l=Object.assign(s.l||{},n.l);
+  msSave(); ev.forEach(msPush);
+}
+function msPush(e){ msQueue.push(e); msNext(); }
+function msBlocked(){ return ["#devNote","#login","#nameAsk","#pwReset","#news"].some(q=>{ const el=document.querySelector(q); return el&&!el.hidden; }) || !!document.getElementById("msOv"); }
+function msNext(){
+  if(msBusy||!msQueue.length) return;
+  if(msBlocked()){ setTimeout(msNext,2500); return; }
+  msBusy=true; setTimeout(()=>{ const e=msQueue.shift(); if(!e){ msBusy=false; return; } msShow(e); },1200);
+}
+// ---- tiempo de estudio: solo con la app visible y con actividad en los últimos 90 s (dentro o fuera de las asignaturas)
+setInterval(()=>{
+  if(document.visibilityState!=="visible"||Date.now()-uLast>=90000) return;
+  if(!MS) MS={secs:0}; MS.secs=(MS.secs||0)+5; msSecsDirty+=5;
+  if(msSecsDirty>=60){ msSecsDirty=0; msSave(); msCheck(); }
+},5000);
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden"&&msSecsDirty){ msSecsDirty=0; msSave(); } });
+// ---- ranking (solo web): puesto actual por asignatura frente al último que vimos
+async function msRank(){
+  if(!msReady||!sb||!sbUser||!MS||!MS.seen||Date.now()-msRankAt<30000) return; msRankAt=Date.now();
+  try{
+    const r=await sb.rpc("ranking"); if(r.error||!r.data) return;
+    SUBJ.forEach(s=>{
+      const rows=r.data.filter(x=>x.subject===s.k).map(x=>({n:x.n,mine:!!x.mine,pts:rkPts(Number(x.avg20),x.n)})).sort((a,b)=>b.pts-a.pts||b.n-a.n);
+      const i=rows.findIndex(x=>x.mine); if(i<0) return; const pos=i+1, old=MS.seen.p[s.k];
+      if(old&&pos<old) msPush({id:"rank",k:s.k,from:old,to:pos});
+      MS.seen.p[s.k]=pos;
+    }); msSave();
+  }catch(e){}
+}
+// ---- diseño
+const msEpau=(n,skip)=>{ let s='<rect width="64" height="26" rx="4" fill="#0A1724" stroke="#4A6B88" stroke-width="1.4"/>'; for(let i=0;i<4;i++){ const x=22+i*10; if(i<n) s+=`<rect x="${x}" y="0" width="6.4" height="26" fill="url(#msg)"/>`; else if(i!==skip) s+=`<rect x="${x}" y="0" width="6.4" height="26" fill="#1D3347"/>`; } return s; };
+const msPilot=g=>`<svg class="mspilot" viewBox="0 0 240 236" width="236" height="232" aria-label="Piloto recibiendo un galón"><ellipse cx="120" cy="228" rx="86" ry="8" fill="rgba(0,0,0,.35)"/>
+<path d="M26 232c0-44 22-74 62-82h64c40 8 62 38 62 82z" fill="url(#msn)" stroke="#0A1724" stroke-width="2"/><path d="M98 150l22 44 22-44z" fill="#fff"/><path d="M114 156h12l4 10-10 36-10-36z" fill="#C8102E"/>
+<path d="M98 150 120 194 84 168zM142 150 120 194 156 168z" fill="#102A42" stroke="#0A1724" stroke-width="1.5"/><circle cx="86" cy="206" r="3" fill="url(#msg)"/><circle cx="154" cy="206" r="3" fill="url(#msg)"/>
+<g transform="translate(24 170) rotate(-22)" opacity=".95"><g transform="scale(.9)">${msEpau(g,-1)}</g></g>
+<g transform="translate(168 150) rotate(22)"><g transform="scale(1.05)">${msEpau(g-1,g-1)}<g class="msnew"><rect x="${22+(g-1)*10}" y="-3" width="6.4" height="32" rx="1" fill="url(#msg)" stroke="#8A6208" stroke-width=".6"/></g><g class="msflash"><circle cx="${25+(g-1)*10}" cy="13" r="20" fill="#FFF3B8" opacity=".85"/></g></g></g>
+<use class="msspk" href="#msstar" x="196" y="140" width="22" height="22"/><use class="msspk" href="#msstar" x="150" y="168" width="14" height="14" style="animation-delay:1.7s"/><use class="msspk" href="#msstar" x="214" y="176" width="12" height="12" style="animation-delay:1.9s"/>
+<rect x="104" y="124" width="32" height="32" rx="10" fill="#E9B88D"/><ellipse cx="78" cy="96" rx="7" ry="10" fill="#EDBE95"/><ellipse cx="162" cy="96" rx="7" ry="10" fill="#EDBE95"/><ellipse cx="120" cy="92" rx="42" ry="46" fill="#F4CBA3"/>
+<g class="msblink"><ellipse cx="103" cy="96" rx="4.6" ry="6" fill="#1B2A38"/><ellipse cx="137" cy="96" rx="4.6" ry="6" fill="#1B2A38"/><circle cx="104.6" cy="93.6" r="1.6" fill="#fff"/><circle cx="138.6" cy="93.6" r="1.6" fill="#fff"/></g>
+<path d="M94 83q9-6 18-1M128 82q9-5 18 1" stroke="#5B3D26" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="92" cy="110" rx="8" ry="5" fill="#F0A08A" opacity=".55"/><ellipse cx="148" cy="110" rx="8" ry="5" fill="#F0A08A" opacity=".55"/>
+<path d="M104 116q16 18 32 0z" fill="#fff" stroke="#8A4B3A" stroke-width="2.2" stroke-linejoin="round"/><path d="M118 100q2 6 4 0" stroke="#D69A78" stroke-width="2" fill="none" stroke-linecap="round"/>
+<path d="M70 70c0-30 22-48 50-48s50 18 50 48c-14-9-32-13-50-13s-36 4-50 13z" fill="url(#msn)" stroke="#0A1724" stroke-width="2"/><path d="M68 72c16-10 34-15 52-15s36 5 52 15l-2 9c-15-8-32-12-50-12s-35 4-50 12z" fill="#0F2438" stroke="#0A1724" stroke-width="1.6"/>
+<path d="M82 78c10-4 24-7 38-7s28 3 38 7" stroke="url(#msg)" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="1 7"/><path d="M120 28l9 10-9 11-9-11z" fill="url(#msg)" stroke="#8A6208" stroke-width="1.2"/><circle cx="120" cy="39" r="3.2" fill="#14304A"/></svg>`;
+const msMedal=in_=>`<svg class="msemb" viewBox="0 0 200 200" width="200" height="200" aria-hidden="true"><path d="M62 4h30l24 70H84zM138 4h-30L84 74h32z" fill="#C8102E" stroke="#7E0A1D" stroke-width="2" stroke-linejoin="round"/><circle cx="100" cy="116" r="74" fill="url(#msg)" stroke="#8A6208" stroke-width="3"/><circle cx="100" cy="116" r="60" fill="#14304A" stroke="#FBE08A" stroke-width="2.5"/>${in_}<use class="msspk" href="#msstar" x="150" y="48" width="24" height="24"/><use class="msspk" href="#msstar" x="26" y="92" width="16" height="16" style="animation-delay:1.8s"/></svg>`;
+const msTick='<circle cx="130" cy="132" r="17" fill="#3FBF86"/><path d="M121 132l7 7 12-14" stroke="#fff" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+function msData(e){
+  const pl=(n,a,b)=>n===1?a:b;
+  if(e.id==="galon"){ const ri=ranksInfo(); return {k:"Ascenso",h:msPilot(e.g),t:e.g===1?"¡Tu primer galón!":"¡Nuevo galón!",s:`Ya eres <b>${esc(RANKS[e.g])}</b>`,c:[`<b>${e.g}</b> ${pl(e.g,"galón","galones")}`,`<b>${e.pass}</b> ${pl(e.pass,"asignatura aprobada","asignaturas aprobadas")}`],b:"¡Seguir volando!"}; }
+  if(e.id==="horas"){ const off=Math.round(352*(1-0.82)); return {k:"Constancia",h:msMedal(`<circle class="msring" style="--off:${off}" cx="100" cy="116" r="56" transform="rotate(-90 100 116)" fill="none" stroke="#E8BF45" stroke-width="7" stroke-linecap="round"/><text x="100" y="${e.h>=100?122:124}" text-anchor="middle" font-size="${e.h>=100?34:40}" font-weight="800" fill="#fff" font-family="system-ui">${e.h}</text><text x="100" y="146" text-anchor="middle" font-size="15" font-weight="700" fill="#E8BF45" font-family="system-ui">HORAS</text>`),t:`${e.h} horas de estudio`,s:"Tiempo real con la app abierta y en marcha",c:[`Siguiente meta: <b>${e.h+MS_HOURS} h</b>`],b:"Seguir estudiando"}; }
+  if(e.id==="tests"){ return {k:"Entrenamiento",h:msMedal(`<path d="M72 92h56M72 112h56M72 132h36" stroke="#8FB3D1" stroke-width="6" stroke-linecap="round"/>${msTick}`),t:`¡${e.n} tests hechos!`,s:"Cada test cuenta: <b>vas en serio</b>",c:[`Siguiente meta: <b>${e.n+MS_TESTS}</b>`],b:`¡A por los ${e.n+MS_TESTS}!`}; }
+  if(e.id==="rank"){ const s=SUBJ.find(x=>x.k===e.k), d=e.from-e.to; return {k:"Ranking · "+s.short,h:msMedal(`<path d="M62 150v-26h24v26zM88 150V94h24v56zM114 150v-40h24v40z" fill="#8FB3D1"/><path d="M88 150V94h24v56z" fill="url(#msg)"/><g class="msup"><path d="M100 36l22 26h-14v16H92V62H78z" fill="#3FBF86" stroke="#0E5A3A" stroke-width="2" stroke-linejoin="round" transform="translate(0 -6) scale(.9) translate(11 4)"/></g><text x="100" y="168" text-anchor="middle" font-size="15" font-weight="800" fill="#fff" font-family="system-ui">Nº ${e.to}</text>`),t:"¡Subes en el ranking!",s:`Del puesto ${e.from} al <b>${e.to} en ${esc(s.short)}</b>`,c:[`Has adelantado a <b>${d}</b> ${pl(d,"compañero","compañeros")}`],b:"Ver ranking",go:()=>{ rkSub=e.k; show("rank"); }}; }
+  if(e.id==="lista"){ const s=SUBJ.find(x=>x.k===e.k); return {k:"Asignatura preparada",h:msMedal(`<path d="M60 126l30-12-8-32 10-4 18 30 28-8c6-2 12 3 10 9s-8 8-14 10l-24 8 6 24-9 4-18-24-24 8z" fill="#E3ECF2" stroke="#8FB3D1" stroke-width="2" stroke-linejoin="round" transform="translate(-6 -8) scale(1.05)"/><circle cx="142" cy="146" r="18" fill="#3FBF86" stroke="#14304A" stroke-width="3"/><path d="M133 146l7 7 12-14" stroke="#fff" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),t:`${esc(s.short)}, preparada`,s:`Media de los últimos 5 tests: <b>${e.avg} %</b>`,c:[`<b>${e.ready}</b> de <b>${SUBJ.length}</b> asignaturas listas`],b:"¡Siguiente asignatura!"}; }
+  return {k:"Racha",h:msMedal(`<g class="msflame"><path d="M100 60c4 18 26 28 26 52a26 26 0 0 1-52 0c0-12 6-20 12-26 2 8 6 12 10 12-2-14 0-28 4-38z" fill="#FF8A1F"/><path d="M100 92c3 10 14 16 14 28a14 14 0 0 1-28 0c0-8 4-12 8-16 2 5 4 6 6 6-1-7-1-12 0-18z" fill="#FFD25A"/></g><text x="100" y="156" text-anchor="middle" font-size="24" font-weight="800" fill="#fff" font-family="system-ui">${e.d} días</text>`),t:`¡${e.d} días de racha!`,s:e.d===7?"Una semana <b>sin fallar</b>":"Constancia de <b>piloto</b>",c:[e.next?`Siguiente meta: <b>${e.next} días</b>`:"¡Nivel máximo!"],b:e.next?`¡A por ${e.next}!`:"¡Seguir volando!"};
+}
+function msClose(go){
+  const ov=document.getElementById("msOv"); if(ov) ov.remove(); msBusy=false; if(typeof go==="function") try{ go(); }catch(e){}
+  if(msLast&&msLast.focus) try{ msLast.focus(); }catch(e){} setTimeout(msNext,600);
+}
+let msLast=null;
+function msShow(e){
+  const d=msData(e); msLast=document.activeElement;
+  const ov=document.createElement("div"); ov.id="msOv";
+  ov.innerHTML=`<div class="mscard" role="dialog" aria-modal="true" aria-label="${esc(d.t)}"><div class="msrays"></div><div class="msglow"></div><p class="mskick">${esc(d.k)}</p><div class="mshero">${d.h}</div><h2>${d.t}</h2><p class="mssub">${d.s}</p><div class="mschips">${d.c.map(c=>`<span class="mschip">${c}</span>`).join("")}</div><button class="msgo" type="button">${d.b}</button><button class="mslater" type="button">Cerrar</button></div>`;
+  const card=ov.firstChild, cols=["#E8BF45","#3FBF86","#2F6FA3","#C8102E","#fff","#FF8A1F"];
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches) for(let i=0;i<34;i++){ const c=document.createElement("i"); c.className="mscf"; c.style.left=Math.random()*100+"%"; c.style.background=cols[i%cols.length]; c.style.animationDuration=(2.2+Math.random()*2)+"s"; c.style.animationDelay=(Math.random()*.9)+"s"; card.prepend(c); }
+  document.body.appendChild(ov);
+  ov.querySelector(".msgo").onclick=()=>msClose(d.go); ov.querySelector(".mslater").onclick=()=>msClose();
+  ov.addEventListener("keydown",x=>{ if(x.key==="Escape"){ x.stopPropagation(); msClose(); } });
+  ov.querySelector(".msgo").focus();
+}
+window.F0Logros={demo:id=>{ const s=SUBJ[0].k, E={galon:{id:"galon",g:Math.max(1,ranksInfo().g)||2,pass:3},horas:{id:"horas",h:10},tests:{id:"tests",n:15},racha:{id:"racha",d:7,next:14},lista:{id:"lista",k:s,avg:87,ready:2},rank:{id:"rank",k:s,from:4,to:3}}; if(E[id]) msPush(E[id]); }};
+try{ const m=/^#logro-(\w+)$/.exec(location.hash); if(m) setTimeout(()=>window.F0Logros.demo(m[1]),1500); }catch(e){}
+
 const boot = (async ()=>{
   const C = window.claude;
   const cfg = window.F0_CONFIG;
@@ -1461,7 +1605,7 @@ const boot = (async ()=>{
     if(owner && db){ await loadAllCloud(); $("#saveBtn").classList.add("cloud"); $("#saveTxt").textContent="En tu cuenta"; renderDash(); renderTabs(); }
   }catch(e){}
 })();
-boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); });
+boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); setTimeout(()=>{ msReady=true; msCheck(); msRank(); },2500); });
 </script>
 <!--stall:start-->
 <style>
