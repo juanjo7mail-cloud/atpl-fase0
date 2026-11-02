@@ -2448,7 +2448,7 @@ const dd=function(list,mode){
 };
 function ui(){
   const sb=document.getElementById("startBtn"); if(!sb||document.getElementById("f0x")) return;
-  const st=document.createElement("style"); st.textContent=".f0x{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line,#CBD8E0);border-radius:8px;padding:10px 12px;margin:10px 0;cursor:pointer}.f0x input{margin-top:3px;width:18px;height:18px;flex:none}.f0x small{display:block;color:var(--muted,#5A6F82);font-size:13px;line-height:1.35}.f0x:has(input:checked){border-color:#C8102E;background:color-mix(in srgb,#C8102E 8%,transparent)}.f0xb{display:inline-block;font:700 12px/1 system-ui,sans-serif;letter-spacing:.06em;background:#C8102E;color:#fff;border-radius:4px;padding:4px 8px;margin:0 0 8px}";
+  const st=document.createElement("style"); st.textContent=".f0x{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line,#CBD8E0);border-radius:8px;padding:10px 12px;margin:10px 0;cursor:pointer}.f0x input{margin-top:3px;width:18px;height:18px;flex:none}.f0x small{display:block;color:var(--muted,#5A6F82);font-size:13px;line-height:1.35}.f0x:has(input:checked){border-color:#C8102E;background:color-mix(in srgb,#C8102E 8%,transparent)}.f0xb[hidden]{display:none!important}.f0xb{display:inline-block;font:700 12px/1 system-ui,sans-serif;letter-spacing:.06em;background:#C8102E;color:#fff;border-radius:4px;padding:4px 8px;margin:0 0 8px}";
   document.head.appendChild(st);
   const l=document.createElement("label"); l.className="f0x"; l.id="f0x";
   l.innerHTML='<input type="checkbox" id="f0xc"><span><b>Dificultad extra</b><small>Preguntas nuevas, más difíciles y rebuscadas sobre el temario, además de las más duras del banco. El tiempo no cambia.</small></span>';
