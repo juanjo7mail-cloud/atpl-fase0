@@ -7,7 +7,7 @@
 const MAXLEN=500, GAP=500, KEEP=200, TTL=60*60*1000, GRACE=10*60*1000, RESEND=4000, READ_TTL=5*60*1000;   // gracia: tras desconectarse, un compañero sigue «en línea» 10 min y le llegan los mensajes al volver   // los mensajes duran 60 min (solo en este dispositivo)
 const $=(s,r)=>(r||document).querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const C={dmTo:"", dmText:"", people:[], sms:false, pAt:0, dch:null, fAt:0, deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0};
+const C={dmTo:"", dmText:"", people:[], sms:false, smsErr:"", pAt:0, dch:null, fAt:0, deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0};
 
 const PLANE='<path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z"/>';
 const ICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path class="bb" d="M16 3C8.8 3 3 8 3 14.2c0 3.3 1.7 6.3 4.4 8.3-.2 1.9-1 3.6-2.2 5 2.6-.3 4.8-1.3 6.4-2.6 1.4.4 2.9.6 4.4.6 7.200 0 13-5 13-11.300S23.200 3 16 3z"/><g class="pl" transform="translate(16 14) rotate(-45) scale(.82) translate(-10 -10)">'+PLANE+'</g></svg>';
@@ -204,10 +204,11 @@ async function loadPeople(){
   C.pAt=Date.now();
   try{
     const r=await d.sb.rpc("chat_people");
-    if(!r||r.error||!Array.isArray(r.data)){ C.sms=false; update(); return; }
+    if(!r||r.error||!Array.isArray(r.data)){ C.sms=false; C.smsErr=String((r&&r.error&&(r.error.code||r.error.message))||"sin datos").slice(0,60); update(); return; }
+    C.smsErr="";
     C.people=r.data.map(x=>({id:String(x.user_id),n:String(x.full_name||"Alumno").slice(0,60)})).filter(x=>x.id!==C.uid);
     C.people.forEach(x=>{ C.names[x.id]=x.n; }); C.sms=true;
-  }catch(e){ C.sms=false; }
+  }catch(e){ C.sms=false; C.smsErr=String((e&&(e.code||e.message))||"error").slice(0,60); }
   update();
 }
 function subDb(){
@@ -316,10 +317,10 @@ function update(){
   const mm=$("#f0cMsgs",r), atEnd=!mm||mm.scrollHeight-mm.scrollTop-mm.clientHeight<60;
   if(!room){
     const gone=Object.keys(C.rooms).filter(k=>!C.peers[k]);
-    if(Date.now()-C.pAt>30000) loadPeople();
+    if(Date.now()-C.pAt>(C.sms?30000:8000)) loadPeople();
     const offl=C.people.filter(x=>!C.peers[x.id]||C.peers[x.id].away);
     const canDm=C.sms&&offl.length>0;
-    const dmHint=!C.sms?"Disponible muy pronto":(offl.length?"Elegir compañero…":"Todos están en línea");
+    const dmHint=!C.sms?("No disponible"+(C.smsErr?" · "+C.smsErr:"")):(offl.length?"Elegir compañero…":"Todos están en línea");
     const dm=`<form class="f0c-dm" id="f0cDm" autocomplete="off"><div class="t">Mensaje sin conexión</div><select id="f0cTo" aria-label="Elegir compañero que no está en línea" ${canDm?"":"disabled"}><option value="">${dmHint}</option>${canDm?offl.map(x=>`<option value="${esc(x.id)}"${x.id===C.dmTo?" selected":""}>${esc(x.n)}</option>`).join(""):""}</select><div class="r"><input id="f0cDmIn" maxlength="${MAXLEN}" placeholder="Escribe un mensaje…" aria-label="Mensaje sin conexión" ${canDm?"":"disabled"}><button type="submit" aria-label="Enviar" ${canDm?"":"disabled"}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></div></form>`;
     const row=(k,sub,isOn)=>`<button class="f0c-p${isOn?"":" gone"}" data-room="${esc(k)}"><span class="av">${esc(ini(nameOf(k)))}<i></i></span><span class="nm">${esc(nameOf(k))}<small>${esc(sub)}</small></span>${C.unread[k]?`<b class="u">${C.unread[k]}</b>`:""}</button>`;
     const list=(online.length||gone.length)?`<div class="f0c-list">${online.length?"<h3>En línea</h3>"+online.map(k=>row(k,C.unread[k]?"mensaje nuevo":(C.peers[k].away?"ausente un momento · le llegará al volver":"toca para escribir"),true)).join(""):""}${gone.length?"<h3>Conversaciones</h3>"+gone.map(k=>row(k,C.sms?"sin conexión · le llegará igualmente":"ya no está en línea",false)).join(""):""}</div>`
