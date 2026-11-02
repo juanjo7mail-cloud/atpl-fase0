@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="7abe9f9364d8";</script>
+<script>window.F0_BUILD="5410790240a4";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1138,7 +1138,7 @@ $("#sgForm").addEventListener("submit",async e=>{ e.preventDefault();
   const kind=(document.querySelector('input[name=sgKind]:checked')||{}).value||"otro";
   const r=await sb.from("suggestions").insert({email:sbUser.email, name:MY.name||null, kind, subject:$("#sgSubj").value||null, body});
   if(r.error){ $("#sgSend").disabled=false; msg.textContent=(r.error.code==="42P01"||/suggestions/.test(r.error.message||""))?"El buzón aún no está activado. Prueba en un rato.":"No se ha podido enviar. Inténtalo en un rato."; return; }
-  msg.style.color="var(--ok)"; msg.textContent="¡Recibido! Gracias."; SG=null; setTimeout(()=>{ $("#sugBox").hidden=true; },1300);
+  msg.style.color="var(--ok)"; msg.textContent="¡Recibido! Gracias."; SG=null; try{ sgnDone(); }catch(e){} setTimeout(()=>{ $("#sugBox").hidden=true; },1300);
 });
 const SG_KIND={pregunta:"Pregunta",correccion:"Corrección",otro:"Idea"};
 async function drawInbox(){
@@ -1196,6 +1196,55 @@ function usageFlush(){
   try{ sb.rpc("track_usage",{p_view:current,p_seconds:0}).then(()=>{},()=>{}); }catch(e){}
 }
 setInterval(usageFlush,30000);
+
+/* ===================== aviso del buzón: señal amarilla de aeropuerto (web) =====================
+   Sale una vez tras ~15 min de uso activo. «Ahora no» o la ✕: vuelve a preguntar a las 48 h. Si envía una sugerencia, no vuelve a salir. */
+const SGN_AFTER=900, SGN_WAIT=48*3600*1000;
+let sgnS=null, sgnN=0, sgnEl=null;
+const sgnKey=()=>"f0:sgn:"+(sbUser?sbUser.id:"");
+function sgnLoad(){ if(sgnS) return sgnS; try{ sgnS=JSON.parse(localStorage.getItem(sgnKey())||"null"); }catch(e){} return sgnS=Object.assign({t:0,next:0,done:false},sgnS||{}); }
+function sgnSave(){ try{ localStorage.setItem(sgnKey(),JSON.stringify(sgnS)); }catch(e){} }
+function sgnDone(){ sgnLoad().done=true; sgnSave(); sgnHide(); }
+function sgnHide(){ if(sgnEl){ sgnEl.remove(); sgnEl=null; } }
+function sgnBusy(){
+  if(["#news","#login","#nameAsk","#devNote","#sugBox","#pwReset","#sheet","#search"].some(q=>{ const e=$(q); return e&&!e.hidden; })||$("#msOv")) return true;
+  try{ return [...document.querySelectorAll("iframe")].some(f=>{ const q=f.contentDocument&&f.contentDocument.getElementById("quiz"); return q&&!q.hidden; }); }catch(e){ return false; }
+}
+function sgnShow(force){
+  if(sgnEl||!sb||!sbUser) return;
+  if(!document.getElementById("sgnCss")){
+    const st=document.createElement("style"); st.id="sgnCss";
+    st.textContent=`#sgnBox{position:fixed;left:50%;bottom:max(86px,calc(env(safe-area-inset-bottom,0px) + 80px));transform:translateX(-50%);width:min(calc(100% - 24px),400px);z-index:60;background:#FFC400;color:#111;border:3px solid #111;border-radius:10px;box-shadow:0 0 0 2px #FFC400,0 0 0 5px #111,0 14px 34px rgba(0,0,0,.45);overflow:hidden;font-family:var(--display);animation:sgnIn .4s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes sgnIn{from{opacity:0;transform:translate(-50%,30px)}to{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion:reduce){#sgnBox{animation:none}}
+#sgnBox .hd{position:relative;display:flex;align-items:center;gap:8px;background:#111;color:#FFC400;padding:5px 12px;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase}
+#sgnBox .x{position:absolute;top:0;right:4px;border:0;background:none;color:#FFC400;font:700 24px/30px Arial,sans-serif;cursor:pointer;padding:0 8px}
+#sgnBox .bd{display:flex;gap:12px;padding:12px 14px 4px;align-items:flex-start}
+#sgnBox .pic{flex:none;width:50px;height:50px;background:#111;border-radius:6px;display:grid;place-items:center}
+#sgnBox h3{margin:0;font-weight:700;font-size:25px;line-height:1.05;text-transform:uppercase}
+#sgnBox p{margin:5px 0 0;font:600 15px/1.35 var(--body);color:#111}
+#sgnBox .row{display:flex;gap:8px;padding:10px 14px 14px}
+#sgnBox .b{flex:1;font:700 18px var(--display);letter-spacing:.07em;text-transform:uppercase;padding:9px 10px;border-radius:6px;border:3px solid #111;background:none;color:#111;cursor:pointer}
+#sgnBox .b.p{background:#111;color:#FFC400}
+#sgnBox button:focus-visible{outline:3px solid #111;outline-offset:2px}`;
+    document.head.appendChild(st);
+  }
+  const b=document.createElement("div"); b.id="sgnBox"; b.setAttribute("role","dialog"); b.setAttribute("aria-label","Buzón de sugerencias");
+  b.innerHTML=`<div class="hd"><svg width="15" height="15" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="#FFC400" stroke-width="2"/><rect x="9" y="8.5" width="2" height="6" fill="#FFC400"/><circle cx="10" cy="5.8" r="1.2" fill="#FFC400"/></svg>Información<button class="x" type="button" aria-label="Cerrar" data-a="no">×</button></div><div class="bd"><div class="pic"><svg width="30" height="30" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h11A1.5 1.5 0 0 1 17 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 14.5zm1.6.3 5.4 4.3 5.4-4.3" fill="none" stroke="#FFC400" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg></div><div><h3>¿Qué te falta en la web?</h3><p>Una pregunta que echas en falta, un error o una idea. Así la web mejora para todos.</p></div></div><div class="row"><button class="b p" type="button" data-a="go">Sugerir →</button><button class="b" type="button" data-a="no">Ahora no</button></div>`;
+  b.addEventListener("click",e=>{ const a=e.target.closest("[data-a]"); if(!a) return;
+    if(!force){ sgnLoad().next=Date.now()+SGN_WAIT; sgnS.t=0; sgnSave(); }
+    sgnHide(); if(a.dataset.a==="go") openSug(); });
+  b.addEventListener("keydown",e=>{ if(e.key==="Escape"){ e.stopPropagation(); if(!force){ sgnLoad().next=Date.now()+SGN_WAIT; sgnS.t=0; sgnSave(); } sgnHide(); } });
+  document.body.appendChild(b); sgnEl=b;
+}
+setInterval(()=>{
+  if(!sb||!sbUser||!MY.name||document.visibilityState!=="visible"||Date.now()-uLast>=90000||sgnEl) return;
+  const s=sgnLoad(); if(s.done) return;
+  s.t+=5; if(++sgnN%6===0) sgnSave();
+  if(s.t>=SGN_AFTER&&Date.now()>=s.next&&!sgnBusy()) sgnShow(false);
+},5000);
+window.F0Aviso={demo:()=>sgnShow(true)};
+try{ if(location.hash==="#aviso-buzon") setTimeout(()=>sgnShow(true),1500); }catch(e){}
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") usageFlush(); });
 
 /* ===================== en línea (Supabase Realtime Presence) ===================== */
