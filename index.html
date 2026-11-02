@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="7d70c474aa56";</script>
+<script>window.F0_BUILD="01625b8de357";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -750,7 +750,7 @@ function show(v, cmd){
       view=document.createElement("section"); view.className="view"; view.id="v-"+v; view.setAttribute("role","tabpanel");
       view.innerHTML=`<div class="loading">Cargando…</div>`;
       const f=document.createElement("iframe"); f.className="subj"; f.allow="microphone; autoplay"; f.title=SUBJ.find(s=>s.k===v).name; f.src="s/"+v+".html";
-      f.addEventListener("load",()=>{ const l=view.querySelector(".loading"); if(l) l.remove(); try{ const d=f.contentDocument; if(d&&d.head){ const st=d.createElement("style"); st.textContent=PLANE_CUR; d.head.appendChild(st); hookAct(d); } }catch(e){} });
+      f.addEventListener("load",()=>{ try{ hlInit(f,v); }catch(e){} const l=view.querySelector(".loading"); if(l) l.remove(); try{ const d=f.contentDocument; if(d&&d.head){ const st=d.createElement("style"); st.textContent=PLANE_CUR; d.head.appendChild(st); hookAct(d); } }catch(e){} });
       view.appendChild(f); $("#main").appendChild(view); frames[v]=f;
     }
     if(cmd){ if(ready[v]) sendCmd(v,cmd); else pendingCmd[v]=cmd; }
@@ -1217,6 +1217,135 @@ function usageFlush(){
 }
 setInterval(usageFlush,30000);
 
+/* ===================== subrayador (lápiz) en el temario =====================
+   Botón ✎ abajo a la izquierda de cada asignatura: elige color (o línea) y subraya arrastrando con el Pencil, el dedo o el ratón.
+   Borrador: toca un subrayado. Se guarda en el progreso de la cuenta (STATE[k].hl) y se vuelve a pintar buscando el texto, aunque cambie el apunte. */
+const HL_COL={y:"#FFE58A",g:"#A8E6C1",p:"#FFC2D6",b:"#B9D8FF"}, HL_SKIP="script,style,svg,nav,button,input,select,textarea,header,[role=tablist],#quiz,.f0hl-ui,[contenteditable]";
+const HL_CSS=`mark.f0hl{background:var(--hlc,#FFE58A);color:#14304A;border-radius:2px;padding:0;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+mark.f0hl[data-c=y]{--hlc:#FFE58A}mark.f0hl[data-c=g]{--hlc:#A8E6C1}mark.f0hl[data-c=p]{--hlc:#FFC2D6}mark.f0hl[data-c=b]{--hlc:#B9D8FF}
+mark.f0hl[data-c=u]{background:none;color:inherit;text-decoration:underline;text-decoration-color:#E5484D;text-decoration-thickness:2.5px;text-underline-offset:3px}
+.f0hl-ui{position:fixed;left:max(10px,env(safe-area-inset-left,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:2147483000;display:flex;align-items:center;gap:6px;font-family:system-ui,-apple-system,sans-serif;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.f0hl-ui button{border:0;cursor:pointer;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;padding:0;-webkit-tap-highlight-color:transparent}
+.f0hl-fab{background:#14304A;color:#E8BF45;box-shadow:0 0 0 2px #E8BF45,0 6px 18px rgba(0,0,0,.35)}
+.f0hl-fab svg{width:22px;height:22px}
+.f0hl-pal{display:none;align-items:center;gap:4px;background:#14304A;border-radius:999px;padding:4px 8px 4px 4px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.f0hl-ui.open .f0hl-pal{display:flex}
+.f0hl-pal button{width:36px;height:36px;background:transparent}
+.f0hl-pal i{display:block;width:24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,.55)}
+.f0hl-pal button[aria-pressed=true] i{border-color:#fff;box-shadow:0 0 0 3px #E8BF45}
+.f0hl-pal .u i{background:none;border:0;border-radius:0;border-bottom:3px solid #E5484D;height:20px;width:20px;color:#fff;font:700 15px/17px system-ui;text-align:center}
+.f0hl-pal .x{color:#fff}.f0hl-pal .x svg{width:22px;height:22px}.f0hl-pal .x[aria-pressed=true]{outline:3px solid #E8BF45;border-radius:50%}
+.f0hl-rm{position:absolute;z-index:2147483000;background:#14304A;color:#fff;border:0;border-radius:999px;padding:7px 13px;font:600 14px system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.4);cursor:pointer}
+@media print{.f0hl-ui,.f0hl-rm{display:none!important}mark.f0hl[data-c=u]{text-decoration:underline}}`;
+function hlGet(k){ const st=STATE[k]||(STATE[k]={}); return st.hl||(st.hl=[]); }
+const hlTimers={};
+function hlPersist(k){ lsSet(k,STATE[k]); clearTimeout(hlTimers[k]); hlTimers[k]=setTimeout(()=>{ try{ cloudSet(k,STATE[k]); }catch(e){} },1500); }
+function hlText(d){
+  const nodes=[]; let base=0, n;
+  const w=d.createTreeWalker(d.body,4,{acceptNode(t){ const p=t.parentElement; return (t.nodeValue&&p&&!p.closest(HL_SKIP))?1:2; }});
+  while((n=w.nextNode())){ nodes.push({n,b:base}); base+=n.nodeValue.length; }
+  return {nodes,text:nodes.map(x=>x.n.nodeValue).join("")};
+}
+function hlWrap(d,info,gs,ge,id,c){
+  for(const x of info.nodes){
+    const len=x.n.nodeValue.length, s=Math.max(gs,x.b)-x.b, e=Math.min(ge,x.b+len)-x.b;
+    if(e<=s||!x.n.parentNode) continue;
+    let t=x.n; if(s>0) t=t.splitText(s); if(e-s<t.nodeValue.length) t.splitText(e-s);
+    if(!t.nodeValue.trim()) continue;
+    const m=d.createElement("mark"); m.className="f0hl"; m.dataset.id=id; m.dataset.c=c; t.parentNode.insertBefore(m,t); m.appendChild(t);
+  }
+}
+function hlFind(text,it){
+  let i=text.indexOf(it.p+it.t+it.s); if(i>=0) return i+it.p.length;
+  i=text.indexOf(it.p+it.t); if(i>=0) return i+it.p.length;
+  i=text.indexOf(it.t+it.s); if(i>=0) return i;
+  i=text.indexOf(it.t); return i;
+}
+function hlApplyAll(F){
+  const {d,k}=F; if(!d||!d.body) return;
+  const have=new Set([...d.querySelectorAll("mark.f0hl")].map(m=>m.dataset.id));
+  const todo=hlGet(k).filter(it=>!it.del&&!have.has(it.id)&&(F.tries[it.id]=(F.tries[it.id]||0)+1)<=6);
+  if(!todo.length) return;
+  F.busy=true;
+  try{ for(const it of todo){ const info=hlText(d), gs=hlFind(info.text,it); if(gs<0) continue; hlWrap(d,info,gs,gs+it.t.length,it.id,it.c); } }catch(e){}
+  F.obs&&F.obs.takeRecords(); F.busy=false;
+}
+function hlItem(F,r){
+  const d=F.d, info=hlText(d); let gs=-1, ge=-1;
+  for(const x of info.nodes){
+    if(!r.intersectsNode(x.n)) continue;
+    const len=x.n.nodeValue.length, a=(x.n===r.startContainer)?r.startOffset:0, b=(x.n===r.endContainer)?r.endOffset:len;
+    if(b<=a) continue; if(gs<0) gs=x.b+a; ge=x.b+b;
+  }
+  if(gs<0) return null;
+  let t=info.text.slice(gs,ge); const lead=t.length-t.replace(/^\s+/,"").length; gs+=lead; t=t.trim();
+  if(t.length<2) return null; ge=gs+Math.min(t.length,800); t=info.text.slice(gs,ge);
+  return {item:{id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),c:F.tool,p:info.text.slice(Math.max(0,gs-24),gs),t,s:info.text.slice(ge,ge+24),ts:Date.now()},gs,ge,info};
+}
+function hlCommit(F){
+  const sel=F.d.getSelection(); if(!sel||sel.rangeCount===0||sel.isCollapsed||!F.tool||F.tool==="x") return;
+  const r=sel.getRangeAt(0); if(r.commonAncestorContainer.parentElement&&r.commonAncestorContainer.parentElement.closest(".f0hl-ui")) return;
+  const x=hlItem(F,r); try{ sel.removeAllRanges(); }catch(e){}
+  if(!x) return;
+  hlGet(F.k).push(x.item); F.busy=true; hlWrap(F.d,x.info,x.gs,x.ge,x.item.id,x.item.c); F.obs&&F.obs.takeRecords(); F.busy=false; hlPersist(F.k);
+}
+function hlRemove(F,id){
+  F.busy=true;
+  F.d.querySelectorAll('mark.f0hl[data-id="'+id+'"]').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild,m); m.remove(); p.normalize&&p.normalize(); });
+  F.obs&&F.obs.takeRecords(); F.busy=false;
+  const it=hlGet(F.k).find(x=>x.id===id); if(it){ it.del=1; hlPersist(F.k); }
+}
+function hlInit(f,k){
+  const d=f.contentDocument; if(!d||!d.body||d.getElementById("f0hlUi")) return;
+  const w=d.defaultView, F={d,k,w,tool:"",tries:{},busy:false,obs:null,pen:null,rm:null};
+  const st=d.createElement("style"); st.textContent=HL_CSS; d.head.appendChild(st);
+  const ui=d.createElement("div"); ui.id="f0hlUi"; ui.className="f0hl-ui";
+  const sw=(c,l)=>`<button type="button" data-t="${c}" aria-pressed="false" aria-label="${l}"><i style="background:${HL_COL[c]}"></i></button>`;
+  ui.innerHTML=`<button type="button" class="f0hl-fab" aria-label="Subrayar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M14.5 7.5l3 3"/></svg></button><div class="f0hl-pal" role="toolbar" aria-label="Subrayar">${sw("y","Amarillo")}${sw("g","Verde")}${sw("p","Rosa")}${sw("b","Azul")}<button type="button" class="u" data-t="u" aria-pressed="false" aria-label="Subrayar con línea"><i>U</i></button><button type="button" class="x" data-t="x" aria-pressed="false" aria-label="Borrador: toca un subrayado"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 21h10M5.5 14.5l7-7a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L12 18H8z"/></svg></button></div>`;
+  d.body.appendChild(ui);
+  const setTool=t=>{ F.tool=t; ui.classList.toggle("open",!!t); ui.querySelector(".f0hl-fab").setAttribute("aria-expanded",String(!!t)); ui.querySelectorAll(".f0hl-pal button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.t===t))); if(t&&t!=="x") try{ localStorage.setItem("f0:hltool",t); }catch(e){} clearRm(); try{ d.getSelection().removeAllRanges(); }catch(e){} };
+  const clearRm=()=>{ if(F.rm){ F.rm.remove(); F.rm=null; } };
+  ui.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
+    if(b.classList.contains("f0hl-fab")){ let t=""; try{ t=localStorage.getItem("f0:hltool")||"y"; }catch(x){ t="y"; } setTool(F.tool?"":(HL_COL[t]||t==="u"?t:"y")); return; }
+    const t=b.dataset.t; setTool(F.tool===t?"":t); if(!F.tool) return; });
+  // borrar: borrador (o toque sobre un subrayado cuando no hay herramienta → aparece «Quitar»)
+  d.addEventListener("click",e=>{
+    const m=e.target.closest&&e.target.closest("mark.f0hl");
+    if(F.rm&&!(e.target.closest&&e.target.closest(".f0hl-rm"))) clearRm();
+    if(!m||(e.target.closest&&e.target.closest(".f0hl-ui"))) return;
+    const sel=d.getSelection(); if(sel&&!sel.isCollapsed&&F.tool!=="x") return;
+    if(F.tool==="x"){ hlRemove(F,m.dataset.id); return; }
+    if(F.tool) return;
+    clearRm(); const r=m.getBoundingClientRect(), b=d.createElement("button"); b.type="button"; b.className="f0hl-rm"; b.textContent="Quitar subrayado";
+    b.style.left=Math.max(8,Math.min(r.left+w.scrollX,w.innerWidth-170))+"px"; b.style.top=(r.bottom+w.scrollY+6)+"px";
+    b.addEventListener("click",()=>{ hlRemove(F,m.dataset.id); clearRm(); }); d.body.appendChild(b); F.rm=b;
+  },true);
+  // selección con el dedo o el ratón: se aplica al soltar / tras una pausa
+  let selT=0, down=false;
+  d.addEventListener("pointerdown",e=>{ if(e.pointerType!=="pen") down=true; },true);
+  d.addEventListener("pointerup",e=>{ if(e.pointerType!=="pen"){ down=false; if(F.tool&&F.tool!=="x"&&e.pointerType==="mouse") setTimeout(()=>hlCommit(F),20); } },true);
+  d.addEventListener("selectionchange",()=>{ if(!F.tool||F.tool==="x"||F.pen) return; clearTimeout(selT); selT=setTimeout(()=>{ if(!down) hlCommit(F); },750); });
+  // Apple Pencil: arrastrar sobre el texto lo selecciona al instante (el dedo sigue desplazando la página)
+  const caret=(x,y)=>{ try{ if(d.caretRangeFromPoint){ const r=d.caretRangeFromPoint(x,y); return r?{n:r.startContainer,o:r.startOffset}:null; } if(d.caretPositionFromPoint){ const p=d.caretPositionFromPoint(x,y); return p?{n:p.offsetNode,o:p.offset}:null; } }catch(e){} return null; };
+  const okTarget=el=>el&&el.closest&&!el.closest(HL_SKIP)&&!el.closest(".f0hl-rm");
+  d.addEventListener("pointerdown",e=>{
+    if(e.pointerType!=="pen"||!F.tool||!okTarget(e.target)) return;
+    if(F.tool==="x"){ const m=e.target.closest("mark.f0hl"); if(m) hlRemove(F,m.dataset.id); return; }
+    const c=caret(e.clientX,e.clientY); if(c) F.pen=c;
+  },true);
+  d.addEventListener("pointermove",e=>{
+    if(!F.pen||e.pointerType!=="pen") return; const c=caret(e.clientX,e.clientY); if(!c) return;
+    try{ d.getSelection().setBaseAndExtent(F.pen.n,F.pen.o,c.n,c.o); }catch(x){}
+  },true);
+  const penEnd=e=>{ if(!F.pen||e.pointerType!=="pen") return; F.pen=null; hlCommit(F); };
+  d.addEventListener("pointerup",penEnd,true); d.addEventListener("pointercancel",penEnd,true);
+  const stylus=e=>{ if(!F.tool) return; const t=e.touches&&e.touches[0]; if(t&&t.touchType==="stylus"&&okTarget(e.target)){ e.preventDefault(); } };   // el lápiz no desplaza la página; el dedo sí
+  d.addEventListener("touchstart",stylus,{passive:false,capture:true}); d.addEventListener("touchmove",stylus,{passive:false,capture:true});
+  // pintar lo guardado ahora y cuando aparezca contenido nuevo (pestañas que se dibujan al abrirlas)
+  F.k=k; hlApplyAll(F);
+  let mt=0; try{ F.obs=new w.MutationObserver(()=>{ if(F.busy) return; clearTimeout(mt); mt=setTimeout(()=>hlApplyAll(F),700); }); F.obs.observe(d.body,{childList:true,subtree:true}); }catch(e){}
+  (window.__hlF=window.__hlF||{})[k]=F;
+}
 /* ===================== aviso del buzón: señal amarilla de aeropuerto (web) =====================
    Sale una vez tras ~15 min de uso activo. «Ahora no» o la ✕: vuelve a preguntar a las 48 h. Si envía una sugerencia, no vuelve a salir. */
 const SGN_AFTER=900, SGN_WAIT=48*3600*1000;
