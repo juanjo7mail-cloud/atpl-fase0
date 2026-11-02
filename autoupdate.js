@@ -46,14 +46,22 @@
   function banner(show) {
     if (!show) { if (bar) bar.style.display = "none"; return; }
     if (!bar) {
+      var st = document.createElement("style");
+      st.textContent = "#f0upd{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:99999;display:flex;align-items:center;gap:9px;max-width:calc(100vw - 24px);padding:6px 6px 6px 12px;border-radius:999px;background:var(--head,#14304A);color:#E3ECF2;border:1px solid rgba(232,191,69,.45);box-shadow:0 8px 24px rgba(0,0,0,.35);font:600 13px/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;white-space:nowrap;transform:translateX(-50%);-webkit-animation:f0updin .35s cubic-bezier(.2,1.3,.4,1) both;animation:f0updin .35s cubic-bezier(.2,1.3,.4,1) both}" +
+        "#f0upd svg{flex:none;color:#E8BF45}" +
+        "#f0upd button{font:inherit;font-weight:800;color:#14304A;background:linear-gradient(180deg,#F4D26A,#E0AD2A);border:0;border-radius:999px;min-height:32px;padding:0 14px;cursor:pointer}" +
+        "#f0upd button:active{transform:translateY(1px)}#f0upd button:focus-visible{outline:2px solid #fff;outline-offset:2px}" +
+        "@-webkit-keyframes f0updin{from{opacity:0;-webkit-transform:translate(-50%,16px)}}@keyframes f0updin{from{opacity:0;transform:translate(-50%,16px)}}" +
+        "@media (prefers-reduced-motion:reduce){#f0upd{-webkit-animation:none;animation:none}}";
+      document.head.appendChild(st);
       bar = document.createElement("div");
+      bar.id = "f0upd";
       bar.setAttribute("role", "status");
-      bar.style.cssText = "position:fixed;left:12px;bottom:12px;z-index:99999;max-width:min(92vw,360px);padding:10px 12px;border-radius:10px;background:#0b3d6b;color:#fff;font:14px/1.35 system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.35)";
-      bar.innerHTML = '<span>Hay una versión nueva de la web.</span> <button type="button" style="margin-left:6px;padding:4px 10px;border:0;border-radius:6px;background:#fff;color:#0b3d6b;font:inherit;font-weight:600;cursor:pointer">Actualizar ahora</button>';
+      bar.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 20v-4h-4"/></svg><span>Versión nueva</span><button type="button">Actualizar</button>';
       bar.querySelector("button").onclick = function () { reload(true); };
       document.body.appendChild(bar);
     }
-    bar.style.display = "block";
+    bar.style.display = "flex";
   }
   function decide() {
     if (!pending) return;

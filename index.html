@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="790f40a24589";</script>
+<script>window.F0_BUILD="7abe9f9364d8";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1100,6 +1100,7 @@ async function signedIn(user, consent){
   isAdmin = String(user.email||"").toLowerCase()===ADMIN_EMAIL;
   if(!$("#login").hidden){ $("#lgForm").classList.add("pulled"); $("#lgNames").hidden=true; await new Promise(r=>setTimeout(r, matchMedia("(prefers-reduced-motion: reduce)").matches?0:480)); }
   $("#login").hidden=true; $("#lgForm").classList.remove("pulled");
+  startPresence();   // el chat y los compañeros en línea se conectan ya, sin esperar a los datos de la nube
   // lo guardado en este navegador solo se une si es de esta misma cuenta
   try{ const prev=localStorage.getItem("f0:uid"); if(prev && prev!==user.id){ SUBJ.forEach(x=>localStorage.removeItem("f0:"+x.k)); loadAllLocal(); } localStorage.setItem("f0:uid", user.id); }catch(e){}
   try{ await loadAllCloud(); }catch(e){ console.warn(e); }
@@ -1107,7 +1108,7 @@ async function signedIn(user, consent){
   if(pendingName){ try{ await sb.rpc("set_profile",{p_name:pendingName,p_show:true}); }catch(e){} pendingName=""; }
   loadMine();
   visStart = document.visibilityState==="visible"?Date.now():null; clearInterval(beatT); beatT=setInterval(beatFlush,60000);
-  $("#saveTxt").textContent="Mi progreso"; setSaveState("ok"); renderAcct(); renderDash(); renderTabs(); startPresence();
+  $("#saveTxt").textContent="Mi progreso"; setSaveState("ok"); renderAcct(); renderDash(); renderTabs();
   Object.entries(frames).forEach(([k,f])=>{ ready[k]=false; f.src=f.src; });
   if(consent) newsMark();
   setTimeout(showNews, 900);
@@ -1364,7 +1365,7 @@ const rkPts=(avg,n)=>avg*(0.75+0.25*Math.min(1,Math.log(n/5)/Math.log(8)));
 const rkHave=k=>attemptsOf(k).filter(a=>a.total>=5).length;
 async function renderRank(){
   const box=$("#rank"); if(!sb||!sbUser){ box.innerHTML=""; return; }
-  box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1><p>Quién lleva mejor cada asignatura.</p></div></div><p class="muted" id="rkLoad">Cargando…</p>`;
+  box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1></div></div><p class="muted" id="rkLoad">Cargando…</p>`;
   try{
     const r=await sb.rpc("ranking"); if(r.error) throw r.error; await loadMine();
     RK={rows:r.data||[]};
@@ -1382,7 +1383,7 @@ function drawRank(){
   const status = have<5 ? `Llevas <b>${have}</b> de 5 tests en ${esc(s.short)}. Te faltan <b>${5-have}</b> para entrar en su ranking.`
     : me ? `Vas el <b>nº ${me.pos}</b> de ${rows.length} en ${esc(s.short)} con <b>${me.pts.toFixed(1)}</b> puntos.` : `Tus tests se están contando; vuelve a abrir el ranking en unos segundos.`;
   const pd=n=>`<span class="pd ${n<=3?"p"+n:""}">${n}</span>`;
-  box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1><p>Quién lleva mejor cada asignatura. Entras solo con hacer 5 tests de la asignatura.</p></div></div>
+  box.innerHTML=`<div class="dhead"><div><h1>Ranking</h1></div></div>
   <div class="rk-chips" role="group" aria-label="Asignatura">${SUBJ.map(x=>`<button type="button" data-rk="${x.k}" aria-pressed="${x.k===rkSub}">${x.code} · ${esc(x.short)}</button>`).join("")}</div>
   <div class="st-box"><h2>${esc(s.code)} ${esc(s.short)}</h2><p style="margin:0 0 10px;font-size:15px">${status}</p>
     ${rows.length?`<div class="st-scroll"><table class="st-tbl rk-tbl"><thead><tr><th></th><th>Nombre</th><th class="n">Tests</th><th class="n">Nota</th><th class="n">Puntos</th></tr></thead><tbody>

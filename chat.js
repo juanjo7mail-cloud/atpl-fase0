@@ -4,10 +4,10 @@
    API: F0Chat.start({sb,user,name}) · F0Chat.leave() · F0Chat.unread() · F0Chat.state() */
 (function(){
 "use strict";
-const MAXLEN=500, GAP=500, KEEP=200, TTL=60*60*1000, GRACE=60*1000, RESEND=4000;   // gracia: tras desconectarse, un compañero sigue «en línea» 60 s y le llegan los mensajes al volver   // los mensajes duran 60 min (solo en este dispositivo)
+const MAXLEN=500, GAP=500, KEEP=200, TTL=60*60*1000, GRACE=10*60*1000, RESEND=4000;   // gracia: tras desconectarse, un compañero sigue «en línea» 10 min y le llegan los mensajes al volver   // los mensajes duran 60 min (solo en este dispositivo)
 const $=(s,r)=>(r||document).querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const C={deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0};
+const C={dmTo:"", dmText:"", deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0};
 
 const PLANE='<path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z"/>';
 const ICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path class="bb" d="M16 3C8.8 3 3 8 3 14.2c0 3.3 1.7 6.3 4.4 8.3-.2 1.9-1 3.6-2.2 5 2.6-.3 4.8-1.3 6.4-2.6 1.4.4 2.9.6 4.4.6 7.200 0 13-5 13-11.300S23.200 3 16 3z"/><g class="pl" transform="translate(16 14) rotate(-45) scale(.82) translate(-10 -10)">'+PLANE+'</g></svg>';
@@ -55,7 +55,7 @@ function css(){
 .f0c-p .u{flex:none;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#FF3B30;color:#fff;font:700 13px/22px var(--body);text-align:center}
 .f0c-empty{margin:auto;text-align:center;padding:20px 22px;color:var(--muted);font:500 14px/1.5 var(--body)}
 .f0c-empty svg{width:54px;height:54px;display:block;margin:0 auto 8px;opacity:.55}.f0c-empty .bb{fill:none;stroke:currentColor;stroke-width:1.5}.f0c-empty .pl{fill:currentColor}
-.f0c-note{margin:0;padding:8px 12px 10px;border-top:1px solid var(--line);font:500 11.500px/1.4 var(--body);color:var(--muted)}
+.f0c-note{margin:0;padding:6px 12px 10px;font:500 11.500px/1.4 var(--body);color:var(--muted)}
 .f0c-msgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
 .f0c-m{max-width:82%;padding:7px 11px;border-radius:14px 14px 14px 3px;background:var(--paper);border:1px solid var(--line);font:15px/1.4 var(--body);overflow-wrap:anywhere;white-space:pre-wrap}
 .f0c-m time{display:block;font:500 10px var(--body);color:var(--muted);margin-top:2px;text-align:right}
@@ -67,6 +67,15 @@ function css(){
 .f0c-form button{flex:none;width:42px;border:0;border-radius:50%;background:var(--btn,var(--accent));color:#fff;cursor:pointer;display:grid;place-items:center}
 .f0c-form button svg{width:20px;height:20px;fill:currentColor}
 .f0c-form button:disabled,.f0c-form input:disabled{opacity:.5;cursor:not-allowed}
+.f0c-dm{display:flex;flex-direction:column;gap:7px;padding:9px 9px 8px;border-top:1px solid var(--line);background:var(--paper)}
+.f0c-dm select,.f0c-dm input{width:100%;min-width:0;font:16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:9px 14px}
+.f0c-dm select{appearance:none;-webkit-appearance:none;padding-right:34px;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 19px) 52%,calc(100% - 14px) 52%;background-size:5px 5px;background-repeat:no-repeat}
+.f0c-dm select:focus,.f0c-dm input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.f0c-dm .r{display:flex;gap:8px}
+.f0c-dm button{flex:none;width:42px;border:0;border-radius:50%;background:var(--btn,var(--accent));color:#fff;cursor:pointer;display:grid;place-items:center}
+.f0c-dm button svg{width:20px;height:20px;fill:currentColor}
+.f0c-dm select:disabled,.f0c-dm input:disabled,.f0c-dm button:disabled{opacity:.5;cursor:not-allowed}
+.f0c-dm .t{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 4px}
 @media (max-width:560px){
  .f0c{right:max(10px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px))}
  .f0c-fab{padding:6px 14px 6px 6px}.f0c-fab svg{width:34px;height:34px}
@@ -176,8 +185,8 @@ function onMsg(p){
   push(room,{id:p.id,n:String(p.n||"Alumno").slice(0,60),t:+p.t||Date.now(),x,me:false});
   ack(p); update();
 }
-function send(text){
-  const to=C.active, x=clean(text); if(!x||!to||C.status!=="on"||!C.peers[to]) return false;
+function send(text,toArg){
+  const to=toArg||C.active, x=clean(text); if(!x||!to||C.status!=="on"||!C.peers[to]) return false;
   const now=Date.now(); if(now-C.last<GAP) return false; C.last=now;
   const m={id:C.uid.slice(0,6)+now.toString(36)+Math.random().toString(36).slice(2,6),f:C.uid,n:myName(),to,t:now,x};
   try{ C.ch.send({type:"broadcast",event:"m",payload:m}); }catch(e){ return false; }
@@ -191,7 +200,7 @@ const ini=n=>n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toU
 const nameOf=r=>(C.peers[r]&&C.peers[r].n)||C.names[r]||(C.rooms[r]&&C.rooms[r].find(m=>!m.me)&&C.rooms[r].find(m=>!m.me).n)||"Compañero";
 function setOpen(v){
   C.open=!!v; if(!C.root) return;
-  if(!v) C.active=null; else if(C.active) C.unread[C.active]=0;
+  if(!v){ C.active=null; } else if(C.active) C.unread[C.active]=0;
   save();
   update();
   if(v){ const t=$("#f0cIn",C.root)||$(".f0c-p",C.root)||$("#f0cX",C.root); t&&t.focus(); } else { const f=$(".f0c-fab",C.root); f&&f.focus(); }
@@ -209,7 +218,14 @@ function build(){
     if(e.target.closest("#f0cBack")){ C.active=null; return update(); }
     const b=e.target.closest(".f0c-p"); if(b) openRoom(b.dataset.room);
   });
-  r.addEventListener("submit",e=>{ if(!e.target.closest("#f0cForm")) return; e.preventDefault(); const i=$("#f0cIn",r); if(!i) return; const v=i.value; i.value=""; if(!send(v)) i.value=v; });
+  r.addEventListener("input",e=>{ if(e.target.id==="f0cDmIn") C.dmText=e.target.value; });
+  r.addEventListener("change",e=>{ if(e.target.id==="f0cTo") C.dmTo=e.target.value; });
+  r.addEventListener("submit",e=>{
+    if(e.target.closest("#f0cDm")){ e.preventDefault(); const sel=$("#f0cTo",r), i=$("#f0cDmIn",r); if(!sel||!i) return;
+      if(!sel.value){ sel.focus(); return; }
+      const to=sel.value, v=i.value; if(!clean(v)){ i.focus(); return; }
+      if(send(v,to)){ C.dmText=""; C.dmTo=""; openRoom(to); } return; }
+    if(!e.target.closest("#f0cForm")) return; e.preventDefault(); const i=$("#f0cIn",r); if(!i) return; const v=i.value; i.value=""; if(!send(v)) i.value=v; });
   r.addEventListener("keydown",e=>{ if(e.key==="Escape"&&C.open){ e.stopPropagation(); setOpen(false); } });
   document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&C.open&&C.root&&C.root.contains(document.activeElement)) setOpen(false); });
   update();
@@ -230,17 +246,22 @@ function update(){
   const stTxt={on:n===1?"1 compañero en línea":n+" compañeros en línea",conn:"Conectando…",err:"Sin conexión. Reintentando…",off:"Desconectado"}[C.status];
   const room=C.active;
   const keep=$("#f0cIn",r)?{v:$("#f0cIn",r).value,f:document.activeElement===$("#f0cIn",r)}:null;
+  const dmI=$("#f0cDmIn",r), dmKeep=dmI&&document.activeElement===dmI?{a:dmI.selectionStart,b:dmI.selectionEnd}:null, dmSelFocus=document.activeElement===$("#f0cTo",r);
   const mm=$("#f0cMsgs",r), atEnd=!mm||mm.scrollHeight-mm.scrollTop-mm.clientHeight<60;
   if(!room){
     const gone=Object.keys(C.rooms).filter(k=>!C.peers[k]);
+    const canDm=on&&online.length>0;
+    const dm=`<form class="f0c-dm" id="f0cDm" autocomplete="off"><div class="t">Mensaje directo</div><select id="f0cTo" aria-label="Elegir compañero" ${canDm?"":"disabled"}><option value="">${canDm?"Elegir compañero…":"Nadie en línea"}</option>${online.map(k=>`<option value="${esc(k)}"${k===C.dmTo?" selected":""}>${esc(nameOf(k))}</option>`).join("")}</select><div class="r"><input id="f0cDmIn" maxlength="${MAXLEN}" placeholder="Escribe un mensaje…" aria-label="Mensaje directo" ${canDm?"":"disabled"}><button type="submit" aria-label="Enviar" ${canDm?"":"disabled"}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></div></form>`;
     const row=(k,sub,isOn)=>`<button class="f0c-p${isOn?"":" gone"}" data-room="${esc(k)}"><span class="av">${esc(ini(nameOf(k)))}<i></i></span><span class="nm">${esc(nameOf(k))}<small>${esc(sub)}</small></span>${C.unread[k]?`<b class="u">${C.unread[k]}</b>`:""}</button>`;
     const list=(online.length||gone.length)?`<div class="f0c-list">${online.length?"<h3>En línea</h3>"+online.map(k=>row(k,C.unread[k]?"mensaje nuevo":(C.peers[k].away?"ausente un momento · le llegará al volver":"toca para escribir"),true)).join(""):""}${gone.length?"<h3>Conversaciones</h3>"+gone.map(k=>row(k,"ya no está en línea",false)).join(""):""}</div>`
       :`<div class="f0c-empty">${ICON}${on?"Ahora mismo no hay nadie más conectado.<br>Cuando entre un compañero aparecerá aquí.":"No se ha podido conectar el chat."}</div>`;
-    pan.innerHTML=`<header class="f0c-hd ${C.status}">${ICON}<h2>Online pilots<small><i></i>${esc(stTxt)}</small></h2><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos solo en este dispositivo (por si cierras la web sin querer) y luego se borran. No compartas datos personales ni claves.</p></div>`;
+    pan.innerHTML=`<header class="f0c-hd ${C.status}">${ICON}<h2>Online pilots<small><i></i>${esc(stTxt)}</small></h2><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}${dm}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos</p></div>`;
+    const ts=$("#f0cTo",r), ti=$("#f0cDmIn",r); if(ts&&C.dmTo&&online.includes(C.dmTo)) ts.value=C.dmTo; if(ti) ti.value=C.dmText;
+    if(dmKeep&&ti){ ti.focus(); try{ ti.setSelectionRange(dmKeep.a,dmKeep.b); }catch(e){} } else if(dmSelFocus&&ts) ts.focus();
   } else {
     const off=!C.peers[room]||!on;
     const msgs=(C.rooms[room]||[]).map(m=>`<div class="f0c-m${m.me?" me":""}">${esc(m.x)}<time>${hhmm(m.t)}${m.p===1?" · enviando…":m.p===2?" · no entregado":""}</time></div>`).join("");
-    pan.innerHTML=`<header class="f0c-hd ${C.peers[room]?C.status:"off"}"><button id="f0cBack" type="button" aria-label="Volver a la lista">‹</button><h2>${esc(nameOf(room))}<small><i></i>${C.peers[room]?(C.peers[room].away?"ausente un momento":"en línea"):"no está en línea"}</small></h2><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body"><div class="f0c-msgs" id="f0cMsgs" role="log" aria-live="polite"><div class="f0c-sys">Chat privado con ${esc(nameOf(room))}. Se entrega si está en línea o vuelve en menos de 1 minuto. Los mensajes se borran a los 60 minutos.</div>${msgs}</div><form class="f0c-form" id="f0cForm" autocomplete="off"><input id="f0cIn" maxlength="${MAXLEN}" placeholder="${off?"No está en línea":"Escribe un mensaje…"}" aria-label="Mensaje" ${off?"disabled":""}><button type="submit" aria-label="Enviar" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></form></div>`;
+    pan.innerHTML=`<header class="f0c-hd ${C.peers[room]?C.status:"off"}"><button id="f0cBack" type="button" aria-label="Volver a la lista">‹</button><h2>${esc(nameOf(room))}<small><i></i>${C.peers[room]?(C.peers[room].away?"ausente un momento":"en línea"):"no está en línea"}</small></h2><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body"><div class="f0c-msgs" id="f0cMsgs" role="log" aria-live="polite"><div class="f0c-sys">Chat privado con ${esc(nameOf(room))}. Se entrega si está en línea o vuelve en menos de 10 minutos. Los mensajes se borran a los 60 minutos.</div>${msgs}</div><form class="f0c-form" id="f0cForm" autocomplete="off"><input id="f0cIn" maxlength="${MAXLEN}" placeholder="${off?"No está en línea":"Escribe un mensaje…"}" aria-label="Mensaje" ${off?"disabled":""}><button type="submit" aria-label="Enviar" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></form></div>`;
     const ni=$("#f0cIn",r); if(keep&&ni){ ni.value=keep.v; if(keep.f&&!ni.disabled) ni.focus(); }
     const nm=$("#f0cMsgs",r); if(nm&&(atEnd||!keep)) nm.scrollTop=nm.scrollHeight;
   }
