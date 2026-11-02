@@ -7,7 +7,7 @@
 const MAXLEN=500, GAP=500, KEEP=200, TTL=60*60*1000, GRACE=10*60*1000, RESEND=4000, READ_TTL=5*60*1000;   // gracia: tras desconectarse, un compañero sigue «en línea» 10 min y le llegan los mensajes al volver   // los mensajes duran 60 min (solo en este dispositivo)
 const $=(s,r)=>(r||document).querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const C={dmTo:"", dmText:"", people:[], sms:false, smsErr:"", pAt:0, dch:null, fAt:0, deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0};
+const C={dmTo:"", dmText:"", people:[], anim:0, sms:false, smsErr:"", pAt:0, dch:null, fAt:0, deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0};
 
 const PLANE='<path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z"/>';
 const ICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path class="bb" d="M16 3C8.8 3 3 8 3 14.2c0 3.3 1.7 6.3 4.4 8.3-.2 1.9-1 3.6-2.2 5 2.6-.3 4.8-1.3 6.4-2.6 1.4.4 2.9.6 4.4.6 7.200 0 13-5 13-11.300S23.200 3 16 3z"/><g class="pl" transform="translate(16 14) rotate(-45) scale(.82) translate(-10 -10)">'+PLANE+'</g></svg>';
@@ -18,69 +18,72 @@ function css(){
   const s=document.createElement("style"); s.id="f0chat-css";
   s.textContent=`
 .f0c{position:fixed;z-index:30;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));font-family:var(--body)}
-.f0c-fab{display:flex;align-items:center;gap:9px;border:0;cursor:pointer;color:#fff;background:linear-gradient(135deg,#0E7C86,#14304A);border-radius:999px;padding:7px 16px 7px 8px;box-shadow:0 6px 22px rgba(10,23,36,.35),0 1px 0 rgba(255,255,255,.18) inset;font:700 14px var(--body);position:relative;transition:transform .15s}
+.f0c-fab{display:flex;align-items:center;gap:9px;cursor:pointer;color:#000;background:#FFC400;border:3px solid #000;border-radius:8px;padding:5px 14px 5px 7px;box-shadow:0 0 0 2px #FFC400,0 0 0 5px #000,0 8px 24px rgba(0,0,0,.4);font:700 14px var(--body);position:relative;transition:transform .15s}
 .f0c-fab:hover{transform:translateY(-2px)}
-.f0c-fab:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px var(--accent)}
-.f0c-fab svg{width:38px;height:38px;flex:none;display:block}
-.f0c-fab .bb{fill:#fff}.f0c-fab .pl{fill:#0E7C86}
-.f0c-fab span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;text-align:left}
-.f0c-fab small{font:600 11px var(--body);opacity:.9;display:flex;align-items:center;gap:5px}
-.f0c-fab small i{width:8px;height:8px;border-radius:50%;background:#6ee7a1;box-shadow:0 0 0 2px rgba(110,231,161,.3)}
-.f0c-fab.off small i{background:#c0c9d0;box-shadow:none}
-.f0c-fab .n{position:absolute;top:-7px;right:-4px;min-width:24px;height:24px;padding:0 6px;border-radius:12px;background:#FF3B30;color:#fff;font:700 14px/24px var(--body);text-align:center;border:2px solid var(--bg);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.f0c-fab:focus-visible{outline:3px solid #fff;outline-offset:6px}
+.f0c-fab svg{width:34px;height:34px;flex:none;display:block}
+.f0c-fab .bb{fill:#000}.f0c-fab .pl{fill:#FFC400}
+.f0c-fab span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1;text-align:left;font:700 17px var(--display);letter-spacing:.07em;text-transform:uppercase}
+.f0c-fab small{font:700 11px var(--body);letter-spacing:.04em;opacity:.85;display:flex;align-items:center;gap:5px;text-transform:none}
+.f0c-fab small i{width:8px;height:8px;border-radius:50%;background:#12A150;box-shadow:0 0 0 2px rgba(18,161,80,.3)}
+.f0c-fab.off small i{background:#6b6b6b;box-shadow:none}
+.f0c-fab .n{position:absolute;top:-14px;right:-12px;min-width:24px;height:24px;padding:0 6px;border-radius:12px;background:#FF3B30;color:#fff;font:700 14px/20px var(--body);text-align:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .f0c.open .f0c-fab{display:none}
-.f0c-pan{display:none;flex-direction:column;width:min(360px,calc(100vw - 28px));height:min(520px,calc(100dvh - 90px));background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 44px rgba(10,23,36,.4);overflow:hidden}
-.f0c.open .f0c-pan{display:flex;animation:f0cin .18s ease-out}
-@keyframes f0cin{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.f0c.open .f0c-pan{animation:none}.f0c-fab{transition:none}}
-.f0c-hd{display:flex;align-items:center;gap:10px;padding:11px 12px;background:linear-gradient(135deg,#0E7C86,#14304A);color:#fff}
-.f0c-hd svg{width:30px;height:30px;flex:none}.f0c-hd .bb{fill:#fff}.f0c-hd .pl{fill:#0E7C86}
-.f0c-hd h2{margin:0;font:700 15px/1.2 var(--body);flex:1;min-width:0}
-.f0c-hd h2 small{display:flex;align-items:center;gap:5px;font:500 11px var(--body);opacity:.9;margin-top:1px}
-.f0c-hd h2 small i{width:8px;height:8px;border-radius:50%;background:#6ee7a1}
-.f0c-hd.err h2 small i,.f0c-hd.off h2 small i{background:#f0827d}
-.f0c-hd button{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:8px;min-width:34px;height:34px;padding:0 9px;font:700 15px var(--body);cursor:pointer}
-.f0c-hd button:hover{background:rgba(255,255,255,.28)}
-.f0c-hd button:focus-visible{outline:2px solid #fff;outline-offset:1px}
+.f0c-pan{display:none;flex-direction:column;width:min(370px,calc(100vw - 28px));height:min(560px,calc(100dvh - 90px));background:#0B0F14;color:#fff;border:3px solid #000;outline:2px solid #FFC400;border-radius:10px;box-shadow:0 14px 44px rgba(0,0,0,.55);overflow:hidden}
+.f0c.open .f0c-pan{display:flex;animation:f0cin .2s ease-out}
+@keyframes f0cin{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes f0cflip{0%{transform:rotateX(90deg);opacity:0}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.f0c.open .f0c-pan{animation:none}.f0c-fab{transition:none}.f0c-st{animation:none!important}}
+.f0c-hd{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#000;border-bottom:3px solid #FFC400;color:#FFC400}
+.f0c-hd .t{flex:1;min-width:0}
+.f0c-hd h2{margin:0;font:700 21px/1.1 var(--display);letter-spacing:.07em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f0c-hd small{display:flex;align-items:center;gap:6px;font:500 12.5px var(--body);color:#9AA7B2;margin-top:2px}
+.f0c-hd small i{flex:none;width:8px;height:8px;border-radius:50%;background:#3FD08A}
+.f0c-hd.err small i,.f0c-hd.off small i{background:#f0827d}
+.f0c-hd button{flex:none;border:0;background:#FFC400;color:#000;border-radius:6px;min-width:34px;height:34px;padding:0 9px;font:700 18px var(--body);cursor:pointer}
+.f0c-hd button:hover{background:#FFD84D}
+.f0c-hd button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .f0c-body{flex:1;min-height:0;display:flex;flex-direction:column}
-.f0c-list{flex:1;overflow:auto;padding:8px 8px 4px;display:flex;flex-direction:column;gap:2px}
-.f0c-list h3{margin:8px 6px 3px;font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.f0c-p{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:none;color:var(--ink);font:600 14px var(--body);padding:9px 8px;border-radius:10px;cursor:pointer}
-.f0c-p:hover,.f0c-p:focus-visible{background:var(--accentbg);outline:none}
-.f0c-p .av{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--bluebg);color:var(--blue);font:700 13px var(--body);position:relative}
-.f0c-p .av i{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;background:var(--ok);border:2px solid var(--paper)}
-.f0c-p.gone .av{opacity:.6}.f0c-p.gone .av i{display:none}
-.f0c-p .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.f0c-p small{display:block;font:500 12px var(--body);color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.f0c-colh{display:flex;gap:10px;padding:6px 14px;font:700 12px var(--display);letter-spacing:.14em;text-transform:uppercase;color:#FFC400;opacity:.75;border-bottom:1px solid rgba(255,196,0,.5)}
+.f0c-colh span:nth-child(1){min-width:56px}.f0c-colh span:nth-child(2){flex:1}.f0c-colh span:nth-child(3){min-width:86px;text-align:center}
+.f0c-list{flex:1;overflow:auto;padding:0 0 4px;display:flex;flex-direction:column}
+.f0c-list h3{margin:14px 14px 4px;font:700 13px var(--display);letter-spacing:.14em;text-transform:uppercase;color:#FFC400;display:flex;align-items:center;gap:8px}
+.f0c-list h3:after{content:"";flex:1;height:1px;background:rgba(255,196,0,.35)}
+.f0c-p{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px solid #1F2C37;background:#111A22;color:#fff;font:600 14px var(--body);padding:11px 14px;cursor:pointer;transition:background .12s}
+.f0c-p:nth-of-type(even){background:#0D141B}
+.f0c-p:hover,.f0c-p:focus-visible{background:#1A2733;outline:none;box-shadow:inset 4px 0 0 #FFC400}
+.f0c-p .cs{flex:none;min-width:56px;font:700 25px/1 var(--display);letter-spacing:.04em;color:#FFC400}
+.f0c-p .nm{flex:1;min-width:0;font:600 15px/1.15 var(--display);letter-spacing:.05em;text-transform:uppercase;overflow-wrap:anywhere}
+.f0c-p small{display:block;margin-top:2px;font:500 12px var(--body);letter-spacing:0;text-transform:none;color:#8FA0AE}
+.f0c-st{flex:none;min-width:86px;text-align:center;font:700 12px var(--display);letter-spacing:.1em;text-transform:uppercase;padding:3px 6px;border-radius:3px}.f0c-st.an{animation:f0cflip .5s ease-out both}
+.f0c-st.on{background:#12301F;color:#3FD08A}.f0c-st.away{background:#3A2E08;color:#FFC400}.f0c-st.off{background:#222B33;color:#8FA0AE}
 .f0c-p .u{flex:none;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#FF3B30;color:#fff;font:700 13px/22px var(--body);text-align:center}
-.f0c-empty{margin:auto;text-align:center;padding:20px 22px;color:var(--muted);font:500 14px/1.5 var(--body)}
-.f0c-empty svg{width:54px;height:54px;display:block;margin:0 auto 8px;opacity:.55}.f0c-empty .bb{fill:none;stroke:currentColor;stroke-width:1.5}.f0c-empty .pl{fill:currentColor}
-.f0c-note{margin:0;padding:6px 12px 10px;font:500 11.500px/1.4 var(--body);color:var(--muted)}
-.f0c-msgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
-.f0c-m{max-width:82%;padding:7px 11px;border-radius:14px 14px 14px 3px;background:var(--paper);border:1px solid var(--line);font:15px/1.4 var(--body);overflow-wrap:anywhere;white-space:pre-wrap}
-.f0c-m time{display:block;font:500 10px var(--body);color:var(--muted);margin-top:2px;text-align:right}
-.f0c-m.me{align-self:flex-end;background:var(--accentbg);border-color:transparent;border-radius:14px 14px 3px 14px}
-.f0c-sys{align-self:center;text-align:center;font:500 12px/1.4 var(--body);color:var(--muted);max-width:280px}
-.f0c-form{display:flex;gap:8px;padding:9px;border-top:1px solid var(--line);background:var(--paper)}
-.f0c-form input{flex:1;min-width:0;font:16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:10px 14px}
-.f0c-form input:focus{outline:2px solid var(--accent);outline-offset:1px}
-.f0c-form button{flex:none;width:42px;border:0;border-radius:50%;background:var(--btn,var(--accent));color:#fff;cursor:pointer;display:grid;place-items:center}
-.f0c-form button svg{width:20px;height:20px;fill:currentColor}
-.f0c-form button:disabled,.f0c-form input:disabled{opacity:.5;cursor:not-allowed}
-.f0c-dm{display:flex;flex-direction:column;gap:7px;padding:9px 9px 8px;border-top:1px solid var(--line);background:var(--paper)}
-.f0c-dm select,.f0c-dm input{width:100%;min-width:0;font:16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:9px 14px}
-.f0c-dm select{appearance:none;-webkit-appearance:none;padding-right:34px;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 19px) 52%,calc(100% - 14px) 52%;background-size:5px 5px;background-repeat:no-repeat}
-.f0c-dm select:focus,.f0c-dm input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.f0c-empty{margin:auto;text-align:center;padding:20px 22px;color:#8FA0AE;font:500 14px/1.5 var(--body)}
+.f0c-empty svg{width:54px;height:54px;display:block;margin:0 auto 8px;opacity:.6}.f0c-empty .bb{fill:none;stroke:#FFC400;stroke-width:1.5}.f0c-empty .pl{fill:#FFC400}
+.f0c-note{margin:0;padding:6px 14px 10px;font:500 11.5px/1.4 var(--body);color:#8FA0AE;background:#000}
+.f0c-msgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:6px;background:#0B0F14}
+.f0c-m{max-width:82%;padding:7px 11px;border-radius:4px;background:#1B242D;color:#fff;font:15px/1.4 var(--body);overflow-wrap:anywhere;white-space:pre-wrap}
+.f0c-m time{display:block;font:500 10.5px var(--body);color:#9AA7B2;margin-top:2px;text-align:right}
+.f0c-m.me{align-self:flex-end;background:#FFC400;color:#000}.f0c-m.me time{color:#3A3000}
+.f0c-sys{align-self:center;text-align:center;font:500 12px/1.4 var(--body);color:#8FA0AE;max-width:290px}
+.f0c-form{display:flex;gap:8px;padding:9px;border-top:3px solid #FFC400;background:#000}
+.f0c-form input,.f0c-dm input{flex:1;min-width:0;font:16px var(--body);color:#fff;background:#111A22;border:1px solid #2A3946;border-radius:4px;padding:10px 12px}
+.f0c-form input:focus,.f0c-dm input:focus{outline:2px solid #FFC400;outline-offset:1px}
+.f0c-form button,.f0c-dm button.go{flex:none;width:44px;border:0;border-radius:4px;background:#FFC400;color:#000;cursor:pointer;display:grid;place-items:center}
+.f0c-form button svg,.f0c-dm button.go svg{width:20px;height:20px;fill:currentColor}
+.f0c-form button:disabled,.f0c-form input:disabled,.f0c-dm input:disabled,.f0c-dm button.go:disabled{opacity:.45;cursor:not-allowed}
+.f0c-dm{display:flex;flex-direction:column;gap:7px;padding:9px 9px 0;border-top:3px solid #FFC400;background:#000}
+.f0c-dm .t{font:700 13px var(--display);letter-spacing:.14em;text-transform:uppercase;color:#FFC400;margin:0 4px}
+.f0c-dm .chips{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 4px;-webkit-overflow-scrolling:touch}
+.f0c-dm .chip{flex:none;font:600 14px var(--body);padding:5px 12px;border-radius:999px;border:1.5px solid #FFC400;background:none;color:#FFC400;cursor:pointer}
+.f0c-dm .chip[aria-pressed="true"]{background:#FFC400;color:#000;font-weight:700}
+.f0c-dm .hint{margin:0 4px;font:500 13px var(--body);color:#8FA0AE}
 .f0c-dm .r{display:flex;gap:8px}
-.f0c-dm button{flex:none;width:42px;border:0;border-radius:50%;background:var(--btn,var(--accent));color:#fff;cursor:pointer;display:grid;place-items:center}
-.f0c-dm button svg{width:20px;height:20px;fill:currentColor}
-.f0c-dm select:disabled,.f0c-dm input:disabled,.f0c-dm button:disabled{opacity:.5;cursor:not-allowed}
-.f0c-dm .t{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 4px}
 @media (max-width:560px){
  .f0c{right:max(10px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px))}
- .f0c-fab{padding:6px 14px 6px 6px}.f0c-fab svg{width:34px;height:34px}
+ .f0c-fab{padding:4px 12px 4px 6px}
  .f0c.open{left:0;right:0;bottom:0}
- .f0c-pan{width:100%;height:min(78dvh,600px);border-radius:16px 16px 0 0;border-width:1px 0 0}
+ .f0c-pan{width:100%;height:min(80dvh,620px);border-radius:12px 12px 0 0;border-width:3px 0 0;outline:0}
 }
 @media print{.f0c{display:none}}`;
   document.head.appendChild(s);
@@ -115,7 +118,7 @@ function load(){
     save();
   }catch(e){}
 }
-function tick(){ if(prune()){ save(); update(); } if(C.sms&&document.visibilityState==="visible"&&Date.now()-C.fAt>55000) fetchInbox(); }
+function tick(){ if(prune()){ save(); update(); } try{ const k=C.root&&$("#f0cClk",C.root); if(k) k.textContent=hhmm(Date.now()); }catch(e){} if(C.sms&&document.visibilityState==="visible"&&Date.now()-C.fAt>55000) fetchInbox(); }
 
 /* ---------- canal ---------- */
 function myName(){ try{ return String((C.deps&&C.deps.name&&C.deps.name())||"Alumno").trim().slice(0,60)||"Alumno"; }catch(e){ return "Alumno"; } }
@@ -264,9 +267,10 @@ function sendSms(to,x){
 /* ---------- interfaz ---------- */
 const hhmm=t=>{ const d=new Date(t); return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); };
 const ini=n=>n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase()||"?";
+const sign=n=>{ const w=String(n).trim().split(/\s+/).filter(Boolean); let g=w.slice(0,3).map(x=>x[0]).join(""); if(g.length<3&&w[0]) g=(g+w[0].slice(1)).slice(0,3); return (g||"???").toUpperCase(); };
 const nameOf=r=>(C.peers[r]&&C.peers[r].n)||C.names[r]||(C.rooms[r]&&C.rooms[r].find(m=>!m.me)&&C.rooms[r].find(m=>!m.me).n)||"Compañero";
 function setOpen(v){
-  C.open=!!v; if(!C.root) return;
+  C.open=!!v; if(v) C.anim=Date.now(); if(!C.root) return;
   if(!v){ C.active=null; } else if(C.active){ C.unread[C.active]=0; markRead(C.active); }
   save();
   update();
@@ -283,14 +287,13 @@ function build(){
     if(e.target.closest(".f0c-fab")) return setOpen(true);
     if(e.target.closest("#f0cX")) return setOpen(false);
     if(e.target.closest("#f0cBack")){ C.active=null; return update(); }
+    const ch=e.target.closest("[data-dm]"); if(ch){ C.dmTo=C.dmTo===ch.dataset.dm?"":ch.dataset.dm; update(); const di=$("#f0cDmIn",r); if(di&&!di.disabled) di.focus(); return; }
     const b=e.target.closest(".f0c-p"); if(b) openRoom(b.dataset.room);
   });
   r.addEventListener("input",e=>{ if(e.target.id==="f0cDmIn") C.dmText=e.target.value; });
-  r.addEventListener("change",e=>{ if(e.target.id==="f0cTo") C.dmTo=e.target.value; });
-  r.addEventListener("submit",e=>{
-    if(e.target.closest("#f0cDm")){ e.preventDefault(); const sel=$("#f0cTo",r), i=$("#f0cDmIn",r); if(!sel||!i) return;
-      if(!sel.value){ sel.focus(); return; }
-      const to=sel.value, v=i.value; if(!clean(v)){ i.focus(); return; }
+    r.addEventListener("submit",e=>{
+    if(e.target.closest("#f0cDm")){ e.preventDefault(); const i=$("#f0cDmIn",r); if(!i) return;
+      const to=C.dmTo, v=i.value; if(!to){ return; } if(!clean(v)){ i.focus(); return; }
       if(send(v,to)){ C.dmText=""; C.dmTo=""; openRoom(to); } return; }
     if(!e.target.closest("#f0cForm")) return; e.preventDefault(); const i=$("#f0cIn",r); if(!i) return; const v=i.value; i.value=""; if(!send(v)) i.value=v; });
   r.addEventListener("keydown",e=>{ if(e.key==="Escape"&&C.open){ e.stopPropagation(); setOpen(false); } });
@@ -316,22 +319,27 @@ function update(){
   const dmI=$("#f0cDmIn",r), dmKeep=dmI&&document.activeElement===dmI?{a:dmI.selectionStart,b:dmI.selectionEnd}:null, dmSelFocus=document.activeElement===$("#f0cTo",r);
   const mm=$("#f0cMsgs",r), atEnd=!mm||mm.scrollHeight-mm.scrollTop-mm.clientHeight<60;
   if(!room){
-    const gone=Object.keys(C.rooms).filter(k=>!C.peers[k]);
     if(Date.now()-C.pAt>(C.sms?30000:8000)) loadPeople();
+    const offIds=[...new Set([...C.people.map(x=>x.id),...Object.keys(C.rooms)])].filter(k=>!C.peers[k]);
+    offIds.sort((a,b)=>nameOf(a).localeCompare(nameOf(b),"es"));
     const offl=C.people.filter(x=>!C.peers[x.id]||C.peers[x.id].away);
     const canDm=C.sms&&offl.length>0;
-    const dmHint=!C.sms?("No disponible"+(C.smsErr?" · "+C.smsErr:"")):(offl.length?"Elegir compañero…":"Todos están en línea");
-    const dm=`<form class="f0c-dm" id="f0cDm" autocomplete="off"><div class="t">Mensaje sin conexión</div><select id="f0cTo" aria-label="Elegir compañero que no está en línea" ${canDm?"":"disabled"}><option value="">${dmHint}</option>${canDm?offl.map(x=>`<option value="${esc(x.id)}"${x.id===C.dmTo?" selected":""}>${esc(x.n)}</option>`).join(""):""}</select><div class="r"><input id="f0cDmIn" maxlength="${MAXLEN}" placeholder="Escribe un mensaje…" aria-label="Mensaje sin conexión" ${canDm?"":"disabled"}><button type="submit" aria-label="Enviar" ${canDm?"":"disabled"}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></div></form>`;
-    const row=(k,sub,isOn)=>`<button class="f0c-p${isOn?"":" gone"}" data-room="${esc(k)}"><span class="av">${esc(ini(nameOf(k)))}<i></i></span><span class="nm">${esc(nameOf(k))}<small>${esc(sub)}</small></span>${C.unread[k]?`<b class="u">${C.unread[k]}</b>`:""}</button>`;
-    const list=(online.length||gone.length)?`<div class="f0c-list">${online.length?"<h3>En línea</h3>"+online.map(k=>row(k,C.unread[k]?"mensaje nuevo":(C.peers[k].away?"ausente un momento · le llegará al volver":"toca para escribir"),true)).join(""):""}${gone.length?"<h3>Conversaciones</h3>"+gone.map(k=>row(k,C.sms?"sin conexión · le llegará igualmente":"ya no está en línea",false)).join(""):""}</div>`
+    const first=x=>String(x.n).split(/\s+/)[0], dup=x=>offl.filter(y=>first(y).toLowerCase()===first(x).toLowerCase()).length>1;
+    const chipLbl=x=>dup(x)?first(x)+" "+((String(x.n).split(/\s+/)[1]||"")[0]||"")+".":first(x);
+    const dmHint=!C.sms?("No disponible"+(C.smsErr?" · "+C.smsErr:"")):(offl.length?"":"Todos están en línea");
+    const dm=`<form class="f0c-dm" id="f0cDm" autocomplete="off"><div class="t">Mensaje sin conexión</div>${canDm?`<div class="chips" role="group" aria-label="Elegir compañero que no está en línea">${offl.map(x=>`<button type="button" class="chip" data-dm="${esc(x.id)}" aria-pressed="${x.id===C.dmTo}">${esc(chipLbl(x))}</button>`).join("")}</div>`:`<p class="hint">${esc(dmHint)}</p>`}<div class="r"><input id="f0cDmIn" maxlength="${MAXLEN}" placeholder="${C.dmTo&&canDm?"Escribe para "+esc(first({n:nameOf(C.dmTo)}))+"…":"Elige un compañero…"}" aria-label="Mensaje sin conexión" ${canDm&&C.dmTo?"":"disabled"}><button type="submit" class="go" aria-label="Enviar" ${canDm&&C.dmTo?"":"disabled"}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></div></form>`;
+    const sub=(k,st)=>C.unread[k]?"mensaje nuevo":st==="away"?"ausente un momento · le llegará":"";
+    const an=Date.now()-C.anim<800?" an":"";
+    const row=(k,st)=>`<button class="f0c-p${st==="off"?" gone":""}" data-room="${esc(k)}"><span class="cs">${esc(sign(nameOf(k)))}</span><span class="nm">${esc(nameOf(k))}${sub(k,st)?`<small>${esc(sub(k,st))}</small>`:""}</span><span class="f0c-st ${st}${an}">${{on:"En línea",away:"Ausente",off:"Sin conexión"}[st]}</span>${C.unread[k]?`<b class="u">${C.unread[k]}</b>`:""}</button>`;
+    const list=(online.length||offIds.length)?`<div class="f0c-colh"><span>Indicativo</span><span>Piloto</span><span>Estado</span></div><div class="f0c-list">${online.length?"<h3>En línea</h3>"+online.map(k=>row(k,C.peers[k].away?"away":"on")).join(""):""}${offIds.length?"<h3>Sin conexión</h3>"+offIds.map(k=>row(k,"off")).join(""):""}</div>`
       :`<div class="f0c-empty">${ICON}${on?"Ahora mismo no hay nadie más conectado.<br>Cuando entre un compañero aparecerá aquí.":"No se ha podido conectar el chat."}</div>`;
-    pan.innerHTML=`<header class="f0c-hd ${C.status}">${ICON}<h2>Online pilots<small><i></i>${esc(stTxt)}</small></h2><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}${dm}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos</p></div>`;
-    const ts=$("#f0cTo",r), ti=$("#f0cDmIn",r); if(ts&&C.dmTo&&offl.some(x=>x.id===C.dmTo)) ts.value=C.dmTo; if(ti) ti.value=C.dmText;
-    if(dmKeep&&ti){ ti.focus(); try{ ti.setSelectionRange(dmKeep.a,dmKeep.b); }catch(e){} } else if(dmSelFocus&&ts) ts.focus();
+    pan.innerHTML=`<header class="f0c-hd ${C.status}"><div class="t"><h2>Online pilots</h2><small><i></i><span id="f0cClk">${hhmm(Date.now())}</span> · ${esc(stTxt)}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}${dm}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos</p></div>`;
+    const ti=$("#f0cDmIn",r); if(ti) ti.value=C.dmText;
+    if(dmKeep&&ti){ ti.focus(); try{ ti.setSelectionRange(dmKeep.a,dmKeep.b); }catch(e){} }
   } else {
     const live=on&&C.peers[room]&&!C.peers[room].away, off=!live&&!C.sms&&(!C.peers[room]||!on);
     const msgs=(C.rooms[room]||[]).map(m=>`<div class="f0c-m${m.me?" me":""}">${esc(m.x)}<time>${hhmm(m.t)}${m.p===1?" · enviando…":m.p===2?" · no entregado":m.p===3?" · enviado":""}</time></div>`).join("");
-    pan.innerHTML=`<header class="f0c-hd ${C.peers[room]?C.status:"off"}"><button id="f0cBack" type="button" aria-label="Volver a la lista">‹</button><h2>${esc(nameOf(room))}<small><i></i>${C.peers[room]?(C.peers[room].away?"ausente un momento":"en línea"):(C.sms?"sin conexión · le llegará":"no está en línea")}</small></h2><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body"><div class="f0c-msgs" id="f0cMsgs" role="log" aria-live="polite"><div class="f0c-sys">Chat privado con ${esc(nameOf(room))}. ${C.sms?"Si no está en línea, le llega igualmente (como un SMS) y se borra 5 minutos después de leerlo.":"Se entrega si está en línea o vuelve en menos de 10 minutos."}</div>${msgs}</div><form class="f0c-form" id="f0cForm" autocomplete="off"><input id="f0cIn" maxlength="${MAXLEN}" placeholder="${off?"No está en línea":(live?"Escribe un mensaje…":"Mensaje sin conexión…")}" aria-label="Mensaje" ${off?"disabled":""}><button type="submit" aria-label="Enviar" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></form></div>`;
+    pan.innerHTML=`<header class="f0c-hd ${C.peers[room]?C.status:"off"}"><button id="f0cBack" type="button" aria-label="Volver a la lista">‹</button><div class="t"><h2>${esc(nameOf(room))}</h2><small><i></i>${C.peers[room]?(C.peers[room].away?"ausente un momento":"en línea"):(C.sms?"sin conexión · le llegará":"no está en línea")}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body"><div class="f0c-msgs" id="f0cMsgs" role="log" aria-live="polite"><div class="f0c-sys">Chat privado con ${esc(nameOf(room))}. ${C.sms?(live?"":"Si no está en línea, le llega igualmente (como un SMS) y se borra 5 minutos después de leerlo."):"Se entrega si está en línea o vuelve en menos de 10 minutos."}</div>${msgs}</div><form class="f0c-form" id="f0cForm" autocomplete="off"><input id="f0cIn" maxlength="${MAXLEN}" placeholder="${off?"No está en línea":(live?"Escribe un mensaje…":"Mensaje sin conexión…")}" aria-label="Mensaje" ${off?"disabled":""}><button type="submit" aria-label="Enviar" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></form></div>`;
     const ni=$("#f0cIn",r); if(keep&&ni){ ni.value=keep.v; if(keep.f&&!ni.disabled) ni.focus(); }
     const nm=$("#f0cMsgs",r); if(nm&&(atEnd||!keep)) nm.scrollTop=nm.scrollHeight;
   }
