@@ -3402,7 +3402,7 @@ function go(tab,mode,start){
     var q=document.getElementById("quiz"), s=document.getElementById("setup");
     if(q&&!q.hidden&&s){ q.hidden=true; s.hidden=false; }
     var r=document.querySelector('input[name=mode][value="'+mode+'"]'); if(r){ r.checked=true; r.dispatchEvent(new Event("change",{bubbles:true})); }
-    if(start&&r){ var sb=document.getElementById("startBtn"); if(sb) setTimeout(function(){ sb.click(); },40); }
+    if(start&&r){ try{ localStorage.setItem("f0:extra:"+location.pathname,"0"); var xc=document.getElementById("f0xc"); if(xc) xc.checked=false; }catch(e){} var sb=document.getElementById("startBtn"); if(sb) setTimeout(function(){ sb.click(); },40); }
   },60); }
   try{ window.scrollTo({top:0}); }catch(e){}
 }
@@ -3497,7 +3497,7 @@ function ui(){
   const c=l.querySelector("input"); c.checked=isExtra(); c.addEventListener("change",()=>{ try{ localStorage.setItem(XK,c.checked?"1":"0"); }catch(e){} });
   const q=document.getElementById("qlist"); const bd=document.createElement("div"); bd.className="f0xb"; bd.textContent="DIFICULTAD EXTRA"; bd.hidden=true; if(q&&q.parentNode) q.parentNode.insertBefore(bd,q);
   sb.addEventListener("click",()=>{ const m=(document.querySelector("input[name=mode]:checked")||{}).value||"";
-    const on=isExtra()&&!SKIP.test(m); bd.hidden=!on;
+    const on=isExtra()&&!SKIP.test(m)&&EX.length>0; bd.hidden=!on;
   });
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",ui); else ui();
