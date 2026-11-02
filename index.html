@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="1618c66ccf65";</script>
+<script>window.F0_BUILD="946e1ed42bb9";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1240,9 +1240,10 @@ mark.f0hl[data-c=u]{background:none;color:inherit;text-decoration:underline;text
 function hlGet(k){ const st=STATE[k]||(STATE[k]={}); return st.hl||(st.hl=[]); }
 const hlTimers={};
 function hlPersist(k){ lsSet(k,STATE[k]); clearTimeout(hlTimers[k]); hlTimers[k]=setTimeout(()=>{ try{ cloudSet(k,STATE[k]); }catch(e){} },1500); }
+const hlRoot=d=>d.getElementById("notes")||d.getElementById("p-notes");   /* solo la pestaña Apuntes */
 function hlText(d){
   const nodes=[]; let base=0, n;
-  const w=d.createTreeWalker(d.body,4,{acceptNode(t){ const p=t.parentElement; return (t.nodeValue&&p&&!p.closest(HL_SKIP))?1:2; }});
+  const w=d.createTreeWalker(hlRoot(d)||d.body,4,{acceptNode(t){ const p=t.parentElement; return (t.nodeValue&&p&&!p.closest(HL_SKIP))?1:2; }});
   while((n=w.nextNode())){ nodes.push({n,b:base}); base+=n.nodeValue.length; }
   return {nodes,text:nodes.map(x=>x.n.nodeValue).join("")};
 }
@@ -1296,7 +1297,7 @@ function hlRemove(F,id){
   const it=hlGet(F.k).find(x=>x.id===id); if(it){ it.del=1; hlPersist(F.k); }
 }
 function hlInit(f,k){
-  const d=f.contentDocument; if(!d||!d.body||d.getElementById("f0hlUi")) return;
+  const d=f.contentDocument; if(!d||!d.body||d.getElementById("f0hlUi")||!hlRoot(d)) return;
   const w=d.defaultView, F={d,k,w,tool:"",tries:{},busy:false,obs:null,pen:null,rm:null};
   const st=d.createElement("style"); st.textContent=HL_CSS; d.head.appendChild(st);
   const ui=d.createElement("div"); ui.id="f0hlUi"; ui.className="f0hl-ui";
@@ -1305,6 +1306,8 @@ function hlInit(f,k){
   d.body.appendChild(ui);
   const setTool=t=>{ F.tool=t; ui.classList.toggle("open",!!t); ui.querySelector(".f0hl-fab").setAttribute("aria-expanded",String(!!t)); ui.querySelectorAll(".f0hl-pal button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.t===t))); if(t&&t!=="x") try{ localStorage.setItem("f0:hltool",t); }catch(e){} clearRm(); try{ d.getSelection().removeAllRanges(); }catch(e){} };
   const clearRm=()=>{ if(F.rm){ F.rm.remove(); F.rm=null; } };
+  const inNotes=()=>{ const r=hlRoot(d); return !!r&&!r.hidden; };
+  const sync=()=>{ const on=inNotes(); ui.style.display=on?"":"none"; if(!on){ if(F.tool) setTool(""); clearRm(); } };
   ui.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
     if(b.classList.contains("f0hl-fab")){ let t=""; try{ t=localStorage.getItem("f0:hltool")||"y"; }catch(x){ t="y"; } setTool(F.tool?"":(HL_COL[t]||t==="u"?t:"y")); return; }
     const t=b.dataset.t; setTool(F.tool===t?"":t); if(!F.tool) return; });
@@ -1327,7 +1330,7 @@ function hlInit(f,k){
   d.addEventListener("selectionchange",()=>{ if(!F.tool||F.tool==="x"||F.pen) return; clearTimeout(selT); selT=setTimeout(()=>{ if(!down) hlCommit(F); },750); });
   // Apple Pencil: arrastrar sobre el texto lo selecciona al instante (el dedo sigue desplazando la página)
   const caret=(x,y)=>{ try{ if(d.caretRangeFromPoint){ const r=d.caretRangeFromPoint(x,y); return r?{n:r.startContainer,o:r.startOffset}:null; } if(d.caretPositionFromPoint){ const p=d.caretPositionFromPoint(x,y); return p?{n:p.offsetNode,o:p.offset}:null; } }catch(e){} return null; };
-  const okTarget=el=>el&&el.closest&&!el.closest(HL_SKIP)&&!el.closest(".f0hl-rm");
+  const okTarget=el=>el&&el.closest&&!el.closest(HL_SKIP)&&!el.closest(".f0hl-rm")&&hlRoot(d).contains(el);
   d.addEventListener("pointerdown",e=>{
     if(e.pointerType!=="pen"||!F.tool||!okTarget(e.target)) return;
     if(F.tool==="x"){ const m=e.target.closest("mark.f0hl"); if(m) hlRemove(F,m.dataset.id); return; }
@@ -1342,7 +1345,8 @@ function hlInit(f,k){
   const stylus=e=>{ if(!F.tool) return; const t=e.touches&&e.touches[0]; if(t&&t.touchType==="stylus"&&okTarget(e.target)){ e.preventDefault(); } };   // el lápiz no desplaza la página; el dedo sí
   d.addEventListener("touchstart",stylus,{passive:false,capture:true}); d.addEventListener("touchmove",stylus,{passive:false,capture:true});
   // pintar lo guardado ahora y cuando aparezca contenido nuevo (pestañas que se dibujan al abrirlas)
-  F.k=k; hlApplyAll(F);
+  F.k=k; hlApplyAll(F); sync();
+  try{ new w.MutationObserver(sync).observe(hlRoot(d),{attributes:true,attributeFilter:["hidden"]}); }catch(e){}
   let mt=0; try{ F.obs=new w.MutationObserver(()=>{ if(F.busy) return; clearTimeout(mt); mt=setTimeout(()=>hlApplyAll(F),700); }); F.obs.observe(d.body,{childList:true,subtree:true}); }catch(e){}
   (window.__hlF=window.__hlF||{})[k]=F;
 }
