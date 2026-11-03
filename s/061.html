@@ -100,6 +100,7 @@ tr.al td{background:color-mix(in srgb,var(--blue) 8%,transparent)}
 </style>
 <style>
 .mode{display:block;border:1px solid var(--line);border-radius:4px;padding:10px 12px;margin:6px 0;cursor:pointer}
+.ctabs{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 6px 4px}.ctab{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:16px;padding:6px 12px;font:600 13.5px var(--body);cursor:pointer;min-height:34px}.ctab[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:#fff}#setup:not(:has(input[value=calc]:checked)) .ctabs,#setup:not(:has(input[value=calc]:checked)) #calcInfo{opacity:.6}
 .mode:has(input:checked){border-color:var(--blue);background:color-mix(in srgb,var(--blue) 7%,transparent)}
 .mode small{display:block;color:var(--muted);margin-left:26px}
 select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
@@ -1286,7 +1287,9 @@ details.lo .body > .formula{margin-top:10px}
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA · cronometrado <small><span class="row" style="margin-top:6px"><select id="senEx" aria-label="Examen"><option value="061">061 General Navigation · 55 preguntas</option><option value="062">062 Radio Navigation · 66 preguntas</option><option value="both">061 + 062 seguidos · 121 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>: 15 ejercicios y 15 de teoría, según tus fallos y lo que más pesa</small></label>
-      <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos · 20 preguntas <small>: QDM/QDR/QTE, RMI, VOR, DME, deriva, viento, tiempo, combustible… números nuevos cada vez</small></label>
+      <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos <small>: elige el tipo ↓ · números nuevos cada vez</small></label>
+      <div class="ctabs" id="calcTabs" role="tablist" aria-label="Tipo de cálculo"></div>
+      <p class="muted small" id="calcInfo" style="margin:0 0 10px 4px"></p>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel" aria-label="Tema"></select></small></label>
@@ -3770,6 +3773,104 @@ const GEN_061X = {tr6:gTASd, e29:gRhumbDiff, u19:gMeridDist, v5:gDrift, dw2:gDri
 
 Object.assign(GEN, GEN_061X);
 // <<END gen061x>>
+// <<BEGIN calctabs>>
+// ===== TCA (track correction angle) y convergencia: generadores para las pestañas de «Solo cálculos» =====
+const kxSide = () => { const a = nvP(["left","right"]); return [a, a==="left"?"right":"left"]; };
+const kxOne = x => (Math.round(x*10)/10).toFixed(1).replace(/\.0$/,"");
+const kxDeg = x => kxOne(x)+"°";
+function kxPair(){   // a = distancia volada, b = distancia que falta, x = desvío: TKE y CA enteros
+  let a,b,x,t,c; do{ a=nvP([20,30,40,60]); b=nvP([15,20,30,40,45,60,90]); x=nvR(1,6); t=60*x/a; c=60*x/b; }
+  while(t%1 || c%1 || t<2 || c<2 || t+c>30 || t===c);
+  return {a,b,x,t,c};
+}
+function gCA(){
+  const {a,b,x,t,c} = kxPair(), [side] = kxSide();
+  return {text:nvP([`After flying ${a} NM from A you fix your position ${x} NM ${side} of track, with ${b} NM still to go to B. The closing angle (CA) to reach B is about:`,
+                    `You are ${x} NM ${side} of the planned track, ${a} NM from A and ${b} NM from B. The closing angle (CA) is about:`]),
+    opts:nvOpts(c,[t,t+c,2*c,x],kxDeg,1),
+    expl:`★ CA = 60 × desvío ÷ distancia que FALTA = 60 × ${x} ÷ ${b} = ${c}°. (El TKE usa la distancia volada: 60 × ${x} ÷ ${a} = ${t}°; el TCA = TKE + CA = ${t+c}°.)`, v:true, p:{kind:"ca",a,b,x,ans:c}};
+}
+function gTCAhdg(){
+  const {a,b,x,t,c} = kxPair(), [side,turn] = kxSide(), h = nvR(0,35)*10, sg = turn==="right"?1:-1;
+  const f = v => nvH(v)+"°";
+  return {text:nvP([`You are flying heading ${nvH(h)}° on a ${a+b} NM leg. After ${a} NM your position is ${x} NM ${side} of track. With the wind unchanged, the heading to fly directly to the destination is:`,
+                    `Heading ${nvH(h)}°. ${a} NM after leaving A, you are ${x} NM ${side} of track and ${b} NM from the destination. What heading takes you directly to the destination (same wind)?`]),
+    opts:nvOpts(h+sg*(t+c),[h+sg*t,h+sg*c,h-sg*(t+c),h+sg*(t+c)*2],f,2),
+    expl:`★ TKE = 60 × ${x} ÷ ${a} = ${t}° · CA = 60 × ${x} ÷ ${b} = ${c}° · TCA = TKE + CA = ${t+c}°, hacia el track: ${turn==="right"?"derecha":"izquierda"}, así que ${nvH(h)}° ${sg>0?"+":"−"} ${t+c}° = ${nvH(h+sg*(t+c))}°.`, v:true, p:{kind:"tcah",a,b,x,h,ans:nvH(h+sg*(t+c))}};
+}
+function gOffTrack(){
+  let t,d; do{ t=nvP([2,3,4,5,6,8]); d=nvP([30,60,90,120,150,180]); }while((t*d/60)%1 || t*d/60>25);
+  const x = t*d/60;
+  return {text:nvP([`A constant track error of ${t}° is maintained for ${d} NM. By the 1 in 60 rule, the distance off track at the end is about:`,
+                    `You fly ${d} NM with a track error of ${t}°. How far off the planned track will you be (1 in 60 rule)?`]),
+    opts:nvOpts(x,[t*d/30,t*d,d/t,60*t/d],v=>kxOne(v)+" NM",1),
+    expl:`★ Desvío = ángulo × distancia ÷ 60 = ${t} × ${d} ÷ 60 = ${kxOne(x)} NM. (Es la misma regla de 1 en 60 al revés.)`, v:true, p:{kind:"offt",t,d,ans:x}};
+}
+function gTCAdef(){
+  const t=nvR(2,14), c=nvR(2,12), k=nvP(["tca","ca","tke"]);
+  if(k==="tca") return {text:`The track error angle (TKE) is ${t}° and the closing angle (CA) is ${c}°. The track correction angle (TCA) to fly directly to the destination is:`,
+    opts:nvOpts(t+c,[Math.abs(t-c),2*t,2*c,t*c],kxDeg,1), expl:`★ TCA = TKE + CA = ${t} + ${c} = ${t+c}°.`, v:true, p:{kind:"tcad",k,ans:t+c}};
+  if(k==="ca") return {text:`You need a track correction angle (TCA) of ${t+c}° to fly directly to the destination. The track error angle (TKE) is ${t}°. The closing angle (CA) is:`,
+    opts:nvOpts(c,[t+c+t,t,t+c,Math.abs(t-c)],kxDeg,1), expl:`★ TCA = TKE + CA → CA = TCA − TKE = ${t+c} − ${t} = ${c}°.`, v:true, p:{kind:"tcad",k,ans:c}};
+  return {text:`You need a track correction angle (TCA) of ${t+c}° and the closing angle (CA) is ${c}°. The track error angle (TKE) is:`,
+    opts:nvOpts(t,[t+c+c,c,t+c,Math.abs(t-c)],kxDeg,1), expl:`★ TCA = TKE + CA → TKE = TCA − CA = ${t+c} − ${c} = ${t}°.`, v:true, p:{kind:"tcad",k,ans:t}};
+}
+// --- convergencia y great circle ---
+function kxLons(){   // dos meridianos: devuelve textos y el cambio de longitud
+  const k = nvP(["we","we","ww","ee"]);
+  let a,b,d;
+  if(k==="we"){ a=nvR(5,40); b=nvR(5,40); d=a+b; return {A:`${String(a).padStart(3,"0")}°W`, B:`${String(b).padStart(3,"0")}°E`, d}; }
+  if(k==="ww"){ a=nvR(5,20); d=nvP([10,12,15,20,24,30]); b=a+d; return {A:`${String(b).padStart(3,"0")}°W`, B:`${String(a).padStart(3,"0")}°W`, d}; }
+  a=nvR(5,20); d=nvP([10,12,15,20,24,30]); b=a+d; return {A:`${String(a).padStart(3,"0")}°E`, B:`${String(b).padStart(3,"0")}°E`, d};
+}
+function gConvE(){
+  const L = kxLons(), lat = nvP([30,40,50,60,70]), hs = nvP(["N","S"]), sn = Math.sin(xR(lat)), cv = L.d*sn;
+  return {text:nvP([`Earth convergence between ${L.A} and ${L.B} at a mean latitude of ${lat}°${hs} is about:`, `The earth convergence between meridians ${L.A} and ${L.B}, at ${lat}°${hs}, is about:`]),
+    opts:nvOpts(Math.round(cv*10)/10,[L.d*Math.cos(xR(lat)), cv/2, L.d, L.d*Math.tan(xR(lat)/2)],kxDeg,1),
+    expl:`★ Convergencia = cambio de longitud × sen latitud media = ${L.d}° × sen ${lat}° = ${L.d} × ${sn.toFixed(3)} = ${kxOne(cv)}°. (Trampas: usar cos, o dar la mitad, que es el ángulo de conversión.)`, v:true, p:{kind:"conve",d:L.d,lat,ans:cv}};
+}
+function gConvAng(){
+  const L = kxLons(), lat = nvP([30,40,50,60,70]), hs = nvP(["N","S"]), cv = L.d*Math.sin(xR(lat)), ca = cv/2;
+  return {text:nvP([`A and B are on the ${lat}°${hs} parallel, at ${L.A} and ${L.B}. The conversion angle between the rhumb line and the great circle is about:`,
+                    `Two positions on the ${lat}°${hs} parallel, ${L.A} and ${L.B}. The conversion angle (rhumb line to great circle) is about:`]),
+    opts:nvOpts(Math.round(ca*10)/10,[cv,L.d/2,cv/4,L.d*Math.cos(xR(lat))/2],kxDeg,1),
+    expl:`★ Conversión = ½ convergencia = ½ × ${L.d}° × sen ${lat}° = ½ × ${kxOne(cv)}° = ${kxOne(ca)}°. (Dar la convergencia entera es la trampa.)`, v:true, p:{kind:"convang",d:L.d,lat,ans:ca}};
+}
+function gGCtrk(){
+  let L,lat,hs,cv,ca,east,rl,ans,sign,init; do{
+    L=kxLons(); lat=nvP([40,45,50,55,60]); hs=nvP(["N","S"]); cv=L.d*Math.sin(xR(lat)); ca=cv/2; east=nvP([true,false]); init=nvP([true,false]);
+  }while(ca<3 || ca>16 || Math.abs(ca-Math.round(ca))<.12);
+  rl = east?90:270;
+  // N: este → el great circle sale al norte (−CA); oeste → +CA. S: al revés. El final es lo contrario del inicial.
+  const sInit = (hs==="N") === east ? -1 : 1, sg = init ? sInit : -sInit;
+  ans = rl + sg*ca;
+  const f = v => nvH(Math.round(v))+"°";
+  const from = east ? [L.A,L.B] : [L.B,L.A];
+  return {text:`A (${lat}°${hs} ${from[0]}) to B (${lat}°${hs} ${from[1]}): the rhumb line track is ${nvH(rl)}°(T). The ${init?"INITIAL":"FINAL"} great circle track is about:`,
+    opts:nvOpts(Math.round(ans),[rl-sg*ca,rl+sg*cv,rl-sg*cv,rl],f,2),
+    expl:`★ Conversión = ½ × ${L.d}° × sen ${lat}° = ${kxOne(ca)}°. El great circle se curva hacia el polo ${hs}: el track ${init?"inicial":"final"} es ${nvH(rl)}° ${sg>0?"+":"−"} ${kxOne(ca)}° ≈ ${f(ans)} (el rhumb line queda en medio de los dos tracks).`, v:true, p:{kind:"gctrk",lat,d:L.d,east,init,ans:Math.round(ans)}};
+}
+function gChartConv(){
+  const polar = Math.random()<.3, d = nvP([10,12,15,20,24,30,36,40]), lat = nvP([30,40,45,50,60]);
+  const n = polar?1:Math.sin(xR(lat)), cv = d*n, L = kxLons();
+  if(polar) return {text:`On a polar stereographic chart, the chart convergence between two meridians ${d}° apart is:`,
+    opts:nvOpts(d,[d/2,d*Math.sin(xR(60)),d*Math.cos(xR(60)),2*d],kxDeg,1), expl:`★ Polar estereográfica: constante del cono n = 1 → convergencia de la carta = cambio de longitud = ${d}°.`, v:true, p:{kind:"pconv",d,ans:d}};
+  return {text:`Lambert conformal chart, parallel of origin ${lat}°N. The chart convergence between ${L.A} and ${L.B} is about:`,
+    opts:nvOpts(Math.round(L.d*n*10)/10,[L.d,L.d*Math.cos(xR(lat)),L.d*n/2,L.d*Math.sin(xR(lat/2))],kxDeg,1),
+    expl:`★ Lambert: constante del cono n = sen del parallel of origin = sen ${lat}° = ${n.toFixed(3)}. Convergencia de la carta = ${L.d}° × ${n.toFixed(3)} = ${kxOne(L.d*n)}°.`, v:true, p:{kind:"lconv",d:L.d,lat,ans:L.d*n}};
+}
+BASE.push(
+ ["kx1","061.01.03","n","tke","★ TCA: closing angle (CA) from the distance still to go.",["",""," ",""],""],
+ ["kx2","061.01.03","n","tke","★ TCA: heading to fly directly to the destination after a fix off track.",["",""," ",""],""],
+ ["kx3","061.01.03","n","tke","★ TCA: distance off track from the track error angle (1 in 60).",["",""," ",""],""],
+ ["kx4","061.01.03","n","tke","★ TCA: TCA = TKE + CA, solve for any of the three.",["",""," ",""],""],
+ ["kx6","061.03.01","a","conv","Earth convergence between two meridians at a mean latitude.",["",""," ",""],""],
+ ["kx7","061.03.01","a","convang","Conversion angle between the rhumb line and the great circle.",["",""," ",""],""],
+ ["kx8","061.03.01","a","convang","Initial or final great circle track from the rhumb line track and the conversion angle.",["",""," ",""],""],
+ ["kx9","061.04.02","a","chartA","Chart convergence on a Lambert (n = sin parallel of origin) or polar stereographic chart.",["",""," ",""],""]
+);
+Object.assign(GEN,{kx1:gCA, kx2:gTCAhdg, kx3:gOffTrack, kx4:gTCAdef, kx6:gConvE, kx7:gConvAng, kx8:gGCtrk, kx9:gChartConv});
+// <<END calctabs>>
 // <<BEGIN navexam>>
 // ===== 061 / 062: preguntas del examen de navegación (Partes 1–6) + variantes con cifras nuevas =====
 // Cada familia nx* (y las pf* ya existentes) sirve: (a) la pregunta original, literal, 1 de cada 4 veces; (b) una variante numérica nueva.
@@ -4445,10 +4546,49 @@ function selectSenasa(ex, lenKey, inc, atpl){
   });
   return blocks.flatMap(b=>shuffle(chosen.filter(q=>blockOf(q)===b.k)));
 }
+// ---------- «Solo cálculos»: pestañas por tipo de cálculo ----------
+const CALC_TABS = [
+ {k:"mix", t:"🎲 Mezcla", d:"Un poco de todo (20), lo más flojo primero.", n:20},
+ {k:"p1", t:"1 · Tierra", d:"Parte 1 de tu hoja: distancias por meridiano, paralelo y por el polo, y posición tras una ruta.", n:12,
+  ids:["u10","u11","u12","u15","u16","u19","u21","nx1","nx2","nx3","nx4","nx5","nx5b","nx6","pf4","pf4b","sx1"]},
+ {k:"p2", t:"2 · Hora", d:"Parte 2: LMT, UTC, hora estándar y cambio de día al cruzar los 180°.", n:12,
+  ids:["t15","t16","t17","t18","pf1","pf1b","pf2","pf3","pf3b","pf3bb","nx8"]},
+ {k:"p3", t:"3 · Rumbos", d:"Parte 3: brújula, desvío, variación, deriva y track verdadero.", n:12,
+  ids:["tr1","tr13","d15","d13","pf5","pf5b","nx9","nx10","dw1","dw2","v5"]},
+ {k:"p4", t:"4 · Cartas", d:"Parte 4: escala, centímetros ↔ millas y escala de Mercator según la latitud.", n:12,
+  ids:["c3","nx11","nx12","nx13","pf6","pf6b","ap46"]},
+ {k:"p5", t:"5 · Viento", d:"Parte 5: triángulo de velocidades: viento, deriva, groundspeed, rumbo y track.", n:12,
+  ids:["nx14","nx15","nx16","nx17","nx18","nx19","v12","v13","v14","v15","tr11","tr14","tr17"]},
+ {k:"p6", t:"6 · Radio", d:"Parte 6: alcance y potencia del NDB, alcance del VOR, DME y radar.", n:12,
+  ids:["nx20","nx21","nx22","nx23","nx24","p3","p16","p21","vo14","ap75","dm2","dm9","rd6","rd7","rd18","sx14"]},
+ {k:"tca", t:"TCA", d:"Track Correction Angle: TKE, closing angle, regla de 1 en 60, doble error y rumbo corregido.", n:12,
+  ids:["ie1","ie2","ie3","ie5","ie9","kx1","kx2","kx3","kx4"]},
+ {k:"brg", t:"NDB · VOR · RMI", d:"Marcaciones: QDM, QDR, QTE, QUJ, RMI, CDI y rumbo de interceptación.", n:12,
+  ids:["nd7","nd15","nd17","tr2","vo10","vo15","vo16","cq1","cq2","cq3","sx9","sx12","sx13"]},
+ {k:"dr", t:"Tiempo y fuel", d:"Tiempo, combustible, ETA, unidades, TAS/IAS y descenso.", n:12,
+  ids:["tr3","tr4","tr15","tr16","sx6","tr6","ap5","ap13","ap24","sx7","cq4","u1","u2","u3","u5","u6","u20"]},
+ {k:"gc", t:"Great circle", atpl:true, d:"Convergencia, ángulo de conversión, track inicial/final y convergencia de la carta. Es temario ATPL aún no dado: marca la casilla de abajo.", n:12,
+  ids:["kx6","kx7","kx8","kx9","ap38","sx2","sx8","e29"]}
+];
+const CKEY = "nav061:calc:"+location.pathname;
+let calcKey = "mix"; try{ const k = localStorage.getItem(CKEY); if(CALC_TABS.some(t=>t.k===k)) calcKey = k; }catch(e){}
+const calcTab = () => CALC_TABS.find(t=>t.k===calcKey) || CALC_TABS[0];
+function drawCalcTabs(){
+  const box = document.getElementById("calcTabs"); if(!box) return;
+  box.innerHTML = CALC_TABS.map(t=>`<button type="button" class="ctab" role="tab" data-k="${t.k}" aria-selected="${t.k===calcKey}">${t.t}</button>`).join("");
+  const t = calcTab(), info = document.getElementById("calcInfo");
+  if(info) info.textContent = `${t.d}${t.ids?` · ${t.n} preguntas`:""}`;
+}
+document.getElementById("calcTabs").addEventListener("click", e=>{
+  const b = e.target.closest(".ctab"); if(!b) return;
+  calcKey = b.dataset.k; try{ localStorage.setItem(CKEY, calcKey); }catch(x){}
+  document.querySelector('input[name=mode][value=calc]').checked = true; drawCalcTabs();
+});
+drawCalcTabs();
 const isStyled = q => !!GEN[q[0]];
 // ejercicio práctico = se resuelve calculando o con carta/instrumento; el resto es teoría
 const PRAC_IDS = new Set("e29 t15 t16 t17 t18 d13 d15 tr1 tr13 tr2 tr3 tr4 tr6 tr7 tr11 tr14 tr15 tr16 tr17 u6 u10 u11 u12 u15 u16 u19 u20 u21 c3 c27 v5 v12 v13 v14 v15 dw1 dw2 ie1 ie2 ie3 ie5 ie9 nd7 nd15 nd17 vo16 dm2 dm9 rd18 p3 ap5 ap13 ap24 ap38 ap46 ap75".split(" "));
-const isPracId = id => PRAC_IDS.has(id) || /^(pf|nx|sx|cq)/.test(id);
+const isPracId = id => PRAC_IDS.has(id) || /^(pf|nx|sx|cq|kx)/.test(id);
 const isPrac = q => isPracId(q[0]);
 const isHardPrac = q => /^(pf|nx|sx|cq|ap|ie|nd)/.test(q[0]) || /^(v1[2-5]|tr1[147]|u1[0-2])$/.test(q[0]);
 const STYLE_SHARE = {"061":0.5, "062":0.5};   // mitad ejercicios, mitad teoría
@@ -4461,6 +4601,14 @@ function selectQuestions(mode, inc, lo, atpl){
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c")));
   if(mode==="all") return shuffle(pool);
+  if(mode==="calc" && calcTab().ids){ // pestaña concreta: solo ese tipo de cálculo, números nuevos y lo más flojo primero
+    const tab = calcTab(), inPool = new Set(pool.map(q=>q[0]));
+    if(tab.atpl && !atpl) return [];
+    const qs = tab.ids.map(id=>BYID.get(id)).filter(q=>q && GEN[q[0]] && (tab.atpl || inPool.has(q[0])));
+    if(!qs.length) return [];
+    const sc = qs.map(q=>({q,p:priority(q,st)+Math.random()*2})).sort((a,b)=>b.p-a.p).map(x=>x.q), out = [];
+    for(let i=0;i<tab.n;i++) out.push(sc[i%sc.length]);
+    return shuffle(out); }
   if(mode==="calc"){ // un generador por tipo de ejercicio, máximo 3 por tema, priorizando lo flojo
     const gen=pool.filter(isPrac), sc=gen.map(q=>({q,p:priority(q,st)+Math.random()*2})).sort((a,b)=>b.p-a.p), out=[], per={};
     for(const x of sc){ if(out.length>=20) break; const l=x.q[1]; if((per[l]||0)>=3) continue; per[l]=(per[l]||0)+1; out.push(x.q); }
@@ -4769,10 +4917,11 @@ $("#startBtn").addEventListener("click",()=>{
   curMode = document.querySelector('input[name=mode]:checked').value;
   curEx = $("#senEx").value; curLen = curMode==="senasa" ? $("#senLen").value : null;
   const qs = F0DEDUP(selectQuestions(curMode, $("#incComp").checked, $("#loSel").value, $("#incAtpl").checked), curMode);
-  if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
+  if(!qs.length){ $("#startMsg").textContent = (curMode==="calc" && calcTab().atpl && !$("#incAtpl").checked) ? "Este tipo es temario ATPL aún no dado: marca «Incluir temario ATPL aún no dado» para practicarlo." : "No hay preguntas con esa selección."; return; }
   $("#startMsg").textContent = "";
   const st = stats();
-  current = qs.map(q=>{ const V = variantOf(q); return {id:q[0],lo:q[1],src:q[2],ref:q[3],text:V.text,html:V.html||"",expl:V.expl,correct:V.opts[0],
+  const seenTxt = new Set();
+  current = qs.map(q=>{ let V = variantOf(q); if(curMode==="calc"){ for(let z=0; z<8 && seenTxt.has(V.text); z++) V = variantOf(q); seenTxt.add(V.text); } return {id:q[0],lo:q[1],src:q[2],ref:q[3],text:V.text,html:V.html||"",expl:V.expl,correct:V.opts[0],
     opts:shuffle(V.opts.map((t,i)=>({t,ok:i===0}))),ans:null,
     tag: (st.q[q[0]]||{}).last===false ? "fallada antes" : focusActive(q[0],st) ? "refuerzo" : ""}; });
   $("#qlist").innerHTML = current.map((q,i)=>`
@@ -4810,7 +4959,7 @@ async function finishTest(timeout){
   const pct = Math.round(score/current.length*100), pass = pct>=75;
   const kP = current.filter(q=>isPracId(q.id)), kT = current.filter(q=>!isPracId(q.id)), okOf = a => a.filter(q=>q.ans!==null && q.opts[q.ans].ok).length;
   const kindHTML = (kP.length && kT.length) ? `<div style="margin-top:6px;display:flex;gap:18px;flex-wrap:wrap"><span>Ejercicios <b class="${okOf(kP)/kP.length>=.75?'pass':'fail'}">${okOf(kP)}/${kP.length}</b></span><span>Teoría <b class="${okOf(kT)/kT.length>=.75?'pass':'fail'}">${okOf(kT)}/${kT.length}</b></span></div>` : "";
-  const rec = {id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:curMode, score, total:current.length, pct, byLO, items};
+  const rec = {id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:curMode, score, total:current.length, pct, byLO, items}; if(curMode==="calc") rec.kind = calcKey;
   if(curMode==="senasa"){ Object.assign(rec,{exam:curEx, len:curLen, limitS:tLimit, usedS, timeout:!!timeout, byBlock, score0:s0, total0:n0}); }
   state.attempts.push(rec);
   const R = senLen(curEx,"real"), realS = R.min*60/R.n, perQ = usedS/current.length;
