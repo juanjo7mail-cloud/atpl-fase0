@@ -2624,7 +2624,7 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema concreto <small><select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row" style="margin:10px 0 2px"><input type="checkbox" id="incAtpl"> Incluir temario ATPL aún no dado</label>
+    <label class="row" style="margin:10px 0 2px"><input type="checkbox" id="incAtpl"> Simulacro: incluir temario ATPL aún no dado</label>
     <label class="row" style="margin:0 0 10px"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
     <p class="muted" style="font-size:14px">Formato examen: 4 opciones, corrección al final, 75 % para aprobar. Muchas preguntas salen con otra redacción, otros números o al revés (etiqueta «variante»): hay que razonarlas, no reconocerlas. Las del trial y las de las diapositivas salen <b>siempre</b> con otra redacción, nunca con el enunciado original.</p>
     <button class="btn" id="startBtn">Empezar test</button>
@@ -3373,6 +3373,154 @@ const VARIANTS_V5 = {
       ["Advection fog gets its name because the air:",["Moves horizontally over a colder surface","Rises vertically and cools","Sinks and warms","Stays still and radiates heat"],"Advección es movimiento horizontal, y de ahí el nombre del tipo de niebla."]]
 };
 Object.keys(VARIANTS_V5).forEach(k=>{ VARIANTS[k] = (VARIANTS[k]||[]).concat(VARIANTS_V5[k]); });
+// ===== 050: variantes nuevas (otra redacción, la pregunta al revés u otro caso) de las preguntas de clase y de los apuntes =====
+const VARIANTS_MET4 = {
+ w2:[["The lowest air temperature of the day normally occurs:",["Shortly after sunrise","At midnight","At 14:00 solar time","Just before sunset"],"El suelo se enfría por radiación toda la noche, así que el mínimo llega poco después del amanecer, cuando vuelve a entrar sol."],
+     ["Why does the highest air temperature of the day occur in the early afternoon and not at solar noon?",["The ground keeps gaining more heat than it loses until mid-afternoon","The sun is only at its highest in the afternoon","The air needs time to cool after the morning","The pressure is lowest at midday"],"El suelo sigue acumulando calor después de que el sol esté en lo más alto, y el aire se calienta desde el suelo."]],
+ w3:[["A layer of air in which the temperature does NOT change with height is called:",["An isothermal layer","An inversion","A standard lapse rate layer","The tropopause"],"Isotermo: temperatura constante con la altura, como la capa de −56,5 °C de la ISA. En la inversión la temperatura SUBE con la altura."],
+     ["Within an inversion layer, as height increases the temperature:",["Increases","Decreases steadily","Remains constant","Falls to −56.5 °C"],"Inversión: más temperatura a más altura. Es una capa muy estable, y debajo de ella se acumulan neblina y calima."]],
+ w4:[["A surface that reflects most of the incoming solar radiation has a:",["High albedo","Low albedo","High lapse rate","High dew point"],"Albedo alto = refleja mucho (nieve, nubes). Albedo bajo = absorbe (suelo oscuro, asfalto)."]],
+ w5:[["Why does fresh snow warm up so little in sunshine?",["It reflects most of the radiation: high albedo","It absorbs most of the radiation","It is porous and gives off heat quickly","It is a good conductor of heat"],"La nieve tiene albedo muy alto: refleja casi toda la radiación y absorbe poca. Las superficies oscuras hacen lo contrario."]],
+ w6:[["Why does sand become very hot by day and cool quickly at night?",["Porous surfaces absorb and release heat quickly","It has a very high albedo","It stores heat for a long time","It does not exchange heat with the air"],"Lo poroso absorbe y emite calor deprisa. Lo que guarda el calor mucho tiempo es el agua."]],
+ w7:[["Which air movement builds up the cold pool of a valley inversion on a clear night?",["Katabatic flow of cold, dense air down the slopes","Anabatic flow of warm air up the slopes","A sea breeze from the coast","Subsidence over a depression"],"El aire frío y denso baja por las laderas (viento catabático) y se acumula en el fondo: abajo frío, arriba más templado."]],
+ w9:[["A surface wind reported as 270° is blowing:",["From the west","Towards the west","From the south","Towards the north"],"La dirección del viento es siempre DE DÓNDE viene: 270° es viento del oeste."]],
+ w10:[["On a wind barb, a full feather (barb) represents:",["10 kt","5 kt","50 kt","1 kt"],"Banderín 50, pluma entera 10, media pluma 5. Se suman."],
+      ["On a wind barb, a half feather represents:",["5 kt","10 kt","50 kt","25 kt"],"Media pluma = 5 kt, pluma entera = 10 kt, banderín = 50 kt."]],
+ w11:[["A wind barb shows two full barbs and one half barb. The wind speed is:",["25 kt","15 kt","30 kt","35 kt"],"10 + 10 + 5 = 25 kt."],
+      ["A wind barb shows one pennant and two full barbs. The wind speed is:",["70 kt","60 kt","52 kt","80 kt"],"50 + 10 + 10 = 70 kt."]],
+ w12:[["A speed of 120 kt is a speed of:",["120 nautical miles per hour","120 kilometres per hour","64 nautical miles per hour","120 statute miles per hour"],"Un nudo es una milla náutica por hora, así que 120 kt son 120 NM/h."]],
+ w13:[["Meteorologists give the wind direction with reference to:",["True north","Magnetic north","Grid north","Compass north"],"Verdadera (geográfica) para el meteorólogo, magnética para aviación (ATIS y torre)."]],
+ w14:[["The pressure gradient force is directed:",["At right angles to the isobars, from high to low pressure","Along the isobars, with low pressure on the left","At right angles to the isobars, from low to high pressure","Along the isobars, clockwise"],"La PGF va de alta a baja y cortando las isobaras a 90°. El viento que va paralelo a las isobaras es el geostrófico."],
+      ["If there were no Coriolis effect and no friction, the air would move:",["Straight from high to low pressure, across the isobars","Parallel to the isobars","From low to high pressure","In circles around the high"],"Sin Coriolis lo único que actúa es la PGF: el aire iría de alta a baja directamente."]],
+ w20:[["In the northern hemisphere, the wind around a depression circulates:",["Anticlockwise","Clockwise","Directly towards the centre, without rotating","Parallel to the fronts only"],"En el HN: horario alrededor de la alta, antihorario alrededor de la baja."],
+      ["In the southern hemisphere, the wind around an anticyclone circulates:",["Anticlockwise","Clockwise","Directly towards the centre","It does not circulate"],"En el HS todo va al revés: la alta gira en sentido antihorario y la baja en el horario."]],
+ w21:[["The geostrophic wind is the result of the balance between:",["The pressure gradient force and the Coriolis effect","The pressure gradient force and friction","The Coriolis effect and the centrifugal force","The pressure gradient force and the centrifugal force only"],"Geostrófico: PGF + Coriolis y isobaras rectas, viento paralelo a ellas. Con isobaras curvas entra además la centrífuga: gradiente."]],
+ w22:[["The wind that blows around very small, intense systems near the equator, where the Coriolis effect is negligible, is the:",["Cyclostrophic wind","Geostrophic wind","Gradient wind","Katabatic wind"],"Cyclostrophic: sin Coriolis, el equilibrio es entre la PGF y la fuerza centrífuga."]],
+ w23:[["Why do anticyclones not form near the equator?",["The Coriolis effect is almost zero, so the air does not rotate","Friction is too high","The pressure is always too low","The sea is too cold"],"Sin Coriolis el aire no gira, y sin giro no hay anticiclones. Sí aparecen borrascas cálidas locales."]],
+ w28:[["Friction reduces the surface wind more over:",["Land than over the sea","The sea than over land","Flat terrain than over mountains","Neither: it is the same"],"La tierra es más rugosa que el agua: el rozamiento frena más sobre tierra."]],
+ w29:[["Near the surface in the northern hemisphere, friction makes the wind blow:",["Across the isobars towards low pressure, at a lower speed","Across the isobars towards high pressure, at a lower speed","Parallel to the isobars, at a lower speed","Across the isobars towards low pressure, at a higher speed"],"La fricción frena el viento, Coriolis se debilita y gana la PGF: el viento corta las isobaras hacia la baja. Eso es backed y más flojo."]],
+ w24:[["Warm air rises at the equator and sinks at around 30° latitude. That circulation is the:",["Hadley cell","Ferrel cell","Polar cell","Walker cell"],"Hadley: la célula ecuatorial, la más intensa."]],
+ w25:[["Spain, at about 40°N, lies in the circulation cell called:",["Ferrel cell","Hadley cell","Polar cell","Equatorial cell"],"De 30° a 60° de latitud está la célula de Ferrel."]],
+ w26:[["The cells of the general circulation are limited in height by the:",["Tropopause","Friction layer, at about 1000 m","Freezing level","Core of the jet stream"],"Llegan hasta la tropopausa, que el aire prácticamente no atraviesa."]],
+ w31:[["Compared with a land breeze, a sea breeze is:",["Stronger, and blows by day from the sea","Weaker, and blows by night from the sea","Stronger, and blows by night from the land","Weaker, and blows by day from the land"],"Brisa marina: de día, del mar a la tierra y más fuerte que la terrestre."]],
+ w33:[["Which wind flows down a slope at night as cold, dense air?",["Katabatic wind","Anabatic wind","Foehn","Sea breeze"],"Catabático: baja (kata = hacia abajo). Anabático: sube por la ladera de día."],
+      ["An anabatic wind is:",["Warm air flowing up a slope during the day","Cold air flowing down a slope at night","A warm, dry wind on the lee side of a mountain","A sea breeze channelled along a valley"],"Anabático: el aire que se calienta junto a la ladera sube por ella de día."]],
+ w35:[["After a Foehn, the air arriving on the lee side of the mountain is:",["Warm and dry","Cold and moist","Warm and moist","Cold and dry"],"El aire pierde su agua en barlovento, y al bajar se comprime y se calienta: llega cálido y seco."]],
+ x6:[["Which part of a mountain wave system is the most dangerous to fly through?",["The rotor beneath the wave crests","The smooth lift in the wave itself","The air above the lenticular clouds","The stable air upwind of the mountain"],"El rotor, bajo las crestas de la onda, es la zona de turbulencia severa. La onda en sí es un flujo suave."]],
+ k12:[["Which condition does NOT favour the formation of mountain waves?",["Unstable air","Stable air","Wind of more than 15 kt","Wind nearly perpendicular to the ridge"],"Hace falta aire ESTABLE: con aire inestable la corriente sube y no ondula."]],
+ k13:[["Where is the turbulence of a mountain wave greatest?",["Over the summit and at the first undulation downwind, increasing with height","Upwind of the range, close to the ground","Only on the valley floor","Equally at all heights"],"Aumenta con la altura, y lo peor está sobre la cima y en la primera ondulación a sotavento."]],
+ k14:[["Lenticular altocumulus clouds mark:",["The crests of the mountain waves downwind of the ridge","The base of the rotor","A cold front passing","The anvil of a cumulonimbus"],"Las lenticulares aparecen en las crestas de las ondulaciones a sotavento; el cap cloud, sobre la cima."]],
+ k9:[["Turbulence found downwind of buildings and hills at low level is:",["Mechanical turbulence","Thermal turbulence","Wake turbulence","Clear air turbulence"],"La mecánica la causa un obstáculo físico y se encuentra a sotavento y a baja cota."]],
+ k10:[["Thermal (convective) turbulence is weakest:",["At night","At solar noon in summer","Over dark ground by day","Over a sunny desert in the afternoon"],"Depende del calentamiento del suelo: de noche, sin calentamiento, prácticamente no hay."]],
+ c1:[["Compared with warm air, cold air can hold:",["Less water vapour","More water vapour","The same amount of water vapour","No water vapour"],"Cuanto más frío, menos vapor admite."],
+     ["When an air mass is cooled without losing any water vapour, its relative humidity:",["Rises","Falls","Stays constant","Becomes zero"],"El mismo vapor ocupa un porcentaje mayor de lo que el aire más frío admite: sube la RH."]],
+ c3:[["When the relative humidity is 100 %, the air is:",["Saturated, with the temperature equal to the dew point","Dry","Unsaturated","Unstable"],"Saturación: no admite más vapor, y temperatura y punto de rocío coinciden."]],
+ c6:[["When the temperature and the dew point are equal, the air is:",["Saturated","Dry","Unstable","Isothermal"],"Temperatura = punto de rocío significa RH del 100 %."]],
+ c4:[["Why are condensation nuclei needed for a cloud to form?",["The water vapour condenses onto them to form droplets","They warm the air","They lower the relative humidity","They stop the evaporation"],"El vapor condensa sobre núcleos (sal, polvo, humo): sin ellos casi no se forman gotas."]],
+ c8:[["Air that sinks in an anticyclone is compressed, so it:",["Warms and its relative humidity falls","Cools and its relative humidity rises","Warms and its relative humidity rises","Keeps its temperature"],"Compresión adiabática: más temperatura, menos RH, la nube se deshace."]],
+ c9:[["Which of the following makes a cloud dissipate?",["Subsidence (adiabatic compression)","Lifting of the air","Cooling of the air","Addition of moisture"],"Se disipan por subsidencia, por mezcla con aire más seco o por corrientes descendentes."]],
+ c16:[["Compared with medium cloud, low cloud is normally:",["Warmer, above 0 °C, with less icing","Colder, below −45 °C, with no icing","At the same temperature, with severe icing","Made only of ice crystals"],"El piso bajo suele estar por encima de cero y da poco engelamiento."]],
+ c18:[["Which cloud prefix indicates a medium-level cloud?",["ALTO-","CIRRO-","STRATO-","NIMBO-"],"ALTO- = piso medio. CIRRO- = alto. No quiere decir «muy alto»."]],
+ c20:[["Showers, hail and moderate to severe turbulence are associated with:",["Cumuliform clouds","Stratiform clouds","Cirriform clouds","Mist"],"Las cumuliformes crecen en vertical: chubascos, granizo y turbulencia."]],
+ c23:[["Why does the anvil of a cumulonimbus form?",["The cloud reaches the tropopause and spreads out horizontally","The air at the top is saturated and falls","The downdraughts spread out when they hit the ground","It meets a layer of dry air at low level"],"La tropopausa frena el ascenso y la nube se extiende en horizontal: el yunque."]],
+ c24:[["Continuous, never-severe precipitation from a large cloud with diffuse edges is typical of:",["Nimbostratus","Cumulonimbus","Cirrostratus","Cumulus"],"Nimbostratus: baja o media, de bordes difusos y lluvia continua."]],
+ c25:[["A medium-level layer cloud of striated appearance, with supercooled droplets and light continuous rain, is:",["Altostratus","Cirrostratus","Stratus","Altocumulus"],"El altostratus está en la franja de temperaturas del engelamiento."]],
+ c26:[["A halo around the sun is caused by:",["Ice crystals in cirrostratus","Water droplets in altocumulus","Dust in the air","Raindrops in nimbostratus"],"El halo lo producen los cristales de hielo del cirrostratus."]],
+ c27:[["Where is the turbulence of a cumulus cloud found?",["Below it and at its level","Above its top","Only at the surface","Nowhere"],"Debajo y a su nivel. Sobre el tope, el aire va más tranquilo."]],
+ x2:[["Which fog is grouped with those formed by ADDING water vapour to the air?",["Frontal fog","Radiation fog","Advection fog","Orographic fog"],"Frontal y sea smoke saturan añadiendo agua. Radiación, advección y orográfica, enfriando."]],
+ x3:[["Radiation, advection and orographic fog form because the air is:",["Cooled to its dew point","Heated from below","Compressed adiabatically","Given extra water vapour"],"Las tres enfrían: el suelo de noche, una superficie fría o el ascenso por la ladera."]],
+ x4:[["With absolutely no wind on a clear night, instead of fog the moisture is deposited as:",["Dew","Thick fog","Stratus","Mist"],"Sin mezcla no se forma una capa: el agua se deposita sobre el suelo como rocío."]],
+ x5:[["Radiation fog lifted off the ground by a wind of more than about 10 kt becomes:",["Stratus","Dew","Haze","Cirrus"],"La capa se despega del suelo y deja de ser niebla para ser un estrato."]],
+ k15:[["A visibility of 800 m with water droplets as the obscuring agent is reported as:",["Fog (FG)","Mist (BR)","Haze (HZ)","Drizzle (DZ)"],"Menos de 1.000 m y gotas de agua: niebla, FG."]],
+ k16:[["A visibility of 3000 m caused by water droplets, with relative humidity above 95 %, is reported as:",["Mist (BR)","Fog (FG)","Haze (HZ)","Smoke (FU)"],"BR: 1.000 m o más, gotas de agua y RH por encima del 95 %."]],
+ k19:[["Which wind is most favourable for radiation fog?",["Light, about 2 to 8 kt","Calm","Above 15 kt","Above 25 kt"],"Algo de viento mezcla la capa; en calma sale rocío y con viento fuerte se levanta en estrato."]],
+ k20:[["Which conditions favour radiation fog?",["Clear sky, night and light wind over land","Overcast sky, afternoon, over the sea","A warm front and a strong wind","Unstable air and showers"],"El suelo tiene que irradiar su calor: cielo despejado, noche y poco viento."]],
+ k21:[["Radiation fog normally disperses when:",["The sun heats the ground, or a stronger wind lifts it into stratus","The temperature falls further","The relative humidity increases","A colder surface arrives"],"La insolación la levanta, y el viento fuerte la convierte en estrato."]],
+ k22:[["Advection fog is lifted into stratus when the wind is above about:",["15 kt","5 kt","2 kt","30 kt"],"Hasta 15 kt sigue siendo niebla; por encima, estrato."]],
+ k23:[["Cold air moving over a warmer, moist surface produces:",["Steaming fog (Arctic smoke)","Advection fog","Radiation fog","Frontal fog"],"Aire frío sobre agua más cálida: el agua se evapora, satura el aire y sale la niebla de vapor."]],
+ k24:[["Hill fog is essentially:",["Cloud on the hillside, formed by humid air lifted up the slope","Radiation fog in the valley","Fog that travels with a warm front","Cold air over a warmer sea"],"Niebla orográfica: aire húmedo forzado a subir por la ladera. Local y pequeña."]],
+ k25:[["Fog that travels with a warm front or an occlusion is:",["Frontal fog","Radiation fog","Advection fog","Steaming fog"],"La precipitación del frente satura el aire y la base baja hasta el suelo."]],
+ k26:[["Which change would break up steaming fog?",["A stronger wind or a change in its direction","Colder air arriving over the same water","An increase in the humidity above the water","Nightfall"],"Se rompe cuando cambia el viento: es lo que mantenía la situación."]],
+ c21:[["If a stratus layer lowers until its base touches the ground, it is called:",["Fog","Mist","Haze","Virga"],"La niebla es un estrato que toca el suelo."]],
+ c28:[["According to the coalescence theory, raindrops grow by:",["Capturing smaller droplets as they fall","Freezing at the top of the cloud","Adiabatic expansion","Sublimation"],"Coalescencia: la gota grande barre las pequeñas y crece hasta precipitar."]],
+ c29:[["Supercooled water drops that freeze on contact with the aircraft are those of:",["Freezing rain (FZRA)","Hail (GR)","Snow grains (SG)","Ice pellets (PL)"],"FZRA: agua líquida por debajo de 0 °C que se congela al chocar."]],
+ c34:[["Precipitation from cumuliform clouds is typically:",["A shower: a lot in a short time","Continuous light rain","Drizzle","Virga only"],"Chubasco: mucha agua en poco tiempo. La continua sale de las estratiformes."]],
+ o6:[["An air mass that forms over the Atlantic at about 60°N is classified as:",["Polar maritime (Pm)","Polar continental (Pc)","Tropical maritime (Tm)","Tropical continental (Tc)"],"Polar (por la latitud) y marítima (por el origen): Pm."],
+     ["An air mass that forms over Siberia in winter is classified as:",["Polar continental (Pc)","Polar maritime (Pm)","Tropical continental (Tc)","Arctic maritime (Am)"],"Latitud alta y origen continental: Pc, fría y seca."]],
+ o7:[["A cold air mass moves over a much warmer surface. It becomes:",["More unstable, because it is heated from below","More stable, because it is heated from below","More stable, because it is cooled from below","Neutral"],"Calentar por abajo inestabiliza el aire."]],
+ k27:[["Air masses form over areas of:",["High pressure, so they are stable at source","Low pressure, so they are unstable at source","Strong winds","Mountains"],"Se forman donde el aire se queda quieto sobre una superficie uniforme: altas presiones."]],
+ k28:[["A tropical air mass moving towards higher latitudes becomes:",["More stable, because it is cooled from below","More unstable, because it is heated from below","Drier, because it loses moisture","Unchanged"],"Se enfría por abajo: más estable."]],
+ x7:[["At a front, the warm air that produces the cloud lies:",["Above the wedge of cold air","Below the cold air","Beside the cold air at the surface","Entirely behind the front"],"El aire cálido asciende por encima de la cuña fría."]],
+ o1:[["In a cold occlusion, the air behind the cold front is:",["Colder than the air ahead of the warm front, and undercuts it","Less cold than the air ahead, and rides over it","At the same temperature as the warm sector","Always tropical air"],"Oclusión fría: el aire de detrás es más frío y se mete por debajo."]],
+ o2:[["Which description fits the weather behind a cold front?",["Showers, good visibility and falling temperature","Continuous rain and poor visibility","Fog and drizzle","Low stratus and rising temperature"],"Tras el frente frío entra aire polar: desarrollo vertical, buena visibilidad y temperatura más baja."]],
+ o3:[["At a cold front, the air that is lifted is:",["The warm air, pushed up by the advancing cold air","The cold air, pushed up by the warm air","Both masses mix and rise","Neither: they stay side by side"],"El aire frío, más denso, se mete por debajo y empuja al cálido hacia arriba."]],
+ o4:[["The first sign of an approaching warm front is normally:",["Cirrus (CI)","Nimbostratus (NS)","Cumulonimbus (CB)","Altostratus (AS)"],"CI → CS → AS → NS. Los cirros anuncian el frente cálido desde lejos."]],
+ o5:[["In an occlusion, the warm sector is:",["Lifted off the ground","Still at the surface","Wider than before","Colder than the air around it"],"En las dos oclusiones el sector cálido queda en altura."]],
+ k29:[["Which front has the gentler slope, about 1:150?",["The warm front","The cold front","The occluded front","The quasi-stationary front"],"El cálido es muy tendido, y su nubosidad se ve desde lejos."]],
+ k30:[["Because the cold front is steeper than the warm front, it produces:",["A narrow belt of weather, with CB and showers","A wide belt of continuous rain","Fog ahead of it","Mainly stratiform cloud"],"Más vertical: empuja el aire cálido de golpe hacia arriba y salen cumulonimbus."]],
+ k31:[["A cold front moves at a speed of about:",["The geostrophic wind","Two thirds of the geostrophic wind","Half the geostrophic wind","Twice the geostrophic wind"],"El frío va al viento geostrófico y el cálido a 2/3: por eso el frío lo alcanza y ocluye."]],
+ k32:[["Pressure that falls and then rises sharply is typical of the passage of a:",["Cold front","Warm front","Warm occlusion","Col"],"Frente frío: cae y luego sube. En el cálido la caída se frena."]],
+ k33:[["In the northern hemisphere, the wind at the passage of a warm front:",["Veers","Backs","Does not change","Reverses through 180°"],"Los dos frentes hacen rolar el viento a la derecha en el HN."]],
+ k34:[["Behind a cold front, the air is typically:",["Cold and clear, with good visibility","Warm and humid, with fog","Warm and dry, with haze","Calm, with low stratus"],"Detrás del frente frío entra aire polar: visibilidad excelente y temperatura más baja."]],
+ k35:[["In an occlusion, which front catches up with which?",["The cold front catches up with the warm front","The warm front catches up with the cold front","Both move at exactly the same speed","The occlusion catches up with the cold front"],"El frente frío es más rápido, alcanza al cálido y levanta el sector cálido."]],
+ k36:[["A cold occlusion is more typical of:",["Summer, with a narrow belt of showers","Winter, with a wide belt of stable precipitation","Winter, with a narrow belt of drizzle","Summer, with a wide belt of continuous rain"],"La fría es de verano, banda estrecha con CB. La cálida es la de invierno."]],
+ k37:[["A front whose position hardly changes, with the air masses flowing parallel to it, is a:",["Quasi-stationary front","Cold front","Warm front","Occluded front"],"Cuasi-estacionario: sin convergencia ni ascenso apreciable."]],
+ k38:[["At a front, the air that rises over the other is the:",["Warm air, because it is less dense","Cold air, because it is denser","Moist air, whatever its temperature","Dry air, whatever its temperature"],"El aire cálido es menos denso y flota sobre el frío."]],
+ w37:[["Lines joining points of equal temperature are called:",["Isotherms","Isobars","Isogons","Isotachs"],"Isotermas. Las isobaras son de igual presión."],
+      ["Lines joining points of equal pressure on a surface chart are called:",["Isobars","Isotherms","Isohyets","Isogons"],"Iso-bara: igual presión."]],
+ w36:[["An elongated extension of a LOW pressure system is a:",["Trough","Ridge","Col","Front"],"Trough (vaguada) sale de la baja; ridge (dorsal), de la alta."]],
+ w38:[["Which weather is typical of a depression?",["Cloud, rain and strong winds, because the air converges and rises","Few clouds and light winds, because the air subsides","Clear skies, because the air diverges","Dry and stable, because the isobars are far apart"],"Borrasca: convergencia, ascenso, nubes y mal tiempo."]],
+ c32:[["Airframe icing, if there is moisture, must be expected within which temperature range?",["0 °C to −45 °C","+10 °C to 0 °C","−45 °C to −60 °C","Below −60 °C"],"De 0 a −45 °C con humedad, nube o precipitación."]],
+ k6:[["Light turbulence causes:",["Slight, erratic changes in attitude or altitude","Large changes in altitude and momentary loss of control","Structural damage","Loss of control for a long period"],"Ligera: pequeños cambios erráticos. Moderada: desvía rumbo y altitud. Severa: pérdida momentánea de control."]],
+ k7:[["Moderate turbulence together with a momentary loss of control of the aircraft is classified as:",["Severe","Light","Moderate","Extreme"],"Severa = moderada + pérdida momentánea del control."]],
+ k8:[["The same turbulence can be moderate for a jet and severe for a light aircraft, because the classification is:",["Subjective, depending on the aircraft","Fixed by ICAO in metres per second","Measured by ground radar","Identical for every type"],"Es una clasificación subjetiva: depende del avión."]],
+ k11:[["The strongest wake vortices come from aircraft that are:",["Heavy, flying slowly in a clean configuration","Light, flying fast with flaps extended","Medium weight, flying with flaps extended","Light and slow"],"Cuanto más pesado, más lento y más limpio, más fuertes los torbellinos de punta de ala."]],
+ x1:[["Flying through a microburst on approach, the wind first becomes:",["A headwind, then a tailwind","A tailwind, then a headwind","A crosswind from the left","A crosswind from the right"],"Primero viento en cara (se gana sustentación) y luego en cola (se pierde de golpe)."]],
+ k4:[["A violent downdraught that spreads out horizontally on reaching the ground is called a:",["Microburst","Gust front","Tornado","Dust devil"],"Microburst: corriente descendente violenta que se abre al llegar al suelo."]],
+ k1:[["In which stage of a thunderstorm are there ONLY updraughts?",["The cumulus stage","The mature stage","The dissipating stage","The anvil stage"],"Cumulus: solo ascendentes. Madura: las dos. Disipación: solo descendentes."]],
+ k2:[["Which stage of a thunderstorm contains only downdraughts?",["The dissipating stage","The cumulus stage","The mature stage","All of them"],"Disipación: se acaba el combustible y quedan solo descendentes."]],
+ k3:[["The mature stage of a thunderstorm is characterised by:",["Updraughts and downdraughts, rain, lightning and severe turbulence","Only updraughts","Only downdraughts","No precipitation"],"Es la fase peligrosa: conviven las dos corrientes."]],
+ k5:[["Which of these is NOT needed for a thunderstorm to develop?",["A stable atmosphere","Plenty of moisture","Instability","A trigger"],"Hace falta aire inestable, humedad y un disparador. El aire estable lo impide."]],
+ k17:[["Haze (HZ) is caused by:",["Very small dry solid particles in suspension","Water droplets in a saturated layer","Large raindrops","Ice crystals only"],"Calima: partículas sólidas y secas. La neblina es agua."]],
+ k18:[["Good visibility is most likely with:",["Unstable air and a strong wind, which mix the lower layers","Stable air and an inversion","Light winds and clear skies at night","A high pressure centre with calm air"],"El viento y la inestabilidad mezclan y dispersan las partículas."],
+      ["Poor visibility near the surface is associated with:",["Stable conditions, an inversion and a light wind","Unstable air and a strong wind","A deep depression","Strong gradient winds"],"Sin mezcla, las partículas y las gotas se quedan abajo."]],
+ x9:[["The wind group 25015G28KT means:",["Wind from 250° at 15 kt, gusting 28 kt","Wind from 250° at 28 kt, gusting 15 kt","Wind to 250° at 15 kt, gusting 28 kt","Wind from 150° at 28 kt, variable"],"Dirección, velocidad media, G y la racha máxima."]],
+ x10:[["Which ICAO location indicator prefix designates Spain?",["LE","EG","LF","LI"],"L = Europa del sur y E = España. EG es Reino Unido, LF Francia y LI Italia."]],
+ o13:[["In a METAR and a TAF, cloud heights are given above:",["Aerodrome elevation","Mean sea level","The highest obstacle in the area","The 1013 hPa surface"],"Siempre sobre el aeródromo (AAL), en centenares de pies."]],
+ o14:[["In a METAR, a visibility of 0800 means:",["800 m","8 km","80 m","8 NM"],"La visibilidad del METAR va en metros."]],
+ k39:[["Which report is issued when conditions change significantly, outside the routine schedule?",["SPECI","METAR","TAF","TREND"],"SPECI: observación especial, mismo código que el METAR."]],
+ k47:[["The wind in a METAR is given in degrees:",["True","Magnetic","Grid","Relative to the runway"],"Verdaderos en METAR y TAF; magnéticos en ATIS y torre."]],
+ k48:[["How is an unavailable visibility coded in a METAR?",["////","0000","9999","NIL"],"Lo que no se puede observar se rellena con barras."]],
+ k49:[["A real QNH of 1021.8 hPa is coded in a METAR as:",["Q1021","Q1022","Q1020","A3018"],"El QNH se trunca al entero inferior, nunca se redondea hacia arriba."]],
+ k50:[["Runway visual range (RVR) is reported in the METAR when the visibility or the RVR is below:",["1500 m","3000 m","5000 m","800 m"],"Por debajo de 1.500 m."]],
+ k51:[["FZRA in a METAR stands for:",["Freezing rain","Fog and rain","Frontal rain","Heavy rain showers"],"FZ = engelante."]],
+ k52:[["A visibility of 500 m caused by water droplets is coded:",["FG","BR","HZ","DZ"],"Menos de 1.000 m: FG. BR es neblina."]],
+ k53:[["GR in the METAR code indicates:",["Hail","Small hail or snow pellets","Drizzle","Snow grains"],"GR es el granizo grande; GS el pequeño."]],
+ k54:[["Which of these METAR codes is NOT a water droplet phenomenon but dry particles in suspension?",["HZ","BR","FG","DZ"],"HZ es calima: partículas sólidas. BR y FG son agua."]],
+ k55:[["A thunderstorm 12 km from the aerodrome would be coded:",["VCTS","TS","+TS","RETS"],"VC = en las proximidades: entre 8 y 16 km."]],
+ k56:[["Snow blown by the wind to a height of 3 m above the ground is coded:",["BLSN","DRSN","SHSN","SNRA"],"BL: levantado a 2 m o más; DR: por debajo de 2 m."]],
+ k57:[["How would 'light rain showers' be coded in a METAR?",["-SHRA","SHRA-","RASH-","+SHRA"],"Intensidad, descriptor y fenómeno: − SH RA."]],
+ k58:[["PL in the METAR code means:",["Ice pellets","Snow grains","Small hail","Hail"],"PL: hielo granulado. SG: cinarra."]],
+ k59:[["RETS in the supplementary information of a METAR indicates:",["Recent thunderstorm","Reduced thunderstorm","Repeated thunderstorm","Rain with thunderstorm"],"RE = recent: ocurrido desde el último informe."]],
+ k60:[["Which cloud types are given after the height group in a METAR?",["CB and TCU only","All types","Stratus only","Cirrus only"],"Solo CB y TCU: son las que hay que evitar."]],
+ c14:[["Which cloud amount is 5 to 7 oktas?",["BKN","SCT","FEW","OVC"],"FEW 1–2, SCT 3–4, BKN 5–7, OVC 8."],
+      ["FEW in a METAR indicates a cloud amount of:",["1 to 2 oktas","3 to 4 oktas","5 to 7 oktas","8 oktas"],"FEW 1–2, SCT 3–4, BKN 5–7, OVC 8."]],
+ x11:[["On a significant weather chart, ISOL means:",["Isolated","Occasional","Frequent","Embedded"],"ISOL aislados, OCNL ocasionales, FRQ frecuentes y EMBD embebidos."]],
+ o9:[["Which information best describes the weather at the destination for a flight departing in 7 hours?",["The TAF","The METAR","The SPECI","The ATIS"],"Para el futuro hace falta un pronóstico: el TAF. METAR, SPECI y ATIS describen el presente."]],
+ o10:[["A SIGMET is issued for:",["Hazardous phenomena at any level in the FIR, such as active thunderstorms or severe turbulence","Moderate rain at an aerodrome","A change in the QNH","Light turbulence"],"Es el aviso de fenómenos peligrosos en ruta."]],
+ k40:[["A 24-hour TAF is issued every:",["6 hours","3 hours","12 hours","1 hour"],"Los TAF largos (12 a 24 h) se emiten cada 6 horas; los de 9 horas, cada 3."]],
+ k41:[["Which TAF group indicates a change that persists after it occurs?",["BECMG","TEMPO","PROB40","NSW"],"BECMG: cambio sin retorno."]],
+ k42:[["TEMPO describes fluctuations that are:",["Temporary: less than one hour each time and less than half the period","Permanent","Probable at 30 %","Forecast to start at a fixed time"],"Si el cambio se queda, sería BECMG."]],
+ k43:[["Which probability values can follow PROB in a TAF?",["30 and 40","60 and 70","50 only","100"],"PROB30 y PROB40. Con más del 40 % se cifra directamente el fenómeno."]],
+ k44:[["The trend at the end of a METAR refers to the next:",["2 hours","30 minutes","6 hours","9 hours"],"NOSIG, BECMG o TEMPO se refieren a las dos horas siguientes."]],
+ k45:[["A GAMET is an area forecast for:",["Low level flights, from the surface up to about FL100 (FL150 over mountains)","Flights above FL250","One aerodrome and its vicinity","The whole troposphere"],"Pronóstico de área en texto para baja cota."]],
+ k46:[["Which message amends a GAMET with a low level hazard?",["AIRMET","SIGMET","SPECI","TREND"],"AIRMET complementa al GAMET; para fenómenos severos de cualquier nivel, SIGMET."]],
+ o8:[["Where is the meteorological service available at a given aerodrome published?",["In the AIP","In the METAR","In the ATIS","In the SIGMET"],"El AIP declara el servicio meteorológico de cada aeródromo."]],
+ o11:[["Which service broadcasts reports and trends of several aerodromes continuously?",["VOLMET","ATIS","SIGMET","GAMET"],"VOLMET es el servicio de radiodifusión."]],
+ o12:[["Which is a recorded broadcast, continuously repeated, giving the current information for ONE aerodrome?",["ATIS","VOLMET","SIGMET","GAMET"],"ATIS: información del propio aeródromo en una frecuencia propia."]]
+};
+Object.keys(VARIANTS_MET4).forEach(k=>{ VARIANTS[k] = (VARIANTS[k]||[]).concat(VARIANTS_MET4[k]); });
+
 
 
 // ---------- Identificación visual de nubes (src "p") ----------
@@ -4162,6 +4310,7 @@ function selectSim(n, incAtpl, incComp){
 }
 function selectQuestions(mode, lo, incAtpl, incComp, simLen){
   const st = stats();
+  if(mode!=="sim") incAtpl = false;      // fuera del simulacro, solo lo que entra en Fase 0
   if(mode==="sim")   return selectSim(simLen==="half"?42:EXAM_N, incAtpl, incComp);
   if(mode==="trial") return shuffle(BANK.filter(q=>q[2]==="t"||q[2]==="m"||q[2]==="s"));
   if(mode==="foto")  return shuffle(BANK.filter(q=>q[2]==="p"));
@@ -4170,20 +4319,27 @@ function selectQuestions(mode, lo, incAtpl, incComp, simLen){
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && q[2]!=="p"));
   if(mode==="all") return shuffle(pool);
-  const N = Math.min(30, pool.length);
-  const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
-  const chosen = []; const perSub = {};
-  const take = q => { chosen.push(q); perSub[q[1]]=(perSub[q[1]]||0)+1; };
-  // al menos 6 del trial, de temario ya dado
-  for(const x of scored){
-    if(chosen.filter(q=>q[2]==="t").length>=6) break;
-    if(x.q[2]!=="t" || x.q[7] || chosen.includes(x.q)) continue;
-    take(x.q);
-  }
-  for(const x of scored){ if(chosen.length>=N) break;
-    if(chosen.includes(x.q)) continue;
-    if((perSub[x.q[1]]||0)>=5) continue;     // máximo 5 por tema
-    take(x.q); }
+  // adaptativo: 30 preguntas de Fase 0, repartidas por capítulos y tipos, sin repetir las de los últimos tests
+  const N = Math.min(30, pool.length), RK = "f0:met:recent:"+location.pathname;
+  let recent = []; try{ recent = JSON.parse(localStorage.getItem(RK)||"[]"); }catch(e){}
+  const rec = new Map(); recent.forEach((id,i)=>{ if(!rec.has(id)) rec.set(id, i); });     // 0 = la más reciente
+  const w = q => { let p = priority(q,st); const r = rec.get(q[0]); if(r!==undefined) p *= r<30 ? .3 : r<60 ? .55 : .8; return Math.pow(Math.max(.05,p),1.6); };
+  const key = q => Math.pow(Math.random(), 1/w(q));        // muestreo ponderado sin reposición
+  const sc = new Map(pool.map(q=>[q[0],key(q)])), byKey = (a,b)=>sc.get(b[0])-sc.get(a[0]);
+  const chosen = [], perLO = {}, perKind = {};
+  const kindOf = q => q[2]==="y" ? "y" : (GEN_050[q[0]] ? "g" : "o"), KCAP = {y:2, g:6, o:99}, LOCAP = 3;
+  const ok = (q,cap=true) => !chosen.includes(q) && (!cap || ((perLO[q[1]]||0)<LOCAP && (perKind[kindOf(q)]||0)<KCAP[kindOf(q)]));
+  const take = q => { chosen.push(q); perLO[q[1]]=(perLO[q[1]]||0)+1; perKind[kindOf(q)]=(perKind[kindOf(q)]||0)+1; };
+  const sorted = pool.slice().sort(byKey);
+  // 1) al menos 6 del trial
+  sorted.filter(q=>q[2]==="t" && ok(q)).slice(0,6).forEach(take);
+  // 2) al menos una de cada capítulo con preguntas
+  shuffle(CHAPTERS.map(c=>c[0])).forEach(ch=>{ if(chosen.length>=N || chosen.some(q=>chOf(q[1])===ch)) return;
+    const q = sorted.find(x=>chOf(x[1])===ch && ok(x)); if(q) take(q); });
+  // 3) el resto, por sorteo ponderado (prioridad, peso en el examen, fallos y novedad)
+  sorted.forEach(q=>{ if(chosen.length<N && ok(q)) take(q); });
+  sorted.forEach(q=>{ if(chosen.length<N && ok(q,false)) take(q); });
+  try{ localStorage.setItem(RK, JSON.stringify(chosen.map(q=>q[0]).concat(recent).slice(0,90))); }catch(e){}
   return shuffle(chosen.slice(0,N));
 }
 
@@ -4493,7 +4649,7 @@ function renderSetup(){
   const nt = BANK.filter(q=>q[2]==="t"||q[2]==="m"||q[2]==="s").length;
   const ntw = BANK.filter(q=>(q[2]==="t"||q[2]==="m"||q[2]==="s") && (st.q[q[0]]||{}).last===false).length;
   $("#trialCount").textContent = `Las ${nt} del trial y de los ejercicios de clase, cada una con una variante al azar${ntw?`. ${ntw} aún falladas`:""}.`;
-  const los = [...new Set(BANK.map(q=>q[1]))].sort((a,b)=>SUBORDER.indexOf(a)-SUBORDER.indexOf(b));
+  const los = [...new Set(BANK.filter(q=>!q[7]&&q[2]!=="p").map(q=>q[1]))].sort((a,b)=>SUBORDER.indexOf(a)-SUBORDER.indexOf(b));
   const sel = $("#loSel").value;
   $("#loSel").innerHTML = los.map(l=>`<option value="${l}" ${l===sel?'selected':''}>${esc(loLabelEs(l))}</option>`).join("");
 }
