@@ -3542,7 +3542,7 @@ function gPScale(fam){
         `The scale of a Lambert/Mercator chart at the Equator (0°) is ${fmtS(S0)}. At what latitude B will the scale of the chart become ${fmtS(Sl)}?`,
         `On a direct Mercator chart the scale at the equator is ${fmtS(S0)}. At which latitude does the scale reach ${fmtS(Sl)}?`
       ]), opts:fillS(f(L), cand.map(f), k=>f(L+5*k)),
-      expl:`Mercator: escala ∝ 1/cos φ (crece hacia los polos). ${S0.toLocaleString("en-US")} / ${Sl.toLocaleString("en-US")} = ${(S0/Sl).toFixed(3)} = 1/cos φ → cos φ = ${(Sl/S0).toFixed(3)} → φ = ${L}°.`, v:true, p:{kind:"scale",sub:"lat",S0,Sl,ans:L}};
+      expl:`Mercator: escala ∝ 1/cos φ (crece hacia los polos). ${S0.toLocaleString("en-US")} / ${Sl.toLocaleString("en-US")} ≈ ${(S0/Sl).toFixed(3)} = 1/cos φ → cos φ ≈ ${(Sl/S0).toFixed(3)} → φ ≈ ${L}° (la escala está redondeada al millar; la latitud exacta es la de las opciones).`, v:true, p:{kind:"scale",sub:"lat",S0,Sl,ans:L}};
   }
   if(kind==="scale"){
     const [L,c] = pick(tab), Sl = Math.round(S0*c/1000)*1000, SS0 = S0;
