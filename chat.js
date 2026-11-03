@@ -74,9 +74,31 @@ function css(){
 .f0c-form button:disabled,.f0c-form input:disabled,.f0c-dm input:disabled,.f0c-dm button.go:disabled{opacity:.45;cursor:not-allowed}
 .f0c-dm{display:flex;flex-direction:column;gap:7px;padding:9px 9px 0;border-top:1px solid #2B3F50;background:#10223A}
 .f0c-dm .t{font:700 13px var(--display);letter-spacing:.14em;text-transform:uppercase;color:#E8BF45;margin:0 4px}
-.f0c-dm .chips{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 4px;-webkit-overflow-scrolling:touch}
-.f0c-dm .chip{flex:none;font:600 14px var(--body);padding:5px 12px;border-radius:999px;border:1.5px solid #9CCBF3;background:none;color:#9CCBF3;cursor:pointer}
-.f0c-dm .chip[aria-pressed="true"]{background:#E8BF45;color:#14304A;border-color:#E8BF45;font-weight:700}
+.f0c-dm .dd{position:relative}
+.f0c-dm .dd-b{width:100%;display:flex;align-items:center;gap:10px;min-height:48px;padding:5px 12px 5px 7px;border-radius:14px;border:1.5px solid #2B3F50;background:#0C1B29;color:#E3ECF2;font:600 16px var(--body);text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+.f0c-dm .dd-b:hover{border-color:#3B5874;background:#102233}
+.f0c-dm .dd-b[aria-expanded="true"],.f0c-dm .dd-b:focus-visible{border-color:#E8BF45;outline:none;box-shadow:0 0 0 3px rgba(232,191,69,.18)}
+.f0c-dm .dd-b .v{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f0c-dm .dd-b .v.ph{color:#9FB3C4;font-weight:500}
+.f0c-dm .dd-b .cv{flex:none;width:18px;height:18px;fill:none;stroke:#E8BF45;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.f0c-dm .dd-b[aria-expanded="true"] .cv{transform:rotate(180deg)}
+.f0c-dm .dd .av{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#173A4F;color:#9CCBF3;font:700 13px var(--display);letter-spacing:.04em;box-shadow:0 0 0 2px #0C1B29,0 0 0 3.5px #4A6178}
+.f0c-dm .dd .av.away{box-shadow:0 0 0 2px #0C1B29,0 0 0 3.5px #E8BF45}
+.f0c-dm .dd .av.pick{background:transparent;box-shadow:none;border:1.5px dashed #E8BF45;color:#E8BF45}
+.f0c-dm .dd .av.pick svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.f0c-dm .dd-l{position:absolute;left:0;right:0;bottom:calc(100% + 8px);max-height:min(252px,42dvh);overflow:auto;overscroll-behavior:contain;padding:5px;border-radius:16px;border:1px solid #3B5874;background:#10223A;box-shadow:0 -12px 34px rgba(0,0,0,.55);z-index:6;transform-origin:50% 100%}
+.f0c-dm .dd-l.anim{animation:f0cdd .18s cubic-bezier(.2,.9,.3,1.1) both}
+@keyframes f0cdd{from{opacity:0;transform:translateY(8px) scale(.97)}}
+.f0c-dm .dd-l[hidden]{display:none}
+.f0c-dm .dd-o{display:flex;align-items:center;gap:10px;width:100%;min-height:50px;padding:6px 10px 6px 7px;border:0;border-radius:11px;background:none;color:#E3ECF2;text-align:left;cursor:pointer;font:600 15px/1.2 var(--body)}
+.f0c-dm .dd-o:hover,.f0c-dm .dd-o:focus-visible{background:#183049;outline:none}
+.f0c-dm .dd-o:focus-visible{box-shadow:inset 0 0 0 2px #E8BF45}
+.f0c-dm .dd-o .nm{flex:1;min-width:0;overflow-wrap:anywhere}
+.f0c-dm .dd-o small{display:block;margin-top:1px;font:500 12.5px var(--body);color:#9FB3C4}
+.f0c-dm .dd-o .ck{flex:none;width:18px;height:18px;fill:none;stroke:#E8BF45;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.f0c-dm .dd-o[aria-selected="true"]{background:rgba(232,191,69,.1)}
+.f0c-dm .dd-o[aria-selected="true"] .ck{opacity:1}
+@media (prefers-reduced-motion:reduce){.f0c-dm .dd-l.anim{animation:none}.f0c-dm .dd-b .cv{transition:none}}
 .f0c-dm .hint{margin:0 4px;font:500 13px var(--body);color:#9FB3C4}
 .f0c-dm .r{display:flex;gap:8px}
 @media (max-width:560px){
@@ -287,7 +309,9 @@ function build(){
     if(e.target.closest(".f0c-fab")) return setOpen(true);
     if(e.target.closest("#f0cX")) return setOpen(false);
     if(e.target.closest("#f0cBack")){ C.active=null; return update(); }
-    const ch=e.target.closest("[data-dm]"); if(ch){ C.dmTo=C.dmTo===ch.dataset.dm?"":ch.dataset.dm; update(); const di=$("#f0cDmIn",r); if(di&&!di.disabled) di.focus(); return; }
+    if(e.target.closest("#f0cDd")){ C.dmOpen=!C.dmOpen; C.dmAnim=C.dmOpen; update(); if(C.dmOpen){ const o=$(".dd-o[aria-selected=true]",r)||$(".dd-o",r); if(o) o.focus({preventScroll:false}); } return; }
+    const ch=e.target.closest("[data-dm]"); if(ch){ C.dmTo=ch.dataset.dm; C.dmOpen=false; update(); const di=$("#f0cDmIn",r); if(di&&!di.disabled) di.focus(); return; }
+    if(C.dmOpen&&!e.target.closest(".dd")){ C.dmOpen=false; update(); }
     const b=e.target.closest(".f0c-p"); if(b) openRoom(b.dataset.room);
   });
   r.addEventListener("input",e=>{ if(e.target.id==="f0cDmIn") C.dmText=e.target.value; });
@@ -296,7 +320,12 @@ function build(){
       const to=C.dmTo, v=i.value; if(!to){ return; } if(!clean(v)){ i.focus(); return; }
       if(send(v,to)){ C.dmText=""; C.dmTo=""; openRoom(to); } return; }
     if(!e.target.closest("#f0cForm")) return; e.preventDefault(); const i=$("#f0cIn",r); if(!i) return; const v=i.value; i.value=""; if(!send(v)) i.value=v; });
-  r.addEventListener("keydown",e=>{ if(e.key==="Escape"&&C.open){ e.stopPropagation(); setOpen(false); } });
+  r.addEventListener("keydown",e=>{
+    if(C.dmOpen&&e.target.closest&&e.target.closest(".dd")){
+      if(e.key==="Escape"){ e.stopPropagation(); C.dmOpen=false; update(); const b=$("#f0cDd",r); if(b) b.focus(); return; }
+      if(e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); const os=[...r.querySelectorAll(".dd-o")], i=os.indexOf(document.activeElement); const n=os[e.key==="ArrowDown"?Math.min(os.length-1,i+1):Math.max(0,i<0?0:i-1)]; if(n) n.focus(); return; }
+    }
+    if(e.key==="Escape"&&C.open){ e.stopPropagation(); setOpen(false); } });
   document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&C.open&&C.root&&C.root.contains(document.activeElement)) setOpen(false); });
   update();
 }
@@ -316,6 +345,7 @@ function update(){
   const stTxt={on:n===1?"1 compañero en línea":n+" compañeros en línea",conn:"Conectando…",err:"Sin conexión. Reintentando…",off:"Desconectado"}[C.status];
   const room=C.active;
   const keep=$("#f0cIn",r)?{v:$("#f0cIn",r).value,f:document.activeElement===$("#f0cIn",r)}:null;
+  const ddF=document.activeElement&&document.activeElement.classList&&document.activeElement.classList.contains("dd-o")?document.activeElement.dataset.dm:null;
   const dmI=$("#f0cDmIn",r), dmKeep=dmI&&document.activeElement===dmI?{a:dmI.selectionStart,b:dmI.selectionEnd}:null, dmSelFocus=document.activeElement===$("#f0cTo",r);
   const mm=$("#f0cMsgs",r), atEnd=!mm||mm.scrollHeight-mm.scrollTop-mm.clientHeight<60;
   if(!room){
@@ -324,16 +354,22 @@ function update(){
     offIds.sort((a,b)=>nameOf(a).localeCompare(nameOf(b),"es"));
     const offl=C.people.filter(x=>!C.peers[x.id]||C.peers[x.id].away);
     const canDm=C.sms&&offl.length>0;
-    const first=x=>String(x.n).split(/\s+/)[0], dup=x=>offl.filter(y=>first(y).toLowerCase()===first(x).toLowerCase()).length>1;
-    const chipLbl=x=>dup(x)?first(x)+" "+((String(x.n).split(/\s+/)[1]||"")[0]||"")+".":first(x);
+    const first=x=>String(x.n).split(/\s+/)[0];
     const dmHint=!C.sms?("No disponible"+(C.smsErr?" · "+C.smsErr:"")):(offl.length?"":"Todos están en línea");
-    const dm=`<form class="f0c-dm" id="f0cDm" autocomplete="off"><div class="t">Mensaje sin conexión</div>${canDm?`<div class="chips" role="group" aria-label="Elegir compañero que no está en línea">${offl.map(x=>`<button type="button" class="chip" data-dm="${esc(x.id)}" aria-pressed="${x.id===C.dmTo}">${esc(chipLbl(x))}</button>`).join("")}</div>`:`<p class="hint">${esc(dmHint)}</p>`}<div class="r"><input id="f0cDmIn" maxlength="${MAXLEN}" placeholder="${C.dmTo&&canDm?"Escribe para "+esc(first({n:nameOf(C.dmTo)}))+"…":"Elige un compañero…"}" aria-label="Mensaje sin conexión" ${canDm&&C.dmTo?"":"disabled"}><button type="submit" class="go" aria-label="Enviar" ${canDm&&C.dmTo?"":"disabled"}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></div></form>`;
+    offl.sort((a,b)=>String(a.n).localeCompare(String(b.n),"es"));
+    if(C.dmTo&&!offl.some(x=>x.id===C.dmTo)) C.dmTo="";
+    if(!canDm||!offl.length) C.dmOpen=false;
+    const sel=offl.find(x=>x.id===C.dmTo), stOf=x=>C.peers[x.id]&&C.peers[x.id].away?"away":"off";
+    const ddOpt=x=>`<button type="button" class="dd-o" role="option" data-dm="${esc(x.id)}" aria-selected="${x.id===C.dmTo}"><span class="av ${stOf(x)}">${esc(ini(x.n))}</span><span class="nm">${esc(x.n)}<small>${stOf(x)==="away"?"ausente · le llegará al volver":"sin conexión · le llegará"}</small></span><svg class="ck" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`;
+    const dd=`<div class="dd"><button type="button" class="dd-b" id="f0cDd" aria-haspopup="listbox" aria-expanded="${!!C.dmOpen}" aria-controls="f0cDdL">${sel?`<span class="av ${stOf(sel)}">${esc(ini(sel.n))}</span><span class="v">${esc(sel.n)}</span>`:`<span class="av pick"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.6-3.7 3.6-5.6 7-5.6s6.400 1.900 7 5.600"/></svg></span><span class="v ph">Elegir compañero…</span>`}<svg class="cv" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><div class="dd-l${C.dmAnim?" anim":""}" id="f0cDdL" role="listbox" aria-label="Compañeros sin conexión" ${C.dmOpen?"":"hidden"}${C.dmAnim?"":""}>${offl.map(ddOpt).join("")}</div></div>`;
+    const dm=`<form class="f0c-dm" id="f0cDm" autocomplete="off"><div class="t">Mensaje sin conexión</div>${canDm?dd:`<p class="hint">${esc(dmHint)}</p>`}<div class="r"><input id="f0cDmIn" maxlength="${MAXLEN}" placeholder="${C.dmTo&&canDm?"Escribe para "+esc(first({n:nameOf(C.dmTo)}))+"…":"Elige un compañero…"}" aria-label="Mensaje sin conexión" ${canDm&&C.dmTo?"":"disabled"}><button type="submit" class="go" aria-label="Enviar" ${canDm&&C.dmTo?"":"disabled"}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></div></form>`;
     const sub=(k,st)=>C.unread[k]?"mensaje nuevo":st==="on"?"toca para escribir":st==="away"?"ausente un momento · le llegará al volver":(C.sms?"sin conexión · le llegará":"ya no está en línea");
     const row=(k,st)=>`<button class="f0c-p ${st}${st==="off"?" gone":""}" data-room="${esc(k)}"><span class="av">${esc(ini(nameOf(k)))}</span><span class="nm">${esc(nameOf(k))}<small>${esc(sub(k,st))}</small></span>${C.unread[k]?`<b class="u">${C.unread[k]}</b>`:""}</button>`;
     const list=(online.length||offIds.length)?`<div class="f0c-list">${online.length?"<h3>En frecuencia</h3>"+online.map(k=>row(k,C.peers[k].away?"away":"on")).join(""):""}${offIds.length?"<h3>Fuera de frecuencia</h3>"+offIds.map(k=>row(k,"off")).join(""):""}</div>`
       :`<div class="f0c-empty">${ICON}${on?"Ahora mismo no hay nadie más conectado.<br>Cuando entre un compañero aparecerá aquí.":"No se ha podido conectar el chat."}</div>`;
     pan.innerHTML=`<header class="f0c-hd ${C.status}"><div class="t"><h2>Online pilots</h2><small><i></i>FREC 122.800 · ${esc(stTxt)}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}${dm}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos</p></div>`;
-    const ti=$("#f0cDmIn",r); if(ti) ti.value=C.dmText;
+    C.dmAnim=false; const ti=$("#f0cDmIn",r); if(ti) ti.value=C.dmText;
+    if(ddF&&C.dmOpen){ const o=[...r.querySelectorAll(".dd-o")].find(x=>x.dataset.dm===ddF); if(o) o.focus(); }
     if(dmKeep&&ti){ ti.focus(); try{ ti.setSelectionRange(dmKeep.a,dmKeep.b); }catch(e){} }
   } else {
     const live=on&&C.peers[room]&&!C.peers[room].away, off=!live&&!C.sms&&(!C.peers[room]||!on);

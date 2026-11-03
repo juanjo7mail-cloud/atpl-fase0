@@ -4108,8 +4108,9 @@ function priority(q, st){
   if(q[2]==="a") p += 1.2;               // ATPL aún no dado
   return Math.max(.2,p) * (0.8 + Math.random()*0.4);
 }
-function poolFor(incAtpl, incComp){
+function poolFor(incAtpl, incComp, withPhoto){
   return BANK.filter(q=>{
+    if(q[2]==="p" && !withPhoto) return false;     // las de «la nube de la foto» solo en el simulacro y en el test de nubes
     if(!incAtpl && q[7]) return false;
     if(!incComp && (q[2]==="n"||q[2]==="g")) return false;
     return true;
@@ -4141,7 +4142,7 @@ function simPlan(n){
 }
 function selectSim(n, incAtpl, incComp){
   const plan = simPlan(n);
-  const pool = poolFor(incAtpl, incComp).filter(q=>!isOut(q[1]));
+  const pool = poolFor(incAtpl, incComp, true).filter(q=>!isOut(q[1]));
   const used = new Set(); const picked = [];
   const deficit = [];
   Object.keys(plan).forEach(code=>{
@@ -4167,7 +4168,7 @@ function selectQuestions(mode, lo, incAtpl, incComp, simLen){
   if(mode==="simb")  return shuffle(BANK.filter(q=>q[2]==="y"));
   let pool = poolFor(incAtpl, incComp);
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
-  if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo));
+  if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && q[2]!=="p"));
   if(mode==="all") return shuffle(pool);
   const N = Math.min(30, pool.length);
   const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
@@ -4479,12 +4480,12 @@ $("#goSim").addEventListener("click",()=>{ showTab("test"); const r=document.que
 // ---------- test ----------
 function renderSetup(){
   const st = stats();
-  const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false && q[2]!=="t").length;
+  const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false && q[2]!=="t" && q[2]!=="p").length;
   const nwt = BANK.filter(q=>(st.q[q[0]]||{}).last===false && q[2]==="t").length;
   const nat = BANK.filter(q=>q[7]).length;
   $("#simCount").textContent = `84 preguntas con el reparto oficial por capítulo, ordenadas como en el examen y cronometradas.`;
   $("#wrongCount").textContent = (nw ? `${nw} preguntas con la última respuesta incorrecta` : "Sin fallos pendientes") + (nwt?`; ${nwt} más del trial.`:".");
-  $("#allCount").textContent = `Las ${BANK.length} del banco, en orden aleatorio.`;
+  $("#allCount").textContent = `Las ${BANK.filter(q=>q[2]!=="p").length} del banco, en orden aleatorio.`;
   const nf = BANK.filter(q=>q[2]==="p").length;
   const nfw = BANK.filter(q=>q[2]==="p" && (st.q[q[0]]||{}).last===false).length;
   $("#fotoCount").textContent = `Identificar la nube en la foto. La imagen cambia cada vez.`;
@@ -4758,10 +4759,10 @@ const dd=function(list,mode){
     const srcs=new Set(list.map(it=>{const q=qOf(it);return q&&q[2];}).filter(Boolean)), seen=new Set(), have=new Set(list.map(it=>{const q=qOf(it);return q&&q[0];}).filter(Boolean));
     return list.map(it=>{ const q=qOf(it); if(!q) return it; const ks=keys(q);
       if(!ks.some(k=>seen.has(k))){ ks.forEach(k=>seen.add(k)); return it; }
-      const ok=p=>p[1]===q[1]&&p[2]!=="o"&&p[4]&&p[4]!=="—"&&!have.has(p[0])&&!keys(p).some(k=>seen.has(k));
+      const ok=p=>p[1]===q[1]&&p[2]!=="o"&&(p[2]!=="p"||mode==="foto")&&p[4]&&p[4]!=="—"&&!have.has(p[0])&&!keys(p).some(k=>seen.has(k));
       let cand=pool.filter(p=>ok(p)&&p[2]===q[2]);
       if(!cand.length) cand=pool.filter(p=>ok(p)&&srcs.has(p[2]));
-      if(!cand.length){ const ch=String(q[1]).split(".").slice(0,3).join("."); const ok2=p=>p[2]!=="o"&&p[4]&&p[4]!=="—"&&!have.has(p[0])&&!keys(p).some(k=>seen.has(k))&&srcs.has(p[2]);
+      if(!cand.length){ const ch=String(q[1]).split(".").slice(0,3).join("."); const ok2=p=>p[2]!=="o"&&(p[2]!=="p"||mode==="foto")&&p[4]&&p[4]!=="—"&&!have.has(p[0])&&!keys(p).some(k=>seen.has(k))&&srcs.has(p[2]);
         cand=pool.filter(p=>ok2(p)&&String(p[1]).startsWith(ch)); if(!cand.length) cand=pool.filter(ok2); }
       if(!cand.length) return it;
       const p=cand[Math.floor(Math.random()*cand.length)]; keys(p).forEach(k=>seen.add(k)); have.add(p[0]);

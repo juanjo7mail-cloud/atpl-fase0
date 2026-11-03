@@ -1280,7 +1280,7 @@ details.lo .body > .formula{margin-top:10px}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA · cronometrado <small><span class="row" style="margin-top:6px"><select id="senEx" aria-label="Examen"><option value="061">061 General Navigation · 55 preguntas</option><option value="062">062 Radio Navigation · 66 preguntas</option><option value="both">061 + 062 seguidos · 121 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>: tus fallos, lo flojo y lo que más pesa</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>: 15 ejercicios y 15 de teoría, según tus fallos y lo que más pesa</small></label>
       <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos · 20 preguntas <small>: QDM/QDR/QTE, RMI, VOR, DME, deriva, viento, tiempo, combustible… números nuevos cada vez</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
@@ -4422,19 +4422,31 @@ function selectSenasa(ex, lenKey, inc, atpl){
     const out = chosen.filter(q=>q[1]===t[1] && !isTrial(q)).sort((a,b)=>pr.get(a[0])-pr.get(b[0]))[0];
     if(out) chosen.splice(chosen.indexOf(out),1,t);
   }
-  // estilo del examen: 061 es sobre todo cálculo, carta y tablas; 062 lleva instrumentos y figuras
+  // mitad ejercicios prácticos y mitad teoría en cada examen; los ejercicios más difíciles, primero
   exams.forEach(e=>{
-    const mine = chosen.filter(q=>examOf(q)===e), target = Math.round(mine.length*STYLE_SHARE[e]);
-    let have = mine.filter(isStyled).length;
-    const cand = pool.filter(q=>examOf(q)===e && isStyled(q) && !chosen.includes(q)).sort((a,b)=>pr.get(b[0])-pr.get(a[0]));
+    const mine = () => chosen.filter(q=>examOf(q)===e), target = Math.round(mine().length*STYLE_SHARE[e]);
+    const sc = q => pr.get(q[0]) + (isHardPrac(q)?1.2:0);
+    const cand = pool.filter(q=>examOf(q)===e && isPrac(q) && !chosen.includes(q)).sort((a,b)=>sc(b)-sc(a));
+    let have = mine().filter(isPrac).length;
     for(const c of cand){ if(have>=target) break;
-      const out = chosen.filter(q=>q[1]===c[1] && !isStyled(q) && !isTrial(q)).sort((a,b)=>pr.get(a[0])-pr.get(b[0]))[0];
+      const outs = mine().filter(q=>!isPrac(q) && !isTrial(q)).sort((a,b)=>pr.get(a[0])-pr.get(b[0]));
+      const out = outs.find(q=>q[1]===c[1]) || outs.find(q=>blockOf(q)===blockOf(c)) || outs[0];
       if(out){ chosen.splice(chosen.indexOf(out),1,c); have++; } }
+    const theory = pool.filter(q=>examOf(q)===e && !isPrac(q) && !chosen.includes(q)).sort((a,b)=>pr.get(b[0])-pr.get(a[0]));
+    while(have>target){
+      const out = mine().filter(q=>isPrac(q) && !isTrial(q)).sort((a,b)=>sc(a)-sc(b))[0];
+      const inn = theory.find(q=>q[1]===(out&&out[1])) || theory.find(q=>out&&blockOf(q)===blockOf(out)) || theory[0];
+      if(!out||!inn) break; chosen.splice(chosen.indexOf(out),1,inn); theory.splice(theory.indexOf(inn),1); have--; }
   });
   return blocks.flatMap(b=>shuffle(chosen.filter(q=>blockOf(q)===b.k)));
 }
 const isStyled = q => !!GEN[q[0]];
-const STYLE_SHARE = {"061":0.45, "062":0.2};
+// ejercicio práctico = se resuelve calculando o con carta/instrumento; el resto es teoría
+const PRAC_IDS = new Set("e29 t15 t16 t17 t18 d13 d15 tr1 tr13 tr2 tr3 tr4 tr6 tr7 tr11 tr14 tr15 tr16 tr17 u6 u10 u11 u12 u15 u16 u19 u20 u21 c3 c27 v5 v12 v13 v14 v15 dw1 dw2 ie1 ie2 ie3 ie5 ie9 nd7 nd15 nd17 vo16 dm2 dm9 rd18 p3 ap5 ap13 ap24 ap38 ap46 ap75".split(" "));
+const isPracId = id => PRAC_IDS.has(id) || /^(pf|nx|sx|cq)/.test(id);
+const isPrac = q => isPracId(q[0]);
+const isHardPrac = q => /^(pf|nx|sx|cq|ap|ie|nd)/.test(q[0]) || /^(v1[2-5]|tr1[147]|u1[0-2])$/.test(q[0]);
+const STYLE_SHARE = {"061":0.5, "062":0.5};   // mitad ejercicios, mitad teoría
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senEx").value, $("#senLen").value, inc, atpl);
   const st = stats();
@@ -4445,7 +4457,7 @@ function selectQuestions(mode, inc, lo, atpl){
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c")));
   if(mode==="all") return shuffle(pool);
   if(mode==="calc"){ // un generador por tipo de ejercicio, máximo 3 por tema, priorizando lo flojo
-    const gen=pool.filter(isStyled), sc=gen.map(q=>({q,p:priority(q,st)+Math.random()*2})).sort((a,b)=>b.p-a.p), out=[], per={};
+    const gen=pool.filter(isPrac), sc=gen.map(q=>({q,p:priority(q,st)+Math.random()*2})).sort((a,b)=>b.p-a.p), out=[], per={};
     for(const x of sc){ if(out.length>=20) break; const l=x.q[1]; if((per[l]||0)>=3) continue; per[l]=(per[l]||0)+1; out.push(x.q); }
     for(const x of sc){ if(out.length>=20) break; if(!out.includes(x.q)) out.push(x.q); }
     return shuffle(out); }
@@ -4465,6 +4477,17 @@ function selectQuestions(mode, inc, lo, atpl){
     const out = cand.find(x=>!isStyled(x)) || cand[0];
     if(out) chosen.splice(chosen.indexOf(out),1,q);
   });
+  // mitad ejercicios prácticos y mitad teoría; de los ejercicios, los difíciles y los más flojos primero
+  const half = Math.round(chosen.length/2), sc = q => (prm.get(q[0])||0) + (isHardPrac(q)?1.2:0);
+  let nP = chosen.filter(isPrac).length;
+  for(const c of pool.filter(q=>isPrac(q) && !chosen.includes(q)).sort((a,b)=>sc(b)-sc(a))){
+    if(nP>=half) break;
+    const out = chosen.filter(q=>!isPrac(q) && !isTrial(q)).sort((a,b)=>sc(a)-sc(b))[0];
+    if(!out) break; chosen.splice(chosen.indexOf(out),1,c); nP++; }
+  const addT = pool.filter(q=>!isPrac(q) && !chosen.includes(q)).sort((a,b)=>sc(b)-sc(a));
+  while(nP>half){
+    const out = chosen.filter(q=>isPrac(q) && !isEx(q) && !isTrial(q)).sort((a,b)=>sc(a)-sc(b))[0], inn = addT.shift();
+    if(!out||!inn) break; chosen.splice(chosen.indexOf(out),1,inn); nP--; }
   return shuffle(chosen);
 }
 
@@ -4780,6 +4803,8 @@ async function finishTest(timeout){
     box.insertAdjacentHTML("beforeend", `<div class="expl"><b class="${ok?'pass':'fail'}">${ok?'Correcta':(q.ans===null?'Sin responder':'Fallada')}</b> · <span class="es">${esc(q.expl)}</span>${ok?'':`<div class="ref"><b>Repasa:</b> ${esc(refText(q))}</div>`}</div>`);
   });
   const pct = Math.round(score/current.length*100), pass = pct>=75;
+  const kP = current.filter(q=>isPracId(q.id)), kT = current.filter(q=>!isPracId(q.id)), okOf = a => a.filter(q=>q.ans!==null && q.opts[q.ans].ok).length;
+  const kindHTML = (kP.length && kT.length) ? `<div style="margin-top:6px;display:flex;gap:18px;flex-wrap:wrap"><span>Ejercicios <b class="${okOf(kP)/kP.length>=.75?'pass':'fail'}">${okOf(kP)}/${kP.length}</b></span><span>Teoría <b class="${okOf(kT)/kT.length>=.75?'pass':'fail'}">${okOf(kT)}/${kT.length}</b></span></div>` : "";
   const rec = {id:"t"+Date.now().toString(36), date:new Date().toISOString(), mode:curMode, score, total:current.length, pct, byLO, items};
   if(curMode==="senasa"){ Object.assign(rec,{exam:curEx, len:curLen, limitS:tLimit, usedS, timeout:!!timeout, byBlock, score0:s0, total0:n0}); }
   state.attempts.push(rec);
@@ -4791,7 +4816,7 @@ async function finishTest(timeout){
   $("#result").innerHTML = `
     <div class="card">
       <div class="score ${pass?'pass':'fail'}">${score}/${current.length}</div>
-      <div><b>${pct} % · ${pass?'APTO':'NO APTO'}</b> <span class="muted">(mínimo 75 %)</span></div>${blockHTML}
+      <div><b>${pct} % · ${pass?'APTO':'NO APTO'}</b> <span class="muted">(mínimo 75 %)</span></div>${kindHTML}${blockHTML}
       <div style="margin-top:12px">${los.map(l=>{const p=Math.round(byLO[l].ok/byLO[l].total*100);
         return `<div class="lorow"><div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(loLabel(l))}</span><span>${byLO[l].ok}/${byLO[l].total}</span></div><div class="bar"><i style="width:${p}%;background:${p>=75?'var(--ok)':'var(--bad)'}"></i></div></div>`}).join("")}</div>
       <p style="margin:12px 0 4px"><b>Siguiente foco:</b> ${next.map(x=>esc(loLabel(x.lo))).join(" y ")}</p>
