@@ -3549,7 +3549,7 @@ function gPScale(fam){
     const f = v=>fmtS(v), eq = Math.random()<.5;
     if(eq) return {text:`On a Mercator chart the scale at ${L}° of latitude is ${fmtS(Sl)}. The scale at the Equator is about:`,
       opts:fillS(f(S0), [f(Sl*c), f(Sl*c*c), f(Sl*2), f(Sl/c/c)].filter(x=>x!==f(S0)), k=>f(S0*(1+0.1*k))),
-      expl:`Escala en φ = escala del ecuador × cos φ, o sea el denominador en φ es MENOR. Ecuador = ${Sl.toLocaleString("en-US")} ÷ cos ${L}° ≈ ${S0.toLocaleString("en-US")}.`, v:true, p:{kind:"scale",sub:"eq",L,Sl,ans:S0}};
+      expl:`En Mercator la escala crece hacia los polos (×1/cos φ): el denominador en φ es el del ecuador × cos φ, así que el del ecuador es MAYOR. Ecuador = ${Sl.toLocaleString("en-US")} ÷ cos ${L}° ≈ ${S0.toLocaleString("en-US")}. Trampas: multiplicar por cos en vez de dividir, o usar cos² o 2.`, v:true, p:{kind:"scale",sub:"eq",L,Sl,ans:S0}};
     return {text:pick([
         `The scale of a Mercator chart at the Equator is ${fmtS(SS0)}. At latitude ${L}° the scale is about:`,
         `A direct Mercator chart has a scale of ${fmtS(SS0)} at the equator. At ${L}°N the scale is:`
