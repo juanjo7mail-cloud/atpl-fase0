@@ -100,7 +100,7 @@ tr.al td{background:color-mix(in srgb,var(--blue) 8%,transparent)}
 </style>
 <style>
 .mode{display:block;border:1px solid var(--line);border-radius:4px;padding:10px 12px;margin:6px 0;cursor:pointer}
-.ctabs{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 6px 4px}.ctab{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:16px;padding:6px 12px;font:600 13.5px var(--body);cursor:pointer;min-height:34px}.ctab[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:#fff}#setup:not(:has(input[value=calc]:checked)) .ctabs,#setup:not(:has(input[value=calc]:checked)) #calcInfo{opacity:.6}
+.ctabs{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 6px 4px}.ctab{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:16px;padding:6px 12px;font:600 13.5px var(--body);cursor:pointer;min-height:34px}.ctab[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}.nlab{align-self:center;font:600 13px var(--body);color:var(--muted);margin-right:2px}#calcN .ctab{min-width:44px;text-align:center}.ctab[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:#fff}#setup:not(:has(input[value=calc]:checked)) .ctabs,#setup:not(:has(input[value=calc]:checked)) #calcInfo{opacity:.6}
 .mode:has(input:checked){border-color:var(--blue);background:color-mix(in srgb,var(--blue) 7%,transparent)}
 .mode small{display:block;color:var(--muted);margin-left:26px}
 select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
@@ -1289,6 +1289,7 @@ details.lo .body > .formula{margin-top:10px}
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>: 15 ejercicios y 15 de teoría, según tus fallos y lo que más pesa</small></label>
       <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos <small>: elige el tipo ↓ · números nuevos cada vez</small></label>
       <div class="ctabs" id="calcTabs" role="tablist" aria-label="Tipo de cálculo"></div>
+      <div class="ctabs" id="calcN" aria-label="Número de preguntas"></div>
       <p class="muted small" id="calcInfo" style="margin:0 0 10px 4px"></p>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
@@ -4523,12 +4524,23 @@ const CALC_TABS = [
 const CKEY = "nav061:calc:"+location.pathname;
 let calcKey = "mix"; try{ const k = localStorage.getItem(CKEY); if(CALC_TABS.some(t=>t.k===k)) calcKey = k; }catch(e){}
 const calcTab = () => CALC_TABS.find(t=>t.k===calcKey) || CALC_TABS[0];
+const NKEY = "nav061:calcn:"+location.pathname;
+let calcN = 12; try{ const v = +localStorage.getItem(NKEY); if([3,6,12,20].includes(v)) calcN = v; }catch(e){}
+const calcOpts = () => calcTab().ids ? [3,6,12] : [3,6,12,20];
+const calcCount = () => calcOpts().includes(calcN) ? calcN : (calcTab().ids ? 12 : 20);
 function drawCalcTabs(){
   const box = document.getElementById("calcTabs"); if(!box) return;
   box.innerHTML = CALC_TABS.map(t=>`<button type="button" class="ctab" role="tab" data-k="${t.k}" aria-selected="${t.k===calcKey}">${t.t}</button>`).join("");
   const t = calcTab(), info = document.getElementById("calcInfo");
-  if(info) info.textContent = `${t.d}${t.ids?` · ${t.n} preguntas`:""}`;
+  if(info) info.textContent = t.d;
+  const nb = document.getElementById("calcN");
+  if(nb) nb.innerHTML = '<span class="nlab">Preguntas</span>' + calcOpts().map(n=>`<button type="button" class="ctab" data-n="${n}" aria-pressed="${n===calcCount()}">${n}</button>`).join("");
 }
+document.getElementById("calcN").addEventListener("click", e=>{
+  const b = e.target.closest("[data-n]"); if(!b) return;
+  calcN = +b.dataset.n; try{ localStorage.setItem(NKEY, String(calcN)); }catch(x){}
+  document.querySelector('input[name=mode][value=calc]').checked = true; drawCalcTabs();
+});
 document.getElementById("calcTabs").addEventListener("click", e=>{
   const b = e.target.closest(".ctab"); if(!b) return;
   calcKey = b.dataset.k; try{ localStorage.setItem(CKEY, calcKey); }catch(x){}
@@ -4556,12 +4568,13 @@ function selectQuestions(mode, inc, lo, atpl){
     const qs = tab.ids.map(id=>BYID.get(id)).filter(q=>q && GEN[q[0]] && inPool.has(q[0]));
     if(!qs.length) return [];
     const sc = qs.map(q=>({q,p:priority(q,st)+Math.random()*2})).sort((a,b)=>b.p-a.p).map(x=>x.q), out = [];
-    for(let i=0;i<tab.n;i++) out.push(sc[i%sc.length]);
+    for(let i=0,N=calcCount();i<N;i++) out.push(sc[i%sc.length]);
     return shuffle(out); }
   if(mode==="calc"){ // un generador por tipo de ejercicio, máximo 3 por tema, priorizando lo flojo
     const gen=pool.filter(isPrac), sc=gen.map(q=>({q,p:priority(q,st)+Math.random()*2})).sort((a,b)=>b.p-a.p), out=[], per={};
-    for(const x of sc){ if(out.length>=20) break; const l=x.q[1]; if((per[l]||0)>=3) continue; per[l]=(per[l]||0)+1; out.push(x.q); }
-    for(const x of sc){ if(out.length>=20) break; if(!out.includes(x.q)) out.push(x.q); }
+    const N=calcCount();
+    for(const x of sc){ if(out.length>=N) break; const l=x.q[1]; if((per[l]||0)>=3) continue; per[l]=(per[l]||0)+1; out.push(x.q); }
+    for(const x of sc){ if(out.length>=N) break; if(!out.includes(x.q)) out.push(x.q); }
     return shuffle(out); }
   // adaptativo: 20 por prioridad, como mucho 5 del mismo tema y al menos 6 del trial
   const N = Math.min(30, pool.length), MAXLO = 5;

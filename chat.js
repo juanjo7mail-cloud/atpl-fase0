@@ -4,7 +4,7 @@
    API: F0Chat.start({sb,user,name}) · F0Chat.leave() · F0Chat.unread() · F0Chat.state() */
 (function(){
 "use strict";
-const MAXLEN=500, GAP=500, KEEP=200, TTL=60*60*1000, GRACE=10*60*1000, RESEND=4000, READ_TTL=5*60*1000;   // gracia: tras desconectarse, un compañero sigue «en línea» 10 min y le llegan los mensajes al volver   // los mensajes duran 60 min (solo en este dispositivo)
+const MAXLEN=500, GAP=500, KEEP=200, TTL=60*60*1000, GRACE=10*60*1000, RESEND=4000, READ_TTL=5*60*1000, DAY=24*60*60*1000, MAXFILE=2*1024*1024, EXT=/\.(pdf|docx?|xlsx?|pptx?|txt|csv|rtf|png|jpe?g)$/i;   // gracia: tras desconectarse, un compañero sigue «en línea» 10 min y le llegan los mensajes al volver   // los mensajes duran 60 min (solo en este dispositivo)
 const $=(s,r)=>(r||document).querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const C={dmTo:"", dmText:"", people:[], sms:false, smsErr:"", pAt:0, dch:null, fAt:0, deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0};
@@ -71,6 +71,18 @@ function css(){
 .f0c-form button,.f0c-dm button.go{flex:none;width:44px;border:0;border-radius:50%;background:linear-gradient(#F4D26A,#E0AD2A);color:#14304A;cursor:pointer;display:grid;place-items:center;transition:transform .12s}
 .f0c-form button:active,.f0c-dm button.go:active{transform:scale(.9) rotate(-8deg)}
 .f0c-form button svg,.f0c-dm button.go svg{width:20px;height:20px;fill:currentColor}
+.f0c-form button.at{width:40px;background:#16314A;color:#9CCBF3;border:1px solid #2B3F50}
+.f0c-form button.at svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.f0c-form button.at:hover{background:#1D3E5E}.f0c-form button.at:focus-visible{outline:2px solid #E8BF45;outline-offset:1px}
+.f0c-att{display:block;margin-top:6px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.18);color:inherit;border-radius:10px;padding:8px 12px;font:600 14px var(--body);cursor:pointer;text-align:left}
+.f0c-att:hover{background:rgba(0,0,0,.3)}.f0c-att:focus-visible{outline:2px solid #E8BF45;outline-offset:1px}.f0c-att:disabled{opacity:.6;cursor:wait}
+.f0c-m .ft{display:block;font:500 12px var(--body);opacity:.85;margin-top:2px}
+.f0c-err{margin:0;padding:6px 12px;background:#3A1D22;color:#FFB4AE;font:600 13px var(--body);border-top:1px solid #5A2A30}
+#f0cView{position:fixed;inset:0;z-index:2147483000;background:rgba(3,8,13,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;-webkit-user-select:none;user-select:none}
+#f0cView img{max-width:100%;max-height:calc(100dvh - 120px);object-fit:contain;border-radius:8px;-webkit-touch-callout:none;pointer-events:none}
+#f0cView p{margin:0;color:#9FB3C4;font:500 13px var(--body);text-align:center}
+#f0cView button{border:0;border-radius:12px;background:linear-gradient(#F4D26A,#E0AD2A);color:#14304A;font:700 16px var(--body);padding:11px 26px;min-height:44px;cursor:pointer}
+#f0cView button:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .f0c-form button:disabled,.f0c-form input:disabled,.f0c-dm input:disabled,.f0c-dm button.go:disabled{opacity:.45;cursor:not-allowed}
 .f0c-dm{display:flex;flex-direction:column;gap:7px;padding:9px 9px 0;border-top:1px solid #2B3F50;background:#10223A}
 .f0c-dm .t{font:700 13px var(--display);letter-spacing:.14em;text-transform:uppercase;color:#E8BF45;margin:0 4px}
@@ -124,7 +136,7 @@ function save(){
 function prune(){
   const lim=Date.now()-TTL; let ch=false;
   Object.keys(C.rooms).forEach(k=>{
-    const a=C.rooms[k], b=a.filter(m=>(m.s&&!m.me)?(!m.rd||m.rd>Date.now()-READ_TTL):m.t>lim);
+    const a=C.rooms[k], b=a.filter(m=>(m.k==="file"&&!m.me)?m.t>Date.now()-DAY:(m.k==="photo"&&!m.me)?(m.v?m.v>Date.now()-READ_TTL:m.t>Date.now()-DAY):(m.s&&!m.me)?(!m.rd||m.rd>Date.now()-READ_TTL):m.t>lim);
     if(b.length!==a.length){ ch=true; C.rooms[k]=b; }
     if(!b.length){ delete C.rooms[k]; delete C.unread[k]; if(C.active===k&&!C.peers[k]) C.active=null; }
     else if((C.unread[k]||0)>b.filter(m=>!m.me).length) C.unread[k]=b.filter(m=>!m.me).length;
@@ -243,29 +255,37 @@ function subDb(){
     C.dch.subscribe(()=>{});
   }catch(e){ C.dch=null; }
 }
-function smsInit(){ loadPeople().then(()=>{ if(C.sms){ fetchInbox(); subDb(); } }); }
+async function probeAtt(){
+  const d=C.deps; C.att=false; if(!d||!d.sb||typeof d.sb.rpc!=="function") return;
+  try{ const r=await d.sb.rpc("chat_attach_ok"); C.att=!!(r&&!r.error&&r.data===true); }catch(e){ C.att=false; }
+  update();
+}
+function smsInit(){ loadPeople().then(async()=>{ if(C.sms){ await probeAtt(); fetchInbox(); subDb(); } }); }
 async function fetchInbox(){
   const d=C.deps; if(!d||!C.sms||C.fetching) return; C.fetching=true; C.fAt=Date.now();
   try{
-    const r=await d.sb.from("chat_messages").select("id,from_id,from_name,body,created_at,read_at").eq("to_id",C.uid).is("read_at",null).order("created_at",{ascending:true}).limit(100);
+    let q=d.sb.from("chat_messages").select(C.att?"id,from_id,from_name,body,created_at,read_at,kind,fname,fsize":"id,from_id,from_name,body,created_at,read_at").eq("to_id",C.uid);
+    q=C.att?q.or("read_at.is.null,kind.eq.file"):q.is("read_at",null);
+    const r=await q.order("created_at",{ascending:true}).limit(100);
     if(r&&!r.error&&Array.isArray(r.data)) r.data.forEach(onSms);
   }catch(e){}
   C.fetching=false;
 }
 function onSms(row){
-  if(!row||!row.id||String(row.to_id||C.uid)!==C.uid||row.read_at) return;
+  const kd=row&&(row.kind==='photo'||row.kind==='file')?row.kind:"";
+  if(!row||!row.id||String(row.to_id||C.uid)!==C.uid||(row.read_at&&kd!=="file")) return;
   const id="s"+row.id, room=String(row.from_id); if(room===C.uid) return;
   const x=clean(row.body); if(!x) return;
   if(C.seen.has(id)) return;
   C.seen.add(id); if(C.seen.size>2000) C.seen=new Set([...C.seen].slice(-500));
   C.names[room]=String(row.from_name||C.names[room]||"Alumno").slice(0,60);
-  push(room,{id,n:C.names[room],t:+new Date(row.created_at)||Date.now(),x,me:false,s:1,sid:String(row.id)});
+  push(room,kd?{id,n:C.names[room],t:+new Date(row.created_at)||Date.now(),x:kd==="photo"?"Foto":x,me:false,s:1,sid:String(row.id),k:kd,fs:+row.fsize||0}:{id,n:C.names[room],t:+new Date(row.created_at)||Date.now(),x,me:false,s:1,sid:String(row.id)});
   if(viewing(room)) markRead(room);
   update();
 }
 function markRead(room){
   const d=C.deps, a=C.rooms[room]; if(!d||!a) return;
-  const ms=a.filter(m=>m.s&&!m.me&&!m.rd&&m.sid); if(!ms.length) return;
+  const ms=a.filter(m=>m.s&&!m.me&&!m.rd&&m.sid&&!m.k); if(!ms.length) return;
   const now=Date.now(); ms.forEach(m=>{ m.rd=now; }); save();
   try{
     Promise.resolve(d.sb.from("chat_messages").update({read_at:new Date().toISOString()}).in("id",ms.map(m=>m.sid)).is("read_at",null)).then(r=>{
@@ -286,6 +306,69 @@ function sendSms(to,x){
   return true;
 }
 
+/* ---------- fotos (se ven una sola vez) y archivos (24 h) ---------- */
+const b64of=blob=>new Promise((ok,ko)=>{ const f=new FileReader(); f.onload=()=>ok(String(f.result).split(",")[1]||""); f.onerror=()=>ko(f.error); f.readAsDataURL(blob); });
+const fmtSize=n=>n>=1048576?(n/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(n/1024))+" KB";
+function toast(t){ C.err=t; update(); clearTimeout(C.errT); C.errT=setTimeout(()=>{ C.err=""; update(); },6000); }
+async function packPhoto(file){
+  if(!/^image\//.test(file.type||"")) throw new Error("Elige una imagen");
+  let bmp; try{ bmp=await createImageBitmap(file,{imageOrientation:"from-image"}); }catch(e){ throw new Error("Formato de imagen no compatible"); }
+  const sc=Math.min(1,1280/Math.max(bmp.width,bmp.height)), c=document.createElement("canvas");
+  c.width=Math.max(1,Math.round(bmp.width*sc)); c.height=Math.max(1,Math.round(bmp.height*sc));
+  const g=c.getContext("2d"); g.fillStyle="#fff"; g.fillRect(0,0,c.width,c.height); g.drawImage(bmp,0,0,c.width,c.height); if(bmp.close) bmp.close();
+  let blob=null; for(const q of [.74,.62,.5,.4]){ blob=await new Promise(r=>c.toBlob(r,"image/jpeg",q)); if(blob&&blob.size<=1100000) break; }
+  if(!blob||blob.size>1250000) throw new Error("La foto es demasiado grande");
+  return {data:await b64of(blob),name:"Foto",mime:"image/jpeg",size:blob.size};
+}
+async function sendAtt(to,kind,file){
+  const d=C.deps; if(!d||!to||!file) return;
+  if(!C.att||typeof d.sb.rpc!=="function") return toast("Los adjuntos aún no están activados");
+  const now=Date.now(); if(now-C.last<GAP) return; C.last=now;
+  let pk;
+  try{
+    if(kind==="photo") pk=await packPhoto(file);
+    else{
+      if(!EXT.test(file.name||"")) throw new Error("Tipo no permitido. Admite PDF, Word, Excel, PowerPoint, TXT, CSV, PNG y JPG");
+      if(file.size>MAXFILE) throw new Error("El archivo pesa más de 2 MB");
+      pk={data:await b64of(file),name:String(file.name).replace(/[\\/:*?"<>|\u0000-\u001F]/g,"_").slice(0,80),mime:String(file.type||"").slice(0,80),size:file.size};
+    }
+  }catch(e){ return toast(e.message||"No se pudo preparar el archivo"); }
+  const id="a"+C.uid.slice(0,6)+now.toString(36)+Math.random().toString(36).slice(2,6);
+  C.seen.add(id); C.names[to]=nameOf(to);
+  push(to,{id,n:myName(),t:now,x:pk.name,me:true,s:1,k:kind,fs:pk.size,p:1}); update();
+  let ok=false, why="";
+  try{ const r=await d.sb.rpc("chat_send_attachment",{p_to:to,p_kind:kind,p_name:pk.name,p_mime:pk.mime,p_data:pk.data}); ok=!!(r&&!r.error&&r.data); if(r&&r.error) why=String(r.error.message||""); }catch(e){}
+  mark(to,id,ok?3:2); save(); update();
+  if(!ok) toast(why&&/demasiad|permitido|grande|JPEG/i.test(why)?why:"No se ha podido enviar");
+}
+function findMsg(sid){ for(const k of Object.keys(C.rooms)){ const m=C.rooms[k].find(x=>x.sid===sid&&x.k); if(m) return m; } return null; }
+async function takePhoto(sid){
+  const m=findMsg(sid), d=C.deps; if(!m||m.v||m.busy||!d) return;
+  m.busy=1; update(); let data=null;
+  try{ const r=await d.sb.rpc("chat_take_photo",{p_id:sid}); data=r&&!r.error&&r.data||null; }catch(e){}
+  delete m.busy;
+  if(!data){ m.v=Date.now(); save(); update(); return toast("La foto ya no está disponible"); }
+  m.v=Date.now(); save(); update();
+  const ov=document.createElement("div"); ov.id="f0cView"; ov.setAttribute("role","dialog"); ov.setAttribute("aria-modal","true"); ov.setAttribute("aria-label","Foto de "+nameOf(Object.keys(C.rooms).find(k=>C.rooms[k].includes(m))||""));
+  const im=new Image(); im.alt="Foto recibida"; im.draggable=false; im.src="data:image/jpeg;base64,"+data; data=null;
+  const t=document.createElement("p"); t.textContent="Esta foto se ve una sola vez. Al cerrar desaparece.";
+  const b=document.createElement("button"); b.type="button"; b.textContent="Cerrar";
+  const close=()=>{ im.src=""; ov.remove(); document.removeEventListener("keydown",key,true); const x=$("#f0cIn",C.root); if(x) x.focus(); };
+  const key=e=>{ if(e.key==="Escape"){ e.stopPropagation(); close(); } };
+  ov.addEventListener("contextmenu",e=>e.preventDefault()); b.addEventListener("click",close); document.addEventListener("keydown",key,true);
+  ov.append(im,t,b); document.body.appendChild(ov); b.focus();
+}
+async function getFile(sid){
+  const m=findMsg(sid), d=C.deps; if(!m||m.busy||!d) return;
+  m.busy=1; update(); let row=null;
+  try{ const r=await d.sb.rpc("chat_get_file",{p_id:sid}); row=r&&!r.error&&Array.isArray(r.data)&&r.data[0]||null; }catch(e){}
+  delete m.busy; update();
+  if(!row||!row.data) return toast("El archivo ya no está disponible (se borra a las 24 h)");
+  const bin=atob(row.data), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+  const url=URL.createObjectURL(new Blob([u],{type:"application/octet-stream"})), a=document.createElement("a");
+  a.href=url; a.download=String(row.name||m.x||"archivo").replace(/[\\/:*?"<>|\u0000-\u001F]/g,"_"); document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),30000);
+}
+
 /* ---------- interfaz ---------- */
 const hhmm=t=>{ const d=new Date(t); return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); };
 const ini=n=>n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase()||"?";
@@ -303,18 +386,23 @@ function build(){
   if(C.root) return; css();
   C.title=String(document.title||"").replace(/^\(\d+\)\s*/,"");
   const r=document.createElement("aside"); r.className="f0c"; r.setAttribute("aria-label","Chat con compañeros");
-  r.innerHTML='<button class="f0c-fab" type="button" aria-expanded="false" aria-haspopup="dialog"></button><section class="f0c-pan" role="dialog" aria-label="Online pilots"></section>';
+  r.innerHTML='<button class="f0c-fab" type="button" aria-expanded="false" aria-haspopup="dialog"></button><section class="f0c-pan" role="dialog" aria-label="Online pilots"></section><input type="file" id="f0cPh" accept="image/*" hidden tabindex="-1"><input type="file" id="f0cFl" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.png,.jpg,.jpeg" hidden tabindex="-1">';
   document.body.appendChild(r); C.root=r;
   r.addEventListener("click",e=>{
     if(e.target.closest(".f0c-fab")) return setOpen(true);
     if(e.target.closest("#f0cX")) return setOpen(false);
     if(e.target.closest("#f0cBack")){ C.active=null; return update(); }
+    if(e.target.closest("#f0cPhB")){ const i=$("#f0cPh",r); i.value=""; i.click(); return; }
+    if(e.target.closest("#f0cFlB")){ const i=$("#f0cFl",r); i.value=""; i.click(); return; }
+    const ph=e.target.closest("[data-ph]"); if(ph) return takePhoto(ph.dataset.ph);
+    const fl=e.target.closest("[data-fl]"); if(fl) return getFile(fl.dataset.fl);
     if(e.target.closest("#f0cDd")){ C.dmOpen=!C.dmOpen; C.dmAnim=C.dmOpen; update(); if(C.dmOpen){ const o=$(".dd-o[aria-selected=true]",r)||$(".dd-o",r); if(o) o.focus({preventScroll:false}); } return; }
     const ch=e.target.closest("[data-dm]"); if(ch){ C.dmTo=ch.dataset.dm; C.dmOpen=false; update(); const di=$("#f0cDmIn",r); if(di&&!di.disabled) di.focus(); return; }
     if(C.dmOpen&&!e.target.closest(".dd")){ C.dmOpen=false; update(); }
     const b=e.target.closest(".f0c-p"); if(b) openRoom(b.dataset.room);
   });
   r.addEventListener("input",e=>{ if(e.target.id==="f0cDmIn") C.dmText=e.target.value; });
+  r.addEventListener("change",e=>{ const t=e.target; if(t.id!=="f0cPh"&&t.id!=="f0cFl") return; const f=t.files&&t.files[0]; t.value=""; if(f&&C.active) sendAtt(C.active,t.id==="f0cPh"?"photo":"file",f); });
     r.addEventListener("submit",e=>{
     if(e.target.closest("#f0cDm")){ e.preventDefault(); const i=$("#f0cDmIn",r); if(!i) return;
       const to=C.dmTo, v=i.value; if(!to){ return; } if(!clean(v)){ i.focus(); return; }
@@ -367,14 +455,19 @@ function update(){
     const row=(k,st)=>`<button class="f0c-p ${st}${st==="off"?" gone":""}" data-room="${esc(k)}"><span class="av">${esc(ini(nameOf(k)))}</span><span class="nm">${esc(nameOf(k))}<small>${esc(sub(k,st))}</small></span>${C.unread[k]?`<b class="u">${C.unread[k]}</b>`:""}</button>`;
     const list=(online.length||offIds.length)?`<div class="f0c-list">${online.length?"<h3>En frecuencia</h3>"+online.map(k=>row(k,C.peers[k].away?"away":"on")).join(""):""}${offIds.length?"<h3>Fuera de frecuencia</h3>"+offIds.map(k=>row(k,"off")).join(""):""}</div>`
       :`<div class="f0c-empty">${ICON}${on?"Ahora mismo no hay nadie más conectado.<br>Cuando entre un compañero aparecerá aquí.":"No se ha podido conectar el chat."}</div>`;
-    pan.innerHTML=`<header class="f0c-hd ${C.status}"><div class="t"><h2>Online pilots</h2><small><i></i>FREC 122.800 · ${esc(stTxt)}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}${dm}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos</p></div>`;
+    pan.innerHTML=`<header class="f0c-hd ${C.status}"><div class="t"><h2>Online pilots</h2><small><i></i>FREC 122.800 · ${esc(stTxt)}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}${dm}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos${C.att?" · Fotos: se ven una vez · Archivos: 24 h":""}</p></div>`;
     C.dmAnim=false; const ti=$("#f0cDmIn",r); if(ti) ti.value=C.dmText;
     if(ddF&&C.dmOpen){ const o=[...r.querySelectorAll(".dd-o")].find(x=>x.dataset.dm===ddF); if(o) o.focus(); }
     if(dmKeep&&ti){ ti.focus(); try{ ti.setSelectionRange(dmKeep.a,dmKeep.b); }catch(e){} }
   } else {
     const live=on&&C.peers[room]&&!C.peers[room].away, off=!live&&!C.sms&&(!C.peers[room]||!on);
-    const msgs=(C.rooms[room]||[]).map(m=>`<div class="f0c-m${m.me?" me":""}">${esc(m.x)}<time>${hhmm(m.t)}${m.p===1?" · enviando…":m.p===2?" · no entregado":m.p===3?" · enviado":""}</time></div>`).join("");
-    pan.innerHTML=`<header class="f0c-hd ${C.peers[room]?C.status:"off"}"><button id="f0cBack" type="button" aria-label="Volver a la lista">‹</button><div class="t"><h2>${esc(nameOf(room))}</h2><small><i></i>${C.peers[room]?(C.peers[room].away?"ausente un momento":"en línea"):(C.sms?"sin conexión · le llegará":"no está en línea")}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body"><div class="f0c-msgs" id="f0cMsgs" role="log" aria-live="polite"><div class="f0c-sys">Chat privado con ${esc(nameOf(room))}. ${C.sms?(live?"":"Si no está en línea, le llega igualmente (como un SMS) y se borra 5 minutos después de leerlo."):"Se entrega si está en línea o vuelve en menos de 10 minutos."}</div>${msgs}</div><form class="f0c-form" id="f0cForm" autocomplete="off"><input id="f0cIn" maxlength="${MAXLEN}" placeholder="${off?"No está en línea":(live?"Escribe un mensaje…":"Mensaje sin conexión…")}" aria-label="Mensaje" ${off?"disabled":""}><button type="submit" aria-label="Enviar" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></form></div>`;
+    const attBody=m=>{
+      if(m.k==="photo") return m.me?"Foto enviada<span class=\"ft\">Se ve una sola vez</span>":m.v?"Foto vista<span class=\"ft\">Ya no está disponible</span>":`Foto<span class="ft">Se ve una sola vez</span><button type="button" class="f0c-att" data-ph="${esc(m.sid)}" ${m.busy?"disabled":""}>${m.busy?"Abriendo…":"Ver foto"}</button>`;
+      const left=Math.max(1,Math.ceil((DAY-(Date.now()-m.t))/3600000)), sz=m.fs?" · "+fmtSize(m.fs):"";
+      return `<b>${esc(m.x)}</b>${sz}<span class="ft">${m.me?"Archivo enviado · el destinatario lo tiene 24 h":"Caduca en "+left+" h"}</span>`+(m.me?"":`<button type="button" class="f0c-att" data-fl="${esc(m.sid)}" ${m.busy?"disabled":""}>${m.busy?"Descargando…":"Descargar"}</button>`);
+    };
+    const msgs=(C.rooms[room]||[]).map(m=>`<div class="f0c-m${m.me?" me":""}">${m.k?attBody(m):esc(m.x)}<time>${hhmm(m.t)}${m.p===1?" · enviando…":m.p===2?" · no entregado":m.p===3?" · enviado":""}</time></div>`).join("");
+    pan.innerHTML=`<header class="f0c-hd ${C.peers[room]?C.status:"off"}"><button id="f0cBack" type="button" aria-label="Volver a la lista">‹</button><div class="t"><h2>${esc(nameOf(room))}</h2><small><i></i>${C.peers[room]?(C.peers[room].away?"ausente un momento":"en línea"):(C.sms?"sin conexión · le llegará":"no está en línea")}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body"><div class="f0c-msgs" id="f0cMsgs" role="log" aria-live="polite"><div class="f0c-sys">Chat privado con ${esc(nameOf(room))}. ${C.sms?(live?"":"Si no está en línea, le llega igualmente (como un SMS) y se borra 5 minutos después de leerlo."):"Se entrega si está en línea o vuelve en menos de 10 minutos."}</div>${msgs}</div>${C.err?`<p class="f0c-err" role="alert">${esc(C.err)}</p>`:""}<form class="f0c-form" id="f0cForm" autocomplete="off">${C.att?`<button type="button" class="at" id="f0cPhB" aria-label="Enviar foto (se ve una sola vez)" title="Foto · se ve una sola vez" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.6-2.4h6.800L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg></button><button type="button" class="at" id="f0cFlB" aria-label="Enviar archivo (24 h)" title="Archivo · 24 h" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.500l-7.800 7.800a5 5 0 0 1-7-7L13 4.500a3.400 3.400 0 0 1 4.800 4.800l-7.800 7.800a1.800 1.800 0 0 1-2.500-2.500L14.500 8"/></svg></button>`:""}<input id="f0cIn" maxlength="${MAXLEN}" placeholder="${off?"No está en línea":(live?"Escribe un mensaje…":"Mensaje sin conexión…")}" aria-label="Mensaje" ${off?"disabled":""}><button type="submit" aria-label="Enviar" ${off?"disabled":""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></form></div>`;
     const ni=$("#f0cIn",r); if(keep&&ni){ ni.value=keep.v; if(keep.f&&!ni.disabled) ni.focus(); }
     const nm=$("#f0cMsgs",r); if(nm&&(atEnd||!keep)) nm.scrollTop=nm.scrollHeight;
   }
@@ -382,12 +475,12 @@ function update(){
 function start(deps){
   const fresh=C.status==="off"||C.uid!==deps.user.id;
   C.deps=deps; build();
-  if(fresh){ C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.uid=deps.user.id; load(); clearInterval(C.pruneT); C.pruneT=setInterval(tick,30000); clearInterval(C.outT); C.outT=setInterval(expire,2000); C.out={}; C.people=[]; C.sms=false; C.pAt=0; C.fAt=0; join(false); smsInit(); }
+  if(fresh){ C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.uid=deps.user.id; load(); clearInterval(C.pruneT); C.pruneT=setInterval(tick,30000); clearInterval(C.outT); C.outT=setInterval(expire,2000); C.out={}; C.people=[]; C.sms=false; C.att=false; C.err=""; C.pAt=0; C.fAt=0; join(false); smsInit(); }
 }
 function leave(){
   try{ if(C.uid) localStorage.removeItem(SK()); }catch(e){}   // al cerrar sesión se borra el chat de este dispositivo
   clearInterval(C.pruneT); clearInterval(C.outT); C.out={}; try{ if(C.title) document.title=C.title; }catch(e){}
-  leaveChannel(); if(C.dch){ try{ C.deps.sb.removeChannel(C.dch); }catch(e){} C.dch=null; } C.people=[]; C.sms=false; C.status="off"; C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.deps=null; C.uid="";
+  leaveChannel(); if(C.dch){ try{ C.deps.sb.removeChannel(C.dch); }catch(e){} C.dch=null; } C.people=[]; C.sms=false; C.att=false; C.status="off"; C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.deps=null; C.uid="";
   if(C.root){ C.root.remove(); C.root=null; }
 }
 function wake(){   // al volver a la pestaña (o recuperar red): si el canal se cayó, se reconecta; si no, se vuelve a anunciar la presencia

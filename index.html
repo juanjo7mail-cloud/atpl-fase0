@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="0c8ed4b8c48e";</script>
+<script>window.F0_BUILD="29829ddcbcb0";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -801,8 +801,8 @@ const RANKS=["Alumno","Cadete","Segundo oficial","Primer oficial","Capitán"], N
 function ranksInfo(){
   const sums=SUBJ.map(s=>summary(s.k)), pass=sums.filter(m=>m.n>=5&&m.avg5>=75).length;
   let g=0; for(let i=1;i<NEED.length;i++) if(pass>=NEED[i]) g=i;
-  const st=streakInfo().count, star=g===4&&sums.every(m=>m.avg5>=85)&&st>=14;
-  return {pass,g,star,st,sums};
+  const star=g===4&&sums.every(m=>m.avg5>=85);
+  return {pass,g,star,sums};
 }
 function epaulette(g,star){
   let s='<svg viewBox="0 0 56 24" width="48" height="21" aria-hidden="true"><rect x=".8" y="2.5" width="54.4" height="19" rx="3.5" fill="#0A1724" stroke="#3B5874" stroke-width="1.2"/>';
@@ -820,8 +820,8 @@ function fillGaPop(){
   const r=ranksInfo(), next=r.g<4?NEED[r.g+1]:null, miss=next==null?0:next-r.pass;
   $("#gaPop").innerHTML=`<h3>${r.star?"Capitán transoceánico ★":RANKS[r.g]} · ${r.g} ${r.g===1?"galón":"galones"}</h3>
     <p>Asignaturas aprobadas (75 % o más con 5+ tests): <b>${r.pass}/${SUBJ.length}</b></p>
-    <p class="muted">${next==null?(r.star?"Has completado todo. ¡Buen vuelo!":"Cuatro galones. Para la ★: todas con 85 % o más y 14 días de racha (llevas "+r.st+")."):"Siguiente galón con "+next+" aprobadas: te "+(miss===1?"falta 1":"faltan "+miss)+"."}</p>
-    <ul class="muted"><li>1 galón: 1 asignatura</li><li>2 galones: 3 asignaturas</li><li>3 galones: 6 asignaturas</li><li>4 galones: las ${SUBJ.length}</li><li>★ transoceánico: las ${SUBJ.length} con 85 % + racha de 14 días</li></ul>`;
+    <p class="muted">${next==null?(r.star?"Has completado todo. ¡Buen vuelo!":"Cuatro galones. Para la ★: todas con 85 % o más de media."):"Siguiente galón con "+next+" aprobadas: te "+(miss===1?"falta 1":"faltan "+miss)+"."}</p>
+    <ul class="muted"><li>1 galón: 1 asignatura</li><li>2 galones: 3 asignaturas</li><li>3 galones: 6 asignaturas</li><li>4 galones: las ${SUBJ.length}</li><li>★ transoceánico: las ${SUBJ.length} con 85 % o más de media</li></ul>`;
 }
 $("#rankBtn").addEventListener("click",e=>{ e.stopPropagation(); const p=$("#gaPop"); p.hidden=!p.hidden; $("#rankBtn").setAttribute("aria-expanded",String(!p.hidden)); if(!p.hidden){ fillGaPop(); $("#onPop").hidden=true; } });
 document.addEventListener("click",e=>{ const p=$("#gaPop"); if(p&&!p.hidden&&!e.target.closest("#gaPop")){ p.hidden=true; $("#rankBtn").setAttribute("aria-expanded","false"); } });
@@ -1606,6 +1606,9 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
+  {id:"2026-11-03d", items:[
+    {i:"🔢", t:"Navegación · test de cálculo con 3, 6 o 12 preguntas"}
+  ]},
   {id:"2026-11-03c", items:[
     {i:"🧮", t:"Navegación · test de «Solo cálculos» por tipo: tierra, hora, rumbos, cartas, viento, radio, TCA…"}
   ]},
@@ -1663,7 +1666,7 @@ const NEWS=[
   ]},
   {id:"2026-10-25c", items:[
     {i:"🔥", t:"Racha diaria", d:"Cada día con un test de 10+ preguntas suma. Tienes un descanso por semana sin perder la racha. Arriba, en Inicio, ves tu racha y la meta de 5 días."},
-    {i:"🎖️", t:"Galones", d:"Arriba, junto a tu cuenta: de 0 a 4 galones según cuántas asignaturas apruebas (75 % con 5+ tests) y la ★ de capitán transoceánico para los más constantes. Púlsalos para ver cómo subir."},
+    {i:"🎖️", t:"Galones", d:"Arriba, junto a tu cuenta: de 0 a 4 galones según cuántas asignaturas apruebas (75 % con 5+ tests) y la ★ de capitán transoceánico si además tienes todas con 85 % o más. Púlsalos para ver cómo subir."},
     {i:"🔁", t:"Repasar hoy", d:"Tus fallos vuelven a los 1, 3, 7 y 14 días. Si hay pendientes, la tarjeta de la asignatura tiene el botón «Repasar hoy» (máximo 20)."},
     {i:"📲", t:"Instálala en el iPad o el iPhone", d:"En Safari: Compartir → Añadir a pantalla de inicio. Se abre como una app, a pantalla completa.", web:true}
   ]},
