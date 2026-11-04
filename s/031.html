@@ -2903,12 +2903,15 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     Object.keys(by).forEach(id=>{ const s=by[id]; if(!s.fail||s.box>=4) return; if(now-s.t>=IV[s.box]*864e5-6*36e5) due.push(id); });
     return due;
   }
-  const mk=id=>{ const q=byId(id); return q?(typeof selectItems==="function"?{k:"mc",q}:q):null; };
+  const bo=x=>typeof baseOf==="function"?baseOf(x):String(x).split("~")[0];
+  const mk=id=>{ let q=byId(id);
+    if(q&&q[2]==="o"){ const b=bo(q[0]), L=(typeof BANK!=="undefined"?BANK:[]).filter(v=>v[2]!=="o"&&v[0]!==q[0]&&bo(v[0])===b&&Array.isArray(v[5])&&v[5].length>=2&&String(v[4]).replace(/[—·\s]/g,"").length>2); q=L.length?L[Math.floor(Math.random()*L.length)]:null; }
+    return q?(typeof selectItems==="function"?{k:"mc",q}:q):null; };
   const shuf=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
   const o=window.F0DEDUP; if(typeof o!=="function") return;
   window.F0DEDUP=function(list,mode){
     if(window.__f0rev && mode==="wrong"){ window.__f0rev=false;
-      try{ const items=shuf(dueSet()).slice(0,20).map(mk).filter(Boolean); if(items.length) return items; }catch(e){ console.error("repaso",e); } }
+      try{ const items=shuf(dueSet()).slice(0,20).map(mk).filter(Boolean).filter((x,i,a)=>a.findIndex(y=>(y.q||y)[0]===(x.q||x)[0])===i); if(items.length) return items; }catch(e){ console.error("repaso",e); } }
     return o(list,mode); };
   addEventListener("message",function(e){ const d=e.data; if(d&&d.t==="f0-cmd") window.__f0rev=!!d.review; });
   window.F0REVIEW={due:()=>dueSet().length};
