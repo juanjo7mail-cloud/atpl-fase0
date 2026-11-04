@@ -1155,7 +1155,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Examen cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senLen"><option value="full">Completo · 34 preguntas en 48 min (el real da 60)</option><option value="half">Exprés · 17 preguntas en 24 min</option><option value="real">Tiempo real · 34 preguntas en 60 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas · 45 min <small>Solo test. Tus fallos, lo que más pesa, TRIAL y ★ OJO.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Solo test. Tus fallos, lo que más pesa, TRIAL y ★ OJO.</small></label>
       <label class="mode"><input type="radio" name="mode" value="voice"> Radio por voz · solo hablando <small>ATC te habla en inglés y contestas por el micrófono, sin escribir. Te dice si está bien, mal o qué te falta según la fraseología OACI/SENASA.
         <span class="row" id="voiceOpts"><select id="vLevel" aria-label="Dificultad de la audición"><option value="easy">Fácil · despacio y sin ruido</option><option value="normal" selected>Normal · algo de ruido</option><option value="hard">Difícil · rápido y con ruido</option><option value="real">Real · frecuencia saturada</option></select>
         <select id="vAccent" aria-label="Acento"><option value="gb">Británico</option><option value="us">Americano</option><option value="random">Al azar</option></select>
@@ -3453,7 +3453,7 @@ try{
 
 // ---------- 1 · Examen Fase 0 de Comunicaciones: 30 preguntas tipo test, 45 min, estilo trial ----------
 try{
-  const F0N = 30;
+  const F0N = 20;
   selectProf = function(){
     const st = stats(), ok = q => isGiven(q) && q[2]!=="c" && q[2]!=="g" && in090(q);
     const pool = BANK.filter(ok), pr = new Map(pool.map(q=>[q[0], priority(q,st)]));
@@ -3469,9 +3469,9 @@ try{
     need(()=>true, F0N);
     return shuffle(out).map(q=>({k:"mc", q}));
   };
-  MODE_LABEL.adaptive = "Adaptativo · 30 preguntas · 45 min";
+  MODE_LABEL.adaptive = "Adaptativo · 20 preguntas · 45 min";
   const ad = document.querySelector('input[name=mode][value=adaptive]'), lab = ad && ad.closest("label");
-  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Adaptativo · 30 preguntas · 45 min <small>Solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
+  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Adaptativo · 20 preguntas · 45 min <small>Solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
     const sn = document.querySelector('input[name=mode][value=senasa]'); if(sn) sn.checked = false; }
 }catch(e){ console.error("com_patch examen", e); }
 

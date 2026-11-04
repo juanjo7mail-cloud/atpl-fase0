@@ -1244,7 +1244,7 @@ details.lo.atpl{border-left-color:var(--magenta)}
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="examen" checked> Simulacro SENASA <small id="examCount"></small>
         <span class="opts"><select id="examLenSel" aria-label="Duración"><option value="full">Completo · 46 preguntas en 72 min (el real da 90)</option><option value="half">Exprés · 23 preguntas en 36 min</option><option value="real">Tiempo real · 46 preguntas en 90 min</option></select></span></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Con el reparto del examen de SENASA. Al menos 6 de clase y 6 de los trials; en cada bloque entran primero tus fallos, lo marcado ★ OJO y tus subcapítulos flojos. Como mucho 5 por subcapítulo. Sin reloj.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Con el reparto del examen de SENASA. Al menos 4 de clase y 4 de los trials; en cada bloque entran primero tus fallos, lo marcado ★ OJO y tus subcapítulos flojos. Como mucho 4 por subcapítulo.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
@@ -2534,7 +2534,7 @@ function selectQuestions(mode, inc, lo){
     // ordenadas por capítulo, como en el examen real
     return pickByQuota(pool, examN, 0, null).sort((a,b)=>subOf(a).localeCompare(subOf(b)));
   }
-  return shuffle(pickByQuota(pool, 30, 6, 5, 6));
+  return shuffle(pickByQuota(pool, 20, 4, 4, 4));
 }
 
 // ---------- reloj y ritmo del simulacro ----------
@@ -2892,7 +2892,8 @@ $("#startBtn").addEventListener("click",()=>{
   if(curMode==="examen"){
     startExamClock();
     $("#qlist").insertAdjacentHTML("afterbegin", `<div class="examhead"><b>Simulacro SENASA · ${current.length} preguntas en ${examMin} min</b> <span class="muted">· ${LEN[examLen].l}; el examen real son 46 en 90 min. Reparto oficial por capítulo.</span></div>`);
-  } else stopExamClock();
+  } else if(curMode==="adaptive"){ examMin=45; startExamClock(); }
+  else stopExamClock();
   updProg(); window.scrollTo({top:0});
 });
 function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length}`; }

@@ -1306,7 +1306,7 @@ details.lo .body > .formula{margin-top:10px}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Examen cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senEx" aria-label="Examen"><option value="061">061 General Navigation · 55 preguntas</option><option value="062">062 Radio Navigation · 66 preguntas</option><option value="both">061 + 062 seguidos · 121 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>15 ejercicios y 15 de teoría, según tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>10 ejercicios de cálculo (uno de cada tipo) y 10 de teoría, según tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos <small id="calcInfo">Números nuevos cada vez.</small>
         <span class="opts"><select id="calcTypeSel" aria-label="Tipo de cálculo"></select><select id="calcCountSel" aria-label="Número de preguntas"></select></span></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
@@ -4566,7 +4566,7 @@ drawCalcTabs();
 const isStyled = q => !!GEN[q[0]];
 // ejercicio práctico = se resuelve calculando o con carta/instrumento; el resto es teoría
 const PRAC_IDS = new Set("e29 t15 t16 t17 t18 d13 d15 tr1 tr13 tr2 tr3 tr4 tr6 tr7 tr11 tr14 tr15 tr16 tr17 u6 u10 u11 u12 u15 u16 u19 u20 u21 c3 c27 v5 v12 v13 v14 v15 dw1 dw2 ie1 ie2 ie3 ie5 ie9 nd7 nd15 nd17 vo16 dm2 dm9 rd18 p3 ap5 ap13 ap24 ap38 ap46 ap75".split(" "));
-const isPracId = id => PRAC_IDS.has(id) || /^(pf|nx|sx|cq|kx)/.test(id);
+const isPracId = id => PRAC_IDS.has(id) || /^(pf|nx|sx|cq|kx)/.test(id) || !!GEN[id];
 const isPrac = q => isPracId(q[0]);
 const isHardPrac = q => /^(pf|nx|sx|cq|ap|ie|nd)/.test(q[0]) || /^(v1[2-5]|tr1[147]|u1[0-2])$/.test(q[0]);
 const STYLE_SHARE = {"061":0.5, "062":0.5};   // mitad ejercicios, mitad teoría
@@ -4592,34 +4592,25 @@ function selectQuestions(mode, inc, lo, atpl){
     for(const x of sc){ if(out.length>=N) break; const l=x.q[1]; if((per[l]||0)>=3) continue; per[l]=(per[l]||0)+1; out.push(x.q); }
     for(const x of sc){ if(out.length>=N) break; if(!out.includes(x.q)) out.push(x.q); }
     return shuffle(out); }
-  // adaptativo: 20 por prioridad, como mucho 5 del mismo tema y al menos 6 del trial
-  const N = Math.min(30, pool.length), MAXLO = 5;
-  const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
-  const chosen = [], nLO = l => chosen.filter(q=>q[1]===l).length;
-  const take = (q, cap=true) => { if(chosen.includes(q) || (cap && nLO(q[1])>=MAXLO)) return; chosen.push(q); };
-  for(const x of scored){ if(chosen.filter(isTrial).length>=6) break; if(isTrial(x.q)) take(x.q); }
-  for(const x of scored){ if(chosen.length>=N) break; take(x.q); }
-  for(const x of scored){ if(chosen.length>=N) break; take(x.q,false); }
-  // los ejercicios de clase y de cálculo (pf…, nx…) entran siempre: al menos 6 en cada test adaptativo, sustituyendo a los de menor prioridad
-  const prm = new Map(scored.map(x=>[x.q[0],x.p])), isEx = q=>/^(pf|nx)/.test(q[0]);
-  shuffle(pool.filter(q=>isEx(q) && !chosen.includes(q))).forEach(q=>{
-    if(chosen.filter(isEx).length>=6) return;
-    const cand = chosen.filter(x=>!isEx(x) && !isTrial(x)).sort((a,b)=>(prm.get(a[0])||0)-(prm.get(b[0])||0));
-    const out = cand.find(x=>!isStyled(x)) || cand[0];
-    if(out) chosen.splice(chosen.indexOf(out),1,q);
-  });
-  // mitad ejercicios prácticos y mitad teoría; de los ejercicios, los difíciles y los más flojos primero
-  const half = Math.round(chosen.length/2), sc = q => (prm.get(q[0])||0) + (isHardPrac(q)?1.2:0);
-  let nP = chosen.filter(isPrac).length;
-  for(const c of pool.filter(q=>isPrac(q) && !chosen.includes(q)).sort((a,b)=>sc(b)-sc(a))){
-    if(nP>=half) break;
-    const out = chosen.filter(q=>!isPrac(q) && !isTrial(q)).sort((a,b)=>sc(a)-sc(b))[0];
-    if(!out) break; chosen.splice(chosen.indexOf(out),1,c); nP++; }
-  const addT = pool.filter(q=>!isPrac(q) && !chosen.includes(q)).sort((a,b)=>sc(b)-sc(a));
-  while(nP>half){
-    const out = chosen.filter(q=>isPrac(q) && !isEx(q) && !isTrial(q)).sort((a,b)=>sc(a)-sc(b))[0], inn = addT.shift();
-    if(!out||!inn) break; chosen.splice(chosen.indexOf(out),1,inn); nP--; }
-  return shuffle(chosen);
+  // adaptativo: 20 preguntas = 10 ejercicios de cálculo (uno de cada tipo de la lista de ejercicios y 1 más del tipo más flojo) + 10 de teoría
+  // los ejercicios van primero y la teoría al final; cada ejercicio sale con números nuevos
+  const inPool = new Set(pool.map(q=>q[0])), sc = q => priority(q,st) + (isHardPrac(q)?1.2:0) + Math.random()*1.5;
+  const exOf = tab => tab.ids.map(id=>BYID.get(id)).filter(q=>q && GEN[q[0]] && inPool.has(q[0]));
+  const exs = [], left = [];
+  CALC_TABS.filter(t=>t.ids).forEach(t=>{
+    const c = exOf(t).map(q=>({q,p:sc(q)})).sort((a,b)=>b.p-a.p);
+    if(c.length){ exs.push(c[0].q); c.slice(1).forEach(x=>left.push(x)); } });
+  left.sort((a,b)=>b.p-a.p);
+  for(const x of left){ if(exs.length>=10) break; if(!exs.includes(x.q)) exs.push(x.q); }
+  const theory = pool.filter(q=>!isPrac(q) && !GEN[q[0]]), pt = new Map(theory.map(q=>[q[0], priority(q,st)]));
+  const sorted = theory.slice().sort((a,b)=>pt.get(b[0])-pt.get(a[0])), th = [], perLO = {}, usedB = new Set();
+  const takeT = (q, cap=true) => { if(th.includes(q) || th.length>=20-exs.length) return;
+    if(cap && (perLO[q[1]]||0)>=2) return; if(isTrial(q)){ const b=trialBase?trialBase(q[0]):q[0]; if(usedB.has(b)) return; usedB.add(b); }
+    perLO[q[1]]=(perLO[q[1]]||0)+1; th.push(q); };
+  for(const q of sorted){ if(th.filter(isTrial).length>=4) break; if(isTrial(q)) takeT(q); }
+  for(const q of sorted) takeT(q);
+  for(const q of sorted) takeT(q,false);
+  return shuffle(exs).concat(shuffle(th));
 }
 
 // ---------- persistencia: progreso.json dentro del propio artefacto ----------
@@ -4910,7 +4901,7 @@ $("#startBtn").addEventListener("click",()=>{
     </div>`).join("");
   $("#qlist").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{ current[+e.target.name.slice(1)].ans = +e.target.value; updProg(); }));
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBtn").hidden=false; $("#finishBtn").disabled=false;
-  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? senLen(curEx,curLen).min*60 : 0;
+  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? senLen(curEx,curLen).min*60 : (curMode==="adaptive" ? 45*60 : 0);
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
@@ -5598,7 +5589,7 @@ const dd=function(list,mode){
     if(!Array.isArray(list)||/^(all|wrong|lo|calc|voice|trial|profe)$/.test(mode)) return list;
     const pool=(typeof BANK!=="undefined"&&Array.isArray(BANK))?BANK:[];
     const srcs=new Set(list.map(it=>{const q=qOf(it);return q&&q[2];}).filter(Boolean)), seen=new Set(), have=new Set(list.map(it=>{const q=qOf(it);return q&&q[0];}).filter(Boolean));
-    return list.map(it=>{ const q=qOf(it); if(!q) return it; const ks=keys(q);
+    return list.map(it=>{ const q=qOf(it); if(!q) return it; if(typeof GEN!=="undefined"&&GEN[q[0]]) return it; const ks=keys(q);
       if(!ks.some(k=>seen.has(k))){ ks.forEach(k=>seen.add(k)); return it; }
       const ok=p=>p[1]===q[1]&&p[2]!=="o"&&p[4]&&p[4]!=="—"&&!have.has(p[0])&&!keys(p).some(k=>seen.has(k));
       let cand=pool.filter(p=>ok(p)&&p[2]===q[2]);

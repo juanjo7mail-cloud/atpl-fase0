@@ -822,7 +822,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Examen cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senSubj" aria-label="Asignatura"><option value="031">031 Mass and Balance · 25 preguntas</option><option value="032">032 Performance · 45 preguntas</option><option value="033">033 Flight Planning · 42 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos · 15 preguntas <small>Números nuevos cada vez.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
@@ -2405,7 +2405,7 @@ function selectQuestions(mode, inc, lo, atpl){
   if(mode==="lo") return shuffle(pool.filter(q=>subOf(q[1])===lo));
   if(mode==="all") return shuffle(pool);
   if(mode==="calc"){ const c=pool.filter(q=>isGen(q) && isGiven(q)); return shuffle(c.map(q=>({q,p:priority(q,st)})).sort((a,b)=>b.p-a.p).slice(0,15).map(x=>x.q)); }
-  return pickAdaptive(pool, Math.min(30, pool.length), st);
+  return pickAdaptive(pool, Math.min(20, pool.length), st);
 }
 
 // ---------- persistencia: progreso.json dentro del propio artefacto ----------
@@ -2674,7 +2674,7 @@ $("#startBtn").addEventListener("click",()=>{
   $("#qlist").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{ current[+e.target.name.slice(1)].ans = +e.target.value; finishArmed=false; $("#finishMsg").textContent=""; updProg(); }));
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBtn").hidden=false; $("#finishBtn").disabled=false;
   clearInterval(tTimer); finishing=false; tStart=Date.now();
-  tLimit = curMode==="senasa" ? SEN_LEN(curSubj)[curLen].min*60 : curMode==="trial" ? 3600 : 0;
+  tLimit = curMode==="senasa" ? SEN_LEN(curSubj)[curLen].min*60 : curMode==="trial" ? 3600 : curMode==="adaptive" ? 45*60 : 0;
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });

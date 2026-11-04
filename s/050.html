@@ -2676,7 +2676,7 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="sim" checked> Simulacro SENASA <small id="simCount"></small>
         <span class="opts"><select id="simLen" aria-label="Duración"><option value="full">Completo · 84 preguntas en 96 min (el real da 120)</option><option value="half">Exprés · 42 preguntas en 48 min</option><option value="real">Tiempo real · 84 preguntas en 120 min</option></select></span></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Prioriza tus fallos, los subcapítulos flojos, lo que no has visto y el peso en el examen. Al menos 6 del trial.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Prioriza tus fallos, los subcapítulos flojos, lo que no has visto y el peso en el examen. Al menos 6 del trial.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="foto"> Nubes por foto <small id="fotoCount"></small></label>
@@ -4379,7 +4379,7 @@ function selectQuestions(mode, lo, incAtpl, incComp, simLen){
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && q[2]!=="p" && (incAtpl || !q[7])));
   if(mode==="all") return shuffle(pool);
   // adaptativo: 30 preguntas de Fase 0, repartidas por capítulos y tipos, sin repetir las de los últimos tests
-  const N = Math.min(30, pool.length), RK = "f0:met:recent:"+location.pathname;
+  const N = Math.min(20, pool.length), RK = "f0:met:recent:"+location.pathname;
   let recent = []; try{ recent = JSON.parse(localStorage.getItem(RK)||"[]"); }catch(e){}
   const rec = new Map(); recent.forEach((id,i)=>{ if(!rec.has(id)) rec.set(id, i); });     // 0 = la más reciente
   const w = q => { let p = priority(q,st); const r = rec.get(q[0]); if(r!==undefined) p *= r<30 ? .3 : r<60 ? .55 : .8; return Math.pow(Math.max(.05,p),1.6); };
@@ -4717,10 +4717,10 @@ $("#simLen").addEventListener("change",()=>{ document.querySelector('input[name=
 let current = [], curMode = "sim", simSecs = 0, simStart = 0, simTick = null, simLenKind="full";
 function mmss(s){ const m=Math.floor(Math.abs(s)/60), q=Math.abs(s)%60; return (s<0?"−":"")+m+":"+String(q).padStart(2,"0"); }
 function stopTimer(){ if(simTick){ clearInterval(simTick); simTick=null; } }
-function startTimer(n, kind){
+function startTimer(n, kind, fixedSecs){
   // Completo: 20 % menos de tiempo que el real. Exprés: la mitad de ese tiempo. Tiempo real: 86 s/pregunta.
-  const perQ = kind==="real" ? EXAM_MIN*60/EXAM_N : EXAM_MIN*60/EXAM_N*0.8;
-  simSecs = Math.round(perQ*n); simStart = Date.now();
+  let perQ = kind==="real" ? EXAM_MIN*60/EXAM_N : EXAM_MIN*60/EXAM_N*0.8;
+  simSecs = fixedSecs || Math.round(perQ*n); simStart = Date.now(); if(fixedSecs) perQ = fixedSecs/n;
   const box=$("#timerBox"); box.hidden=false;
   const tickFn=()=>{
     const el=Math.floor((Date.now()-simStart)/1000), left=simSecs-el;
@@ -4765,7 +4765,7 @@ $("#startBtn").addEventListener("click",()=>{
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false;
   $("#finishBtn").hidden = false; $("#finishBtn").disabled = false;
   stopTimer();
-  if(curMode==="sim") startTimer(current.length, simLenKind); else $("#timerBox").hidden = true;
+  if(curMode==="sim") startTimer(current.length, simLenKind); else if(curMode==="adaptive") startTimer(current.length, "real", 45*60); else $("#timerBox").hidden = true;
   updProg(); window.scrollTo({top:0});
 });
 function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length}`; }

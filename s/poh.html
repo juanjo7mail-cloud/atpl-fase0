@@ -695,7 +695,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="plane" checked> Test por avión <small><span class="row" style="margin-top:6px"><select id="acSel"></select></span>Solo preguntas de ese avión: 30 por prioridad.</small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Tus fallos y lo que más pesa, de los tres aviones.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Tus fallos y lo que más pesa, de los tres aviones.</small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
     </div>
     <label class="row" style="margin:10px 0 4px"><input type="checkbox" id="incTrial"> Incluir temario aún no dado</label>
@@ -1392,7 +1392,7 @@ function selectQuestions(mode, inc, lo, atpl){
   const pool = BANK.filter(q=> (inc || q[2]!=="c") && (plane ? acOf(q).includes($("#acSel").value) : (atpl || isGiven(q))));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
   // por avión o adaptativo (30): por prioridad, como mucho 6 (o 5) de un mismo tema y una sola variante por pregunta original
-  const N = Math.min(30, pool.length), MAXLO = plane ? 6 : 5;
+  const N = Math.min(20, pool.length), MAXLO = plane ? 6 : 5;
   const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
   const chosen = [], usedB = new Set(), nLO = l => chosen.filter(q=>q[1]===l).length;
   const take = (q, cap=true) => { const b=baseOf(q[0]); if(chosen.includes(q) || usedB.has(b) || (cap && nLO(q[1])>=MAXLO)) return; usedB.add(b); chosen.push(q); };
@@ -1645,7 +1645,7 @@ $("#startBtn").addEventListener("click",()=>{
     </div>`).join("");
   $("#qlist").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{ current[+e.target.name.slice(1)].ans = +e.target.value; askedUnanswered=false; $("#finishAsk").hidden=true; $("#finishBtn").textContent="Corregir"; updProg(); }));
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBox").hidden=false; $("#finishBtn").disabled=false; $("#finishBtn").textContent="Corregir"; $("#finishAsk").hidden=true; askedUnanswered=false;
-  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : 0;
+  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : (curMode==="adaptive" ? 45*60 : 0);
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
