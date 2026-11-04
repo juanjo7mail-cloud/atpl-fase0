@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="75b857b8ff6e";</script>
+<script>window.F0_BUILD="fccdac6c9913";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1410,7 +1410,7 @@ function fillOnPop(){ const l=onlineList(), named=l.filter(x=>x.n).sort((a,b)=>a
 function drawOnline(){ const l=onlineList(); $("#onBtn").hidden=!sbUser||!l.length; $("#onN").textContent=l.length; if(!$("#onPop").hidden) fillOnPop(); }
 function trackMe(){ try{ if(presCh) presCh.track({n:MY.name||""}); }catch(e){} }
 function stopPresence(){ try{ if(presCh&&sb) sb.removeChannel(presCh); }catch(e){} presCh=null; $("#onBtn").hidden=true; $("#onPop").hidden=true; $("#onBtn").setAttribute("aria-expanded","false"); }
-function chatDeps(){ return {sb,user:sbUser,name:()=>MY.name||(sbUser.email||"alumno").split("@")[0]}; }
+function chatDeps(){ return {sb,user:sbUser,name:()=>MY.name||(sbUser.email||"alumno").split("@")[0],busy:sgnBusy}; }
 function startPresence(){ stopPresence(); try{ if(window.F0Chat&&sb&&sbUser) window.F0Chat.start(chatDeps()); }catch(e){} if(!sb||!sbUser||typeof sb.channel!=="function") return;
   try{ presCh=sb.channel("f0:online",{config:{presence:{key:sbUser.id}}});
     presCh.on("presence",{event:"sync"},drawOnline).subscribe(st=>{ if(st==="SUBSCRIBED") trackMe(); });

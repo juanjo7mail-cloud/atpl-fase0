@@ -7,7 +7,7 @@
 const MAXLEN=500, GAP=500, KEEP=200, TTL=60*60*1000, GRACE=10*60*1000, RESEND=4000, READ_TTL=5*60*1000, DAY=24*60*60*1000, MAXFILE=2*1024*1024, EXT=/\.(pdf|docx?|xlsx?|pptx?|txt|csv|rtf|png|jpe?g)$/i;   // gracia: tras desconectarse, un compañero sigue «en línea» 10 min y le llegan los mensajes al volver   // los mensajes duran 60 min (solo en este dispositivo)
 const $=(s,r)=>(r||document).querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const C={dmTo:"", dmText:"", people:[], sms:false, smsErr:"", pAt:0, dch:null, fAt:0, deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0};
+const C={dmTo:"", dmText:"", people:[], sms:false, smsErr:"", pAt:0, dch:null, fAt:0, deps:null, ch:null, uid:"", status:"off", peers:{}, rooms:{}, unread:{}, active:null, open:false, last:0, seen:new Set(), retry:0, root:null, shown:0, names:{}, title:"", pruneT:0, out:{}, outT:0, nt:{ready:false,q:[],tm:0,hide:0}};
 
 const PLANE='<path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z"/>';
 const ICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path class="bb" d="M16 3C8.8 3 3 8 3 14.2c0 3.3 1.7 6.3 4.4 8.3-.2 1.9-1 3.6-2.2 5 2.6-.3 4.8-1.3 6.4-2.6 1.4.4 2.9.6 4.4.6 7.200 0 13-5 13-11.300S23.200 3 16 3z"/><g class="pl" transform="translate(16 14) rotate(-45) scale(.82) translate(-10 -10)">'+PLANE+'</g></svg>';
@@ -120,6 +120,15 @@ function css(){
  .f0c.open{left:0;right:0;bottom:0}
  .f0c-pan{width:100%;height:min(80dvh,620px);border-radius:18px 18px 0 0;border-width:1px 0 0}
 }
+.f0c-toast{width:max-content;position:absolute;right:0;bottom:calc(100% + 10px);display:flex;align-items:center;gap:8px;max-width:min(300px,calc(100vw - 28px));border:1px solid #3B5874;border-radius:14px;padding:8px 12px;background:#10223A;color:#E3ECF2;font:600 13.5px/1.25 var(--body);box-shadow:0 8px 24px rgba(10,23,36,.4);cursor:pointer;animation:f0tin .28s cubic-bezier(.2,1.2,.4,1) both;text-align:left}
+.f0c-toast i{width:9px;height:9px;border-radius:50%;flex:none;background:#6ee7a1;box-shadow:0 0 0 3px rgba(110,231,161,.28)}
+.f0c-toast::after{content:"";position:absolute;right:26px;bottom:-6px;width:10px;height:10px;background:#10223A;border-right:1px solid #3B5874;border-bottom:1px solid #3B5874;transform:rotate(45deg)}
+.f0c-toast.out{animation:f0tout .25s ease-in both}
+@keyframes f0tin{from{opacity:0;transform:translateY(10px) scale(.92)}}
+@keyframes f0tout{to{opacity:0;transform:translateY(6px)}}
+.f0c.open .f0c-toast{display:none}
+.f0c-opt{display:flex;align-items:center;gap:8px;margin:8px 0 0;font-size:12.5px;color:#94A9BA;cursor:pointer}.f0c-opt input{width:16px;height:16px;flex:none;accent-color:#0E7C86}
+@media (prefers-reduced-motion:reduce){.f0c-toast,.f0c-toast.out{animation:none}}
 @media print{.f0c{display:none}}`;
   document.head.appendChild(s);
 }
@@ -175,11 +184,45 @@ function join(priv){
     } else if(st==="CLOSED"&&C.status==="on"){ C.status="err"; update(); if(C.retry++<3) setTimeout(()=>{ if(C.deps&&C.status==="err") join(false); },3000); }
   });
 }
-function leaveChannel(){ if(C.ch){ try{ C.deps.sb.removeChannel(C.ch); }catch(e){} C.ch=null; } C.peers={}; }
+function leaveChannel(){ C.nt.ready=false; if(C.ch){ try{ C.deps.sb.removeChannel(C.ch); }catch(e){} C.ch=null; } C.peers={}; }
+/* ---------- burbuja «se ha conectado» ---------- */
+const NT_GAP=30*60*1000, NT_KEY="f0:conn-toast", NT_SEEN="f0:conn-seen";
+const ntOn=()=>{ try{ return localStorage.getItem(NT_KEY)!=="0"; }catch(e){ return true; } };
+function ntSeen(){ try{ return JSON.parse(localStorage.getItem(NT_SEEN)||"{}")||{}; }catch(e){ return {}; } }
+function ntBusy(){ try{ return !!(C.deps&&typeof C.deps.busy==="function"&&C.deps.busy()); }catch(e){ return false; } }
+function announce(cur){   // «cur» = presentes ahora (sin mí). Solo avisa de los que NO estaban en la lista anterior.
+  const N=C.nt; if(!N.ready){ N.ready=true; N.t0=Date.now(); return; }
+  if(Date.now()-N.t0<5000) return;                               // los primeros 5 s tras unirse aún llega la lista de los que ya estaban          // primera sincronización = quienes ya estaban: sin aviso
+  if(!ntOn()) return;
+  const now=Date.now(), seen=ntSeen(); let ch=false;
+  Object.keys(cur).forEach(k=>{
+    if(C.peers[k]) return;                                       // ya estaba (o vuelve de la gracia): no es nuevo
+    if(seen[k]&&now-seen[k]<NT_GAP) return;                      // ya avisado hace menos de 30 min
+    seen[k]=now; ch=true; if(!N.q.some(x=>x.id===k)) N.q.push({id:k,n:cur[k].n});
+  });
+  if(ch){ Object.keys(seen).forEach(k=>{ if(now-seen[k]>DAY) delete seen[k]; }); try{ localStorage.setItem(NT_SEEN,JSON.stringify(seen)); }catch(e){} }
+  ntFlush();
+}
+function ntFlush(){
+  const N=C.nt; clearTimeout(N.tm); if(!N.q.length||!C.root) return;
+  if(C.open){ N.q=[]; return; }                                  // con el chat abierto ya ves la lista
+  if(ntBusy()||document.visibilityState!=="visible"){ N.tm=setTimeout(ntFlush,3000); return; }   // en un test (o pestaña oculta) se guarda para después
+  const q=N.q.splice(0), f=q[0].n.split(/\s+/)[0]||"Un compañero";
+  const txt=q.length===1?esc(f)+" se ha conectado":esc(f)+" y "+(q.length-1)+(q.length===2?" más":" más")+" se han conectado";
+  ntHide(true);
+  const t=document.createElement("button"); t.type="button"; t.className="f0c-toast"; t.setAttribute("role","status"); t.innerHTML="<i></i><span>"+txt+"</span>";
+  t.addEventListener("click",()=>{ ntHide(true); setOpen(true); });
+  C.root.appendChild(t); N.hide=setTimeout(()=>ntHide(false),4000);
+}
+function ntHide(now){
+  clearTimeout(C.nt.hide); const t=C.root&&$(".f0c-toast",C.root); if(!t) return;
+  if(now){ t.remove(); return; } t.classList.add("out"); setTimeout(()=>t.remove(),260);
+}
 function syncPeers(){
   const now=Date.now(), cur={}; let back=[];
   try{ const st=C.ch.presenceState(); Object.keys(st).forEach(k=>{ const m=st[k]&&st[k][0]; if(m&&k!==C.uid) cur[k]={n:String(m.n||"Alumno").slice(0,60)}; }); }catch(e){}
   const o=Object.assign({},cur);
+  try{ announce(cur); }catch(e){}
   Object.keys(C.peers).forEach(k=>{
     const p=C.peers[k];
     if(cur[k]){ if(p.away) back.push(k); return; }
@@ -376,7 +419,7 @@ const ini=n=>n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toU
 const sign=n=>{ const w=String(n).trim().split(/\s+/).filter(Boolean); let g=w.slice(0,3).map(x=>x[0]).join(""); if(g.length<3&&w[0]) g=(g+w[0].slice(1)).slice(0,3); return (g||"???").toUpperCase(); };
 const nameOf=r=>(C.peers[r]&&C.peers[r].n)||C.names[r]||(C.rooms[r]&&C.rooms[r].find(m=>!m.me)&&C.rooms[r].find(m=>!m.me).n)||"Compañero";
 function setOpen(v){
-  C.open=!!v; if(!C.root) return;
+  C.open=!!v; if(!C.root) return; if(v){ C.nt.q=[]; ntHide(true); }
   if(!v){ C.active=null; } else if(C.active){ C.unread[C.active]=0; markRead(C.active); }
   save();
   update();
@@ -389,6 +432,7 @@ function build(){
   const r=document.createElement("aside"); r.className="f0c"; r.setAttribute("aria-label","Chat con compañeros");
   r.innerHTML='<button class="f0c-fab" type="button" aria-expanded="false" aria-haspopup="dialog"></button><section class="f0c-pan" role="dialog" aria-label="Online pilots"></section><input type="file" id="f0cPh" accept="image/*" hidden tabindex="-1"><input type="file" id="f0cFl" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.png,.jpg,.jpeg" hidden tabindex="-1">';
   document.body.appendChild(r); C.root=r;
+  r.addEventListener("change",e=>{ if(e.target&&e.target.id==="f0cNt"){ try{ localStorage.setItem(NT_KEY,e.target.checked?"1":"0"); }catch(x){} if(!e.target.checked){ C.nt.q=[]; ntHide(true); } } });
   r.addEventListener("click",e=>{
     if(e.target.closest(".f0c-fab")) return setOpen(true);
     if(e.target.closest("#f0cX")) return setOpen(false);
@@ -460,7 +504,7 @@ function update(){
     const onl=online.filter(k=>!(C.unread[k]>0)), ofl=offIds.filter(k=>!(C.unread[k]>0));
     const list=(online.length||offIds.length)?`<div class="f0c-list">${nw.length?'<h3 class="nw">Mensajes nuevos</h3>'+nw.map(k=>row(k,stK(k))).join(""):""}${onl.length?"<h3>En frecuencia</h3>"+onl.map(k=>row(k,stK(k))).join(""):""}${ofl.length?"<h3>Fuera de frecuencia</h3>"+ofl.map(k=>row(k,"off")).join(""):""}</div>`
       :`<div class="f0c-empty">${ICON}${on?"Ahora mismo no hay nadie más conectado.<br>Cuando entre un compañero aparecerá aquí.":"No se ha podido conectar el chat."}</div>`;
-    pan.innerHTML=`<header class="f0c-hd ${C.status}"><div class="t"><h2>Online pilots</h2><small><i></i>FREC 122.800 · ${esc(stTxt)}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}${dm}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos${C.att?" · Fotos: se ven una vez · Archivos: 24 h":""}</p></div>`;
+    pan.innerHTML=`<header class="f0c-hd ${C.status}"><div class="t"><h2>Online pilots</h2><small><i></i>FREC 122.800 · ${esc(stTxt)}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}${dm}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos${C.att?" · Fotos: se ven una vez · Archivos: 24 h":""}</p><label class="f0c-opt"><input type="checkbox" id="f0cNt"${ntOn()?" checked":""}> Avisar cuando se conecte un compañero</label></div>`;
     C.dmAnim=false; const ti=$("#f0cDmIn",r); if(ti) ti.value=C.dmText;
     if(ddF&&C.dmOpen){ const o=[...r.querySelectorAll(".dd-o")].find(x=>x.dataset.dm===ddF); if(o) o.focus(); }
     if(dmKeep&&ti){ ti.focus(); try{ ti.setSelectionRange(dmKeep.a,dmKeep.b); }catch(e){} }
@@ -480,12 +524,12 @@ function update(){
 function start(deps){
   const fresh=C.status==="off"||C.uid!==deps.user.id;
   C.deps=deps; build();
-  if(fresh){ C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.uid=deps.user.id; load(); clearInterval(C.pruneT); C.pruneT=setInterval(tick,30000); clearInterval(C.outT); C.outT=setInterval(expire,2000); C.out={}; C.people=[]; C.sms=false; C.att=false; C.err=""; C.pAt=0; C.fAt=0; join(false); smsInit(); }
+  if(fresh){ C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.uid=deps.user.id; C.nt={ready:false,q:[],tm:0,hide:0}; load(); clearInterval(C.pruneT); C.pruneT=setInterval(tick,30000); clearInterval(C.outT); C.outT=setInterval(expire,2000); C.out={}; C.people=[]; C.sms=false; C.att=false; C.err=""; C.pAt=0; C.fAt=0; join(false); smsInit(); }
 }
 function leave(){
   try{ if(C.uid) localStorage.removeItem(SK()); }catch(e){}   // al cerrar sesión se borra el chat de este dispositivo
   clearInterval(C.pruneT); clearInterval(C.outT); C.out={}; try{ if(C.title) document.title=C.title; }catch(e){}
-  leaveChannel(); if(C.dch){ try{ C.deps.sb.removeChannel(C.dch); }catch(e){} C.dch=null; } C.people=[]; C.sms=false; C.att=false; C.status="off"; C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.deps=null; C.uid="";
+  clearTimeout(C.nt.tm); clearTimeout(C.nt.hide); C.nt={ready:false,q:[],tm:0,hide:0}; leaveChannel(); if(C.dch){ try{ C.deps.sb.removeChannel(C.dch); }catch(e){} C.dch=null; } C.people=[]; C.sms=false; C.att=false; C.status="off"; C.rooms={}; C.unread={}; C.names={}; C.seen=new Set(); C.active=null; C.open=false; C.deps=null; C.uid="";
   if(C.root){ C.root.remove(); C.root=null; }
 }
 function wake(){   // al volver a la pestaña (o recuperar red): si el canal se cayó, se reconecta; si no, se vuelve a anunciar la presencia
