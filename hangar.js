@@ -101,7 +101,7 @@ const CSS=`#fh{
 #fh [data-crew=go] .fh-m2{animation:fh-m2go 3.4s linear forwards}
 #fh [data-crew=back] .fh-m1{animation:fh-m1back 3.4s linear forwards}
 #fh [data-crew=back] .fh-m2{animation:fh-m2back 3.4s linear forwards}
-#fh [data-crew=aside] .fh-m1{transform:translate(563px,88px)}
+#fh [data-crew=aside] .fh-m1{transform:translate(617px,88px)}
 #fh [data-crew=aside] .fh-m2{transform:translate(190px,0)}
 #fh [data-crew=go] .fh-leg,#fh [data-crew=back] .fh-leg{animation:fh-walk .42s ease-in-out 8 alternate}
 #fh [data-crew=go] .fh-l2,#fh [data-crew=back] .fh-l2{animation-direction:alternate-reverse}
@@ -111,8 +111,8 @@ const CSS=`#fh{
 @keyframes fh-walk{from{transform:rotate(-24deg)}to{transform:rotate(24deg)}}
 @keyframes fh-bob{50%{transform:translateY(-2.5px)}}
 @keyframes fh-nod{50%{transform:translateY(1.5px)}}
-@keyframes fh-m1go{0%{transform:translate(0,0)}14%{transform:translate(0,88px)}100%{transform:translate(563px,88px)}}
-@keyframes fh-m1back{0%{transform:translate(563px,88px)}86%{transform:translate(0,88px)}100%{transform:translate(0,0)}}
+@keyframes fh-m1go{0%{transform:translate(0,0)}14%{transform:translate(0,88px)}100%{transform:translate(617px,88px)}}
+@keyframes fh-m1back{0%{transform:translate(617px,88px)}86%{transform:translate(0,88px)}100%{transform:translate(0,0)}}
 @keyframes fh-m2go{0%{transform:translate(0,0)}100%{transform:translate(190px,0)}}
 @keyframes fh-m2back{0%{transform:translate(190px,0)}100%{transform:translate(0,0)}}
 
@@ -135,7 +135,7 @@ const CSS=`#fh{
 @keyframes fh-plane{
   0%,33%{transform:translateX(0);animation-timing-function:cubic-bezier(.5,0,.6,1)}
   100%{transform:translateX(-1250px)}}
-@media (max-width:560px){#fh .bays{gap:3px}#fh .bay{font-size:10px}#fh .qcard .q{font-size:19px}#fh .loto span{display:none}}
+@media (max-width:560px){#fh .testing .fh-scene{height:128px}#fh .bays{gap:3px}#fh .bay{font-size:10px}#fh .qcard .q{font-size:19px}#fh .loto span{display:none}}
 @media (prefers-reduced-motion:reduce){#fh *{animation:none!important;transition:none!important}#fh .out #fh-plane,#fh .out .fh-tug{opacity:0}}
 `;
 const SVG=`  <svg class="fh-scene" id="fh-scene" data-crew="work" viewBox="0 0 960 380" role="img" aria-label="Un avión en un hangar, con dos mecánicos trabajando en el motor y en el fuselaje">
@@ -173,43 +173,48 @@ const SVG=`  <svg class="fh-scene" id="fh-scene" data-crew="work" viewBox="0 0 9
     <g class="lampsw"><path d="M850 40V66" stroke="#4d6477"/><path d="M830 82L850 66L870 82Z" fill="#c89a3a"/><path d="M830 82H870L1000 300H710Z" fill="url(#fhgCone)" class="flick"/></g>
    </g>
 
-   <!-- AVIÓN ESCUELA: monomotor de ala alta (morro a la izquierda) -->
+   <!-- AVIÓN ESCUELA: bimotor de ala alta, tipo Tecnam P2006T (morro a la izquierda) -->
    <g id="fh-plane">
-    <!-- estabilizadores y deriva -->
-    <path d="M700 214L792 205L797 214L706 226Z" fill="url(#fhgWing)"/>
-    <path class="lv-tail" d="M690 214L736 112H770L773 131L768 216Z"/>
-    <!-- ala alta y montante -->
-    <path d="M326 146H524L534 157L322 160Z" fill="url(#fhgWing)"/><path d="M326 146H524" stroke="#e9eff3" stroke-width="2"/><path class="lv-tail" d="M326 146H352L350 159L322 160Z"/>
-    <path d="M404 264L440 160" stroke="#8d9fac" stroke-width="4" stroke-linecap="round"/><path d="M392 264L398 244" stroke="#8d9fac" stroke-width="0"/>
+    <!-- motor lejano (insinúa el bimotor) -->
+    <g><path d="M296 150Q296 144 304 144L368 146L370 170L304 174Q296 174 296 168Z" fill="#7f93a1"/><path d="M304 160H366" stroke="#6a7f8e" stroke-width="2"/></g>
+    <!-- estabilizador y deriva -->
+    <path d="M724 220L808 211L812 219L730 232Z" fill="url(#fhgWing)"/>
+    <path class="lv-tail" d="M692 214L748 120H782L794 220Z"/><path d="M700 200L752 124" stroke="#fff" stroke-width="1" opacity=".18"/>
+    <!-- ala alta cantilever -->
+    <path d="M336 168L540 171L554 184L330 192Z" fill="url(#fhgWing)"/><path d="M336 168L540 171" stroke="#f3f6f8" stroke-width="2"/><path class="lv-tail" d="M336 168H362L358 190L330 192Z"/>
     <!-- fuselaje -->
-    <path d="M232 232C232 212 244 202 262 200L318 197L354 168H520Q560 170 584 196L772 209L774 224L560 258L320 264H262C244 264 232 252 232 232Z" fill="url(#fhgFus)"/>
-    <path class="lv-tail" d="M420 262Q560 228 772 209L774 224L560 258Z"/><path class="lv-b" d="M452 259L560 254L772 220" stroke-width="3.500"/>
+    <path d="M240 240C240 228 250 222 266 220L322 214L362 186H498C530 186 548 192 566 198L792 214L794 230L552 266L520 268H298C262 268 240 258 240 240Z" fill="url(#fhgFus)"/>
+    <path d="M370 188H496" stroke="#fff" stroke-width="2" opacity=".6"/>
+    <path class="lv-tail" d="M430 268Q580 238 792 214L794 230L552 266Z"/><path class="lv-b" d="M468 266L560 261L794 226" stroke-width="3.500"/>
     <!-- ventanas -->
-    <g fill="#2a4256"><path d="M324 196L356 172H374V200Z"/><path d="M382 174H440V204H382Z" rx="3"/><path d="M448 174H514L536 190V204H448Z"/></g>
-    <path d="M441 170V262" stroke="#8fa3b0" stroke-width="1.5"/><path d="M406 214H420" stroke="#6a7f8e" stroke-width="3" stroke-linecap="round"/>
-    <text x="570" y="212" font-family="JetBrains Mono,monospace" font-weight="700" font-size="13" letter-spacing="2" fill="#173047" transform="rotate(4 570 212)">EC-ATP</text>
-    <!-- motor y capó abierto -->
-    <g><rect x="258" y="200" width="60" height="16" rx="3" fill="#33495a"/><circle cx="272" cy="203" r="6" fill="#51616e"/><circle cx="294" cy="203" r="6" fill="#51616e"/><circle cx="312" cy="203" r="5" fill="#51616e"/></g>
-    <g class="cowl"><path d="M318 198L324 190L266 168L254 176Z" fill="#c9d4db" stroke="#6a7f8e" stroke-width="1.500"/></g>
-    <!-- hélice -->
-    <ellipse cx="231" cy="232" rx="9" ry="14" fill="#c9d4db"/><rect x="224" y="176" width="7" height="112" rx="3" fill="#2a3946" opacity=".9"/>
+    <g fill="#2a4256"><path d="M328 212L362 189H378V215Z"/><path d="M386 191H448Q452 191 452 195V215H386Z"/><path d="M460 191H510L532 204V215H460Z"/></g>
+    <g fill="#fff" opacity=".12"><path d="M392 193H412L402 213H386Z"/><path d="M466 193H486L476 213H460Z"/></g>
+    <path d="M454 188V266" stroke="#8fa3b0" stroke-width="1.5"/><path d="M424 226H440" stroke="#6a7f8e" stroke-width="3" stroke-linecap="round"/>
+    <path d="M300 218L300 266M520 270" stroke="#fff" stroke-width="0"/><path d="M450 186V180" stroke="#6a7f8e" stroke-width="2"/>
+    <text x="604" y="226" font-family="JetBrains Mono,monospace" font-weight="700" font-size="13" letter-spacing="2" fill="#173047" transform="rotate(3 604 226)">EC-ATP</text>
+    <!-- góndola del motor cercano, con el capó abierto -->
+    <g><rect x="280" y="168" width="58" height="20" rx="3" fill="#33495a"/><circle cx="292" cy="172" r="6" fill="#51616e"/><circle cx="310" cy="172" r="6" fill="#51616e"/><circle cx="328" cy="172" r="6" fill="#51616e"/>
+     <path d="M270 186L340 186L342 198Q300 204 272 196Z" fill="url(#fhgFus)"/><path d="M278 192H338" stroke="#aebbc5" stroke-width="2"/></g>
+    <g class="cowl"><path d="M338 168L342 160L286 138L276 146Z" fill="#c9d4db" stroke="#6a7f8e" stroke-width="1.500"/></g>
+    <ellipse cx="264" cy="182" rx="8" ry="13" fill="#c9d4db"/><rect x="258" y="128" width="6" height="108" rx="3" fill="#2a3946" opacity=".9"/>
     <!-- tren -->
-    <g><path d="M270 262L264 288" stroke="#51616e" stroke-width="7"/><circle cx="262" cy="291" r="11" fill="#1a2630" stroke="#5d7283" stroke-width="3"/></g>
-    <g><path d="M476 262L482 288" stroke="#51616e" stroke-width="8"/><circle cx="482" cy="291" r="13" fill="#1a2630" stroke="#5d7283" stroke-width="3"/></g>
+    <path d="M410 266Q470 282 524 266V260H410Z" fill="#b8c6cf"/>
+    <g><path d="M272 268L267 288" stroke="#8d9fac" stroke-width="7"/><circle cx="264" cy="293" r="11" fill="#1a2630" stroke="#5d7283" stroke-width="3"/></g>
+    <g><path d="M470 274L474 290" stroke="#8d9fac" stroke-width="8"/><circle cx="474" cy="293" r="12" fill="#1a2630" stroke="#5d7283" stroke-width="3"/></g>
     <!-- gatos -->
-    <g fill="#f5c531"><path d="M394 264L378 300H410Z" opacity=".95"/><path d="M650 238L634 300H666Z" opacity=".95"/></g><g fill="#16120a"><rect x="376" y="298" width="36" height="6"/><rect x="632" y="298" width="36" height="6"/></g>
+    <g fill="#f5c531"><path d="M392 268L376 302H408Z" opacity=".95"/><path d="M702 224L686 302H718Z" opacity=".95"/></g><g fill="#16120a"><rect x="374" y="300" width="36" height="5"/><rect x="684" y="300" width="36" height="5"/></g>
     <!-- baliza y etiqueta AOG -->
-    <ellipse class="beacon" cx="752" cy="113" rx="7" ry="4" fill="#f26a63"/>
-    <g><path d="M226 244L214 262" stroke="#8d9fac" stroke-width="1.500"/><rect x="186" y="260" width="46" height="26" rx="3" fill="#f26a63"/><text x="209" y="277" text-anchor="middle" font-family="JetBrains Mono,monospace" font-weight="700" font-size="11" letter-spacing="1" fill="#1a0706">AOG</text></g>
+    <ellipse class="beacon" cx="766" cy="124" rx="7" ry="4" fill="#f26a63"/>
+    <g><path d="M300 268L306 274" stroke="#8d9fac" stroke-width="1.500"/><rect x="292" y="274" width="46" height="22" rx="3" fill="#f26a63"/><text x="315" y="289" text-anchor="middle" font-family="JetBrains Mono,monospace" font-weight="700" font-size="11" letter-spacing="1" fill="#1a0706">AOG</text></g>
    </g>
 
    <!-- plataforma (fija) junto al motor -->
-   <g class="fh-plat"><g stroke="#5d7283" stroke-width="3"><path d="M244 292V222M300 292V222M244 222H300M244 258H300"/></g><rect x="238" y="216" width="68" height="8" fill="#f5c531"/></g>
+   <g class="fh-plat"><g stroke="#5d7283" stroke-width="3"><path d="M192 292V224M246 292V224M192 224H246M192 258H246"/></g><rect x="186" y="216" width="66" height="8" fill="#f5c531"/></g>
    <!-- mecánico 1 (plataforma, motor) -->
    <g class="fh-m fh-m1"><g class="fh-bob">
-     <rect class="fh-leg fh-l1" x="265" y="200" width="6" height="16" rx="2" fill="#1a2630"/><rect class="fh-leg fh-l2" x="273" y="200" width="6" height="16" rx="2" fill="#1a2630"/>
-     <rect x="263" y="178" width="18" height="24" rx="4" fill="#f08a24"/><circle cx="272" cy="169" r="8.500" fill="#e9b88f"/><path d="M262.500 167C262.500 155 281.500 155 281.500 167Z" fill="#f5c531"/>
-     <g class="fh-wrench"><path d="M279 184L296 198" stroke="#e9b88f" stroke-width="6" stroke-linecap="round"/><path d="M294 197L310 206" stroke="#8d9fac" stroke-width="5" stroke-linecap="round"/><circle cx="314" cy="208" r="5.500" fill="none" stroke="#8d9fac" stroke-width="3"/></g>
+     <rect class="fh-leg fh-l1" x="211" y="200" width="6" height="16" rx="2" fill="#1a2630"/><rect class="fh-leg fh-l2" x="219" y="200" width="6" height="16" rx="2" fill="#1a2630"/>
+     <rect x="209" y="178" width="18" height="24" rx="4" fill="#f08a24"/><circle cx="218" cy="169" r="8.500" fill="#e9b88f"/><path d="M208.500 167C208.500 155 227.500 155 227.500 167Z" fill="#f5c531"/>
+     <g class="fh-wrench"><path d="M225 184L244 186" stroke="#e9b88f" stroke-width="6" stroke-linecap="round"/><path d="M242 186L254 180" stroke="#8d9fac" stroke-width="5" stroke-linecap="round"/><circle cx="258" cy="178" r="5.500" fill="none" stroke="#8d9fac" stroke-width="3"/></g>
    </g></g>
    <!-- mecánico 2 (cola) con lámpara -->
    <g class="fh-m fh-m2"><g class="fh-bob">
@@ -220,10 +225,10 @@ const SVG=`  <svg class="fh-scene" id="fh-scene" data-crew="work" viewBox="0 0 9
    <!-- GPU, carro de herramientas, conos -->
    <g><rect x="552" y="262" width="74" height="40" rx="4" fill="#f5c531"/><rect x="560" y="270" width="28" height="16" fill="#16120a"/><circle cx="568" cy="306" r="6" fill="#0a131b"/><circle cx="612" cy="306" r="6" fill="#0a131b"/><path d="M552 284C520 284 500 272 492 262" fill="none" stroke="#e9eff3" stroke-width="3"/></g>
    <g transform="translate(702 0)"><rect x="40" y="262" width="62" height="40" rx="3" fill="#c94a3f"/><g fill="#8d2f27"><rect x="46" y="268" width="50" height="8"/><rect x="46" y="280" width="50" height="8"/><rect x="46" y="292" width="50" height="8"/></g><circle cx="52" cy="306" r="4" fill="#0a131b"/><circle cx="92" cy="306" r="4" fill="#0a131b"/></g>
-   <g fill="#f08a24"><path d="M180 326L190 300L200 326Z"/><path d="M670 332L680 306L690 332Z"/><path d="M906 328L916 302L926 328Z"/></g><g fill="#fff" opacity=".9"><rect x="185" y="312" width="10" height="3"/><rect x="675" y="318" width="10" height="3"/><rect x="911" y="314" width="10" height="3"/></g>
+   <g fill="#f08a24"><path d="M330 330L340 304L350 330Z"/><path d="M670 332L680 306L690 332Z"/><path d="M906 328L916 302L926 328Z"/></g><g fill="#fff" opacity=".9"><rect x="335" y="316" width="10" height="3"/><rect x="675" y="318" width="10" height="3"/><rect x="911" y="314" width="10" height="3"/></g>
    <!-- tractor de remolque (llega por delante del morro) -->
    <g class="fh-tug" id="fh-tug">
-    <path d="M138 297L260 291" stroke="#8d9fac" stroke-width="5" stroke-linecap="round"/><circle cx="262" cy="291" r="4.500" fill="#f5c531"/>
+    <path d="M138 297L262 293" stroke="#8d9fac" stroke-width="5" stroke-linecap="round"/><circle cx="264" cy="293" r="4.500" fill="#f5c531"/>
     <rect x="132" y="282" width="14" height="16" rx="2" fill="#51616e"/>
     <rect x="24" y="272" width="116" height="32" rx="7" fill="#f08a24"/><rect x="24" y="298" width="116" height="6" fill="url(#fhstripe)"/>
     <path d="M64 272L72 242H124L132 272Z" fill="#f08a24"/><path d="M77 248H119L125 268H71Z" fill="#2a4256"/>
@@ -258,7 +263,7 @@ function build(){
    <div class="panel" id="fh-panel"></div><div class="hazard"></div></div><div class="toast" id="fh-toast" role="status"></div>`;
   document.body.appendChild(root);
   panel=$("#fh-panel",root); scene=$("#fh-scene",root); sheet=$("#fh-sheet",root);
-  scene.setAttribute("role","img"); scene.setAttribute("aria-label","Un avión en un hangar con dos mecánicos trabajando en el motor");
+  scene.setAttribute("role","img"); scene.setAttribute("aria-label","Un bimotor de escuela en un hangar con dos mecánicos trabajando en el motor");
   $("#fh-loto",root).onclick=()=>{ const b=$("#fh-loto",root); b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); toast("Cierre bloqueado por mantenimiento (LOTO). Firma el CRS para abrir el hangar."); };
   root.addEventListener("click",e=>{ if(e.target===root) $("#fh-loto",root).click(); });
 }
@@ -294,7 +299,7 @@ function drawSet(){
 }
 
 /* ---------------- pantallas ---------------- */
-function setTest(on){ sheet.classList.toggle("testing",on); scene.setAttribute("viewBox",on?(innerWidth<600?"180 110 640 220":"0 110 960 220"):"0 0 960 380"); scene.setAttribute("preserveAspectRatio",on?"xMidYMid slice":"xMidYMid meet"); }
+function setTest(on){ sheet.classList.toggle("testing",on); scene.setAttribute("viewBox",on?(innerWidth<600?"190 110 620 220":"0 110 960 220"):"0 0 960 380"); scene.setAttribute("preserveAspectRatio",on?"xMidYMid slice":"xMidYMid meet"); }
 function crew(state,after){ clearTimeout(crewT); scene.setAttribute("data-crew",state); if(after) crewT=setTimeout(()=>scene.setAttribute("data-crew",after.to),after.ms); }
 function bar(){ return S.preview&&S.bar?`<div class="prevbar"><span>MODO PRUEBA · nada se guarda</span><button type="button" id="fh-exit">Salir de la prueba</button></div>`:""; }
 function bindExit(){ const b=$("#fh-exit",root); if(b) b.onclick=()=>hide(); }
