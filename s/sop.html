@@ -2488,4 +2488,68 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   addEventListener("message",function(e){ const d=e.data; if(d&&d.t==="f0-cmd") window.__f0rev=!!d.review; });
   window.F0REVIEW={due:()=>dueSet().length};
 }catch(e){ console.error("review_patch",e); } })();
-</script><!--/f0rev-->>
+</script><!--/f0rev-->><!--f0go--><script>/* «Ver en los apuntes»: en cualquier test, al fallar una pregunta sale un enlace al tema de los apuntes (y al párrafo más parecido) y un botón para volver al test. */
+(function(){ try{
+  const css=document.createElement("style");
+  css.textContent=".f0go{display:flex;width:fit-content;max-width:100%;align-items:center;gap:6px;margin:10px 0 2px;padding:7px 12px;border-radius:8px;border:1px solid var(--accent,#0E7C86);background:var(--accentbg,#DFF1F1);color:var(--ink,#14304A);font:600 14px/1.2 var(--body,system-ui,sans-serif);cursor:pointer;min-height:36px}.f0go:hover{filter:brightness(.97)}.f0go:focus-visible{outline:2px solid var(--blue,#2F6FA3);outline-offset:2px}"
+   +"#f0back{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;border:0;border-radius:24px;padding:12px 20px;background:var(--ink,#14304A);color:var(--paper,#fff);font:700 15px var(--body,system-ui,sans-serif);box-shadow:0 8px 24px rgba(10,23,36,.35);cursor:pointer}"
+   +".f0hit{outline:3px solid var(--accent,#0E7C86);outline-offset:3px;border-radius:4px;background:var(--accentbg,#DFF1F1);transition:background 1.2s,outline-color 1.2s}.f0hit.f0off{outline-color:transparent;background:transparent}";
+  document.head.appendChild(css);
+  const LOR=/\b(?:X\.\d{3}|(?:POH|SOP)\.\d+(?:\.\d+)*|\d{3}(?:\.\d{1,3}){1,3})\b/;
+  const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  const STOP=new Set("which what that this with from have will does into than then when where while their there these those about because should would could after before only also each both such more most less very some other being been they them were your you are the and for not but any all can may its has had one two three four who whom".split(" "));
+  function resolve(code){
+    if(!code) return null;
+    if(/^\d{3}$/.test(code)) return document.getElementById("lo-X."+code);
+    let c=code;
+    while(c){ const el=document.getElementById("lo-"+c)||document.querySelector('details.lo[data-los~="'+c+'"]'); if(el) return el; const i=c.lastIndexOf("."); if(i<0) break; c=c.slice(0,i); if(!/\./.test(c)) break; }
+    const d=document.querySelector('details.lo[data-lo^="'+code+'."]')||document.querySelector('details.lo[data-los~="'+code+'"]'); if(d) return d;
+    const m=code.match(/^(\d{3})\./); if(m){ const x=document.getElementById("lo-X."+m[1]); if(x) return x; }
+    const par=code.split(".").slice(0,2).join("."); if(par!==code&&/^\d{3}\.\d+$/.test(par)){ return document.querySelector('details.lo[id^="lo-'+par+'."]'); }
+    return null;
+  }
+  function codeOf(q){ const t=((q.querySelector(".qhead span")||{}).textContent||""); const m=t.match(LOR); if(m) return m[0]; const m2=t.match(/·\s*(\d{3})\b/); return m2?m2[1]:null; }
+  function tokens(s){ const out=new Set(); norm(s).replace(/[^a-z0-9.,%°–-]+/g," ").split(" ").forEach(w=>{ w=w.replace(/^[.,–-]+|[.,–-]+$/g,""); if(w.length>=4&&!STOP.has(w)) out.add(w); }); return out; }
+  function best(lo,qEl){
+    try{
+      const corr=(qEl.querySelector(".choice.right")||{}).textContent||"", stem=(qEl.querySelector(".qtext")||{}).textContent||"";
+      const tc=tokens(corr), ts=tokens(stem); if(tc.size+ts.size<2) return null;
+      let top=null,sc=0;
+      lo.querySelectorAll("li,p,td,th,h4,figcaption,.key,.flag,.profe").forEach(el=>{
+        if(el.closest(".f0go")) return; const tx=norm(el.textContent); if(tx.length<12||tx.length>700) return;
+        let m=0; tc.forEach(t=>{ if(tx.includes(t)) m++; });
+        const cov=tc.size?m/tc.size:0; if(!(tc.size===1?m===1:(cov>=0.75&&m>=2&&tx.length>=30))) return;
+        let st=0; ts.forEach(t=>{ if(!tc.has(t)&&tx.includes(t)) st++; });
+        const s=cov*3+Math.min(st,3)*0.5-Math.log(Math.max(tx.length,60)/60)*0.4;
+        if(s>sc){ sc=s; top=el; } });
+      return top;
+    }catch(e){ return null; }
+  }
+  let backEl=null, from=null;
+  function clearBack(){ if(backEl){ backEl.remove(); backEl=null; } from=null; }
+  function go(qEl,code){
+    const lo=resolve(code); if(!lo||typeof openNotes!=="function") return;
+    const tab=(document.querySelector('nav [aria-selected="true"]')||{}).dataset; const prev=tab&&tab.tab||"test";
+    const hit=best(lo,qEl); from={qEl,prev};
+    openNotes(lo.id);
+    if(hit){ setTimeout(()=>{ let d=hit.closest("details"); while(d){ d.open=true; d=d.parentElement.closest("details"); }
+      hit.scrollIntoView({behavior:"smooth",block:"center"}); hit.classList.add("f0hit"); setTimeout(()=>hit.classList.add("f0off"),3500); setTimeout(()=>hit.classList.remove("f0hit","f0off"),5000); },220); }
+    if(backEl) backEl.remove();
+    backEl=document.createElement("button"); backEl.id="f0back"; backEl.type="button"; backEl.textContent="← Volver "+(prev==="hist"?"al historial":"al test");
+    backEl.onclick=()=>{ const f=from; clearBack(); if(f){ try{ showTab(f.prev); }catch(e){} setTimeout(()=>{ try{ f.qEl.scrollIntoView({block:"center"}); }catch(e){} },80); } };
+    document.body.appendChild(backEl);
+  }
+  document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{ if(backEl&&b.dataset.tab!=="notes") clearBack(); }));
+  function decorate(root){
+    root.querySelectorAll(".expl").forEach(ex=>{
+      if(ex.querySelector(".f0go")) return; const ref=ex.querySelector(".ref"); if(!ref) return;
+      const q=ex.closest(".q"); if(!q) return;
+      const code=codeOf(q); const lo=resolve(code); if(!lo) return;
+      const b=document.createElement("button"); b.type="button"; b.className="f0go"; b.textContent="📖 Ver en los apuntes";
+      b.setAttribute("aria-label","Ver en los apuntes el tema "+lo.dataset.lo);
+      b.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); go(q,code); });
+      ref.appendChild(b); }); }
+  new MutationObserver(ms=>{ for(const m of ms) m.addedNodes.forEach(n=>{ if(n.nodeType!==1) return; if(n.matches&&n.matches(".expl")){ decorate(n.parentNode); } else if(n.querySelector&&n.querySelector(".expl")) decorate(n); }); }).observe(document.body,{childList:true,subtree:true});
+  window.F0GO={resolve,best};
+}catch(e){ console.error("f0go",e); } })();
+</script><!--/f0go-->
