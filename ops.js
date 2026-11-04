@@ -171,7 +171,7 @@ function infer(list){
 
 /* ---------- mapa ---------- */
 const PLANE='<svg viewBox="0 0 20 20" width="26" height="26" style="transform:rotate({r}deg)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z" fill="#FFC400" stroke="#14181D" stroke-width="1.1"/></svg>';
-const CHART={url:"ops-lecu-adc.jpg",b:[[40.36671420,-3.80024328],[40.37145459,-3.77071018]]};
+const CHART={url:"ops-lecu-adc.jpg",b:[[40.36659176,-3.79715401],[40.37154104,-3.77206957]]};
 function setMode(m){
   S.mode=m; const M=S.map, R=S.root; if(!M) return;
   if(S.tile){ if(m==="aip"){ if(M.hasLayer(S.tile)) M.removeLayer(S.tile); } else if(!M.hasLayer(S.tile)) S.tile.addTo(M); }
@@ -490,7 +490,7 @@ function render(el,opt){
      <div class="wh"><b>METAR</b><label class="sw"><input type="checkbox" id="opRawT" checked><i></i>raw mode</label></div><div class="wl" id="opMet"></div>
      <div class="wh"><b>TAF</b><span class="hz">hora Z</span></div><div class="wl" id="opTaf"></div></div></section>
     <div class="op-hero">
-     <section class="pn op-map"><h2>Cuatro Vientos <small id="opTrSt">tráfico ADS-B…</small></h2><div id="opMap"></div><p class="src mapnote" id="opMapNote">Carta AIP de aeródromo (copia de 2015, solo la parte civil): puede estar desactualizada. Vigente: <a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">Cartas AIP ↗</a></p></section>
+     <section class="pn op-map"><h2>Cuatro Vientos <small id="opTrSt">tráfico ADS-B…</small></h2><div id="opMap"></div><p class="src mapnote" id="opMapNote">Carta de aeródromo del AIP (parte civil) · © ENAIRE. Comprueba siempre la vigente en <a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">Cartas AIP ↗</a></p></section>
      <aside class="op-side">
       <section class="pn"><h2>Pista en uso</h2><div class="bd"><div class="rwy" id="opRwy"></div><p class="src">La pista real la fija la torre o el ATIS (118.230). Aquí se deduce del tráfico ADS-B y, si no hay, del viento. AD civil: 08:00 Z–ocaso (invierno), 07:00 Z–ocaso (verano). Cerrado el primer domingo de mes (salvo enero y agosto).</p></div></section>
      </aside>
