@@ -6,7 +6,16 @@ async function load(){var v=await ask({t:"f0-load",k:K});if(v===undefined){try{v
 async function save(st){try{localStorage.setItem(LS,JSON.stringify(st))}catch(e){}await ask({t:"f0-save",k:K,v:st})}
 window.__hub={use:async function(n){return n==="artifact"?{publish:async function(f){var x=f&&f["progreso.json"];if(x){await save(JSON.parse(typeof x==="string"?x:x.content))}return{}}}:null},
 fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
-})();</script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+})();</script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><style id="f0pre-css">/*f0pre*/
+.pfv{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:8px 0 12px}
+.pfv .c{border:1.5px solid var(--line);border-top:4px solid var(--pc,#0E7C86);border-radius:10px;padding:10px 12px;background:var(--paper)}
+.pfv .c h5{margin:0 0 2px;font:700 16px "Barlow Condensed",Barlow,sans-serif;text-transform:uppercase;letter-spacing:.04em;color:var(--pc,#0E7C86)}
+.pfv .c ul{margin:4px 0 0;padding-left:18px;font-size:15px}.pfv .c li{margin:2px 0}.pfv .c small{color:var(--muted)}
+.noex{display:inline-block;margin-left:8px;padding:1px 9px;border-radius:12px;border:1px solid var(--line);font:600 12px Barlow,sans-serif;color:var(--muted);vertical-align:middle;text-transform:none;letter-spacing:0}
+.pfvnote{margin:10px 0;padding:9px 12px;border-radius:8px;border:1.5px dashed var(--line);background:var(--paper);font-size:15px}
+.pfvnote b{font-family:"Barlow Condensed",Barlow,sans-serif;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-right:6px}
+</style>
+</head><body>
 <title>SOP · PS-28, C172 y Piper</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -594,6 +603,18 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="flag"><b>Trampa</b> Cumplir <b>una sola</b> condición no basta: un avión con el CG dentro pero por encima del peso máximo al despegue <b>no puede volar</b>, y al revés.</div>
 <h4>Antes de ir al avión</h4>
 <div class="scroll"><table class=""><tr><th>Tema</th><th>Qué dice el SOP</th></tr><tr><td>Planificación</td><td>El avión y el horario se reservan en <b>private radar</b>: los cambios se avisan con <b>24 h</b> de antelación; los horarios están en hora <b>ZULU</b>; mira la misión de tu syllabus; llega a <b>OPS 1 h antes</b> del vuelo.</td></tr><tr><td>Puntualidad y seguridad</td><td>Llega a tiempo a los briefings y a la preparación del vuelo · pasa el control de seguridad al menos <b>15 min antes</b> · lleva siempre el <b>chaleco reflectante</b> en la plataforma.</td></tr><tr><td>Prioridades</td><td>Los <b>exámenes en vuelo</b> tienen prioridad sobre los vuelos de instrucción. Faltar sin justificar puede acarrear sanciones.</td></tr></table></div>
+<!--f0pre--><h4>Antes de volar: la carpeta del vuelo <span class="noex">no entra en examen</span></h4>
+<p>Es lo que se prepara en OPS antes de ir al avión. Son tres bloques (el esquema de la pantalla de clase):</p>
+<div class="pfv">
+<div class="c" style="--pc:#B8500A"><h5>1 · Masa y centrado, plan de vuelo</h5><ul><li><b>Formulario de control de vuelos</b>: tipo de vuelo (solo, instrucción…) y tripulación a bordo.</li><li><b>Hoja de carga y centrado</b> del avión (una por vuelo).</li><li><b>Mensaje de plan de vuelo</b> (el que se presenta a ATS).</li><li><b>Plan de vuelo operacional</b>: ruta, tiempos y combustible.</li></ul></div>
+<div class="c" style="--pc:#1D6FB0"><h5>2 · Meteo y NOTAM</h5><ul><li><b>METAR y TAF</b> de salida, llegada y alternativa (la AEMET los da por aeródromo).</li><li><b>Avisos</b> (warnings) del aeródromo y mapas de la zona.</li><li><b>NOTAM</b> de cada aeródromo: pistas, rodaduras y zonas cerradas.</li></ul></div>
+<div class="c" style="--pc:#2A7A40"><h5>3 · Cartas y AIP</h5><ul><li><b>Carta visual</b> (VFR) de la zona.</li><li><b>Carta de aproximación visual</b> y <b>plano del aeródromo</b> (plataforma y rodaduras).</li><li><b>AIP</b>: la fuente oficial de todas ellas.</li></ul></div>
+</div>
+<div class="pfv">
+<div class="c" style="--pc:#4350B8"><h5>Tus documentos</h5><ul><li><b>Licencia</b> y <b>certificado médico</b> en vigor.</li><li><b>Logbook</b> y <b>syllabus</b> del curso.</li><li><small>Márcalos en «Qué llevar», más abajo.</small></li></ul></div>
+<div class="c" style="--pc:#7A41A6"><h5>Documentos del avión</h5><ul><li><b>Manual de vuelo</b> (AFM o POH).</li><li><b>Certificado de matrícula</b> (original).</li><li><b>Certificado de aeronavegabilidad</b> (original), con su <b>ARC</b> vigente.</li><li><b>Certificado de ruido</b>, si aplica.</li><li><b>Licencia de estación</b> de aeronave (radio), si aplica.</li><li><b>Seguro</b> de responsabilidad civil frente a terceros.</li><li><b>Libro de a bordo</b> (journey log).</li><li><b>Plan de vuelo ATS</b> presentado y <b>cartas</b> de la ruta y de las alternativas.</li><li><b>Procedimientos y señales de interceptación</b>.</li></ul></div>
+</div>
+<div class="pfvnote"><b>Ojo</b>La lista del avión sale de <b>Part-NCO.GEN.135</b> (Reglamento UE 965/2012, vuelos no comerciales). Si el vuelo despega y aterriza en el <b>mismo aeródromo</b>, los certificados y el seguro pueden quedarse en la base en lugar de ir a bordo; el manual de vuelo, el plan y las cartas se llevan siempre. Lo del ARC y lo que pide Flyschool en cada vuelo, <b>confírmalo con tu instructor o con OPS</b>.</div>
 <h4>Qué llevar · marca lo que tienes</h4>
 <div id="visBag" class="vis"></div>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Masa y centrado</b>: «dos límites, una hoja por vuelo» = envolvente del CG + peso máximo al despegue.</li><li><b>24 · Z · 1 h · 15</b>: 24 h para avisar cambios, hora Zulu, 1 h antes en OPS, 15 min antes en seguridad.</li></ul></div>
