@@ -1796,7 +1796,7 @@ button.choice:disabled{cursor:default}
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row" style="margin:10px 0 4px" title="En el adaptativo, como mucho 6 de 20 serán de temario aún no dado"><input type="checkbox" id="incTrial"> Incluir temario ATPL aún no dado</label>
+    <label class="row" style="margin:10px 0 4px" title="Sin marcar, solo sale lo dado y lo de Fase 0. Marcada, también temario ATPL aún no dado (en el adaptativo, como mucho 6)"><input type="checkbox" id="incTrial"> Incluir temario ATPL aún no dado</label>
     <label class="row" style="margin:0 0 10px"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
@@ -3368,7 +3368,7 @@ function selectQuestions(mode, inc, lo, atpl){
   const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
   if(mode==="trial") return shuffle(pool.filter(isTrial));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
-  if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c")));
+  if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c") && (atpl || isGiven(q))));
   if(mode==="all") return shuffle(pool);
   // adaptativo: 20 por prioridad; como mucho 5 de un mismo tema, al menos 6 del trial y como mucho 6 de temario aún no dado
   const N = Math.min(30, pool.length), MAXLO = 5, MAXND = 6;

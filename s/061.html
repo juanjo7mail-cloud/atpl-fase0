@@ -4561,7 +4561,7 @@ function selectQuestions(mode, inc, lo, atpl){
     return shuffle(Object.values(g).map(a=>a[Math.floor(Math.random()*a.length)])); }
   const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
-  if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c")));
+  if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c") && (atpl || isGiven(q))));
   if(mode==="all") return shuffle(pool);
   if(mode==="calc" && calcTab().ids){ // pestaña concreta: solo ese tipo de cálculo, números nuevos y lo más flojo primero
     const tab = calcTab(), inPool = new Set(pool.map(q=>q[0]));

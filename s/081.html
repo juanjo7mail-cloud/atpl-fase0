@@ -1234,7 +1234,7 @@ details.lo.atpl{border-left-color:var(--magenta)}
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema concreto <small><select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row" style="margin:10px 0"><input type="checkbox" id="incX"> Incluir temario <b>ATPL aún no dado</b> <span class="muted">· el simulacro lo incluye siempre</span></label>
+    <label class="row" style="margin:10px 0"><input type="checkbox" id="incX"> Incluir temario <b>ATPL aún no dado</b> <span class="muted">· sin marcar, solo sale lo dado en Fase 0</span></label>
     <label class="row" style="margin:10px 0"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted" style="font-size:14px"></p>
@@ -2506,7 +2506,7 @@ function selectQuestions(mode, inc, lo){
   const st=stats();
   let pool=BANK.filter(q=> inc || q[2]!=="c");
   const xEl=$("#incX");
-  if(mode!=="examen" && xEl && xEl.checked===false) pool=pool.filter(q=>q[2]!=="x");
+  if(xEl && xEl.checked===false) pool=pool.filter(q=>q[2]!=="x");   // el temario ATPL aún no dado solo sale con la casilla marcada, en todos los tests
   if(mode==="slides") return shuffle(pool.filter(q=>q[2]==="s"||q[2]==="e"));
   if(mode==="trial") return shuffle(pool.filter(q=>isTrial(q)||isExam(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
@@ -2834,7 +2834,7 @@ function renderSetup(){
   const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas cuya última respuesta fue incorrecta.` : "Ahora mismo no tienes fallos pendientes.";
   $("#allCount").textContent = `${BANK.length} preguntas.`;
-  $("#examCount").textContent = `Reparto oficial de EASA: 46 preguntas por los ocho capítulos 081.01 a 081.08, ordenadas por capítulo como en el examen. Incluye el temario ATPL que aún no has dado.`;
+  $("#examCount").textContent = `Reparto oficial de EASA: 46 preguntas por los ocho capítulos 081.01 a 081.08, ordenadas por capítulo como en el examen. Con la casilla «ATPL aún no dado» sin marcar, solo entra lo que ya se ha dado y el reparto se ajusta.`;
   $("#trialCount").textContent = `Las ${BANK.filter(q=>isTrial(q)||isExam(q)).length} preguntas de los trials y de los ejercicios de clase, cada una con una variante al azar.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = ECQB.map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.id} · ${c.es}</option>`).join("");
