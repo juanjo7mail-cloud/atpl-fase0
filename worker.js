@@ -37,6 +37,25 @@ async function traffic() {
   }
   return null;
 }
+// Calles de rodaje, plataformas y puntos de espera de Cuatro Vientos desde OpenStreetMap (Overpass). No es oficial. Caché de 24 h.
+const OVP = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"];
+const OQ = '[out:json][timeout:20];(way["aeroway"~"^(taxiway|taxilane|apron|runway)$"](around:1800,40.3706,-3.785);node["aeroway"="holding_position"](around:1800,40.3706,-3.785););out geom tags;';
+async function aero() {
+  for (const url of OVP) {
+    try {
+      const r = await fetch(url + "?data=" + encodeURIComponent(OQ), { headers: { "User-Agent": "atpl-fase0-ops/1.0" } }); if (!r.ok) continue;
+      const j = await r.json(); if (!Array.isArray(j.elements)) continue;
+      const w = [], n = [];
+      for (const e of j.elements) {
+        const t = e.tags || {};
+        if (e.type === "way" && e.geometry && e.geometry.length > 1) w.push({ k: t.aeroway === "taxilane" ? "taxiway" : t.aeroway, r: t.ref || "", p: e.geometry.map(q => [q.lat, q.lon]) });
+        else if (e.type === "node") n.push({ lat: e.lat, lon: e.lon, r: t.ref || "" });
+      }
+      return { w, n };
+    } catch (e) { /* siguiente servidor */ }
+  }
+  return null;
+}
 export default {
   async fetch(req, env, ctx) {
     const u = new URL(req.url);
@@ -46,6 +65,13 @@ export default {
       const r2 = new Response(JSON.stringify({ ok: ok2, ac: ac || [], at: Date.now() }), { status: ok2 ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok2 ? "public, max-age=8" : "no-store", "access-control-allow-origin": "*" } });
       if (ok2) ctx.waitUntil(c2.put(ck2, r2.clone()));
       return r2;
+    }
+    if (u.pathname === "/api/aero") {
+      const ck3 = new Request(u.origin + "/api/aero", { method: "GET" }), c3 = caches.default, h3 = await c3.match(ck3); if (h3) return h3;
+      const a = await aero(), ok3 = !!(a && a.w.length);
+      const r3 = new Response(JSON.stringify(ok3 ? { ok: true, w: a.w, n: a.n } : { ok: false }), { status: ok3 ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok3 ? "public, max-age=86400" : "no-store", "access-control-allow-origin": "*" } });
+      if (ok3) ctx.waitUntil(c3.put(ck3, r3.clone()));
+      return r3;
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
     const ck = new Request(u.origin + "/api/wx", { method: "GET" }), cache = caches.default;

@@ -190,15 +190,34 @@ function drawTraffic(){
     const m=L.marker([a.lat,a.lon],{icon:L.divIcon({className:"op-ac",html:PLANE.replace("{r}",a.tr||0)+`<span><b>${esc(a.f||a.r||a.h||"")}</b>${esc(alt)}</span>`,iconSize:[26,26],iconAnchor:[13,13]}),zIndexOffset:500});
     m.bindPopup(`<b>${esc(a.f||"—")}</b> ${esc(a.r||"")}<br>${esc(a.t||"")}<br>${esc(alt)}${a.g!=null?" · "+Math.round(a.g)+" kt":""}${a.tr!=null?" · rumbo "+Math.round(a.tr)+"º":""}`); m.addTo(S.trl); });
 }
+function drawAero(){
+  const L=window.L, M=S.map, g=S.axl, A=S.aero; if(!L||!M||!g) return; g.clearLayers(); if(!A) return;
+  let bb=null;
+  (A.w||[]).forEach(w=>{ if(!w.p||w.p.length<2) return; const ll=w.p;
+    if(w.k==="apron"){ L.polygon(ll,{color:"#9AA5B1",weight:1,fillColor:"#B8C0C8",fillOpacity:.22,interactive:false}).addTo(g); return; }
+    if(w.k==="runway") return;
+    L.polyline(ll,{color:"#14181D",weight:6,opacity:.55,interactive:false}).addTo(g);
+    L.polyline(ll,{color:"#FFD84A",weight:3,opacity:.95,interactive:false}).addTo(g);
+    if(w.r){ const m=ll[Math.floor(ll.length/2)]; L.marker(m,{interactive:false,icon:L.divIcon({className:"op-tw",html:"<span>"+esc(w.r)+"</span>",iconSize:null})}).addTo(g); }
+    ll.forEach(q=>{ bb=bb?bb.extend(q):L.latLngBounds([q,q]); }); });
+  (A.n||[]).forEach(n=>{ L.circleMarker([n.lat,n.lon],{radius:4,color:"#fff",weight:1.5,fillColor:"#E5322B",fillOpacity:1,interactive:false}).addTo(g); });
+  if(bb&&!S.aeroFit){ S.aeroFit=1; try{ M.fitBounds(bb.extend(AD.main.a.ll).extend(AD.main.b.ll),{padding:[30,30],maxZoom:16}); }catch(e){} }
+  const el=M.getContainer(); el.classList.toggle("hide-tw",M.getZoom()<14); if(!M._twz){ M._twz=1; M.on("zoomend",()=>M.getContainer().classList.toggle("hide-tw",M.getZoom()<14)); }
+}
+function loadAero(){
+  const f=S.opt&&S.opt.fetchAero; if(!f) return; if(S.aero){ drawAero(); return; }
+  f().then(r=>{ if(r&&r.w) S.aero=r; }).catch(()=>{}).then(()=>{ if(S.root) drawAero(); });
+}
 function initMap(){
   const L=window.L, el=$("#opMap",S.root); if(!el) return;
   if(!L){ el.innerHTML='<p class="muted" style="padding:20px">No se ha podido cargar el mapa.</p>'; return; }
-  if(S.map){ S.map.remove(); S.map=null; S.lay=null; S.trl=null; }
+  if(S.map){ S.map.remove(); S.map=null; S.lay=null; S.trl=null; S.axl=null; } S.aeroFit=0;
   const M=L.map(el,{scrollWheelZoom:false,dragging:!L.Browser.mobile,tap:false,zoomControl:true,attributionControl:true});
-  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Imagen: Esri, Maxar, Earthstar Geographics · ADS-B: comunidad adsb.lol"}).addTo(M);
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Imagen: Esri, Maxar · Rodaje: OpenStreetMap (no oficial) · ADS-B: adsb.lol"}).addTo(M);
+  S.axl=L.layerGroup().addTo(M);
   L.control.scale({imperial:false,position:"bottomleft"}).addTo(M);
   const fit=()=>M.fitBounds(L.latLngBounds([AD.main.a.ll,AD.main.b.ll]),{padding:[50,50],maxZoom:15});
-  fit(); S.map=M; setTimeout(()=>{ try{ M.invalidateSize(); fit(); }catch(e){} },120);
+  fit(); S.map=M; drawAero(); setTimeout(()=>{ try{ M.invalidateSize(); fit(); }catch(e){} },120);
 }
 
 /* ---------- pintado ---------- */
@@ -297,7 +316,7 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op-lbl{white-space:nowrap}.op-lbl span{display:inline-block;transform:translate(-50%,-50%);background:#14181D;color:#fff;font:700 15px/1 Barlow,sans-serif;border:2px solid #fff;border-radius:5px;padding:3px 7px}
 .op-lbl.on span{background:var(--am);color:#14181D;border-color:#14181D;font-size:17px}.op-lbl em{position:absolute;left:0;top:16px;transform:translateX(-50%);font:700 11px Barlow,sans-serif;font-style:normal;letter-spacing:.08em;background:#14181D;color:var(--am);padding:2px 6px;border-radius:4px}
 .op-dir svg{filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))}
-.op-ac{position:relative}.op-ac svg{filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}.op-ac span{position:absolute;left:24px;top:2px;white-space:nowrap;font:600 11px/1.15 Barlow,sans-serif;color:#fff;background:rgba(20,24,29,.82);border-radius:3px;padding:1px 4px}.op-ac span b{display:block;font-size:12px}
+.op-tw span{display:inline-block;transform:translate(-50%,-50%);background:#FFD84A;color:#14181D;font:700 11px/1 Barlow,sans-serif;border-radius:3px;padding:2px 4px;border:1px solid #14181D}.hide-tw .op-tw{display:none}.op-ac{position:relative}.op-ac svg{filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}.op-ac span{position:absolute;left:24px;top:2px;white-space:nowrap;font:600 11px/1.15 Barlow,sans-serif;color:#fff;background:rgba(20,24,29,.82);border-radius:3px;padding:1px 4px}.op-ac span b{display:block;font-size:12px}
 .leaflet-container{font-family:Barlow,system-ui,sans-serif}
 .op-side{display:grid;gap:14px;align-content:start}
 .rwy{display:flex;gap:14px;align-items:center}.sign{background:#000;color:#FFD100;font:700 52px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.04em;padding:8px 18px;border-radius:6px;outline:2px solid #FFD100;outline-offset:-7px;min-width:88px;text-align:center}.sign.est{color:#C9B13A;outline-color:#C9B13A;outline-style:dashed}.sign.dim{color:#665400;outline-color:#665400}
@@ -326,11 +345,11 @@ table.tf,table.mn{width:100%;border-collapse:collapse;font-size:14.5px}.tf th,.m
 .sw{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--mu);cursor:pointer}.sw input{position:absolute;opacity:0;pointer-events:none}.sw i{width:30px;height:18px;border-radius:9px;background:var(--ln);position:relative;transition:background .15s}.sw i:after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s}.sw input:checked+i{background:var(--vfr)}.sw input:checked+i:after{left:14px}
 .wl{display:grid}.wr{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--ln)}.wr:first-child{border-top:0}.wr .cc{flex:none;margin-top:2px;min-width:40px;text-align:center}.wr .wt{flex:1;min-width:0;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere}.wr .wt small{font:12px Barlow,sans-serif;color:var(--mu)}.wr .wt b{font-family:Barlow,sans-serif}.wr em{flex:none;font-style:normal;font-size:12.5px;color:var(--mu);margin-top:3px}.wl .auto{font-size:12.5px;color:var(--mu);padding:4px 0}
 .wr .wt:not(:has(.k)){font-family:Barlow,system-ui,sans-serif;font-size:14.5px}
-.frs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fr{border:1px solid var(--ln);border-radius:8px;padding:6px 10px;display:grid}.fr small{font:600 11px Barlow,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}.fr b{font:700 22px/1.15 "Barlow Condensed",Barlow,sans-serif;letter-spacing:.03em;font-variant-numeric:tabular-nums}
-.mn tr.res td:nth-child(n+3){white-space:nowrap}.lim.g{color:var(--ok);font-weight:600}.lim.r{color:var(--no);font-weight:600}.lim.a{color:var(--mid);font-weight:600}.lim.n{color:var(--mu)}.mn b.r{color:var(--no)}
+.frs{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}.fp{display:inline-flex;gap:6px;align-items:baseline}.fp small{font:600 11px Barlow,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}.fp b{font:700 17px "Barlow Condensed",Barlow,sans-serif;letter-spacing:.03em;font-variant-numeric:tabular-nums}.fa{margin-left:auto;font-size:12px;color:var(--mu)!important;text-decoration:none}
+table.mn{table-layout:fixed}.mn th:nth-child(1),.mn tbody th{width:21%}.mn th:nth-child(2){width:19%}.mn td.lim{overflow-wrap:anywhere}.mn tr.res td{display:table-cell}.mn tr.res td .ac{margin:2px 3px 2px 0;padding:2px 6px;font-size:12px}.lim.g{color:var(--ok);font-weight:600}.lim.r{color:var(--no);font-weight:600}.lim.a{color:var(--mid);font-weight:600}.lim.n{color:var(--mu)}.mn b.r{color:var(--no)}
 .pn>h2 small a{color:var(--k1);text-decoration:none}.op-note a{color:var(--mu);text-decoration:underline}.op-note{line-height:1.6}
 .pn .bd{padding:10px 14px}.tbl.rw td,.tbl.rw th{padding:5px 6px}
-@media (max-width:560px){.op-top{display:grid;grid-template-columns:1fr 1fr;gap:10px}.op-top .id{grid-column:1}.op-top .tm{grid-column:2;grid-row:1;margin:0;justify-self:end}.op-top .ad,.op-top .cat{min-width:0}.pn>h2{font-size:15px}.op-lbl span{font-size:13px}.tf,.mn,.tbl{font-size:13px!important}.tf td,.mn td,.mn tbody th,.tbl td{padding:6px 4px!important}.tf th,.mn th{padding:4px!important}.op-top .id b{font-size:32px}.op-top .tm{margin-left:0}.sign{font-size:44px}}`;
+@media (max-width:560px){.mn,.mn td,.mn tbody th{font-size:13px!important}.mn tbody th{font-size:13.5px!important}.op-top{display:grid;grid-template-columns:1fr 1fr;gap:10px}.op-top .id{grid-column:1}.op-top .tm{grid-column:2;grid-row:1;margin:0;justify-self:end}.op-top .ad,.op-top .cat{min-width:0}.pn>h2{font-size:15px}.op-lbl span{font-size:13px}.tf,.mn,.tbl{font-size:13px!important}.tf td,.mn td,.mn tbody th,.tbl td{padding:6px 4px!important}.tf th,.mn th{padding:4px!important}.op-top .id b{font-size:32px}.op-top .tm{margin-left:0}.sign{font-size:44px}}`;
 const FQ=[["TWR","118.705","Torre","ok"],["GND (GMC)","121.805","Rodaje","ok"],["ATIS","118.230","Información","ok"],["Emergencia","121.500","H24","ok"],["TWR (reserva)","122.505","Back-up","ok"]];
 function render(el,opt){
   S.opt=opt||{}; S.root=el; S.tr=null; S.trAt=null;
@@ -347,7 +366,6 @@ function render(el,opt){
      <section class="pn op-map"><h2>Cuatro Vientos <small id="opTrSt">tráfico ADS-B…</small></h2><div id="opMap"></div></section>
      <aside class="op-side">
       <section class="pn"><h2>Pista en uso</h2><div class="bd"><div class="rwy" id="opRwy"></div><p class="src">La pista real la fija la torre o el ATIS (118.230). Aquí se deduce del tráfico ADS-B y, si no hay, del viento. AD civil: 08:00 Z–ocaso (invierno), 07:00 Z–ocaso (verano). Cerrado el primer domingo de mes (salvo enero y agosto).</p></div></section>
-      <section class="pn"><h2>Frecuencias <small>AIP</small></h2><div class="bd frs">${FQ.map(f=>`<div class="fr"><small>${f[0]}</small><b>${f[1]}</b></div>`).join("")}</div></section>
      </aside>
     </div>
     <section class="pn"><h2>Pista ${A.id} <small><a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">Cartas AIP ↗</a></small></h2><div class="bd">
@@ -358,18 +376,18 @@ function render(el,opt){
       <tr><th>TODA</th><td>${A.a.toda} m</td><td>${A.b.toda} m</td></tr>
       <tr><th>ASDA</th><td>${A.a.asda} m</td><td>${A.b.asda} m</td></tr>
       <tr><th>LDA</th><td>${A.a.lda} m</td><td>${A.b.lda} m</td></tr>
-      <tr><th>Zona de parada</th><td>${A.a.swy} m</td><td>${A.b.swy} m</td></tr></tbody></table>
-     <p class="src">${A.len.toLocaleString("es-ES")} × ${A.wid} m · asfalto · PCN ${A.pcn} · franja ${A.strip} m · desde K-1 (09): TORA y TODA 1278, ASDA 1332. La pista de tierra paralela está cerrada al tráfico civil.</p></div></section>
+      <tr><th>Zona de parada</th><td>${A.a.swy} m</td><td>${A.b.swy} m</td></tr></tbody></table></div></section>
     <section class="pn"><h2>Mínimos de la escuela <small>SOP.4.1</small></h2><div class="bd" id="opMin"></div></section>
     <section class="pn"><h2>Viento y tiempo <small><a href="https://www.windy.com/40.37/-3.785?wind,8" target="_blank" rel="noopener">Windy ↗</a></small></h2><div class="op-wy"><iframe title="Mapa de viento Windy" src="${wy}" referrerpolicy="no-referrer" allow="fullscreen"></iframe></div></section>
+    <section class="pn"><div class="bd frs">${FQ.map(f=>`<span class="fp"><small>${f[0]}</small><b>${f[1]}</b></span>`).join("")}<a class="fa" target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">AIP ↗</a></div></section>
     <p class="op-note">Herramienta de estudio, no para planificar un vuelo real. Fuentes oficiales: <a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET</a> · <a target="_blank" rel="noopener" href="https://insignia.enaire.es/">NOTAM e Insignia (ENAIRE)</a> · <a target="_blank" rel="noopener" href="https://www.flightradar24.com/40.37,-3.79/12">FlightRadar24</a> · <a target="_blank" rel="noopener" href="https://www.windy.com/40.37/-3.785?wind,8">Windy</a>. Horas en UTC (Z).</p>
    </div></div>`;
   el.addEventListener("click",ev=>{ const b=ev.target.closest("#opDemo"); if(b){ S.opt.fetchWx=null; setData(demoData(S.scen)); } });
   el.addEventListener("change",ev=>{ if(ev.target.id==="opRawT"){ S.rawMode=ev.target.checked; fill(); } });
-  initMap(); load(); loadTr(); clock();
+  initMap(); load(); loadTr(); loadAero(); clock();
   clearInterval(S.clk); S.clk=setInterval(clock,10000); clearInterval(S.t); S.t=setInterval(()=>{ if(S.opt.fetchWx) load(); else if(S.data) fill(); },5*60000);
   clearInterval(S.tt); S.tt=setInterval(loadTr,12000);
 }
-function leave(){ clearInterval(S.clk); clearInterval(S.t); clearInterval(S.tt); try{ if(S.map) S.map.remove(); }catch(e){} S.map=null; S.lay=null; S.trl=null; S.root=null; }
+function leave(){ clearInterval(S.clk); clearInterval(S.t); clearInterval(S.tt); try{ if(S.map) S.map.remove(); }catch(e){} S.map=null; S.lay=null; S.trl=null; S.axl=null; S.root=null; }
 window.F0Ops={render,leave,_t:{parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
 })();
