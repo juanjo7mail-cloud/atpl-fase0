@@ -17,12 +17,13 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="60031994b707";</script>
+<script>window.F0_BUILD="feb1f9c6f72c";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
 <script src="radio.js"></script>
 <script src="chat.js"></script>
+<script src="hangar.js"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f1d0070793724820ae63bfa8c465ba85"}'></script>
 </head>
 <body>
@@ -1129,6 +1130,7 @@ async function signedIn(user, consent){
   loadMine();
   visStart = document.visibilityState==="visible"?Date.now():null; clearInterval(beatT); beatT=setInterval(beatFlush,60000);
   $("#saveTxt").textContent="Mi progreso"; setSaveState("ok"); renderAcct(); renderDash(); renderTabs();
+  try{ if(window.F0Hangar) window.F0Hangar.init({sb:sb,user:sbUser,admin:isAdmin}); }catch(e){}   /* broma del hangar: solo la web con cuenta */
   Object.entries(frames).forEach(([k,f])=>{ ready[k]=false; f.src=f.src; });
   if(consent) newsMark();
   setTimeout(showNews, 900);
@@ -1417,7 +1419,7 @@ $("#onBtn").addEventListener("click",e=>{ e.stopPropagation(); const p=$("#onPop
 document.addEventListener("click",e=>{ const p=$("#onPop"); if(p&&!p.hidden&&!e.target.closest("#onPop")){ p.hidden=true; $("#onBtn").setAttribute("aria-expanded","false"); } });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ const p=$("#onPop"); if(p&&!p.hidden){ p.hidden=true; $("#onBtn").focus(); } } });
 async function signOut(){
-  beatFlush(); usageFlush(); try{ if(sb&&sbUser) sb.rpc("track_usage",{p_view:"off",p_seconds:0}).then(()=>{},()=>{}); }catch(e){} clearInterval(beatT); stopPresence();
+  beatFlush(); usageFlush(); try{ if(sb&&sbUser) sb.rpc("track_usage",{p_view:"off",p_seconds:0}).then(()=>{},()=>{}); }catch(e){} clearInterval(beatT); stopPresence(); try{ if(window.F0Hangar) window.F0Hangar.stop(); }catch(e){}
   try{ await sb.auth.signOut(); }catch(e){}
   sbUser=null; remote=null; isAdmin=false; MY={name:"",show:true};
   try{ SUBJ.forEach(s=>localStorage.removeItem("f0:"+s.k)); }catch(e){}
@@ -1476,6 +1478,22 @@ async function renderStats(){
   drawStats();
 }
 
+/* ---- Hangar (broma de la web en mantenimiento): interruptor del admin ---- */
+let HGST=null, hgArm=0;
+async function drawHangar(reload){
+  const el=$("#hgBox"); if(!el) return;
+  if(!window.F0Hangar){ el.remove(); return; }
+  if(reload||!HGST){ try{ HGST=await window.F0Hangar.adminGet(); }catch(e){ HGST={err:true}; } }
+  const b=$("#hgBox"); if(!b) return; const h=HGST;
+  if(h.err){ b.innerHTML=`<h2>Hangar (broma)</h2><p class="muted">Aún no está activado: ejecuta <b>hangar.sql</b> en Supabase (SQL Editor) y recarga.</p>`; return; }
+  b.innerHTML=`<h2>Hangar (broma) · ${h.on?"ACTIVADO":"apagado"}</h2>
+    <p class="muted">${h.on?"Les saldrá a cada alumno cuando lleve 30 min de uso activo (web abierta y visible) desde que lo activaste. Al liberarlo no vuelve a salir.":"Apagado: no sale a nadie, y a quien lo tenga puesto se le quita en menos de 1 min."} Tú no lo ves salvo con «Probar». Liberados en esta edición: <b>${h.done||0}</b>.</p>
+    <div class="acts" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="hgTog" type="button">${h.on?"Apagar":"Activar"}</button><button class="btn" id="hgPrev" type="button" style="--btn:var(--muted)">Probar</button><button class="btn" id="hgNew" type="button" style="--btn:var(--muted)">Nueva edición</button></div>`;
+  $("#hgTog").onclick=async()=>{ try{ await window.F0Hangar.adminSet(!h.on,false); }catch(e){ alert("No se pudo: "+(e.message||e)); } drawHangar(true); };
+  $("#hgPrev").onclick=()=>window.F0Hangar.preview();
+  $("#hgNew").onclick=async ev=>{ const t=ev.currentTarget; if(!hgArm){ hgArm=1; t.textContent="¿Seguro? Todos lo vuelven a tener pendiente"; setTimeout(()=>{ hgArm=0; if(t.isConnected) t.textContent="Nueva edición"; },4000); return; }
+    hgArm=0; try{ await window.F0Hangar.adminSet(true,true); }catch(e){ alert("No se pudo: "+(e.message||e)); } drawHangar(true); };
+}
 /* ---- mapa de calor y "quién está dónde" ---- */
 const VIEW_ES={test:"Inicio",rank:"Ranking",radio:"Radio",stats:"Stats"};
 function viewLabel(v){ const s=SUBJ.find(x=>x.k===v); return s?`${s.code} ${s.short}`:(VIEW_ES[v]||v); }
@@ -1554,6 +1572,7 @@ function drawStats(){
       </tbody></table></div></div>`}`;
   if(!one){ const d=document.createElement("div"); d.id="inbox"; box.querySelector(".st-grid").before(d); drawInbox(); }
   { const g=box.querySelector(".st-grid"), lv=document.createElement("div"); lv.id="liveBox"; lv.className="st-box"; lv.style.marginBottom="14px"; g.before(lv);
+    const hg=document.createElement("div"); hg.id="hgBox"; hg.className="st-box"; hg.style.marginBottom="14px"; lv.before(hg); drawHangar(false);
     const hm=document.createElement("div"); hm.id="heatBox"; hm.className="st-box"; hm.style.margin="14px 0"; g.after(hm); drawLive(); drawHeat();
     clearInterval(liveT); liveT=setInterval(pollLive,15000); }
   $("#stSel").addEventListener("change", e=>{ stUser=e.target.value; drawStats(); });
