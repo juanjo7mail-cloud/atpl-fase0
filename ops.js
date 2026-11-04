@@ -205,24 +205,30 @@ function initMap(){
 const mark=(arr)=>arr.every(Boolean)?'<i class="m ok">✔</i>':arr.some(Boolean)?'<i class="m mid" title="Cumple solo algún avión">▲</i>':'<i class="m no">✖</i>';
 function wCompass(w){ const calm=!w||(w.spd===0&&!w.gst), vr=w&&w.vrb;
   return `<svg viewBox="0 0 60 60" width="58" height="58"><circle cx="30" cy="30" r="27" fill="none" stroke="var(--ln)" stroke-width="2"/>${calm?'<text x="30" y="35" text-anchor="middle" font-size="12" font-weight="700" fill="var(--mu)">CALMA</text>':vr?'<text x="30" y="35" text-anchor="middle" font-size="14" font-weight="700" fill="var(--mu)">VRB</text>':`<g transform="rotate(${w.dir+180} 30 30)"><path d="M30 6 L40 42 L30 34 L20 42 Z" fill="var(--ink)"/></g>`}</svg>`; }
-function tile(h,b,s,x,c){ return `<div class="tl ${c||""}"><small>${h}</small>${x||""}<b>${b}</b><span>${s||""}</span></div>`; }
+const ageTxt=m=>m<1?"ahora":m<60?m+" min":Math.floor(m/60)+" h "+(m%60?(m%60)+" min":"");
+function decShort(e){ const w=e.wind, ws=!w?"—":(w.spd===0&&!w.gst?"Calma":(w.vrb?"VRB":pad3(w.dir)+"º")+" "+w.spd+(w.gst?"G"+w.gst:"")+" kt");
+  const cl=e.cavok?"CAVOK":((e.clouds||[]).map(x=>x.t+" "+x.h.toLocaleString("es-ES")).join(" · ")||"sin nubes");
+  return ws+" · "+visTxt(e.vis)+((e.wx&&e.wx.length)?" · "+e.wx.map(wxText).join(", "):"")+" · "+cl+" · "+(e.temp!=null?e.temp+"/"+e.dew+" ºC":"")+(e.qnh?" · QNH "+e.qnh:""); }
+function wrow(c,txt,age){ return `<div class="wr"><span class="cc ${c}">${c}</span><span class="wt">${txt}</span>${age==null?"":`<em>${ageTxt(age)}</em>`}</div>`; }
+function tile(h,b,s,x,c){ return `<div class="tl ${c||""}"><small>${h}</small>${x||""}<b>${b}</b>${s?`<span>${s}</span>`:""}</div>`; }
 function fill(){
   const d=S.data, R=S.root; if(!d||!R) return; const now=new Date(), e=d.m, cat=flightCat(e), st=adState(now);
   $("#opAd",R).className="ad "+(st.open?"open":"closed"); $("#opAd",R).innerHTML=st.open?`<b>AD ABIERTO</b><small>hasta el ocaso · ${fz(st.set)} Z</small>`:`<b>AD CERRADO</b><small>${st.st==="night"?"noche · ocaso "+fz(st.set)+" Z":"abre "+fz(st.openAt)+" Z"}</small>`;
-  const cb=$("#opCat",R); cb.className="cat "+cat; cb.innerHTML="<b>"+cat+"</b><small>"+CATT[cat]+"</small>";
+  const cb=$("#opCat",R); cb.hidden=!st.open; cb.className="cat "+cat; cb.innerHTML="<b>"+cat+"</b><small>"+CATT[cat]+"</small>"; $("#opTop",R).classList.toggle("cl",!st.open);
   const age=d.obs?Math.round((now-d.obs)/60000):null;
-  $("#opSub",R).innerHTML=`${NOTE[d.mSt]||d.demo?`<span class="${NOTE[d.mSt]?"old":""}">${NOTE[d.mSt]||""}${d.demo?' <b class="dm">DATOS DE EJEMPLO</b>':""}</span>`:""}`+(age==null?"":`<span class="${age>75?"old":""}">${age>75?"Dato antiguo · ":"Observado "}${age<1?"ahora":"hace "+age+" min"} · ${fz(d.obs)} Z</span>`)+`<span>☀ Orto ${fz(st.rise)} Z · Ocaso ${fz(st.set)} Z</span>`;
-  // fichas tipo Windy
+  $("#opSub",R).innerHTML=`${NOTE[d.mSt]||d.demo?`<span class="${NOTE[d.mSt]?"old":""}">${NOTE[d.mSt]||""}${d.demo?' <b class="dm">DATOS DE EJEMPLO</b>':""}</span>`:""}`+(age==null?"":`<span class="${age>75?"old":""}">${age>75?"Dato antiguo · ":"Observado "}${age<1?"ahora":"hace "+age+" min"} · ${fz(d.obs)} Z</span>`)+`<span>☀ Orto ${fz(st.rise)} Z · Ocaso ${fz(st.set)} Z</span>`+((d.tp&&d.tp.station&&!/^(LECU|LEVS)$/.test(d.tp.station))?`<span class="old">TAF de ${d.tp.station==="LEMD"?"Barajas (LEMD)":d.tp.station}</span>`:"");
+  // fichas compactas
   const ce=e.cavok?"CAVOK":e.ceil!=null?e.ceil.toLocaleString("es-ES")+" ft":((e.clouds&&e.clouds.length)?"Sin techo":"Despejado");
-  $("#opTiles",R).innerHTML=tile("Viento",e.wind&&e.wind.spd===0&&!e.wind.gst?"Calma":(e.wind?(e.wind.vrb?"VRB":pad3(e.wind.dir)+"º")+" · "+e.wind.spd+" kt":"—"),e.wind&&e.wind.gst?"rachas "+e.wind.gst+" kt":(e.wind&&e.wind.var?"varía "+e.wind.var[0]+"–"+e.wind.var[1]+"º":"en superficie"),wCompass(e.wind),"wd")
-   +tile("Visibilidad",visTxt(e.vis),wxTxt(e)==="Ninguno"?"sin fenómenos":wxTxt(e))
-   +tile("Nubes",ce,e.cavok?"sin nubes bajas":((e.clouds||[]).map(x=>x.t+" "+(x.h/100)).join(" · ")||"—"))
-   +tile("Temperatura",e.temp!=null?e.temp+" ºC":"—",e.dew!=null?"rocío "+e.dew+" ºC":"")
-   +tile("QNH",e.qnh?e.qnh+" hPa":"—",e.trend?(/NOSIG/.test(e.trend)?"sin cambios (NOSIG)":esc(e.trend)):"");
-  $("#opMetRaw",R).innerHTML=rawHtml(d.metar)+(/\sAUTO\s/.test(d.metar)?'<div class="auto">METAR automático: no informa de precipitación (AIP).</div>':"");
-  const tp=d.tp, tl=$("#opTafSt",R); if(tl) tl.textContent=tp&&tp.station?("de "+tp.station+(tp.station==="LEMD"?" (Barajas)":"")):"";
-  $("#opTafRaw",R).innerHTML=tp&&d.taf?rawHtml(d.taf):"No hay TAF disponible.";
-  $("#opTafTb",R).innerHTML=tp&&tp.periods.length?`<table class="tf"><thead><tr><th>Periodo (Z)</th><th>Viento</th><th>Visib.</th><th>Nubes / tiempo</th><th></th></tr></thead><tbody>${tp.periods.map(p=>{ const q=p.e, c=flightCat(q); return `<tr><td><b>${esc(p.label)}</b>${p.rng?`<small>${esc(p.rng)}</small>`:""}</td><td>${kt(q.wind)}</td><td>${visTxt(q.vis)}</td><td>${(q.wx&&q.wx.length?q.wx.map(wxText).join(", ")+" · ":"")+(q.cavok?"CAVOK":(q.clouds&&q.clouds.length?q.clouds.map(k=>k.t+" "+(k.h/100)).join(" "):"sin nubes"))}</td><td><span class="cc ${c}">${c}</span></td></tr>`; }).join("")}</tbody></table>`:"";
+  $("#opTiles",R).innerHTML=tile("Viento",e.wind&&e.wind.spd===0&&!e.wind.gst?"Calma":(e.wind?(e.wind.vrb?"VRB":pad3(e.wind.dir)+"º")+" · "+e.wind.spd+" kt":"—"),e.wind&&e.wind.gst?"rachas "+e.wind.gst+" kt":(e.wind&&e.wind.var?"varía "+e.wind.var[0]+"–"+e.wind.var[1]+"º":""),wCompass(e.wind),"wd")
+   +tile("Visibilidad",visTxt(e.vis),wxTxt(e)==="Ninguno"?"":wxTxt(e),"","vs")
+   +tile("Nubes",ce,e.cavok?"":((e.clouds||[]).map(x=>x.t+" "+(x.h/100)).join(" · ")))
+   +tile("Temp.",e.temp!=null?e.temp+" ºC":"—",e.dew!=null?"rocío "+e.dew+" ºC":"")
+   +tile("QNH hPa",e.qnh?String(e.qnh):"—","");
+  const rm=S.rawMode!==false; const cx=$("#opRawT",R); if(cx) cx.checked=rm;
+  const hist=(d.hist&&d.hist.length?d.hist:[d.metar]).slice(0,5);
+  $("#opMet",R).innerHTML=hist.map((r,i)=>{ const q=i===0?e:parseMetar(r), ob=obsDate(q,now), ag=ob?Math.round((now-ob)/60000):null; return wrow(flightCat(q),rm?rawHtml(r.replace(/^METAR\s+/,"")):esc(decShort(q)),ag); }).join("")+(/\sAUTO\s/.test(d.metar)?'<div class="auto">METAR automático: no informa de precipitación (AIP).</div>':"");
+  const tp=d.tp;
+  $("#opTaf",R).innerHTML=!tp||!d.taf?'<div class="auto">No hay TAF disponible.</div>':(rm?wrow(flightCat(tp.periods[0].e),rawHtml(d.taf.replace(/^TAF\s+(AMD\s+|COR\s+)?/,"")),null):tp.periods.map(p=>`<div class="wr"><span class="cc ${flightCat(p.e)}">${flightCat(p.e)}</span><span class="wt"><b>${esc(p.label)}</b>${p.rng?` <small>${esc(p.rng)}</small>`:""}<br>${esc(decShort(p.e))}</span></div>`).join(""));
   // pista en uso
   const evF=evalOne(e,"fi"), evS=evalOne(e,"solo"), w=evF.w, wind=(e.wind&&!e.wind.vrb&&Math.max(e.wind.spd,e.wind.gst||0)>=3)?w.end:null, trf=S.tr?infer(S.tr):null, act=st.open?(trf?(AD.main.a.id===trf.id?AD.main.a:AD.main.b):wind):null;
   let rt;
@@ -233,24 +239,25 @@ function fill(){
   $("#opRwy",R).innerHTML=rt; drawMap(act);
   // mínimos
   const f1=evF.ac.cz.f, f2=evS.ac.cz.f, all=(ev,k)=>Object.keys(AC).map(a=>ev.ac[a].f[k]), open=st.open;
-  const cell=(ok,txt)=>`<td class="lim">${txt} ${ok}</td>`;
+  const cell=(ok,txt,nn)=>`<td class="lim ${nn&&!open?"n":(ok===true?"g":ok===false?"r":"a")}">${txt}</td>`;
+  const tri=arr=>arr.every(Boolean)?true:arr.some(Boolean)?null:false;
   const chips=ev=>Object.keys(AC).map(k=>{ const s=open?ev.ac[k].s:"no", why=open?(ev.ac[k].why.join(" · ")||"Dentro de todos los mínimos"):"Aeródromo cerrado"; return `<span class="ac ${s}" title="${esc(why)}">${AC[k].c}</span>`; }).join("");
-  $("#opMin",R).innerHTML=`<table class="mn"><thead><tr><th></th><th>Ahora</th><th>Con instructor</th><th>Solo</th></tr></thead><tbody>
-   <tr><th>Horario</th><td><b>${open?"Día":"Noche"}</b></td>${cell(mark([open]),"de día")}${cell(mark([open]),"de día")}</tr>
-   <tr><th>Visibilidad</th><td><b>${visTxt(e.vis)}</b></td>${cell(mark([f1.vis]),"≥ 5 km")}${cell(mark([f2.vis]),"≥ 8 km")}</tr>
-   <tr><th>Techo</th><td><b>${e.ceil==null?"Sin techo":e.ceil.toLocaleString("es-ES")+" ft"}</b></td>${cell(mark([f1.cig]),"≥ 1.500 ft")}${cell(mark([f2.cig]),"≥ 2.500 ft")}</tr>
-   <tr><th>Viento cruzado</th><td><b>${Math.round(w.cross)} kt</b></td>${cell(mark(all(evF,"cross")),"≤ 12 · 15 · 15 kt")}${cell(mark(all(evS,"cross")),"≤ 10 · 12 · 12 kt")}</tr>
-   <tr><th>Viento de cara</th><td><b>${Math.max(0,Math.round(w.head))} kt</b></td>${cell(mark([f1.head]),"≤ 20 kt")}${cell(mark([f2.head]),"≤ 20 kt")}</tr>
-   <tr><th>Viento de cola</th><td><b>${Math.max(0,Math.round(-w.head))} kt</b></td>${cell(mark([f1.tail]),"≤ 5 kt")}${cell(mark([f2.tail]),"0 kt")}</tr>
-   <tr><th>Temperatura</th><td><b>${e.temp!=null?e.temp+" ºC":"—"}</b></td>${cell(mark(all(evF,"temp")),"≤ 32 · 35 · 35 ºC")}${cell(mark(all(evS,"temp")),"≤ 32 ºC")}</tr>
+  $("#opMin",R).innerHTML=`<table class="mn"><thead><tr><th></th><th>Ahora</th><th>Instructor</th><th>Solo</th></tr></thead><tbody>
+   <tr><th>Horario</th><td><b class="${open?"":"r"}">${open?"Día":"Noche"}</b></td>${cell(open,"de día")}${cell(open,"de día")}</tr>
+   <tr><th>Visibilidad</th><td><b>${visTxt(e.vis)}</b></td>${cell(f1.vis,"≥ 5 km",1)}${cell(f2.vis,"≥ 8 km",1)}</tr>
+   <tr><th>Techo</th><td><b>${e.ceil==null?"Sin techo":e.ceil.toLocaleString("es-ES")+" ft"}</b></td>${cell(f1.cig,"≥ 1.500 ft",1)}${cell(f2.cig,"≥ 2.500 ft",1)}</tr>
+   <tr><th>Cruzado</th><td><b>${Math.round(w.cross)} kt</b></td>${cell(tri(all(evF,"cross")),"≤ 12 · 15 · 15",1)}${cell(tri(all(evS,"cross")),"≤ 10 · 12 · 12",1)}</tr>
+   <tr><th>De cara</th><td><b>${Math.max(0,Math.round(w.head))} kt</b></td>${cell(f1.head,"≤ 20 kt",1)}${cell(f2.head,"≤ 20 kt",1)}</tr>
+   <tr><th>De cola</th><td><b>${Math.max(0,Math.round(-w.head))} kt</b></td>${cell(f1.tail,"≤ 5 kt",1)}${cell(f2.tail,"0 kt",1)}</tr>
+   <tr><th>Temp.</th><td><b>${e.temp!=null?e.temp+" ºC":"—"}</b></td>${cell(tri(all(evF,"temp")),"≤ 32 · 35 · 35",1)}${cell(tri(all(evS,"temp")),"≤ 32 ºC",1)}</tr>
    <tr class="res"><th>¿Se puede?</th><td></td><td>${chips(evF)}</td><td>${chips(evS)}</td></tr></tbody></table>
-   <p class="nt">Límites por avión: Cruiser · C172 · Piper (SOP.4.1). El horario es el del AIP (civil). Orientativo: decide el HT o el CFI.</p>`;
+   <p class="nt">${open?"":"Fuera de horario: el resto de límites no aplican. "}Aviones: Cruiser · C172 · Piper (SOP.4.1). Orientativo: decide el HT o el CFI.</p>`;
   const ts=$("#opTrSt",R); if(ts) ts.textContent=S.tr?("✈ "+S.tr.length+" aviones · ADS-B · "+fz(S.trAt)+" Z"):"ADS-B no disponible";
 }
 function clock(){ const R=S.root; if(!R) return; const n=new Date(), z=$("#opZ",R), dd=$("#opD",R); if(z) z.textContent=pad(n.getUTCHours())+":"+pad(n.getUTCMinutes()); if(dd) dd.textContent=dayZ(n); }
 function setData(raw){
   const m=parseMetar(raw.metar.raw), tp=raw.taf?parseTaf(raw.taf.raw):null;
-  S.data={m,tp,metar:raw.metar.raw,taf:raw.taf?raw.taf.raw:"",mSt:raw.metar.station,obs:obsDate(m,new Date()),demo:!!raw.demo};
+  S.data={m,tp,hist:raw.metar.hist||null,metar:raw.metar.raw,taf:raw.taf?raw.taf.raw:"",mSt:raw.metar.station,obs:obsDate(m,new Date()),demo:!!raw.demo};
   const er=$("#opErr",S.root); if(er) er.hidden=true; fill();
 }
 function load(){
@@ -307,52 +314,58 @@ table.tf,table.mn{width:100%;border-collapse:collapse;font-size:14.5px}.tf th,.m
 .mn td.lim{color:var(--mu)}.mn tr.res td{padding-top:10px}.ac{display:inline-block;font:700 12.5px Barlow,sans-serif;border-radius:4px;padding:3px 8px;margin:2px 4px 2px 0;border:1px solid}.ac.ok{color:var(--ok);background:var(--okb);border-color:var(--ok)}.ac.warn{color:var(--mid);background:var(--midb);border-color:var(--mid)}.ac.no{color:var(--no);background:var(--nob);border-color:var(--no)}
 .nt{margin:10px 0 0;font-size:13px;color:var(--mu)}
 .st{font:600 12px Barlow,sans-serif;border-radius:4px;padding:2px 6px;white-space:nowrap}.st.ok{color:var(--ok);background:var(--okb)}.st.no{color:var(--no);background:var(--nob)}.st.mid{color:var(--mid);background:var(--midb)}
-.op-wy{position:relative;height:clamp(380px,60vh,560px);background:#2B3138}.op-wy iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.op-wy{position:relative;height:clamp(300px,52vh,520px);background:#2B3138}.op-wy iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .lk{display:flex;flex-wrap:wrap;gap:8px}.lk a{font:600 14.5px Barlow,sans-serif;color:var(--ink)!important;text-decoration:none;border:1px solid var(--ln);border-radius:6px;padding:8px 12px;background:var(--pn)}.lk a:hover{border-color:var(--ink)}
 .op-note{font-size:13px;color:var(--mu);padding:0 2px}.op-note b{color:var(--ink)}
-@media (max-width:560px){.op-top{display:grid;grid-template-columns:1fr 1fr;gap:10px}.op-top .id{grid-column:1}.op-top .tm{grid-column:2;grid-row:1;margin:0;justify-self:end}.op-top .ad,.op-top .cat{min-width:0}.tiles{grid-template-columns:1fr 1fr}.pn>h2{font-size:15px}.op-lbl span{font-size:13px}.tf,.mn,.tbl{font-size:13px!important}.tf td,.mn td,.mn tbody th,.tbl td{padding:6px 4px!important}.tf th,.mn th{padding:4px!important}.op-top .id b{font-size:32px}.op-top .tm{margin-left:0}.sign{font-size:44px}}`;
+
+.cat[hidden]{display:none}.op-top.cl .ad{grid-column:1/-1}
+.tiles.strip{display:grid;gap:8px;grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:10px}.strip .tl{grid-column:span 2;padding:8px 10px;min-height:0;gap:0}.strip .tl.wd,.strip .tl.vs{grid-column:span 3}
+.strip .tl small{font-size:11px}.strip .tl b{font-size:22px}.strip .tl span{font-size:12px;line-height:1.25}.strip .tl.wd svg{width:40px;height:40px;top:8px;right:10px}
+@media (min-width:720px){.tiles.strip{grid-template-columns:repeat(5,minmax(0,1fr))}.strip .tl,.strip .tl.wd,.strip .tl.vs{grid-column:auto}}
+.wh{display:flex;justify-content:space-between;align-items:center;margin:12px 0 4px}.wh b{font:700 15px "Barlow Condensed",Barlow,sans-serif;letter-spacing:.1em;color:var(--mid)}.wh .hz{font-size:12px;color:var(--mu)}
+.sw{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--mu);cursor:pointer}.sw input{position:absolute;opacity:0;pointer-events:none}.sw i{width:30px;height:18px;border-radius:9px;background:var(--ln);position:relative;transition:background .15s}.sw i:after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s}.sw input:checked+i{background:var(--vfr)}.sw input:checked+i:after{left:14px}
+.wl{display:grid}.wr{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--ln)}.wr:first-child{border-top:0}.wr .cc{flex:none;margin-top:2px;min-width:40px;text-align:center}.wr .wt{flex:1;min-width:0;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere}.wr .wt small{font:12px Barlow,sans-serif;color:var(--mu)}.wr .wt b{font-family:Barlow,sans-serif}.wr em{flex:none;font-style:normal;font-size:12.5px;color:var(--mu);margin-top:3px}.wl .auto{font-size:12.5px;color:var(--mu);padding:4px 0}
+.wr .wt:not(:has(.k)){font-family:Barlow,system-ui,sans-serif;font-size:14.5px}
+.frs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fr{border:1px solid var(--ln);border-radius:8px;padding:6px 10px;display:grid}.fr small{font:600 11px Barlow,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}.fr b{font:700 22px/1.15 "Barlow Condensed",Barlow,sans-serif;letter-spacing:.03em;font-variant-numeric:tabular-nums}
+.mn tr.res td:nth-child(n+3){white-space:nowrap}.lim.g{color:var(--ok);font-weight:600}.lim.r{color:var(--no);font-weight:600}.lim.a{color:var(--mid);font-weight:600}.lim.n{color:var(--mu)}.mn b.r{color:var(--no)}
+.pn>h2 small a{color:var(--k1);text-decoration:none}.op-note a{color:var(--mu);text-decoration:underline}.op-note{line-height:1.6}
+.pn .bd{padding:10px 14px}.tbl.rw td,.tbl.rw th{padding:5px 6px}
+@media (max-width:560px){.op-top{display:grid;grid-template-columns:1fr 1fr;gap:10px}.op-top .id{grid-column:1}.op-top .tm{grid-column:2;grid-row:1;margin:0;justify-self:end}.op-top .ad,.op-top .cat{min-width:0}.pn>h2{font-size:15px}.op-lbl span{font-size:13px}.tf,.mn,.tbl{font-size:13px!important}.tf td,.mn td,.mn tbody th,.tbl td{padding:6px 4px!important}.tf th,.mn th{padding:4px!important}.op-top .id b{font-size:32px}.op-top .tm{margin-left:0}.sign{font-size:44px}}`;
 const FQ=[["TWR","118.705","Torre","ok"],["GND (GMC)","121.805","Rodaje","ok"],["ATIS","118.230","Información","ok"],["Emergencia","121.500","H24","ok"],["TWR (reserva)","122.505","Back-up","ok"]];
 function render(el,opt){
   S.opt=opt||{}; S.root=el; S.tr=null; S.trAt=null;
   const A=AD.main, wy="https://embed.windy.com/embed2.html?lat=40.37&lon=-3.785&detailLat=40.37&detailLon=-3.785&zoom=8&level=surface&overlay=wind&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1";
   el.innerHTML=`<style>${CSS}</style><div class="op">
-   <header class="op-top"><div class="id"><b>${AD.icao}</b><span>${AD.name}</span></div><div class="ad closed" id="opAd"><b>AD</b><small>…</small></div><div class="cat" id="opCat"><b>—</b><small>cargando</small></div><div class="tm"><small>HORA UTC (Z)</small><div><b id="opZ">--:--</b><b><i id="opD"></i></b></div></div></header>
+   <header class="op-top" id="opTop"><div class="id"><b>${AD.icao}</b><span>${AD.name}</span></div><div class="ad closed" id="opAd"><b>AD</b><small>…</small></div><div class="cat" id="opCat"><b>—</b><small>cargando</small></div><div class="tm"><small>HORA UTC (Z)</small><div><b id="opZ">--:--</b><b><i id="opD"></i></b></div></div></header>
    <div class="op-sub" id="opSub"><span>Cargando METAR y TAF…</span></div>
    <div class="op-err" id="opErr" hidden><span><b>No se han podido cargar el METAR y el TAF.</b> Consulta la AEMET.</span><a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET</a>${S.opt.allowDemo?'<button type="button" id="opDemo">Ver con datos de ejemplo</button>':""}</div>
    <div class="op-in">
-    <section class="pn"><h2>Tiempo <small>METAR y TAF · hora Z</small></h2><div class="bd"><div class="tiles" id="opTiles"></div>
-     <div class="op-two"><div><div class="hs">METAR <span id="opMetSt"></span></div><div class="raw" id="opMetRaw"></div></div><div><div class="hs">TAF <span id="opTafSt"></span></div><div class="raw" id="opTafRaw"></div></div></div>
-     <div id="opTafTb"></div></div></section>
+    <section class="pn"><div class="bd"><div class="tiles strip" id="opTiles"></div>
+     <div class="wh"><b>METAR</b><label class="sw"><input type="checkbox" id="opRawT" checked><i></i>raw mode</label></div><div class="wl" id="opMet"></div>
+     <div class="wh"><b>TAF</b><span class="hz">hora Z</span></div><div class="wl" id="opTaf"></div></div></section>
     <div class="op-hero">
      <section class="pn op-map"><h2>Cuatro Vientos <small id="opTrSt">tráfico ADS-B…</small></h2><div id="opMap"></div></section>
      <aside class="op-side">
-      <section class="pn"><h2>Pista en uso</h2><div class="bd"><div class="rwy" id="opRwy"></div><p class="src">La pista real la fija la torre o el ATIS (118.230). Aquí se deduce del tráfico ADS-B en vivo y, si no hay, del viento.</p></div></section>
-      <section class="pn"><h2>Horario del AD <small>AIP</small></h2><div class="bd"><dl class="fq"><dt>Civil, invierno</dt><dd>08:00 Z – ocaso</dd><dt>Civil, verano</dt><dd>07:00 Z – ocaso</dd></dl><p class="src">Cerrado el primer domingo de cada mes por exhibición aérea (salvo enero y agosto). Militar: lunes a viernes, de orto a ocaso.</p></div></section>
+      <section class="pn"><h2>Pista en uso</h2><div class="bd"><div class="rwy" id="opRwy"></div><p class="src">La pista real la fija la torre o el ATIS (118.230). Aquí se deduce del tráfico ADS-B y, si no hay, del viento. AD civil: 08:00 Z–ocaso (invierno), 07:00 Z–ocaso (verano). Cerrado el primer domingo de mes (salvo enero y agosto).</p></div></section>
+      <section class="pn"><h2>Frecuencias <small>AIP</small></h2><div class="bd frs">${FQ.map(f=>`<div class="fr"><small>${f[0]}</small><b>${f[1]}</b></div>`).join("")}</div></section>
      </aside>
     </div>
-    <section class="pn"><h2>Pista ${A.id} <small>AIP AD 2-LECU/LEVS</small></h2><div class="bd">
+    <section class="pn"><h2>Pista ${A.id} <small><a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">Cartas AIP ↗</a></small></h2><div class="bd">
      <table class="tbl rw"><thead><tr><th></th><th><span class="sign sm">${A.a.id}</span></th><th><span class="sign sm">${A.b.id}</span></th></tr></thead><tbody>
       <tr><th>Rumbo magnético</th><td>${A.a.hdg}º</td><td>${A.b.hdg}º</td></tr>
-      <tr><th>Elevación del umbral</th><td>${A.a.el} ft</td><td>${A.b.el} ft</td></tr>
-      <tr><th>Zona de parada</th><td>${A.a.swy} m</td><td>${A.b.swy} m</td></tr>
-      <tr><th>Medidas</th><td colspan="2">${A.len.toLocaleString("es-ES")} × ${A.wid} m</td></tr>
-      <tr><th>Superficie</th><td colspan="2">Asfalto (${A.surf}) · PCN ${A.pcn}</td></tr>
-      <tr><th>Franja</th><td colspan="2">${A.strip} m</td></tr></tbody></table>
-     <div class="hs">Distancias declaradas (m)</div>
-     <table class="tbl"><thead><tr><th>Pista</th><th>TORA</th><th>TODA</th><th>ASDA</th><th>LDA</th></tr></thead><tbody>
-      <tr><td><b>${A.a.id}</b></td><td>${A.a.tora}</td><td>${A.a.toda}</td><td>${A.a.asda}</td><td>${A.a.lda}</td></tr>
-      <tr><td><b>${A.b.id}</b></td><td>${A.b.tora}</td><td>${A.b.toda}</td><td>${A.b.asda}</td><td>${A.b.lda}</td></tr>
-      <tr><td>09 desde K-1</td><td>1278</td><td>1278</td><td>1332</td><td>–</td></tr></tbody></table>
-     <p class="src">Elevación del aeródromo 2.269 ft. La pista de tierra paralela está cerrada al tráfico civil.</p>
-     <div class="lk" style="margin-top:10px"><a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">Cartas AIP (ADC, rodaje, VAC)</a><a target="_blank" rel="noopener" href="https://aip.enaire.es/aip/contenido_AIP/AD/AD2/LECU_LEVS/LE_AD_2_LECU_LEVS_en.pdf">AIP LECU/LEVS en PDF</a><a target="_blank" rel="noopener" href="https://aip.aero/es/en/vfr/?LECU=">Cartas VFR (aip.aero)</a></div></div></section>
-    <section class="pn"><h2>Frecuencias <small>AIP</small></h2><div class="bd"><table class="tbl"><tbody>${FQ.map(f=>`<tr><td>${f[0]}</td><td><b>${f[1]}</b></td><td class="muted">${f[2]}</td></tr>`).join("")}</tbody></table>
-</div></section>
-    <section class="pn"><h2>Mínimos de la escuela <small>SOP.4.1 + horario AIP</small></h2><div class="bd" id="opMin"></div></section>
-    <section class="pn"><h2>Viento y tiempo <small>Windy</small></h2><div class="op-wy"><iframe title="Mapa de viento Windy" src="${wy}" referrerpolicy="no-referrer" allow="fullscreen"></iframe></div><div class="bd"><span class="muted">¿No carga? </span><a href="https://www.windy.com/40.37/-3.785?wind,8" target="_blank" rel="noopener">Abrir en Windy</a></div></section>
-    <section class="pn"><h2>Enlaces</h2><div class="bd lk"><a target="_blank" rel="noopener" href="https://www.flightradar24.com/40.37,-3.79/12">FlightRadar24</a><a target="_blank" rel="noopener" href="https://globe.adsbexchange.com/?lat=40.37&lon=-3.785&zoom=11">ADS-B Exchange</a><a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET · METAR y TAF oficiales</a><a target="_blank" rel="noopener" href="https://insignia.enaire.es/">NOTAM · ENAIRE</a></div></section>
-    <p class="op-note"><b>Herramienta de estudio.</b> No sirve para planificar ni decidir un vuelo real: la fuente oficial es la AEMET (meteo), el AIS de ENAIRE (NOTAM y cartas) y tu instructor. La pista en uso y los mínimos del día los confirma OPS. Todas las horas, en UTC (Z).</p>
+      <tr><th>Elevación umbral</th><td>${A.a.el} ft</td><td>${A.b.el} ft</td></tr>
+      <tr><th>TORA</th><td>${A.a.tora} m</td><td>${A.b.tora} m</td></tr>
+      <tr><th>TODA</th><td>${A.a.toda} m</td><td>${A.b.toda} m</td></tr>
+      <tr><th>ASDA</th><td>${A.a.asda} m</td><td>${A.b.asda} m</td></tr>
+      <tr><th>LDA</th><td>${A.a.lda} m</td><td>${A.b.lda} m</td></tr>
+      <tr><th>Zona de parada</th><td>${A.a.swy} m</td><td>${A.b.swy} m</td></tr></tbody></table>
+     <p class="src">${A.len.toLocaleString("es-ES")} × ${A.wid} m · asfalto · PCN ${A.pcn} · franja ${A.strip} m · desde K-1 (09): TORA y TODA 1278, ASDA 1332. La pista de tierra paralela está cerrada al tráfico civil.</p></div></section>
+    <section class="pn"><h2>Mínimos de la escuela <small>SOP.4.1</small></h2><div class="bd" id="opMin"></div></section>
+    <section class="pn"><h2>Viento y tiempo <small><a href="https://www.windy.com/40.37/-3.785?wind,8" target="_blank" rel="noopener">Windy ↗</a></small></h2><div class="op-wy"><iframe title="Mapa de viento Windy" src="${wy}" referrerpolicy="no-referrer" allow="fullscreen"></iframe></div></section>
+    <p class="op-note">Herramienta de estudio, no para planificar un vuelo real. Fuentes oficiales: <a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET</a> · <a target="_blank" rel="noopener" href="https://insignia.enaire.es/">NOTAM e Insignia (ENAIRE)</a> · <a target="_blank" rel="noopener" href="https://www.flightradar24.com/40.37,-3.79/12">FlightRadar24</a> · <a target="_blank" rel="noopener" href="https://www.windy.com/40.37/-3.785?wind,8">Windy</a>. Horas en UTC (Z).</p>
    </div></div>`;
   el.addEventListener("click",ev=>{ const b=ev.target.closest("#opDemo"); if(b){ S.opt.fetchWx=null; setData(demoData(S.scen)); } });
+  el.addEventListener("change",ev=>{ if(ev.target.id==="opRawT"){ S.rawMode=ev.target.checked; fill(); } });
   initMap(); load(); loadTr(); clock();
   clearInterval(S.clk); S.clk=setInterval(clock,10000); clearInterval(S.t); S.t=setInterval(()=>{ if(S.opt.fetchWx) load(); else if(S.data) fill(); },5*60000);
   clearInterval(S.tt); S.tt=setInterval(loadTr,12000);

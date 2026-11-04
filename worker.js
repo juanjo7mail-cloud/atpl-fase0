@@ -5,15 +5,22 @@ const STATIONS = ["LECU", "LEVS", "LEGT", "LEMD"];
 const AW = "https://aviationweather.gov/api/data/";
 async function up(kind, id) {
   try {
-    const r = await fetch(AW + kind + "?ids=" + id + "&format=json" + (kind === "metar" ? "&hours=3" : ""), { headers: { "User-Agent": "atpl-fase0-ops/1.0" } });
+    const r = await fetch(AW + kind + "?ids=" + id + "&format=json" + (kind === "metar" ? "&hours=4" : ""), { headers: { "User-Agent": "atpl-fase0-ops/1.0" } });
     if (!r.ok) return null;
     const t = await r.text(); if (!t.trim()) return null;
     const j = JSON.parse(t);
-    return Array.isArray(j) && j.length ? j[0] : null;
+    return Array.isArray(j) && j.length ? j : null;
   } catch (e) { return null; }
 }
 async function first(kind, key) {
-  for (const id of STATIONS) { const x = await up(kind, id); if (x && x[key]) return { raw: String(x[key]).trim(), station: id }; }
+  for (const id of STATIONS) {
+    const arr = await up(kind, id);
+    if (arr && arr[0] && arr[0][key]) {
+      const o = { raw: String(arr[0][key]).trim(), station: id };
+      if (kind === "metar") o.hist = arr.map(x => String(x[key] || "").trim()).filter(Boolean).slice(0, 5);   // más reciente primero
+      return o;
+    }
+  }
   return null;
 }
 // Tráfico ADS-B en vivo (comunidad adsb.lol; si falla, airplanes.live). Radio 15 NM alrededor de Cuatro Vientos. Caché 8 s.
