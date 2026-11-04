@@ -13,7 +13,7 @@ const CSS=`#fh{
   --night:#0B141C; --wall:#12202B; --steel:#1B2D3B; --line:#2B4153;
   --lamp:#FFB52E; --hazard:#F5C531; --ink:#E9EFF3; --muted:#92A6B5;
   --ok:#4FC98C; --bad:#F26A63; --blue:#6FB2E6;
-  --lv-a:#101D36; --lv-b:#3FA0D8; --lv-tail:#101D36;
+  --lv-a:#1A2D6B; --lv-b:#33A1DA; --lv-tail:#1A2D6B;
   --disp:"Barlow Condensed","Barlow",system-ui,sans-serif;
   --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
@@ -77,7 +77,7 @@ const CSS=`#fh{
 #fh .prevbar button{background:var(--lamp);color:#1b1100;border:0;border-radius:4px;padding:6px 12px;font:700 14px var(--disp);cursor:pointer}
 
 /* livery */
-#fh .lv-a{stroke:var(--lv-a);fill:none} #fh .lv-b{stroke:var(--lv-b);fill:none} #fh .lv-tail{fill:var(--lv-tail)}
+#fh .lv-a{stroke:var(--lv-a);fill:none} #fh .lv-b{stroke:var(--lv-b);fill:none} #fh .lv-tail{fill:var(--lv-tail)} #fh .lv-bf{fill:var(--lv-b);stroke:none}
 
 /* escena */
 #fh .beacon{animation:fh-blink 1.1s steps(1) infinite}
@@ -101,7 +101,7 @@ const CSS=`#fh{
 #fh [data-crew=go] .fh-m2{animation:fh-m2go 3.4s linear forwards}
 #fh [data-crew=back] .fh-m1{animation:fh-m1back 3.4s linear forwards}
 #fh [data-crew=back] .fh-m2{animation:fh-m2back 3.4s linear forwards}
-#fh [data-crew=aside] .fh-m1{transform:translate(617px,88px)}
+#fh [data-crew=aside] .fh-m1{transform:translate(551px,0)}
 #fh [data-crew=aside] .fh-m2{transform:translate(190px,0)}
 #fh [data-crew=go] .fh-leg,#fh [data-crew=back] .fh-leg{animation:fh-walk .42s ease-in-out 8 alternate}
 #fh [data-crew=go] .fh-l2,#fh [data-crew=back] .fh-l2{animation-direction:alternate-reverse}
@@ -111,8 +111,8 @@ const CSS=`#fh{
 @keyframes fh-walk{from{transform:rotate(-24deg)}to{transform:rotate(24deg)}}
 @keyframes fh-bob{50%{transform:translateY(-2.5px)}}
 @keyframes fh-nod{50%{transform:translateY(1.5px)}}
-@keyframes fh-m1go{0%{transform:translate(0,0)}14%{transform:translate(0,88px)}100%{transform:translate(617px,88px)}}
-@keyframes fh-m1back{0%{transform:translate(617px,88px)}86%{transform:translate(0,88px)}100%{transform:translate(0,0)}}
+@keyframes fh-m1go{0%{transform:translate(0,0)}100%{transform:translate(551px,0)}}
+@keyframes fh-m1back{0%{transform:translate(551px,0)}100%{transform:translate(0,0)}}
 @keyframes fh-m2go{0%{transform:translate(0,0)}100%{transform:translate(190px,0)}}
 @keyframes fh-m2back{0%{transform:translate(190px,0)}100%{transform:translate(0,0)}}
 
@@ -122,21 +122,24 @@ const CSS=`#fh{
 #fh .out #fh-outside{opacity:1}
 #fh .out #fh-door-l{transform:translateX(-170px)} #fh .out #fh-door-r{transform:translateX(170px)}
 #fh .fh-tug{opacity:0;transform:translateX(1100px)}
-#fh .out .fh-tug{opacity:1;animation:fh-tug 8.5s linear forwards}
-#fh .out #fh-plane{animation:fh-plane 8.5s linear forwards}
+#fh #fh-plane,#fh .fh-tug{transform-origin:480px 292px;transform-box:view-box}
+#fh .out .fh-tug{opacity:1;animation:fh-tug 9s linear forwards}
+#fh .out #fh-plane{animation:fh-plane 9s linear forwards}
 #fh .out .sign{opacity:0;transition:opacity .6s}
 #fh .out .fh-tug .fh-w{transform-box:fill-box;transform-origin:50% 50%;animation:fh-spin .5s linear infinite}
 @keyframes fh-spin{to{transform:rotate(-360deg)}}
 @keyframes fh-tug{
   0%{transform:translateX(1100px);animation-timing-function:cubic-bezier(.2,.7,.3,1)}
-  26%{transform:translateX(0);animation-timing-function:linear}
-  33%{transform:translateX(0);animation-timing-function:cubic-bezier(.5,0,.6,1)}
-  100%{transform:translateX(-1250px)}}
+  22%{transform:translateX(0);animation-timing-function:linear}
+  30%{transform:translateX(0);animation-timing-function:cubic-bezier(.5,0,.7,1)}
+  88%{transform:translate(0,-34px) scale(.09);opacity:1}
+  100%{transform:translate(0,-34px) scale(.07);opacity:0}}
 @keyframes fh-plane{
-  0%,33%{transform:translateX(0);animation-timing-function:cubic-bezier(.5,0,.6,1)}
-  100%{transform:translateX(-1250px)}}
+  0%,30%{transform:none;animation-timing-function:cubic-bezier(.5,0,.7,1)}
+  88%{transform:translate(0,-34px) scale(.09);opacity:1}
+  100%{transform:translate(0,-34px) scale(.07);opacity:0}}
 @media (max-width:560px){#fh .testing .fh-scene{height:128px}#fh .bays{gap:3px}#fh .bay{font-size:10px}#fh .qcard .q{font-size:19px}#fh .loto span{display:none}}
-@media (prefers-reduced-motion:reduce){#fh *{animation:none!important;transition:none!important}#fh .out #fh-plane,#fh .out .fh-tug{opacity:0}}
+@media (prefers-reduced-motion:reduce){#fh *{animation:none!important;transition:none!important}#fh .out #fh-plane,#fh .out .fh-tug{opacity:1;animation:fh-tug 9s linear forwards}
 `;
 const SVG=`  <svg class="fh-scene" id="fh-scene" data-crew="work" viewBox="0 0 960 380" role="img" aria-label="Un avión en un hangar, con dos mecánicos trabajando en el motor y en el fuselaje">
    <defs>
@@ -173,48 +176,47 @@ const SVG=`  <svg class="fh-scene" id="fh-scene" data-crew="work" viewBox="0 0 9
     <g class="lampsw"><path d="M850 40V66" stroke="#4d6477"/><path d="M830 82L850 66L870 82Z" fill="#c89a3a"/><path d="M830 82H870L1000 300H710Z" fill="url(#fhgCone)" class="flick"/></g>
    </g>
 
-   <!-- AVIÓN ESCUELA: bimotor de ala alta, tipo Tecnam P2006T (morro a la izquierda) -->
+   <!-- AVIÓN ESCUELA: bimotor de ala baja con puntas curvadas, tipo Tecnam P2006T (morro a la izquierda) -->
    <g id="fh-plane">
-    <!-- motor lejano (insinúa el bimotor) -->
-    <g><path d="M296 150Q296 144 304 144L368 146L370 170L304 174Q296 174 296 168Z" fill="#7f93a1"/><path d="M304 160H366" stroke="#6a7f8e" stroke-width="2"/></g>
+    <!-- lejano: hélice y ala del otro lado asomando por detrás -->
+    <rect x="320" y="168" width="5" height="62" rx="2" fill="#1f2c38"/>
+    <path d="M432 238L520 232L568 190L552 186L510 214L440 224Z" fill="#aebbc5"/><path class="lv-tail" d="M552 186L568 190L562 200L548 196Z"/>
     <!-- estabilizador y deriva -->
-    <path d="M724 220L808 211L812 219L730 232Z" fill="url(#fhgWing)"/>
-    <path class="lv-tail" d="M692 214L748 120H782L794 220Z"/><path d="M700 200L752 124" stroke="#fff" stroke-width="1" opacity=".18"/>
-    <!-- ala alta cantilever -->
-    <path d="M336 168L540 171L554 184L330 192Z" fill="url(#fhgWing)"/><path d="M336 168L540 171" stroke="#f3f6f8" stroke-width="2"/><path class="lv-tail" d="M336 168H362L358 190L330 192Z"/>
+    <path d="M722 232L814 224L818 232L732 246Z" fill="url(#fhgWing)"/><path class="lv-tail" d="M804 225L814 224L818 232L808 233Z"/>
+    <path class="lv-tail" d="M686 228L734 128H772L784 232Z"/><path class="lv-bf" d="M690 218L778 218L784 232L688 232Z"/>
     <!-- fuselaje -->
-    <path d="M240 240C240 228 250 222 266 220L322 214L362 186H498C530 186 548 192 566 198L792 214L794 230L552 266L520 268H298C262 268 240 258 240 240Z" fill="url(#fhgFus)"/>
-    <path d="M370 188H496" stroke="#fff" stroke-width="2" opacity=".6"/>
-    <path class="lv-tail" d="M430 268Q580 238 792 214L794 230L552 266Z"/><path class="lv-b" d="M468 266L560 261L794 226" stroke-width="3.500"/>
-    <!-- ventanas -->
-    <g fill="#2a4256"><path d="M328 212L362 189H378V215Z"/><path d="M386 191H448Q452 191 452 195V215H386Z"/><path d="M460 191H510L532 204V215H460Z"/></g>
-    <g fill="#fff" opacity=".12"><path d="M392 193H412L402 213H386Z"/><path d="M466 193H486L476 213H460Z"/></g>
-    <path d="M454 188V266" stroke="#8fa3b0" stroke-width="1.5"/><path d="M424 226H440" stroke="#6a7f8e" stroke-width="3" stroke-linecap="round"/>
-    <path d="M300 218L300 266M520 270" stroke="#fff" stroke-width="0"/><path d="M450 186V180" stroke="#6a7f8e" stroke-width="2"/>
-    <text x="604" y="226" font-family="JetBrains Mono,monospace" font-weight="700" font-size="13" letter-spacing="2" fill="#173047" transform="rotate(3 604 226)">EC-ATP</text>
+    <path d="M200 248C200 238 214 230 236 226L296 218C318 206 342 192 374 190H470C500 192 520 200 548 210L780 226L784 242L560 262L340 270C260 272 200 266 200 248Z" fill="url(#fhgFus)"/>
+    <path class="lv-tail" d="M200 248C200 238 214 230 236 226L296 218C318 206 342 192 374 190L374 232C340 240 300 248 262 262L204 262C201 258 200 253 200 248Z"/>
+    <path class="lv-tail" d="M374 232L540 228Q600 228 650 232L782 234L783 240L650 240Q590 240 540 238L374 242Z"/>
+    <path class="lv-bf" d="M330 252Q430 244 540 246Q610 247 660 246L783 242L784 249L660 253Q600 254 540 254Q430 253 350 262Z"/>
+    <!-- cabina -->
+    <path d="M304 218C326 204 346 194 374 192H470C494 194 508 202 522 212L520 226H304Z" fill="#12202f"/>
+    <path d="M330 206C346 198 360 194 380 193L372 224H316Z" fill="#fff" opacity=".1"/><path d="M430 193H470C488 195 500 201 512 208L470 224H420Z" fill="#fff" opacity=".07"/>
+    <path d="M418 192V226" stroke="#2a4256" stroke-width="3"/>
+    <text x="598" y="230" font-family="JetBrains Mono,monospace" font-weight="700" font-size="12" letter-spacing="2" fill="#173047" transform="rotate(2.500 598 230)">EC-ATP</text>
+    <!-- ala cercana con punta curvada hacia arriba -->
+    <path d="M380 252L492 258L526 284L446 288Z" fill="url(#fhgWing)"/><path d="M380 252L492 258" stroke="#f3f6f8" stroke-width="2"/>
+    <path class="lv-tail" d="M500 282L536 246L544 248L524 286Z"/><path d="M380 252L446 288" stroke="#8fa3b0" stroke-width="1" opacity=".6"/>
     <!-- góndola del motor cercano, con el capó abierto -->
-    <g><rect x="280" y="168" width="58" height="20" rx="3" fill="#33495a"/><circle cx="292" cy="172" r="6" fill="#51616e"/><circle cx="310" cy="172" r="6" fill="#51616e"/><circle cx="328" cy="172" r="6" fill="#51616e"/>
-     <path d="M270 186L340 186L342 198Q300 204 272 196Z" fill="url(#fhgFus)"/><path d="M278 192H338" stroke="#aebbc5" stroke-width="2"/></g>
-    <g class="cowl"><path d="M338 168L342 160L286 138L276 146Z" fill="#c9d4db" stroke="#6a7f8e" stroke-width="1.500"/></g>
-    <ellipse cx="264" cy="182" rx="8" ry="13" fill="#c9d4db"/><rect x="258" y="128" width="6" height="108" rx="3" fill="#2a3946" opacity=".9"/>
+    <g><rect x="332" y="246" width="76" height="14" rx="3" fill="#33495a"/><circle cx="346" cy="250" r="5" fill="#51616e"/><circle cx="364" cy="250" r="5" fill="#51616e"/><circle cx="382" cy="250" r="5" fill="#51616e"/><circle cx="400" cy="250" r="5" fill="#51616e"/>
+     <path d="M318 268Q318 260 330 260L408 262L412 284L330 286Q318 286 318 276Z" fill="url(#fhgFus)"/><path d="M326 272H404" stroke="#aebbc5" stroke-width="2"/></g>
+    <g class="cowl"><path d="M408 258L414 248L344 226L332 238Z" fill="#c9d4db" stroke="#6a7f8e" stroke-width="1.500"/></g>
+    <ellipse cx="314" cy="273" rx="7" ry="11" fill="#e6edf1"/><rect x="309" y="239" width="5" height="68" rx="2" fill="#1f2c38" opacity=".95"/>
     <!-- tren -->
-    <path d="M410 266Q470 282 524 266V260H410Z" fill="#b8c6cf"/>
-    <g><path d="M272 268L267 288" stroke="#8d9fac" stroke-width="7"/><circle cx="264" cy="293" r="11" fill="#1a2630" stroke="#5d7283" stroke-width="3"/></g>
-    <g><path d="M470 274L474 290" stroke="#8d9fac" stroke-width="8"/><circle cx="474" cy="293" r="12" fill="#1a2630" stroke="#5d7283" stroke-width="3"/></g>
+    <g><path d="M262 268L258 294" stroke="#8d9fac" stroke-width="6"/><circle cx="256" cy="297" r="9" fill="#1a2630" stroke="#5d7283" stroke-width="3"/></g>
+    <g><path d="M430 286L436 294" stroke="#8d9fac" stroke-width="7"/><circle cx="436" cy="296" r="10" fill="#1a2630" stroke="#5d7283" stroke-width="3"/></g>
     <!-- gatos -->
-    <g fill="#f5c531"><path d="M392 268L376 302H408Z" opacity=".95"/><path d="M702 224L686 302H718Z" opacity=".95"/></g><g fill="#16120a"><rect x="374" y="300" width="36" height="5"/><rect x="684" y="300" width="36" height="5"/></g>
+    <g fill="#f5c531"><path d="M392 272L376 304H408Z" opacity=".95"/><path d="M696 250L680 304H712Z" opacity=".95"/></g><g fill="#16120a"><rect x="374" y="302" width="36" height="5"/><rect x="678" y="302" width="36" height="5"/></g>
     <!-- baliza y etiqueta AOG -->
-    <ellipse class="beacon" cx="766" cy="124" rx="7" ry="4" fill="#f26a63"/>
-    <g><path d="M300 268L306 274" stroke="#8d9fac" stroke-width="1.500"/><rect x="292" y="274" width="46" height="22" rx="3" fill="#f26a63"/><text x="315" y="289" text-anchor="middle" font-family="JetBrains Mono,monospace" font-weight="700" font-size="11" letter-spacing="1" fill="#1a0706">AOG</text></g>
+    <ellipse class="beacon" cx="760" cy="131" rx="7" ry="4" fill="#f26a63"/>
+    <g><path d="M522 266L526 274" stroke="#8d9fac" stroke-width="1.500"/><rect x="504" y="274" width="46" height="22" rx="3" fill="#f26a63"/><text x="527" y="289" text-anchor="middle" font-family="JetBrains Mono,monospace" font-weight="700" font-size="11" letter-spacing="1" fill="#1a0706">AOG</text></g>
    </g>
 
-   <!-- plataforma (fija) junto al motor -->
-   <g class="fh-plat"><g stroke="#5d7283" stroke-width="3"><path d="M192 292V224M246 292V224M192 224H246M192 258H246"/></g><rect x="186" y="216" width="66" height="8" fill="#f5c531"/></g>
-   <!-- mecánico 1 (plataforma, motor) -->
+   <!-- mecánico 1 (junto al motor) -->
    <g class="fh-m fh-m1"><g class="fh-bob">
-     <rect class="fh-leg fh-l1" x="211" y="200" width="6" height="16" rx="2" fill="#1a2630"/><rect class="fh-leg fh-l2" x="219" y="200" width="6" height="16" rx="2" fill="#1a2630"/>
-     <rect x="209" y="178" width="18" height="24" rx="4" fill="#f08a24"/><circle cx="218" cy="169" r="8.500" fill="#e9b88f"/><path d="M208.500 167C208.500 155 227.500 155 227.500 167Z" fill="#f5c531"/>
-     <g class="fh-wrench"><path d="M225 184L244 186" stroke="#e9b88f" stroke-width="6" stroke-linecap="round"/><path d="M242 186L254 180" stroke="#8d9fac" stroke-width="5" stroke-linecap="round"/><circle cx="258" cy="178" r="5.500" fill="none" stroke="#8d9fac" stroke-width="3"/></g>
+     <rect class="fh-leg fh-l1" x="277" y="288" width="6" height="16" rx="2" fill="#1a2630"/><rect class="fh-leg fh-l2" x="285" y="288" width="6" height="16" rx="2" fill="#1a2630"/>
+     <rect x="275" y="262" width="18" height="28" rx="4" fill="#f08a24"/><circle cx="284" cy="253" r="8.500" fill="#e9b88f"/><path d="M274.500 251C274.500 239 293.500 239 293.500 251Z" fill="#f5c531"/>
+     <g class="fh-wrench"><path d="M291 270L304 268" stroke="#e9b88f" stroke-width="6" stroke-linecap="round"/><path d="M302 268L314 262" stroke="#8d9fac" stroke-width="5" stroke-linecap="round"/><circle cx="318" cy="260" r="5.500" fill="none" stroke="#8d9fac" stroke-width="3"/></g>
    </g></g>
    <!-- mecánico 2 (cola) con lámpara -->
    <g class="fh-m fh-m2"><g class="fh-bob">
@@ -228,7 +230,7 @@ const SVG=`  <svg class="fh-scene" id="fh-scene" data-crew="work" viewBox="0 0 9
    <g fill="#f08a24"><path d="M330 330L340 304L350 330Z"/><path d="M670 332L680 306L690 332Z"/><path d="M906 328L916 302L926 328Z"/></g><g fill="#fff" opacity=".9"><rect x="335" y="316" width="10" height="3"/><rect x="675" y="318" width="10" height="3"/><rect x="911" y="314" width="10" height="3"/></g>
    <!-- tractor de remolque (llega por delante del morro) -->
    <g class="fh-tug" id="fh-tug">
-    <path d="M138 297L262 293" stroke="#8d9fac" stroke-width="5" stroke-linecap="round"/><circle cx="264" cy="293" r="4.500" fill="#f5c531"/>
+    <path d="M138 297L252 298" stroke="#8d9fac" stroke-width="5" stroke-linecap="round"/><circle cx="254" cy="298" r="4.500" fill="#f5c531"/>
     <rect x="132" y="282" width="14" height="16" rx="2" fill="#51616e"/>
     <rect x="24" y="272" width="116" height="32" rx="7" fill="#f08a24"/><rect x="24" y="298" width="116" height="6" fill="url(#fhstripe)"/>
     <path d="M64 272L72 242H124L132 272Z" fill="#f08a24"/><path d="M77 248H119L125 268H71Z" fill="#2a4256"/>
@@ -263,7 +265,7 @@ function build(){
    <div class="panel" id="fh-panel"></div><div class="hazard"></div></div><div class="toast" id="fh-toast" role="status"></div>`;
   document.body.appendChild(root);
   panel=$("#fh-panel",root); scene=$("#fh-scene",root); sheet=$("#fh-sheet",root);
-  scene.setAttribute("role","img"); scene.setAttribute("aria-label","Un bimotor de escuela en un hangar con dos mecánicos trabajando en el motor");
+  scene.setAttribute("role","img"); scene.setAttribute("aria-label","Un Tecnam P2006T, bimotor de escuela, en un hangar con dos mecánicos trabajando en el motor");
   $("#fh-loto",root).onclick=()=>{ const b=$("#fh-loto",root); b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); toast("Cierre bloqueado por mantenimiento (LOTO). Firma el CRS para abrir el hangar."); };
   root.addEventListener("click",e=>{ if(e.target===root) $("#fh-loto",root).click(); });
 }
@@ -305,7 +307,7 @@ function bar(){ return S.preview&&S.bar?`<div class="prevbar"><span>MODO PRUEBA 
 function bindExit(){ const b=$("#fh-exit",root); if(b) b.onclick=()=>hide(); }
 function intro(){
   panel.innerHTML=`${bar()}
-   <div class="tagrow"><span class="aog">AOG · AIRCRAFT ON GROUND</span><span class="mono">Orden de trabajo WO-0075 · Hangar 3</span></div>
+   <div class="tagrow"><span class="aog">AOG · AIRCRAFT ON GROUND</span><span class="mono">Tecnam P2006T · EC-ATP · WO-0075 · Hangar 3</span></div>
    <h3 id="fh-lt">La web está en el hangar</h3>
    <p>Revisión previa a los exámenes de Fase 0. Se ha abierto el capó, se han levantado los gatos y hay dos mecánicos dentro del motor. Nadie despega hasta que el ingeniero firme el certificado de puesta en servicio (CRS).</p>
    <div class="wo">
