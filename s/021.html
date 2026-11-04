@@ -325,6 +325,26 @@ button.choice:disabled{cursor:default}
 @media (max-width:560px){.ctl{grid-template-columns:repeat(2,1fr)} header .code{font-size:52px}}
 </style>
 
+<style id="f0-test-ui">
+/* ===== Pestaña Test unificada (misma tipografía, tamaños, desplegables y subtextos en todas las asignaturas) ===== */
+#test #setup{font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45}
+#test #setup>b:first-child{display:block;font:600 20px/1.2 "Barlow Condensed",Barlow,sans-serif;margin:0 0 6px;letter-spacing:0}
+#test #setup .mode{display:block;padding:10px 12px;margin:6px 0;border-radius:4px;font:500 16px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
+#test #setup .mode>b{font-weight:600}
+#test #setup .mode small{display:block;margin:3px 0 0 26px;font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted)}
+#test #setup .mode small:empty{display:none}
+#test #setup .mode .row,#test #setup .mode .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:8px;margin:8px 0 0 26px!important;align-items:stretch}
+#test #setup .mode small .row{margin-left:0!important}
+#test #setup .mode select,#test #setup .mode small select{display:block;width:100%;max-width:100%;min-height:38px;margin:0;padding:6px 8px;font:400 14.5px/1.3 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;text-overflow:ellipsis}
+#test #setup .mode small>select{margin-top:8px}
+#test #setup>label.chk{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:8px;margin:8px 0 0;font:500 15px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+#test #setup>label.chk input{margin:4px 0 0;flex:none}
+#test #setup>label.chk>span{flex:1 1 auto;min-width:0}
+#test #setup>label.chk small{display:block;margin:1px 0 0;font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted)}
+#test #setup p.muted{font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;margin:10px 0 0}
+#test #setup #startBtn{display:inline-block;font:600 17px/1.2 "Barlow Condensed",Barlow,sans-serif;padding:12px 22px;margin-top:14px;border-radius:4px}
+@media (max-width:560px){#test #setup .mode .row,#test #setup .mode .opts{grid-template-columns:1fr;margin-left:0!important}#test #setup .mode small{margin-left:0}}
+</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1789,15 +1809,15 @@ button.choice:disabled{cursor:default}
   <div id="setup" class="card">
     <b>Elige el test</b>
     <div style="margin-top:8px">
-      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small><span class="row" style="margin-top:6px"><select id="senEx" aria-label="Examen"><option value="021">021 · 80 preguntas</option><option value="022">022 · 60 preguntas</option><option value="both">021 + 022 seguidos · 140 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
+      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Examen cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senEx" aria-label="Examen"><option value="021">021 · 80 preguntas</option><option value="022">022 · 60 preguntas</option><option value="both">021 + 022 seguidos · 140 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
-      <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
+      <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row" style="margin:10px 0 4px" title="Sin marcar, solo sale lo dado y lo de Fase 0. Marcada, también temario ATPL aún no dado (en el adaptativo, como mucho 6)"><input type="checkbox" id="incTrial"> Incluir temario ATPL aún no dado</label>
-    <label class="row" style="margin:0 0 10px"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
+    <label class="row chk"><input type="checkbox" id="incTrial"> <span>Incluir temario ATPL aún no dado<small>Sin marcar, solo sale lo dado y lo que entra en Fase 0.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las de clase y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
   </div>
@@ -3617,9 +3637,9 @@ function renderSenOpts(){
 function renderSetup(){
   const st = stats();
   const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false).length;
-  $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
-  $("#allCount").textContent = `${BANK.filter(isGiven).length} de lo dado + ${BANK.filter(q=>!isGiven(q)).length} aún no dado`;
-  $("#trialCount").textContent = `${BANK.filter(isTrial).length} preguntas de los trials, cada una como variante`;
+  $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
+  $("#allCount").textContent = `${BANK.filter(isGiven).length} preguntas de lo dado + ${BANK.filter(q=>!isGiven(q)).length} de ATPL aún no dado.`;
+  $("#trialCount").textContent = `${BANK.filter(isTrial).length} preguntas del trial, cada una en variante.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
   renderSenOpts();

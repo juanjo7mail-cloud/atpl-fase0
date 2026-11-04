@@ -222,6 +222,26 @@ details.lo.atpl{border-left-color:var(--magenta)}
 .concept.fixed{opacity:.72}
 .cmeta{font-size:13px;margin-top:4px}
 </style>
+<style id="f0-test-ui">
+/* ===== Pestaña Test unificada (misma tipografía, tamaños, desplegables y subtextos en todas las asignaturas) ===== */
+#test #setup{font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45}
+#test #setup>b:first-child{display:block;font:600 20px/1.2 "Barlow Condensed",Barlow,sans-serif;margin:0 0 6px;letter-spacing:0}
+#test #setup .mode{display:block;padding:10px 12px;margin:6px 0;border-radius:4px;font:500 16px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
+#test #setup .mode>b{font-weight:600}
+#test #setup .mode small{display:block;margin:3px 0 0 26px;font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted)}
+#test #setup .mode small:empty{display:none}
+#test #setup .mode .row,#test #setup .mode .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:8px;margin:8px 0 0 26px!important;align-items:stretch}
+#test #setup .mode small .row{margin-left:0!important}
+#test #setup .mode select,#test #setup .mode small select{display:block;width:100%;max-width:100%;min-height:38px;margin:0;padding:6px 8px;font:400 14.5px/1.3 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;text-overflow:ellipsis}
+#test #setup .mode small>select{margin-top:8px}
+#test #setup>label.chk{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:8px;margin:8px 0 0;font:500 15px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+#test #setup>label.chk input{margin:4px 0 0;flex:none}
+#test #setup>label.chk>span{flex:1 1 auto;min-width:0}
+#test #setup>label.chk small{display:block;margin:1px 0 0;font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted)}
+#test #setup p.muted{font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;margin:10px 0 0}
+#test #setup #startBtn{display:inline-block;font:600 17px/1.2 "Barlow Condensed",Barlow,sans-serif;padding:12px 22px;margin-top:14px;border-radius:4px}
+@media (max-width:560px){#test #setup .mode .row,#test #setup .mode .opts{grid-template-columns:1fr;margin-left:0!important}#test #setup .mode small{margin-left:0}}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -1222,22 +1242,18 @@ details.lo.atpl{border-left-color:var(--magenta)}
   <div id="setup" class="card">
     <b>Elige el test</b>
     <div style="margin-top:8px">
-      <label class="mode"><input type="radio" name="mode" value="examen" checked> <b>Simulacro SENASA</b> <small id="examCount"></small>
-        <span class="lenseg" id="examLen" style="margin-left:26px;max-width:420px">
-          <button type="button" data-len="full" aria-pressed="true">Completo · 46 en 72 min</button>
-          <button type="button" data-len="half" aria-pressed="false">Exprés · 23 en 36 min</button>
-          <button type="button" data-len="real" aria-pressed="false">Tiempo real · 46 en 90 min</button>
-        </span></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small> con el reparto del examen de SENASA. Al menos 6 de las preguntas de clase y 6 de los trials; dentro de cada bloque entran primero tus fallos, lo marcado ★ OJO y tus subcapítulos flojos. Como mucho 5 por subcapítulo. Sin reloj.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="examen" checked> Simulacro SENASA <small id="examCount"></small>
+        <span class="opts"><select id="examLenSel" aria-label="Duración"><option value="full">Completo · 46 preguntas en 72 min (el real da 90)</option><option value="half">Exprés · 23 preguntas en 36 min</option><option value="real">Tiempo real · 46 preguntas en 90 min</option></select></span></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Con el reparto del examen de SENASA. Al menos 6 de clase y 6 de los trials; en cada bloque entran primero tus fallos, lo marcado ★ OJO y tus subcapítulos flojos. Como mucho 5 por subcapítulo. Sin reloj.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
-      <label class="mode"><input type="radio" name="mode" value="lo"> Un tema concreto <small><select id="loSel"></select></small></label>
+      <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row" style="margin:10px 0"><input type="checkbox" id="incX"> Incluir temario <b>ATPL aún no dado</b> <span class="muted">· sin marcar, solo sale lo dado en Fase 0</span></label>
-    <label class="row" style="margin:10px 0"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
+    <label class="row chk"><input type="checkbox" id="incX"> <span>Incluir temario ATPL aún no dado<small>Sin marcar, solo sale lo dado y lo que entra en Fase 0.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las de clase y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
-    <p id="startMsg" class="muted" style="font-size:14px"></p>
+    <p id="startMsg" class="muted small"></p>
   </div>
   <div id="quiz" hidden>
     <div class="pace" id="paceBox" hidden></div>
@@ -2832,9 +2848,9 @@ Respond ONLY with JSON, no markdown: {"questions":[{"lo":"050.x","q":"...","corr
 function renderSetup(){
   const st = stats();
   const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false).length;
-  $("#wrongCount").textContent = nw ? `${nw} preguntas cuya última respuesta fue incorrecta.` : "Ahora mismo no tienes fallos pendientes.";
-  $("#allCount").textContent = `${BANK.length} preguntas.`;
-  $("#examCount").textContent = `Reparto oficial de EASA: 46 preguntas por los ocho capítulos 081.01 a 081.08, ordenadas por capítulo como en el examen. Con la casilla «ATPL aún no dado» sin marcar, solo entra lo que ya se ha dado y el reparto se ajusta.`;
+  $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
+  $("#allCount").textContent = `${BANK.filter(q=>q[2]!=="x").length} preguntas de lo dado + ${BANK.filter(q=>q[2]==="x").length} de ATPL aún no dado.`;
+  $("#examCount").textContent = `Examen cronometrado con el reparto oficial de EASA por capítulo (081.01 a 081.08); corrección al final.`;
   $("#trialCount").textContent = `Las ${BANK.filter(q=>isTrial(q)||isExam(q)).length} preguntas de los trials y de los ejercicios de clase, cada una con una variante al azar.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = ECQB.map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.id} · ${c.es}</option>`).join("");
@@ -2850,11 +2866,10 @@ function srcTags(q){
    + (q.src==="g"?'<span class="tag g">generada</span> ':'')
    + (q.src==="x"?'<span class="tag x">ATPL</span> ':'');
 }
-document.querySelectorAll("#examLen button").forEach(b=>b.addEventListener("click",e=>{
-  e.preventDefault(); examLen=b.dataset.len;
-  document.querySelectorAll("#examLen button").forEach(x=>x.setAttribute("aria-pressed", x.dataset.len===examLen));
+$("#examLenSel").addEventListener("change",e=>{
+  examLen=e.target.value;
   const r=document.querySelector('input[name=mode][value=examen]'); if(r) r.checked=true;
-}));
+});
 $("#startBtn").addEventListener("click",()=>{
   curMode = document.querySelector('input[name=mode]:checked').value;
   const qs = F0DEDUP(selectQuestions(curMode, $("#incComp").checked, $("#loSel").value), curMode);

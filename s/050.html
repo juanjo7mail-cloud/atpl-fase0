@@ -20,7 +20,27 @@ select{max-width:100%;text-overflow:ellipsis}
 .swx .src{font-size:12.5px;color:var(--muted);margin-top:4px}
 figure.mfig{margin:10px 0;max-width:460px}figure.mfig img{display:block;width:100%;height:auto;border-radius:6px;border:1px solid var(--line)}
 figure.mfig figcaption{font-size:13.5px;color:var(--muted);margin-top:4px}
-</style></head><body>
+</style><style id="f0-test-ui">
+/* ===== Pestaña Test unificada (misma tipografía, tamaños, desplegables y subtextos en todas las asignaturas) ===== */
+#test #setup{font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45}
+#test #setup>b:first-child{display:block;font:600 20px/1.2 "Barlow Condensed",Barlow,sans-serif;margin:0 0 6px;letter-spacing:0}
+#test #setup .mode{display:block;padding:10px 12px;margin:6px 0;border-radius:4px;font:500 16px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
+#test #setup .mode>b{font-weight:600}
+#test #setup .mode small{display:block;margin:3px 0 0 26px;font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted)}
+#test #setup .mode small:empty{display:none}
+#test #setup .mode .row,#test #setup .mode .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:8px;margin:8px 0 0 26px!important;align-items:stretch}
+#test #setup .mode small .row{margin-left:0!important}
+#test #setup .mode select,#test #setup .mode small select{display:block;width:100%;max-width:100%;min-height:38px;margin:0;padding:6px 8px;font:400 14.5px/1.3 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;text-overflow:ellipsis}
+#test #setup .mode small>select{margin-top:8px}
+#test #setup>label.chk{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:8px;margin:8px 0 0;font:500 15px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+#test #setup>label.chk input{margin:4px 0 0;flex:none}
+#test #setup>label.chk>span{flex:1 1 auto;min-width:0}
+#test #setup>label.chk small{display:block;margin:1px 0 0;font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted)}
+#test #setup p.muted{font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;margin:10px 0 0}
+#test #setup #startBtn{display:inline-block;font:600 17px/1.2 "Barlow Condensed",Barlow,sans-serif;padding:12px 22px;margin-top:14px;border-radius:4px}
+@media (max-width:560px){#test #setup .mode .row,#test #setup .mode .opts{grid-template-columns:1fr;margin-left:0!important}#test #setup .mode small{margin-left:0}}
+</style>
+</head><body>
 <title>050 Meteorology · Meteorología</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
 <style>
@@ -2610,25 +2630,21 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
   <div id="setup" class="card">
     <b>Elige el test</b>
     <div style="margin-top:8px">
-      <label class="mode"><input type="radio" name="mode" value="sim" checked> Simulacro SENASA <small id="simCount"></small></label>
-      <div class="row" id="simLens" style="margin:4px 0 12px 26px;gap:8px">
-        <label class="row" style="gap:5px"><input type="radio" name="simlen" value="full" checked> <span>Completo · 84 preguntas</span></label>
-        <label class="row" style="gap:5px"><input type="radio" name="simlen" value="half"> <span>Exprés · 42</span></label>
-        <label class="row" style="gap:5px"><input type="radio" name="simlen" value="real"> <span>Tiempo real · 84 en 2 h</span></label>
-      </div>
+      <label class="mode"><input type="radio" name="mode" value="sim" checked> Simulacro SENASA <small id="simCount"></small>
+        <span class="opts"><select id="simLen" aria-label="Duración"><option value="full">Completo · 84 preguntas en 96 min (el real da 120)</option><option value="half">Exprés · 42 preguntas en 48 min</option><option value="real">Tiempo real · 84 preguntas en 120 min</option></select></span></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas <small>Prioriza tus fallos, los subcapítulos flojos, lo que no has visto y el peso en el examen. Al menos 6 del trial.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="foto"> Nubes por foto <small id="fotoCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="simb"> Símbolos del mapa <small id="simbCount"></small></label>
-      <label class="mode"><input type="radio" name="mode" value="lo"> Un tema concreto <small><select id="loSel"></select></small></label>
+      <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row" style="margin:10px 0 2px"><input type="checkbox" id="incAtpl"> Incluir temario ATPL aún no dado</label>
-    <label class="row" style="margin:0 0 10px"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
-    <p class="muted" style="font-size:14px">Formato examen: 4 opciones, corrección al final, 75 % para aprobar. Muchas preguntas salen con otra redacción, otros números o al revés (etiqueta «variante»): hay que razonarlas, no reconocerlas. Las del trial y las de las diapositivas salen <b>siempre</b> con otra redacción, nunca con el enunciado original.</p>
-    <button class="btn" id="startBtn">Empezar test</button>
-    <p id="startMsg" class="muted" style="font-size:14px"></p>
+    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir temario ATPL aún no dado<small>Sin marcar, solo sale lo dado y lo que entra en Fase 0.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las de clase y del trial.</small></span></label>
+    <p class="muted">Formato examen: 4 opciones, corrección al final, 75 % para aprobar. Muchas preguntas salen con otra redacción, otros números o al revés (etiqueta «variante»): hay que razonarlas, no reconocerlas. Las del trial y las de las diapositivas salen <b>siempre</b> con otra redacción, nunca con el enunciado original.</p>
+    <button class="btn" id="startBtn">Empezar</button>
+    <p id="startMsg" class="muted small"></p>
   </div>
   <div id="quiz" hidden>
     <div class="timer" id="timerBox" hidden>
@@ -4638,9 +4654,9 @@ function renderSetup(){
   const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false && q[2]!=="t" && q[2]!=="p").length;
   const nwt = BANK.filter(q=>(st.q[q[0]]||{}).last===false && q[2]==="t").length;
   const nat = BANK.filter(q=>q[7]).length;
-  $("#simCount").textContent = `84 preguntas con el reparto oficial por capítulo, ordenadas como en el examen y cronometradas.`;
+  $("#simCount").textContent = `Examen cronometrado con el reparto oficial de EASA por capítulo; corrección al final.`;
   $("#wrongCount").textContent = (nw ? `${nw} preguntas con la última respuesta incorrecta` : "Sin fallos pendientes") + (nwt?`; ${nwt} más del trial.`:".");
-  $("#allCount").textContent = `Las ${BANK.filter(q=>q[2]!=="p").length} del banco, en orden aleatorio.`;
+  $("#allCount").textContent = `${BANK.filter(q=>q[2]!=="p" && !q[7]).length} preguntas de lo dado + ${BANK.filter(q=>q[2]!=="p" && q[7]).length} de ATPL aún no dado.`;
   const nf = BANK.filter(q=>q[2]==="p").length;
   const nfw = BANK.filter(q=>q[2]==="p" && (st.q[q[0]]||{}).last===false).length;
   $("#fotoCount").textContent = `Identificar la nube en la foto. La imagen cambia cada vez.`;
@@ -4652,9 +4668,7 @@ function renderSetup(){
   const sel = $("#loSel").value;
   $("#loSel").innerHTML = los.map(l=>`<option value="${l}" ${l===sel?'selected':''}>${esc(loLabelEs(l))}</option>`).join("");
 }
-document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener("change",()=>{
-  $("#simLens").style.display = $('input[name=mode]:checked').value==="sim" ? "flex" : "none";
-}));
+$("#simLen").addEventListener("change",()=>{ document.querySelector('input[name=mode][value=sim]').checked = true; });
 
 let current = [], curMode = "sim", simSecs = 0, simStart = 0, simTick = null, simLenKind="full";
 function mmss(s){ const m=Math.floor(Math.abs(s)/60), q=Math.abs(s)%60; return (s<0?"−":"")+m+":"+String(q).padStart(2,"0"); }
@@ -4681,7 +4695,7 @@ function startTimer(n, kind){
 }
 $("#startBtn").addEventListener("click",()=>{
   curMode = document.querySelector('input[name=mode]:checked').value;
-  simLenKind = (document.querySelector('input[name=simlen]:checked')||{value:"full"}).value;
+  simLenKind = $("#simLen").value;
   const qs = F0DEDUP(selectQuestions(curMode, $("#loSel").value, $("#incAtpl").checked, $("#incComp").checked, simLenKind), curMode);
   if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
   $("#startMsg").textContent = "";
@@ -4825,7 +4839,6 @@ loadState().then(()=>{
   try{ initAlt(); initViento(); initDens(); initTormenta(); initRolar(); }catch(e){ console.error("visuales", e); }
   renderNotesMeta();
   renderSetup();
-  $("#simLens").style.display = "flex";
   showTab((location.hash||"").replace("#t-","").replace("#",""), true);
 });
 

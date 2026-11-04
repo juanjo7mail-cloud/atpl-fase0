@@ -349,6 +349,26 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
 .vchk{list-style:none;padding:0;margin:6px 0}
 .vchk li{padding:3px 0;font-size:15px} .vchk li.ok{color:var(--ok)} .vchk li.ko{color:var(--bad)} .vchk li.mid{color:var(--warn)}
 </style>
+<style id="f0-test-ui">
+/* ===== Pestaña Test unificada (misma tipografía, tamaños, desplegables y subtextos en todas las asignaturas) ===== */
+#test #setup{font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45}
+#test #setup>b:first-child{display:block;font:600 20px/1.2 "Barlow Condensed",Barlow,sans-serif;margin:0 0 6px;letter-spacing:0}
+#test #setup .mode{display:block;padding:10px 12px;margin:6px 0;border-radius:4px;font:500 16px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
+#test #setup .mode>b{font-weight:600}
+#test #setup .mode small{display:block;margin:3px 0 0 26px;font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted)}
+#test #setup .mode small:empty{display:none}
+#test #setup .mode .row,#test #setup .mode .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:8px;margin:8px 0 0 26px!important;align-items:stretch}
+#test #setup .mode small .row{margin-left:0!important}
+#test #setup .mode select,#test #setup .mode small select{display:block;width:100%;max-width:100%;min-height:38px;margin:0;padding:6px 8px;font:400 14.5px/1.3 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;text-overflow:ellipsis}
+#test #setup .mode small>select{margin-top:8px}
+#test #setup>label.chk{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:8px;margin:8px 0 0;font:500 15px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+#test #setup>label.chk input{margin:4px 0 0;flex:none}
+#test #setup>label.chk>span{flex:1 1 auto;min-width:0}
+#test #setup>label.chk small{display:block;margin:1px 0 0;font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted)}
+#test #setup p.muted{font:400 13.5px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;margin:10px 0 0}
+#test #setup #startBtn{display:inline-block;font:600 17px/1.2 "Barlow Condensed",Barlow,sans-serif;padding:12px 22px;margin-top:14px;border-radius:4px}
+@media (max-width:560px){#test #setup .mode .row,#test #setup .mode .opts{grid-template-columns:1fr;margin-left:0!important}#test #setup .mode small{margin-left:0}}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -612,7 +632,6 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
   </table></div>
   <h4>Autorización condicional</h4>
   <div class="vis" id="visCond"><b>Orden</b><ol><li>Call sign</li><li>Condición</li><li>Autorización</li><li>Condición repetida</li></ol></div>
-  </div>
   <ul>
     <li>Orden: <b>call sign · condición · autorización · condición repetida</b>. «FTR 95, behind the landing Airbus, line up and wait behind».</li>
     <li>Colación en el <b>mismo orden</b>, con el indicativo al final: «Behind the landing Airbus, line up and wait behind, FTR 95».</li>
@@ -921,7 +940,6 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
   </div>
   <h4>El mensaje · orden</h4>
   <div class="vis" id="visMayday"><b>Orden</b><ol><li>MAYDAY ×3</li><li>Estación a la que llamas</li><li>Tu indicativo</li><li>Naturaleza de la emergencia</li><li>Intenciones</li><li>Posición, nivel y rumbo</li></ol></div>
-  </div>
   <ul>
     <li>«<b>Mayday, mayday, mayday</b>, London, Fastair 342, engine fire, request recovery to Heathrow, 5 miles south of Bovingdon, FL130, heading 150».</li>
     <li>La primera estación que lo recibe: lo <b>acusa de inmediato</b>, <b>toma el control</b> de las comunicaciones (o lo transfiere), avisa al ATS y al operador y evita que otros entren en esa frecuencia.</li>
@@ -1136,20 +1154,20 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
   <div id="setup" class="card">
     <b>Elige el test</b>
     <div style="margin-top:8px">
-      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small><span class="row" style="margin-top:6px"><select id="senLen"><option value="full">Completo · 34 preguntas en 48 min (el real da 60)</option><option value="half">Exprés · 17 preguntas en 24 min</option><option value="real">Tiempo real · 34 preguntas en 60 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 · 45 min <small>Solo test. Tus fallos, lo que más pesa, TRIAL y ★ OJO.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Examen cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senLen"><option value="full">Completo · 34 preguntas en 48 min (el real da 60)</option><option value="half">Exprés · 17 preguntas en 24 min</option><option value="real">Tiempo real · 34 preguntas en 60 min</option></select></span></small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 30 preguntas · 45 min <small>Solo test. Tus fallos, lo que más pesa, TRIAL y ★ OJO.</small></label>
       <label class="mode"><input type="radio" name="mode" value="voice"> Radio por voz · solo hablando <small>ATC te habla en inglés y contestas por el micrófono, sin escribir. Te dice si está bien, mal o qué te falta según la fraseología OACI/SENASA.
-        <span class="row" id="voiceOpts" style="margin-top:6px"><select id="vLevel" aria-label="Dificultad de la audición"><option value="easy">Fácil · despacio y sin ruido</option><option value="normal" selected>Normal · algo de ruido</option><option value="hard">Difícil · rápido y con ruido</option><option value="real">Real · frecuencia saturada</option></select>
+        <span class="row" id="voiceOpts"><select id="vLevel" aria-label="Dificultad de la audición"><option value="easy">Fácil · despacio y sin ruido</option><option value="normal" selected>Normal · algo de ruido</option><option value="hard">Difícil · rápido y con ruido</option><option value="real">Real · frecuencia saturada</option></select>
         <select id="vAccent" aria-label="Acento"><option value="gb">Británico</option><option value="us">Americano</option><option value="random">Al azar</option></select>
         <select id="vCount" aria-label="Número de mensajes"><option value="5">5 mensajes</option><option value="10" selected>10 mensajes</option><option value="15">15 mensajes</option></select>
         <select id="vTypes" aria-label="Tipo de mensajes"><option value="all">Colaciones y llamadas tuyas</option><option value="atc">Solo colaciones a ATC</option><option value="own">Solo llamadas tuyas (MAYDAY, PAN PAN, blind…)</option></select></span><span id="voiceInfo"></span></small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
-      <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
+      <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row" style="margin:10px 0 4px"><input type="checkbox" id="incTrial"> Incluir temario ATPL aún no dado</label>
-    <label class="row" style="margin:0 0 10px"><input type="checkbox" id="incComp" checked> Incluir complemento</label>
+    <label class="row chk"><input type="checkbox" id="incTrial"> <span>Incluir temario ATPL aún no dado<small>Sin marcar, solo sale lo dado y lo que entra en Fase 0.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las de clase y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
   </div>
@@ -2638,9 +2656,9 @@ Respond ONLY with JSON, no markdown: {"questions":[{"lo":"090.xx.xx.xx","q":"...
 function renderSetup(){
   const st = stats();
   const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false).length + F0.filter(f=>(st.q[f.id]||{}).last===false).length;
-  $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
-  $("#allCount").textContent = `${BANK.filter(isGiven).length + F0.length} + ${BANK.filter(q=>!isGiven(q)).length} ATPL`;
-  $("#trialCount").textContent = `${BANK.filter(isT).length} preguntas, siempre en variante`;
+  $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
+  $("#allCount").textContent = `${BANK.filter(isGiven).length + F0.length} preguntas de lo dado + ${BANK.filter(q=>!isGiven(q)).length} de ATPL aún no dado.`;
+  $("#trialCount").textContent = `${BANK.filter(isT).length} preguntas del trial, cada una en variante.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
 }
@@ -3699,7 +3717,7 @@ try{
   const vl = document.querySelector('input[name=mode][value=voice]'), vlab = vl && vl.closest("label");
   if(vlab && !document.querySelector('input[name=mode][value=atis]')){
     vlab.insertAdjacentHTML("afterend", `<label class="mode"><input type="radio" name="mode" value="atis"> Escucha ATIS · rellena lo que oyes <small>Oyes un ATIS en inglés (acentos británico, americano, irlandés, australiano e indio; con ruido y más rápido según la dificultad) y rellenas letra, hora, pista, viento, visibilidad, nubes, QNH… No cuenta en la media.
-      <span class="row" id="atisOpts" style="margin-top:6px"><select id="aLevel" aria-label="Dificultad"><option value="easy">Fácil · despacio y sin ruido</option><option value="normal" selected>Normal · algo de ruido</option><option value="hard">Difícil · rápido y con ruido</option><option value="real">Real · muy rápido, una sola escucha</option></select>
+      <span class="row" id="atisOpts"><select id="aLevel" aria-label="Dificultad"><option value="easy">Fácil · despacio y sin ruido</option><option value="normal" selected>Normal · algo de ruido</option><option value="hard">Difícil · rápido y con ruido</option><option value="real">Real · muy rápido, una sola escucha</option></select>
       <select id="aAccent" aria-label="Acento"><option value="var" selected>Acento según el aeropuerto</option><option value="gb">Británico</option><option value="us">Americano</option><option value="ie">Irlandés</option><option value="au">Australiano</option><option value="in">Indio</option></select>
       <select id="aCount" aria-label="Número de ATIS"><option value="1">1 ATIS</option><option value="3" selected>3 ATIS</option><option value="5">5 ATIS</option></select></span></small></label>`);
     document.getElementById("startBtn").addEventListener("click", e=>{ const m = document.querySelector("input[name=mode]:checked"); if(m && m.value==="atis"){ e.stopImmediatePropagation(); e.preventDefault(); startAtis(); } }, true);
