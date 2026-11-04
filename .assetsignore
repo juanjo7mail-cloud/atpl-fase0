@@ -2,3 +2,4 @@
 .nojekyll
 wrangler.jsonc
 .assetsignore
+worker.js

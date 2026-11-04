@@ -11,6 +11,7 @@ self.addEventListener("fetch", e => {
   if (r.method !== "GET") return;
   const u = new URL(r.url);
   if (u.origin !== location.origin) return;
+  if (u.pathname.startsWith("/api/")) return;   // el tiempo (METAR/TAF) nunca se sirve de caché
   e.respondWith((async () => {
     try {
       const res = await fetch(r, { cache: "no-cache" });

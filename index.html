@@ -17,12 +17,13 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="5222df2f2684";</script>
+<script>window.F0_BUILD="241a77d5c8a9";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
 <script src="radio.js"></script>
 <script src="chat.js"></script>
+<script src="ops.js"></script>
 <script src="hangar.js"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f1d0070793724820ae63bfa8c465ba85"}'></script>
 </head>
@@ -448,6 +449,9 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
   <section class="view" id="v-stats" role="tabpanel" hidden>
     <div class="dash" id="stats"></div>
   </section>
+  <section class="view" id="v-ops" role="tabpanel" hidden>
+    <div id="ops"></div>
+  </section>
   <section class="view" id="v-radio" role="tabpanel" hidden>
     <div class="dash" id="radio"></div>
   </section>
@@ -721,12 +725,18 @@ function renderTabs(){
     `<button class="tab test solo" role="tab" data-v="test" aria-selected="${current==="test"}"><b>INICIO</b></button>` +
     (sbUser?`<button class="tab test solo" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b></button>`:"") +
     (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
+    (isAdmin&&window.F0Ops?`<button class="tab test solo" role="tab" data-v="ops" aria-selected="${current==="ops"}"><b>OPS</b></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
   drawMenu(); tabArrows();
 }
+function opsLoad(){   // Leaflet solo se descarga al abrir OPS
+  if(window.L) return Promise.resolve();
+  return window._opsL||(window._opsL=new Promise(ok=>{ const l=document.createElement("link"); l.rel="stylesheet"; l.href="vendor/leaflet/leaflet.css"; document.head.appendChild(l);
+    const s=document.createElement("script"); s.src="vendor/leaflet/leaflet.js"; s.onload=s.onerror=()=>ok(); document.head.appendChild(s); }));
+}
 function drawMenu(){
   const lv = k => summary(k).lvl, it=(v,c,n,d)=>`<button role="menuitem" data-v="${v}" aria-current="${current===v}"><span class="mc">${c}</span><span class="mn">${esc(n)}</span><i class="md ${d||""}"></i></button>`;
-  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+"<hr>"+
+  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+(isAdmin&&window.F0Ops?it("ops","OPS","Cuatro Vientos: tiempo y pista"):"")+"<hr>"+
     SUBJ.map(s=>it(s.k,s.code,s.short,lv(s.k))).join("");
 }
 function tabArrows(){
@@ -740,10 +750,12 @@ function menuOpen(on){
 }
 function show(v, cmd){
   if(sbUser&&MY&&MY.ok&&!MY.name){ openNameAsk(); return; }   // sin nombre y apellidos no se entra
+  if(current==="ops"&&v!=="ops"){ try{ window.F0Ops&&window.F0Ops.leave(); }catch(e){} }
   current=v; renderTabs(); try{vswSync();}catch(e){}
   document.querySelectorAll(".view").forEach(el=>el.hidden = el.id!=="v-"+v);
   if(v==="stats"){ renderStats(); }
   else if(v==="rank"){ renderRank(); }
+  else if(v==="ops"){ if(window.F0Ops&&isAdmin) opsLoad().then(()=>window.F0Ops.render($("#ops"),{fetchWx:()=>fetch("/api/wx",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })})); }
   else if(v==="radio"){ if(window.F0Radio&&sbUser) window.F0Radio.render($("#radio"),{sb,user:sbUser,name:()=>MY.name||(sbUser.email||"alumno").split("@")[0]}); }
   else if(v!=="test"){
     let view=$("#v-"+v);
@@ -776,7 +788,7 @@ document.addEventListener("click",e=>{ if(!$("#menu").hidden && !e.target.closes
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#menu").hidden) menuOpen(false); });
 $("#tabs").addEventListener("keydown",e=>{
   if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
-  const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser?["rank"]:[]),...(sbUser&&window.F0Radio?["radio"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
+  const ids=[...(isAdmin?["stats"]:[]),"test",...(sbUser?["rank"]:[]),...(sbUser&&window.F0Radio?["radio"]:[]),...(isAdmin&&window.F0Ops?["ops"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
   show(n); document.querySelector(`.tab[data-v="${n}"]`).focus();
 });
 
@@ -1423,7 +1435,7 @@ async function signOut(){
   try{ await sb.auth.signOut(); }catch(e){}
   sbUser=null; remote=null; isAdmin=false; MY={name:"",show:true};
   try{ SUBJ.forEach(s=>localStorage.removeItem("f0:"+s.k)); }catch(e){}
-  loadAllLocal(); try{ if(window.F0Radio) window.F0Radio.leave(); }catch(e){} try{ if(window.F0Chat) window.F0Chat.leave(); }catch(e){} if(current==="stats"||current==="rank"||current==="radio") show("test"); renderAcct(); renderDash(); renderTabs(); openLogin();
+  loadAllLocal(); try{ if(window.F0Radio) window.F0Radio.leave(); }catch(e){} try{ if(window.F0Ops) window.F0Ops.leave(); }catch(e){} try{ if(window.F0Chat) window.F0Chat.leave(); }catch(e){} if(current==="stats"||current==="rank"||current==="radio"||current==="ops") show("test"); renderAcct(); renderDash(); renderTabs(); openLogin();
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
