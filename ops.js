@@ -490,7 +490,7 @@ function render(el,opt){
      <div class="wh"><b>METAR</b><label class="sw"><input type="checkbox" id="opRawT" checked><i></i>raw mode</label></div><div class="wl" id="opMet"></div>
      <div class="wh"><b>TAF</b><span class="hz">hora Z</span></div><div class="wl" id="opTaf"></div></div></section>
     <div class="op-hero">
-     <section class="pn op-map"><h2>Cuatro Vientos <small id="opTrSt">tráfico ADS-B…</small></h2><div id="opMap"></div><p class="src mapnote" id="opMapNote">Carta de aeródromo del AIP (parte civil) · © ENAIRE. Comprueba siempre la vigente en <a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">Cartas AIP ↗</a></p></section>
+     <section class="pn op-map"><h2>Cuatro Vientos <small id="opTrSt">tráfico ADS-B…</small></h2><div id="opMap"></div><p class="src mapnote" id="opMapNote">AD 2-LECU/LEVS ADC 1.1 (WEF 25-DEC-25, AIRAC AMDT 13/25), parte civil · © ENAIRE. Comprueba siempre la vigente en <a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">Cartas AIP ↗</a></p></section>
      <aside class="op-side">
       <section class="pn"><h2>Pista en uso</h2><div class="bd"><div class="rwy" id="opRwy"></div><p class="src">La pista real la fija la torre o el ATIS (118.230). Aquí se deduce del tráfico ADS-B y, si no hay, del viento. AD civil: 08:00 Z–ocaso (invierno), 07:00 Z–ocaso (verano). Cerrado el primer domingo de mes (salvo enero y agosto).</p></div></section>
      </aside>
