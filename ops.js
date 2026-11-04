@@ -171,11 +171,12 @@ function infer(list){
 
 /* ---------- mapa ---------- */
 const PLANE='<svg viewBox="0 0 20 20" width="26" height="26" style="transform:rotate({r}deg)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z" fill="#FFC400" stroke="#14181D" stroke-width="1.1"/></svg>';
-const CHART={url:"ops-lecu-adc.jpg",b:[[40.36659176,-3.79715401],[40.37154104,-3.77206957]]};
+const CHART={url:"ops-lecu-adc.jpg",ovl:"ops-lecu-ovl.png",b:[[40.36659176,-3.79715401],[40.37154104,-3.77206957]]};
 function setMode(m){
   S.mode=m; const M=S.map, R=S.root; if(!M) return;
   if(S.tile){ if(m==="aip"){ if(M.hasLayer(S.tile)) M.removeLayer(S.tile); } else if(!M.hasLayer(S.tile)) S.tile.addTo(M); }
-  if(S.img){ if(m==="sat"){ if(M.hasLayer(S.img)) M.removeLayer(S.img); } else { if(!M.hasLayer(S.img)) S.img.addTo(M); S.img.setOpacity(m==="aip"?1:.92); const e=S.img.getElement(); if(e) e.classList.toggle("mx",m==="mix"); } }
+  if(S.img){ if(m!=="aip"){ if(M.hasLayer(S.img)) M.removeLayer(S.img); } else if(!M.hasLayer(S.img)) S.img.addTo(M); }
+  if(S.imgO){ if(m!=="ovl"){ if(M.hasLayer(S.imgO)) M.removeLayer(S.imgO); } else if(!M.hasLayer(S.imgO)) S.imgO.addTo(M); }
   M.getContainer().classList.toggle("aip",m==="aip");
   if(R){ R.querySelectorAll(".mseg button").forEach(b=>b.classList.toggle("on",b.dataset.m===m)); const nt=$("#opMapNote",R); if(nt) nt.hidden=m==="sat"; }
   drawMap(S.act);
@@ -184,7 +185,7 @@ function drawMap(act){
   const L=window.L, M=S.map; if(!L||!M) return;
   if(S.lay) S.lay.clearLayers(); else S.lay=L.layerGroup().addTo(M);
   const g=S.lay, A=AD.main; S.act=act;
-  if((S.mode||"mix")==="sat"){
+  if((S.mode||"ovl")!=="aip"){
   L.polyline([A.a.ll,A.b.ll],{color:"#FFFFFF",weight:12,opacity:.85}).addTo(g);
   L.polyline([A.a.ll,A.b.ll],{color:"#262A30",weight:8,opacity:1}).addTo(g);
   L.polyline([A.a.ll,A.b.ll],{color:"#FFFFFF",weight:1.5,opacity:.9,dashArray:"7 7"}).addTo(g); }
@@ -208,10 +209,11 @@ function initMap(){
   S.tile=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Imagen: Esri, Maxar · ADS-B: adsb.lol"}).addTo(M);
   M.createPane("chart"); M.getPane("chart").style.zIndex=250;
   S.img=L.imageOverlay(CHART.url,CHART.b,{pane:"chart",interactive:false,attribution:"Carta AIP © ENAIRE"});
-  const SG=L.Control.extend({options:{position:"topright"},onAdd(){ const d=L.DomUtil.create("div","mseg"); d.innerHTML='<button data-m="sat">Satélite</button><button data-m="mix">Mixto</button><button data-m="aip">Carta AIP</button>'; L.DomEvent.disableClickPropagation(d); d.addEventListener("click",ev=>{ const b=ev.target.closest("button"); if(b) setMode(b.dataset.m); }); return d; }}); new SG().addTo(M);
+  S.imgO=L.imageOverlay(CHART.ovl,CHART.b,{pane:"chart",interactive:false,attribution:"Rodaje: carta AIP © ENAIRE"});
+  const SG=L.Control.extend({options:{position:"topright"},onAdd(){ const d=L.DomUtil.create("div","mseg"); d.innerHTML='<button data-m="sat">Satélite</button><button data-m="ovl">Rodaje</button><button data-m="aip">Carta AIP</button>'; L.DomEvent.disableClickPropagation(d); d.addEventListener("click",ev=>{ const b=ev.target.closest("button"); if(b) setMode(b.dataset.m); }); return d; }}); new SG().addTo(M);
   L.control.scale({imperial:false,position:"bottomleft"}).addTo(M);
   const fit=()=>M.fitBounds(L.latLngBounds([AD.main.a.ll,AD.main.b.ll,[CHART.b[0][0],AD.lon]]),{padding:[30,10],maxZoom:16});
-  fit(); S.map=M; setMode(S.mode||"mix"); setTimeout(()=>{ try{ M.invalidateSize(); fit(); }catch(e){} },120);
+  fit(); S.map=M; setMode(S.mode||"ovl"); setTimeout(()=>{ try{ M.invalidateSize(); fit(); }catch(e){} },120);
 }
 
 /* ---------- pintado ---------- */
@@ -348,7 +350,7 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .mseg button{font:600 12.5px Barlow,sans-serif;color:#C9D1D9;background:transparent;border:0;padding:6px 10px;cursor:pointer}
 .op .mseg button.on{background:var(--am);color:#14181D}
 .op #opMap.aip{background:#fff}
-.op .leaflet-pane>img.mx{mix-blend-mode:multiply}
+.op 
 .op .mapnote{padding:6px 12px;margin:0;border-top:1px solid var(--ln)}
 .op .op-ac{position:relative}
 .op .op-ac svg{filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
@@ -515,6 +517,6 @@ function render(el,opt){
   clearInterval(S.clk); S.clk=setInterval(clock,10000); clearInterval(S.t); S.t=setInterval(()=>{ if(S.opt.fetchWx) load(); else if(S.data) fill(); },5*60000);
   clearInterval(S.tt); S.tt=setInterval(loadTr,12000);
 }
-function leave(){ clearInterval(S.clk); clearInterval(S.t); clearInterval(S.tt); try{ if(S.map) S.map.remove(); }catch(e){} S.map=null; S.lay=null; S.trl=null; S.tile=null; S.img=null; if(S.root) S.root.innerHTML=""; S.root=null; }
+function leave(){ clearInterval(S.clk); clearInterval(S.t); clearInterval(S.tt); try{ if(S.map) S.map.remove(); }catch(e){} S.map=null; S.lay=null; S.trl=null; S.tile=null; S.img=null; S.imgO=null; if(S.root) S.root.innerHTML=""; S.root=null; }
 window.F0Ops={render,leave,_t:{parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
 })();
