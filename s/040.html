@@ -297,10 +297,13 @@ details.lo.out{border-left-color:var(--line)}
 <h2>040.01 · Human factors: basic concepts <span class="wtag">4 preg. · 8 %</span></h2>
 
 <!-- ===== 040.01.03 ===== -->
-<details class="lo atpl" id="lo-040.01.03" data-lo="040.01.03">
+<details class="lo" id="lo-040.01.03" data-lo="040.01.03">
 <summary><span class="lonum">040.01.03</span><span class="lotitle">Flight safety concepts</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>TEM: <b>threat</b> (externa) → <b>error</b> (del piloto) → <b>UAS</b> (estado no deseado). Se gestiona con <b>avoid · trap · mitigate</b>. SHELL: la <b>L</b> del centro es el piloto.</div>
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>El <b>modelo TEM</b> (Threat and Error Management).</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>TEM: <b>threat</b> (externa, fuera de tu influencia) → <b>error</b> (tuyo) → <b>UAS</b> (estado no deseado) → <b>adverse outcome</b>. Se gestiona con <b>avoid · trap · mitigate</b>.</div>
   <div class="svgbox" id="visTem">
   <svg viewBox="0 0 640 210" role="img" aria-label="Threat and error management">
     <g font-size="13" text-anchor="middle">
@@ -323,7 +326,18 @@ details.lo.out{border-left-color:var(--line)}
     <text x="320" y="196" font-size="12" text-anchor="middle" fill="var(--muted)">Cada barrera verde corta la cadena antes del resultado adverso</text>
   </svg>
   </div>
-  <div class="svgbox" id="visShell">
+  <ul>
+    <li><b>Threat</b>: suceso o error <b>fuera de la influencia</b> de los pilotos que requiere atención inmediata. Dos tipos: <b>environmental</b> (meteo, aeropuerto, ATC, terreno) y <b>organisational</b> (presión operativa, p. ej. un club sin acceso a información meteo y con la actitud «vuela igualmente»).</li>
+    <li>Según su naturaleza: <b>inmediata y conocida</b> (una tormenta), <b>latente</b> (palancas de flaps y tren demasiado juntas; combustible insuficiente) o <b>desconocida</b> (vectores radar erróneos del ATC).</li>
+    <li><b>Internal threats</b>: <b>complacency</b>, <b>fatigue</b>, <b>lack of recency</b>, <b>hazardous personalities</b>. External: terreno, estado del avión, otro tráfico, despegues y aterrizajes, performance.</li>
+    <li><b>Error</b>: acción u omisión que te aparta de lo previsto y erosiona los márgenes. Tres tipos: <b>aircraft handling · procedural · communication</b>.</li>
+    <li><b>UAS</b> (undesired aircraft state): posición, condición o actitud que reduce mucho los márgenes de seguridad. Si no se gestiona → <b>adverse outcome</b>.</li>
+    <li><b>Management</b>: <b>anticipation (avoid)</b> antes del vuelo · <b>recognition (trap)</b> · <b>recovering (mitigate)</b>. Tres capas de defensa.</li>
+    <li>TEM nació de los datos <b>LOSA</b> (Continental Airlines): la cabina automatizada no trajo toda la seguridad esperada por el factor humano.</li>
+  </ul>
+  <div class="comp"><b>ATPL</b>
+    <ul><li><b>SHELL</b> (Edwards, ampliado por Hawkins): Software, Hardware, Environment y Liveware alrededor de la <b>L central</b>. Una pantalla mal diseñada es un fallo <b>L–H</b>; una checklist confusa, <b>L–S</b>; una mala comunicación, <b>L–L</b>.</li></ul>
+    <div class="svgbox" id="visShell">
   <svg viewBox="0 0 640 230" role="img" aria-label="SHELL model">
     <g font-size="13" text-anchor="middle">
       <rect x="270" y="80" width="100" height="70" rx="10" fill="var(--magenta)"/><text x="320" y="112" font-size="22" font-weight="700" fill="var(--paper)">L</text><text x="320" y="132" font-size="11" fill="var(--paper)">el piloto</text>
@@ -336,13 +350,7 @@ details.lo.out{border-left-color:var(--line)}
     <text x="20" y="220" font-size="11" fill="var(--muted)">Los fallos aparecen en las interfaces: L–H, L–S, L–E, L–L</text>
   </svg>
   </div>
-  <div class="comp"><b>ATPL</b><ul>
-    <li><b>Threat</b>: suceso <b>fuera de la influencia</b> de los pilotos que hay que gestionar. <b>Environmental</b>: meteo, aeropuerto, ATC, terreno. <b>Organisational</b>: presión operacional de la empresa. Pueden ser inmediatas y conocidas (una tormenta), latentes (palancas de flaps y tren demasiado juntas) o desconocidas (un vector radar erróneo).</li>
-    <li><b>Error</b>: acción u omisión que te aparta de lo previsto. Tres tipos: <b>aircraft handling · procedural · communication</b>.</li>
-    <li><b>UAS</b> (undesired aircraft state): posición, condición o actitud que reduce los márgenes. Sin gestionar → <b>adverse outcome</b>.</li>
-    <li>TEM salió de los datos <b>LOSA</b> de Continental Airlines: la automatización no trajo toda la seguridad esperada.</li>
-    <li><b>SHELL</b> (Edwards, ampliado por Hawkins): Software, Hardware, Environment y Liveware alrededor de la <b>L central</b>. Una pantalla mal diseñada es un fallo <b>L–H</b>; una checklist confusa, <b>L–S</b>; una mala comunicación, <b>L–L</b>.</li>
-  </ul></div>
+  </div>
   <div class="flag"><b>Trampa:</b> los tipos de error de TEM (manejo, procedimiento, comunicación) no son los de 040.03.02 (fault, slip, omission, violation).</div>
 </div>
 </details>
@@ -393,34 +401,35 @@ details.lo.out{border-left-color:var(--line)}
 <h2>040.02 · Basics of aviation physiology and health maintenance <span class="wtag">24 preg. · 50 %</span></h2>
 
 <!-- ===== 040.02.03 ===== -->
-<details class="lo atpl" id="lo-040.02.03" data-lo="040.02.03">
+<details class="lo" id="lo-040.02.03" data-lo="040.02.03">
 <summary><span class="lonum">040.02.03</span><span class="lotitle">Health and hygiene</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>Antes de cada vuelo, <b>IMSAFE</b>. Cualquier medicamento te deja en tierra hasta que diga lo contrario un médico. Gastroenteritis: <b>no vuelas</b>.</div>
+  <div class="key"><b>Clave</b>Antes de cada vuelo, <b>IMSAFE</b>. Cualquier medicamento te deja en tierra hasta que lo autorice un médico. Gastroenteritis: <b>no vuelas</b>.</div>
   <h4>¿Vuelas o no vuelas? · ponte a prueba</h4>
   <div class="svgbox sim" id="visFit">
     <p class="case" id="fitCase"></p>
     <div class="opts" id="fitOpts"></div>
     <p id="fitFb" aria-live="polite"></p>
   </div>
-  <div class="comp"><b>ATPL</b>
   <div class="scroll"><table>
-   <tr><th>Situación</th><th>Regla</th></tr>
-   <tr><td><b>IMSAFE</b></td><td><b>I</b>llness · <b>M</b>edication · <b>S</b>tress · <b>A</b>lcohol · <b>F</b>atigue · <b>E</b>motion (o Eating)</td></tr>
-   <tr><td>Medication</td><td>En tierra hasta que lo autorice un médico: antibióticos, antihistamínicos, tranquilizantes y estimulantes, tensión arterial, analgésicos</td></tr>
-   <tr><td>Anaesthetic (local, dental)</td><td>Unas <b>24 h</b></td></tr>
-   <tr><td>Blood donation · bone marrow</td><td><b>24 h</b> · <b>48 h</b> (anestesia general)</td></tr>
-   <tr><td>Alcohol</td><td><b>24 h</b> desde la última copa y nunca por encima de <b>0,2 ‰</b> en sangre. Se elimina a ~<b>1 unidad por hora</b> y nada lo acelera. Empeora el juicio y te hace sentir que lo haces genial</td></tr>
-   <tr><td>Scuba diving</td><td>Más de 30 ft → <b>24 h</b> (040.02.01)</td></tr>
-   <tr><td>Smoking</td><td>CO → menos O₂ en sangre; el humo de cualquiera afecta a todos en una cabina pequeña</td></tr>
-   <tr><td>Common cold</td><td>Inocuo en tierra, serio en vuelo (oídos, senos): no volar</td></tr>
+   <tr><th>Tema</th><th>Lo que hay que saber</th></tr>
+   <tr><td><b>IMSAFE</b></td><td><b>I</b>llness · <b>M</b>edication · <b>S</b>tress · <b>A</b>lcohol · <b>F</b>atigue · <b>E</b>motion. Para la CAA y CASA, la <b>E</b> es <b>Eating</b> (comer bien e hidratarse); también se escribe <b>IAMSAFE</b> (Alimentation)</td></tr>
+   <tr><td>Physical fitness</td><td>Ayuda a tolerar el <b>estrés</b>, el <b>cansancio</b>, la <b>fatiga</b> y el <b>poco oxígeno</b> en altura. Hace falta un esfuerzo continuo</td></tr>
+   <tr><td>Mental fitness</td><td>La carga principal del piloto es intelectual. La deterioran: <b>medicación, drogas (alcohol y tabaco), estrés, problemas personales, falta de sueño, mala alimentación, fatiga</b></td></tr>
+   <tr><td>Illness</td><td>Un resfriado es inocuo en tierra y serio en vuelo y a altitud. <b>Gastroenteritis: no vuelas</b></td></tr>
+   <tr><td>Smoking</td><td>El <b>CO</b> ocupa el lugar del oxígeno en la sangre. El humo de cualquiera afecta a todos en la cabina, aunque no fumen</td></tr>
+   <tr><td>Medication</td><td>Hasta que lo autorice un médico, <b>cualquier medicamento te deja en tierra</b>: antibióticos, tranquilizantes, antidepresivos y sedantes, estimulantes (cafeína, anfetaminas), antihistamínicos, antihipertensivos, analgésicos</td></tr>
+   <tr><td>Anaesthetic</td><td>Local, general o dental: unas <b>24 h</b></td></tr>
+   <tr><td>Blood donation</td><td><b>24 h</b> sin volar (riesgo leve de desmayo). <b>Bone marrow</b>: <b>48 h</b>, por la anestesia general</td></tr>
+   <tr><td>Alcohol</td><td>La OACI recomienda <b>24 h</b> desde la última ingesta. Hasta una cantidad pequeña empeora el juicio y te hace sentir que lo haces genial. Las drogas recreativas (marihuana, LSD…) nunca se mezclan con volar</td></tr>
+   <tr><td>Fatigue and sleep deprivation</td><td>Bajan mucho la capacidad física y mental. <b>Un piloto cansado no debe volar</b></td></tr>
   </table></div>
-  <ul>
+  <div class="comp"><b>ATPL</b><ul>
+    <li><b>Alcohol</b>: EASA no permite volar por encima de <b>0,2 ‰</b>. Se elimina a ~<b>1 unidad por hora</b> y nada lo acelera.</li>
     <li><b>Incapacitation</b>: la causa más frecuente es <b>gastrointestinal</b>. La <b>sutil</b> es la más peligrosa porque no se nota. <b>Two communication rule</b>: si no responde bien a dos comunicaciones, sospecha.</li>
     <li><b>Ritmo circadiano</b>: sin relojes externos dura unas <b>25 h</b>; el que manda es el de la <b>temperatura</b>. Alerta mínima de madrugada (03:00–06:00). <b>Jet lag</b>: peor hacia el <b>este</b> (el día se acorta). Los sueños, en fase <b>REM</b>.</li>
-    <li><b>Barotrauma</b>: oídos sobre todo al <b>bajar</b>. Se iguala tragando, bostezando o con <b>Valsalva</b>. Resfriado → no volar.</li>
+    <li><b>Barotrauma</b>: oídos sobre todo al <b>bajar</b>. Se iguala tragando, bostezando o con <b>Valsalva</b>.</li>
     <li><b>Obesity</b>: más riesgo coronario y menos tolerancia a las G.</li>
-    <li><b>Fatigue</b>: acumulativa e insidiosa, no siempre la nota quien la sufre (040.03.06).</li>
   </ul></div>
 </div>
 </details>
@@ -818,7 +827,8 @@ details.lo.out{border-left-color:var(--line)}
   </ul>
   <div class="flag"><b>Trampa:</b> en un viraje a ritmo <b>constante</b> los canales dejan de avisar: solo notan aceleración y deceleración.</div>
 
-  <div class="comp"><b>ATPL · Vision (aún no dado)</b>
+  <h4>Vision</h4>
+  <div>
   <div class="svgbox" id="visEye">
     <div class="simrow"><span class="segc" data-g="eye"><button type="button" class="on" data-v="day">De día</button><button type="button" data-v="night">De noche</button></span></div>
     <svg viewBox="0 0 640 250" role="img" aria-label="The eye: cones and rods">
@@ -840,7 +850,7 @@ details.lo.out{border-left-color:var(--line)}
     <p class="vismsg" id="eyeMsg"></p>
   </div>
   <div class="scroll"><table>
-   <tr><th>Tema</th><th>Lo que pregunta el examen</th></tr>
+   <tr><th>Tema</th><th>Lo que hay que saber</th></tr>
    <tr><td>Partes</td><td><b>Cornea</b> (refracta, no cambia de forma) · <b>iris</b> (regula la luz con la pupila) · <b>lens</b> (enfoca: <b>accommodation</b>, músculos ciliares) · <b>retina</b> · nervio óptico (punto ciego)</td></tr>
    <tr><td>Cones · rods</td><td>Conos en la <b>fóvea</b>: color, detalle (fotópica). Bastones en la periferia, máximo a <b>~10°</b>: blanco y negro, de noche (escotópica). De noche, mira un poco de lado</td></tr>
    <tr><td>Adaptation</td><td>A la luz ~<b>10 s</b>; a la oscuridad mucho más lenta. 1–2 s de luz fuerte bastan para perderla</td></tr>
@@ -863,28 +873,41 @@ details.lo.out{border-left-color:var(--line)}
 <h2>040.03 · Basic aviation psychology <span class="wtag">20 preg. · 42 %</span></h2>
 
 <!-- ===== 040.03.04 ===== -->
-<details class="lo atpl" id="lo-040.03.04" data-lo="040.03.04">
+<details class="lo" id="lo-040.03.04" data-lo="040.03.04">
 <summary><span class="lonum">040.03.04</span><span class="lotitle">Avoiding and managing errors: cockpit management</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>Comunicación de <b>dos sentidos</b>: read-back y, si dudas, <b>pregunta</b>. Objetivo: el mismo modelo mental en toda la tripulación.</div>
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li><b>Situational awareness</b>: cuando la <b>percepción es igual a la realidad</b>.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>SA buena = <b>perception = reality</b>. Para mantenerla: reúne datos, considera todas las interpretaciones y revisa tu hipótesis. Comunicación de <b>dos sentidos</b>: si dudas, <b>pregunta</b>.</div>
+  <div class="scroll"><table>
+   <tr><th>Concepto</th><th>Qué es</th></tr>
+   <tr><td><b>Situational awareness</b></td><td>Modelo mental exacto de tu entorno, dentro y fuera del avión y de tu propio estado. Depende de vigilancia, alerta, comunicación, comprensión y briefing. La percepción es muy poderosa, correcta o no: hay pilotos que ignoraron avisos del avión</td></tr>
+   <tr><td><b>La interfieren</b></td><td>Estrés · interrupciones del pensamiento · fatiga · deseos («lo que quiero que pase») · mala comunicación · aburrimiento</td></tr>
+   <tr><td><b>Pérdida de SA</b></td><td>Confusión · fijación en un solo dato · prisa · saltarse o acortar procedimientos · cambios de humor · caída brusca del nivel de vuelo · <b>discrepancias sin explicar entre instrumentos</b> · resultados inesperados · «algo raro pasa»</td></tr>
+   <tr><td><b>Mantenerla</b></td><td>Reúne toda la información posible · tómate el tiempo: las decisiones rápidas rara vez hacen falta · considera <b>todas</b> las interpretaciones · revisa tu hipótesis según avanza el vuelo · si un dato no encaja, no lo descartes · interpreta el mundo como es, no como quieres. <b>Espera lo mejor, planifica lo peor</b></td></tr>
+   <tr><td><b>Mental model</b></td><td>Lo forman la <b>experience</b>, la <b>expectation</b> y el <b>briefing</b>. Si el modelo es incorrecto, la SA falla</td></tr>
+   <tr><td><b>CRM</b></td><td><b>Crew Resource Management</b>: mejora el trabajo en equipo. Es una <b>habilidad para la vida</b>, también si vuelas solo: hay que practicarla desde el principio. Nació tras accidentes como el de <b>United (Portland, 1978)</b>: avión en perfecto estado que se quedó sin combustible mientras se atendía un problema de tren. El «error del piloto» dejó de aceptarse sin más</td></tr>
+   <tr><td><b>Communication</b></td><td>Quien transmite cree que su mensaje es inequívoco: por eso es de <b>dos sentidos</b> (read-back, preguntar, ambiente que lo permita). <b>Oír</b> es físico; <b>escuchar</b> es activo y exige concentración. El emisor: mensajes <b>cortos</b>, por partes y cuando el receptor pueda atender. El receptor: escucha, pide aclaración y revisa. <b>Cuando dudes, pregunta</b></td></tr>
+   <tr><td><b>Team skills</b></td><td>Buena comunicación · relaciones interpersonales · reconocer estrés, fatiga y sobrecarga en uno mismo y en los demás · voluntad de exponer y de atender · SA en cada fase · formación, preparación y vigilancia · flexibilidad · usar todas las herramientas · reducir distracciones</td></tr>
+  </table></div>
   <div class="comp"><b>ATPL</b><ul>
-    <li><b>CRM</b> nace tras accidentes como el de <b>United (Portland, 1978)</b>: avión en perfecto estado que se quedó sin combustible mientras la tripulación atendía un problema de tren. El «error del piloto» dejó de aceptarse sin más.</li>
-    <li>CRM es una <b>habilidad para toda la carrera</b>, también volando solo: comunicación, consciencia situacional, decisión, personalidad y trabajo en equipo.</li>
-    <li><b>Comunicación</b>: quien transmite cree que su mensaje es inequívoco; por eso hace falta <b>read-back</b>. Mensajes <b>cortos</b>, por partes, cuando el otro pueda atender. <b>Oír</b> es físico; <b>escuchar</b> es activo.</li>
     <li><b>Authority gradient</b>: muy empinado (<b>autocratic</b>) → el copiloto no se atreve a hablar; muy plano (<b>laissez-faire</b>) → nadie lidera. Lo deseable: <b>synergistic</b>.</li>
     <li><b>Groupthink</b>: el grupo prefiere estar de acuerdo antes que criticar una mala decisión. Para conflictos: escucha activa, <b>inquiry</b>, <b>advocacy</b> y feedback.</li>
     <li><b>SOPs</b>, checklists y briefings hacen predecibles las acciones y ayudan a cazar errores.</li>
-    <li>Equipo: comunicación, flexibilidad, SA en cada fase, reconocer <b>estrés, fatiga y sobrecarga</b> en uno mismo y en los demás, usar todos los recursos.</li>
   </ul></div>
 </div>
 </details>
 
 <!-- ===== 040.03.01 ===== -->
-<details class="lo atpl" id="lo-040.03.01" data-lo="040.03.01">
+<details class="lo" id="lo-040.03.01" data-lo="040.03.01">
 <summary><span class="lonum">040.03.01</span><span class="lotitle">Human information processing</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>Memoria de trabajo: <b>5 ± 2</b> elementos según EASA; se pierden en <b>10–20 s</b>. Por eso la autorización se <b>apunta</b>.</div>
-  <div class="flag"><b>Trampa:</b> el PDF del curso dice <b>7 ± 2</b> (Miller); en el examen EASA, <b>5 ± 2</b>.</div>
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>Las atenciones más importantes: <b>selective</b> y <b>divided</b>.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Memoria a corto plazo: <b>7 ± 2</b> elementos, se pierden en <b>10–20 s</b> si no se repasan. Atención: <b>selective</b> y <b>divided</b>. Memoria a largo plazo: <b>semantic · episodic · procedural</b>.</div>
+  <div class="flag"><b>Trampa:</b> el curso da <b>7 ± 2</b> (Miller); el syllabus EASA da <b>5 ± 2</b>.</div>
   <div class="svgbox" id="visInfo">
   <svg viewBox="0 0 640 250" role="img" aria-label="Information processing">
     <g font-size="12" text-anchor="middle">
@@ -901,41 +924,57 @@ details.lo.out{border-left-color:var(--line)}
     <text x="320" y="238" font-size="11" text-anchor="middle" fill="var(--muted)">Repasar pasa la información de la memoria a corto plazo a la de largo plazo</text>
   </svg>
   </div>
+  <div class="scroll"><table>
+   <tr><th>Concepto</th><th>Qué es</th></tr>
+   <tr><td><b>Information processing</b></td><td><b>Detection → perception → decision → action → feedback</b>. El estímulo debe superar el <b>sensory threshold</b>. En aviación importan los almacenes sensoriales de <b>vista y oído</b></td></tr>
+   <tr><td><b>Attention</b></td><td>Dedicar a propósito recursos mentales a un asunto. <b>Mejora</b> el procesamiento, <b>cuesta esfuerzo</b> y es <b>limitada</b>. <b>Selective</b>: eliges qué atender (tu indicativo te salta). <b>Divided</b>: reparte el tiempo entre tareas, una a una (aproximación visual: fuera y dentro). El peligro es <b>atender a lo que no toca</b></td></tr>
+   <tr><td><b>Overload</b></td><td>Con arousal alto la atención se vuelve en <b>embudo</b> (funnelling). Síntomas: caída brusca del rendimiento, bloqueos, regresión, cambios de humor, inquietud, temblor, pánico</td></tr>
+   <tr><td><b>Short-term memory</b></td><td>Se pierde en <b>10–20 s</b> si no se repasa o se pasa a la larga. <b>7 ± 2</b> elementos sin relación (checklists, mensajes de radio). Muy sensible a las <b>interrupciones</b>. Lo <b>acústico</b> se retiene mejor que lo visual</td></tr>
+   <tr><td><b>Long-term memory</b></td><td><b>Semantic</b> (conocimientos generales) · <b>episodic</b> (sucesos: un vuelo, una reunión) · <b>procedural</b> (programas motores). Duración ilimitada, pero cuesta recuperarla. La afectan <b>expectation, suggestion, repetition y amnesia</b>. Importa más la respuesta <b>correcta</b> que la rápida</td></tr>
+   <tr><td><b>Learning</b></td><td><b>Classical/operant conditioning</b> (Pavlov: reaccionar ante un fire warning) · <b>insight</b> (entender el equipo de navegación) · <b>observational</b> (imitar: el follow-through) · <b>experience</b> · <b>skill learning</b> (motivación, atención, observación, práctica y feedback). Se retiene mejor con <b>mnemonics, memory training, motivation y experience</b>. Sin motivación se puede aprender; sin <b>atención</b>, no. Con la edad se ralentizan las reacciones, pero la experiencia lo compensa</td></tr>
+  </table></div>
   <div class="comp"><b>ATPL</b>
   <div class="scroll"><table>
    <tr><th>Concepto</th><th>Qué es</th></tr>
-   <tr><td><b>Sensory threshold</b></td><td>Fuerza mínima de un estímulo para que lo detecten los sentidos</td></tr>
-   <tr><td><b>Attention</b></td><td><b>Selective</b> (eliges qué atender; tu indicativo te salta) · <b>divided</b> (reparte el tiempo entre tareas, una a una). Mejora el procesamiento, cuesta esfuerzo y es limitada</td></tr>
-   <tr><td><b>Short-term memory</b></td><td><b>5 ± 2</b> elementos sin relación, se pierden en <b>10–20 s</b> si no se repasan; muy sensible a las interrupciones; lo <b>acústico</b> se retiene mejor que lo visual</td></tr>
-   <tr><td><b>Long-term memory</b></td><td><b>Semantic</b> (significados) · <b>episodic</b> (sucesos) · <b>procedural</b> (programas motores). Pega: el tiempo que tarda en recuperar</td></tr>
-   <tr><td><b>Overload</b></td><td>Atención en <b>embudo</b>, bloqueos, regresión, cambios de humor, temblor, pánico</td></tr>
+   <tr><td><b>Hypovigilance</b></td><td>Alerta reducida, p. ej. en un crucero largo y tranquilo</td></tr>
    <tr><td><b>Perception</b></td><td><b>Bottom-up</b> (de los datos) y <b>top-down</b> (de lo que esperas): subjetiva, a veces muy convincente aunque sea errónea</td></tr>
    <tr><td><b>Rasmussen</b></td><td><b>Skill</b>-based (automático) · <b>rule</b>-based (normas aprendidas) · <b>knowledge</b>-based (situación nueva)</td></tr>
    <tr><td><b>Anderson</b></td><td>Fases de una habilidad: <b>cognitive → associative → autonomous</b></td></tr>
-   <tr><td><b>Learning</b></td><td>Condicionamiento clásico/operante · insight · <b>observational</b> (imitación) · experiencia · habilidades. Se retiene más con <b>mnemonics</b>, motivación y práctica</td></tr>
+   <tr><td><b>Working memory</b></td><td>EASA: <b>5 ± 2</b> elementos</td></tr>
   </table></div></div>
 </div>
 </details>
 
 <!-- ===== 040.03.06 ===== -->
-<details class="lo atpl" id="lo-040.03.06" data-lo="040.03.06">
+<details class="lo" id="lo-040.03.06" data-lo="040.03.06">
 <summary><span class="lonum">040.03.06</span><span class="lotitle">Human overload and underload</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>Rindes mejor con un <b>arousal medio</b>. El estrés es <b>acumulativo</b> y depende de lo que <b>percibes</b>.</div>
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>La <b>activación óptima</b> (arousal): ni muy baja ni muy alta.</li>
+    <li>Con mucho estrés, la <b>performance</b> se ve afectada.</li>
+    <li>Los <b>dos tipos de estrés</b>: agudo y crónico.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Rindes mejor con un <b>arousal medio</b> (curva en U invertida). El estrés es <b>acumulativo</b> y <b>subjetivo</b>: depende de lo que <b>percibes</b>. La experiencia lo reduce.</div>
   <div class="svgbox sim" id="visArousal">
     <div class="simrow"><label for="arR">Arousal</label><input type="range" id="arR" min="0" max="100" step="1" value="50"></div>
     <svg viewBox="0 0 640 220" id="arSvg" role="img" aria-label="Arousal and performance"></svg>
     <p class="vismsg" id="arMsg"></p>
   </div>
-  <div class="comp"><b>ATPL</b>
   <div class="scroll"><table>
    <tr><th>Concepto</th><th>Qué es</th></tr>
-   <tr><td><b>Arousal</b></td><td>Disposición para responder. Bajo: escaneo lento, se pierden datos. Alto: atención en embudo, errores. Muy alto: sobrecarga</td></tr>
-   <tr><td><b>Stress</b></td><td>Lo causa un <b>stressor</b>. Es <b>acumulativo</b> y <b>subjetivo</b>: depende de la demanda que percibes y de la capacidad que crees tener. Síntomas: sudor, boca seca, pulso alto, ansiedad, miedo</td></tr>
-   <tr><td><b>Selye</b></td><td>Síndrome general de adaptación: <b>alarm → resistance → exhaustion</b>. «Fight or flight» lo gobierna el <b>sistema nervioso autónomo</b></td></tr>
-   <tr><td><b>Coping</b></td><td><b>Action</b> (cambias la situación) · <b>cognitive</b> (cambias cómo la ves) · <b>symptom-directed</b> (alivias los síntomas). Tolerancia: <b>experiencia, aprendizaje y CRM</b>. El humor ayuda</td></tr>
-   <tr><td><b>Fatigue</b></td><td>Acumulativa e insidiosa. <b>Corto plazo</b> (sueño, jornada, jet lag): se arregla descansando. <b>Crónica</b>: deja de volar. Síntomas: menos comunicación, más errores, escaneo reducido, irritabilidad, volver a viejos hábitos. <b>FRMS</b>: gestión del riesgo de fatiga basada en datos</td></tr>
-  </table></div></div>
+   <tr><td><b>Arousal</b></td><td>La disposición del ser humano para responder. <b>Bajo</b> (al despertar, fatiga extrema): escaneo lento, se pierden datos. <b>Óptimo</b>: máxima eficacia. <b>Alto</b>: atención en embudo, errores. <b>Muy alto</b>: sobrecarga</td></tr>
+   <tr><td><b>Stress</b></td><td>Lo causa un <b>stressor</b> (errores, problemas de salud, procedimientos poco conocidos). <b>Agudo</b>: aparece y desaparece pronto. <b>Crónico</b>: duradero y agotador. Es <b>acumulativo</b> (una discusión en tierra suma al problema en cabina) y <b>subjetivo</b>. Cuenta lo que <b>percibes</b> de la demanda y de tu capacidad. La <b>experiencia</b> lo reduce. Muy poco estímulo también produce inquietud</td></tr>
+   <tr><td><b>Síntomas</b></td><td>Sudor, boca seca, dificultad para respirar, pulso alto, ansiedad, fatiga, miedo</td></tr>
+   <tr><td><b>Coping</b></td><td><b>Action</b> (quitas el problema o lo haces menos exigente) · <b>cognitive</b> · <b>symptom directed</b>. Corto plazo = <b>action coping</b>; largo plazo = <b>stress management</b> (cambio de estilo de vida o asesoramiento). El primer paso es <b>reconocer</b> que existe. El mecanismo del estrés es fisiológico; las estrategias para afrontarlo, <b>psicológicas</b></td></tr>
+   <tr><td><b>Tolerancia</b></td><td><b>Experience</b> (menos sorpresas) · <b>learning</b> (reflejos correctos aun bajo estrés) · <b>CRM</b> (usar todos los recursos). Simulador, briefing y un buen ambiente en cabina; el <b>humor</b> ayuda</td></tr>
+   <tr><td><b>Fatigue</b></td><td>Cansancio profundo, <b>acumulativo</b> e <b>insidioso</b>: se tarda en reconocerlo y cuesta admitirlo. Causas: falta de sueño reparador, mala forma física o mental, estrés y ansiedad excesivos, <b>jet lag</b>. <b>Short-term</b>: se arregla sin volar y descansando. <b>Long-term (chronic)</b>: deja de volar</td></tr>
+   <tr><td><b>Síntomas de fatiga</b></td><td>Menos conciencia, cansancio evidente, reacción más lenta, concentración en túnel, mal vuelo instrumental, irritabilidad, volver a viejos hábitos, peor motricidad y visión, <b>memoria a corto plazo</b>, distracción, más errores, <b>menos escaneo</b> y <b>menos comunicación</b></td></tr>
+   <tr><td><b>Retrasar la fatiga</b></td><td>Aceptar que puede pasar · planificar el sueño · ejercicio · evitar el alcohol · comer regular y equilibrado · vida emocional bajo control · comodidad en cabina, comida y bebida a mano, asiento bien ajustado</td></tr>
+  </table></div>
+  <div class="comp"><b>ATPL</b><ul>
+    <li><b>Selye</b>: síndrome general de adaptación <b>alarm → resistance → exhaustion</b>. «Fight or flight»: <b>sistema nervioso autónomo</b>.</li>
+    <li><b>FRMS</b>: gestión del riesgo de fatiga basada en datos. <b>Underload</b>: hypovigilance y datos que se escapan.</li>
+  </ul></div>
   <div class="flag"><b>Trampa:</b> cuenta la <b>percepción</b> de la demanda y de tu capacidad, no la dificultad real.</div>
 </div>
 </details>
@@ -945,12 +984,13 @@ details.lo.out{border-left-color:var(--line)}
 <summary><span class="lonum">040.03.02</span><span class="lotitle">Human error and reliability</span></summary>
 <div class="body">
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>Los factores humanos están detrás de alrededor del <b>80 %</b> de los accidentes.</li>
+    <li>Los factores humanos están detrás de entre el <b>76 y el 95 %</b> de los accidentes.</li>
     <li>Los tipos de <b>error involuntario</b>.</li>
   </ul></div>
   <div class="key"><b>Clave</b>Fault = intención mala · slip = ejecución mala · omission = paso olvidado · violation = a propósito.</div>
   <ul>
     <li>En tareas simples y repetitivas, el humano se equivoca <b>1 de cada 100</b> veces; <b>1 de cada 1.000</b> ya es «bastante bueno» (Hawkins). Empeora con estrés, fatiga y moral baja.</li>
+    <li>Con práctica la fiabilidad humana mejora mucho; la falta de práctica la deteriora (<b>deterioration effect</b>). <b>1 de cada 1.000</b> ya es «bastante bueno».</li>
     <li>Los errores se encadenan: <b>error chain</b>. Fuentes <b>internas</b> (percepción, memoria, fatiga, falta de práctica) y <b>externas</b> (estresores, ergonomía, presión de la empresa, entorno social).</li>
   </ul>
   <h4 id="visErr">Tipos de error · ejemplo: hacer un cola-cao</h4>
@@ -964,20 +1004,19 @@ details.lo.out{border-left-color:var(--line)}
   <ul><li>Errores <b>latentes</b> (escondidos en el sistema: diseño, procedimientos) y <b>activos</b> (los comete quien opera, con efecto inmediato).</li></ul>
   <div class="flag"><b>Trampa:</b> el test del PDF divide el error humano en <b>dos</b>: faults y slips.</div>
   <div class="flag"><b>Trampa:</b> la <b>violation</b> no es un error involuntario: es deliberada. Las omisiones suelen venir de una <b>interrupción</b>.</div>
-  <div class="comp"><b>ATPL · Situational awareness (aún no dado)</b><ul>
-    <li><b>SA</b>: tu modelo mental coincide con la realidad. Lo forman la <b>experiencia</b>, la <b>expectativa</b> y el <b>briefing</b>.</li>
-    <li>La rompen: estrés, fatiga, interrupciones, aburrimiento, mala comunicación y <b>lo que deseas que pase</b>.</li>
-    <li>Pistas de pérdida: confusión, fijación en un solo dato, prisa, atajos, salirse de los procedimientos, <b>instrumentos que no cuadran</b>, «algo raro pasa».</li>
-    <li>Para mantenerla: reúne todos los datos, considera todas las interpretaciones, comprueba tu hipótesis según avanza el vuelo. «Espera lo mejor, planifica lo peor».</li>
-  </ul></div>
+  
 </div>
 </details>
 
 <!-- ===== 040.03.05 ===== -->
-<details class="lo atpl" id="lo-040.03.05" data-lo="040.03.05">
+<details class="lo" id="lo-040.03.05" data-lo="040.03.05">
 <summary><span class="lonum">040.03.05</span><span class="lotitle">Human behaviour</span></summary>
 <div class="body">
-  <div class="key"><b>Clave</b>EASA da <b>seis</b> actitudes peligrosas, cada una con su antídoto. Comportamiento = personalidad + actitud + entorno.</div>
+  <div class="key"><b>Clave</b>Las preferencias de personalidad <b>no son buenas ni malas</b>: cada una tiene fortalezas y debilidades. Una mala primera impresión cuesta mucho cambiarla.</div>
+  <ul>
+    <li><b>Personality</b>: <b>extraversion / introversion</b> · <b>sensing / intuitive</b> · <b>thinking / feeling</b> · <b>judging / perceiving</b>. Combinar personalidades distintas, con tolerancia, aumenta el potencial del equipo.</li>
+    <li>Conoces a tripulantes, personal de empresa y pasajeros por primera vez: <b>piensa tu conducta antes de encontrarte con ellos</b>.</li>
+  </ul>
   <div class="comp"><b>ATPL</b>
   <div class="scroll"><table>
    <tr><th>Actitud</th><th>Piensa</th><th>Antídoto</th></tr>
@@ -988,13 +1027,12 @@ details.lo.out{border-left-color:var(--line)}
    <tr><td><b>Resignation</b></td><td>«¿Para qué?»</td><td>No estoy indefenso: puedo cambiarlo</td></tr>
    <tr><td><b>Complacency</b></td><td>«Todo va bien, como siempre»</td><td>Vigila y comprueba</td></tr>
   </table></div>
-  <ul><li>Preferencias de personalidad (extraversión/introversión, sensación/intuición…): <b>ninguna es buena ni mala</b>; cada una tiene fortalezas y debilidades. La primera impresión cuesta mucho cambiarla.</li></ul></div>
   <h4>¿Qué actitud es? · ponte a prueba</h4>
   <div class="svgbox sim" id="visHaz">
     <p class="case" id="hazCase"></p>
     <div class="opts" id="hazOpts"></div>
     <p id="hazFb" aria-live="polite"></p>
-  </div>
+  </div></div>
 </div>
 </details>
 
@@ -1012,14 +1050,21 @@ details.lo.out{border-left-color:var(--line)}
 </details>
 
 <!-- ===== 040.03.03 ===== -->
-<details class="lo atpl" id="lo-040.03.03" data-lo="040.03.03">
+<details class="lo" id="lo-040.03.03" data-lo="040.03.03">
 <summary><span class="lonum">040.03.03</span><span class="lotitle">Decision-making</span></summary>
 <div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>El <b>FORDEC</b>.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Problema <b>previsible</b> → <b>SOP</b>. Problema <b>complejo</b> → método: <b>DODAR</b> o <b>FORDEC</b>.</div>
+  <div class="scroll"><table>
+   <tr><th>Método</th><th>Pasos</th></tr>
+   <tr><td><b>SOPs</b></td><td>Fallos predecibles (fuego de motor, fallo hidráulico, tren): expertos los estudiaron y fijaron la mejor solución</td></tr>
+   <tr><td><b>DODAR</b> (British Airways)</td><td><b>D</b>iagnosis · <b>O</b>ptions · <b>D</b>ecide · <b>A</b>ssign · <b>R</b>eview</td></tr>
+   <tr><td><b>FORDEC</b></td><td><b>F</b>acts · <b>O</b>ptions · <b>R</b>isks &amp; benefits · <b>D</b>ecision · <b>E</b>xecution · <b>C</b>heck</td></tr>
+  </table></div>
   <div class="comp"><b>ATPL</b><ul>
-    <li>Problemas <b>previsibles</b> (fuego de motor, fallo hidráulico) → <b>SOPs</b>, pensados de antemano por expertos.</li>
-    <li>Problemas <b>complejos</b> → método: <b>DODAR</b> (Diagnosis · Options · Decide · Assign · Review) o <b>FORDEC</b> (Facts · Options · Risks &amp; benefits · Decision · Execution · Check).</li>
-    <li>Las decisiones rápidas <b>rara vez hacen falta</b> y a menudo son erróneas: tómate el tiempo que puedas.</li>
-    <li>Sesgos: <b>confirmation bias</b> (solo ves lo que te da la razón) · <b>risky shift</b> (en grupo se arriesga más).</li>
+    <li><b>Confirmation bias</b>: solo ves lo que te da la razón. <b>Risky shift</b>: en grupo se arriesga más.</li>
   </ul></div>
 </div>
 </details>
@@ -1123,19 +1168,19 @@ const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">"
 const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
 const fmtDate = d => new Date(d).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
 const prefersReduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-const SUB = [["040.01.03", "B1", 10, "Flight safety concepts", "", "atpl"],
+const SUB = [["040.01.03", "B1", 10, "Flight safety concepts", "", "part"],
  ["040.01.04", "B1", 8, "Safety culture", "", "part"],
  ["040.01.01", "B1", 1, "Human factors in aviation", "", "atpl"],
- ["040.02.03", "B2", 63, "Health and hygiene", "", "atpl"],
+ ["040.02.03", "B2", 63, "Health and hygiene", "", "part"],
  ["040.02.01", "B2", 58, "Basics of flight physiology", "", "part"],
  ["040.02.02", "B2", 53, "People and the environment: the sensory system", "", "part"],
- ["040.03.04", "B3", 39, "Avoiding and managing errors: cockpit management", "", "atpl"],
- ["040.03.01", "B3", 37, "Human information processing", "", "atpl"],
- ["040.03.06", "B3", 37, "Human overload and underload", "", "atpl"],
+ ["040.03.04", "B3", 39, "Avoiding and managing errors: cockpit management", "", "part"],
+ ["040.03.01", "B3", 37, "Human information processing", "", "part"],
+ ["040.03.06", "B3", 37, "Human overload and underload", "", "part"],
  ["040.03.02", "B3", 21, "Human error and reliability", "", "part"],
- ["040.03.05", "B3", 13, "Human behaviour", "", "atpl"],
+ ["040.03.05", "B3", 13, "Human behaviour", "", "part"],
  ["040.03.07", "B3", 12, "Advanced cockpit automation", "", "atpl"],
- ["040.03.03", "B3", 10, "Decision-making", "", "atpl"],
+ ["040.03.03", "B3", 10, "Decision-making", "", "part"],
  ["X.050", "X", 0, "Atmosphere, ISA and density altitude", "", "part"]];
 const BLOCKS = [{"k": "B1", "code": "040.01", "name": "Human factors: basic concepts", "n": 4, "los": 19},
  {"k": "B2", "code": "040.02", "name": "Basics of aviation physiology and health maintenance", "n": 24, "los": 174},
@@ -1154,7 +1199,9 @@ const loLabel = l => LO_NAME[l] ? `${dcode(l)} · ${LO_NAME[l]}` : LEGACY[l] ? `
 const baseOf = id => String(id).split("~")[0];
 const isVar = q => String(q[0]).includes("~");
 // del trial y de temas dados en parte, lo que aún no se ha visto en clase
-const NOT_YET = new Set(["tr1", "tr4", "tr8", "tr16", "tr19", "tr2", "tr9", "tr18"]);
+const NOT_YET = new Set([]);
+// preguntas del curso (PDF) que no valen en el modo ATPL: el syllabus EASA da otra cifra
+const F0ONLY = new Set(["q81"]);
 const isGiven = q => q[2]!=="a" && (SUBMAP[q[1]]||{}).cov!=="atpl" && !NOT_YET.has(baseOf(q[0]));
 
 // <<BEGIN gen040x>>
@@ -1591,10 +1638,10 @@ const BASE = [
  ["tr8~1", "040.02.02", "t", "eye", "Full dark adaptation of the eyes takes about:", ["30–40 minutes", "5–10 minutes", "1–2 minutes", "2 hours"], "Adaptación completa a la oscuridad: 30–40 min."],
  ["tr8~2", "040.02.02", "t", "eye", "Before a night flight, how long does it take to reach full night vision?", ["About 30–40 minutes", "About 5 minutes", "About 1 minute", "About 2 hours"], "Adaptación completa a la oscuridad: 30–40 min."],
  ["tr8~3", "040.02.02", "t", "eye", "A pilot needs full night vision for a 22:00 departure. He should start avoiding bright light at about:", ["21:20–21:30", "21:55–22:00", "21:45–21:50", "19:30–20:00"], "Adaptación completa: 30–40 min."],
- ["tr9","040.03.02","o","sa","—",["—","·","··","···"],""],
- ["tr9~1", "040.03.02", "t", "sa", "Which behaviour best maintains situational awareness?", ["Keep collecting information, updating and planning ahead", "Using only the information that confirms your plan", "Relying mainly on your feelings and your instinct", "Watching closely a single primary instrument"], "Recoger todos los datos, actualizar y anticiparse. Interpretar para confirmar lo que quieres es confirmation bias."],
- ["tr9~2", "040.03.02", "t", "sa", "Interpreting the information so that it confirms where you want to be is:", ["A threat to situational awareness", "The best way to keep situational awareness", "Required by CRM", "Good airmanship"], "Recoger todos los datos, actualizar y anticiparse. Interpretar para confirmar lo que quieres es confirmation bias."],
- ["tr9~3", "040.03.02", "t", "sa", "Which behaviour does NOT help situational awareness?", ["Interpreting data to confirm what you expect", "Gathering all of the available data", "Updating your mental picture continuously", "Planning ahead for the next phases"], "Recoger todos los datos, actualizar y anticiparse. Interpretar para confirmar lo que quieres es confirmation bias."],
+ ["tr9","040.03.04","o","sa","—",["—","·","··","···"],""],
+ ["tr9~1", "040.03.04", "t", "sa", "Which behaviour best maintains situational awareness?", ["Keep collecting information, updating and planning ahead", "Using only the information that confirms your plan", "Relying mainly on your feelings and your instinct", "Watching closely a single primary instrument"], "Recoger todos los datos, actualizar y anticiparse. Interpretar para confirmar lo que quieres es confirmation bias."],
+ ["tr9~2", "040.03.04", "t", "sa", "Interpreting the information so that it confirms where you want to be is:", ["A threat to situational awareness", "The best way to keep situational awareness", "Required by CRM", "Good airmanship"], "Recoger todos los datos, actualizar y anticiparse. Interpretar para confirmar lo que quieres es confirmation bias."],
+ ["tr9~3", "040.03.04", "t", "sa", "Which behaviour does NOT help situational awareness?", ["Interpreting data to confirm what you expect", "Gathering all of the available data", "Updating your mental picture continuously", "Planning ahead for the next phases"], "Recoger todos los datos, actualizar y anticiparse. Interpretar para confirmar lo que quieres es confirmation bias."],
  ["tr10","040.02.02","o","scc","—",["—","·","··","···"],""],
  ["tr10~1", "040.02.02", "t", "scc", "The semi-circular canals detect:", ["Changes in rotation (angular acceleration)", "Constant rotation at any rate", "Sound waves of high frequency", "Light reaching the retina"], "Detectan aceleraciones y deceleraciones (angulares)."],
  ["tr10~2", "040.02.02", "t", "scc", "During a long turn at a constant rate, the semi-circular canals:", ["Stop signalling the turn after a while", "Keep signalling the turn perfectly", "Signal a climb instead of a turn", "Signal a descent instead of a turn"], "Detectan aceleraciones y deceleraciones (angulares)."],
@@ -1940,7 +1987,118 @@ const BASE = [
  ["A102", "040.03.07", "a", "auto", "Complacency in automated cockpits means:", ["Over-trusting the system and monitoring poorly", "Refusing to use the autopilot at all", "Flying every approach manually by habit", "Distrusting every automatic system"], "Complacencia: te fías tanto que dejas de vigilar."],
  ["A103", "040.03.07", "a", "auto", "If the automation does something you do not understand, you should:", ["Revert to a lower level of automation", "Reprogram the FMS until it works", "Ignore it and continue monitoring", "Ask ATC for help with the FMS"], "Baja un nivel de automatismo (de LNAV/VNAV a HDG/ALT) o vuela a mano."],
  ["A104", "040.03.07", "a", "auto", "Loss of 'mode awareness' means that the pilot:", ["Does not know which mode the automation is in", "Has forgotten how to fly manually", "Cannot hear the aural warnings", "Is suffering from mild hypoxia"], "Mode awareness: saber en qué modo está el piloto automático."],
- ["A105", "040.03.07", "a", "auto", "Compared with Boeing, the Airbus automation philosophy is that:", ["The automation can correct erroneous pilot inputs", "The pilot always keeps the final authority", "No flight envelope protection is fitted", "The autopilot can never be disconnected"], "Airbus: el sistema puede corregir al piloto (protecciones). Boeing: el piloto es el último operador."]
+ ["A105", "040.03.07", "a", "auto", "Compared with Boeing, the Airbus automation philosophy is that:", ["The automation can correct erroneous pilot inputs", "The pilot always keeps the final authority", "No flight envelope protection is fitted", "The autopilot can never be disconnected"], "Airbus: el sistema puede corregir al piloto (protecciones). Boeing: el piloto es el último operador."],
+["q81~1","040.03.01","t","mem","How many unrelated items can normally be held in short-term memory at one time?",["7 ± 2","8 ± 2","6 ± 2","5 ± 2"],"Memoria a corto plazo: 7 ± 2 elementos sin relación (Miller), como dice el curso. El syllabus EASA da 5 ± 2."],
+["q81~2","040.03.01","t","mem","A pilot receives a long departure clearance and cannot write it down. Roughly how many unrelated items can he hold in short-term memory?",["About 7 ± 2","About 3","About 15","About 20"],"Capacidad limitada: 7 ± 2 elementos; por eso la autorización se apunta."],
+["q82~1","040.03.01","t","attn","What are the two types of attention?",["Selective and divided","Cognitive and intuitive","Intuitive and behavioural","Divided and intuitive"],"Selective (eliges qué atender; tu indicativo te salta) y divided (reparto de tiempo entre tareas)."],
+["q82~2","040.03.01","t","attn","A pilot flying a visual approach looks outside and checks the instruments in turn. This is an example of:",["Divided attention","Selective attention","Intuitive attention","Passive attention"],"El procesador central dedica una fracción de segundo a cada tarea, una tras otra: atención dividida."],
+["q84~1","040.03.01","t","learn","Which of these helps to increase the retention of information?",["Mnemonics","Funnelling of attention","Expectation","Interruptions"],"Herramientas de aprendizaje: mnemonics, entrenamiento de la memoria, motivación y experiencia."],
+["q84~2","040.03.01","t","learn","Which of these is a tool to improve learning performance?",["Memory training","Reducing motivation","Avoiding experience","Dividing the attention"],"Mnemonics, memory training, motivation y experience mejoran el aprendizaje."],
+["q85~1","040.03.01","t","learn","A student pilot follows through on the controls during an approach and flies the next approach alone. This is:",["Observational learning (imitation)","Classical/operant conditioning","Experience","Insight"],"Observational learning: se replica lo que se ha visto hacer a otro."],
+["q85~2","040.03.01","t","learn","An experienced pilot's immediate reaction to a fire warning is an example of:",["Classical/operant conditioning","Insight","Observational learning","Experience"],"Condicionamiento (Pavlov): respuesta fisiológica aprendida, como reaccionar ante una alarma de fuego."],
+["q91~1","040.03.06","t","fatigue","Which of these is a symptom of fatigue?",["Decrease in communication","High level of awareness","Improved motor skills","Better short-term memory"],"Fatiga: menos comunicación, más errores, escaneo reducido, menos atención y memoria a corto plazo peor."],
+["q91~2","040.03.06","t","fatigue","Which of these is NOT a symptom of fatigue?",["Sharper vision","Irritability","Reduced scan","Increased reaction time"],"La fatiga empeora la visión y alarga el tiempo de reacción; no los mejora."],
+["q92~1","040.03.06","t","stress","A good atmosphere on the flight deck is a great help in a stressful situation, and humour can be an ______ antidote to stress.",["effective","stressful","intuitive","barrier"],"Un buen ambiente en cabina y el humor ayudan a gestionar el estrés."],
+["q92~2","040.03.06","t","stress","Which of these helps a crew to cope with a stressful situation?",["A good atmosphere on the flight deck","Silence on the flight deck","Skipping the briefing","Ignoring the stressor"],"Buen ambiente, humor, CRM, experiencia y una buena preparación reducen el estrés."],
+["q93~1","040.03.06","t","stress","What is a stressor?",["Any cause of stress, e.g. errors or health problems","Only a physical demand placed on the body","A symptom of fatigue such as irritability","A technique used to cope with stress"],"Stressor = causa del estrés: errores, problemas de salud, procedimientos poco conocidos…"],
+["q93~2","040.03.06","t","stress","The cause of stress is called a:",["Stressor","Stress limit","Coping strategy","Arousal"],"Los stressors causan el estrés."],
+["q94~1","040.03.06","t","fatigue","Fatigue, like stress, is:",["Cumulative","Only a short-term condition","Instantly recognised by the sufferer","Removed by a cup of coffee"],"Estrés y fatiga son acumulativos."],
+["q94~2","040.03.06","t","fatigue","In what way does fatigue differ from simple tiredness?",["It is more insidious: the pilot may be unaware of it for a long time","It is always instantly recognised by the sufferer","It is easy to admit to the crew","It is caused only by jet lag"],"El cansancio se nota y se admite; la fatiga es insidiosa y cuesta reconocerla."],
+["q95~1","040.03.06","t","stress","Successfully completing a stressful task will, in a similar future situation:",["Reduce the stress experienced","Increase the stress experienced","Have no effect on the stress","Make the pilot more sensitive to stressors"],"La experiencia ayuda a combatir el estrés: completar con éxito una tarea estresante lo reduce la próxima vez."],
+["q95~2","040.03.06","t","stress","Which of these increases a pilot's resistance to stress?",["Experience","Unfamiliar procedures","Poor briefing","Sleep deprivation"],"Experiencia, aprendizaje y CRM son las armas contra el estrés."],
+["q101~1","040.03.04","t","sa","Unexplained discrepancies between instruments are a signal of:",["Bad (lost) situational awareness","An electrical system malfunction","Insufficient preparation","Good situational awareness"],"Instrumentos que no cuadran: señal de pérdida de situational awareness."],
+["q101~2","040.03.04","t","sa","Which of these may indicate that situational awareness has been lost?",["Fixed concentration on a single item","Regular cross-checking of all the data","Calm, unhurried checks","Following the approved procedures"],"Fijación en un solo dato, prisa, atajos, salirse de procedimientos…"],
+["q102~1","040.03.04","t","comm","Asking for clarification when more information is needed, and continually reviewing the information received, is:",["A good tool","Allowed only for ATC","To be used only in stressful moments","Not allowed on the flight deck"],"Cuando dudes, pregunta: la comunicación eficaz es de dos sentidos."],
+["q102~2","040.03.04","t","comm","A receiver who is unsure about a message should:",["Ask for clarification","Assume the transmitter's intention","Say nothing, to avoid distracting the crew","Wait until the end of the flight"],"«Remember… when unsure, ask!»"],
+["q103~1","040.03.04","t","sa","When perception matches reality, the pilot has:",["Good situational awareness","Poor situational awareness","No situational awareness","An excess of personal experience"],"Situational awareness = percepción igual a la realidad."],
+["q103~2","040.03.04","t","sa","Situational awareness is poor when:",["The pilot's mental picture differs from reality","Perception matches reality","The crew has been well briefed","All the available data have been considered"],"Un modelo mental incorrecto es el origen de la pérdida de SA."],
+["q104~1","040.03.04","t","comm","CRM stands for:",["Crew Resource Management","Crew Recognition Member","Cabin Resting Monitor","Cockpit Resource Monitor"],"Crew Resource Management."],
+["q104~2","040.03.04","t","comm","Crew Resource Management was developed mainly to improve:",["Teamwork","Aircraft performance","Radio phraseology only","Navigation accuracy"],"CRM nace para mejorar el trabajo en equipo."],
+["q105~1","040.01.03","t","tem","TEM uses a sequence to manage threats and errors. It is:",["Avoid, trap and mitigate","Detect, decide and act","Plan, brief and execute","Identify, ignore and report"],"Avoid (anticipar) · trap (reconocer) · mitigate (recuperar)."],
+["q105~2","040.01.03","t","tem","The three phases of threat and error management are:",["Anticipation, recognition and recovery","Perception, decision and action","Briefing, execution and debriefing","Threat, error and undesired aircraft state"],"Anticipation (avoid) · recognition (trap) · recovering (mitigate)."],
+["er9","040.03.02","p","rel","Human error is estimated to contribute to roughly what range of accidents?",["76–95 %","10–25 %","30–45 %","50–60 %"],"Los factores humanos están detrás de entre el 76 y el 95 % de los accidentes."],
+["er10","040.03.02","p","rel","Which statement about human reliability is correct?",["It can be greatly improved with practice","It cannot be improved by training","It is not affected by stress or fatigue","It decreases with experience"],"La práctica mejora mucho la fiabilidad; el estrés, la fatiga y la moral baja la empeoran."],
+["er11","040.03.02","p","etypes","Lack of practice, also known as the «deterioration effect», is:",["An internal source of error","An external source of error","A violation","A threat"],"Fuentes internas: percepción errónea, mala interpretación, supuestos previos, memoria, fatiga y falta de práctica."],
+["er12","040.03.02","p","etypes","A badly designed layout of the instruments is an example of which source of error?",["External (ergonomics)","Internal (faulty memory)","Internal (fatigue)","Violation"],"Fuentes externas: estresores, ergonomía, economía (presión de la empresa) y entorno social."],
+["in1","040.03.01","p","perc","The minimum strength a stimulus must have to be picked up by the sensory receptors is called the:",["Sensory threshold","Attention threshold","Perception limit","Arousal level"],"Sensory threshold = umbral sensorial."],
+["in2","040.03.01","p","perc","Which list gives the stages of the functional model of information processing?",["Detection, perception, decision, action and feedback","Perception, memory, decision and action","Detection, attention, action and report","Sensing, storing, deciding and forgetting"],"Detección → percepción → decisión → acción → feedback."],
+["in3","040.03.01","p","perc","Which sensory stores are the most important in aviation?",["Sight and hearing","Touch and taste","Smell and taste","Touch and smell"],"Los almacenes sensoriales del tacto, gusto y olfato importan poco; vista y oído, mucho."],
+["in4","040.03.01","p","attn","Which statement about attention is correct?",["It requires effort and is limited","It requires no effort","It is unlimited","It cannot move from one item to another"],"La atención mejora el procesamiento, cuesta esfuerzo y es limitada."],
+["in5","040.03.01","p","attn","What is the major danger regarding attention for pilots?",["Paying attention to the wrong item at a given time","Being too alert during the whole flight","Having no attention left for the checklist","Having too much motivation to fly"],"La mente siempre atiende a algo: el peligro es la mala gestión de la atención."],
+["in6","040.03.01","p","attn","At times of high arousal, attention may become narrowed so that important information is disregarded. This is called:",["Funnelling of attention","Divided attention","Selective attention","Habituation"],"Atención en embudo (funnelling)."],
+["in7","040.03.01","p","attn","Which of these is a symptom of mental overload?",["Mental blocks and panic","A wider scan","Better decision-making","A slower heart rate"],"Sobrecarga: bajón brusco del rendimiento, embudo, regresión, bloqueos, cambios de humor, temblor y pánico."],
+["in8","040.03.01","p","mem","Information in short-term memory that is not rehearsed is lost after about:",["10 to 20 seconds","1 to 2 minutes","5 minutes","1 hour"],"Se pierde en 10–20 s si no se repasa."],
+["in9","040.03.01","p","mem","Which type of information is generally easier to retain in short-term memory?",["Acoustic information","Visual information","Tactile information","Olfactory information"],"Es más fácil repasar sonidos que datos visuales."],
+["in10","040.03.01","p","mem","A frequency is passed to a pilot and an interruption follows very soon after. The most likely result is that:",["The frequency is lost and has to be requested again","It is automatically stored in long-term memory","It is retained for about one hour","It is rehearsed without any effort"],"La memoria a corto plazo es muy sensible a las interrupciones."],
+["in11","040.03.01","p","mem","Long-term memory contains which types of information?",["Semantic, episodic and procedural","Acoustic, visual and tactile","Sensory, short-term and working","Semantic, spatial and situational"],"Semantic (conocimientos), episodic (sucesos) y procedural (programas motores)."],
+["in12","040.03.01","p","mem","Procedural memory (motor programmes) stores:",["How to perform skills and actions","General knowledge of the world","Personal events","Radio frequencies"],"Procedural = habilidades y movimientos aprendidos."],
+["in13","040.03.01","p","mem","Which of these affects long-term memory?",["Expectation","The colour of the cockpit","The altitude","The noise level"],"Factores de la memoria a largo plazo: expectation, suggestion, repetition y amnesia."],
+["in14","040.03.01","p","mem","Under pressure, what is of paramount importance?",["To make the correct response rather than a fast response","To make a fast response","To make the response that fits your ideas","To avoid making any response"],"Mejor la respuesta correcta que la rápida."],
+["in15","040.03.01","p","learn","Although age slows mental and physical reactions, the performance of pilots decreases only slightly, if at all, because:",["Experience compensates for the deficiencies","Reaction times do not change with age","Older pilots do not make errors","Memory improves with age"],"La experiencia compensa."],
+["in16","040.03.01","p","learn","Learning a skill (motor programme) involves:",["Motivation, attention, practice and feedback","Observation only, without any practice","Motivation only, without any feedback","Experience only, without any attention"],"Skill learning: observación + práctica + feedback correctivo."],
+["in17","040.03.01","p","learn","Which factor is essential for learning, even though it is possible to learn without motivation?",["Attention","Mnemonics","Overlearning","Stress"],"Se puede aprender sin motivación, pero no sin atención."],
+["in18","040.03.01","p","learn","A pilot sets up the on-board navigation equipment after understanding how it works. The type of learning is:",["Insight","Observational learning","Classical conditioning","Experience"],"Insight: el dato se entiende y se retiene."],
+["st1","040.03.06","p","stress","Stress results when the demands placed on a person create a pressure that is perceived as:",["An overload","Always physical","Absent","Lower than the ability to cope"],"Las demandas, mentales o físicas, producen estrés cuando crean una sobrecarga."],
+["st2","040.03.06","p","stress","Which statement about stress is correct?",["It is subjective: what stresses one person may not stress another","A given stressor affects everybody in the same way","Stress is not cumulative","Stress depends only on the real difficulty of the task"],"El estrés es subjetivo y acumulativo: cuenta la evaluación que haces de la demanda y de tu capacidad."],
+["st3","040.03.06","p","stress","A pilot has an argument with a colleague on the ground and then meets a problem on the flight deck. His stress level will probably be:",["Higher than if the argument had not taken place","Lower, because he is warmed up","Unaffected, because the argument is over","Lower, because experience helps"],"El estrés es acumulativo."],
+["st4","040.03.06","p","stress","An acute stressor is one that:",["Appears suddenly and disappears after a short time","Is long lasting and exhausting","Is always a physical demand on the body","Never has any effect on health"],"Dos tipos de estresor: agudo (breve) y crónico (duradero y agotador)."],
+["st5","040.03.06","p","stress","Which of these is a typical response to high stress?",["Increased heart rate","A slower heart rate","Reduced sweating","Slower breathing"],"Sudor, boca seca, dificultad para respirar, pulso alto, ansiedad, fatiga y miedo."],
+["st6","040.03.06","p","arousal","Arousal is defined as:",["The measure of the human being's readiness to respond","A state of deep tiredness after a long duty","The ability to cope with a high workload","The capacity of the short-term memory"],"Arousal = disposición para responder."],
+["st7","040.03.06","p","arousal","At which level of arousal is a pilot at his most efficient?",["A medium (optimal) level","Very low","Very high","Arousal has no effect on performance"],"Curva en U invertida: el rendimiento es máximo con una activación óptima."],
+["st8","040.03.06","p","arousal","At low levels of arousal, such as just after waking or in extreme fatigue, a pilot tends to:",["Scan slowly and miss information","Narrow his attention","Process information faster","Perform at his best"],"Arousal bajo: escaneo lento y rendimiento bajo."],
+["st9","040.03.06","p","arousal","At very high arousal levels the pilot experiences:",["Overload, with attention funnelled to the perceived primary task","Better scanning of peripheral and secondary information","Better memory and faster decision-making","Underload, with a slow environmental scan"],"Arousal muy alto: sobrecarga y atención en embudo."],
+["st10","040.03.06","p","stress","Coping with stress by removing the problem or making the situation less demanding is called:",["Action coping","Cognitive coping","Symptom-directed coping","Passive coping"],"Tres tipos de coping: action, cognitive y symptom directed."],
+["st11","040.03.06","p","stress","Which are the chief weapons to increase stress tolerance?",["Experience, learning and CRM","Alcohol, caffeine and rest","Speed, pressure and routine","Avoiding every demand"],"Experiencia, aprendizaje y CRM."],
+["st12","040.03.06","p","stress","Long-term stress management, as opposed to short-term action coping, may involve:",["A change of life-style or counselling","More flying hours and fewer days off","Ignoring the problem until it passes","Suppressing the symptoms with drugs"],"Coping a corto plazo = acción; gestión a largo plazo = cambio de estilo de vida o asesoramiento."],
+["st13","040.03.06","p","stress","Stress coping strategies are mainly:",["Psychological","Physiological","Medical","Mechanical"],"El mecanismo del estrés es sobre todo fisiológico, pero las estrategias para afrontarlo son sobre todo psicológicas."],
+["st14","040.03.06","p","stress","What is the first step in dealing with stress?",["To recognise and admit that the condition exists","To increase the workload to keep busy","To suppress the knowledge of the problem","To take medication to relax"],"Reconocer el problema es el primer paso."],
+["st15","040.03.06","p","stress","Regular simulator flights help to resist stress because:",["Emergencies can be practised in a safe environment","They remove all stress","They replace the pre-flight briefing","They increase arousal"],"Entrenar reduce las situaciones desconocidas."],
+["st16","040.03.06","p","fatigue","Which of these can cause fatigue?",["Desynchronisation of body cycles (jet lag)","Adequate and restful sleep each night","Good physical and mental fitness","A regular and balanced diet"],"Fatiga: falta de sueño, mala forma física o mental, estrés excesivo y jet lag."],
+["st17","040.03.06","p","fatigue","Short-term fatigue is usually remedied by:",["Not flying and getting sufficient rest","Drinking strong coffee and flying on","Flying more hours to get used to it","Drinking a little alcohol to relax"],"La fatiga a corto plazo se arregla descansando."],
+["st18","040.03.06","p","fatigue","A pilot who suspects he suffers from chronic fatigue must:",["Take himself off flying","Continue flying with a second pilot","Drink coffee","Wait for the symptoms to get worse"],"La fatiga crónica es difícil de reconocer y de admitir: hay que dejar de volar."],
+["st19","040.03.06","p","fatigue","Which of these helps to delay the onset of fatigue?",["Planning sleep strategies proactively","Drinking alcohol before sleeping","Skipping meals","Avoiding exercise"],"Planificar el sueño, comer de forma regular y equilibrada, hacer ejercicio y evitar el alcohol."],
+["st20","040.03.06","p","fatigue","Why can fatigue be more dangerous than simple tiredness?",["The pilot may be unaware of it and hesitant to admit it","It is always obvious to the pilot himself","It disappears after one cup of coffee","It only affects the physical condition"],"La fatiga es insidiosa."],
+["sa1","040.03.04","p","sa","Situational awareness means:",["An accurate mental model of the environment: perception matches reality","Knowing only the position and heading of the aircraft","Flying the aircraft without using the instruments","Reacting to every event as fast as possible"],"Perception = reality."],
+["sa2","040.03.04","p","sa","Which of these can interfere with situational awareness?",["Interruptions to the thought process","A thorough briefing before the flight","Good communication in the crew","A high level of alertness"],"Estrés, interrupciones, fatiga, mala comunicación, aburrimiento y «lo que deseas que pase»."],
+["sa3","040.03.04","p","sa","How can a high level of situational awareness be achieved?",["Gathering all the information and considering all interpretations","Making up your mind as quickly as possible","Considering only the data that fit your ideas","Disregarding the data that do not fit"],"Reúne información, considera todas las interpretaciones y comprueba tu hipótesis."],
+["sa4","040.03.04","p","sa","Which of these is NOT a cue indicating loss of situational awareness?",["Calm, unhurried cross-checking","Confusion and unexplained concern","Rushing the checks and procedures","Taking short-cuts in the procedures"],"Confusión, prisa, atajos, fijación y discrepancias entre instrumentos sí lo son."],
+["sa5","040.03.04","p","sa","Which factors affect the creation of a pilot's mental model?",["Experience, expectation and briefing","Age, sex and nationality","Altitude, speed and heading","Fatigue, noise and vibration"],"Experiencia · expectativa · briefing."],
+["sa6","040.03.04","p","sa","A pilot's situational awareness may be so overwhelming, even if wrong, that he:",["Ignores warnings telling him his actions are wrong","Corrects his mental model immediately","Asks the rest of the crew for help","Widens his scan of the instruments"],"La percepción es muy poderosa, sea correcta o errónea."],
+["sa7","040.03.04","p","comm","Is CRM relevant to a student pilot who flies alone?",["Yes, it is a life skill that has to be developed from the start","No, it is only needed in a multi-crew career","No, it is only relevant in the airlines","Only in emergencies on the flight deck"],"CRM es una habilidad para toda la vida y hay que entrenarla desde el principio."],
+["sa8","040.03.04","p","comm","The 1978 United Airlines accident near Portland, which led to CRM, was caused by:",["Fuel exhaustion while the crew dealt with a landing gear problem","A double engine failure during the approach","Severe turbulence in the holding pattern","A landing on the wrong runway"],"El avión, en perfecto estado, se quedó sin combustible en espera."],
+["sa9","040.03.04","p","comm","Effective communication must be:",["Two-way","One-way","Only verbal","Only written"],"Dos sentidos: read-back y preguntar cuando se duda."],
+["sa10","040.03.04","p","comm","Which action by the transmitter encourages listening?",["Keeping the transmissions short","Sending a large quantity of information at once","Transmitting while the receiver is busy","Using terms the receiver does not know"],"Mensajes cortos, por partes y cuando el receptor pueda atender."],
+["sa11","040.03.04","p","comm","Listening differs from hearing because listening:",["Is an active process that requires concentration","Is a passive, purely physical process","Requires no attention from the receiver","Is only necessary for ATC"],"Hearing es físico; listening es interpretar el sonido."],
+["dm1","040.03.03","p","sop","For predictable problems such as an engine fire, the pilot should use:",["Standard Operating Procedures","DODAR only","Experimentation","A vote among the crew"],"Los SOPs resuelven problemas previsibles, pensados de antemano por expertos."],
+["dm2","040.03.03","p","dec","DODAR stands for:",["Diagnosis, Options, Decide, Assign, Review","Detect, Observe, Decide, Act, Report","Diagnosis, Observe, Decide, Act, Review","Decide, Organise, Delegate, Assess, Report"],"DODAR (British Airways)."],
+["dm3","040.03.03","p","dec","FORDEC stands for:",["Facts, Options, Risks and benefits, Decision, Execution, Check","Flight, Operation, Risk, Decision, Evaluation, Control","Facts, Observe, Review, Decide, Execute, Close","Fuel, Options, Route, Diversion, Emergency, Check"],"FORDEC: facts · options · risks & benefits · decision · execution · check."],
+["dm4","040.03.03","p","dec","Which approach is used for complex, unpredictable problems?",["A structured model such as DODAR or FORDEC","Standard Operating Procedures only","Trial and error, learning as you go","The captain's intuition alone"],"Sin SOP posible, hace falta un método estructurado."],
+["dm5","040.03.05","p","pers","Extraversion/introversion, sensing/intuition, thinking/feeling and judging/perceiving are:",["Psychological preferences, none of which is right or wrong","Personality disorders that must be treated","Hazardous attitudes that must be avoided","Types of human error in the cockpit"],"Cada preferencia tiene fortalezas y debilidades; combinar personalidades distintas aumenta el potencial del equipo."],
+["te1","040.01.03","p","tem","In TEM, a threat is:",["An external event or error outside the pilots' influence that requires attention","An action by the pilot that deviates from his intention","A position of the aircraft that reduces safety margins","A deliberate violation of the rules"],"Threat = fuera de la influencia del piloto."],
+["te2","040.01.03","p","tem","Which are the two main types of threat?",["Environmental and organisational","Latent and active","Internal and procedural","Handling and communication"],"Environmental: meteo, aeropuerto, ATC, terreno. Organisational: presión operativa."],
+["te3","040.01.03","p","tem","Which of these is an environmental threat?",["A thunderstorm","Operational pressure from the company","Fatigue","Lack of recency"],"Meteo, condiciones del aeropuerto, ATC y terreno."],
+["te4","040.01.03","p","tem","A flying club with no computer to access met information and a «just fly anyway» attitude is an example of:",["An organisational threat","An environmental threat","A communication error","An undesired aircraft state"],"Amenaza organizacional."],
+["te5","040.01.03","p","tem","In TEM, the three types of error are:",["Aircraft handling, procedural and communication","Faults, slips, omissions and violations","Latent, active and passive errors","Perception, decision and action errors"],"No confundir con los tipos de error de 040.03.02."],
+["te6","040.01.03","p","tem","An undesired aircraft state is:",["A position, condition or attitude that reduces safety margins","An error made by the crew during the flight","An external event outside the crew's influence","A violation of the regulations by the crew"],"UAS: resulta de errores no gestionados."],
+["te7","040.01.03","p","tem","Which of these is an internal threat?",["Complacency","Terrain","Other traffic","Weather"],"Internas: complacency, fatigue, lack of recency, hazardous personalities."],
+["te8","040.01.03","p","tem","Which TEM component is an action or inaction that results in a deviation from the pilot's intention?",["Error","Threat","Undesired aircraft state","Countermeasure"],"Error = acción u omisión que desvía de lo previsto."],
+["te9","040.01.03","p","tem","TEM was developed as a framework to improve human performance after the analysis of data from:",["Line Operations Safety Audits (LOSA)","Flight data recorders only","Maintenance reports","Medical examinations"],"Los datos LOSA mostraron que la cabina automatizada no aumentaba la seguridad en proporción."],
+["ft1","040.02.03","p","meds","In the IMSAFE checklist, the letter «S» stands for:",["Stress","Sleep","Safety","Sickness"],"Illness · Medication · Stress · Alcohol · Fatigue · Emotion."],
+["ft2","040.02.03","p","meds","In IMSAFE, the letters «I», «M» and «A» stand for:",["Illness, Medication and Alcohol","Injury, Mood and Altitude","Illness, Medication and Altitude","Injury, Medication and Alcohol"],"IMSAFE."],
+["ft3","040.02.03","p","meds","In IMSAFE the letter «E» means Emotion according to the FAA. Other authorities, such as CAA and CASA, use it for:",["Eating (nutrition and hydration)","Exercise (physical fitness)","Eyesight (visual acuity)","Experience (flight hours)"],"E = Eating: comer bien e hidratarse (también se escribe IAMSAFE, con Alimentation)."],
+["ft4","040.02.03","p","meds","Which of these can degrade a pilot's mental fitness?",["Lack of sleep or poor eating habits","Regular exercise and good fitness","A balanced diet and hydration","Adequate rest between duties"],"Medicación, drogas, estrés, problemas personales, falta de sueño, mala alimentación y fatiga."],
+["ft5","040.02.03","p","meds","Physical fitness helps a pilot to:",["Cope better with stress, fatigue and reduced oxygen","Avoid the need for sleep on long flights","Ignore the symptoms of hypoxia at altitude","Eliminate the effects of alcohol quickly"],"Estar en forma ayuda a tolerar el estrés, la fatiga y la altitud."],
+["ft6","040.02.03","p","smoke","Smoking reduces a pilot's performance because it:",["Reduces the oxygen carried in the blood, replacing it with carbon monoxide","Increases the oxygen-carrying capacity of the blood","Improves night vision","Affects only the smoker's lungs"],"El CO ocupa el lugar del oxígeno en la sangre."],
+["ft7","040.02.03","p","smoke","Smoke from other people in the cockpit:",["Affects everyone on board, even non-smokers","Affects only the smoker himself","Has no effect on the other occupants","Improves the alertness of the crew"],"No hace falta fumar para sufrir los efectos."],
+["ft8","040.02.03","p","meds","Until cleared by a doctor, a pilot should assume that any drug or medication:",["Will temporarily ground him","Is safe if it is sold over the counter","Is safe if taken in small doses","Has no effect on flying"],"Cualquier medicamento te deja en tierra hasta que lo autorice un médico."],
+["ft9","040.02.03","p","meds","After an anaesthetic (local, general or dental), a pilot should usually wait about:",["24 hours","2 hours","8 hours","1 week"],"Anestésicos: unas 24 h."],
+["ft10","040.02.03","p","meds","After donating blood, a pilot should not fly for at least:",["24 hours","6 hours","12 hours","72 hours"],"Donación de sangre: 24 h; riesgo leve de desmayo."],
+["ft11","040.02.03","p","meds","After a bone marrow donation, a pilot should not fly for at least:",["48 hours","24 hours","12 hours","1 week"],"Médula: 48 h, porque implica anestesia general."],
+["ft12","040.02.03","p","alc","The ICAO recommendation regarding alcohol and flying is a minimum of:",["24 hours from the last alcohol intake","2 hours from the last alcohol intake","8 hours from the last alcohol intake","12 hours from the last alcohol intake"],"Recomendación OACI: 24 h desde la última ingesta de alcohol."],
+["ft13","040.02.03","p","alc","Why is even a small quantity of alcohol dangerous for a pilot?",["It impairs judgement but makes him feel he performs well","It improves reaction time and concentration","It reduces anxiety and so improves judgement","It speeds up the recovery from fatigue"],"Reduce la ansiedad y da una falsa sensación de rendir muy bien."],
+["ft14","040.02.03","p","alc","A tired or fatigued pilot:",["Should not be flying","May fly if he feels fit enough","May fly if he drinks coffee","May fly if the flight is short"],"El cansancio y la falta de sueño bajan mucho la capacidad física y mental."],
+["ft15","040.02.03","p","alc","Recreational drugs such as marijuana or LSD, with regard to flying:",["Must never be mixed with flying","May be taken the day before","Are acceptable in small amounts","Have no effect after two hours"],"Nunca se mezclan con volar."],
+["ft16","040.02.03","p","meds","A common cold, which is a fairly innocuous complaint on the ground, in flight may:",["Have serious effects under the stress of flying and altitude","Be ignored, as it is always harmless in flight","Improve with altitude as the air is drier","Affect only the sense of smell and taste"],"Resfriado: no volar."]
 ];
 const LO_REFS = {};
 BASE.forEach(q=>{ if(q[3]) (LO_REFS[q[1]]=LO_REFS[q[1]]||[]).includes(q[3]) || LO_REFS[q[1]].push(q[3]); });
@@ -2013,7 +2171,7 @@ const capOf = qs => qs.filter(q=>!isVar(q)).length + new Set(qs.filter(isVar).ma
 // simulacro SENASA: 4 · 24 · 20 por capítulo y, dentro, por subcapítulo según su peso
 function selectSenasa(lenKey, inc, atpl){
   const st = stats(), N = SEN_LEN[lenKey].n;
-  const pool = BANK.filter(q=> servable(q) && in040(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
+  const pool = BANK.filter(q=> servable(q) && in040(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)) && !(atpl && F0ONLY.has(baseOf(q[0]))));
   const bySub = {}; pool.forEach(q=>(bySub[q[1]]=bySub[q[1]]||[]).push(q));
   const subsOf = k => SUB.filter(s=>s[1]===k && bySub[s[0]]).map(s=>s[0]);
   const bT = alloc(N, BLOCKS.map(b=>({k:b.k, w:b.n, cap:subsOf(b.k).reduce((a,s)=>a+capOf(bySub[s]),0)})));
@@ -2025,7 +2183,7 @@ function selectSenasa(lenKey, inc, atpl){
     let n=0; for(const q of list){ if(n>=tgt[s]) break; if(isVar(q)){ const b=baseOf(q[0]); if(usedB.has(b)) continue; usedB.add(b); } chosen.push(q); n++; }
   });
   // al menos 6 variantes del trial (3 en el exprés): cambia la pregunta menos prioritaria de su mismo subcapítulo
-  const minT = N>=40 ? 6 : 3;
+  const minT = N>=40 ? 12 : 6;
   const spare = pool.filter(q=>q[2]==="t" && !chosen.includes(q)).sort((a,b)=>pr.get(b[0])-pr.get(a[0]));
   for(const t of spare){
     if(chosen.filter(q=>q[2]==="t").length>=minT) break;
@@ -2044,7 +2202,7 @@ function selectQuestions(mode, inc, lo, atpl){
     BANK.filter(q=>q[2]==="t").forEach(q=>{ const k=baseOf(q[0]); (groups[k]=groups[k]||[]).push(q); });
     return shuffle(Object.values(groups).map(g=>g[Math.floor(Math.random()*g.length)]));
   }
-  const pool = BANK.filter(q=> servable(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
+  const pool = BANK.filter(q=> servable(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)) && !(atpl && F0ONLY.has(baseOf(q[0]))));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
   if(mode==="all") return shuffle(pool);
@@ -2053,7 +2211,7 @@ function selectQuestions(mode, inc, lo, atpl){
   const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
   const chosen = [], usedB = new Set(), nLO = l => chosen.filter(q=>q[1]===l).length;
   const take = (q, cap=true) => { if(chosen.includes(q) || (cap && nLO(q[1])>=MAXLO)) return; if(isVar(q)){ const b=baseOf(q[0]); if(usedB.has(b)) return; usedB.add(b); } chosen.push(q); };
-  for(const x of scored){ if(chosen.filter(q=>q[2]==="t").length>=6) break; if(x.q[2]==="t") take(x.q); }
+  for(const x of scored){ if(chosen.filter(q=>q[2]==="t").length>=12) break; if(x.q[2]==="t") take(x.q); }
   for(const x of scored){ if(chosen.length>=N) break; take(x.q); }
   for(const x of scored){ if(chosen.length>=N) break; take(x.q,false); }
   return shuffle(chosen);
@@ -2196,7 +2354,7 @@ function atStake(st){
 }
 
 // ---------- conceptos más fallados (por resumen de apuntes) ----------
-const REF_CONCEPT = {"atm": ["Capas de la atmósfera y tropopausa", "lo-X.050", "Tropopausa media 11 km (≈ 36.000 ft): 17 km en el ecuador, 9 km en los polos. Por encima, temperatura constante (−56,5 °C en ISA)."], "trop": ["Capas de la atmósfera y tropopausa", "lo-X.050", "Tropopausa media 11 km (≈ 36.000 ft): 17 km en el ecuador, 9 km en los polos. Por encima, temperatura constante (−56,5 °C en ISA)."], "trop2": ["Capas de la atmósfera y tropopausa", "lo-X.050", "Tropopausa media 11 km (≈ 36.000 ft): 17 km en el ecuador, 9 km en los polos. Por encima, temperatura constante (−56,5 °C en ISA)."], "comp": ["Composición del aire (21 % a cualquier altitud)", "visAlt", "78 % N₂ · 21 % O₂ · 1 % otros, igual a cualquier altitud. Al subir baja la presión parcial del O₂, no su porcentaje."], "isa": ["ISA: valores y desviación", "visIsa", "ISA: 15 °C · 1013,25 hPa · −2 °C por 1.000 ft hasta 36.000 ft; después, −56,5 °C fijo. Desviación = real − ISA (más caliente → +)."], "isa2": ["ISA: valores y desviación", "visIsa", "ISA: 15 °C · 1013,25 hPa · −2 °C por 1.000 ft hasta 36.000 ft; después, −56,5 °C fijo. Desviación = real − ISA (más caliente → +)."], "dev": ["ISA: valores y desviación", "visIsa", "ISA: 15 °C · 1013,25 hPa · −2 °C por 1.000 ft hasta 36.000 ft; después, −56,5 °C fijo. Desviación = real − ISA (más caliente → +)."], "da": ["Altitud de densidad", "lo-X.050", "Más calor, humedad o altura → menos densidad → MÁS altitud de densidad → peores actuaciones."], "boyle": ["Leyes de los gases", "visGas", "Boyle: V inverso a P (lo atrapado se expande al subir) · Charles: V ∝ T · Dalton: suma de parciales → hipoxia · Henry: gas disuelto ∝ presión → DCS."], "charles": ["Leyes de los gases", "visGas", "Boyle: V inverso a P (lo atrapado se expande al subir) · Charles: V ∝ T · Dalton: suma de parciales → hipoxia · Henry: gas disuelto ∝ presión → DCS."], "dalton": ["Leyes de los gases", "visGas", "Boyle: V inverso a P (lo atrapado se expande al subir) · Charles: V ∝ T · Dalton: suma de parciales → hipoxia · Henry: gas disuelto ∝ presión → DCS."], "henry": ["Henry: buceo y enfermedad descompresiva", "visGas", "Henry: al bajar la presión, el N₂ disuelto sale en burbujas (DCS). Buceo a más de 30 ft → 24 h sin volar."], "law": ["Leyes de los gases", "visGas", "Boyle: V inverso a P (lo atrapado se expande al subir) · Charles: V ∝ T · Dalton: suma de parciales → hipoxia · Henry: gas disuelto ∝ presión → DCS."], "def": ["Presión parcial de O₂ y umbrales de oxígeno", "visAlt", "Aire 160 mmHg; en los alvéolos 103 al nivel del mar y 55 a 10.000 ft (mínimo normal). Con 100 % O₂: 103 hasta 33.700 ft y 55 hasta 40.000 ft; más arriba, a presión."], "pp": ["Presión parcial de O₂ y umbrales de oxígeno", "visDalton", "Aire 160 mmHg; en los alvéolos 103 al nivel del mar y 55 a 10.000 ft (mínimo normal). Con 100 % O₂: 103 hasta 33.700 ft y 55 hasta 40.000 ft; más arriba, a presión."], "thr": ["Presión parcial de O₂ y umbrales de oxígeno", "visAlt", "Aire 160 mmHg; en los alvéolos 103 al nivel del mar y 55 a 10.000 ft (mínimo normal). Con 100 % O₂: 103 hasta 33.700 ft y 55 hasta 40.000 ft; más arriba, a presión."], "ox55": ["Presión parcial de O₂ y umbrales de oxígeno", "visAlt", "Aire 160 mmHg; en los alvéolos 103 al nivel del mar y 55 a 10.000 ft (mínimo normal). Con 100 % O₂: 103 hasta 33.700 ft y 55 hasta 40.000 ft; más arriba, a presión."], "types": ["Tipos de hipoxia (tabaco y CO incluidos)", "visTypes", "Hypoxic = falla el aire (altitud) · anaemic = la sangre (CO, tabaco, anemia) · stagnant = la circulación (G) · histotoxic = la célula (alcohol)."], "co": ["Tipos de hipoxia (tabaco y CO incluidos)", "visTypes", "Hypoxic = falla el aire (altitud) · anaemic = la sangre (CO, tabaco, anemia) · stagnant = la circulación (G) · histotoxic = la célula (alcohol)."], "smoke": ["Tipos de hipoxia (tabaco y CO incluidos)", "visTypes", "Hypoxic = falla el aire (altitud) · anaemic = la sangre (CO, tabaco, anemia) · stagnant = la circulación (G) · histotoxic = la célula (alcohol)."], "fact": ["Factores que influyen en la hipoxia", "lo-040.02.01", "La empeoran: altitud, ritmo de ascenso, tiempo en altura, esfuerzo, frío, enfermedad, fatiga, alcohol y tabaco."], "phase": ["Fases de la hipoxia", "visAlt", "Curso: indiferente 0–10.000 · compensatoria 10–15.000 · alteración 15–20.000 (euforia) · crítica 20–25.000 ft. EASA usa umbrales: 7.000 · 10–12.000 · 22.000 ft."], "stage2": ["Fases de la hipoxia", "visAlt", "Curso: indiferente 0–10.000 · compensatoria 10–15.000 · alteración 15–20.000 (euforia) · crítica 20–25.000 ft. EASA usa umbrales: 7.000 · 10–12.000 · 22.000 ft."], "press": ["Presurización: isobárica y diferencial", "visPress", "Isobaric: altitud de cabina constante. Differential: diferencia de presión dentro–fuera constante. Cabina máxima normal 8.000 ft."], "o2": ["Oxígeno suplementario (5.000 noche · 12.500 + 30 min · 14.000)", "visAlt", "Curso: de noche por encima de 5.000 ft · por encima de 12.500 ft más de 30 min · por encima de 14.000 ft siempre."], "tuc": ["TUC y EPT", "visLadder", "TUC = tiempo para darte cuenta y actuar. 25.000 ft 3–5 min · 30.000 1–2 min · 35.000 30–60 s · 40.000 15–20 s. El EPT es siempre menor."], "tuc2": ["TUC y EPT", "visLadder", "TUC = tiempo para darte cuenta y actuar. 25.000 ft 3–5 min · 30.000 1–2 min · 35.000 30–60 s · 40.000 15–20 s. El EPT es siempre menor."], "sym": ["Síntomas de hipoxia y cianosis", "lo-040.02.01", "El síntoma más traicionero es la euforia: te sientes bien. Cianosis = piel azulada. Vigila la altitud y el tiempo, no cómo te sientes."], "cyan": ["Síntomas de hipoxia y cianosis", "lo-040.02.01", "El síntoma más traicionero es la euforia: te sientes bien. Cianosis = piel azulada. Vigila la altitud y el tiempo, no cómo te sientes."], "gas": ["Respiración, alvéolos y volúmenes", "lo-040.02.01", "El intercambio de O₂ y CO₂ se hace en los alvéolos. 12–20 respiraciones por minuto (media 16). El cuerpo no almacena O₂."], "cap": ["Respiración, alvéolos y volúmenes", "lo-040.02.01", "El intercambio de O₂ y CO₂ se hace en los alvéolos. 12–20 respiraciones por minuto (media 16). El cuerpo no almacena O₂."], "resp2": ["Respiración, alvéolos y volúmenes", "lo-040.02.01", "El intercambio de O₂ y CO₂ se hace en los alvéolos. 12–20 respiraciones por minuto (media 16). El cuerpo no almacena O₂."], "co2": ["El CO₂ controla la respiración", "visCO2", "Lo que te hace respirar es el CO₂ en sangre, no la falta de O₂: por eso la hipoxia no da la alarma."], "hyv": ["Hiperventilación frente a hipoxia", "visCO2", "Hiperventilar baja el CO₂: hormigueo, espasmos, mareo. Respira despacio, habla alto, bolsa. Por encima de 10.000 ft, si dudas: oxígeno primero."], "hvh": ["Hiperventilación frente a hipoxia", "visCO2", "Hiperventilar baja el CO₂: hormigueo, espasmos, mareo. Respira despacio, habla alto, bolsa. Por encima de 10.000 ft, si dudas: oxígeno primero."], "hyv2": ["Hiperventilación frente a hipoxia", "visCO2", "Hiperventilar baja el CO₂: hormigueo, espasmos, mareo. Respira despacio, habla alto, bolsa. Por encima de 10.000 ft, si dudas: oxígeno primero."], "heart": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "vessels": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "blood": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "circ": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "cvfunc": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "ear": ["Partes del oído y camino del sonido", "earBox", "Oído externo y medio con aire; interno con líquido. Cóclea = oír. La trompa de Eustaquio iguala el oído medio. Volumen en dB, tono en Hz."], "sound": ["Partes del oído y camino del sonido", "earBox", "Oído externo y medio con aire; interno con líquido. Cóclea = oír. La trompa de Eustaquio iguala el oído medio. Volumen en dB, tono en Hz."], "eust": ["Partes del oído y camino del sonido", "earBox", "Oído externo y medio con aire; interno con líquido. Cóclea = oír. La trompa de Eustaquio iguala el oído medio. Volumen en dB, tono en Hz."], "scc": ["Equilibrio y the leans", "visLeans", "Canales semicirculares = giros (aceleración angular); otolitos = inclinación y aceleración lineal. Tras un viraje largo, al nivelar crees que viras al otro lado: cree a los instrumentos."], "leans": ["Equilibrio y the leans", "visLeans", "Canales semicirculares = giros (aceleración angular); otolitos = inclinación y aceleración lineal. Tras un viraje largo, al nivelar crees que viras al otro lado: cree a los instrumentos."], "cheese": ["Error humano y queso suizo", "cheeseBox", "Accidente = agujeros alineados en todas las defensas: basta cerrar uno para pararlo. Alrededor del 80 % de los accidentes tienen factores humanos."], "rel": ["Error humano y queso suizo", "cheeseBox", "Accidente = agujeros alineados en todas las defensas: basta cerrar uno para pararlo. Alrededor del 80 % de los accidentes tienen factores humanos."], "etypes": ["Tipos de error", "visErr", "Fault: intención mala · slip: ejecución mala · omission: paso olvidado (por una interrupción) · violation: a propósito."], "gz": ["G positivas: greyout, blackout y G-LOC", "lo-040.02.01", null], "baro": ["Barotrauma y Valsalva", "lo-040.02.03", null], "cabin": ["Altitud de cabina y pérdida de presurización", "visPress", null], "coE": ["Monóxido de carbono", "visTypes", null], "bp": ["Pulso, tensión y gasto cardíaco", "circBox", null], "dcs": ["Enfermedad descompresiva: bends, chokes, creeps", "lo-040.02.01", null], "hialt": ["Gran altitud: ozono, radiación y aire seco", "lo-040.02.01", null], "hyvE": ["Hiperventilación frente a hipoxia", "visCO2", "Hiperventilar baja el CO₂: hormigueo, espasmos, mareo. Respira despacio, habla alto, bolsa. Por encima de 10.000 ft, si dudas: oxígeno primero."], "thr3": ["Fases de la hipoxia", "visAlt", "Curso: indiferente 0–10.000 · compensatoria 10–15.000 · alteración 15–20.000 (euforia) · crítica 20–25.000 ft. EASA usa umbrales: 7.000 · 10–12.000 · 22.000 ft."], "tucE": ["TUC y EPT", "visLadder", "TUC = tiempo para darte cuenta y actuar. 25.000 ft 3–5 min · 30.000 1–2 min · 35.000 30–60 s · 40.000 15–20 s. El EPT es siempre menor."], "eye": ["Partes del ojo", "visEye", "Conos en la fóvea (color y detalle, de día); bastones en la periferia (de noche). De noche mira un poco de lado. Adaptación completa a la oscuridad: 30 min o más."], "illus": ["Ilusiones visuales en la aproximación", "visRwy", "Pista cuesta arriba o estrecha → te ves alto → te quedas bajo. Cuesta abajo o ancha → te ves bajo → vas alto. Black hole → bajas de más."], "nihl": ["Ruido y pérdida auditiva", "earBox", null], "sd": ["Desorientación espacial", "visLeans", null], "senses": ["Umbral sensorial", "lo-040.02.02", null], "meds": ["¿Apto para volar? IMSAFE", "visFit", "IMSAFE antes de cada vuelo. Medicamento, resfriado o gastroenteritis → en tierra. Donar sangre o anestesia local → 24 h."], "alc": ["Alcohol", "visFit", null], "incap": ["Incapacitación en vuelo", "lo-040.02.03", null], "sleep": ["Sueño, ritmo circadiano y jet lag", "lo-040.02.03", null], "mem": ["Memoria de trabajo y largo plazo", "visInfo", null], "attn": ["Atención selectiva y dividida", "visInfo", null], "perc": ["Percepción", "visInfo", null], "learn": ["Aprendizaje", "lo-040.03.01", null], "sa": ["Consciencia situacional", "lo-040.03.02", null], "dec": ["Toma de decisiones", "lo-040.03.03", null], "comm": ["Comunicación en cabina", "lo-040.03.04", null], "tag": ["Gradiente de autoridad y liderazgo", "lo-040.03.04", null], "group": ["Groupthink", "lo-040.03.04", null], "sop": ["SOPs y checklists", "lo-040.03.04", null], "haz": ["Actitudes peligrosas", "visHaz", null], "pers": ["Personalidad y actitud", "lo-040.03.05", null], "arousal": ["Arousal y rendimiento", "visArousal", null], "stress": ["Estrés", "visArousal", null], "fatigue": ["Fatiga", "lo-040.03.06", null], "auto": ["Automatización y complacencia", "lo-040.03.07", null], "tem": ["TEM: amenazas, errores y UAS", "visTem", null], "shell": ["Modelo SHELL", "visShell", null], "cult": ["Cultura de seguridad", "lo-040.01.04", null], "sms": ["SMS", "lo-040.01.04", null], "kso": ["Competencias del piloto", "lo-040.01.01", null]};
+const REF_CONCEPT = {"atm": ["Capas de la atmósfera y tropopausa", "lo-X.050", "Tropopausa media 11 km (≈ 36.000 ft): 17 km en el ecuador, 9 km en los polos. Por encima, temperatura constante (−56,5 °C en ISA)."], "trop": ["Capas de la atmósfera y tropopausa", "lo-X.050", "Tropopausa media 11 km (≈ 36.000 ft): 17 km en el ecuador, 9 km en los polos. Por encima, temperatura constante (−56,5 °C en ISA)."], "trop2": ["Capas de la atmósfera y tropopausa", "lo-X.050", "Tropopausa media 11 km (≈ 36.000 ft): 17 km en el ecuador, 9 km en los polos. Por encima, temperatura constante (−56,5 °C en ISA)."], "comp": ["Composición del aire (21 % a cualquier altitud)", "visAlt", "78 % N₂ · 21 % O₂ · 1 % otros, igual a cualquier altitud. Al subir baja la presión parcial del O₂, no su porcentaje."], "isa": ["ISA: valores y desviación", "visIsa", "ISA: 15 °C · 1013,25 hPa · −2 °C por 1.000 ft hasta 36.000 ft; después, −56,5 °C fijo. Desviación = real − ISA (más caliente → +)."], "isa2": ["ISA: valores y desviación", "visIsa", "ISA: 15 °C · 1013,25 hPa · −2 °C por 1.000 ft hasta 36.000 ft; después, −56,5 °C fijo. Desviación = real − ISA (más caliente → +)."], "dev": ["ISA: valores y desviación", "visIsa", "ISA: 15 °C · 1013,25 hPa · −2 °C por 1.000 ft hasta 36.000 ft; después, −56,5 °C fijo. Desviación = real − ISA (más caliente → +)."], "da": ["Altitud de densidad", "lo-X.050", "Más calor, humedad o altura → menos densidad → MÁS altitud de densidad → peores actuaciones."], "boyle": ["Leyes de los gases", "visGas", "Boyle: V inverso a P (lo atrapado se expande al subir) · Charles: V ∝ T · Dalton: suma de parciales → hipoxia · Henry: gas disuelto ∝ presión → DCS."], "charles": ["Leyes de los gases", "visGas", "Boyle: V inverso a P (lo atrapado se expande al subir) · Charles: V ∝ T · Dalton: suma de parciales → hipoxia · Henry: gas disuelto ∝ presión → DCS."], "dalton": ["Leyes de los gases", "visGas", "Boyle: V inverso a P (lo atrapado se expande al subir) · Charles: V ∝ T · Dalton: suma de parciales → hipoxia · Henry: gas disuelto ∝ presión → DCS."], "henry": ["Henry: buceo y enfermedad descompresiva", "visGas", "Henry: al bajar la presión, el N₂ disuelto sale en burbujas (DCS). Buceo a más de 30 ft → 24 h sin volar."], "law": ["Leyes de los gases", "visGas", "Boyle: V inverso a P (lo atrapado se expande al subir) · Charles: V ∝ T · Dalton: suma de parciales → hipoxia · Henry: gas disuelto ∝ presión → DCS."], "def": ["Presión parcial de O₂ y umbrales de oxígeno", "visAlt", "Aire 160 mmHg; en los alvéolos 103 al nivel del mar y 55 a 10.000 ft (mínimo normal). Con 100 % O₂: 103 hasta 33.700 ft y 55 hasta 40.000 ft; más arriba, a presión."], "pp": ["Presión parcial de O₂ y umbrales de oxígeno", "visDalton", "Aire 160 mmHg; en los alvéolos 103 al nivel del mar y 55 a 10.000 ft (mínimo normal). Con 100 % O₂: 103 hasta 33.700 ft y 55 hasta 40.000 ft; más arriba, a presión."], "thr": ["Presión parcial de O₂ y umbrales de oxígeno", "visAlt", "Aire 160 mmHg; en los alvéolos 103 al nivel del mar y 55 a 10.000 ft (mínimo normal). Con 100 % O₂: 103 hasta 33.700 ft y 55 hasta 40.000 ft; más arriba, a presión."], "ox55": ["Presión parcial de O₂ y umbrales de oxígeno", "visAlt", "Aire 160 mmHg; en los alvéolos 103 al nivel del mar y 55 a 10.000 ft (mínimo normal). Con 100 % O₂: 103 hasta 33.700 ft y 55 hasta 40.000 ft; más arriba, a presión."], "types": ["Tipos de hipoxia (tabaco y CO incluidos)", "visTypes", "Hypoxic = falla el aire (altitud) · anaemic = la sangre (CO, tabaco, anemia) · stagnant = la circulación (G) · histotoxic = la célula (alcohol)."], "co": ["Tipos de hipoxia (tabaco y CO incluidos)", "visTypes", "Hypoxic = falla el aire (altitud) · anaemic = la sangre (CO, tabaco, anemia) · stagnant = la circulación (G) · histotoxic = la célula (alcohol)."], "smoke": ["Tipos de hipoxia (tabaco y CO incluidos)", "visTypes", "Hypoxic = falla el aire (altitud) · anaemic = la sangre (CO, tabaco, anemia) · stagnant = la circulación (G) · histotoxic = la célula (alcohol)."], "fact": ["Factores que influyen en la hipoxia", "lo-040.02.01", "La empeoran: altitud, ritmo de ascenso, tiempo en altura, esfuerzo, frío, enfermedad, fatiga, alcohol y tabaco."], "phase": ["Fases de la hipoxia", "visAlt", "Curso: indiferente 0–10.000 · compensatoria 10–15.000 · alteración 15–20.000 (euforia) · crítica 20–25.000 ft. EASA usa umbrales: 7.000 · 10–12.000 · 22.000 ft."], "stage2": ["Fases de la hipoxia", "visAlt", "Curso: indiferente 0–10.000 · compensatoria 10–15.000 · alteración 15–20.000 (euforia) · crítica 20–25.000 ft. EASA usa umbrales: 7.000 · 10–12.000 · 22.000 ft."], "press": ["Presurización: isobárica y diferencial", "visPress", "Isobaric: altitud de cabina constante. Differential: diferencia de presión dentro–fuera constante. Cabina máxima normal 8.000 ft."], "o2": ["Oxígeno suplementario (5.000 noche · 12.500 + 30 min · 14.000)", "visAlt", "Curso: de noche por encima de 5.000 ft · por encima de 12.500 ft más de 30 min · por encima de 14.000 ft siempre."], "tuc": ["TUC y EPT", "visLadder", "TUC = tiempo para darte cuenta y actuar. 25.000 ft 3–5 min · 30.000 1–2 min · 35.000 30–60 s · 40.000 15–20 s. El EPT es siempre menor."], "tuc2": ["TUC y EPT", "visLadder", "TUC = tiempo para darte cuenta y actuar. 25.000 ft 3–5 min · 30.000 1–2 min · 35.000 30–60 s · 40.000 15–20 s. El EPT es siempre menor."], "sym": ["Síntomas de hipoxia y cianosis", "lo-040.02.01", "El síntoma más traicionero es la euforia: te sientes bien. Cianosis = piel azulada. Vigila la altitud y el tiempo, no cómo te sientes."], "cyan": ["Síntomas de hipoxia y cianosis", "lo-040.02.01", "El síntoma más traicionero es la euforia: te sientes bien. Cianosis = piel azulada. Vigila la altitud y el tiempo, no cómo te sientes."], "gas": ["Respiración, alvéolos y volúmenes", "lo-040.02.01", "El intercambio de O₂ y CO₂ se hace en los alvéolos. 12–20 respiraciones por minuto (media 16). El cuerpo no almacena O₂."], "cap": ["Respiración, alvéolos y volúmenes", "lo-040.02.01", "El intercambio de O₂ y CO₂ se hace en los alvéolos. 12–20 respiraciones por minuto (media 16). El cuerpo no almacena O₂."], "resp2": ["Respiración, alvéolos y volúmenes", "lo-040.02.01", "El intercambio de O₂ y CO₂ se hace en los alvéolos. 12–20 respiraciones por minuto (media 16). El cuerpo no almacena O₂."], "co2": ["El CO₂ controla la respiración", "visCO2", "Lo que te hace respirar es el CO₂ en sangre, no la falta de O₂: por eso la hipoxia no da la alarma."], "hyv": ["Hiperventilación frente a hipoxia", "visCO2", "Hiperventilar baja el CO₂: hormigueo, espasmos, mareo. Respira despacio, habla alto, bolsa. Por encima de 10.000 ft, si dudas: oxígeno primero."], "hvh": ["Hiperventilación frente a hipoxia", "visCO2", "Hiperventilar baja el CO₂: hormigueo, espasmos, mareo. Respira despacio, habla alto, bolsa. Por encima de 10.000 ft, si dudas: oxígeno primero."], "hyv2": ["Hiperventilación frente a hipoxia", "visCO2", "Hiperventilar baja el CO₂: hormigueo, espasmos, mareo. Respira despacio, habla alto, bolsa. Por encima de 10.000 ft, si dudas: oxígeno primero."], "heart": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "vessels": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "blood": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "circ": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "cvfunc": ["Corazón, arterias, venas y circulaciones", "circBox", "Las arterias salen del corazón y las venas vuelven. La arteria pulmonar lleva sangre pobre en O₂. Sistémica: izquierdo → cuerpo → derecho."], "ear": ["Partes del oído y camino del sonido", "earBox", "Oído externo y medio con aire; interno con líquido. Cóclea = oír. La trompa de Eustaquio iguala el oído medio. Volumen en dB, tono en Hz."], "sound": ["Partes del oído y camino del sonido", "earBox", "Oído externo y medio con aire; interno con líquido. Cóclea = oír. La trompa de Eustaquio iguala el oído medio. Volumen en dB, tono en Hz."], "eust": ["Partes del oído y camino del sonido", "earBox", "Oído externo y medio con aire; interno con líquido. Cóclea = oír. La trompa de Eustaquio iguala el oído medio. Volumen en dB, tono en Hz."], "scc": ["Equilibrio y the leans", "visLeans", "Canales semicirculares = giros (aceleración angular); otolitos = inclinación y aceleración lineal. Tras un viraje largo, al nivelar crees que viras al otro lado: cree a los instrumentos."], "leans": ["Equilibrio y the leans", "visLeans", "Canales semicirculares = giros (aceleración angular); otolitos = inclinación y aceleración lineal. Tras un viraje largo, al nivelar crees que viras al otro lado: cree a los instrumentos."], "cheese": ["Error humano y queso suizo", "cheeseBox", "Accidente = agujeros alineados en todas las defensas: basta cerrar uno para pararlo. Alrededor del 80 % de los accidentes tienen factores humanos."], "rel": ["Error humano y queso suizo", "cheeseBox", "Accidente = agujeros alineados en todas las defensas: basta cerrar uno para pararlo. Alrededor del 80 % de los accidentes tienen factores humanos."], "etypes": ["Tipos de error", "visErr", "Fault: intención mala · slip: ejecución mala · omission: paso olvidado (por una interrupción) · violation: a propósito."], "gz": ["G positivas: greyout, blackout y G-LOC", "lo-040.02.01", null], "baro": ["Barotrauma y Valsalva", "lo-040.02.03", null], "cabin": ["Altitud de cabina y pérdida de presurización", "visPress", null], "coE": ["Monóxido de carbono", "visTypes", null], "bp": ["Pulso, tensión y gasto cardíaco", "circBox", null], "dcs": ["Enfermedad descompresiva: bends, chokes, creeps", "lo-040.02.01", null], "hialt": ["Gran altitud: ozono, radiación y aire seco", "lo-040.02.01", null], "hyvE": ["Hiperventilación frente a hipoxia", "visCO2", "Hiperventilar baja el CO₂: hormigueo, espasmos, mareo. Respira despacio, habla alto, bolsa. Por encima de 10.000 ft, si dudas: oxígeno primero."], "thr3": ["Fases de la hipoxia", "visAlt", "Curso: indiferente 0–10.000 · compensatoria 10–15.000 · alteración 15–20.000 (euforia) · crítica 20–25.000 ft. EASA usa umbrales: 7.000 · 10–12.000 · 22.000 ft."], "tucE": ["TUC y EPT", "visLadder", "TUC = tiempo para darte cuenta y actuar. 25.000 ft 3–5 min · 30.000 1–2 min · 35.000 30–60 s · 40.000 15–20 s. El EPT es siempre menor."], "eye": ["Partes del ojo", "visEye", "Conos en la fóvea (color y detalle, de día); bastones en la periferia (de noche). De noche mira un poco de lado. Adaptación completa a la oscuridad: 30 min o más."], "illus": ["Ilusiones visuales en la aproximación", "visRwy", "Pista cuesta arriba o estrecha → te ves alto → te quedas bajo. Cuesta abajo o ancha → te ves bajo → vas alto. Black hole → bajas de más."], "nihl": ["Ruido y pérdida auditiva", "earBox", null], "sd": ["Desorientación espacial", "visLeans", null], "senses": ["Umbral sensorial", "lo-040.02.02", null], "meds": ["¿Apto para volar? IMSAFE", "visFit", "IMSAFE antes de cada vuelo. Medicamento, resfriado o gastroenteritis → en tierra. Donar sangre o anestesia local → 24 h."], "alc": ["Alcohol", "visFit", null], "incap": ["Incapacitación en vuelo", "lo-040.02.03", null], "sleep": ["Sueño, ritmo circadiano y jet lag", "lo-040.02.03", null], "mem": ["Memoria de trabajo y largo plazo", "visInfo", null], "attn": ["Atención selectiva y dividida", "visInfo", null], "perc": ["Percepción", "visInfo", null], "learn": ["Aprendizaje", "lo-040.03.01", null], "sa": ["Consciencia situacional", "lo-040.03.04", null], "dec": ["Toma de decisiones", "lo-040.03.03", null], "comm": ["Comunicación en cabina", "lo-040.03.04", null], "tag": ["Gradiente de autoridad y liderazgo", "lo-040.03.04", null], "group": ["Groupthink", "lo-040.03.04", null], "sop": ["SOPs y checklists", "lo-040.03.04", null], "haz": ["Actitudes peligrosas", "visHaz", null], "pers": ["Personalidad y actitud", "lo-040.03.05", null], "arousal": ["Arousal y rendimiento", "visArousal", null], "stress": ["Estrés", "visArousal", null], "fatigue": ["Fatiga", "lo-040.03.06", null], "auto": ["Automatización y complacencia", "lo-040.03.07", null], "tem": ["TEM: amenazas, errores y UAS", "visTem", null], "shell": ["Modelo SHELL", "visShell", null], "cult": ["Cultura de seguridad", "lo-040.01.04", null], "sms": ["SMS", "lo-040.01.04", null], "kso": ["Competencias del piloto", "lo-040.01.01", null]};
 function conceptOf(q){ const c = REF_CONCEPT[q[3]]; return c ? [c[0], c[1]||null] : [loLabel(q[1]), null]; }
 function topConcepts(){
   const agg = {};

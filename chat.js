@@ -46,6 +46,7 @@ function css(){
 .f0c-body{flex:1;min-height:0;display:flex;flex-direction:column}
 .f0c-list{flex:1;overflow:auto;padding:4px 10px 8px;display:flex;flex-direction:column;gap:7px}
 .f0c-list h3{margin:12px 2px 0;font:700 13px var(--display);letter-spacing:.14em;text-transform:uppercase;color:#7FD6C2;display:flex;align-items:center;gap:8px}
+.f0c-list h3.nw{color:#E8BF45}
 .f0c-list h3:after{content:"";flex:1;height:1px;background:currentColor;opacity:.25}
 .f0c-p{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:1px solid #223A50;background:#12263A;color:#E3ECF2;font:600 15px var(--body);padding:9px 10px;border-radius:14px;cursor:pointer;transition:transform .12s,background .12s;flex:none}
 .f0c-p:hover,.f0c-p:focus-visible{background:#183049;transform:translateX(3px);outline:none}
@@ -453,7 +454,11 @@ function update(){
     const dm=`<form class="f0c-dm" id="f0cDm" autocomplete="off"><div class="t">Mensaje sin conexión</div>${canDm?dd:`<p class="hint">${esc(dmHint)}</p>`}<div class="r"><input id="f0cDmIn" maxlength="${MAXLEN}" placeholder="${C.dmTo&&canDm?"Escribe para "+esc(first({n:nameOf(C.dmTo)}))+"…":"Elige un compañero…"}" aria-label="Mensaje sin conexión" ${canDm&&C.dmTo?"":"disabled"}><button type="submit" class="go" aria-label="Enviar" ${canDm&&C.dmTo?"":"disabled"}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button></div></form>`;
     const sub=(k,st)=>C.unread[k]?"mensaje nuevo":st==="on"?"toca para escribir":st==="away"?"ausente un momento · le llegará al volver":(C.sms?"sin conexión · le llegará":"ya no está en línea");
     const row=(k,st)=>`<button class="f0c-p ${st}${st==="off"?" gone":""}" data-room="${esc(k)}"><span class="av">${esc(ini(nameOf(k)))}</span><span class="nm">${esc(nameOf(k))}<small>${esc(sub(k,st))}</small></span>${C.unread[k]?`<b class="u">${C.unread[k]}</b>`:""}</button>`;
-    const list=(online.length||offIds.length)?`<div class="f0c-list">${online.length?"<h3>En frecuencia</h3>"+online.map(k=>row(k,C.peers[k].away?"away":"on")).join(""):""}${offIds.length?"<h3>Fuera de frecuencia</h3>"+offIds.map(k=>row(k,"off")).join(""):""}</div>`
+    const lastT=k=>{ const a=C.rooms[k]||[]; return a.length?(a[a.length-1].t||0):0; };
+    const nw=[...new Set([...online,...offIds])].filter(k=>C.unread[k]>0).sort((x,y)=>lastT(y)-lastT(x));   // con mensaje nuevo: arriba del todo, el más reciente primero
+    const stK=k=>C.peers[k]?(C.peers[k].away?"away":"on"):"off";
+    const onl=online.filter(k=>!(C.unread[k]>0)), ofl=offIds.filter(k=>!(C.unread[k]>0));
+    const list=(online.length||offIds.length)?`<div class="f0c-list">${nw.length?'<h3 class="nw">Mensajes nuevos</h3>'+nw.map(k=>row(k,stK(k))).join(""):""}${onl.length?"<h3>En frecuencia</h3>"+onl.map(k=>row(k,stK(k))).join(""):""}${ofl.length?"<h3>Fuera de frecuencia</h3>"+ofl.map(k=>row(k,"off")).join(""):""}</div>`
       :`<div class="f0c-empty">${ICON}${on?"Ahora mismo no hay nadie más conectado.<br>Cuando entre un compañero aparecerá aquí.":"No se ha podido conectar el chat."}</div>`;
     pan.innerHTML=`<header class="f0c-hd ${C.status}"><div class="t"><h2>Online pilots</h2><small><i></i>FREC 122.800 · ${esc(stTxt)}</small></div><button id="f0cX" type="button" aria-label="Cerrar chat">✕</button></header><div class="f0c-body">${list}${dm}<p class="f0c-note">Mensajes privados en tiempo real. Se conservan 60 minutos${C.att?" · Fotos: se ven una vez · Archivos: 24 h":""}</p></div>`;
     C.dmAnim=false; const ti=$("#f0cDmIn",r); if(ti) ti.value=C.dmText;
