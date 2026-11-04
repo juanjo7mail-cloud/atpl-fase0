@@ -464,6 +464,49 @@ td.k{font-family:var(--sans);font-weight:600}
 </style>
 
 
+<style id="f0-unify">
+/* ===== 050 alineada con el resto de asignaturas (mismos tamaños, márgenes y componentes) ===== */
+body{font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;padding:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 64px}
+header.masthead{border-bottom:0;padding:28px 0 8px;margin:0}
+header.masthead .code{font:700 64px/.9 "Barlow Condensed",Barlow,sans-serif;letter-spacing:-1px;margin:0}
+header.masthead h1{font:600 28px/1.5 "Barlow Condensed",Barlow,sans-serif;letter-spacing:normal;margin:4px 0 2px}
+header.masthead p,header.masthead .examline{margin:0;max-width:none;color:var(--muted);font-size:16px;line-height:1.5}
+nav[role=tablist]{padding:12px 0;margin:0 0 20px;border-bottom:2px solid var(--ink)}
+nav[role=tablist] button{font:600 17px "Barlow Condensed",Barlow,sans-serif;padding:10px 6px}
+h2{font:600 24px/1.5 "Barlow Condensed",Barlow,sans-serif;letter-spacing:normal;margin:28px 0 4px}
+h2.maph{margin-top:28px}
+.card{border-radius:6px;padding:16px;margin:12px 0}
+.card>b:first-child{font:600 19px "Barlow Condensed",Barlow,sans-serif}
+.btn{font:600 17px "Barlow Condensed",Barlow,sans-serif;padding:12px 20px;border-radius:4px}
+.btn.sm{padding:6px 12px;font-size:15px}
+.btn.sec{padding:8px 14px}
+/* temas del temario */
+details.lo{font:400 16px/1.5 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;border-left-width:4px;border-radius:6px;margin:10px 0}
+details.lo>summary{padding:12px 14px;gap:10px;flex-wrap:wrap}
+details.lo>summary::before{content:none}
+details.lo[open]>summary{background:transparent;border-bottom:0}
+.lonum{font:600 15px "Barlow Condensed",Barlow,sans-serif;color:var(--blue);margin:0;white-space:nowrap}
+details.lo.atpl .lonum{color:var(--blue)}
+/* tablas */
+table{font-size:15px}
+th,td{padding:6px 8px}
+thead th,th{font:600 15px "Barlow Condensed",Barlow,sans-serif;letter-spacing:normal;text-transform:none;color:var(--ink);background:transparent}
+td{font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:400}
+td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)}
+/* test */
+.q{border-left:1px solid var(--rule);border-radius:6px;padding:14px;margin:12px 0}
+.q.correct{border-left-color:var(--ok)}
+.q.wrong{border-left-color:var(--bad)}
+.q .qtext{font:500 16px/1.5 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;margin-bottom:10px}
+.choice,.choice span{font-size:16px;line-height:1.5}
+.tag,.tag.t,.tag.g,.tag.v,.tag.s,.tag.p,.tag.m,.tag.y,.tag.at,.tag.dp{font-size:12px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.5}
+.tag.tr,.tag.pf,.tag.at{font-weight:600}
+.mode:has(input:checked){border-color:var(--blue);background:color-mix(in srgb,var(--blue) 7%,transparent)}
+.progress{font-size:14px}
+.score{background:none;border:0;box-shadow:none;border-radius:0;padding:0;font:700 56px/1 "Barlow Condensed",Barlow,sans-serif}
+.bar i{background:var(--blue)}
+</style>
 <div class="wrap">
 
 <header class="masthead">
@@ -4777,8 +4820,8 @@ $("#finishBtn").addEventListener("click", async ()=>{
       <div class="score ${pass?'pass':'fail'}">${score}/${current.length}</div>
       <div><b>${pct} % · ${pass?'APTO':'NO APTO'}</b> <span class="muted">(mínimo 75 %)</span></div>
       ${extra}
-      <div style="margin-top:14px"><b>Por tema</b>${los.map(l=>{const p=Math.round(byLO[l].ok/byLO[l].total*100);
-        return `<div class="lorow"><div style="display:flex;justify-content:space-between"><span>${esc(loLabelEs(l))}</span><span>${byLO[l].ok}/${byLO[l].total} · ${p} %</span></div><div class="bar"><i style="width:${p}%"></i></div></div>`}).join("")}</div>
+      <div style="margin-top:12px">${los.map(l=>{const p=Math.round(byLO[l].ok/byLO[l].total*100);
+        return `<div class="lorow"><div style="display:flex;justify-content:space-between"><span>${esc(loLabelEs(l))}</span><span>${byLO[l].ok}/${byLO[l].total}</span></div><div class="bar"><i style="width:${p}%;background:${p>=75?'var(--ok)':'var(--bad)'}"></i></div></div>`}).join("")}</div>
       <p style="margin:12px 0 4px"><b>Siguiente foco:</b> ${nextWeak.map(w=>`${esc(loLabelEs(w.lo))} (${Math.round(w.score*100)} %)`).join(" y ")}</p>
       <p id="saveMsg" class="muted" style="font-size:14px">Guardando…</p>
       <div class="row"><button class="btn" id="againBtn">Otro simulacro</button><button class="btn sec" id="mapBtn">Ver mapa</button></div>
@@ -4823,7 +4866,7 @@ function showDetail(id){
   const wrong = (at.items||[]).filter(i=>!i.ok);
   $("#histDetail").innerHTML = `<h2>${MODENAME[at.mode]||at.mode} del ${fmtDate(at.date)}</h2>`+
     `<div class="card"><b>Resumen por tema</b>${los.map(l=>{const p=Math.round(byLO[l].ok/byLO[l].total*100);
-      return `<div class="lorow"><div style="display:flex;justify-content:space-between"><span>${esc(loLabelEs(l))}</span><span>${byLO[l].ok}/${byLO[l].total} · ${p} %</span></div><div class="bar"><i style="width:${p}%"></i></div></div>`}).join("")}</div>`+
+      return `<div class="lorow"><div style="display:flex;justify-content:space-between"><span>${esc(loLabelEs(l))}</span><span>${byLO[l].ok}/${byLO[l].total}</span></div><div class="bar"><i style="width:${p}%;background:${p>=75?'var(--ok)':'var(--bad)'}"></i></div></div>`}).join("")}</div>`+
     `<h3>Fallos</h3>` + (wrong.length ? wrong.map(w=>{
     const q = byId(w.q); if(!q) return "";
     return `<div class="q"><div class="qhead"><span>${esc(loLabelEs(q[1]))}</span></div>${(w.p||q[8])?(k=>`<div class="qimg${isSym(k)?" symq":""}"><img src="${imgSrc(k)}" alt="Imagen de la pregunta" loading="lazy"></div>`)(w.p||pickImg(q[8])):""}<div class="qtext">${esc(w.v||q[4])}${w.v?' <span class="tag v">variante</span>':''}</div>
