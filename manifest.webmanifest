@@ -1,7 +1,7 @@
 {
-  "name": "ATPL Fase 0",
-  "short_name": "Fase 0",
-  "description": "Apuntes y tests de ATPL Fase 0",
+  "name": "ATPL by Juanjo Ruano",
+  "short_name": "ATPL",
+  "description": "Apuntes y tests de ATPL",
   "lang": "es",
   "start_url": "./",
   "scope": "./",

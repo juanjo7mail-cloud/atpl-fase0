@@ -14,7 +14,7 @@ function stationsFor(icao) {   // el propio aeródromo y, si no emite, las 3 est
 const AW = "https://aviationweather.gov/api/data/";
 async function up(kind, id) {
   try {
-    const r = await fetch(AW + kind + "?ids=" + id + "&format=json" + (kind === "metar" ? "&hours=4" : ""), { headers: { "User-Agent": "atpl-fase0-ops/1.0" } });
+    const r = await fetch(AW + kind + "?ids=" + id + "&format=json" + (kind === "metar" ? "&hours=4" : ""), { headers: { "User-Agent": "atpl-fase0-ops/1.0" }, cf: { cacheTtl: 90, cacheEverything: true } });
     if (!r.ok) return null;
     const t = await r.text(); if (!t.trim()) return null;
     const j = JSON.parse(t);
@@ -38,7 +38,7 @@ const trUrls = icao => { const p = AERO[icao] || AERO.LECU; return ["https://api
 async function traffic(icao) {
   for (const url of trUrls(icao)) {
     try {
-      const r = await fetch(url, { headers: { "User-Agent": "atpl-fase0-ops/1.0" } }); if (!r.ok) continue;
+      const r = await fetch(url, { headers: { "User-Agent": "atpl-fase0-ops/1.0" }, cf: { cacheTtl: 10, cacheEverything: true } }); if (!r.ok) continue;
       const j = await r.json(); if (!Array.isArray(j.ac)) continue;
       return j.ac.filter(a => a.lat != null && a.lon != null).slice(0, 80).map(a => ({
         h: a.hex, f: (a.flight || "").trim(), r: a.r || "", t: a.t || "", lat: a.lat, lon: a.lon,
@@ -47,24 +47,30 @@ async function traffic(icao) {
   }
   return null;
 }
+// Memoria en el propio isolate: la Cache API no funciona en *.workers.dev, así que agrupamos las peticiones aquí.
+const MEMO = new Map();
+async function memo(key, ttl, fn) {
+  const h = MEMO.get(key), now = Date.now();
+  if (h && now - h.t < (h.ok ? ttl : 8000)) return h.p;
+  const p = fn(); const e = { t: now, ok: true, p }; MEMO.set(key, e);
+  p.then(v => { e.ok = !!v.ok; }, () => { MEMO.delete(key); });
+  if (MEMO.size > 200) for (const k of MEMO.keys()) { MEMO.delete(k); if (MEMO.size < 100) break; }
+  return p;
+}
+const J = (o, ok, age) => new Response(JSON.stringify(o), { status: ok ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok ? "public, max-age=" + age : "no-store", "access-control-allow-origin": "*" } });
 export default {
   async fetch(req, env, ctx) {
     const u = new URL(req.url);
     const q = (u.searchParams.get("icao") || "").toUpperCase(), icao = AERO[q] ? q : "LECU";   // solo aeródromos de la lista
     if (u.pathname === "/api/traffic") {
-      const ck2 = new Request(u.origin + "/api/traffic?icao=" + icao, { method: "GET" }), c2 = caches.default, h2 = await c2.match(ck2); if (h2) return h2;
-      const ac = await traffic(icao), ok2 = !!ac;
-      const r2 = new Response(JSON.stringify({ ok: ok2, ac: ac || [], at: Date.now() }), { status: ok2 ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok2 ? "public, max-age=8" : "no-store", "access-control-allow-origin": "*" } });
-      if (ok2) ctx.waitUntil(c2.put(ck2, r2.clone()));
-      return r2;
+      const o = await memo("tr:" + icao, 15000, async () => { const ac = await traffic(icao); return { ok: !!ac, ac: ac || [], at: Date.now() }; });
+      return J(o, o.ok, 15);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
-    const ck = new Request(u.origin + "/api/wx?icao=" + icao, { method: "GET" }), cache = caches.default;
-    const hit = await cache.match(ck); if (hit) return hit;
-    const list = stationsFor(icao), [metar, taf] = await Promise.all([first("metar", "rawOb", list), first("taf", "rawTAF", list)]);
-    const ok = !!(metar || taf);
-    const res = new Response(JSON.stringify({ ok, metar, taf, at: Date.now() }), { status: ok ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok ? "public, max-age=120" : "no-store", "access-control-allow-origin": "*" } });
-    if (ok) ctx.waitUntil(cache.put(ck, res.clone()));
-    return res;
+    const o = await memo("wx:" + icao, 120000, async () => {
+      const list = stationsFor(icao), [metar, taf] = await Promise.all([first("metar", "rawOb", list), first("taf", "rawTAF", list)]);
+      return { ok: !!(metar || taf), metar, taf, at: Date.now() };
+    });
+    return J(o, o.ok, 120);
   }
 };

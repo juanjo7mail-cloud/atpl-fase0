@@ -166,6 +166,12 @@ const RAD=Math.PI/180;
 const off=(ll,brg,m)=>[ll[0]+Math.cos(brg*RAD)*m/111320, ll[1]+Math.sin(brg*RAD)*m/(111320*Math.cos(ll[0]*RAD))];
 const dayZ=d=>pad(d.getUTCDate())+"/"+pad(d.getUTCMonth()+1);
 
+/* ---------- memoria de la pista en uso (30 min, en esta pestaña): cuando no pasa ningún avión por el eje, se recuerda el último ---------- */
+function rwMem(inf){
+  try{ const k="f0:rw:"+AD.icao;
+    if(inf){ sessionStorage.setItem(k,JSON.stringify({id:inf.id,at:Date.now()})); return {id:inf.id,n:inf.n,live:true}; }
+    const v=JSON.parse(sessionStorage.getItem(k)||"null"); if(v&&Date.now()-v.at<=30*60000) return {id:v.id,ago:Math.round((Date.now()-v.at)/60000),live:false}; }catch(e){}
+  return inf?{id:inf.id,n:inf.n,live:true}:null; }
 /* ---------- pista en uso según el tráfico ADS-B ---------- */
 function infer(list){
   const c={}, lat0=AD.lat, lon0=AD.lon, es=ends(); es.forEach(r=>c[r.id]=0);
@@ -261,10 +267,10 @@ function fill(){
   const tp=d.tp;
   $("#opTaf",R).innerHTML=!tp||!d.taf?'<div class="auto">No hay TAF disponible.</div>':(rm?wrow(flightCat(tp.periods[0].e),rawHtml(d.taf.replace(/^TAF\s+(AMD\s+|COR\s+)?/,"")),null):tp.periods.map(p=>`<div class="wr"><span class="cc ${flightCat(p.e)}">${flightCat(p.e)}</span><span class="wt"><b>${esc(p.label)}</b>${p.rng?` <small>${esc(p.rng)}</small>`:""}<br>${esc(decShort(p.e))}</span></div>`).join(""));
   // pista en uso
-  const evF=evalOne(e,"fi"), evS=evalOne(e,"solo"), w=evF.w, wind=(e.wind&&!e.wind.vrb&&Math.max(e.wind.spd,e.wind.gst||0)>=3)?w.end:null, trf=S.tr?infer(S.tr):null, act=st.open?(trf?(AD.main.a.id===trf.id?AD.main.a:AD.main.b):wind):null;
+  const evF=evalOne(e,"fi"), evS=evalOne(e,"solo"), w=evF.w, wind=(e.wind&&!e.wind.vrb&&Math.max(e.wind.spd,e.wind.gst||0)>=3)?w.end:null, live=S.tr?infer(S.tr):null, trf=rwMem(live), act=st.open?(trf?(ends().find(x=>x.id===trf.id)||wind):wind):null;
   let rt;
   if(!st.open) rt=`<div class="sign dim">—</div><div class="rt"><b>${AD.other?"De noche":"Aeródromo cerrado"}</b><span>${AD.other?"Es de noche: los vuelos de la escuela son de día":st.st==="night"?"Es de noche: el civil abre de día (orto–ocaso)":"Aún no ha abierto"}</span>${wind?`<span>Por viento sería la <b>${wind.id}</b></span>`:""}</div>`;
-  else if(trf) rt=`<div class="sign">${trf.id}</div><div class="rt"><b>En uso según el tráfico</b><span>${trf.n} ${trf.n>1?"aviones alineados":"avión alineado"} con la pista (ADS-B)</span>${wind?`<span>Por viento: <b>${wind.id}</b> · cara ${Math.round(w.head)} kt · cruzado ${Math.round(w.cross)} kt</span>`:""}</div>`;
+  else if(trf) rt=`<div class="sign${trf.live?"":" est"}">${trf.id}</div><div class="rt"><b>${trf.live?"En uso según el tráfico":"En uso hace poco"}</b><span>${trf.live?trf.n+" "+(trf.n>1?"aviones alineados":"avión alineado")+" con la pista (ADS-B)":"Último avión alineado: hace "+(trf.ago<1?"menos de 1":trf.ago)+" min (ADS-B)"}</span>${wind?`<span>Por viento: <b>${wind.id}</b> · cara ${Math.round(w.head)} kt · cruzado ${Math.round(w.cross)} kt</span>`:""}</div>`;
   else if(wind) rt=`<div class="sign est">${wind.id}</div><div class="rt"><b>Estimada por el viento</b><span>No hay tráfico en la pista para saber la real</span><span>${w.head>=0?"Cara":"Cola"} <b>${Math.abs(Math.round(w.head))} kt</b> · cruzado <b>${Math.round(w.cross)} kt</b>${w.side?" por la "+w.side:""}</span></div>`;
   else rt=`<div class="sign dim">—</div><div class="rt"><b>Sin pista preferente</b><span>Viento flojo o variable (menos de 3 kt)</span></div>`;
   $("#opRwy",R).innerHTML=rt; drawMap(act);
@@ -282,7 +288,7 @@ function fill(){
    <tr><th>De cola</th><td><b>${Math.max(0,Math.round(-w.head))} kt</b></td>${cell(f1.tail,"≤ 5 kt",1)}${cell(f2.tail,"0 kt",1)}</tr>
    <tr><th>Temp.</th><td><b>${e.temp!=null?e.temp+" ºC":"—"}</b></td>${cell(tri(all(evF,"temp")),"≤ 32 · 35 · 35",1)}${cell(tri(all(evS,"temp")),"≤ 32 ºC",1)}</tr>
    <tr class="res"><th>¿Se puede?</th><td></td><td>${chips(evF)}</td><td>${chips(evS)}</td></tr></tbody></table>
-   <p class="nt">${open?"":(AD.other?"De noche: ":"Fuera de horario: ")+"el resto de límites no aplican. "}Aviones: Cruiser · C172 · Piper (SOP.4.1). Orientativo: decide el HT o el CFI.</p>`;
+   <p class="nt">${open?"":(AD.other?"De noche: ":"Fuera de horario: ")+"el resto de límites no aplican. "}Orientativo: decide el HT o el CFI.</p>`;
   const pe=$("#opPist",R); if(pe) pe.innerHTML=pistHTML(e);
   const ts=$("#opTrSt",R); if(ts) ts.textContent=S.tr?("✈ "+S.tr.length+" aviones · ADS-B · "+fz(S.trAt)+" Z"):"ADS-B no disponible";
 }
@@ -293,7 +299,7 @@ function pistHTML(e){
   const body=rows.map(x=>{ const hc=calm?"":(x.hd>=0?"g":(-x.hd>MIN.tailFi?"r":"a")), cc=calm?"":(x.cr<=12?"g":x.cr<=15?"a":"r");
     return `<tr class="${best&&best.r.id===x.r.id?"best":""}"><th><span class="sign sm">${x.r.id}</span></th><td>${x.r.hdg}º</td><td>${x.r.len} m<small>${x.r.surf}</small></td><td class="lim ${hc}">${calm?"—":Math.abs(Math.round(x.hd))+" kt"}<small>${calm?"":x.hd>=0?"de cara":"de cola"}</small></td><td class="lim ${cc}">${calm?"—":Math.round(x.cr)+" kt"}<small>${calm?"":"por la "+x.side}</small></td></tr>`; }).join("");
   let h=`<table class="tbl pst"><thead><tr><th>Pista</th><th>Rumbo</th><th>Longitud</th><th>Viento</th><th>Cruzado</th></tr></thead><tbody>${body}</tbody></table>
-   <p class="src">Con el viento del último METAR${w&&w.gst?" (con rachas)":""}. Cruzado: verde ≤ 12 kt (Cruiser), ámbar ≤ 15 (C172 y Piper), rojo más. Cola: ámbar hasta 5 kt, rojo más.${AD.other?" Longitudes y umbrales de OurAirports (no oficial); el rumbo es el número de pista × 10. Confirma en la AIP.":""}</p>`;
+   ${AD.other?'<p class="src">Datos de OurAirports (no oficial): confirma en la AIP.</p>':""}`;
   if(!AD.other){ const A=AD.main; h+=`<div class="hs">Distancias declaradas · AIP</div><table class="tbl rw"><thead><tr><th></th><th><span class="sign sm">${A.a.id}</span></th><th><span class="sign sm">${A.b.id}</span></th></tr></thead><tbody>
       <tr><th>Elevación umbral</th><td>${A.a.el} ft</td><td>${A.b.el} ft</td></tr><tr><th>TORA</th><td>${A.a.tora} m</td><td>${A.b.tora} m</td></tr><tr><th>TODA</th><td>${A.a.toda} m</td><td>${A.b.toda} m</td></tr><tr><th>ASDA</th><td>${A.a.asda} m</td><td>${A.b.asda} m</td></tr><tr><th>LDA</th><td>${A.a.lda} m</td><td>${A.b.lda} m</td></tr><tr><th>Zona de parada</th><td>${A.a.swy} m</td><td>${A.b.swy} m</td></tr></tbody></table>`; }
   return h; }
@@ -312,24 +318,55 @@ function skyAt(date){
 const cl01=x=>Math.max(0,Math.min(1,x)), lerp=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t)), rgb=c=>"rgb("+c.join(",")+")";
 function moonSVG(p){ const r=18, q=p<0.5?p:1-p, k=Math.cos(2*Math.PI*q), rx=(Math.abs(k)*r).toFixed(2);
   return `<svg viewBox="0 0 40 40" width="40" height="40"><circle cx="20" cy="20" r="${r}" fill="#2B3350"/><g${p<0.5?"":' transform="translate(40 0) scale(-1 1)"'}><path d="M20 2A${r} ${r} 0 0 1 20 38A${rx} ${r} 0 0 ${k>0?0:1} 20 2Z" fill="#F4F1DE"/></g><circle cx="20" cy="20" r="${r}" fill="none" stroke="rgba(255,255,255,.25)"/></svg>`; }
+/* ---------- tiempo en la cabecera (como Windy): las nubes del METAR pasan por delante del sol y la luna; lluvia, nieve, niebla y tormenta ---------- */
+const CLD=[[8,30,150,70],[62,12,130,90],[34,48,170,64],[84,40,140,80],[20,6,120,100],[50,30,160,76],[72,2,150,84],[92,16,110,96],[2,52,130,88],[44,0,140,110]];
+const CSVG='<svg viewBox="0 0 120 50"><g fill="currentColor"><ellipse cx="35" cy="32" rx="30" ry="14"/><ellipse cx="62" cy="22" rx="26" ry="16"/><ellipse cx="90" cy="33" rx="27" ry="13"/><rect x="35" y="30" width="55" height="16" rx="8"/></g></svg>';
+function wxOf(m){
+  const o={cov:0,rain:0,snow:0,fog:0,ts:0,dark:0};
+  if(!m) return o;
+  const cs=m.clouds||[]; o.cov=m.cavok?0:cs.reduce((a,c)=>Math.max(a,c.t==="FEW"?0.2:c.t==="SCT"?0.45:c.t==="BKN"?0.75:1),0);
+  if(cs.some(c=>c.cb)) o.dark=1;
+  (m.wx||[]).forEach(w=>{ const k=w[0]==="+"?1:w[0]==="-"?0.45:0.75;
+    if(/SN|SG|PL|GS/.test(w)) o.snow=Math.max(o.snow,k);
+    else if(/RA|DZ|GR/.test(w)) o.rain=Math.max(o.rain,/DZ/.test(w)?0.35:k);
+    if(/TS/.test(w)){ o.ts=1; o.dark=1; o.rain=Math.max(o.rain,0.6); }
+    if(/FG|FZFG/.test(w)) o.fog=Math.max(o.fog,0.85); else if(/BR|HZ|FU|DU|SA/.test(w)) o.fog=Math.max(o.fog,0.35); });
+  if(m.vis!=null&&m.vis<1000) o.fog=Math.max(o.fog,0.85);
+  if(o.rain||o.snow) o.cov=Math.max(o.cov,0.9);
+  return o;
+}
+function skyWx(){
+  const R=S.root, w=R&&$("#opWx",R); if(!w) return;
+  const x=wxOf(S.data&&S.data.m); S.skyW=x;
+  const n=x.cov>=0.95?9:x.cov>=0.7?7:x.cov>=0.4?4:x.cov>0?2:0, ord=[0,1,2,3,4,5,6,7,8,9], key=[n,x.rain,x.snow,x.fog,x.ts].join();
+  if(w.dataset.k===key){ skyUpdate(); return; } w.dataset.k=key;
+  w.innerHTML=ord.slice(0,n).map(i=>{ const c=CLD[i]; return `<div class="cd" style="left:${c[0]}%;top:${c[1]}%;width:${c[2]}px;animation-duration:${c[3]}s;animation-delay:-${(i*13)%c[3]}s">${CSVG}</div>`; }).join("")
+    +'<div class="veil"></div>'+(x.fog?'<div class="fog"></div>':"")+(x.snow?'<div class="snow"></div>':"")+(x.rain?'<div class="rain"></div>':"")+(x.ts?'<div class="fl"></div>':"");
+  skyUpdate();
+}
 function skyUpdate(){
   const R=S.root, sk=R&&$("#opSky",R); if(!sk) return;
   const k=skyAt(new Date()), alt=k.sun.alt, t=cl01((alt+12)/24), warm=cl01(1-Math.abs(alt-1)/9);
   let top=lerp([6,10,26],[120,184,240],t), bot=lerp([18,28,58],[214,236,252],t);
   top=lerp(top,[64,56,104],warm*0.55); bot=lerp(bot,[236,132,74],warm*0.9);
+  const W=S.skyW||{cov:0,rain:0,snow:0,fog:0,ts:0,dark:0}, gc=lerp([30,36,48],[150,160,172],t), wet=Math.max(W.rain,W.snow*0.6,W.dark);
+  top=lerp(top,gc,W.cov*(0.55+0.25*wet)); bot=lerp(bot,gc,W.cov*(0.5+0.3*wet));
+  const cc=lerp(lerp([78,88,108],[248,250,253],t),[92,100,114],Math.min(1,wet*0.65+(W.cov>=0.95?0.15:0)));
+  const vl=Math.max(0,W.cov-0.7)*1.6, dim=Math.max(0.12,(1-vl*1.1)*(1-0.6*W.fog));
+  sk.style.setProperty("--cc",rgb(cc)); sk.style.setProperty("--vl",vl.toFixed(2)); sk.style.setProperty("--ra",W.rain.toFixed(2)); sk.style.setProperty("--sn",W.snow.toFixed(2)); sk.style.setProperty("--fg",W.fog.toFixed(2));
   sk.style.background="linear-gradient(180deg,"+rgb(top)+","+rgb(bot)+")";
   const lum=(0.299*(top[0]+bot[0])+0.587*(top[1]+bot[1])+0.114*(top[2]+bot[2]))/510; $("#opTop",R).classList.toggle("lt",lum>0.6);
   sk.style.setProperty("--st",cl01(1-(alt+3)/14).toFixed(2));
   const place=(el,a,op)=>{ el.style.left=Math.max(5,Math.min(95,50+a.az/110*44))+"%"; el.style.bottom=Math.max(-20,a.alt/70*70)+"%"; el.style.opacity=(op*cl01((a.alt+4)/6)).toFixed(2); };
   const sun=$("#opSun",R), moon=$("#opMoon",R);
-  place(sun,k.sun,1); sun.style.background="radial-gradient(circle,"+(warm>0.25?"#FFE2A8":"#FFF6C8")+" 0,#FFC400 55%,rgba(255,196,0,.0) 72%)";
-  place(moon,k.moon,lum>0.6?0.35:1); moon.innerHTML=moonSVG(k.moon.ph);
+  place(sun,k.sun,dim); sun.style.background="radial-gradient(circle,"+(warm>0.25?"#FFE2A8":"#FFF6C8")+" 0,#FFC400 55%,rgba(255,196,0,.0) 72%)";
+  place(moon,k.moon,(lum>0.6?0.35:1)*dim); moon.innerHTML=moonSVG(k.moon.ph);
 }
 function clock(){ const R=S.root; if(!R) return; const n=new Date(), z=$("#opZ",R), dd=$("#opD",R); if(z) z.textContent=pad(n.getUTCHours())+":"+pad(n.getUTCMinutes()); if(dd) dd.textContent=dayZ(n); skyUpdate(); }
 function setData(raw){
   const m=parseMetar(raw.metar.raw), tp=raw.taf?parseTaf(raw.taf.raw):null;
   S.data={m,tp,hist:raw.metar.hist||null,metar:raw.metar.raw,taf:raw.taf?raw.taf.raw:"",mSt:raw.metar.station,mKm:raw.metar.km||0,tKm:raw.taf?raw.taf.km||0:0,obs:obsDate(m,new Date()),demo:!!raw.demo};
-  const er=$("#opErr",S.root); if(er) er.hidden=true; fill();
+  const er=$("#opErr",S.root); if(er) er.hidden=true; fill(); skyWx();
 }
 function load(){
   const f0=S.opt&&S.opt.fetchWx, R=S.root, g=S.gen, f=f0&&(()=>f0(S.opt.multi?AD.icao:undefined));
@@ -531,6 +568,20 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .sk .orb{position:absolute;width:46px;height:46px;margin:0 0 -23px -23px;border-radius:50%;transition:left 10s linear,bottom 10s linear,opacity 1s}
 .op .sk .orb.moon{width:40px;height:40px;margin:0 0 -20px -20px;box-shadow:0 0 18px rgba(244,241,222,.35)}
 .op .sk .orb.sun{box-shadow:0 0 26px 6px rgba(255,196,0,.35)}
+.op .sk .wx{position:absolute;inset:0}
+.op .sk .cd{position:absolute;color:var(--cc,#fff);opacity:.93;animation:opdrift linear infinite alternate;transition:color 1s}
+.op .sk .cd svg{display:block;width:100%;height:auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.14))}
+@keyframes opdrift{from{transform:translateX(-16%)}to{transform:translateX(16%)}}
+.op .sk .veil{position:absolute;inset:0;background:var(--cc,#fff);opacity:var(--vl,0);transition:opacity 1s}
+.op .sk .rain,.op .sk .snow,.op .sk .fog,.op .sk .fl{position:absolute;inset:0}
+.op .sk .rain{opacity:var(--ra,0);background:linear-gradient(100deg,transparent 47%,rgba(200,222,250,.75) 50%,transparent 53%) 0 0/13px 24px;animation:oprain .55s linear infinite}
+@keyframes oprain{to{background-position:-5px 24px}}
+.op .sk .snow{opacity:var(--sn,0);background:radial-gradient(circle,#fff 0 1.6px,transparent 2.2px) 0 0/21px 21px,radial-gradient(circle,rgba(255,255,255,.8) 0 1.2px,transparent 1.8px) 10px 7px/17px 17px;animation:opsnow 4s linear infinite}
+@keyframes opsnow{to{background-position:6px 21px,14px 24px}}
+.op .sk .fog{opacity:var(--fg,0);background:linear-gradient(0deg,var(--cc,#dde3ea),transparent 92%)}
+.op .sk .fl{background:#fff;opacity:0;animation:opfl 7s infinite}
+@keyframes opfl{0%,91%,95%,100%{opacity:0}92%{opacity:.7}93%{opacity:.05}94%{opacity:.5}}
+@media (prefers-reduced-motion:reduce){.op .sk .cd,.op .sk .rain,.op .sk .snow,.op .sk .fl{animation:none}}
 .op .op-top.lt{color:#0E2233}
 .op .op-top.lt .idsel span,.op .op-top.lt .id span,.op .op-top.lt .tm small{color:#33506A}
 .op .op-top.lt .idsel b i{color:#B36B00}
@@ -600,7 +651,7 @@ S.rad={a:0,s:1};
 const aipLink=()=>"https://aip.enaire.es/AIP/#"+(AD.other?AD.icao:"LECU/LEVS");
 function radHTML(cls){
   const mt=S.opt&&S.opt.multi?' data-t="res map"':"";
-  if(AD.other) return `<section class="pn rad-na ${cls}"${mt}><h2>Frecuencias <small><a target="_blank" rel="noopener" href="${aipLink()}">AIP ↗</a></small></h2><div class="bd"><p class="src" style="margin:0">Consulta las frecuencias de ${AD.icao} en la AIP.</p></div></section>`;
+  if(AD.other) return `<section class="pn rad-na ${cls}"${mt}><h2>Frecuencias <small><a target="_blank" rel="noopener" href="${aipLink()}">Ver en la AIP ↗</a></small></h2></section>`;
   const a=FQ[S.rad.a], b=FQ[S.rad.s];
   return `<section class="rad ${cls}"${mt} aria-label="Frecuencias de Cuatro Vientos"><div class="rh"><span>COM · LECU</span><a target="_blank" rel="noopener" href="${aipLink()}">AIP ↗</a></div>
    <div class="lcd"><div class="scr"><small>ACTIVA</small><b>${a[1]}</b><i>${a[0]} · ${a[2]}</i></div><button type="button" class="flip" aria-label="Intercambiar activa y en espera" title="Intercambiar">⇄</button><div class="scr st"><small>EN ESPERA</small><b>${b[1]}</b><i>${b[0]} · ${b[2]}</i></div></div>
@@ -615,7 +666,7 @@ const TABS=[["res","Resumen"],["pist","Pistas"],["wx","METAR · TAF"],["map","Ma
 function ddHTML(){
   const here=[AD0.lat,AD0.lon], L=[{icao:"LECU",name:"Cuatro Vientos",lat:AD0.lat,lon:AD0.lon,tm:""}].concat(AEROS).sort((x,y)=>x.name.localeCompare(y.name,"es"));
   return `<div class="gp">`+L.map(o=>{ const d=o.icao==="LECU"?"":kmN(here,[o.lat,o.lon])+" NM"; return `<button type="button" class="ar${o.icao===AD.icao?" sel":""}" data-ic="${o.icao}"><b>${o.icao}</b><span>${o.name}</span><em>${d}${o.tm?(d?" · ":"")+o.tm:""}</em></button>`; }).join("")+"</div>"
-   +'<p class="src dn">Por orden alfabético. Distancia en línea recta desde LECU y duración de la travesía según el Reglamento de vuelos (2019). Datos de pistas de OurAirports (no oficial).</p>';
+   ;
 }
 function showTab(t){
   S.tab=t; const R=S.root; if(!R) return;
@@ -625,11 +676,11 @@ function showTab(t){
 }
 function pick(ic){ const o=ic==="LECU"?null:AEROS.find(x=>x.icao===ic); AD=o?mkAD(o):AD0; S.data=null; S.tr=null; S.act=null; render(S.root,S.opt,true); }
 function render(el,opt,keep){
-  S.opt=opt||{}; S.root=el; S.tr=null; S.trAt=null; S.gen++;
+  S.opt=opt||{}; S.root=el; S.tr=null; S.trAt=null; S.skyW=null; S.gen++;
   const mu=!!S.opt.multi; if(!keep){ AD=AD0; S.tab="res"; }
   const A=AD0.main, wy=wyUrl(), ww=AD.lat.toFixed(3)+"/"+AD.lon.toFixed(3), tb=mu?S.tab||"res":null;
   el.innerHTML=`<style>${CSS}</style><div class="op">
-   <header class="op-top${mu?" skyh":""}" id="opTop">${mu?`<div class="sk" id="opSky" aria-hidden="true">${STARS}<div class="orb sun" id="opSun"></div><div class="orb moon" id="opMoon"></div></div>`:""}<div class="id">${mu?`<button type="button" class="idsel" id="opSel" aria-expanded="false" aria-controls="opDD"><b>${AD.icao}<i>▾</i></b><span>${AD.name}</span></button>`:`<b>${AD.icao}</b><span>${AD.name}</span>`}</div><div class="ad closed" id="opAd"><b>AD</b><small>…</small></div><div class="cat" id="opCat"><b>—</b><small>cargando</small></div><div class="tm"><small>HORA UTC (Z)</small><div><b id="opZ">--:--</b><b><i id="opD"></i></b></div></div></header>
+   <header class="op-top${mu?" skyh":""}" id="opTop">${mu?`<div class="sk" id="opSky" aria-hidden="true">${STARS}<div class="orb sun" id="opSun"></div><div class="orb moon" id="opMoon"></div><div class="wx" id="opWx"></div></div>`:""}<div class="id">${mu?`<button type="button" class="idsel" id="opSel" aria-expanded="false" aria-controls="opDD"><b>${AD.icao}<i>▾</i></b><span>${AD.name}</span></button>`:`<b>${AD.icao}</b><span>${AD.name}</span>`}</div><div class="ad closed" id="opAd"><b>AD</b><small>…</small></div><div class="cat" id="opCat"><b>—</b><small>cargando</small></div><div class="tm"><small>HORA UTC (Z)</small><div><b id="opZ">--:--</b><b><i id="opD"></i></b></div></div></header>
    ${mu?`<div class="op-dd" id="opDD" hidden>${ddHTML()}</div>`:""}
    <div class="op-sub" id="opSub"><span>Cargando METAR y TAF…</span></div>
    <div class="op-err" id="opErr" hidden><span><b>No se han podido cargar el METAR y el TAF.</b> Consulta la AEMET.</span><a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET</a>${S.opt.allowDemo?'<button type="button" id="opDemo">Ver con datos de ejemplo</button>':""}</div>
@@ -657,7 +708,7 @@ function render(el,opt,keep){
     <section class="pn" data-t="res"><h2>Mínimos de la escuela <small>SOP.4.1</small></h2><div class="bd" id="opMin"></div></section>
     <section class="pn" data-t="wx"><h2>Viento y tiempo <small><a href="https://www.windy.com/${ww}?wind,8" target="_blank" rel="noopener">Windy ↗</a></small></h2><div class="op-wy"><iframe title="Mapa de viento Windy" src="${wy}" referrerpolicy="no-referrer" allow="fullscreen" loading="lazy"></iframe></div></section>
     ${radHTML("rad-m")}
-    <p class="op-note">Herramienta de estudio, no para planificar un vuelo real. Fuentes oficiales: <a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET</a> · <a target="_blank" rel="noopener" href="https://insignia.enaire.es/">NOTAM e Insignia (ENAIRE)</a> · <a target="_blank" rel="noopener" href="https://www.flightradar24.com/${AD.lat.toFixed(2)},${AD.lon.toFixed(2)}/12">FlightRadar24</a> · <a target="_blank" rel="noopener" href="https://www.windy.com/${ww}?wind,8">Windy</a>. Horas en UTC (Z).</p>
+    <p class="op-note"><a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET</a> · <a target="_blank" rel="noopener" href="https://www.flightradar24.com/${AD.lat.toFixed(2)},${AD.lon.toFixed(2)}/12">FlightRadar24</a></p>
    </div></div>`;
   el.onclick=ev=>{
     if(ev.target.closest("#opDemo")){ S.opt.fetchWx=null; setData(demoData(S.scen)); return; }
@@ -674,8 +725,8 @@ function render(el,opt,keep){
   if(mu) showTab(tb);
   initMap(); load(); loadTr(); clock();
   clearInterval(S.clk); S.clk=setInterval(clock,10000); clearInterval(S.t); S.t=setInterval(()=>{ if(S.opt.fetchWx) load(); else if(S.data) fill(); },5*60000);
-  clearInterval(S.tt); S.tt=setInterval(loadTr,12000);
+  clearInterval(S.tt); S.tt=setInterval(()=>{ if(!document.hidden) loadTr(); },20000);
 }
 function leave(){ clearInterval(S.clk); clearInterval(S.t); clearInterval(S.tt); try{ if(S.map) S.map.remove(); }catch(e){} S.map=null; S.lay=null; S.trl=null; S.tile=null; S.img=null; S.imgO=null; if(S.root) S.root.innerHTML=""; S.root=null; }
-window.F0Ops={render,leave,_t:{skyAt,parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
+window.F0Ops={render,leave,_t:{skyAt,wxOf,parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
 })();
