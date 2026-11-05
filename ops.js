@@ -142,11 +142,62 @@ function demoData(i){
 
 /* ---------- horario del aeródromo (AIP: civil V 07:00 Z–ocaso, I 08:00 Z–ocaso) ---------- */
 function madOff(d){ const h=+new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Madrid",hour:"numeric",hourCycle:"h23"}).format(d); return (h-d.getUTCHours()+24)%24; }
+/* Horarios AD 2.3 de la AIP (hora UTC). V = verano (horario de verano UE), I = invierno.
+   s/w: {"días ISO 1=lun…7=dom": [[abre,cierra],…]} con HHMM; "SS" = ocaso. x/xs: temporada especial (LERJ).
+   Solo uso/horario del aeródromo (no ATS aparte). Festivos no se calculan (se avisa en la nota). Sin entrada = sin horario en la AIP. */
+const ALL="1-7", WK="1-5";
+const HRS={
+ LEVD:{s:{[WK]:[[600,1915]],"6-7":[[630,1830]]},w:{[WK]:[[700,2015]],"6-7":[[730,1930]]},n:"Festivos: como sábado y domingo"},
+ LEBG:{s:{1:[[600,1800]],2:[[730,1700]],3:[[730,1700]],4:[[600,1800]],5:[[730,1700]],6:[[730,1630]],7:[[730,1700]]},w:{1:[[700,1900]],2:[[830,1800]],3:[[830,1800]],4:[[700,1900]],5:[[830,1800]],6:[[830,1730]],7:[[830,1800]]},n:"Uso público L-V 08:30–16:00 Z (verano); el resto es uso restringido (sin comercial)"},
+ LESA:{s:{[ALL]:[[800,1900]]},w:{[ALL]:[[730,1630]]},n:"Aeródromo militar: tráfico civil limitado (AIP, apartado 20)"},
+ LEAB:{s:{[ALL]:[[700,1230]]},w:{[ALL]:[[800,1330]]},n:"Base militar: civil solo VFR y con autorización previa (48 h)"},
+ LEBA:{s:{[ALL]:[[700,1800]]},w:{[ALL]:[[830,1930]]},n:"AFIS solo L-V (3 h/día): fuera, consulta NOTAM"},
+ LEBZ:{s:{[ALL]:[[630,1815]]},w:{[ALL]:[[730,1915]]}},
+ LETL:{s:{[WK]:[[630,1630]]},w:{[WK]:[[800,1600]]},n:"Cerrado festivos de Aragón; resto con petición 24 h"},
+ LELN:{s:{[ALL]:[[730,1900]]},w:{[ALL]:[[830,2000]]}},
+ LELO:{s:{[WK]:[[525,2000]],6:[[630,1730]],7:[[830,1315],[1415,1930]]},w:{[WK]:[[625,2100]],6:[[730,1830]],7:[[930,1415],[1515,2030]]},
+   x:d=>{ const y=d.getUTCFullYear(), sat=(m,k)=>{ const e=new Date(Date.UTC(y,m+1,0)); e.setUTCDate(e.getUTCDate()-((e.getUTCDay()+1)%7)-7*k); return e; }, a=sat(6,1), b=new Date(Date.UTC(y,8,1)); b.setUTCDate(1+((7-b.getUTCDay())%7)); return d>=a&&d<=b; },
+   xs:{[WK]:[[630,1700]],6:[[630,1730]],7:[[830,1100],[1200,1830]]},n:"Uso restringido (sin IFR ni comercial) amplía el horario público"},
+ LESO:{s:{[ALL]:[[530,1945]]},w:{[ALL]:[[630,2045]]},n:"PPR solo aviación comercial"},
+ LEGR:{s:{[ALL]:[[430,2115]]},w:{[ALL]:[[530,2215]]}},
+ LEZL:{s:{[ALL]:[[430,2300]]},w:{[ALL]:[[530,2400]]}},
+ LELC:{s:{[WK]:[[530,2030]],"6-7":[[630,2030]]},w:{[WK]:[[630,2130]],"6-7":[[730,2130]]},mil:1,n:"Base militar: la AIP indica que NO está disponible para aeronaves civiles"},
+ LEPP:{s:{[ALL]:[[430,2145]]},w:{[ALL]:[[530,2245]]}},
+ LEXJ:{s:{[ALL]:[[430,2100]]},w:{[ALL]:[[530,2200]]}},
+ LEAS:{s:{[ALL]:[[440,2330]]},w:{[ALL]:[[540,2315]]}},
+ LECH:{s:{[ALL]:[[600,1800]]},w:{[ALL]:[[700,1900]]},n:"Uso público (+2 h con PPR); el uso restringido llega hasta el ocaso"},
+ LEAM:{s:{[ALL]:[[510,2045]]},w:{[ALL]:[[610,2145]]}},
+ LEJR:{s:{[ALL]:[[445,2100]]},w:{[ALL]:[[545,2200]]}},
+ LELL:{s:{[ALL]:[[700,"SS"]]},w:{[ALL]:[[800,"SS"]]}}
+};
+const DOW=["dom","lun","mar","mié","jue","vie","sáb"];
+function hrsExpand(t){ const o={}; for(const k in t){ const q=String(k).split("-").map(Number); for(let d=q[0];d<=(q[1]||q[0]);d++) o[d]=t[k]; } return o; }
+function hrsIntervals(h,now){
+  const out=[];
+  for(let k=-1;k<=8;k++){
+    const base=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()+k)), wd=base.getUTCDay()||7, sm=madOff(new Date(base.getTime()+12*36e5))===2;
+    const tb=hrsExpand(h.x&&h.x(base)?h.xs:(sm?h.s:h.w))[wd]||[];
+    tb.forEach(q=>{ const t=n=>new Date(base.getTime()+(Math.floor(n/100)*60+n%100)*6e4); const a=t(q[0]), b=q[1]==="SS"?sunAt(base,false,90.833):t(q[1]); if(b&&b>a) out.push([a,b]); });
+  }
+  out.sort((x,y)=>x[0]-y[0]); const m=[];
+  out.forEach(x=>{ const l=m[m.length-1]; if(l&&x[0]<=l[1]) l[1]=new Date(Math.max(l[1],x[1])); else m.push([x[0],x[1]]); });
+  return m;
+}
+function hrsToday(iv,now){ const a=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()), b=a+864e5;
+  return iv.filter(x=>x[0]<b&&x[1]>a).map(x=>(x[0]<a?"00:00":fz(x[0]))+"–"+(x[1]>=b?"24:00":fz(x[1]))).join(" · "); }
+const fz24=d=>d&&d.getUTCHours()===0&&d.getUTCMinutes()===0?"24:00":fz(d);
+const fday=(d,now)=>d.getUTCDate()===now.getUTCDate()&&d.getUTCMonth()===now.getUTCMonth()?"":DOW[d.getUTCDay()]+" ";
 function adState(now){
-  if(AD.other){ const sn=sun(now), day=!!(sn.rise&&sn.set&&now>=sn.rise&&now<sn.set); return {st:day?"open":"night",open:day,set:sn.set,rise:sn.rise,openAt:sn.rise,day:true}; }
-  const sn=sun(now), summer=madOff(now)===2, oh=summer?7:8, op=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),oh,0));
+  const sn=sun(now), day=!!(sn.rise&&sn.set&&now>=sn.rise&&now<sn.set);
+  if(AD.other){
+    const h=HRS[AD.icao];
+    if(!h) return {st:day?"open":"night",open:day,adOpen:null,unk:true,day,set:sn.set,rise:sn.rise,openAt:sn.rise};
+    const iv=hrsIntervals(h,now), cur=iv.find(x=>now>=x[0]&&now<x[1]), nx=iv.find(x=>x[0]>now), ad=!!cur, open=ad&&day;
+    return {st:open?"open":ad?"night":"closed",open,adOpen:ad,day,set:sn.set,rise:sn.rise,chg:cur?cur[1]:(nx?nx[0]:null),openAt:nx?nx[0]:null,today:hrsToday(iv,now),sched:madOff(now)===2?"V":"I",h};
+  }
+  const summer=madOff(now)===2, oh=summer?7:8, op=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),oh,0));
   const st=now<op?"pre":(sn.set&&now>sn.set?"night":"open");
-  return {st,open:st==="open",openAt:op,set:sn.set,rise:sn.rise,sched:summer?"V":"I"};
+  return {st,open:st==="open",adOpen:st==="open",day:true,openAt:op,set:sn.set,rise:sn.rise,sched:summer?"V":"I"};
 }
 
 /* ---------- textos ---------- */
@@ -255,11 +306,12 @@ function wrow(c,txt,age){ return `<div class="wr"><span class="cc ${c}">${c}</sp
 function tile(h,b,s,x,c){ return `<div class="tl ${c||""}"><small>${h}</small>${x||""}<b>${b}</b>${s?`<span>${s}</span>`:""}</div>`; }
 function fill(){
   const d=S.data, R=S.root; if(!d||!R) return; const now=new Date(), e=d.m, cat=flightCat(e), st=adState(now);
-  $("#opAd",R).className="ad "+(st.open?"open":"closed"); $("#opAd",R).innerHTML=AD.other?(st.open?`<b>DE DÍA</b><small>ocaso ${fz(st.set)} Z</small>`:`<b>DE NOCHE</b><small>orto ${fz(st.rise)} Z</small>`):st.open?`<b>AD ABIERTO</b><small>hasta el ocaso · ${fz(st.set)} Z</small>`:`<b>AD CERRADO</b><small>${st.st==="night"?"noche · ocaso "+fz(st.set)+" Z":"abre "+fz(st.openAt)+" Z"}</small>`;
-  const cb=$("#opCat",R); cb.hidden=!st.open; cb.className="cat "+cat; cb.innerHTML="<b>"+cat+"</b><small>"+CATT[cat]+"</small>"; $("#opTop",R).classList.toggle("cl",!st.open);
+  $("#opAd",R).className="ad "+(st.unk?"unk":st.adOpen?"open":"closed");
+  $("#opAd",R).innerHTML=AD.other?(st.unk?`<b>HORARIO ?</b><small>no consta en la AIP</small>`:st.adOpen?`<b>AD ABIERTO</b><small>${st.h&&st.h.mil?"militar · ":""}hasta ${fz24(st.chg)} Z</small>`:`<b>AD CERRADO</b><small>${st.openAt?"abre "+fday(st.openAt,now)+fz(st.openAt)+" Z":"consulta NOTAM"}</small>`):st.open?`<b>AD ABIERTO</b><small>hasta el ocaso · ${fz(st.set)} Z</small>`:`<b>AD CERRADO</b><small>${st.st==="night"?"noche · ocaso "+fz(st.set)+" Z":"abre "+fz(st.openAt)+" Z"}</small>`;
+  const cb=$("#opCat",R); cb.hidden=false; cb.className="cat "+cat; cb.innerHTML="<b>"+cat+"</b><small>"+CATT[cat]+"</small>"; $("#opTop",R).classList.toggle("cl",AD.other?st.adOpen===false:!st.open);
   const age=d.obs?Math.round((now-d.obs)/60000):null;
   const nte=AD.other?(d.mSt&&d.mSt!==AD.icao?"No hay METAR de "+AD.name+": se usa "+d.mSt+(d.mKm?", a unos "+d.mKm+" km":""):""):(NOTE[d.mSt]||"");
-  $("#opSub",R).innerHTML=`${nte||d.demo?`<span class="${nte?"old":""}">${nte}${d.demo?' <b class="dm">DATOS DE EJEMPLO</b>':""}</span>`:""}`+(age==null?"":`<span class="${age>75?"old":""}">${age>75?"Dato antiguo · ":"Observado "}${age<1?"ahora":"hace "+age+" min"} · ${fz(d.obs)} Z</span>`)+`<span>☀ Orto ${fz(st.rise)} Z · Ocaso ${fz(st.set)} Z</span>`+((d.tp&&d.tp.station&&(AD.other?d.tp.station!==AD.icao:!/^(LECU|LEVS)$/.test(d.tp.station)))?`<span class="old">TAF de ${d.tp.station==="LEMD"?"Barajas (LEMD)":d.tp.station}${AD.other&&d.tKm?", a unos "+d.tKm+" km":""}</span>`:"");
+  $("#opSub",R).innerHTML=`${nte||d.demo?`<span class="${nte?"old":""}">${nte}${d.demo?' <b class="dm">DATOS DE EJEMPLO</b>':""}</span>`:""}`+(age==null?"":`<span class="${age>75?"old":""}">${age>75?"Dato antiguo · ":"Observado "}${age<1?"ahora":"hace "+age+" min"} · ${fz(d.obs)} Z</span>`)+`<span>☀ Orto ${fz(st.rise)} Z · Ocaso ${fz(st.set)} Z</span>`+(AD.other&&st.h?`<span>Horario AIP (${st.sched==="V"?"verano":"invierno"}) hoy: ${st.today||"cerrado"} Z</span>${st.h.n?`<span class="${st.h.mil?"old":""}">${st.h.n}</span>`:""}`:"")+(AD.other&&st.unk?`<span class="old">Sin horario publicado en la AIP: confirma por teléfono o NOTAM</span>`:"")+((d.tp&&d.tp.station&&(AD.other?d.tp.station!==AD.icao:!/^(LECU|LEVS)$/.test(d.tp.station)))?`<span class="old">TAF de ${d.tp.station==="LEMD"?"Barajas (LEMD)":d.tp.station}${AD.other&&d.tKm?", a unos "+d.tKm+" km":""}</span>`:"");
   // fichas compactas
   const ce=e.cavok?"CAVOK":e.ceil!=null?e.ceil.toLocaleString("es-ES")+" ft":((e.clouds&&e.clouds.length)?"Sin techo":"Despejado");
   $("#opTiles",R).innerHTML=tile("Viento",e.wind&&e.wind.spd===0&&!e.wind.gst?"Calma":(e.wind?(e.wind.vrb?"VRB":pad3(e.wind.dir)+"º")+" · "+e.wind.spd+" kt":"—"),e.wind&&e.wind.gst?"rachas "+e.wind.gst+" kt":(e.wind&&e.wind.var?"varía "+e.wind.var[0]+"–"+e.wind.var[1]+"º":""),wCompass(e.wind),"wd")
@@ -275,7 +327,7 @@ function fill(){
   // pista en uso
   const evF=evalOne(e,"fi"), evS=evalOne(e,"solo"), w=evF.w, wind=(e.wind&&!e.wind.vrb&&Math.max(e.wind.spd,e.wind.gst||0)>=3)?w.end:null, live=S.tr?infer(S.tr):null, trf=rwMem(live), act=st.open?(trf?(ends().find(x=>x.id===trf.id)||wind):wind):null;
   let rt;
-  if(!st.open) rt=`<div class="sign dim">—</div><div class="rt"><b>${AD.other?"De noche":"Aeródromo cerrado"}</b><span>${AD.other?"Es de noche: los vuelos de la escuela son de día":st.st==="night"?"Es de noche: el civil abre de día (orto–ocaso)":"Aún no ha abierto"}</span>${wind?`<span>Por viento sería la <b>${wind.id}</b></span>`:""}</div>`;
+  if(!st.open) rt=`<div class="sign dim">—</div><div class="rt"><b>${AD.other?(st.adOpen===false?"Aeródromo cerrado":"De noche"):"Aeródromo cerrado"}</b><span>${AD.other?(st.adOpen===false?(st.openAt?"Abre "+fday(st.openAt,now)+fz(st.openAt)+" Z (AIP)":"Consulta NOTAM"):"Está abierto, pero es de noche: los vuelos de la escuela son de día"):st.st==="night"?"Es de noche: el civil abre de día (orto–ocaso)":"Aún no ha abierto"}</span>${wind?`<span>Por viento sería la <b>${wind.id}</b></span>`:""}</div>`;
   else if(trf) rt=`<div class="sign${trf.live?"":" est"}">${trf.id}</div><div class="rt"><b>${trf.live?"En uso según el tráfico":"En uso hace poco"}</b><span>${trf.live?trf.n+" "+(trf.n>1?"aviones alineados":"avión alineado")+" con la pista (ADS-B)":"Último avión alineado: hace "+(trf.ago<1?"menos de 1":trf.ago)+" min (ADS-B)"}</span>${wind?`<span>Por viento: <b>${wind.id}</b> · cara ${Math.round(w.head)} kt · cruzado ${Math.round(w.cross)} kt</span>`:""}</div>`;
   else if(wind) rt=`<div class="sign est">${wind.id}</div><div class="rt"><b>Estimada por el viento</b><span>No hay tráfico en la pista para saber la real</span><span>${w.head>=0?"Cara":"Cola"} <b>${Math.abs(Math.round(w.head))} kt</b> · cruzado <b>${Math.round(w.cross)} kt</b>${w.side?" por la "+w.side:""}</span></div>`;
   else rt=`<div class="sign dim">—</div><div class="rt"><b>Sin pista preferente</b><span>Viento flojo o variable (menos de 3 kt)</span></div>`;
@@ -284,9 +336,9 @@ function fill(){
   const f1=evF.ac.cz.f, f2=evS.ac.cz.f, all=(ev,k)=>Object.keys(AC).map(a=>ev.ac[a].f[k]), open=st.open;
   const cell=(ok,txt,nn)=>`<td class="lim ${nn&&!open?"n":(ok===true?"g":ok===false?"r":"a")}">${txt}</td>`;
   const tri=arr=>arr.every(Boolean)?true:arr.some(Boolean)?null:false;
-  const chips=ev=>Object.keys(AC).map(k=>{ const s=open?ev.ac[k].s:"no", why=open?(ev.ac[k].why.join(" · ")||"Dentro de todos los mínimos"):"Aeródromo cerrado"; return `<span class="ac ${s}" title="${esc(why)}">${AC[k].c}</span>`; }).join("");
+  const chips=ev=>Object.keys(AC).map(k=>{ const s=open?ev.ac[k].s:"no", why=open?(ev.ac[k].why.join(" · ")||"Dentro de todos los mínimos"):(AD.other&&st.adOpen?"De noche":"Aeródromo cerrado"); return `<span class="ac ${s}" title="${esc(why)}">${AC[k].c}</span>`; }).join("");
   $("#opMin",R).innerHTML=`<table class="mn"><thead><tr><th></th><th>Ahora</th><th>Instructor</th><th>Solo</th></tr></thead><tbody>
-   <tr><th>Horario</th><td><b class="${open?"":"r"}">${open?"Día":"Noche"}</b></td>${cell(open,"de día")}${cell(open,"de día")}</tr>
+   <tr><th>Horario</th><td><b class="${open?"":"r"}">${open?"Día":(AD.other&&st.adOpen===false?"Cerrado":"Noche")}</b></td>${cell(open,"de día")}${cell(open,"de día")}</tr>
    <tr><th>Visibilidad</th><td><b>${visTxt(e.vis)}</b></td>${cell(f1.vis,"≥ 5 km",1)}${cell(f2.vis,"≥ 8 km",1)}</tr>
    <tr><th>Techo</th><td><b>${e.ceil==null?"Sin techo":e.ceil.toLocaleString("es-ES")+" ft"}</b></td>${cell(f1.cig,"≥ 1.500 ft",1)}${cell(f2.cig,"≥ 2.500 ft",1)}</tr>
    <tr><th>Cruzado</th><td><b>${Math.round(w.cross)} kt</b></td>${cell(tri(all(evF,"cross")),"≤ 12 · 15 · 15",1)}${cell(tri(all(evS,"cross")),"≤ 10 · 12 · 12",1)}</tr>
@@ -294,7 +346,7 @@ function fill(){
    <tr><th>De cola</th><td><b>${Math.max(0,Math.round(-w.head))} kt</b></td>${cell(f1.tail,"≤ 5 kt",1)}${cell(f2.tail,"0 kt",1)}</tr>
    <tr><th>Temp.</th><td><b>${e.temp!=null?e.temp+" ºC":"—"}</b></td>${cell(tri(all(evF,"temp")),"≤ 32 · 35 · 35",1)}${cell(tri(all(evS,"temp")),"≤ 32 ºC",1)}</tr>
    <tr class="res"><th>¿Se puede?</th><td></td><td>${chips(evF)}</td><td>${chips(evS)}</td></tr></tbody></table>
-   <p class="nt">${open?"":(AD.other?"De noche: ":"Fuera de horario: ")+"el resto de límites no aplican. "}Orientativo: decide el HT o el CFI.</p>`;
+   <p class="nt">${open?"":(AD.other&&st.adOpen?"De noche: ":"Fuera de horario: ")+"el resto de límites no aplican. "}Orientativo: decide el HT o el CFI.</p>`;
   const pe=$("#opPist",R); if(pe) pe.innerHTML=pistHTML(e);
   const ts=$("#opTrSt",R); if(ts) ts.textContent=S.tr?("✈ "+S.tr.length+" aviones · ADS-B · "+fz(S.trAt)+" Z"):"ADS-B no disponible";
 }
@@ -403,6 +455,7 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .cat.LIFR{background:var(--lifr)}
 .op .ad.open{background:#2D3640;border:1px solid #4B5663}
 .op .ad.closed{background:#8E1B1B;border:1px solid #D45A5A}
+.op .ad.unk{background:#4B5663;border:1px solid #7A8794}
 .op .op-top .tm{margin-left:auto;text-align:right}
 .op .op-top .tm small{display:block;font:600 11px Barlow,sans-serif;letter-spacing:.14em;color:#9AA5B1}
 .op .op-top .tm b{font:600 34px/1 "Barlow Condensed",Barlow,sans-serif;letter-spacing:.05em;font-variant-numeric:tabular-nums;color:var(--am)}
@@ -654,6 +707,7 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .op-top .id{grid-column:1}
 .op .op-top .tm{grid-column:2;grid-row:1;margin:0;justify-self:end}
 .op .op-top .ad,.op .op-top .cat{min-width:0}
+.op .op-top .ad b,.op .op-top .cat b{white-space:nowrap}
 .op .pn>h2{font-size:15px}
 .op .op-lbl span{font-size:13px}
 .op .tf,.op .mn,.op .tbl{font-size:13px!important}
@@ -682,7 +736,7 @@ const supEnd=d=>{ const m=/^(\d\d)\/(\d\d)\/(\d\d)$/.exec(d||""); return m?new D
 const supHTML=()=>{ const c=AD.chart, l=c&&c.sup; if(!l||!l.length) return ""; const now=Date.now(); return `<section class="pn sup" data-t="res pist map"><h2>Avisos de la AIP <small><a target="_blank" rel="noopener" href="${aipLink()}">Ver en la AIP ↗</a></small></h2><div class="bd">${l.map(x=>{ const e=supEnd(x[2]), late=e&&e.getTime()<now; return `<div class="su"><b>${esc(x[0])}</b><span>${esc(x[1])} → ${esc(x[2])} (est.)</span><p>${esc(x[3])}</p>${late?`<p class="sl">Fin estimado superado: sigue vigente hasta que lo cancele un NOTAM, SUP o enmienda AIP.</p>`:""}</div>`; }).join("")}</div></section>`; };
 const chartNote=()=>{ const c=AD.chart; return c?`<p class="src mapnote" id="opMapNote">Carta AIP ADC 1.1 · WEF ${c.wef} · © ENAIRE. ${c.nt?c.nt+" ":""}Colocada con los umbrales de la AIP: orientativa. Consulta la vigente en <a target="_blank" rel="noopener" href="${aipLink()}">Cartas AIP ↗</a></p>`:""; };
 const wyUrl=()=>"https://embed.windy.com/embed2.html?lat="+AD.lat.toFixed(3)+"&lon="+AD.lon.toFixed(3)+"&detailLat="+AD.lat.toFixed(3)+"&detailLon="+AD.lon.toFixed(3)+"&zoom=8&level=surface&overlay=wind&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1";
-const rwyNote=()=>AD.other?"La pista real la fija la torre o el AFIS. Aquí se deduce del tráfico ADS-B y, si no hay, del viento. Horario del aeródromo: consulta la AIP.":"La pista real la fija la torre o el ATIS (118.230). Aquí se deduce del tráfico ADS-B y, si no hay, del viento. AD civil: 08:00 Z-ocaso (invierno), 07:00 Z-ocaso (verano). Cerrado el primer domingo de mes (salvo enero y agosto).";
+const rwyNote=()=>AD.other?"La pista real la fija la torre o el AFIS. Aquí se deduce del tráfico ADS-B y, si no hay, del viento. Horario: AIP AD 2.3 (UTC); fuera de horario, PPR o NOTAM.":"La pista real la fija la torre o el ATIS (118.230). Aquí se deduce del tráfico ADS-B y, si no hay, del viento. AD civil: 08:00 Z-ocaso (invierno), 07:00 Z-ocaso (verano). Cerrado el primer domingo de mes (salvo enero y agosto).";
 const STARS=(()=>{ let x=7,o=""; const r=()=>(x=(x*9301+49297)%233280)/233280; for(let i=0;i<34;i++) o+=`<i class="star" style="left:${(r()*100).toFixed(1)}%;top:${(r()*80).toFixed(1)}%;width:${(1+r()*1.6).toFixed(1)}px;height:${(1+r()*1.6).toFixed(1)}px"></i>`; return o; })();
 /* ---------- NOTAM (pestaña): /api/notam → réplica de ENAIRE en FAA NOTAM Search ---------- */
 const NT_G=[["all","Todos"],["pist","Pista y rodaje"],["luz","Luces"],["ayu","Ayudas"],["proc","Procedimientos"],["esp","Espacio aéreo"],["obs","Obstáculos"],["otr","Otros"]];
