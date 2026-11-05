@@ -79,7 +79,7 @@ async function notams(icao) {
       const body = new URLSearchParams({ searchType: "0", designatorsForLocation: code, formatType: "ICAO", radius: "10", sortColumns: "5 false", sortDirection: "true", radiusSearchOnDesignator: "false", latitudeDirection: "N", longitudeDirection: "W", flightPathBuffer: "4", flightPathIncludeNavaids: "true", flightPathIncludeArtcc: "false", flightPathIncludeTfr: "true", flightPathIncludeRegulatory: "false", flightPathResultsType: "All NOTAMs", offset: String(off), notamsOnly: "false" });
       let j;
       try {
-        const r = await fetch(FAA, { method: "POST", body, headers: { "content-type": "application/x-www-form-urlencoded", "user-agent": "Mozilla/5.0 (compatible; atpl-fase0-ops/1.0)", "origin": "https://notams.aim.faa.gov", "referer": "https://notams.aim.faa.gov/notamSearch/", "accept": "application/json" } });
+        const r = await fetch(FAA, { method: "POST", body, headers: { "content-type": "application/x-www-form-urlencoded", "user-agent": "atpl-fase0-ops/1.0", "accept": "application/json" } });
         if (!r.ok) { NT_WHY = "http " + r.status + " " + (await r.text().catch(() => "")).slice(0, 160).replace(/\s+/g, " "); if (off === 0 && !seen.size) return null; break; }
         j = await r.json();
       } catch (e) { NT_WHY = "exc " + String(e).slice(0, 160); if (off === 0 && !seen.size) return null; break; }

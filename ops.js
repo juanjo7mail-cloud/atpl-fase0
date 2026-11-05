@@ -735,7 +735,7 @@ function render(el,opt,keep){
    ${mu?`<div class="op-dd" id="opDD" hidden>${ddHTML()}</div>`:""}
    <div class="op-sub" id="opSub"><span>Cargando METAR y TAF…</span></div>
    <div class="op-err" id="opErr" hidden><span><b>No se han podido cargar el METAR y el TAF.</b> Consulta la AEMET.</span><a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET</a>${S.opt.allowDemo?'<button type="button" id="opDemo">Ver con datos de ejemplo</button>':""}</div>
-   ${mu?`<nav class="op-tabs" id="opTabs" aria-label="Secciones">${TABS.map(t=>`<button type="button" data-tab="${t[0]}" class="${t[0]===tb?"on":""}" aria-selected="${t[0]===tb}">${t[1]}</button>`).join("")}<a target="_blank" rel="noopener" href="https://insignia.enaire.es/">Insignia ↗</a><a target="_blank" rel="noopener" href="https://www.windy.com/${ww}?webcams,${AD.lat.toFixed(3)},${AD.lon.toFixed(3)},11">Webcams ↗</a></nav>`:""}
+   ${mu?`<nav class="op-tabs" id="opTabs" aria-label="Secciones">${TABS.filter(t=>t[0]!=="ntm"||S.opt.fetchNt).map(t=>`<button type="button" data-tab="${t[0]}" class="${t[0]===tb?"on":""}" aria-selected="${t[0]===tb}">${t[1]}</button>`).join("")}<a target="_blank" rel="noopener" href="https://insignia.enaire.es/">Insignia ↗</a><a target="_blank" rel="noopener" href="https://www.windy.com/${ww}?webcams,${AD.lat.toFixed(3)},${AD.lon.toFixed(3)},11">Webcams ↗</a></nav>`:""}
    <div class="op-in">
     ${supHTML()}
     <section class="pn" data-t="res wx"><div class="bd"><div class="tiles strip" id="opTiles"></div>
@@ -757,7 +757,7 @@ function render(el,opt,keep){
       <tr><th>ASDA</th><td>${A.a.asda} m</td><td>${A.b.asda} m</td></tr>
       <tr><th>LDA</th><td>${A.a.lda} m</td><td>${A.b.lda} m</td></tr>
       <tr><th>Zona de parada</th><td>${A.a.swy} m</td><td>${A.b.swy} m</td></tr></tbody></table></div></section>`}
-    ${mu?`<section class="pn" data-t="ntm"><h2>NOTAM ${AD.icao} <small><a target="_blank" rel="noopener" href="https://insignia.enaire.es/">ENAIRE Insignia ↗</a></small></h2><div class="bd" id="opNt"></div></section>`:""}
+    ${mu&&S.opt.fetchNt?`<section class="pn" data-t="ntm"><h2>NOTAM ${AD.icao} <small><a target="_blank" rel="noopener" href="https://insignia.enaire.es/">ENAIRE Insignia ↗</a></small></h2><div class="bd" id="opNt"></div></section>`:""}
     <section class="pn" data-t="res"><h2>Mínimos de la escuela <small>SOP.4.1</small></h2><div class="bd" id="opMin"></div></section>
     <section class="pn" data-t="wx"><h2>Viento y tiempo <small><a href="https://www.windy.com/${ww}?wind,8" target="_blank" rel="noopener">Windy ↗</a></small></h2><div class="op-wy"><iframe title="Mapa de viento Windy" src="${wy}" referrerpolicy="no-referrer" allow="fullscreen" loading="lazy"></iframe></div></section>
     ${radHTML("rad-m")}
