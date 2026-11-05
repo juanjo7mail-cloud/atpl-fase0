@@ -442,11 +442,31 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .wr em{flex:none;font-style:normal;font-size:12.5px;color:var(--mu);margin-top:3px}
 .op .wl .auto{font-size:12.5px;color:var(--mu);padding:4px 0}
 .op .wr .wt:not(:has(.k)){font-family:Barlow,system-ui,sans-serif;font-size:14.5px}
-.op .frs{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
-.op .fp{display:inline-flex;gap:6px;align-items:baseline}
-.op .fp small{font:600 11px Barlow,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}
-.op .fp b{font:700 17px "Barlow Condensed",Barlow,sans-serif;letter-spacing:.03em;font-variant-numeric:tabular-nums}
-.op .fa{margin-left:auto;font-size:12px;color:var(--mu)!important;text-decoration:none}
+.op .rad{position:relative;border-radius:12px;padding:12px 12px 10px;background:linear-gradient(180deg,#2a2d31,#17191c);border:1px solid #3a3e44;box-shadow:inset 0 1px 0 #4a4f56,0 2px 8px rgba(0,0,0,.25);color:#D9DEE3;min-width:0}
+.op .rad::before,.op .rad::after{content:"";position:absolute;top:7px;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8a9098,#33373c);box-shadow:0 0 0 1px #0c0d0f}
+.op .rad::before{left:8px}.op .rad::after{right:8px}
+.op .rad .rh{display:flex;align-items:center;justify-content:space-between;margin:0 14px 8px;font:700 10px Barlow,sans-serif;letter-spacing:.16em;color:#9AA3AC}
+.op .rad .rh a{color:#9AA3AC!important;text-decoration:none;font-weight:600;letter-spacing:.06em}
+.op .rad .lcd{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
+.op .rad .scr{background:#070806;border-radius:6px;padding:6px 10px 7px;box-shadow:inset 0 2px 6px #000,0 0 0 1px #000,0 1px 0 #4a4f56;min-width:0}
+.op .rad .scr small{display:block;font:700 10px Barlow,sans-serif;letter-spacing:.14em;color:#8a6a1a}
+.op .rad .scr b{display:block;font:700 34px/1.05 "Barlow Condensed",Barlow,sans-serif;letter-spacing:.04em;font-variant-numeric:tabular-nums;color:#FFB000;text-shadow:0 0 8px rgba(255,176,0,.55);white-space:nowrap}
+.op .rad .scr.st b{color:#9AD7FF;text-shadow:0 0 8px rgba(120,200,255,.45)}.op .rad .scr.st small{color:#4b7a96}
+.op .rad .scr i{display:block;font:600 11px Barlow,sans-serif;font-style:normal;color:#b8bdc2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.op .rad .flip{align-self:center;width:38px;height:38px;border-radius:50%;border:1px solid #555b63;background:radial-gradient(circle at 35% 30%,#555b63,#26292d);color:#EEF1F4;font:700 18px/1 Barlow,sans-serif;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.5)}
+.op .rad .flip:active{transform:translateY(1px)}
+.op .rad .keys{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:10px}
+.op .rad .key{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 5px;border-radius:6px;border:1px solid #444950;background:linear-gradient(180deg,#34383d,#222528);color:#E6E9EC;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.45);font-family:Barlow,sans-serif;min-width:0}
+.op .rad .key:active{transform:translateY(1px)}
+.op .rad .key small{font:700 10px Barlow,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#aeb5bc;white-space:nowrap}
+.op .rad .key b{font:700 14px "Barlow Condensed",Barlow,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+.op .rad .key.on{border-color:#FFB000;box-shadow:0 0 0 1px #FFB000,0 2px 3px rgba(0,0,0,.45)}
+.op .rad .key.sb{border-color:#6FC3F5}
+.op .rad .key:focus-visible,.op .rad .flip:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.op .rad .rf{margin:8px 4px 0;font:500 11px Barlow,sans-serif;color:#8E98A3}
+.op .rad-d{display:none}
+@media (min-width:980px){.op .rad-d{display:block}.op .rad-m{display:none}}
+@media (max-width:360px){.op .rad .scr b{font-size:28px}.op .rad .key b{font-size:13px}}
 .op table.mn{table-layout:fixed}
 .op .mn th:nth-child(1),.op .mn tbody th{width:21%}
 .op .mn th:nth-child(2){width:19%}
@@ -480,6 +500,15 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 }
 `;
 const FQ=[["TWR","118.705","Torre","ok"],["GND (GMC)","121.805","Rodaje","ok"],["ATIS","118.230","Información","ok"],["Emergencia","121.500","H24","ok"],["TWR (reserva)","122.505","Back-up","ok"]];
+S.rad={a:0,s:1};
+function radHTML(cls){
+  const a=FQ[S.rad.a], b=FQ[S.rad.s];
+  return `<section class="rad ${cls}" aria-label="Frecuencias de Cuatro Vientos"><div class="rh"><span>COM · LECU</span><a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">AIP ↗</a></div>
+   <div class="lcd"><div class="scr"><small>ACTIVA</small><b>${a[1]}</b><i>${a[0]} · ${a[2]}</i></div><button type="button" class="flip" aria-label="Intercambiar activa y en espera" title="Intercambiar">⇄</button><div class="scr st"><small>EN ESPERA</small><b>${b[1]}</b><i>${b[0]} · ${b[2]}</i></div></div>
+   <div class="keys">${FQ.map((f,i)=>`<button type="button" class="key${i===S.rad.a?" on":i===S.rad.s?" sb":""}" data-fq="${i}" aria-label="${f[0]} ${f[1]}"><small>${f[0].replace("TWR (reserva)","TWR 2").replace(/ \(.*/,"").replace("Emergencia","EMER")}</small><b>${f[1]}</b></button>`).join("")}</div>
+   <p class="rf">Toca una frecuencia para ponerla en espera y ⇄ para activarla. Frecuencias de la AIP (AD 2-LECU).</p></section>`;
+}
+function radDraw(){ if(!S.root) return; S.root.querySelectorAll(".rad").forEach(r=>{ const c=r.classList.contains("rad-d")?"rad-d":"rad-m"; r.outerHTML=radHTML(c); }); }
 function render(el,opt){
   S.opt=opt||{}; S.root=el; S.tr=null; S.trAt=null;
   const A=AD.main, wy="https://embed.windy.com/embed2.html?lat=40.37&lon=-3.785&detailLat=40.37&detailLon=-3.785&zoom=8&level=surface&overlay=wind&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1";
@@ -495,6 +524,7 @@ function render(el,opt){
      <section class="pn op-map"><h2>Cuatro Vientos <small id="opTrSt">tráfico ADS-B…</small></h2><div id="opMap"></div><p class="src mapnote" id="opMapNote">AD 2-LECU/LEVS ADC 1.1 (WEF 25-DEC-25, AIRAC AMDT 13/25), parte civil · © ENAIRE. Comprueba siempre la vigente en <a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">Cartas AIP ↗</a></p></section>
      <aside class="op-side">
       <section class="pn"><h2>Pista en uso</h2><div class="bd"><div class="rwy" id="opRwy"></div><p class="src">La pista real la fija la torre o el ATIS (118.230). Aquí se deduce del tráfico ADS-B y, si no hay, del viento. AD civil: 08:00 Z–ocaso (invierno), 07:00 Z–ocaso (verano). Cerrado el primer domingo de mes (salvo enero y agosto).</p></div></section>
+      ${radHTML("rad-d")}
      </aside>
     </div>
     <section class="pn"><h2>Pista ${A.id} <small><a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">Cartas AIP ↗</a></small></h2><div class="bd">
@@ -508,10 +538,11 @@ function render(el,opt){
       <tr><th>Zona de parada</th><td>${A.a.swy} m</td><td>${A.b.swy} m</td></tr></tbody></table></div></section>
     <section class="pn"><h2>Mínimos de la escuela <small>SOP.4.1</small></h2><div class="bd" id="opMin"></div></section>
     <section class="pn"><h2>Viento y tiempo <small><a href="https://www.windy.com/40.37/-3.785?wind,8" target="_blank" rel="noopener">Windy ↗</a></small></h2><div class="op-wy"><iframe title="Mapa de viento Windy" src="${wy}" referrerpolicy="no-referrer" allow="fullscreen"></iframe></div></section>
-    <section class="pn"><div class="bd frs">${FQ.map(f=>`<span class="fp"><small>${f[0]}</small><b>${f[1]}</b></span>`).join("")}<a class="fa" target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">AIP ↗</a></div></section>
+    ${radHTML("rad-m")}
     <p class="op-note">Herramienta de estudio, no para planificar un vuelo real. Fuentes oficiales: <a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET</a> · <a target="_blank" rel="noopener" href="https://insignia.enaire.es/">NOTAM e Insignia (ENAIRE)</a> · <a target="_blank" rel="noopener" href="https://www.flightradar24.com/40.37,-3.79/12">FlightRadar24</a> · <a target="_blank" rel="noopener" href="https://www.windy.com/40.37/-3.785?wind,8">Windy</a>. Horas en UTC (Z).</p>
    </div></div>`;
   el.addEventListener("click",ev=>{ const b=ev.target.closest("#opDemo"); if(b){ S.opt.fetchWx=null; setData(demoData(S.scen)); } });
+  el.addEventListener("click",ev=>{ const k=ev.target.closest(".rad .key"), f=ev.target.closest(".rad .flip"); if(k){ const i=+k.dataset.fq; if(i===S.rad.a) return; S.rad.s=i; radDraw(); } else if(f){ const t=S.rad.a; S.rad.a=S.rad.s; S.rad.s=t; radDraw(); } });
   el.addEventListener("change",ev=>{ if(ev.target.id==="opRawT"){ S.rawMode=ev.target.checked; fill(); } });
   initMap(); load(); loadTr(); clock();
   clearInterval(S.clk); S.clk=setInterval(clock,10000); clearInterval(S.t); S.t=setInterval(()=>{ if(S.opt.fetchWx) load(); else if(S.data) fill(); },5*60000);
