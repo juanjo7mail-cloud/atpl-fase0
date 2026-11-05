@@ -308,7 +308,7 @@ function fill(){
   const d=S.data, R=S.root; if(!d||!R) return; const now=new Date(), e=d.m, cat=flightCat(e), st=adState(now);
   $("#opAd",R).className="ad "+(st.unk?"unk":st.adOpen?"open":"closed");
   $("#opAd",R).innerHTML=AD.other?(st.unk?`<b>HORARIO ?</b><small>no consta en la AIP</small>`:st.adOpen?`<b>AD ABIERTO</b><small>${st.h&&st.h.mil?"militar · ":""}hasta ${fz24(st.chg)} Z</small>`:`<b>AD CERRADO</b><small>${st.openAt?"abre "+fday(st.openAt,now)+fz(st.openAt)+" Z":"consulta NOTAM"}</small>`):st.open?`<b>AD ABIERTO</b><small>hasta el ocaso · ${fz(st.set)} Z</small>`:`<b>AD CERRADO</b><small>${st.st==="night"?"noche · ocaso "+fz(st.set)+" Z":"abre "+fz(st.openAt)+" Z"}</small>`;
-  const cb=$("#opCat",R); cb.hidden=false; cb.className="cat "+cat; cb.innerHTML="<b>"+cat+"</b><small>"+CATT[cat]+"</small>"; $("#opTop",R).classList.toggle("cl",AD.other?st.adOpen===false:!st.open);
+  const cb=$("#opCat",R); cb.hidden=false; cb.className="cat "+cat; const sn0=sun(now), night=!(sn0.rise&&sn0.set&&now>=sn0.rise&&now<sn0.set); cb.title=night?"Categoría solo por visibilidad y techo de nubes. De noche, el VFR exige habilitación nocturna y aeródromo abierto.":"Categoría por visibilidad y techo de nubes"; cb.innerHTML="<b>"+cat+"</b><small>"+CATT[cat]+(night?" · noche":"")+"</small>"; $("#opTop",R).classList.toggle("cl",AD.other?st.adOpen===false:!st.open);
   const age=d.obs?Math.round((now-d.obs)/60000):null;
   const nte=AD.other?(d.mSt&&d.mSt!==AD.icao?"No hay METAR de "+AD.name+": se usa "+d.mSt+(d.mKm?", a unos "+d.mKm+" km":""):""):(NOTE[d.mSt]||"");
   $("#opSub",R).innerHTML=`${nte||d.demo?`<span class="${nte?"old":""}">${nte}${d.demo?' <b class="dm">DATOS DE EJEMPLO</b>':""}</span>`:""}`+(age==null?"":`<span class="${age>75?"old":""}">${age>75?"Dato antiguo · ":"Observado "}${age<1?"ahora":"hace "+age+" min"} · ${fz(d.obs)} Z</span>`)+`<span>☀ Orto ${fz(st.rise)} Z · Ocaso ${fz(st.set)} Z</span>`+(AD.other&&st.h?`<span>Horario AIP (${st.sched==="V"?"verano":"invierno"}) hoy: ${st.today||"cerrado"} Z</span>${st.h.n?`<span class="${st.h.mil?"old":""}">${st.h.n}</span>`:""}`:"")+(AD.other&&st.unk?`<span class="old">Sin horario publicado en la AIP: confirma por teléfono o NOTAM</span>`:"")+((d.tp&&d.tp.station&&(AD.other?d.tp.station!==AD.icao:!/^(LECU|LEVS)$/.test(d.tp.station)))?`<span class="old">TAF de ${d.tp.station==="LEMD"?"Barajas (LEMD)":d.tp.station}${AD.other&&d.tKm?", a unos "+d.tKm+" km":""}</span>`:"");
@@ -564,7 +564,6 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .op-note{font-size:13px;color:var(--mu);padding:0 2px}
 .op .op-note b{color:var(--ink)}
 .op .cat[hidden]{display:none}
-.op .op-top.cl .ad{grid-column:1/-1}
 .op .tiles.strip{display:grid;gap:8px;grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:10px}
 .op .strip .tl{grid-column:span 2;padding:8px 10px;min-height:0;gap:0}
 .op .strip .tl.wd,.op .strip .tl.vs{grid-column:span 3}
@@ -707,7 +706,7 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .op-top .id{grid-column:1}
 .op .op-top .tm{grid-column:2;grid-row:1;margin:0;justify-self:end}
 .op .op-top .ad,.op .op-top .cat{min-width:0}
-.op .op-top .ad b,.op .op-top .cat b{white-space:nowrap}
+.op .op-top .ad b,.op .op-top .cat b{white-space:nowrap;font-size:20px}
 .op .pn>h2{font-size:15px}
 .op .op-lbl span{font-size:13px}
 .op .tf,.op .mn,.op .tbl{font-size:13px!important}
