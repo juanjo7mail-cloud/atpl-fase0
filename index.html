@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="aa2edb3efdb0";</script>
+<script>window.F0_BUILD="137da4475c64";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1513,7 +1513,7 @@ async function drawHangar(reload){
     hgArm=0; try{ await window.F0Hangar.adminSet(true,true); }catch(e){ alert("No se pudo: "+(e.message||e)); } drawHangar(true); };
 }
 /* ---- mapa de calor y "quién está dónde" ---- */
-const VIEW_ES={test:"Inicio",rank:"Ranking",radio:"Radio",stats:"Stats"};
+const VIEW_ES={test:"Inicio",rank:"Ranking",radio:"Radio",stats:"Stats",ops:"OPS"};
 function viewLabel(v){ const s=SUBJ.find(x=>x.k===v); return s?`${s.code} ${s.short}`:(VIEW_ES[v]||v); }
 function ago(t){ const sec=Math.max(0,Math.round((Date.now()-new Date(t))/1000)); return sec<60?`hace ${sec} s`:sec<3600?`hace ${Math.round(sec/60)} min`:`hace ${Math.round(sec/3600)} h`; }
 function fmtM(sec){ const m=Math.round(sec/60); return m>=60?`${Math.floor(m/60)} h ${String(m%60).padStart(2,"0")} min`:`${m} min`; }
@@ -1537,7 +1537,7 @@ function drawHeat(){
   const sel=`<select id="heatSel" style="font:14px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:5px 8px;margin-left:auto">${[["7","7 días"],["30","30 días"],["all","Todo"]].map(([v,l])=>`<option value="${v}" ${v===heatDays?"selected":""}>${l}</option>`).join("")}</select>`;
   const head=`<div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0">Dónde pasa el tiempo${stUser?"":" · todos"}</h2>${sel}</div>`;
   if(!all){ el.innerHTML=head+`<p class="muted">Sin datos todavía en este periodo. La web empezó a medir cuando se activó update5.sql.</p>`; $("#heatSel").onchange=e=>{ heatDays=e.target.value; drawHeat(); }; return; }
-  const order=[...SUBJ.map(s=>s.k),"test","rank","radio","stats"], vs=order.filter(v=>tot[v]).concat(Object.keys(tot).filter(v=>!order.includes(v)));
+  const order=[...SUBJ.map(s=>s.k),"test","ops","rank","radio","stats"], vs=order.filter(v=>tot[v]).concat(Object.keys(tot).filter(v=>!order.includes(v)));
   const mx=Math.max(...Object.values(tot));
   const barsH=`<p class="muted" style="margin:10px 0 6px">Total medido: <b>${fmtM(all)}</b></p>`+vs.sort((a,b)=>tot[b]-tot[a]).map(v=>`<div class="hbar"><span>${esc(viewLabel(v))}</span><span class="tr"><i style="width:${Math.max(2,100*tot[v]/mx)}%"></i></span><b>${fmtM(tot[v])} · ${Math.round(100*tot[v]/all)} %</b></div>`).join("");
   let mat="";
@@ -1545,7 +1545,7 @@ function drawHeat(){
     const us=Object.keys(byU).sort((a,b)=>Object.values(byU[b]).reduce((x,y)=>x+y,0)-Object.values(byU[a]).reduce((x,y)=>x+y,0)).slice(0,15);
     const cols=order.filter(v=>tot[v]); const cm=Math.max(...us.flatMap(u=>cols.map(v=>byU[u][v]||0)));
     const nameOf=id=>{ const u=ST.find(x=>x.user_id===id); return u?uname(u):"(usuario)"; };
-    mat=`<h3 style="font:700 14px var(--body);margin:16px 0 6px">Mapa de calor por persona (15 con más tiempo)</h3><div class="st-scroll"><table class="st-tbl heat"><thead><tr><th>Persona</th>${cols.map(v=>`<th class="n" title="${esc(viewLabel(v))}">${esc((SUBJ.find(x=>x.k===v)||{}).code?v.toUpperCase():({test:"Inicio",rank:"Rank",radio:"Radio",stats:"Stats"}[v]||v))}</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>${us.map(u=>`<tr><td>${esc(nameOf(u))}</td>${cols.map(v=>{ const x=byU[u][v]||0; return `<td class="n hc" style="${x?`background:color-mix(in srgb,var(--accent) ${Math.round(10+75*x/cm)}%,transparent)`:""}" title="${esc(viewLabel(v))}: ${fmtM(x)}">${x?fmtM(x).replace(" min","'").replace(" h ","h"):""}</td>`; }).join("")}<td class="n"><b>${fmtM(Object.values(byU[u]).reduce((a,b)=>a+b,0))}</b></td></tr>`).join("")}</tbody></table></div>`;
+    mat=`<h3 style="font:700 14px var(--body);margin:16px 0 6px">Mapa de calor por persona (15 con más tiempo)</h3><div class="st-scroll"><table class="st-tbl heat"><thead><tr><th>Persona</th>${cols.map(v=>`<th class="n" title="${esc(viewLabel(v))}">${esc((SUBJ.find(x=>x.k===v)||{}).code?v.toUpperCase():({test:"Inicio",rank:"Rank",radio:"Radio",stats:"Stats",ops:"OPS"}[v]||v))}</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>${us.map(u=>`<tr><td>${esc(nameOf(u))}</td>${cols.map(v=>{ const x=byU[u][v]||0; return `<td class="n hc" style="${x?`background:color-mix(in srgb,var(--accent) ${Math.round(10+75*x/cm)}%,transparent)`:""}" title="${esc(viewLabel(v))}: ${fmtM(x)}">${x?fmtM(x).replace(" min","'").replace(" h ","h"):""}</td>`; }).join("")}<td class="n"><b>${fmtM(Object.values(byU[u]).reduce((a,b)=>a+b,0))}</b></td></tr>`).join("")}</tbody></table></div>`;
   }
   el.innerHTML=head+barsH+mat;
   $("#heatSel").onchange=e=>{ heatDays=e.target.value; drawHeat(); };
