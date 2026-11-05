@@ -57,6 +57,38 @@ async function memo(key, ttl, fn) {
   if (MEMO.size > 200) for (const k of MEMO.keys()) { MEMO.delete(k); if (MEMO.size < 100) break; }
   return p;
 }
+// NOTAM reales por aeródromo: réplica pública de los NOTAM de ENAIRE en FAA NOTAM Search (sin clave). Orientativo; la fuente oficial es ENAIRE Insignia.
+const NT_CODES = { LELO: ["LERJ", "LELO"] };   // Logroño: en NOTAM figura como LERJ (LELO tiene alguno antiguo)
+const FAA = "https://notams.aim.faa.gov/notamSearch/search";
+const iso = s => s && /^\d{10}$/.test(s) ? "20" + s.slice(0, 2) + "-" + s.slice(2, 4) + "-" + s.slice(4, 6) + "T" + s.slice(6, 8) + ":" + s.slice(8, 10) + ":00Z" : null;
+function parseNotam(n) {
+  const m = String(n.icaoMessage || ""), blk = (re) => { const x = re.exec(m); return x ? x[1].replace(/\r/g, "").trim() : ""; };
+  const q = /Q\)\s*([A-Z]{4})\/(Q[A-Z]{4})\/([A-Z ]*)\/([A-Z ]*)\/([A-Z ]*)\/(\d{3})\/(\d{3})\//.exec(m);
+  const c = /C\)\s*(PERM|\d{10})\s*(EST)?/.exec(m), b = /B\)\s*(\d{10})/.exec(m), t = /NOTAM([NRC])/.exec(m);
+  return {
+    id: n.notamNumber, t: t ? t[1] : "N", q: q ? q[2] : "", fir: q ? q[1] : "", tr: q ? q[3].trim() : "", lo: q ? +q[6] : null, hi: q ? +q[7] : null,
+    from: b ? iso(b[1]) : null, to: c && c[1] !== "PERM" ? iso(c[1]) : null, perm: !!(c && c[1] === "PERM"), est: !!(c && c[2]),
+    d: blk(/\n\s*D\)([\s\S]*?)(?=\n\s*E\)|$)/), e: blk(/\n\s*E\)([\s\S]*?)(?=\n\s*[FG]\)|$)/), f: blk(/\n\s*F\)\s*(.*?)(?=\s+G\)|\n|$)/), g: blk(/(?:\n|\s)G\)\s*([^\n]*)/)
+  };
+}
+async function notams(icao) {
+  const seen = new Map();
+  for (const code of NT_CODES[icao] || [icao]) {
+    for (let off = 0; off < 90; off += 30) {
+      const body = new URLSearchParams({ searchType: "0", designatorsForLocation: code, formatType: "ICAO", radius: "10", sortColumns: "5 false", sortDirection: "true", radiusSearchOnDesignator: "false", latitudeDirection: "N", longitudeDirection: "W", flightPathBuffer: "4", flightPathIncludeNavaids: "true", flightPathIncludeArtcc: "false", flightPathIncludeTfr: "true", flightPathIncludeRegulatory: "false", flightPathResultsType: "All NOTAMs", offset: String(off), notamsOnly: "false" });
+      let j;
+      try {
+        const r = await fetch(FAA, { method: "POST", body, headers: { "content-type": "application/x-www-form-urlencoded", "user-agent": "Mozilla/5.0 (compatible; atpl-fase0-ops/1.0)", "origin": "https://notams.aim.faa.gov", "referer": "https://notams.aim.faa.gov/notamSearch/", "accept": "application/json" } });
+        if (!r.ok) { if (off === 0 && !seen.size) return null; break; }
+        j = await r.json();
+      } catch (e) { if (off === 0 && !seen.size) return null; break; }
+      const l = Array.isArray(j.notamList) ? j.notamList : [];
+      for (const n of l) if (n.status !== "Cancelled" && !n.cancelledOrExpired && n.icaoMessage && !seen.has(n.notamNumber)) seen.set(n.notamNumber, parseNotam(n));
+      if (!l.length || (j.endRecordCount || 0) >= (j.totalNotamCount || 0)) break;
+    }
+  }
+  return [...seen.values()];
+}
 const J = (o, ok, age) => new Response(JSON.stringify(o), { status: ok ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok ? "public, max-age=" + age : "no-store", "access-control-allow-origin": "*" } });
 export default {
   async fetch(req, env, ctx) {
@@ -65,6 +97,10 @@ export default {
     if (u.pathname === "/api/traffic") {
       const o = await memo("tr:" + icao, 15000, async () => { const ac = await traffic(icao); return { ok: !!ac, ac: ac || [], at: Date.now() }; });
       return J(o, o.ok, 15);
+    }
+    if (u.pathname === "/api/notam") {
+      const o = await memo("nt:" + icao, 600000, async () => { const l = await notams(icao); return { ok: !!l, n: l || [], at: Date.now(), src: "FAA NOTAM Search" }; });
+      return J(o, o.ok, 300);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
     const o = await memo("wx:" + icao, 120000, async () => {

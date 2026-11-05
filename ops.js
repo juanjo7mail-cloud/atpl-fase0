@@ -566,6 +566,15 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .rad-d{display:none}
 @media (min-width:980px){.op .rad-d{display:block}.op .rad-m{display:none}}
 @media (max-width:360px){.op .rad .scr b{font-size:28px}.op .rad .key b{font-size:13px}}
+.op .nt-sum{padding:2px 0 10px;font:600 15px Barlow,sans-serif;color:var(--mu)}.op .nt-sum b{font:700 22px "Barlow Condensed",Barlow,sans-serif;color:var(--ink);margin-right:2px}.op .nt-sum .ok{color:var(--ok)}.op .nt-sum .pr{color:var(--mid)}
+.op .nt-f{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}.op .ntf{border:1px solid var(--ln);background:transparent;color:var(--ink);border-radius:99px;padding:5px 12px;font:600 13px Barlow,sans-serif;cursor:pointer;min-height:32px}.op .ntf i{font-style:normal;color:var(--mu);margin-left:3px}.op .ntf.on{background:var(--hd);color:#fff;border-color:var(--hd)}.op .ntf.on i{color:#C9D1D9}
+.op .nt-l{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
+.op .nt{border:1px solid var(--ln);border-left:4px solid var(--ok);border-radius:8px;padding:10px 12px;background:var(--pn)}.op .nt.fut{border-left-color:var(--mid)}
+.op .nt header{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.op .nt header b{font:700 15px "JetBrains Mono",ui-monospace,monospace}.op .nt .ch{font:600 12px Barlow,sans-serif;background:var(--bg);border-radius:99px;padding:2px 9px;color:var(--mu)}.op .nt .ch.c2{background:var(--midb);color:var(--mid)}
+.op .nt header em{margin-left:auto;font:700 11px Barlow,sans-serif;letter-spacing:.08em;font-style:normal;padding:3px 8px;border-radius:4px}.op .nt header em.ok{background:var(--okb);color:var(--ok)}.op .nt header em.pr{background:var(--midb);color:var(--mid)}
+.op .nt .nv{margin:6px 0 4px;font:600 13px "JetBrains Mono",ui-monospace,monospace;color:var(--mu)}.op .nt .nx{margin:0;font:500 14px/1.4 Barlow,sans-serif;white-space:pre-line;overflow-wrap:anywhere}.op .nt .nd{margin:6px 0 0;display:flex;flex-wrap:wrap;gap:4px 14px;font:500 13px Barlow,sans-serif;color:var(--mu)}
+.op .nt footer{margin-top:7px;display:flex;gap:10px;font:500 12px Barlow,sans-serif;color:var(--mu)}.op .nt footer code{font:600 12px "JetBrains Mono",ui-monospace,monospace}
+.op .nt-s,.op .nt-e{margin:6px 0;color:var(--mu)}.op .nt-e{padding:10px 12px;border:1px solid var(--no);background:var(--nob);border-radius:8px;color:var(--ink)}.op .nt-src{margin-top:12px}
 .op [data-t][hidden]{display:none!important}
 .op .op-top.skyh{position:relative;overflow:hidden;transition:color .6s}
 .op .op-top.skyh>*:not(.sk){position:relative;z-index:1}
@@ -675,7 +684,35 @@ const chartNote=()=>{ const c=AD.chart; return c?`<p class="src mapnote" id="opM
 const wyUrl=()=>"https://embed.windy.com/embed2.html?lat="+AD.lat.toFixed(3)+"&lon="+AD.lon.toFixed(3)+"&detailLat="+AD.lat.toFixed(3)+"&detailLon="+AD.lon.toFixed(3)+"&zoom=8&level=surface&overlay=wind&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1";
 const rwyNote=()=>AD.other?"La pista real la fija la torre o el AFIS. Aquí se deduce del tráfico ADS-B y, si no hay, del viento. Horario del aeródromo: consulta la AIP.":"La pista real la fija la torre o el ATIS (118.230). Aquí se deduce del tráfico ADS-B y, si no hay, del viento. AD civil: 08:00 Z-ocaso (invierno), 07:00 Z-ocaso (verano). Cerrado el primer domingo de mes (salvo enero y agosto).";
 const STARS=(()=>{ let x=7,o=""; const r=()=>(x=(x*9301+49297)%233280)/233280; for(let i=0;i<34;i++) o+=`<i class="star" style="left:${(r()*100).toFixed(1)}%;top:${(r()*80).toFixed(1)}%;width:${(1+r()*1.6).toFixed(1)}px;height:${(1+r()*1.6).toFixed(1)}px"></i>`; return o; })();
-const TABS=[["res","Resumen"],["pist","Pistas"],["wx","METAR · TAF"],["map","Mapa"]];
+/* ---------- NOTAM (pestaña): /api/notam → réplica de ENAIRE en FAA NOTAM Search ---------- */
+const NT_G=[["all","Todos"],["pist","Pista y rodaje"],["luz","Luces"],["ayu","Ayudas"],["proc","Procedimientos"],["esp","Espacio aéreo"],["obs","Obstáculos"],["otr","Otros"]];
+const ntGrp=q=>{ const c=(q||"")[1]||""; return c==="M"?"pist":c==="L"?"luz":"IJNGC".includes(c)&&c?"ayu":c==="P"?"proc":"RAWS".includes(c)&&c?"esp":c==="O"?"obs":"otr"; };
+const NT_C={LC:"cerrado",AS:"no operativo",AU:"no disponible",CE:"instalado",HW:"obras",AK:"operativo de nuevo",AL:"operativo con limitaciones",LT:"limitado",CA:"activado",CD:"desactivado",LA:"operativo con limitaciones",CH:"cambiado",CC:"completado"};
+const ntD=i=>{ const d=new Date(i), p=n=>String(n).padStart(2,"0"); return p(d.getUTCDate())+"/"+p(d.getUTCMonth()+1)+"/"+String(d.getUTCFullYear()).slice(2)+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())+" Z"; };
+function ntList(r){ const now=Date.now(); return (r.n||[]).map(x=>{ const f=x.from?Date.parse(x.from):0, t=x.to?Date.parse(x.to):Infinity; return Object.assign({},x,{F:f,T:t,act:f<=now&&t>=now,fut:f>now,grp:ntGrp(x.q)}); }).filter(x=>x.T>=now).sort((a,b)=>(b.act-a.act)||(a.act?b.F-a.F:a.F-b.F)); }
+function ntHTML(){
+  const R=S.nt; if(!R) return `<p class="nt-s">Cargando NOTAM…</p>`;
+  if(R.err) return `<div class="nt-e"><b>No se han podido cargar los NOTAM ahora.</b> Consulta la fuente oficial.</div><p class="nt-s"><a target="_blank" rel="noopener" href="https://insignia.enaire.es/">ENAIRE Insignia ↗</a></p>`;
+  const L=ntList(R.r), na=L.filter(x=>x.act).length, nf=L.length-na, F=S.ntF||"all", cnt=g=>g==="all"?L.length:L.filter(x=>x.grp===g).length;
+  const chips=NT_G.filter(g=>g[0]==="all"||cnt(g[0])).map(g=>`<button type="button" class="ntf${g[0]===F?" on":""}" data-g="${g[0]}">${g[1]} <i>${cnt(g[0])}</i></button>`).join("");
+  const V=L.filter(x=>F==="all"||x.grp===F);
+  const card=x=>{ const cond=NT_C[(x.q||"").slice(3,5)]||"", gl=(NT_G.find(g=>g[0]===x.grp)||[0,"Otros"])[1];
+    const alt=(x.f||x.g)?`<span>Límites: ${esc(x.f||"—")} – ${esc(x.g||"—")}</span>`:"";
+    return `<article class="nt ${x.act?"act":"fut"}"><header><b>${esc(x.id)}</b><span class="ch">${esc(gl)}</span>${cond?`<span class="ch c2">${esc(cond)}</span>`:""}<em class="${x.act?"ok":"pr"}">${x.act?"ACTIVO":"PRÓXIMO"}</em></header>
+     <p class="nv">${x.from?ntD(x.from):"—"} → ${x.perm?"permanente":(x.to?ntD(x.to)+(x.est?" (est.)":""):"—")}</p>
+     <p class="nx">${esc(x.e||"(sin texto)")}</p>${(x.d||alt)?`<p class="nd">${x.d?`<span>Horario: ${esc(x.d)}</span>`:""}${alt}</p>`:""}<footer><code>${esc(x.q||"")}</code>${x.t==="R"?"<span>reemplaza a otro</span>":""}</footer></article>`; };
+  return `<div class="nt-sum"><b>${L.length}</b> NOTAM · <span class="ok">${na} activos</span>${nf?` · <span class="pr">${nf} próximos</span>`:""}</div>
+   <div class="nt-f">${chips}</div>${V.length?`<div class="nt-l">${V.map(card).join("")}</div>`:`<p class="nt-s">No hay NOTAM vigentes${F==="all"?" para este aeródromo":" en esta categoría"}.</p>`}
+   <p class="src nt-src">Fuente: FAA NOTAM Search (copia de los NOTAM de ENAIRE) · actualizado ${ntD(R.r.at||Date.now())} · Horas en UTC. Orientativo: la fuente oficial es <a target="_blank" rel="noopener" href="https://insignia.enaire.es/">ENAIRE Insignia ↗</a>.</p>`;
+}
+function ntDraw(){ const e=$("#opNt",S.root); if(e) e.innerHTML=ntHTML(); }
+function loadNt(force){
+  const f0=S.opt&&S.opt.fetchNt, g=S.gen, ic=AD.icao; if(!f0) return;
+  if(!force&&S.nt&&S.nt.ic===ic&&!S.nt.err&&Date.now()-S.nt.t<5*60000) { ntDraw(); return; }
+  S.nt=null; ntDraw();
+  f0(ic).then(r=>{ if(!r||!r.ok) throw 0; return r; }).then(r=>{ if(g===S.gen&&AD.icao===ic) S.nt={ic,t:Date.now(),r}; }).catch(()=>{ if(g===S.gen&&AD.icao===ic) S.nt={ic,t:0,err:1}; }).then(()=>{ if(S.root&&g===S.gen) ntDraw(); });
+}
+const TABS=[["res","Resumen"],["pist","Pistas"],["wx","METAR · TAF"],["ntm","NOTAM"],["map","Mapa"]];
 function ddHTML(){
   const here=[AD0.lat,AD0.lon], L=[{icao:"LECU",name:"Cuatro Vientos",lat:AD0.lat,lon:AD0.lon,tm:""}].concat(AEROS).sort((x,y)=>x.name.localeCompare(y.name,"es"));
   return `<div class="gp">`+L.map(o=>{ const d=o.icao==="LECU"?"":kmN(here,[o.lat,o.lon])+" NM"; return `<button type="button" class="ar${o.icao===AD.icao?" sel":""}" data-ic="${o.icao}"><b>${o.icao}</b><span>${o.name}</span><em>${d}${o.tm?(d?" · ":"")+o.tm:""}</em></button>`; }).join("")+"</div>"
@@ -685,11 +722,12 @@ function showTab(t){
   S.tab=t; const R=S.root; if(!R) return;
   R.querySelectorAll("[data-t]").forEach(x=>{ x.hidden=!x.dataset.t.split(" ").includes(t); });
   R.querySelectorAll("#opTabs [data-tab]").forEach(b=>{ b.classList.toggle("on",b.dataset.tab===t); b.setAttribute("aria-selected",b.dataset.tab===t); });
+  if(t==="ntm") loadNt();
   if(S.map&&(t==="res"||t==="map")) setTimeout(()=>{ try{ S.map.invalidateSize(); S.fit&&S.fit(); }catch(e){} },30);
 }
 function pick(ic){ const o=ic==="LECU"?null:AEROS.find(x=>x.icao===ic); AD=o?mkAD(o):AD0; S.mode=null; S.rad={a:0,s:1}; S.data=null; S.tr=null; S.act=null; render(S.root,S.opt,true); }
 function render(el,opt,keep){
-  S.opt=opt||{}; S.root=el; S.tr=null; S.trAt=null; S.skyW=null; S.gen++;
+  S.opt=opt||{}; S.root=el; S.tr=null; S.trAt=null; S.skyW=null; S.nt=null; S.ntF="all"; S.gen++;
   const mu=!!S.opt.multi; if(!keep){ AD=AD0; S.tab="res"; }
   const A=AD0.main, wy=wyUrl(), ww=AD.lat.toFixed(3)+"/"+AD.lon.toFixed(3), tb=mu?S.tab||"res":null;
   el.innerHTML=`<style>${CSS}</style><div class="op">
@@ -697,7 +735,7 @@ function render(el,opt,keep){
    ${mu?`<div class="op-dd" id="opDD" hidden>${ddHTML()}</div>`:""}
    <div class="op-sub" id="opSub"><span>Cargando METAR y TAF…</span></div>
    <div class="op-err" id="opErr" hidden><span><b>No se han podido cargar el METAR y el TAF.</b> Consulta la AEMET.</span><a target="_blank" rel="noopener" href="https://ama.aemet.es/">AEMET</a>${S.opt.allowDemo?'<button type="button" id="opDemo">Ver con datos de ejemplo</button>':""}</div>
-   ${mu?`<nav class="op-tabs" id="opTabs" aria-label="Secciones">${TABS.map(t=>`<button type="button" data-tab="${t[0]}" class="${t[0]===tb?"on":""}" aria-selected="${t[0]===tb}">${t[1]}</button>`).join("")}<a target="_blank" rel="noopener" href="https://insignia.enaire.es/">NOTAM ↗</a><a target="_blank" rel="noopener" href="https://www.windy.com/${ww}?webcams,${AD.lat.toFixed(3)},${AD.lon.toFixed(3)},11">Webcams ↗</a></nav>`:""}
+   ${mu?`<nav class="op-tabs" id="opTabs" aria-label="Secciones">${TABS.map(t=>`<button type="button" data-tab="${t[0]}" class="${t[0]===tb?"on":""}" aria-selected="${t[0]===tb}">${t[1]}</button>`).join("")}<a target="_blank" rel="noopener" href="https://insignia.enaire.es/">Insignia ↗</a><a target="_blank" rel="noopener" href="https://www.windy.com/${ww}?webcams,${AD.lat.toFixed(3)},${AD.lon.toFixed(3)},11">Webcams ↗</a></nav>`:""}
    <div class="op-in">
     ${supHTML()}
     <section class="pn" data-t="res wx"><div class="bd"><div class="tiles strip" id="opTiles"></div>
@@ -719,6 +757,7 @@ function render(el,opt,keep){
       <tr><th>ASDA</th><td>${A.a.asda} m</td><td>${A.b.asda} m</td></tr>
       <tr><th>LDA</th><td>${A.a.lda} m</td><td>${A.b.lda} m</td></tr>
       <tr><th>Zona de parada</th><td>${A.a.swy} m</td><td>${A.b.swy} m</td></tr></tbody></table></div></section>`}
+    ${mu?`<section class="pn" data-t="ntm"><h2>NOTAM ${AD.icao} <small><a target="_blank" rel="noopener" href="https://insignia.enaire.es/">ENAIRE Insignia ↗</a></small></h2><div class="bd" id="opNt"></div></section>`:""}
     <section class="pn" data-t="res"><h2>Mínimos de la escuela <small>SOP.4.1</small></h2><div class="bd" id="opMin"></div></section>
     <section class="pn" data-t="wx"><h2>Viento y tiempo <small><a href="https://www.windy.com/${ww}?wind,8" target="_blank" rel="noopener">Windy ↗</a></small></h2><div class="op-wy"><iframe title="Mapa de viento Windy" src="${wy}" referrerpolicy="no-referrer" allow="fullscreen" loading="lazy"></iframe></div></section>
     ${radHTML("rad-m")}
@@ -729,6 +768,7 @@ function render(el,opt,keep){
     const k=ev.target.closest(".rad .key"), f=ev.target.closest(".rad .flip");
     if(k){ const i=+k.dataset.fq; if(i===S.rad.a) return; S.rad.s=i; radDraw(); return; }
     if(f){ const t=S.rad.a; S.rad.a=S.rad.s; S.rad.s=t; radDraw(); return; }
+    const nf=ev.target.closest(".ntf"); if(nf){ S.ntF=nf.dataset.g; ntDraw(); return; }
     if(!S.opt.multi) return;
     const sel=ev.target.closest("#opSel"), ar=ev.target.closest("#opDD .ar"), tab=ev.target.closest("#opTabs [data-tab]"), dd=$("#opDD",el);
     if(sel){ dd.hidden=!dd.hidden; sel.setAttribute("aria-expanded",!dd.hidden); return; }
