@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="c598513f96d2";</script>
+<script>window.F0_BUILD="30d9996b094b";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -252,6 +252,12 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .nlist li{display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:start}
 .nlist .ni{width:36px;height:36px;border-radius:10px;background:var(--accentbg);display:grid;place-items:center;font-size:19px}
 .nlist b{display:block;font:700 16px/1.2 var(--body)}
+.nlist li.big{display:block;position:relative;padding:14px;border-radius:14px;border:1.5px solid var(--accent);background:var(--accentbg)}
+.nlist li.big .ni{position:absolute;top:-14px;left:12px;width:40px;height:40px;background:var(--paper);border:1.5px solid var(--accent);font-size:22px}
+.nlist li.big em{display:inline-block;margin:6px 0 6px 52px;padding:2px 8px;border-radius:99px;background:var(--accent);color:#fff;font:700 11px var(--body);font-style:normal;letter-spacing:.06em}
+.nlist li.big b{font-size:18px;line-height:1.25}
+.nlist li.big span.t{color:var(--ink);margin-top:6px}
+.nlist li.big .go{margin-top:12px;width:100%}
 .nlist span.t{display:block;font-size:14px;color:var(--muted);line-height:1.4;margin-top:2px}
 @media (prefers-reduced-motion:reduce){.plane,.plane .ban,.plane .prop,.sky .cl{animation:none}}
 /* etiqueta «Study before flight» */
@@ -723,7 +729,7 @@ function renderTabs(){
   const lv = k => summary(k).lvl;
   $("#tabs").innerHTML = (isAdmin?`<button class="tab test solo" role="tab" data-v="stats" aria-selected="${current==="stats"}"><b>STATS</b></button>`:"") +
     `<button class="tab test solo" role="tab" data-v="test" aria-selected="${current==="test"}"><b>INICIO</b></button>` +
-    (isAdmin&&window.F0Ops?`<button class="tab test solo" role="tab" data-v="ops" aria-selected="${current==="ops"}"><b>OPS</b></button>`:"") +
+    (window.F0Ops?`<button class="tab test solo" role="tab" data-v="ops" aria-selected="${current==="ops"}"><b>OPS</b></button>`:"") +
     (sbUser?`<button class="tab test solo" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b></button>`:"") +
     (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
@@ -736,7 +742,7 @@ function opsLoad(){   // Leaflet solo se descarga al abrir OPS
 }
 function drawMenu(){
   const lv = k => summary(k).lvl, it=(v,c,n,d)=>`<button role="menuitem" data-v="${v}" aria-current="${current===v}"><span class="mc">${c}</span><span class="mn">${esc(n)}</span><i class="md ${d||""}"></i></button>`;
-  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(isAdmin&&window.F0Ops?it("ops","OPS","Cuatro Vientos: tiempo y pista"):"")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+"<hr>"+
+  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(window.F0Ops?it("ops","OPS","Cuatro Vientos: tiempo y pista"):"")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+"<hr>"+
     SUBJ.map(s=>it(s.k,s.code,s.short,lv(s.k))).join("");
 }
 function tabArrows(){
@@ -755,7 +761,7 @@ function show(v, cmd){
   document.querySelectorAll(".view").forEach(el=>el.hidden = el.id!=="v-"+v);
   if(v==="stats"){ renderStats(); }
   else if(v==="rank"){ renderRank(); }
-  else if(v==="ops"){ if(window.F0Ops&&isAdmin) opsLoad().then(()=>window.F0Ops.render($("#ops"),{fetchWx:()=>fetch("/api/wx",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }),fetchTr:()=>fetch("/api/traffic",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })})); }
+  else if(v==="ops"){ if(window.F0Ops) opsLoad().then(()=>window.F0Ops.render($("#ops"),{fetchWx:()=>fetch("/api/wx",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }),fetchTr:()=>fetch("/api/traffic",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })})); }
   else if(v==="radio"){ if(window.F0Radio&&sbUser) window.F0Radio.render($("#radio"),{sb,user:sbUser,name:()=>MY.name||(sbUser.email||"alumno").split("@")[0]}); }
   else if(v!=="test"){
     let view=$("#v-"+v);
@@ -788,7 +794,7 @@ document.addEventListener("click",e=>{ if(!$("#menu").hidden && !e.target.closes
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#menu").hidden) menuOpen(false); });
 $("#tabs").addEventListener("keydown",e=>{
   if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft") return;
-  const ids=[...(isAdmin?["stats"]:[]),"test",...(isAdmin&&window.F0Ops?["ops"]:[]),...(sbUser?["rank"]:[]),...(sbUser&&window.F0Radio?["radio"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
+  const ids=[...(isAdmin?["stats"]:[]),"test",...(window.F0Ops?["ops"]:[]),...(sbUser?["rank"]:[]),...(sbUser&&window.F0Radio?["radio"]:[]),...SUBJ.map(s=>s.k)], i=ids.indexOf(current), n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
   show(n); document.querySelector(`.tab[data-v="${n}"]`).focus();
 });
 
@@ -1637,6 +1643,9 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
+  {id:"2026-11-05", items:[
+    {i:"🛰️", t:"Nueva pestaña OPS · Cuatro Vientos en directo", d:"Mira antes de volar: METAR y TAF de LECU con su categoría (VFR, MVFR, IFR), el viento contra la pista y si cumples los mínimos de la escuela, mapa satélite con las calles de rodaje y los holding points, tráfico real en vivo y las frecuencias de la AIP. Horas siempre en UTC.", big:true, go:"ops", need:"F0Ops"}
+  ]},
   {id:"2026-11-04b", items:[
     {i:"👁️", t:"Factores Humanos · ejercicios de vista y oído, y adaptativo de examen (25 preguntas, 45 min)"}
   ]},
@@ -1740,10 +1749,12 @@ function newsSeen(){ try{ return localStorage.getItem("f0:news")||""; }catch(e){
 function newsMark(){ try{ localStorage.setItem("f0:news", NEWS.reduce((m,n)=>n.id>m?n.id:m,"")); }catch(e){} }
 function showNews(){
   const seen=newsSeen(); if(seen==="~"||!$("#news").hidden) return;
-  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>!x.web||sb);
+  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>(!x.web||sb)&&(!x.need||window[x.need]));
   if(!items.length){ if(NEWS.some(n=>n.id>seen) && !sb) newsMark(); return; }
   if(!$("#devNote").hidden||!$("#login").hidden||!$("#nameAsk").hidden||!$("#pwReset").hidden) return;
-  $("#nwList").innerHTML=items.map(x=>`<li><span class="ni" aria-hidden="true">${x.i}</span><div><b>${esc(x.t)}</b></div></li>`).join("");
+  items.sort((a,b)=>(b.big?1:0)-(a.big?1:0));
+  $("#nwList").innerHTML=items.map(x=>x.big?`<li class="big"><span class="ni" aria-hidden="true">${x.i}</span><div><em>NUEVO</em><b>${esc(x.t)}</b>${x.d?`<span class="t">${esc(x.d)}</span>`:""}${x.go&&(x.go!=="ops"||window.F0Ops)?`<button class="btn go" type="button" data-go="${x.go}">Abrir ${x.go==="ops"?"OPS":"ya"} →</button>`:""}</div></li>`:`<li><span class="ni" aria-hidden="true">${x.i}</span><div><b>${esc(x.t)}</b></div></li>`).join("");
+  $("#nwList").querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{ closeNews(); show(b.dataset.go); window.scrollTo(0,0); }));
   $("#news").hidden=false; $("#nwOk").focus();
 }
 function closeNews(){ newsMark(); $("#news").hidden=true; }
