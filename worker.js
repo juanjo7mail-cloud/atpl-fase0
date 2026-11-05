@@ -71,17 +71,18 @@ function parseNotam(n) {
     d: blk(/\n\s*D\)([\s\S]*?)(?=\n\s*E\)|$)/), e: blk(/\n\s*E\)([\s\S]*?)(?=\n\s*[FG]\)|$)/), f: blk(/\n\s*F\)\s*(.*?)(?=\s+G\)|\n|$)/), g: blk(/(?:\n|\s)G\)\s*([^\n]*)/)
   };
 }
+let NT_WHY = "";
 async function notams(icao) {
-  const seen = new Map();
+  const seen = new Map(); NT_WHY = "";
   for (const code of NT_CODES[icao] || [icao]) {
     for (let off = 0; off < 90; off += 30) {
       const body = new URLSearchParams({ searchType: "0", designatorsForLocation: code, formatType: "ICAO", radius: "10", sortColumns: "5 false", sortDirection: "true", radiusSearchOnDesignator: "false", latitudeDirection: "N", longitudeDirection: "W", flightPathBuffer: "4", flightPathIncludeNavaids: "true", flightPathIncludeArtcc: "false", flightPathIncludeTfr: "true", flightPathIncludeRegulatory: "false", flightPathResultsType: "All NOTAMs", offset: String(off), notamsOnly: "false" });
       let j;
       try {
         const r = await fetch(FAA, { method: "POST", body, headers: { "content-type": "application/x-www-form-urlencoded", "user-agent": "Mozilla/5.0 (compatible; atpl-fase0-ops/1.0)", "origin": "https://notams.aim.faa.gov", "referer": "https://notams.aim.faa.gov/notamSearch/", "accept": "application/json" } });
-        if (!r.ok) { if (off === 0 && !seen.size) return null; break; }
+        if (!r.ok) { NT_WHY = "http " + r.status + " " + (await r.text().catch(() => "")).slice(0, 160).replace(/\s+/g, " "); if (off === 0 && !seen.size) return null; break; }
         j = await r.json();
-      } catch (e) { if (off === 0 && !seen.size) return null; break; }
+      } catch (e) { NT_WHY = "exc " + String(e).slice(0, 160); if (off === 0 && !seen.size) return null; break; }
       const l = Array.isArray(j.notamList) ? j.notamList : [];
       for (const n of l) if (n.status !== "Cancelled" && !n.cancelledOrExpired && n.icaoMessage && !seen.has(n.notamNumber)) seen.set(n.notamNumber, parseNotam(n));
       if (!l.length || (j.endRecordCount || 0) >= (j.totalNotamCount || 0)) break;
@@ -99,7 +100,7 @@ export default {
       return J(o, o.ok, 15);
     }
     if (u.pathname === "/api/notam") {
-      const o = await memo("nt:" + icao, 600000, async () => { const l = await notams(icao); return { ok: !!l, n: l || [], at: Date.now(), src: "FAA NOTAM Search" }; });
+      const o = await memo("nt:" + icao, 600000, async () => { const l = await notams(icao); return { ok: !!l, n: l || [], at: Date.now(), src: "FAA NOTAM Search", why: l ? undefined : NT_WHY }; });
       return J(o, o.ok, 300);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
