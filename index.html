@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="00a812464893";</script>
+<script>window.F0_BUILD="a75338ef14e0";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -588,7 +588,7 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 <script>
 /* ===================== asignaturas ===================== */
 const SUBJ = [
-  {k:"010", c:["#4350B8","#9EA8F2"], code:"010", short:"Air Law", name:"Air Law", extra:[["fase0","Examen Fase 0"],["senasa","Simulacro SENASA"]]},
+  {k:"010", c:["#4350B8","#9EA8F2"], code:"010", short:"Air Law", name:"Air Law", extra:[["fase0","Trial"],["senasa","Simulacro SENASA"]]},
   {k:"021", c:["#0B747E","#5CC8C8"], code:"021·022", short:"Aircraft GK", name:"Airframe, Systems, Power Plant · Instrumentation", extra:[["senasa","Simulacro SENASA"]]},
   {k:"031", c:["#B8500A","#F2A16A"], code:"031·032·033", short:"Performance", name:"Mass and Balance · Performance · Flight Planning", extra:[]},
   {k:"040", c:["#AB3573","#F29AC6"], code:"040", short:"Human Performance", name:"Human Performance and Limitations", extra:[]},
@@ -1445,7 +1445,7 @@ async function signOut(){
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
-const MODE_ES = {atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Examen Fase 0", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas clave", notes:"Desde los apuntes"};
+const MODE_ES = {atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Trial", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas clave", notes:"Desde los apuntes"};
 const uname = u => (u.full_name||"").trim() || String(u.email||"").split("@")[0];
 const fmtDT = d => { if(!d) return "–"; const x=new Date(d), n=new Date(), hm=x.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
   if(x.toDateString()===n.toDateString()) return "hoy · "+hm;
@@ -1739,7 +1739,7 @@ const NEWS=[
     {i:"🏆", t:"Ranking por asignatura", d:"Con 5 tests de una asignatura entras en su ranking, con tu nombre. Mira la pestaña RANKING.", web:true}
   ]},
   {id:"2026-10-23", items:[
-    {i:"⚖️", t:"Performance renovada", d:"Simulacros SENASA de 031, 032 y 033 con el reparto oficial y reloj, «Examen Fase 0» de 30 preguntas en 1 h, altimetría (PA, ISA y altitud de densidad) y muchas preguntas ATPL nuevas."}
+    {i:"⚖️", t:"Performance renovada", d:"Simulacros SENASA de 031, 032 y 033 con el reparto oficial y reloj, «Trial» de 30 preguntas en 1 h, altimetría (PA, ISA y altitud de densidad) y muchas preguntas ATPL nuevas."}
   ]},
   {id:"2026-10-22", items:[
     {i:"🎙️", t:"Radio por voz · Communications", d:"Practica el diálogo ATC–piloto hablando: ATC te habla en inglés y tú contestas por el micrófono."}

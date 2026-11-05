@@ -398,7 +398,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
 <summary><span class="lonum">090.01.01.01</span><span class="lotitle">Meanings and significance</span></summary>
 <div class="body">
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>En el test de Fase 0 saldrá casi seguro algo sobre «<b>transmitting blind</b>»: saber <b>cuándo se dice</b> y <b>qué es</b>.</li>
+    <li>En el examen saldrá casi seguro algo sobre «<b>transmitting blind</b>»: saber <b>cuándo se dice</b> y <b>qué es</b>.</li>
   </ul></div>
   <div class="key"><b>Clave</b><b>Blind transmission</b> (transmisión a ciegas): de una estación a otra cuando <b>no hay comunicación en los dos sentidos</b>, pero se cree que la otra <b>sí te recibe</b>.</div>
   <div class="trap"><b>Trampa:</b> <i>broadcast</i> no va dirigida a nadie en concreto; <i>blind</i> va dirigida a una estación que quizá te oye.</div>
@@ -530,7 +530,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
     <li><b>CORRECTION</b> se usa <b>durante</b> el mensaje; <b>DISREGARD</b>, una vez acabado y sobre una comunicación anterior.</li>
     <li><b>REPORT</b>: notificas. <b>REQUEST</b>: pides.</li>
     <li><b>CLEARED</b> solo en 5 casos: <b>landing, take-off, touch and go, low pass, low approach</b> (este último el que menos se sabe de cara al examen).</li>
-    <li>En el examen de Fase 0 hay una pregunta cuya respuesta es <b>MAINTAIN</b> donde parecería ir <i>hold position</i>: no es lo correcto, pero es así la pregunta.</li>
+    <li>En el examen hay una pregunta cuya respuesta es <b>MAINTAIN</b> donde parecería ir <i>hold position</i>: no es lo correcto, pero es así la pregunta.</li>
     <li><b>8.33 kHz</b> es el único número que se dice con «<b>point</b>»: «eight point three three».</li>
     <li><b>Apron</b>: la zona de parking. <b>Stand</b>: un puesto concreto. <b>Rolling</b>: en carrera de despegue.</li>
     <li><b>TAKE-OFF</b> solo para la autorización de despegue; si no, <b>departure</b> o <b>airborne</b>.</li>
@@ -1281,7 +1281,7 @@ const REFS = {
 "transfer":"CONTACT = llama a esa estación: se colaciona la frecuencia (nunca se omite) y la estación, con el indicativo al final. MONITOR = solo escucha. Si en la nueva nadie contesta, vuelve a la anterior. Si quieres cambiar tú, lo pides y esperas «approved».",
 "cond":"Autorización condicional: indicativo · condición · autorización · condición repetida («behind the landing Airbus, line up and wait behind»). Se colaciona en el mismo orden con el indicativo al final. Con pista activa, piloto y controlador deben ver al tráfico.",
 "cleared":"CLEARED solo en 5 casos: landing, take-off, touch and go, low pass y low approach. El resto de instrucciones van sin «cleared» (taxi, line up, cross).",
-"maintain":"MAINTAIN = continúa según las condiciones indicadas o literalmente («maintain FL 80», «maintain VFR»). En el examen de Fase 0 sale como respuesta donde parecería ir «hold position».",
+"maintain":"MAINTAIN = continúa según las condiciones indicadas o literalmente («maintain FL 80», «maintain VFR»). En el examen sale como respuesta donde parecería ir «hold position».",
 "verify":"VERIFY = comprueba y confirma con quien lo originó. WORDS TWICE = cada palabra dos veces. STANDBY = espera, te llamo (ni aprueba ni deniega). REPORT = notifica; REQUEST = pido. CORRECTION durante el mensaje; DISREGARD una vez acabado.",
 "commfail":"Fallo de comunicaciones: comprueba volumen, frecuencia, jacks, PTT y breakers; prueba otra frecuencia, otra estación o 121.5; squawk 7600; «transmitting blind», cada mensaje dos veces con tus intenciones. En VMC: sigue VMC, aterriza en el adecuado más cercano, vigila las luces y avisa de la llegada (evita el SAR).",
 "rxfail":"Falla solo el receptor: transmite los informes precedidos de «transmitting blind due to receiver failure», todo dos veces, squawk 7600 y vigila las señales luminosas.",
@@ -1339,7 +1339,7 @@ const NEWQ = [
  ["tc4","","n","transfer","What is the difference between MONITOR and CONTACT?",["Monitor: listen only. Contact: call them","Monitor: call them. Contact: listen only","None: both mean call the unit","Monitor is only used for ATIS"],"MONITOR = escucha sin llamar; CONTACT = establece comunicación."],
  ["tc5","","n","transfer","The pilot wants to leave the frequency. He should:",["Request the change and wait for approval","Change and report on the new frequency","Say 'leaving frequency' and change","Change without saying anything"],"Lo pide: «request change to… 134.3» → «approved»."],
  // ----- standard words (COM-2) -----
- ["w36","","n","maintain","Which standard word means 'continue in accordance with the condition(s) specified'?",["Maintain","Hold position","Continue","Standby"],"★ MAINTAIN. En el examen de Fase 0 es la respuesta aunque parezca «hold position»."],
+ ["w36","","n","maintain","Which standard word means 'continue in accordance with the condition(s) specified'?",["Maintain","Hold position","Continue","Standby"],"★ MAINTAIN. En el examen es la respuesta aunque parezca «hold position»."],
  ["w37","","n","cleared","In which case is the word CLEARED used?",["Low approach","Taxi to holding point","Line up and wait","Start-up"],"★ CLEARED solo: landing, take-off, touch and go, low pass y low approach."],
  ["w38","","n","words","The only number transmitted using the word 'point' is:",["8.33 (channel spacing)","118.1 (a frequency)","1013.2 (a QNH)","3.5 (a visibility)"],"★ «Eight point three three». Las frecuencias llevan DECIMAL."],
  ["w39","","n","verify","What is the difference between REPORT and REQUEST?",["Report: pass me information. Request: I wish to obtain","Report: I wish to obtain. Request: pass me information","Both mean 'I wish to obtain'","Both mean 'pass me information'"],"★ REPORT notificas; REQUEST pides."],
