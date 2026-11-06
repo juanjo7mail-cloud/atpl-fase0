@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="11f736a4d0ad";</script>
+<script>window.F0_BUILD="369595de1f88";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -101,6 +101,20 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 .tab .dot.ok{background:#5CC98F}.tab .dot.mid{background:#7EB3DE}.tab .dot.low{background:#E7BD55}
 .tab[aria-selected="true"]{border-bottom-color:#5CC8C8;color:#fff}
 .tab.test b{color:#9EE0DD}
+#brief{margin:0 0 12px}
+#brief button{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;width:100%;text-align:left;border:1px solid #6B4A10;border-radius:12px;padding:9px 14px;cursor:pointer;color:#fff;background:linear-gradient(100deg,#2A1D06,#14304A 78%);font:600 14.5px/1.25 var(--body);min-height:48px}
+#brief button:hover{border-color:#FFC94D}
+#brief button:focus-visible{outline:2px solid #FFC94D;outline-offset:2px}
+#brief .bt{display:flex;align-items:center;gap:7px;font:700 17px/1 var(--display);letter-spacing:.8px;color:#FFC94D}
+#brief .bt svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#brief .bc{font:700 12px/1 var(--body);letter-spacing:.4px;padding:3px 7px;border-radius:5px;color:#fff;background:#1F7A4D}
+#brief .bc.MVFR{background:#2F6FD0}#brief .bc.IFR{background:#D23A2F}#brief .bc.LIFR{background:#B02FA5}
+#brief .bd{color:#CFDBE6;font-weight:500}#brief .bd b{color:#fff;font-weight:700}
+#brief .ba{display:inline-flex;align-items:center;gap:5px;font-weight:700}#brief .ba i{width:8px;height:8px;border-radius:50%;background:#5CC98F}#brief .ba.no i{background:#F0827D}
+#brief .bg{margin-left:auto;color:#FFC94D;font:700 15px var(--display);letter-spacing:.6px;white-space:nowrap}
+#brief .old{color:#E7BD55;font-weight:500}
+@media (max-width:560px){#brief button{gap:5px 10px;padding:8px 12px}#brief .bt{order:1;font-size:16px}#brief .bc{order:2}#brief .bg{order:3;margin-left:auto}#brief .bd{order:4;font-size:13.5px}#brief .ba{order:5;font-size:13.5px}}
+
 .tab.brief{padding:6px 6px 8px}
 .tab.brief .bf{display:flex;align-items:center;gap:7px;padding:0 12px;height:34px;border-radius:9px;font:700 16px/1 var(--display);letter-spacing:.8px;color:#1A1200;background:linear-gradient(180deg,#FFC94D,#F0A116);box-shadow:0 0 0 1px #FFE3A1 inset,0 3px 14px rgba(255,177,30,.32);transition:box-shadow .15s,transform .15s}
 .tab.brief:hover .bf{box-shadow:0 0 0 1px #FFE3A1 inset,0 4px 18px rgba(255,177,30,.55)}
@@ -456,6 +470,7 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
       <div class="dhead">
         <div class="kpis" id="kpis"></div>
       </div>
+      <div id="brief" hidden></div>
       <div class="grid" id="grid"></div>
       <div id="panel"></div>
       <p class="foot">Aprobado con 75 %. «Preparado» = media de tus 5 últimos tests ≥ 85 % · «Casi listo» ≥ 75 % · «Reforzar» por debajo.</p>
@@ -869,6 +884,24 @@ function dueCount(k){
   return n;
 }
 
+
+/* Tarjeta compacta «BRIEFING» en INICIO (solo en modo prueba): resumen de LECU en una línea → abre la pestaña */
+let BR={t:0,d:null,busy:false};
+$("#brief").addEventListener("click",e=>{ if(e.target.closest("button[data-v]")) show("ops"); });
+function drawBrief(){
+  const el=$("#brief"); if(!el) return;
+  if(!(briefOn()&&window.F0Ops&&window.F0Ops.brief)){ el.hidden=true; return; }
+  const ico='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 21 4l-5 17-4-7-7-2z"/></svg>';
+  const paint=()=>{ const d=BR.d, ok=d&&Date.now()-BR.t<30*6e4;
+    el.innerHTML=`<button type="button" data-v="ops" aria-label="Abrir BRIEFING: tiempo, pista y cartas">`+
+      `<span class="bt">${ico}BRIEFING · LECU</span>`+
+      (ok?`<span class="bc ${d.cat}">${d.cat}</span><span class="bd"><b>${d.temp!=null?Math.round(d.temp)+" °C":"—"}</b> · ${esc(d.wind)} · ${esc(d.vis)}${d.age!=null&&d.age>60?` · <span class="old">hace ${Math.round(d.age/60)} h</span>`:""}</span><span class="ba ${d.ad?"":"no"}"><i></i>AD ${d.ad?"ABIERTO":"CERRADO"}</span>`:`<span class="bd">Tiempo, pista y cartas de 23 aeródromos</span>`)+
+      `<span class="bg">ABRIR →</span></button>`; el.hidden=false; };
+  paint();
+  if(Date.now()-BR.t>5*6e4&&!BR.busy){ BR.busy=true;
+    window.F0Ops.brief(()=>fetch("/api/wx",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })).then(d=>{ BR.d=d; BR.t=Date.now(); }).catch(()=>{}).then(()=>{ BR.busy=false; if(current==="test") paint(); }); }
+}
+
 function renderDash(){
   const sums=SUBJ.map(s=>({s, m:summary(s.k)}));
   const tests=sums.reduce((a,x)=>a+x.m.n,0), readyN=sums.filter(x=>x.m.lvl==="ok").length;
@@ -886,7 +919,7 @@ function renderDash(){
         ${dueCount(s.k)?`<button class="btn ghost wide" type="button" data-review="${s.k}" title="${dueCount(s.k)} pendientes de hoy · se completa hasta 20 con tus falladas y preguntas nuevas">🔁 Repasar hoy · 20</button>`:""}
       </div>
     </article>`).join("");
-  drawStripes();
+  drawStripes(); drawBrief();
 }
 $("#grid").addEventListener("click",e=>{
   if(e.target.closest("[data-radio]")){ show("radio"); return; }

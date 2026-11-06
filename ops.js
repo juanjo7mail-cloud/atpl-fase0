@@ -431,6 +431,15 @@ function setData(raw){
   S.data={m,tp,hist:raw.metar.hist||null,metar:raw.metar.raw,taf:raw.taf?raw.taf.raw:"",mSt:raw.metar.station,mKm:raw.metar.km||0,tKm:raw.taf?raw.taf.km||0:0,obs:obsDate(m,new Date()),demo:!!raw.demo};
   const er=$("#opErr",S.root); if(er) er.hidden=true; fill(); skyWx();
 }
+/* Resumen compacto de LECU para la tarjeta de INICIO (sin pintar OPS). Devuelve {cat,temp,wind,vis,ad,age} o lanza error. */
+function brief(fetchWx){
+  return fetchWx().then(r=>{ if(!r||!r.metar) throw 0;
+    const m=parseMetar(r.metar.raw), now=new Date(), od=obsDate(m,now), sv=AD; AD=AD0; let st; try{ st=adState(now); }finally{ AD=sv; }
+    const w=m.wind, wt=!w?"—":(w.spd===0&&!w.gst?"Viento calma":(w.vrb?"VRB":pad3(w.dir)+"º")+" "+w.spd+(w.gst?"G"+w.gst:"")+" kt"),
+      vv=m.vis==null||m.vis>=9999?"≥10 km":(m.vis>=1000?(Math.round(m.vis/100)/10)+" km":m.vis+" m");
+    return {cat:flightCat(m),temp:m.temp,wind:wt,vis:vv,qnh:m.qnh,ad:st.adOpen,adTxt:st.adOpen?"abierto":"cerrado",age:od?Math.round((now-od)/6e4):null};
+  });
+}
 function load(){
   const f0=S.opt&&S.opt.fetchWx, R=S.root, g=S.gen, f=f0&&(()=>f0(S.opt.multi?AD.icao:undefined));
   const fail=()=>{ const er=$("#opErr",R); if(er){ er.hidden=false; } };
@@ -840,5 +849,5 @@ function render(el,opt,keep){
   clearInterval(S.tt); S.tt=setInterval(()=>{ if(!document.hidden) loadTr(); },20000);
 }
 function leave(){ clearInterval(S.clk); clearInterval(S.t); clearInterval(S.tt); try{ if(S.map) S.map.remove(); }catch(e){} S.map=null; S.lay=null; S.trl=null; S.tile=null; S.img=null; S.imgO=null; if(S.root) S.root.innerHTML=""; S.root=null; }
-window.F0Ops={render,leave,_t:{skyAt,wxOf,parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
+window.F0Ops={brief,render,leave,_t:{skyAt,wxOf,parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
 })();
