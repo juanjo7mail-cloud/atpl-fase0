@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="f7ec68d24184";</script>
+<script>window.F0_BUILD="d1b1620004fa";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -111,8 +111,9 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 #brief .sky .orb.moon{width:30px;height:30px;margin:0 0 -15px -15px;box-shadow:0 0 14px rgba(244,241,222,.35)}
 #brief .sky .orb.moon svg{display:block;width:100%;height:100%}
 #brief .sky .orb.sun{box-shadow:0 0 22px 5px rgba(255,196,0,.35)}
-#brief .b1,#brief .b2,#brief .bt,#brief .bc,#brief .ba,#brief .bd,#brief .bg{position:relative;z-index:1}
-#brief .bt,#brief .bd,#brief .ba,#brief .bg{text-shadow:0 1px 3px rgba(0,0,0,.55)}
+#brief .b1,#brief .b2,#brief .bt,#brief .bz,#brief .bc,#brief .ba,#brief .bd,#brief .bg{position:relative;z-index:1}
+#brief .bz{font:600 12.5px/1 var(--body);font-variant-numeric:tabular-nums;color:rgba(255,255,255,.78);letter-spacing:.04em;white-space:nowrap}
+#brief .bt,#brief .bd,#brief .ba,#brief .bg,#brief .bz{text-shadow:0 1px 3px rgba(0,0,0,.55)}
 #brief button:hover{border-color:#FFC94D}
 #brief button:focus-visible{outline:2px solid #FFC94D;outline-offset:2px}
 #brief .bt{display:flex;align-items:center;gap:7px;font:700 17px/1 var(--display);letter-spacing:.8px;color:#FFC94D}
@@ -121,9 +122,10 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 #brief .bc.MVFR{background:#2F6FD0}#brief .bc.IFR{background:#D23A2F}#brief .bc.LIFR{background:#B02FA5}
 #brief .bd{color:#CFDBE6;font-weight:500}#brief .bd b{color:#fff;font-weight:700}
 #brief .ba{display:inline-flex;align-items:center;gap:5px;font-weight:700}#brief .ba i{width:8px;height:8px;border-radius:50%;background:#5CC98F}#brief .ba.no i{background:#F0827D}
-#brief .bg{margin-left:auto;color:#FFC94D;font:700 15px var(--display);letter-spacing:.6px;white-space:nowrap}
+#brief .bg i{font-style:normal}#brief .bg{margin-left:auto;color:#FFC94D;font:700 15px var(--display);letter-spacing:.6px;white-space:nowrap}
 #brief .old{color:#E7BD55;font-weight:500}
-@media (max-width:560px){#brief button{gap:5px 10px;padding:8px 12px}#brief .bt{order:1;font-size:16px}#brief .bc{order:2}#brief .bg{order:3;margin-left:auto}#brief .bd{order:4;font-size:13.5px}#brief .ba{order:5;font-size:13.5px}}
+@media (max-width:560px){#brief button{gap:5px 10px;padding:8px 12px}#brief .bt{order:1;font-size:16px}#brief .bc{order:2}#brief .bz{order:3;margin-left:auto}#brief .bg{order:4;margin-left:0}#brief .bg i{display:none;font-style:normal}#brief .bd{order:5;font-size:13.5px}#brief .ba{order:6;font-size:13.5px}}
+@media (max-width:380px){#brief .bt{font-size:14.5px}#brief .bz{font-size:11.5px}#brief button{gap:5px 8px}}
 @media (min-width:900px){#brief{flex:1 1 340px;align-self:stretch}#brief button{flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:center;gap:8px;height:100%;padding:12px 16px}#brief .b1,#brief .b2{display:flex;align-items:center;gap:10px}#brief .b1 .ba{margin-left:auto}#brief .bd{flex:1;font-size:15px}#brief .bt{font-size:18px}}
 
 .tab.brief{padding:9px 4px 11px}
@@ -898,7 +900,9 @@ function dueCount(k){
 /* Tarjeta compacta «BRIEFING» en INICIO (solo en modo prueba): resumen de LECU en una línea → abre la pestaña */
 let BR={t:0,d:null,busy:false};
 $("#brief").addEventListener("click",e=>{ if(e.target.closest("button[data-v]")) show("ops"); });
+function zulu(){ return new Date().toISOString().slice(11,16)+" Z"; }
 function skyApply(){
+  const z=$("#brief .bz"); if(z) z.textContent=zulu();
   const el=$("#brief .sky"); if(!el||!(window.F0Ops&&window.F0Ops.skyCard)) return;
   let k; try{ k=window.F0Ops.skyCard(new Date()); }catch(e){ return; }
   if(!el.firstChild) el.innerHTML=k.stars+'<div class="orb sun"></div><div class="orb moon"></div>';
@@ -914,8 +918,8 @@ function drawBrief(){
   const ico='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 21 4l-5 17-4-7-7-2z"/></svg>';
   const paint=()=>{ const d=BR.d, ok=d&&Date.now()-BR.t<30*6e4;
     el.innerHTML=`<button type="button" data-v="ops" aria-label="Abrir BRIEFING: tiempo, pista y cartas"><span class="sky" aria-hidden="true"></span>`+
-      `<span class="b1"><span class="bt">${ico}BRIEFING · LECU</span>`+(ok?`<span class="bc ${d.cat}">${d.cat}</span><span class="ba ${d.ad?"":"no"}"><i></i>AD ${d.ad?"ABIERTO":"CERRADO"}</span>`:"")+`</span>`+
-      `<span class="b2">`+(ok?`<span class="bd"><b>${d.temp!=null?Math.round(d.temp)+" °C":"—"}</b> · ${esc(d.wind)} · ${esc(d.vis)}${d.age!=null&&d.age>60?` · <span class="old">hace ${Math.round(d.age/60)} h</span>`:""}</span>`:`<span class="bd">Tiempo, pista y cartas de 23 aeródromos</span>`)+`<span class="bg">ABRIR →</span></span></button>`; el.hidden=false; skyApply(); };
+      `<span class="b1"><span class="bt">${ico}BRIEFING · LECU</span><span class="bz" title="Hora Zulu (UTC)">${zulu()}</span>`+(ok?`<span class="bc ${d.cat}">${d.cat}</span><span class="ba ${d.ad?"":"no"}"><i></i>AD ${d.ad?"ABIERTO":"CERRADO"}</span>`:"")+`</span>`+
+      `<span class="b2">`+(ok?`<span class="bd"><b>${d.temp!=null?Math.round(d.temp)+" °C":"—"}</b> · ${esc(d.wind)} · ${esc(d.vis)}${d.age!=null&&d.age>60?` · <span class="old">hace ${Math.round(d.age/60)} h</span>`:""}</span>`:`<span class="bd">Tiempo, pista y cartas de 23 aeródromos</span>`)+`<span class="bg"><i>ABRIR </i>→</span></span></button>`; el.hidden=false; skyApply(); };
   paint();
   if(Date.now()-BR.t>5*6e4&&!BR.busy){ BR.busy=true;
     window.F0Ops.brief(()=>fetch("/api/wx",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })).then(d=>{ BR.d=d; BR.t=Date.now(); }).catch(()=>{}).then(()=>{ BR.busy=false; if(current==="test") paint(); }); }
@@ -1609,7 +1613,7 @@ function drawHeat(){
     const us=Object.keys(byU).sort((a,b)=>Object.values(byU[b]).reduce((x,y)=>x+y,0)-Object.values(byU[a]).reduce((x,y)=>x+y,0)).slice(0,15);
     const cols=order.filter(v=>tot[v]); const cm=Math.max(...us.flatMap(u=>cols.map(v=>byU[u][v]||0)));
     const nameOf=id=>{ const u=ST.find(x=>x.user_id===id); return u?uname(u):"(usuario)"; };
-    mat=`<h3 style="font:700 14px var(--body);margin:16px 0 6px">Mapa de calor por persona (15 con más tiempo)</h3><div class="st-scroll"><table class="st-tbl heat"><thead><tr><th>Persona</th>${cols.map(v=>`<th class="n" title="${esc(viewLabel(v))}">${esc((SUBJ.find(x=>x.k===v)||{}).code?v.toUpperCase():({test:"Inicio",rank:"Rank",radio:"Radio",stats:"Stats",ops:"OPS"}[v]||v))}</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>${us.map(u=>`<tr><td>${esc(nameOf(u))}</td>${cols.map(v=>{ const x=byU[u][v]||0; return `<td class="n hc" style="${x?`background:color-mix(in srgb,var(--accent) ${Math.round(10+75*x/cm)}%,transparent)`:""}" title="${esc(viewLabel(v))}: ${fmtM(x)}">${x?fmtM(x).replace(" min","'").replace(" h ","h"):""}</td>`; }).join("")}<td class="n"><b>${fmtM(Object.values(byU[u]).reduce((a,b)=>a+b,0))}</b></td></tr>`).join("")}</tbody></table></div>`;
+    mat=`<h3 style="font:700 14px var(--body);margin:16px 0 6px">Mapa de calor por persona (15 con más tiempo)</h3><div class="st-scroll"><table class="st-tbl heat"><thead><tr><th>Persona</th>${cols.map(v=>`<th class="n" title="${esc(viewLabel(v))}">${esc((SUBJ.find(x=>x.k===v)||{}).code?v.toUpperCase():({test:"Inicio",rank:"Rank",radio:"Radio",stats:"Stats",ops:"Brief"}[v]||v))}</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>${us.map(u=>`<tr><td>${esc(nameOf(u))}</td>${cols.map(v=>{ const x=byU[u][v]||0; return `<td class="n hc" style="${x?`background:color-mix(in srgb,var(--accent) ${Math.round(10+75*x/cm)}%,transparent)`:""}" title="${esc(viewLabel(v))}: ${fmtM(x)}">${x?fmtM(x).replace(" min","'").replace(" h ","h"):""}</td>`; }).join("")}<td class="n"><b>${fmtM(Object.values(byU[u]).reduce((a,b)=>a+b,0))}</b></td></tr>`).join("")}</tbody></table></div>`;
   }
   el.innerHTML=head+barsH+mat;
   $("#heatSel").onchange=e=>{ heatDays=e.target.value; drawHeat(); };
