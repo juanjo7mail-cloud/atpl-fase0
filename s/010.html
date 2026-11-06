@@ -3737,10 +3737,18 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     if(q&&q[2]==="o"){ const b=bo(q[0]), L=(typeof BANK!=="undefined"?BANK:[]).filter(v=>v[2]!=="o"&&v[0]!==q[0]&&bo(v[0])===b&&Array.isArray(v[5])&&v[5].length>=2&&String(v[4]).replace(/[—·\s]/g,"").length>2); q=L.length?L[Math.floor(Math.random()*L.length)]:null; }
     return q?(typeof selectItems==="function"?{k:"mc",q}:q):null; };
   const shuf=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  /* orden de la sesión: 1) pendientes de hoy 2) falladas alguna vez (más antiguas primero) 3) sin ver todavía. Siempre hasta 20 como en el resto de asignaturas. */
+  function order(){
+    const due=shuf(dueSet()), dset=new Set(due), fail={}, seen={};
+    [...state.attempts].filter(a=>a&&!a.ignore&&a.mode!=="voice"&&a.mode!=="atis").forEach(a=>(a.items||[]).forEach(it=>{ if(!it||!it.q) return; seen[it.q]=1; if(!it.ok) fail[it.q]=new Date(a.date).getTime(); }));
+    const fl=Object.keys(fail).filter(id=>!dset.has(id)&&byId(id)).sort((a,b)=>fail[a]-fail[b]);
+    const un=shuf((typeof BANK!=="undefined"?BANK:[]).filter(q=>q[2]!=="e"&&!seen[q[0]]).map(q=>q[0]));
+    return [...due,...fl,...un];
+  }
   const o=window.F0DEDUP; if(typeof o!=="function") return;
   window.F0DEDUP=function(list,mode){
     if(window.__f0rev && mode==="wrong"){ window.__f0rev=false;
-      try{ const items=shuf(dueSet()).slice(0,20).map(mk).filter(Boolean).filter((x,i,a)=>a.findIndex(y=>(y.q||y)[0]===(x.q||x)[0])===i); if(items.length) return items; }catch(e){ console.error("repaso",e); } }
+      try{ const items=[], got=new Set(); for(const id of order()){ if(items.length>=20) break; const x=mk(id); if(!x) continue; const k=(x.q||x)[0]; if(got.has(k)) continue; got.add(k); items.push(x); } if(items.length) return items; }catch(e){ console.error("repaso",e); } }
     return o(list,mode); };
   addEventListener("message",function(e){ const d=e.data; if(d&&d.t==="f0-cmd") window.__f0rev=!!d.review; });
   window.F0REVIEW={due:()=>dueSet().length};

@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="3078218a0733";</script>
+<script>window.F0_BUILD="283a9c9141e4";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -871,7 +871,7 @@ function renderDash(){
         <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo · 30</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Ir a la asignatura</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">Más tipos de test</button>
-        ${dueCount(s.k)?`<button class="btn ghost wide" type="button" data-review="${s.k}">🔁 Repasar hoy · ${Math.min(20,dueCount(s.k))}</button>`:""}
+        ${dueCount(s.k)?`<button class="btn ghost wide" type="button" data-review="${s.k}" title="${dueCount(s.k)} pendientes de hoy · se completa hasta 20 con tus falladas y preguntas nuevas">🔁 Repasar hoy · 20</button>`:""}
       </div>
     </article>`).join("");
   drawStripes();
@@ -1717,7 +1717,7 @@ const NEWS=[
   {id:"2026-10-25c", items:[
     {i:"🔥", t:"Racha diaria", d:"Cada día con un test de 10+ preguntas suma. Tienes un descanso por semana sin perder la racha. Arriba, en Inicio, ves tu racha y la meta de 5 días."},
     {i:"🎖️", t:"Galones", d:"Arriba, junto a tu cuenta: de 0 a 4 galones según cuántas asignaturas apruebas (75 % con 5+ tests) y la ★ de capitán transoceánico si además tienes todas con 85 % o más. Púlsalos para ver cómo subir."},
-    {i:"🔁", t:"Repasar hoy", d:"Tus fallos vuelven a los 1, 3, 7 y 14 días. Si hay pendientes, la tarjeta de la asignatura tiene el botón «Repasar hoy» (máximo 20)."},
+    {i:"🔁", t:"Repasar hoy", d:"Tus fallos vuelven a los 1, 3, 7 y 14 días. Si hay pendientes, la tarjeta de la asignatura tiene el botón «Repasar hoy»: siempre 20 preguntas, primero tus pendientes y después tus falladas y preguntas nuevas."},
     {i:"📲", t:"Instálala en el iPad o el iPhone", d:"En Safari: Compartir → Añadir a pantalla de inicio. Se abre como una app, a pantalla completa.", web:true}
   ]},
   {id:"2026-10-25b", items:[

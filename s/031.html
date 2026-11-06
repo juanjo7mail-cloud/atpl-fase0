@@ -1909,13 +1909,9 @@ const ALTQ = [
 const PFP2Q = [
  ["n26","031.04.01.01","n","datum","Which statement about the datum is TRUE?",["It may lie outside the aircraft","It must be inside the cabin","It must coincide with the CG","It must be at the main wheels"],"Puede estar fuera del avión."],
  ["n27","031.05.02.02","n","envelope","On a CG envelope, the forward limit slopes at high masses because:",["Heavy and nose-heavy, the elevator may lack authority","The fuel tanks are located in the nose","The aft limit moves forward with the fuel burn","The fuselage structure is weaker at the nose"],"No habría fuerza en el elevator."],
- ["n28","031.05.02.02","n","envelope","On the Warrior's CG envelope, the dashed line:",["Separates the utility category","Shows the landing mass limit","Shows the ramp mass limit","Marks the fuel tank arm"],"La discontinua separa categorías."],
- ["n29","031.05.02.02","n","envelope","In the Warrior's utility category:",["Max 2020 lb, no baggage or rear passengers","Max 2325 lb with up to 200 lb of baggage","Max 2020 lb with rear passengers allowed","No limit on the baggage carried"],"Hoja del Warrior: utility 2020 lb, sin equipaje ni pasajeros detrás."],
  ["n30","031.04.03.02","n","bemdata","BEW 1531.09 lb with a moment of 135,516.21 lb·in. The empty CG is at:",["88.51 in","85.43 in","88.40 in","0.885 in"],"135.516,21 ÷ 1531,09 = 88,51 in."],
  ["n31","031.01.02.01","n","cgfwd","With the CG forward of the centre of pressure (within limits), the controls are:",["Heavier and the aeroplane more stable","Lighter and the aeroplane less stable","Unaffected by the CG position","Lighter and the aeroplane more stable"],"Adelantado, más estable y mandos más duros."],
  ["n32","031.05.02.02","n","cgcalc","Warrior sheet: 40 US gal of fuel at an arm of 95.0 in. Its moment is:",["22,800 lb·in","3,800 lb·in","2,280 lb·in","4,000 lb·in"],"40 × 6 = 240 lb × 95 = 22 800 lb·in."],
- ["n33","031.05.02.02","n","envelope","Warrior envelope: 2300 lb with the CG at 85.0 in is:",["Outside, forward of the forward limit","Inside the normal category","Inside the utility category","Outside, aft of the aft limit"],"A 2300 lb el límite delantero está en ≈ 86,7 in."],
- ["n34","031.05.02.02","n","envelope","Warrior envelope: 1900 lb with the CG at 86.0 in is:",["Inside both normal and utility categories","Inside the normal category only","Outside the envelope","Inside the utility category only"],"Por debajo de 2020 lb y entre 83 y 87,4 in."],
  ["n35","050.01.05.01","n","isa","ISA: sea-level temperature and lapse rate are:",["15 °C, falling 2 °C per 1000 ft","15 °C, falling 1 °C per 1000 ft","20 °C, falling 2 °C per 1000 ft","0 °C, falling 6.5 °C per 1000 ft"],"15 − 2 × altitud ÷ 1000."],
  ["n36","050.01.05.01","n","isa","ISA temperature at 5000 ft:",["5 °C","25 °C","10 °C","−5 °C"],"15 − 10 = 5 °C."],
  ["n37","050.01.05.01","n","isa","At 4000 ft the OAT is +17 °C. The ISA deviation is:",["ISA +10","ISA +2","ISA −10","ISA +17"],"ISA a 4000 ft = 7 °C → +10."],
@@ -2073,7 +2069,7 @@ const CALCQ = [
 ].map(x=>[x[0],x[1],x[2],x[3],"[cálculo] "+GEN_NAMES[x[0]],[],""]);
 
 // ★ OJO: lo que el profesor remarcó en clase y sus variantes
-const PROFE = new Set(["n09","n10","n11","n12","n14","n15","n16","n19","n24","t3e","p49","k2","k3","k4","k5","k6","k10","t3d","n26","n27","n28","n31","n35","n36","n37","n38","k12","k17","k18","k19","pa12","pa13","t8a","t9b","t9c","pa1"]);
+const PROFE = new Set(["n09","n10","n11","n12","n14","n15","n16","n19","n24","t3e","p49","k2","k3","k4","k5","k6","k10","t3d","n26","n27","n31","n35","n36","n37","n38","k12","k17","k18","k19","pa12","pa13","t8a","t9b","t9c","pa1"]);
 
 const BASE = [].concat(
   TRIAL_ORIG, TRIAL_ORIG2,
@@ -2918,10 +2914,18 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     if(q&&q[2]==="o"){ const b=bo(q[0]), L=(typeof BANK!=="undefined"?BANK:[]).filter(v=>v[2]!=="o"&&v[0]!==q[0]&&bo(v[0])===b&&Array.isArray(v[5])&&v[5].length>=2&&String(v[4]).replace(/[—·\s]/g,"").length>2); q=L.length?L[Math.floor(Math.random()*L.length)]:null; }
     return q?(typeof selectItems==="function"?{k:"mc",q}:q):null; };
   const shuf=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  /* orden de la sesión: 1) pendientes de hoy 2) falladas alguna vez (más antiguas primero) 3) sin ver todavía. Siempre hasta 20 como en el resto de asignaturas. */
+  function order(){
+    const due=shuf(dueSet()), dset=new Set(due), fail={}, seen={};
+    [...state.attempts].filter(a=>a&&!a.ignore&&a.mode!=="voice"&&a.mode!=="atis").forEach(a=>(a.items||[]).forEach(it=>{ if(!it||!it.q) return; seen[it.q]=1; if(!it.ok) fail[it.q]=new Date(a.date).getTime(); }));
+    const fl=Object.keys(fail).filter(id=>!dset.has(id)&&byId(id)).sort((a,b)=>fail[a]-fail[b]);
+    const un=shuf((typeof BANK!=="undefined"?BANK:[]).filter(q=>q[2]!=="e"&&!seen[q[0]]).map(q=>q[0]));
+    return [...due,...fl,...un];
+  }
   const o=window.F0DEDUP; if(typeof o!=="function") return;
   window.F0DEDUP=function(list,mode){
     if(window.__f0rev && mode==="wrong"){ window.__f0rev=false;
-      try{ const items=shuf(dueSet()).slice(0,20).map(mk).filter(Boolean).filter((x,i,a)=>a.findIndex(y=>(y.q||y)[0]===(x.q||x)[0])===i); if(items.length) return items; }catch(e){ console.error("repaso",e); } }
+      try{ const items=[], got=new Set(); for(const id of order()){ if(items.length>=20) break; const x=mk(id); if(!x) continue; const k=(x.q||x)[0]; if(got.has(k)) continue; got.add(k); items.push(x); } if(items.length) return items; }catch(e){ console.error("repaso",e); } }
     return o(list,mode); };
   addEventListener("message",function(e){ const d=e.data; if(d&&d.t==="f0-cmd") window.__f0rev=!!d.review; });
   window.F0REVIEW={due:()=>dueSet().length};
