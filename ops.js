@@ -407,6 +407,17 @@ function skyWx(){
     +'<div class="veil"></div>'+(x.fog?'<div class="fog"></div>':"")+(x.snow?'<div class="snow"></div>':"")+(x.rain?'<div class="rain"></div>':"")+(x.ts?'<div class="fl"></div>':"");
   skyUpdate();
 }
+/* Cielo de la tarjeta de INICIO: mismo sol y luna reales que la cabecera (LECU), con una paleta más oscura para que el texto se lea. */
+function skyCard(now){
+  const sv=AD; AD=AD0; let k; try{ k=skyAt(now||new Date()); }finally{ AD=sv; }
+  const alt=k.sun.alt, t=cl01((alt+12)/24), warm=cl01(1-Math.abs(alt-1)/9);
+  let top=lerp([8,12,30],[34,86,156],t), bot=lerp([18,28,58],[92,156,212],t);
+  top=lerp(top,[64,52,100],warm*0.55); bot=lerp(bot,[226,126,70],warm*0.85);
+  const pl=(a,op)=>({l:Math.max(5,Math.min(95,50+a.az/110*44)).toFixed(1),b:Math.max(-20,a.alt).toFixed(1),o:(op*cl01((a.alt+4)/6)).toFixed(2)});
+  return {bg:"linear-gradient(180deg,"+rgb(top)+","+rgb(bot)+")", st:cl01(1-(alt+3)/14).toFixed(2), alt,
+    stars:STARS, sun:Object.assign(pl(k.sun,0.95),{bg:"radial-gradient(circle,"+(warm>0.25?"#FFE2A8":"#FFF6C8")+" 0,#FFC400 55%,rgba(255,196,0,0) 72%)"}),
+    moon:Object.assign(pl(k.moon,0.95*(1-0.6*t)),{svg:moonSVG(k.moon.ph)})};
+}
 function skyUpdate(){
   const R=S.root, sk=R&&$("#opSky",R); if(!sk) return;
   const k=skyAt(new Date()), alt=k.sun.alt, t=cl01((alt+12)/24), warm=cl01(1-Math.abs(alt-1)/9);
@@ -849,5 +860,5 @@ function render(el,opt,keep){
   clearInterval(S.tt); S.tt=setInterval(()=>{ if(!document.hidden) loadTr(); },20000);
 }
 function leave(){ clearInterval(S.clk); clearInterval(S.t); clearInterval(S.tt); try{ if(S.map) S.map.remove(); }catch(e){} S.map=null; S.lay=null; S.trl=null; S.tile=null; S.img=null; S.imgO=null; if(S.root) S.root.innerHTML=""; S.root=null; }
-window.F0Ops={brief,render,leave,_t:{skyAt,wxOf,parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
+window.F0Ops={brief,render,leave,skyCard,_t:{skyAt,wxOf,parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
 })();

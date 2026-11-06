@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="bd2335145279";</script>
+<script>window.F0_BUILD="ef2f23ba7709";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -103,7 +103,16 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 .tab.test b{color:#9EE0DD}
 #brief{flex:1 1 100%;min-width:0}
 #brief .b1,#brief .b2{display:contents}
-#brief button{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;width:100%;text-align:left;border:1px solid #6B4A10;border-radius:12px;padding:9px 14px;cursor:pointer;color:#fff;background:linear-gradient(100deg,#2A1D06,#14304A 78%);font:600 14.5px/1.25 var(--body);min-height:48px}
+#brief button{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;width:100%;text-align:left;border:1px solid #6B4A10;border-radius:12px;padding:9px 14px;cursor:pointer;color:#fff;background:linear-gradient(180deg,#14304A,#0B1B2E);position:relative;overflow:hidden;font:600 14.5px/1.25 var(--body);min-height:48px}
+#brief .sky{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;border-radius:inherit;background:var(--sky,transparent);transition:background 2s}
+#brief .sky::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,14,28,.62),rgba(6,14,28,.3) 60%,rgba(6,14,28,.12))}
+#brief .sky .star{position:absolute;border-radius:50%;background:#fff;opacity:var(--st,0)}
+#brief .sky .orb{position:absolute;width:38px;height:38px;margin:0 0 -19px -19px;border-radius:50%;transition:left 20s linear,bottom 20s linear,opacity 1s}
+#brief .sky .orb.moon{width:30px;height:30px;margin:0 0 -15px -15px;box-shadow:0 0 14px rgba(244,241,222,.35)}
+#brief .sky .orb.moon svg{display:block;width:100%;height:100%}
+#brief .sky .orb.sun{box-shadow:0 0 22px 5px rgba(255,196,0,.35)}
+#brief .b1,#brief .b2,#brief .bt,#brief .bc,#brief .ba,#brief .bd,#brief .bg{position:relative;z-index:1}
+#brief .bt,#brief .bd,#brief .ba,#brief .bg{text-shadow:0 1px 3px rgba(0,0,0,.55)}
 #brief button:hover{border-color:#FFC94D}
 #brief button:focus-visible{outline:2px solid #FFC94D;outline-offset:2px}
 #brief .bt{display:flex;align-items:center;gap:7px;font:700 17px/1 var(--display);letter-spacing:.8px;color:#FFC94D}
@@ -889,14 +898,24 @@ function dueCount(k){
 /* Tarjeta compacta «BRIEFING» en INICIO (solo en modo prueba): resumen de LECU en una línea → abre la pestaña */
 let BR={t:0,d:null,busy:false};
 $("#brief").addEventListener("click",e=>{ if(e.target.closest("button[data-v]")) show("ops"); });
+function skyApply(){
+  const el=$("#brief .sky"); if(!el||!(window.F0Ops&&window.F0Ops.skyCard)) return;
+  let k; try{ k=window.F0Ops.skyCard(new Date()); }catch(e){ return; }
+  if(!el.firstChild) el.innerHTML=k.stars+'<div class="orb sun"></div><div class="orb moon"></div>';
+  el.style.setProperty("--sky",k.bg); el.style.setProperty("--st",k.st);
+  const put=(o,a)=>{ o.style.left=a.l+"%"; o.style.bottom=a.b+"%"; o.style.opacity=a.o; };
+  const sun=el.querySelector(".sun"), moon=el.querySelector(".moon");
+  put(sun,k.sun); sun.style.background=k.sun.bg; put(moon,k.moon); if(moon.dataset.s!==k.moon.svg){ moon.innerHTML=k.moon.svg; moon.dataset.s=k.moon.svg; }
+}
+setInterval(()=>{ if(!document.hidden) skyApply(); },60000);
 function drawBrief(){
   const el=$("#brief"); if(!el) return;
   if(!(window.F0Ops&&window.F0Ops.brief)){ el.hidden=true; return; }
   const ico='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 21 4l-5 17-4-7-7-2z"/></svg>';
   const paint=()=>{ const d=BR.d, ok=d&&Date.now()-BR.t<30*6e4;
-    el.innerHTML=`<button type="button" data-v="ops" aria-label="Abrir BRIEFING: tiempo, pista y cartas">`+
+    el.innerHTML=`<button type="button" data-v="ops" aria-label="Abrir BRIEFING: tiempo, pista y cartas"><span class="sky" aria-hidden="true"></span>`+
       `<span class="b1"><span class="bt">${ico}BRIEFING · LECU</span>`+(ok?`<span class="bc ${d.cat}">${d.cat}</span><span class="ba ${d.ad?"":"no"}"><i></i>AD ${d.ad?"ABIERTO":"CERRADO"}</span>`:"")+`</span>`+
-      `<span class="b2">`+(ok?`<span class="bd"><b>${d.temp!=null?Math.round(d.temp)+" °C":"—"}</b> · ${esc(d.wind)} · ${esc(d.vis)}${d.age!=null&&d.age>60?` · <span class="old">hace ${Math.round(d.age/60)} h</span>`:""}</span>`:`<span class="bd">Tiempo, pista y cartas de 23 aeródromos</span>`)+`<span class="bg">ABRIR →</span></span></button>`; el.hidden=false; };
+      `<span class="b2">`+(ok?`<span class="bd"><b>${d.temp!=null?Math.round(d.temp)+" °C":"—"}</b> · ${esc(d.wind)} · ${esc(d.vis)}${d.age!=null&&d.age>60?` · <span class="old">hace ${Math.round(d.age/60)} h</span>`:""}</span>`:`<span class="bd">Tiempo, pista y cartas de 23 aeródromos</span>`)+`<span class="bg">ABRIR →</span></span></button>`; el.hidden=false; skyApply(); };
   paint();
   if(Date.now()-BR.t>5*6e4&&!BR.busy){ BR.busy=true;
     window.F0Ops.brief(()=>fetch("/api/wx",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })).then(d=>{ BR.d=d; BR.t=Date.now(); }).catch(()=>{}).then(()=>{ BR.busy=false; if(current==="test") paint(); }); }
@@ -1688,6 +1707,9 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
+  {id:"2026-11-06b", items:[
+    {i:"✈️", t:"Performance · 35 preguntas nuevas del banco del colegio", d:"Densidad y altitud de presión, pendiente de pista, flaps, Vx/Vy, planeo, hélice de paso fijo, masa y centrado, AEMET/SIGWX/TAF y política de combustible. Salen en el adaptativo, el simulacro, por tema y en el banco completo."}
+  ]},
   {id:"2026-11-06", items:[
     {i:"🛰️", t:"La pestaña OPS ahora es BRIEFING: tiempo, pista y cartas de 23 aeródromos", go:"ops", need:"F0Ops"}
   ]},
