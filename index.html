@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="369595de1f88";</script>
+<script>window.F0_BUILD="bd2335145279";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -101,7 +101,8 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 .tab .dot.ok{background:#5CC98F}.tab .dot.mid{background:#7EB3DE}.tab .dot.low{background:#E7BD55}
 .tab[aria-selected="true"]{border-bottom-color:#5CC8C8;color:#fff}
 .tab.test b{color:#9EE0DD}
-#brief{margin:0 0 12px}
+#brief{flex:1 1 100%;min-width:0}
+#brief .b1,#brief .b2{display:contents}
 #brief button{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;width:100%;text-align:left;border:1px solid #6B4A10;border-radius:12px;padding:9px 14px;cursor:pointer;color:#fff;background:linear-gradient(100deg,#2A1D06,#14304A 78%);font:600 14.5px/1.25 var(--body);min-height:48px}
 #brief button:hover{border-color:#FFC94D}
 #brief button:focus-visible{outline:2px solid #FFC94D;outline-offset:2px}
@@ -114,16 +115,17 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 #brief .bg{margin-left:auto;color:#FFC94D;font:700 15px var(--display);letter-spacing:.6px;white-space:nowrap}
 #brief .old{color:#E7BD55;font-weight:500}
 @media (max-width:560px){#brief button{gap:5px 10px;padding:8px 12px}#brief .bt{order:1;font-size:16px}#brief .bc{order:2}#brief .bg{order:3;margin-left:auto}#brief .bd{order:4;font-size:13.5px}#brief .ba{order:5;font-size:13.5px}}
+@media (min-width:900px){#brief{flex:1 1 340px;align-self:stretch}#brief button{flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:center;gap:8px;height:100%;padding:12px 16px}#brief .b1,#brief .b2{display:flex;align-items:center;gap:10px}#brief .b1 .ba{margin-left:auto}#brief .bd{flex:1;font-size:15px}#brief .bt{font-size:18px}}
 
-.tab.brief{padding:6px 6px 8px}
-.tab.brief .bf{display:flex;align-items:center;gap:7px;padding:0 12px;height:34px;border-radius:9px;font:700 16px/1 var(--display);letter-spacing:.8px;color:#1A1200;background:linear-gradient(180deg,#FFC94D,#F0A116);box-shadow:0 0 0 1px #FFE3A1 inset,0 3px 14px rgba(255,177,30,.32);transition:box-shadow .15s,transform .15s}
-.tab.brief:hover .bf{box-shadow:0 0 0 1px #FFE3A1 inset,0 4px 18px rgba(255,177,30,.55)}
-.tab.brief .bf svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.tab.brief .lv{width:8px;height:8px;border-radius:50%;background:#1F9D5C;box-shadow:0 0 0 2px rgba(255,255,255,.55);animation:lvp 2.2s ease-in-out infinite;flex:none}
-@keyframes lvp{50%{box-shadow:0 0 0 5px rgba(255,255,255,0)}}
-.tab.brief[aria-selected="true"]{border-bottom-color:#FFC94D}
+.tab.brief{padding:9px 4px 11px}
+.tab.brief .bf{display:flex;align-items:center;gap:6px;padding:0 10px;height:26px;border-radius:8px;font:700 14.5px/1 var(--display);letter-spacing:.7px;color:#FFD98A;background:rgba(240,170,40,.15);border:1px solid rgba(255,205,110,.42);transition:background .15s,border-color .15s}
+.tab.brief:hover .bf{background:rgba(240,170,40,.26);border-color:rgba(255,205,110,.7)}
+.tab.brief .bf svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tab.brief .lv{width:7px;height:7px;border-radius:50%;background:#3DD68C;animation:lvp 2.4s ease-in-out infinite;flex:none}
+@keyframes lvp{50%{box-shadow:0 0 0 4px rgba(61,214,140,0)}}
+.tab.brief[aria-selected="true"]{border-bottom-color:#E8B14A}
+.tab.brief[aria-selected="true"] .bf{background:rgba(240,170,40,.28);border-color:rgba(255,205,110,.75)}
 @media (prefers-reduced-motion:reduce){.tab.brief .lv{animation:none}}
-.menu .mc.brief{color:#B8760A}
 
 
 /* ---- vistas ---- */
@@ -469,8 +471,8 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
     <div class="dash">
       <div class="dhead">
         <div class="kpis" id="kpis"></div>
+        <div id="brief" hidden></div>
       </div>
-      <div id="brief" hidden></div>
       <div class="grid" id="grid"></div>
       <div id="panel"></div>
       <p class="foot">Aprobado con 75 %. «Preparado» = media de tus 5 últimos tests ≥ 85 % · «Casi listo» ≥ 75 % · «Reforzar» por debajo.</p>
@@ -637,8 +639,7 @@ const STATE = {};          // clave → estado
 let db = null, owner = false;
 const ADMIN_EMAIL = "jjc.ruano@gmail.com";
 let sb=null, sbUser=null, isAdmin=false;
-/* Pestaña OPS → BRIEFING: prueba solo para admin (o con localStorage f0brief=1; ?briefing=0 lo apaga). Al lanzar: BRIEF=true */
-const briefOn=()=>{ try{ const u=new URLSearchParams(location.search).get('briefing'); if(u==='1') localStorage.setItem('f0brief','1'); if(u==='0') localStorage.removeItem('f0brief'); return isAdmin||localStorage.getItem('f0brief')==='1'; }catch(e){ return isAdmin; } };
+/* Pestaña BRIEFING (antes OPS): lanzada a todos el 2026-11-06 */
 let remote = null;         // reservado: otro almacén remoto {get(k), set(k,v), getAll()}
 function lsGet(k){ try{ return JSON.parse(localStorage.getItem("f0:"+k)||"null"); }catch(e){ return null; } }
 function lsSet(k,v){ try{ localStorage.setItem("f0:"+k, JSON.stringify(v)); }catch(e){} }
@@ -756,20 +757,20 @@ function renderTabs(){
   const lv = k => summary(k).lvl;
   $("#tabs").innerHTML = (isAdmin?`<button class="tab test solo" role="tab" data-v="stats" aria-selected="${current==="stats"}"><b>STATS</b></button>`:"") +
     `<button class="tab test solo" role="tab" data-v="test" aria-selected="${current==="test"}"><b>INICIO</b></button>` +
-    (window.F0Ops?(briefOn()?`<button class="tab brief solo" role="tab" data-v="ops" aria-selected="${current==="ops"}" aria-label="Briefing: tiempo, pista y cartas de 23 aeródromos"><div class="bf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 21 4l-5 17-4-7-7-2z"/></svg>BRIEFING<i class="lv" title="Datos en vivo"></i></div></button>`:`<button class="tab test solo" role="tab" data-v="ops" aria-selected="${current==="ops"}"><b>OPS</b></button>`):"") +
+    (window.F0Ops?`<button class="tab brief solo" role="tab" data-v="ops" aria-selected="${current==="ops"}" aria-label="Briefing: tiempo, pista y cartas de 23 aeródromos"><div class="bf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 21 4l-5 17-4-7-7-2z"/></svg>BRIEFING<i class="lv" title="Datos en vivo"></i></div></button>`:"") +
     (sbUser?`<button class="tab test solo" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b></button>`:"") +
     (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
   drawMenu(); tabArrows();
 }
-function opsLoad(){   // Leaflet solo se descarga al abrir OPS
+function opsLoad(){   // Leaflet solo se descarga al abrir BRIEFING
   if(window.L) return Promise.resolve();
   return window._opsL||(window._opsL=new Promise(ok=>{ const l=document.createElement("link"); l.rel="stylesheet"; l.href="vendor/leaflet/leaflet.css"; document.head.appendChild(l);
     const s=document.createElement("script"); s.src="vendor/leaflet/leaflet.js"; s.onload=s.onerror=()=>ok(); document.head.appendChild(s); }));
 }
 function drawMenu(){
   const lv = k => summary(k).lvl, it=(v,c,n,d)=>`<button role="menuitem" data-v="${v}" aria-current="${current===v}"><span class="mc">${c}</span><span class="mn">${esc(n)}</span><i class="md ${d||""}"></i></button>`;
-  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(window.F0Ops?(briefOn()?it("ops","BRIEFING","Tiempo, pista y cartas · 23 aeródromos"):it("ops","OPS","Cuatro Vientos: tiempo y pista")):"")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+"<hr>"+
+  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(window.F0Ops?it("ops","BRIEFING","Tiempo, pista y cartas · 23 aeródromos"):"")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+"<hr>"+
     SUBJ.map(s=>it(s.k,s.code,s.short,lv(s.k))).join("");
 }
 function tabArrows(){
@@ -890,13 +891,12 @@ let BR={t:0,d:null,busy:false};
 $("#brief").addEventListener("click",e=>{ if(e.target.closest("button[data-v]")) show("ops"); });
 function drawBrief(){
   const el=$("#brief"); if(!el) return;
-  if(!(briefOn()&&window.F0Ops&&window.F0Ops.brief)){ el.hidden=true; return; }
+  if(!(window.F0Ops&&window.F0Ops.brief)){ el.hidden=true; return; }
   const ico='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 21 4l-5 17-4-7-7-2z"/></svg>';
   const paint=()=>{ const d=BR.d, ok=d&&Date.now()-BR.t<30*6e4;
     el.innerHTML=`<button type="button" data-v="ops" aria-label="Abrir BRIEFING: tiempo, pista y cartas">`+
-      `<span class="bt">${ico}BRIEFING · LECU</span>`+
-      (ok?`<span class="bc ${d.cat}">${d.cat}</span><span class="bd"><b>${d.temp!=null?Math.round(d.temp)+" °C":"—"}</b> · ${esc(d.wind)} · ${esc(d.vis)}${d.age!=null&&d.age>60?` · <span class="old">hace ${Math.round(d.age/60)} h</span>`:""}</span><span class="ba ${d.ad?"":"no"}"><i></i>AD ${d.ad?"ABIERTO":"CERRADO"}</span>`:`<span class="bd">Tiempo, pista y cartas de 23 aeródromos</span>`)+
-      `<span class="bg">ABRIR →</span></button>`; el.hidden=false; };
+      `<span class="b1"><span class="bt">${ico}BRIEFING · LECU</span>`+(ok?`<span class="bc ${d.cat}">${d.cat}</span><span class="ba ${d.ad?"":"no"}"><i></i>AD ${d.ad?"ABIERTO":"CERRADO"}</span>`:"")+`</span>`+
+      `<span class="b2">`+(ok?`<span class="bd"><b>${d.temp!=null?Math.round(d.temp)+" °C":"—"}</b> · ${esc(d.wind)} · ${esc(d.vis)}${d.age!=null&&d.age>60?` · <span class="old">hace ${Math.round(d.age/60)} h</span>`:""}</span>`:`<span class="bd">Tiempo, pista y cartas de 23 aeródromos</span>`)+`<span class="bg">ABRIR →</span></span></button>`; el.hidden=false; };
   paint();
   if(Date.now()-BR.t>5*6e4&&!BR.busy){ BR.busy=true;
     window.F0Ops.brief(()=>fetch("/api/wx",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })).then(d=>{ BR.d=d; BR.t=Date.now(); }).catch(()=>{}).then(()=>{ BR.busy=false; if(current==="test") paint(); }); }
@@ -1558,7 +1558,7 @@ async function drawHangar(reload){
     hgArm=0; try{ await window.F0Hangar.adminSet(true,true); }catch(e){ alert("No se pudo: "+(e.message||e)); } drawHangar(true); };
 }
 /* ---- mapa de calor y "quién está dónde" ---- */
-const VIEW_ES={test:"Inicio",rank:"Ranking",radio:"Radio",stats:"Stats",ops:"OPS"};
+const VIEW_ES={test:"Inicio",rank:"Ranking",radio:"Radio",stats:"Stats",ops:"Briefing"};
 function viewLabel(v){ const s=SUBJ.find(x=>x.k===v); return s?`${s.code} ${s.short}`:(VIEW_ES[v]||v); }
 function ago(t){ const sec=Math.max(0,Math.round((Date.now()-new Date(t))/1000)); return sec<60?`hace ${sec} s`:sec<3600?`hace ${Math.round(sec/60)} min`:`hace ${Math.round(sec/3600)} h`; }
 function fmtM(sec){ const m=Math.round(sec/60); return m>=60?`${Math.floor(m/60)} h ${String(m%60).padStart(2,"0")} min`:`${m} min`; }
@@ -1688,8 +1688,11 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
+  {id:"2026-11-06", items:[
+    {i:"🛰️", t:"La pestaña OPS ahora es BRIEFING: tiempo, pista y cartas de 23 aeródromos", go:"ops", need:"F0Ops"}
+  ]},
   {id:"2026-11-05b", items:[
-    {i:"🛰️", t:"Nueva pestaña OPS · 23 aeródromos con METAR, TAF y cartas AIP", d:"Elige aeródromo (Cuatro Vientos por defecto) y mira antes de volar: METAR y TAF con su categoría, el viento contra cada pista, los mínimos de la escuela, el mapa satélite con la carta AIP de rodaje encima (calles, holding points), las frecuencias y los avisos de la AIP. Tráfico en vivo en Cuatro Vientos. Horas en UTC.", big:true, go:"ops", need:"F0Ops"}
+    {i:"🛰️", t:"Nueva pestaña BRIEFING · 23 aeródromos con METAR, TAF y cartas AIP", d:"Elige aeródromo (Cuatro Vientos por defecto) y mira antes de volar: METAR y TAF con su categoría, el viento contra cada pista, los mínimos de la escuela, el mapa satélite con la carta AIP de rodaje encima (calles, holding points), las frecuencias y los avisos de la AIP. Tráfico en vivo en Cuatro Vientos. Horas en UTC.", big:true, go:"ops", need:"F0Ops"}
   ]},
   {id:"2026-11-04b", items:[
     {i:"👁️", t:"Factores Humanos · ejercicios de vista y oído, y adaptativo de examen (25 preguntas, 45 min)"}
