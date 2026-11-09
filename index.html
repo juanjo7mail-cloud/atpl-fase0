@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="b230c8c09a4e";</script>
+<script>window.F0_BUILD="49b660286bec";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -1541,14 +1541,28 @@ function evoChart(list){
   return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="Evolución de la nota"><line x1="0" x2="${W}" y1="${y(75)}" y2="${y(75)}" stroke="var(--line)" stroke-dasharray="4 4"/><polyline points="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>`+
     pts.map((a,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(a.pct).toFixed(1)}" r="3.5" fill="${a.pct>=75?"var(--ok)":"var(--warn)"}"><title>${fmtD(a.date)} · ${a.code} · ${a.pct} %</title></circle>`).join("")+`</svg>`;
 }
+/* PostgREST devuelve como mucho 1000 filas por consulta: sin paginar, las estadísticas se quedaban con las más antiguas y "no se movían" */
+async function selAll(table, cols, ord){
+  let out=[];
+  for(let i=0;i<100;i++){
+    let q=sb.from(table).select(cols);
+    if(typeof q.order==="function") ord.forEach(o=>{ q=q.order(o[0],{ascending:o[1]}); });
+    const paged=typeof q.range==="function";
+    const r=paged?await q.range(i*1000,i*1000+999):await q;
+    if(r.error) return r;
+    const d=r.data||[]; out=out.concat(d);
+    if(!paged||d.length<1000) break;
+  }
+  return {data:out,error:null};
+}
 async function renderStats(){
   const box=$("#stats"); if(!isAdmin||!sb){ box.innerHTML=""; return; }
   SG=null;
   box.innerHTML=`<div class="dhead"><div><h1>Estadísticas</h1><p>Solo las ves tú. Visitas sin cuenta y países, en Cloudflare Web Analytics.</p></div></div><p class="muted" id="stLoad">Cargando…</p>`;
   try{
-    let a = await sb.from("profiles").select("user_id,email,created_at,last_seen,visits,seconds,full_name");
-    if(a.error) a = await sb.from("profiles").select("user_id,email,created_at,last_seen,visits,seconds");
-    const b = await sb.from("progress").select("user_id,subject,state");
+    let a = await selAll("profiles","user_id,email,created_at,last_seen,visits,seconds,full_name",[["user_id",true]]);
+    if(a.error) a = await selAll("profiles","user_id,email,created_at,last_seen,visits,seconds",[["user_id",true]]);
+    const b = await selAll("progress","user_id,subject,state",[["user_id",true],["subject",true]]);
     if(a.error||b.error) throw (a.error||b.error);
     const per={}; (a.data||[]).forEach(p=>per[p.user_id]={...p, at:[]});
     (b.data||[]).forEach(r=>{
@@ -1560,7 +1574,7 @@ async function renderStats(){
     Object.values(per).forEach(u=>u.at.sort((x,y)=>new Date(x.date)-new Date(y.date)));
     ST=Object.values(per).sort((x,y)=>String(y.last_seen||"").localeCompare(String(x.last_seen||"")));
   }catch(e){ $("#stLoad").textContent="No se han podido cargar: "+(e.message||e); return; }
-  try{ const ua=await sb.from("usage_log").select("user_id,day,view,seconds"), la=await sb.from("live_now").select("user_id,view,updated_at"); ULerr=!!(ua.error||la.error); UL=ua.data||[]; LN=la.data||[]; }catch(e){ ULerr=true; UL=[]; LN=[]; }
+  try{ const ua=await selAll("usage_log","user_id,day,view,seconds",[["day",false],["user_id",true],["view",true]]), la=await sb.from("live_now").select("user_id,view,updated_at"); ULerr=!!(ua.error||la.error); UL=ua.data||[]; LN=la.data||[]; }catch(e){ ULerr=true; UL=[]; LN=[]; }
   if(stUser && !ST.some(u=>u.user_id===stUser)) stUser="";
   drawStats();
 }
