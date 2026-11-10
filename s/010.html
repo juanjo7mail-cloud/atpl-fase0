@@ -1364,6 +1364,7 @@ input.fillin.right{border-bottom-color:var(--ok);color:var(--ok)} input.fillin.w
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Examen cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senLen"><option value="full">Completo · 44 preguntas en 48 min (el real da 60)</option><option value="half">Exprés · 22 preguntas en 24 min</option><option value="real">Tiempo real · 44 preguntas en 60 min</option></select></span></small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
+      <label class="mode"><input type="radio" name="mode" value="signals"> Señales y balizamiento · 15 preguntas <small>Marcas de pista, luces, señales visuales, ayudas luminosas, señales SAR e interceptación. Cada vez distinto.</small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
@@ -3270,6 +3271,30 @@ function selectSenasa(lenKey, inc, atpl){
     if(out) chosen.splice(chosen.indexOf(out),1,f); }
   return BLOCKS.flatMap(b=>shuffle(chosen.filter(q=>blockOf(q)===b.k)));
 }
+// ---------- test de señales y balizamiento: 15 preguntas repartidas por categorías ----------
+const SIG_LO = new Set(["010.09.03","010.09.04","010.09.05","010.09.06","010.09.08","010.11.04","010.05.06"]);
+const SIG_RX = /light signal|(steady|flashing|continuous)\s+(red|green|white)|series of green|pyrotechnic|navigation light|holding position|marked with|marking|flare|emergency vehicles|stopway|displaced threshold|lighting|acknowledg/i;
+function sigCat(q){
+  const s = q[4]||"", lo = q[1];
+  if(lo==="010.11.04") return "sar";
+  if(lo==="010.05.06") return "interc";
+  if(lo==="010.09.05") return "obst";
+  if(/navigation light/i.test(s)) return "nav";
+  if(lo==="010.05.03") return /holding position/i.test(s) ? "pista" : "atc";
+  if(/PAPI|VASI|approach light|lighting|beacon|\blights?\b/i.test(s) || /^(ph|papi):/.test(q[7]||"")) return "lum";
+  return "pista";
+}
+const SIG_QUOTA = {atc:3, nav:1, pista:5, lum:2, obst:1, sar:2, interc:1};
+function selectSignals(pool){
+  const by = {};
+  shuffle(pool.filter(q=> SIG_LO.has(q[1]) || (["010.05.03"].includes(q[1]) && SIG_RX.test(q[4]||"")))).forEach(q=>{ (by[sigCat(q)] = by[sigCat(q)] || []).push(q); });
+  const out = [], usedB = new Set(), taken = new Set();
+  const put = q => { const b = q[2]==="t" ? baseOf(q[0]) : null; if(taken.has(q[0]) || (b && usedB.has(b))) return false; taken.add(q[0]); if(b) usedB.add(b); out.push(q); return true; };
+  Object.entries(SIG_QUOTA).forEach(([c,n])=>{ let k=0; for(const q of (by[c]||[])){ if(k>=n) break; if(put(q)) k++; } });
+  const rest = shuffle(Object.values(by).flat());
+  for(const q of rest){ if(out.length>=15) break; put(q); }
+  return shuffle(out.slice(0,15));
+}
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senLen").value, inc, atpl);
   const st = stats();
@@ -3279,6 +3304,7 @@ function selectQuestions(mode, inc, lo, atpl){
     return shuffle(Object.values(groups).map(g=>g[Math.floor(Math.random()*g.length)]));
   }
   const pool = BANK.filter(q=> servable(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
+  if(mode==="signals") return selectSignals(pool);
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
   if(mode==="all") return shuffle(pool);
@@ -3562,7 +3588,7 @@ $("#startBtn").addEventListener("click",()=>{
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
-function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${(curMode==="senasa"?`Simulacro SENASA ${SEN_LEN[curLen].label.toLowerCase()}`:{adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un LO",all:"Banco completo",fase0:"Trial"}[curMode])}`; }
+function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${(curMode==="senasa"?`Simulacro SENASA ${SEN_LEN[curLen].label.toLowerCase()}`:{adaptive:"Adaptativo",signals:"Señales y balizamiento",trial:"Trial",wrong:"Mis fallos",lo:"Un LO",all:"Banco completo",fase0:"Trial"}[curMode])}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=> curMode==="trial" ? finishFase0() : finishTest(false));
 async function finishTest(timeout){
@@ -3620,7 +3646,7 @@ function loSummary(at){
 }
 function renderHist(){
   const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const modeName = {adaptive:"Adaptativo",wrong:"Fallos",lo:"Por LO",all:"Banco completo",trial:"Trial",senasa:"SENASA",fase0:"Fase 0"};
+  const modeName = {adaptive:"Adaptativo",signals:"Señales",wrong:"Fallos",lo:"Por LO",all:"Banco completo",trial:"Trial",senasa:"SENASA",fase0:"Fase 0"};
   $("#histEvo").innerHTML = evoChart();
   $("#histBody").innerHTML = list.length ? `<div class="card"><div class="scroll"><table class="hist"><tr><th>Fecha</th><th>Tipo</th><th>Nota</th><th></th><th></th></tr>${
     list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${r.source==="campus"?"Trial":(modeName[r.mode]||r.mode)}${r.mode==="senasa"?` <span class="muted">${(SEN_LEN[r.len]||{}).label||""} · ${fmtMS(r.usedS||0)}</span>`:""}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Detalle</button>`:''}${r.mode==="trial"?` · <button class="linkbtn" data-ig="${r.id}">${ig?'volver a contar':'no contar (al azar)'}</button>`:''}</td></tr>
