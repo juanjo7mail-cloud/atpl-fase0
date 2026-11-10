@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="9fde6546b207";</script>
+<script>window.F0_BUILD="5af4acb1c81e";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -296,6 +296,23 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .nlist li.big b{font-size:18px;line-height:1.25}
 .nlist li.big span.t{color:var(--ink);margin-top:6px}
 .nlist li.big .go{margin-top:12px;width:100%}
+.nlist li.big.xl{padding:18px 16px 16px;border-width:2px;box-shadow:0 8px 26px rgba(14,124,134,.25)}
+.nlist li.big.xl b{font-size:23px;line-height:1.15}
+.nlist li.big.xl .go{padding:14px;font-size:17px}
+.nart{display:block;width:100%;height:auto;margin:12px 0 2px;border-radius:12px}
+.nart .tcp{transform-origin:0 0;animation:tcrock 3.4s ease-in-out infinite alternate}
+.nart .tcb{animation:tcball 3.4s ease-in-out infinite alternate}
+.nart .glide{animation:tcglide 4.4s ease-in infinite}
+@keyframes tcrock{from{transform:rotate(-17deg)}to{transform:rotate(17deg)}}
+@keyframes tcball{from{transform:translateX(-14px)}to{transform:translateX(14px)}}
+@keyframes tcglide{0%{transform:translate(-6px,-6px);opacity:0}12%{opacity:1}85%{opacity:1}100%{transform:translate(78px,52px);opacity:0}}
+.tab.simt{padding:9px 4px 11px}
+.tab.simt .sm{display:flex;align-items:center;gap:6px;padding:0 10px;height:26px;border-radius:8px;font:700 14.5px/1 var(--display);letter-spacing:.7px;color:#BFF5E1;background:rgba(60,200,150,.16);border:1px solid rgba(120,230,190,.45);transition:background .15s,border-color .15s}
+.tab.simt:hover .sm{background:rgba(60,200,150,.28);border-color:rgba(120,230,190,.75)}
+.tab.simt .sm svg{width:15px;height:15px;fill:currentColor}
+.tab.simt .sm em{font:700 9.5px/1 var(--body);font-style:normal;background:#E4572E;color:#fff;border-radius:99px;padding:3px 6px;letter-spacing:.06em;animation:simpulse 1.4s ease-in-out infinite}
+@keyframes simpulse{50%{transform:scale(1.18)}}
+@media (prefers-reduced-motion:reduce){.nart .tcp,.nart .tcb,.nart .glide,.tab.simt .sm em{animation:none}}
 .nlist span.t{display:block;font-size:14px;color:var(--muted);line-height:1.4;margin-top:2px}
 @media (prefers-reduced-motion:reduce){.plane,.plane .ban,.plane .prop,.sky .cl{animation:none}}
 /* etiqueta «Study before flight» */
@@ -769,12 +786,13 @@ let current="test";
 /* enlaces del correo (recuperar contraseña): llegan en la URL como #access_token=…&type=recovery o #error=…; no se toca la URL hasta que la cuenta los lea */
 let authHold=/access_token=|refresh_token=|type=recovery|error_code=|[#&]error=/.test(location.hash);
 const frames={}, ready={}, pendingCmd={};
+function simNew(){ try{ return !localStorage.getItem("f0:simseen"); }catch(e){ return false; } }
 function renderTabs(){
   const lv = k => summary(k).lvl;
   $("#tabs").innerHTML = (isAdmin?`<button class="tab test solo" role="tab" data-v="stats" aria-selected="${current==="stats"}"><b>STATS</b></button>`:"") +
     `<button class="tab test solo" role="tab" data-v="test" aria-selected="${current==="test"}"><b>INICIO</b></button>` +
     (window.F0Ops?`<button class="tab brief solo" role="tab" data-v="ops" aria-selected="${current==="ops"}" aria-label="Briefing: tiempo, pista y cartas de 23 aeródromos"><div class="bf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 21 4l-5 17-4-7-7-2z"/></svg>BRIEFING<i class="lv" title="Datos en vivo"></i></div></button>`:"") +
-    (window.F0Sim?`<button class="tab test solo" role="tab" data-v="sim" aria-selected="${current==="sim"}" aria-label="Simulador: minijuegos de vuelo"><b>SIMULADOR</b></button>`:"") +
+    (window.F0Sim?`<button class="tab simt solo" role="tab" data-v="sim" aria-selected="${current==="sim"}" aria-label="Simulador: minijuegos de vuelo"><div class="sm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>SIMULADOR${simNew()?"<em>NUEVO</em>":""}</div></button>`:"") +
     (sbUser?`<button class="tab test solo" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b></button>`:"") +
     (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
@@ -803,6 +821,7 @@ function show(v, cmd){
   if(sbUser&&MY&&MY.ok&&!MY.name){ openNameAsk(); return; }   // sin nombre y apellidos no se entra
   if(current==="ops"&&v!=="ops"){ try{ window.F0Ops&&window.F0Ops.leave(); }catch(e){} }
   if(current==="sim"&&v!=="sim"){ try{ window.F0Sim&&window.F0Sim.leave(); }catch(e){} }
+  if(v==="sim"){ try{ localStorage.setItem("f0:simseen","1"); }catch(e){} }
   current=v; renderTabs(); try{vswSync();}catch(e){}
   document.querySelectorAll(".view").forEach(el=>el.hidden = el.id!=="v-"+v);
   if(v==="stats"){ renderStats(); }
@@ -1733,6 +1752,9 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
+  {id:"2026-11-10", items:[
+    {big:true, xl:true, i:"🎮", t:"Nuevo: SIMULADOR de vuelo", d:"Cuatro minijuegos para entender los instrumentos haciendo: turn coordinator (giros a tasa 1 con la bola centrada), despegue, aterrizaje con PAPI y viento cruzado, y clasificación de instrumentos giroscópicos y de presión. Se juega con ratón, táctil o teclado, y guarda tu mejor marca.", go:"sim", cta:"Probar el simulador", need:"F0Sim", art:`<svg class="nart" viewBox="0 0 320 130" role="img" aria-label="Turn coordinator y senda de aterrizaje con PAPI"><rect width="320" height="130" rx="12" fill="#0E1318"/><g transform="translate(70 65)"><circle r="50" fill="#161E25" stroke="#46535E" stroke-width="3"/><g stroke="#fff" stroke-width="2.5"><path d="M-44 0h-7M44 0h7"/><path d="M-39-21l-6-3M39-21l6-3" stroke="#8FD6C8"/></g><text x="-33" y="-28" font-size="10" font-weight="700" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif">L</text><text x="33" y="-28" font-size="10" font-weight="700" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif">R</text><g class="tcp"><path d="M-38 0h31l5 6 5-6h31M0 -2v-13" stroke="#FFC247" stroke-width="5" stroke-linecap="round" fill="none"/><circle r="5" fill="#FFC247"/></g><rect x="-26" y="26" width="52" height="12" rx="6" fill="#0A0F13" stroke="#46535E" stroke-width="2"/><circle class="tcb" cx="0" cy="32" r="4.6" fill="#fff"/></g><g transform="translate(236 0)"><path d="M-18 130 -2 70h22l16 60z" fill="#2A343C"/><path d="M8 70v60" stroke="#fff" stroke-width="2" stroke-dasharray="6 5"/><g class="glide"><ellipse cx="-46" cy="22" rx="17" ry="4.5" fill="#fff"/><path d="M-50 22l-9-13h6l13 13zM-50 22l-7 11h5l11-11z" fill="#E4EEF2"/><path d="M-62 22l-5-8h4l5 8z" fill="#fff"/></g><circle cx="-46" cy="86" r="5" fill="#fff"/><circle cx="-34" cy="86" r="5" fill="#fff"/><circle cx="-22" cy="86" r="5" fill="#E5412B"/><circle cx="-10" cy="86" r="5" fill="#E5412B"/><text x="-28" y="104" font-size="9" font-weight="700" fill="#9FB0BC" text-anchor="middle" font-family="Arial,sans-serif" letter-spacing=".08em">PAPI</text></g></svg>`}
+  ]},
   {id:"2026-11-06", items:[
     {i:"🛰️", t:"La pestaña OPS ahora es BRIEFING: tiempo, pista y cartas de 23 aeródromos", go:"ops", need:"F0Ops"}
   ]},
@@ -1846,7 +1868,7 @@ function showNews(){
   if(!items.length){ if(NEWS.some(n=>n.id>seen) && !sb) newsMark(); return; }
   if(!$("#devNote").hidden||!$("#login").hidden||!$("#nameAsk").hidden||!$("#pwReset").hidden) return;
   items.sort((a,b)=>(b.big?1:0)-(a.big?1:0));
-  $("#nwList").innerHTML=items.map(x=>x.big?`<li class="big"><span class="ni" aria-hidden="true">${x.i}</span><div><em>NUEVO</em><b>${esc(x.t)}</b>${x.d?`<span class="t">${esc(x.d)}</span>`:""}${x.go&&(x.go!=="ops"||window.F0Ops)?`<button class="btn go" type="button" data-go="${x.go}">Abrir ${x.go==="ops"?"OPS":"ya"} →</button>`:""}</div></li>`:`<li><span class="ni" aria-hidden="true">${x.i}</span><div><b>${esc(x.t)}</b></div></li>`).join("");
+  $("#nwList").innerHTML=items.map(x=>x.big?`<li class="big${x.xl?" xl":""}"><span class="ni" aria-hidden="true">${x.i}</span><div><em>NUEVO</em><b>${esc(x.t)}</b>${x.d?`<span class="t">${esc(x.d)}</span>`:""}${x.art||""}${x.go&&(x.go!=="ops"||window.F0Ops)?`<button class="btn go" type="button" data-go="${x.go}">${x.cta?esc(x.cta):"Abrir "+(x.go==="ops"?"OPS":"ya")} →</button>`:""}</div></li>`:`<li><span class="ni" aria-hidden="true">${x.i}</span><div><b>${esc(x.t)}</b></div></li>`).join("");
   $("#nwList").querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{ closeNews(); show(b.dataset.go); window.scrollTo(0,0); }));
   $("#news").hidden=false; $("#nwOk").focus();
 }
