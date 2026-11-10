@@ -1476,7 +1476,7 @@ function svgMed(){ return `<svg viewBox="0 0 700 220" role="img" aria-label="Cer
 
 
 
-function svgAirspace(){ return `<svg viewBox="0 0 700 380" role="img" aria-label="Esquema de espacios aéreos alrededor de un aeródromo: A amarillo, B verde, C azul y D naranja">
+function svgAirspaceCyl(){ return `<svg viewBox="0 0 700 380" role="img" aria-label="Esquema de espacios aéreos alrededor de un aeródromo: A amarillo, B verde, C azul y D naranja">
 <style>.at{font:700 24px 'Barlow Condensed',sans-serif;fill:#111;stroke:#fff;stroke-width:4;paint-order:stroke} .gnd{fill:color-mix(in srgb,var(--ok) 12%,transparent)}</style>
 <rect class="gnd" x="4" y="318" width="692" height="58" rx="6"/>
 <path d="M70,150 L70,215 A280,40 0 0 0 630,215 L630,150 Z" fill="#2f6fd6" fill-opacity=".22" stroke="#2f6fd6" stroke-width="2.5"/>
@@ -2236,16 +2236,63 @@ function initLevels(){
 }
 
 // ---- figuras de las preguntas («Anexo», como en SENASA) ----
+// ---- figuras del test de señales: luz de la torre, símbolos SAR, marcas de pista y luces de navegación ----
+function svgLamp(code){
+  const col = {r:"#e5262b", g:"#1fa34a", w:"#ffffff"}[code[1]], flash = code[0]==="f";
+  const rays = [-26,-13,0,13,26].map(a=>`<line x1="104" y1="56" x2="${330}" y2="${56+Math.tan(a*Math.PI/180)*226}" stroke="${col}" stroke-width="6" stroke-dasharray="14 10" stroke-linecap="round"/>`).join("");
+  const cone = `<polygon points="104,56 330,-4 330,116" fill="url(#lg${code})"/>`;
+  return `<svg viewBox="0 0 360 190" role="img" aria-label="Luz dirigida desde la torre de control: ${flash?"intermitente":"fija"}, ${{r:"roja",g:"verde",w:"blanca"}[code[1]]}">
+<style>@keyframes lf${code}{0%,42%{opacity:1}52%,100%{opacity:.06}} .lf${code}{animation:lf${code} 1.1s infinite} @media (prefers-reduced-motion:reduce){.lf${code}{animation:none}}</style>
+<defs><linearGradient id="lg${code}" x1="0" x2="1"><stop offset="0" stop-color="${col}" stop-opacity=".85"/><stop offset="1" stop-color="${col}" stop-opacity=".12"/></linearGradient></defs>
+<rect width="360" height="190" rx="8" fill="#0d1b2a"/><rect y="168" width="360" height="22" fill="#1b2d3f"/>
+<g class="${flash?"lf"+code:""}">${flash?rays:cone}<circle cx="96" cy="56" r="13" fill="${col}" opacity=".35"/><circle cx="96" cy="56" r="8" fill="${col}"/></g>
+<rect x="76" y="64" width="8" height="104" fill="#5d7388"/><rect x="60" y="48" width="48" height="16" rx="3" fill="#7b8fa3"/><rect x="66" y="40" width="36" height="9" rx="2" fill="#9db0c2"/>
+<g fill="#cfd8e0" transform="translate(300 118)"><ellipse cx="0" cy="0" rx="22" ry="4.5"/><path d="M-4,0 L-16,-20 L-9,-20 L6,0Z M-4,0 L-16,20 L-9,20 L6,0Z"/><path d="M-19,0 L-25,-8 L-21,-8 L-14,0Z M-19,0 L-25,8 L-21,8 L-14,0Z"/></g>
+</svg>`; }
+function svgSarSym(s){
+  const W = {stroke:"#fff","stroke-width":16,fill:"none","stroke-linecap":"butt","stroke-linejoin":"miter"};
+  const a = Object.entries(W).map(([k,v])=>`${k}="${v}"`).join(" ");
+  const G = {
+    V:`<path d="M95,45 L150,155 L205,45" ${a}/>`,
+    X:`<path d="M100,45 L200,155 M200,45 L100,155" ${a}/>`,
+    N:`<path d="M105,155 L105,45 L195,155 L195,45" ${a}/>`,
+    Y:`<path d="M95,45 L150,100 L205,45 M150,100 L150,158" ${a}/>`,
+    arrow:`<path d="M70,100 L215,100" ${a}/><path d="M190,60 L240,100 L190,140" ${a} stroke-linejoin="miter"/>`
+  }[s];
+  return `<svg viewBox="0 0 300 200" role="img" aria-label="Símbolo tierra-aire dispuesto en el suelo por supervivientes"><rect width="300" height="200" rx="8" fill="#6f8f3f"/><rect y="150" width="300" height="50" fill="#5d7c34" opacity=".6"/>${G}</svg>`; }
+function svgRwyMark(k){
+  const wh="#f4f4f4", hl="#ff9f1c", pair=(x,w)=>`<rect x="${x}" y="64" width="${w}" height="12" fill="${wh}"/><rect x="${x}" y="144" width="${w}" height="12" fill="${wh}"/>`;
+  const R = (x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="none" stroke="${hl}" stroke-width="4" stroke-dasharray="9 5"/>`;
+  const hlt = {aim:R(194,52,72,116), tdz:R(84,56,88,108)+R(286,56,60,108)+R(362,56,32,108), cl:R(48,98,360,24), edge:R(8,34,404,16)}[k];
+  return `<svg viewBox="0 0 420 220" role="img" aria-label="Pista vista desde arriba con una marca resaltada"><rect width="420" height="220" rx="8" fill="#7a8a52"/>
+<rect x="10" y="40" width="400" height="140" fill="#3b3f45"/>
+<rect x="10" y="42" width="400" height="4" fill="${wh}"/><rect x="10" y="174" width="400" height="4" fill="${wh}"/>
+${[0,1,2,3,4,5,6,7,8,9].map(i=>`<rect x="18" y="${54+i*11.2}" width="26" height="6" fill="${wh}"/>`).join("")}
+${pair(90,28)}${pair(124,28)}${pair(158,28)}
+<rect x="200" y="58" width="60" height="22" fill="${wh}"/><rect x="200" y="140" width="60" height="22" fill="${wh}"/>
+${pair(292,26)}${pair(322,26)}${pair(368,22)}
+${[0,1,2,3,4,5,6,7,8,9].map(i=>`<rect x="${54+i*36}" y="107" width="22" height="6" fill="${wh}"/>`).join("")}
+${hlt}
+<text x="210" y="208" text-anchor="middle" font-size="16" fill="#fff" font-family="Barlow,Arial,sans-serif">Marca resaltada en naranja</text></svg>`; }
+function svgNavL(){
+  return `<svg viewBox="0 0 320 250" role="img" aria-label="Avión visto desde arriba, morro hacia arriba, con tres puntos A, B y C para las luces de navegación"><rect width="320" height="250" rx="8" fill="#10212f"/>
+<g fill="#cfd8e0"><ellipse cx="160" cy="120" rx="15" ry="82"/><path d="M146,100 L30,128 L30,146 L146,134Z M174,100 L290,128 L290,146 L174,134Z"/><path d="M148,188 L108,206 L108,216 L150,204Z M172,188 L212,206 L212,216 L170,204Z"/></g>
+<g font-family="Barlow,Arial,sans-serif" font-weight="700" font-size="20" text-anchor="middle"><circle cx="30" cy="137" r="14" fill="#ffd166"/><text x="30" y="144" fill="#10212f">A</text><circle cx="290" cy="137" r="14" fill="#ffd166"/><text x="290" y="144" fill="#10212f">B</text><circle cx="160" cy="214" r="14" fill="#ffd166"/><text x="160" y="221" fill="#10212f">C</text></g>
+<text x="160" y="22" text-anchor="middle" font-size="15" fill="#9db0c2" font-family="Barlow,Arial,sans-serif">▲ morro</text></svg>`; }
 function figHTML(k){
   if(!k) return "";
   const [t,v]=String(k).split(":"); let c="";
   if(t==="ph") c = PHOTOS[v] ? `<img src="${PHOTOS[v]}" alt="Anexo de la pregunta">` : "";
   else if(t==="thr") c = svgThrFig(+v);
   else if(t==="circ") c = svgCircNum();
-  else if(t==="air") c = svgAirspace();
+  else if(t==="air") c = svgAirspaceCyl();
   else if(t==="papi") c = svgPapi(+v);
   else if(t==="rwyend") c = `<div style="max-width:170px;margin:auto">${svgRwyEnd(v)}</div>`;
   else if(t==="sign") c = svgSign(v);
+  else if(t==="lamp") c = `<div style="max-width:380px;margin:auto">${svgLamp(v)}</div>`;
+  else if(t==="sarsym") c = `<div style="max-width:300px;margin:auto">${svgSarSym(v)}</div>`;
+  else if(t==="rwym") c = svgRwyMark(v);
+  else if(t==="navl") c = `<div style="max-width:320px;margin:auto">${svgNavL()}</div>`;
   return c ? `<div class="anexo"><div class="anexoh">Anexo</div>${c}</div>` : "";
 }
 function initPhotos(){ document.querySelectorAll("img[data-ph]").forEach(i=>{ if(PHOTOS[i.dataset.ph]) i.src=PHOTOS[i.dataset.ph]; }); }
@@ -3158,7 +3205,29 @@ const BASE = [
 ["D4-116", "010.13.02", "n", "a13", "Under Annex 13, an investigation includes:", ["Gathering data, finding causes and making safety recommendations", "Apportioning blame and liability to those involved", "Imposing fines on the operator and crew", "Suspending the licences of the crew"], "Investigación: recoger y analizar información, sacar conclusiones y causas y hacer recomendaciones. Único fin: prevenir."],
 ["D4-120", "010.05.03", "n", "lightsig", "Flying in the circuit, you receive a STEADY red light from the tower. You should:", ["Give way to other aircraft and continue circling", "Not land, because the aerodrome is unsafe", "Land and taxi to the apron", "Return to the aerodrome for landing"], "Roja FIJA en vuelo = cede y sigue en circuito. Roja INTERMITENTE = aeródromo inseguro, no aterrices."],
 ["D4-121", "010.05.03", "n", "lightsig", "In flight, you receive a FLASHING red light from the tower. It means:", ["Aerodrome unsafe, do not land", "Give way and continue circling", "Return for landing", "Cleared to land"], "Intermitente roja en vuelo: aeródromo inseguro, no aterrices."],
-["D4-122", "010.05.03", "n", "lightsig", "Which light from the tower tells an aircraft in flight to give way and keep circling?", ["Steady red", "Flashing red", "Flashing white", "Flashing green"], "Fija = orden estable (cede y espera). Intermitente roja = peligro en el aeródromo."]
+["D4-122", "010.05.03", "n", "lightsig", "Which light from the tower tells an aircraft in flight to give way and keep circling?", ["Steady red", "Flashing red", "Flashing white", "Flashing green"], "Fija = orden estable (cede y espera). Intermitente roja = peligro en el aeródromo."],
+["fg01","010.05.03","n","lightsig","An aircraft IN FLIGHT receives the light signal shown from the tower. It means:",["Give way to other aircraft and continue circling", "Aerodrome unsafe, do not land", "Return for landing", "Cleared to land"],"Luz roja fija en vuelo: cede el paso a otras aeronaves y sigue en circuito.","lamp:sr"],
+["fg02","010.05.03","n","lightsig","An aircraft IN FLIGHT receives the light signal shown from the tower. It means:",["Aerodrome unsafe, do not land", "Give way to other aircraft and continue circling", "Return for landing", "Cleared to land"],"Destellos rojos en vuelo: aeródromo inseguro, no aterrices.","lamp:fr"],
+["fg03","010.05.03","n","lightsig","An aircraft IN FLIGHT receives the light signal shown from the tower. It means:",["Cleared to land", "Give way to other aircraft and continue circling", "Aerodrome unsafe, do not land", "Return for landing"],"Luz verde fija en vuelo: autorizado a aterrizar.","lamp:sg"],
+["fg04","010.05.03","n","lightsig","An aircraft IN FLIGHT receives the light signal shown from the tower. It means:",["Return for landing", "Give way to other aircraft and continue circling", "Aerodrome unsafe, do not land", "Cleared to land"],"Destellos verdes en vuelo: regresa para aterrizar (después esperarás la verde fija).","lamp:fg"],
+["fg05","010.05.03","n","lightsig","An aircraft IN FLIGHT receives the light signal shown from the tower. It means:",["Land at this aerodrome and proceed to the apron", "Give way to other aircraft and continue circling", "Aerodrome unsafe, do not land", "Return for landing"],"Destellos blancos en vuelo: aterriza en este aeródromo y dirígete a la plataforma.","lamp:fw"],
+["fg06","010.05.03","n","lightsig","An aircraft ON THE GROUND receives the light signal shown from the tower. It means:",["Cleared for take-off", "Stop", "Cleared to taxi", "Taxi clear of the landing area in use"],"Luz verde fija en tierra: autorizado a despegar.","lamp:sg"],
+["fg07","010.05.03","n","lightsig","An aircraft ON THE GROUND receives the light signal shown from the tower. It means:",["Cleared to taxi", "Stop", "Cleared for take-off", "Taxi clear of the landing area in use"],"Destellos verdes en tierra: autorizado a rodar.","lamp:fg"],
+["fg08","010.05.03","n","lightsig","An aircraft ON THE GROUND receives the light signal shown from the tower. It means:",["Stop", "Cleared to taxi", "Cleared for take-off", "Taxi clear of the landing area in use"],"Luz roja fija en tierra: detente.","lamp:sr"],
+["fg09","010.05.03","n","lightsig","An aircraft ON THE GROUND receives the light signal shown from the tower. It means:",["Taxi clear of the landing area in use", "Stop", "Cleared to taxi", "Cleared for take-off"],"Destellos rojos en tierra: despeja el área de aterrizaje en uso.","lamp:fr"],
+["fg10","010.05.03","n","lightsig","An aircraft ON THE GROUND receives the light signal shown from the tower. It means:",["Return to the starting point on the aerodrome", "Stop", "Cleared to taxi", "Cleared for take-off"],"Destellos blancos en tierra: vuelve al punto de partida del aeródromo.","lamp:fw"],
+["fg11","010.11.04","n","sarsig","Survivors display the ground symbol shown. It means:",["Require assistance", "Require medical assistance", "No (negative)", "Yes (affirmative)"],"V = necesitamos ayuda.","sarsym:V"],
+["fg12","010.11.04","n","sarsig","Survivors display the ground symbol shown. It means:",["Require medical assistance", "Require assistance", "No (negative)", "Yes (affirmative)"],"X = necesitamos asistencia médica.","sarsym:X"],
+["fg13","010.11.04","n","sarsig","Survivors display the ground symbol shown. It means:",["No (negative)", "Require assistance", "Require medical assistance", "Yes (affirmative)"],"N = no / negativo.","sarsym:N"],
+["fg14","010.11.04","n","sarsig","Survivors display the ground symbol shown. It means:",["Yes (affirmative)", "Require assistance", "Require medical assistance", "No (negative)"],"Y = sí / afirmativo.","sarsym:Y"],
+["fg15","010.11.04","n","sarsig","Survivors display the ground symbol shown. It means:",["Proceeding in this direction", "Require assistance", "Require medical assistance", "No (negative)"],"La flecha = avanzamos en esta dirección.","sarsym:arrow"],
+["fg16","010.09.04","n","rwymk","The marking highlighted on the runway in the figure is the:",["Aiming point marking", "Touchdown zone marking", "Runway centre line marking", "Runway side stripe marking"],"Punto de visada: dos franjas anchas y muy visibles, a unos 300 m del umbral.","rwym:aim"],
+["fg17","010.09.04","n","rwymk","The marking highlighted on the runway in the figure is the:",["Touchdown zone marking", "Aiming point marking", "Runway centre line marking", "Runway side stripe marking"],"Zona de toma de contacto: pares de rectángulos a ambos lados del eje, en grupos de 1, 2 o 3 pares.","rwym:tdz"],
+["fg18","010.09.04","n","rwymk","The marking highlighted on the runway in the figure is the:",["Runway centre line marking", "Aiming point marking", "Touchdown zone marking", "Runway side stripe marking"],"Eje de pista: trazos y huecos uniformes por el centro.","rwym:cl"],
+["fg19","010.09.04","n","rwymk","The marking highlighted on the runway in the figure is the:",["Runway side stripe marking", "Aiming point marking", "Touchdown zone marking", "Runway centre line marking"],"Franja lateral: línea continua en cada borde de la pista.","rwym:edge"],
+["fg20","010.05.03","n","navl","In the figure, the navigation light fitted at point A is:",["Red", "Green", "White", "Yellow"],"Punta del ala izquierda: roja (110°).","navl:1"],
+["fg21","010.05.03","n","navl","In the figure, the navigation light fitted at point B is:",["Green", "Red", "White", "Yellow"],"Punta del ala derecha: verde (110°).","navl:1"],
+["fg22","010.05.03","n","navl","In the figure, the navigation light fitted at point C is:",["White", "Red", "Green", "Yellow"],"Cola: blanca (140° hacia atrás).","navl:1"]
 ];
 const PROFE = new Set(["A05-07", "A05-08", "A05-09", "A06-25", "A07-02", "A07-05", "A08-01", "A09-10", "A09-20", "A11-01", "D3-02", "D3-08", "D3-15", "D3-16", "D3-21", "D3-22", "D3-25", "D3-29", "D3-33", "D3-45", "D3-47", "D3-48", "D3-51", "D3-54", "D3-59", "D3-60", "D3-61", "D3-62", "D3-63", "D3-64", "D3-65", "D3-80", "D3-82", "D3-84", "D3-85", "D3-88", "D3-89", "D3-90", "D3-93", "D4-03", "D4-05", "D4-07", "D4-08", "D4-09", "D4-100", "D4-102", "D4-103", "D4-104", "D4-20", "D4-22", "D4-23", "D4-24", "D4-25", "D4-28", "D4-29", "D4-34", "D4-35", "D4-37", "D4-38", "D4-39", "D4-41", "D4-42", "D4-43", "D4-44", "D4-45", "D4-46", "D4-53", "D4-54", "D4-55", "D4-56", "D4-69", "D4-70", "D4-73", "D4-76", "D4-80", "D4-81", "D4-82", "D4-83", "D4-84", "D4-85", "D4-86", "D4-87", "D4-88", "D4-90", "D4-91", "D4-93", "D4-94", "D4-96", "D4-97", "D4-98", "l04", "l05", "l06", "l09", "l10", "l11", "ls1", "ls2", "ls3", "ls4", "ls5", "pf1", "pf10", "pf11", "pf2", "pf3", "pf4", "pf5", "pf6", "pf7", "pf8", "pf9", "r01", "r02", "r11", "r17", "r18", "r19", "r20", "r21", "r22", "r23", "r24", "rv1", "rv2", "v04", "v05", "v06", "v07", "v08", "v09", "v10", "vh1", "vh2", "vl2", "vr3", "vs1", "vs2", "vs3", "vv3"]);
 // fotos de las diapositivas del profesor (anexos de las preguntas y apuntes)
@@ -3281,7 +3350,7 @@ function sigCat(q){
   if(lo==="010.09.05") return "obst";
   if(/navigation light/i.test(s)) return "nav";
   if(lo==="010.05.03") return /holding position/i.test(s) ? "pista" : "atc";
-  if(/PAPI|VASI|approach light|lighting|beacon|\blights?\b/i.test(s) || /^(ph|papi):/.test(q[7]||"")) return "lum";
+  if(/PAPI|VASI|approach light|lighting|beacon|\blights?\b/i.test(s) || /^papi:/.test(q[7]||"")) return "lum";
   return "pista";
 }
 const SIG_QUOTA = {atc:3, nav:1, pista:5, lum:2, obst:1, sar:2, interc:1};
@@ -3290,7 +3359,9 @@ function selectSignals(pool){
   shuffle(pool.filter(q=> SIG_LO.has(q[1]) || (["010.05.03"].includes(q[1]) && SIG_RX.test(q[4]||"")))).forEach(q=>{ (by[sigCat(q)] = by[sigCat(q)] || []).push(q); });
   const out = [], usedB = new Set(), taken = new Set();
   const put = q => { const b = q[2]==="t" ? baseOf(q[0]) : null; if(taken.has(q[0]) || (b && usedB.has(b))) return false; taken.add(q[0]); if(b) usedB.add(b); out.push(q); return true; };
-  Object.entries(SIG_QUOTA).forEach(([c,n])=>{ let k=0; for(const q of (by[c]||[])){ if(k>=n) break; if(put(q)) k++; } });
+  // cada categoría: primero las preguntas con dibujo (la mitad aprox.), luego texto
+  Object.entries(SIG_QUOTA).forEach(([c,n])=>{ const L = by[c]||[], fg = L.filter(q=>q[7]), tx = L.filter(q=>!q[7]); let k=0, nf=Math.max(1,Math.round(n*0.5));
+    for(const q of fg){ if(k>=nf) break; if(put(q)) k++; } for(const q of tx.concat(fg)){ if(k>=n) break; if(put(q)) k++; } });
   const rest = shuffle(Object.values(by).flat());
   for(const q of rest){ if(out.length>=15) break; put(q); }
   return shuffle(out.slice(0,15));
