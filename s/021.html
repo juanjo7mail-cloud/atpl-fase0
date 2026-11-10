@@ -3417,7 +3417,12 @@ function selectQuestions(mode, inc, lo, atpl){
   const st = stats();
   weakConcepts = new Set(topConcepts().filter(c=>!c.recent).slice(0,5).map(c=>c.name));
   const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
-  if(mode==="trial") return shuffle(pool.filter(isTrial));
+  if(mode==="trial"){ // 25 por test, repartidas entre temas
+    const by = {}; shuffle(pool.filter(isTrial)).forEach(q=>{ (by[q[1]] = by[q[1]] || []).push(q); });
+    const groups = shuffle(Object.values(by)), out = [];
+    for(let r=0; out.length<25; r++){ let any=false; for(const g of groups){ if(g[r]){ any=true; if(out.length<25) out.push(g[r]); } } if(!any) break; }
+    return shuffle(out);
+  }
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c") && (atpl || isGiven(q))));
   if(mode==="all") return shuffle(pool);
@@ -3670,7 +3675,7 @@ function renderSetup(){
   const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
   $("#allCount").textContent = `${BANK.filter(isGiven).length} preguntas de lo dado + ${BANK.filter(q=>!isGiven(q)).length} de ATPL aún no dado.`;
-  $("#trialCount").textContent = `${BANK.filter(isTrial).length} preguntas del trial, cada una en variante.`;
+  $("#trialCount").textContent = `Tests de 25 preguntas repartidas entre temas, cada una en variante (${BANK.filter(isTrial).length} en el banco del trial).`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
   renderSenOpts();
