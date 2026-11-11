@@ -37,14 +37,17 @@ async function first(kind, key, list) {
 // si todas fallan, devuelve el motivo de cada una (campo why) para poder diagnosticarlo.
 const trSrc = icao => { const p = AERO[icao] || AERO.LECU, a = p[0], o = p[1];
   return [["adsb.lol", "https://api.adsb.lol/v2/point/" + a + "/" + o + "/15"], ["airplanes.live", "https://api.airplanes.live/v2/point/" + a + "/" + o + "/15"],
-    ["adsb.fi", "https://opendata.adsb.fi/api/v2/lat/" + a + "/lon/" + o + "/dist/15"], ["adsb.one", "https://api.adsb.one/v2/point/" + a + "/" + o + "/15"]]; };
+    ["adsb.fi", "https://opendata.adsb.fi/api/v2/lat/" + a + "/lon/" + o + "/dist/15"], ["adsb.one", "https://api.adsb.one/v2/point/" + a + "/" + o + "/15"],
+    ["OpenSky", "https://opensky-network.org/api/states/all?lamin=" + (a - .25) + "&lomin=" + (o - .33) + "&lamax=" + (a + .25) + "&lomax=" + (o + .33)]]; };
 async function traffic(icao) {
   const why = [];
   const one = async ([name, url]) => {
     try {
       const r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (compatible; atpl-fase0-ops/1.1)", "Accept": "application/json" }, signal: AbortSignal.timeout(6000) });
       if (!r.ok) { why.push(name + ": HTTP " + r.status); throw 0; }
-      const j = await r.json(), arr = j.ac || j.aircraft;
+      const j = await r.json();
+      if (j && "states" in j) return { src: name, ac: (j.states || []).filter(s => s[5] != null && s[6] != null).slice(0, 120).map(s => ({ h: s[0], f: (s[1] || "").trim(), r: "", t: "", lat: s[6], lon: s[5], gnd: !!s[8], alt: s[8] ? null : (s[7] != null ? Math.round(s[7] * 3.28084) : null), g: s[9] != null ? s[9] * 1.94384 : null, tr: s[10] })) };
+      const arr = j.ac || j.aircraft;
       if (!Array.isArray(arr)) { why.push(name + ": respuesta sin lista"); throw 0; }
       return { src: name, ac: arr.filter(a => a.lat != null && a.lon != null).slice(0, 120).map(a => ({
         h: a.hex, f: (a.flight || "").trim(), r: a.r || "", t: a.t || "", lat: a.lat, lon: a.lon,

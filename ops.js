@@ -350,7 +350,7 @@ function fill(){
    <tr class="res"><th>¿Se puede?</th><td></td><td>${chips(evF)}</td><td>${chips(evS)}</td></tr></tbody></table>
    <p class="nt">${open?"":(AD.other&&st.adOpen?"De noche: ":"Fuera de horario: ")+"el resto de límites no aplican. "}Orientativo: decide el HT o el CFI.</p>`;
   const pe=$("#opPist",R); if(pe) pe.innerHTML=pistHTML(e);
-  const ts=$("#opTrSt",R); if(ts) ts.textContent=S.tr?("✈ "+S.tr.length+" aviones"+(S.tr.some(isFS)?" · "+S.tr.filter(isFS).length+" Flyschool":"")+" · ADS-B · "+fz(S.trAt)+" Z"):"ADS-B no disponible"+(S.trWhy?" ("+S.trWhy+")":"");
+  const ts=$("#opTrSt",R); if(ts) ts.textContent=S.tr?("✈ "+S.tr.length+" aviones"+(S.tr.some(isFS)?" · "+S.tr.filter(isFS).length+" Flyschool":"")+" · ADS-B"+(S.trSrc?" ("+S.trSrc+")":"")+" · "+fz(S.trAt)+" Z"):"ADS-B no disponible"+(S.trWhy?" ("+S.trWhy+")":"");
 }
 /* Distancias declaradas (AIP AD 2.12/2.13, uso civil, sin salidas por intersección): [pista, elev. umbral ft, TORA, TODA, ASDA, LDA] por pares de cabeceras */
 const DD={"LEVD":[["05",2767,3005,3305,3005,3005],["23",2775,3005,3211,3005,3005]],"LEBG":[["04",2941,2099,2099,2099,2099],["22",2962,2099,2099,2099,2099]],"LESA":[["03",2595,2513,2513,2788,2513],["21",2586,2513,2513,2788,2513]],"LEAB":[["09",2281,2700,3080,2700,2700],["27",2301,2700,3080,2700,2700]],"LEBA":[["03",291,2076,2136,2076,2050],["21",305,2241,2301,2241,2050]],"LEBZ":[["13",578,2852,3152,3152,2852],["31",608,2852,3152,3152,2852]],"LETL":[["18",3297,2539,2539,2825,2539],["36",3366,2825,2825,2825,2539]],"LELN":[["05",2994,3000,3000,3000,3000],["23",2996,3000,3000,3000,3000]],"LELO":[["11",1156,2200,2260,2200,2200],["29",1139,2200,2260,2200,2200]],"LESO":[["04",10,1590,1753,1590,1427],["22",14,1590,1753,1590,1427]],"LEGR":[["09",1842,2900,2960,2900,2900],["27",1860,2900,2960,2900,2900]],"LEZL":[["09",83,3364,3424,3364,3364],["27",111,3364,3424,3364,3364]],"LELC":[["04R",12,2320,2516,2320,2320],["22L",6,2320,2508,2320,2320],["04L",29,1317,1377,1746,1577],["22R",17,1268,1328,1714,1577]],"LEPP":[["15",1467,2205,2285,2205,2205],["33",1500,2405,2505,2405,1907]],"LEXJ":[["11",11,2320,2380,2320,2320],["29",12,2320,2380,2320,2320]],"LEAS":[["11",399,2205,2355,2205,2205],["29",399,2205,2325,2205,2205]],"LECH":[["06",1093,2700,2770,2770,2700],["24",1182,2700,2770,2770,2700]],"LEAM":[["07",26,3165,3225,3165,3050],["25",70,3165,3260,3165,3165]],"LEJR":[["02",68,2300,2300,2300,2300],["20",93,2300,2300,2300,2300]],"LELL":[["13",485,899,899,899,899],["31",445,899,899,899,899]]}, DDN={"LETL":"36: umbral desplazado 286 m (LDA < TORA).","LEPP":"33: umbral desplazado 500 m.","LEAM":"07: umbral desplazado 115 m.","LESO":"Ambos umbrales desplazados 163 m.","LELL":"13: últimos 150 m inutilizables (aterrizaje y despegue). 31: umbral desplazado 150 m y últimos 150 m inutilizables para despegar. Pista útil real: 899 m.","LELC":"Base militar: la AIP no la publica para civiles. Pistas 04L/22R solo militares (valores militares).","LEBG":"Salida por intersección C: pista 04 → 822 m; 22 → 1292 m (de día, VMC, envergadura ≤ 15 m, avisar al AFIS).","LEAB":"ASDA civil. Las intersecciones no publican LDA."};
@@ -459,9 +459,37 @@ function load(){
   if(!f){ setData(demoData(S.scen)); return; }
   f().then(r=>{ if(g!==S.gen) return; if(!r||!r.metar) throw 0; setData(r); }).catch(()=>{ if(g===S.gen) fail(); });
 }
+/* Tráfico: primero el Worker; si falla (las redes ADS-B a veces bloquean a Cloudflare), el navegador las pide directamente. */
+const TRDIR=(la,lo)=>{ const a=(+la).toFixed(4), o=(+lo).toFixed(4), dy=0.25, dx=0.25/Math.cos(la*Math.PI/180);
+  return [["adsb.lol",`https://api.adsb.lol/v2/point/${a}/${o}/15`],["airplanes.live",`https://api.airplanes.live/v2/point/${a}/${o}/15`],
+    ["adsb.fi",`https://opendata.adsb.fi/api/v2/lat/${a}/lon/${o}/dist/15`],
+    ["OpenSky",`https://opensky-network.org/api/states/all?lamin=${(la-dy).toFixed(3)}&lomin=${(lo-dx).toFixed(3)}&lamax=${(la+dy).toFixed(3)}&lomax=${(lo+dx).toFixed(3)}`]]; };
+function trMap(j){
+  const arr=j&&(j.ac||j.aircraft);
+  if(Array.isArray(arr)) return arr.filter(a=>a.lat!=null&&a.lon!=null).slice(0,120).map(a=>({h:a.hex,f:(a.flight||"").trim(),r:a.r||"",t:a.t||"",lat:a.lat,lon:a.lon,
+    gnd:a.alt_baro==="ground",alt:typeof a.alt_baro==="number"?a.alt_baro:null,g:a.gs!=null?a.gs:null,tr:a.track!=null?a.track:(a.true_heading!=null?a.true_heading:null)}));
+  if(j&&"states" in j) return (j.states||[]).filter(s=>s[5]!=null&&s[6]!=null).slice(0,120).map(s=>({h:s[0],f:(s[1]||"").trim(),r:"",t:"",lat:s[6],lon:s[5],gnd:!!s[8],
+    alt:s[8]?null:(s[7]!=null?Math.round(s[7]*3.28084):null),g:s[9]!=null?s[9]*1.94384:null,tr:s[10]}));
+  return null;
+}
+async function trDirect(){
+  const why=[];
+  for(const [n,u] of TRDIR(AD.lat,AD.lon)){
+    const c=new AbortController(), to=setTimeout(()=>c.abort(),7000);
+    try{ const r=await fetch(u,{signal:c.signal,cache:"no-store"}); if(!r.ok){ why.push(n+" "+r.status); continue; } const ac=trMap(await r.json()); if(ac) return {ac,src:n}; why.push(n+" sin datos"); }
+    catch(e){ why.push(n+(e&&e.name==="AbortError"?" sin respuesta":" bloqueado")); }
+    finally{ clearTimeout(to); }
+  }
+  throw new Error(why.join(" · "));
+}
 function loadTr(){
   const f0=S.opt&&S.opt.fetchTr, g=S.gen; if(!f0) return;
-  f0(S.opt.multi?AD.icao:undefined).then(r=>{ if(g!==S.gen) return; if(!r||!r.ac) throw 0; S.tr=r.ac; S.trAt=new Date(); S.trWhy=""; }).catch(e=>{ if(g===S.gen){ S.tr=null; S.trWhy=String(e&&e.message||"sin respuesta").slice(0,40); } }).then(()=>{ if(!S.root||g!==S.gen) return; drawTraffic(); if(S.data) fill(); });
+  const viaW=Date.now()-(S.trWbad||0)>300000;   // si el Worker falló hace menos de 5 min, directo
+  const p=viaW?f0(S.opt.multi?AD.icao:undefined).then(r=>{ if(!r||!r.ac||r.ok===false) throw new Error("servidor"); return r; })
+    .catch(e=>{ S.trWbad=Date.now(); S.trWwhy=String(e&&e.message||"servidor"); return trDirect(); }):trDirect();
+  p.then(r=>{ if(g!==S.gen) return; S.tr=r.ac; S.trSrc=r.src||""; S.trAt=new Date(); S.trWhy=""; })
+   .catch(e=>{ if(g===S.gen){ S.tr=null; S.trWhy=String(e&&e.message||"sin respuesta").slice(0,200); } })
+   .then(()=>{ if(!S.root||g!==S.gen) return; drawTraffic(); if(S.data) fill(); });
 }
 const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD;--hd:#1C2128;--am:#FFC400;--vfr:#1E9E44;--mvfr:#2F6FD0;--ifr:#D23A2F;--lifr:#B02FA5;--ok:#1E8A42;--no:#C9372C;--mid:#B7791F;--okb:#E3F3E8;--nob:#FBE5E3;--midb:#FFF1D6;--k1:#0B5CAD;--k2:#8A4B00;--k3:#5A3E9B;--k4:#9A2A2A;--k5:#0B7A6B;
  min-height:65vh;background:var(--bg);color:var(--ink);font:15px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}

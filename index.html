@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="0df2438c8aa2";</script>
+<script>window.F0_BUILD="cca668426fdd";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -841,7 +841,7 @@ function show(v, cmd){
   document.querySelectorAll(".view").forEach(el=>el.hidden = el.id!=="v-"+v);
   if(v==="stats"){ renderStats(); }
   else if(v==="rank"){ renderRank(); }
-  else if(v==="ops"){ if(window.F0Ops) opsLoad().then(()=>window.F0Ops.render($("#ops"),{multi:true,fetchWx:ic=>fetch("/api/wx"+(ic?"?icao="+ic:""),{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }),fetchTr:ic=>fetch("/api/traffic"+(ic?"?icao="+ic:""),{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })})); }
+  else if(v==="ops"){ if(window.F0Ops) opsLoad().then(()=>window.F0Ops.render($("#ops"),{multi:true,fetchWx:ic=>fetch("/api/wx"+(ic?"?icao="+ic:""),{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }),fetchTr:ic=>fetch("/api/traffic"+(ic?"?icao="+ic:""),{cache:"no-store"}).then(r=>r.json().catch(()=>({})).then(j=>{ if(!r.ok||j.ok===false) throw new Error((j.why&&j.why.length?j.why.join(", "):"HTTP "+r.status)); return j; }))})); }
   else if(v==="sim"){ if(window.F0Sim) window.F0Sim.render($("#sim")); }
   else if(v==="radio"){ if(window.F0Radio&&sbUser) window.F0Radio.render($("#radio"),{sb,user:sbUser,name:()=>MY.name||(sbUser.email||"alumno").split("@")[0]}); }
   else if(v!=="test"){
