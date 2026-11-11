@@ -3,7 +3,12 @@
 "use strict";
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x)), lerp=(a,b,t)=>a+(b-a)*t, sst=(a,b,x)=>{ const t=clamp((x-a)/(b-a),0,1); return t*t*(3-2*t); };
 const still=false;
-function fit(c){ const d=Math.min(2,window.devicePixelRatio||1), w=Math.round(c.clientWidth*d), h=Math.round((+c.getAttribute("height"))*d); c.style.height=c.getAttribute("height")+"px"; if(c.width!==w||c.height!==h){ c.width=w; c.height=h; } return d; }
+function fit(c){ const h0=c._h0||(c._h0=Math.max(120,Math.min(520,parseInt(c.getAttribute("height"),10)||340))); let d=Math.min(2,window.devicePixelRatio||1); const cw=c.clientWidth||300; if(cw*h0*d*d>2.4e6) d=Math.max(1,Math.sqrt(2.4e6/(cw*h0)));
+  const w=Math.round(cw*d), h=Math.round(h0*d); if(c.style.height!==h0+"px") c.style.height=h0+"px"; if(c.width!==w||c.height!==h){ c.width=w; c.height=h; } return d; }
+/* Planificador común: 30 imágenes por segundo como máximo, y si una lámina falla se sustituye por su ficha estática en vez de quedarse colgada. */
+const RAF=(window.requestAnimationFrame||(f=>setTimeout(()=>f(Date.now()),33))).bind(window); let CUR=null, queue=[], pumping=false, lastPump=0;
+function pump(t){ if(t-lastPump<30){ RAF(pump); return; } lastPump=t; const a=queue; queue=[]; for(const cb of a){ const L=cb._L; if(L&&L.dead) continue; CUR=L; try{ cb(t); }catch(e){ fail(L,e); } } CUR=null; if(queue.length) RAF(pump); else pumping=false; }
+const requestAnimationFrame=cb=>{ cb._L=CUR; queue.push(cb); if(!pumping){ pumping=true; RAF(pump); } };
 const vis=new Map(), io=("IntersectionObserver" in window)?new IntersectionObserver(es=>es.forEach(e=>vis.set(e.target,e.isIntersecting)),{rootMargin:"120px"}):null;
 const seen=c=>{ if(!c.offsetParent) return false; if(io&&!vis.has(c)){ vis.set(c,true); io.observe(c); } return vis.get(c)!==false; };
 const CSS=`
@@ -11,6 +16,13 @@ const CSS=`
 .f0lab .lt{font:700 12px/1 "Barlow Condensed","Arial Narrow",system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#5d6977;margin:0 0 6px}
 .f0lab figure{margin:0;background:#12202f;border-radius:8px;overflow:hidden;box-shadow:0 6px 16px rgba(10,20,34,.25)}
 .f0lab canvas{display:block;width:100%;touch-action:pan-y}
+.f0lab .sk{height:340px;border-radius:8px;display:grid;place-items:center;color:#9fb3c8;font:600 14px system-ui,sans-serif;background:linear-gradient(100deg,#12202f 30%,#1b2e43 50%,#12202f 70%) 0 0/300% 100%;animation:f0sk 1.6s linear infinite}
+@keyframes f0sk{to{background-position:-150% 0}}
+@media (prefers-reduced-motion:reduce){.f0lab .sk{animation:none}}
+.f0lab .fb{background:#12202f;color:#e9f0f7;border-radius:8px;padding:16px 18px;font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.f0lab .fb b{font:700 18px/1.2 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#ffc94d}
+.f0lab .fb ul{margin:8px 0 0;padding-left:20px}.f0lab .fb li{margin:4px 0;max-width:none}
+.f0lab .fb .fbn{margin:12px 0 0;font-size:13px;color:#9fb3c8}.f0lab .fb button{font:600 13px system-ui,sans-serif;margin-left:6px;padding:5px 10px;border-radius:6px;border:1px solid #3a516b;background:#1a2b3f;color:#e9f0f7;cursor:pointer}
 .f0lab .cap{font:13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:#5d6977;margin:7px 2px 0}
 .f0lab .ctl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:#0f1b29;color:#e9f0f7;padding:12px 14px;font:600 13.5px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif}
 .f0lab .ctl label{display:flex;align-items:center;gap:8px;min-width:0;color:#e9f0f7}
@@ -232,7 +244,7 @@ const LAB={
 },
  axes(root,E){
   const box=E.v3, T=window.THREE, W0=()=>box.clientWidth, H0=()=>box.clientHeight;
-  const rnd=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:"low-power"}); rnd.setPixelRatio(Math.min(2,window.devicePixelRatio||1)); box.insertBefore(rnd.domElement,box.firstChild); E.ld.remove();
+  const rnd=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:"low-power"}); rnd.setPixelRatio(Math.min(1.5,window.devicePixelRatio||1)); box.insertBefore(rnd.domElement,box.firstChild); E.ld.remove(); if(E._L){ E._L.rnd=rnd; rnd.domElement.addEventListener("webglcontextlost",ev=>{ ev.preventDefault(); fail(E._L,new Error("contexto WebGL perdido")); }); }
   const scene=new T.Scene(), cam=new T.PerspectiveCamera(38,1,.1,200);
   scene.add(new T.HemisphereLight(0xdfeeff,0x26323f,1.05)); const sun=new T.DirectionalLight(0xfff2dd,1.15); sun.position.set(6,10,7); scene.add(sun);
   const M=(c,o)=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:.45,metalness:.15},o||{})), white=M(0xf3f5f8), blue=M(0x1b56aa), dark=M(0x1d2733,{roughness:.3}), glass=M(0x243a52,{roughness:.1,metalness:.6}), amber=M(0xffc94d,{emissive:0x5a3d00});
@@ -399,14 +411,32 @@ Object.assign(LAB,{
  }
 });
 /*F1END*/
-let three=null; const needThree=()=>three||(three=new Promise((ok,ko)=>{ if(window.THREE) return ok(); const s=document.createElement("script"); s.src=(window.F0LABS_BASE||"../")+"three.min.js"; s.onload=()=>ok(); s.onerror=ko; document.head.appendChild(s); }));
-function mount(el){
-  if(el._lab) return; const k=el.dataset.lab; if(!LAB[k]) return; el._lab=1;
+const FB={
+ tunnel:"<b>Ángulo de ataque y pérdida</b><ul><li>El CL crece con el ángulo de ataque hasta el ángulo crítico (unos 16°).</li><li>Pasado ese ángulo el flujo se desprende del extradós: la sustentación cae y la resistencia aumenta mucho.</li><li>El ala entra en pérdida siempre al mismo ángulo, a cualquier velocidad o peso.</li></ul>",
+ engine:"<b>Los cuatro tiempos</b><ul><li>1 · Intake (admisión): pistón baja, válvula de admisión abierta.</li><li>2 · Compression (compresión): pistón sube, válvulas cerradas.</li><li>3 · Power (expansión): salta la chispa, el pistón baja y produce trabajo.</li><li>4 · Exhaust (escape): pistón sube, válvula de escape abierta.</li><li>Ciclo completo: 720° de cigüeñal.</li></ul>",
+ altimeter:"<b>Altímetro y reglaje</b><ul><li>El altímetro mide desde la presión seleccionada en la ventanilla.</li><li>Reglaje más alto que el QNH real: sobre-lee (el avión está más bajo).</li><li>Por debajo de 5 000 ft, 1 hPa ≈ 30 ft.</li></ul>",
+ axes:"<b>Ejes y mandos</b><ul><li>Alerones → alabeo (roll) sobre el eje longitudinal.</li><li>Timón de profundidad → cabeceo (pitch) sobre el eje lateral.</li><li>Timón de dirección → guiñada (yaw) sobre el eje vertical.</li></ul>",
+ turn:"<b>Viraje nivelado</b><ul><li>Factor de carga n = 1 / cos φ: 1,15 a 30°, 1,41 a 45°, 2 a 60°.</li><li>La velocidad de pérdida crece con √n.</li><li>A más velocidad con el mismo alabeo: más radio y menos régimen de viraje.</li></ul>",
+ polar:"<b>Polar y mejor planeo</b><ul><li>El mejor planeo se da a L/D máximo: la tangente a la polar desde el origen.</li><li>Más peso: mismo alcance en aire en calma, pero a más velocidad y con más tasa de descenso.</li><li>Viento en cara acorta el alcance; viento en cola lo alarga.</li></ul>",
+ stab:"<b>Estabilidad longitudinal</b><ul><li>CG por delante del punto neutro: estable (vuelve sola), mandos más duros.</li><li>CG en el punto neutro: neutra.</li><li>CG por detrás: inestable.</li></ul>"};
+function fail(L,e){ if(!L||L.dead) return; L.dead=true; try{ console.error("F0Lab",L.k,e); }catch(_){} try{ if(L.rnd){ L.rnd.dispose(); L.rnd.forceContextLoss&&L.rnd.forceContextLoss(); } }catch(_){}
+  L.el.innerHTML='<p class="lt">'+TTL[L.k]+'</p><div class="fb">'+(FB[L.k]||"")+'<p class="fbn">La lámina interactiva no se ha podido mostrar en este dispositivo. <button type="button">Reintentar</button></p></div>';
+  const b=L.el.querySelector("button"); if(b) b.addEventListener("click",()=>{ L.el._lab=0; build(L.el); }); }
+let three=null; const needThree=()=>three||(three=new Promise((ok,ko)=>{ if(window.THREE) return ok(); const s=document.createElement("script"), to=setTimeout(()=>{ three=null; ko(new Error("tiempo agotado")); },12000); s.src=(window.F0LABS_BASE||"../")+"three.min.js"; s.onload=()=>{ clearTimeout(to); window.THREE?ok():ko(new Error("sin THREE")); }; s.onerror=()=>{ clearTimeout(to); three=null; ko(new Error("no carga")); }; document.head.appendChild(s); }));
+function build(el){
+  if(el._lab) return; const k=el.dataset.lab; el._lab=1; const L={k,el,dead:false};
   el.innerHTML='<p class="lt">'+TTL[k]+'</p>'+HTML[k]+'<p class="cap">'+CAP[k]+'</p>';
-  const E={}; el.querySelectorAll("[data-i]").forEach(n=>{ E[n.dataset.i]=n; });
-  const go=()=>{ try{ LAB[k](el,E); }catch(e){ try{ console.error("F0Lab",k,e); }catch(_){} } };
-  if(k==="axes"){ const start=()=>needThree().then(go,()=>{ E.ld.textContent="No se pudo cargar el modelo 3D."; }); if(io){ const o=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ o.disconnect(); start(); } },{rootMargin:"300px"}); o.observe(el); } else start(); }
+  const E={}; el.querySelectorAll("[data-i]").forEach(n=>{ E[n.dataset.i]=n; }); E._L=L;
+  const go=()=>{ if(L.dead) return; CUR=L; try{ LAB[k](el,E); }catch(e){ fail(L,e); } CUR=null; };
+  if(k==="axes"){ const c=document.createElement("canvas"); let gl=null; try{ gl=c.getContext("webgl2")||c.getContext("webgl"); }catch(e){} if(!gl){ fail(L,new Error("sin WebGL")); return; }
+    needThree().then(go,e=>fail(L,e)); }
   else go();
+}
+function mount(el){
+  const k=el.dataset.lab; if(el._m||!LAB[k]) return; el._m=1;
+  el.innerHTML='<p class="lt">'+TTL[k]+'</p><div class="sk"><span>Cargando la lámina…</span></div>';
+  if(!("IntersectionObserver" in window)){ build(el); return; }
+  const o=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ o.disconnect(); build(el); } },{rootMargin:"500px"}); o.observe(el);
 }
 function init(){ if(!document.getElementById("f0labCss")){ const s=document.createElement("style"); s.id="f0labCss"; s.textContent=CSS; document.head.appendChild(s); } document.querySelectorAll(".f0lab[data-lab]").forEach(mount); }
 window.F0Labs={init}; if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init); else init();
