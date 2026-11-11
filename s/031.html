@@ -836,7 +836,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senSubj" aria-label="Asignatura"><option value="031">031 Mass and Balance · 25 preguntas</option><option value="032">032 Performance · 45 preguntas</option><option value="033">033 Flight Planning · 42 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos · 15 preguntas <small>Números nuevos cada vez.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
@@ -2407,15 +2407,15 @@ function pickAdaptive(pool, N, st){
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senSubj").value, $("#senLen").value, inc, atpl);
   const st = stats();
-  if(mode==="trial"){   // trial + ejercicios de clase: 30 preguntas, lo más flojo primero
-    return pickAdaptive(BANK.filter(q=>servable(q) && (q[2]==="t" || q[2]==="p" || PROFE.has(q[0]))), 30, st);
+  if(mode==="trial"){   // trial + ejercicios de clase: 25 preguntas, lo más flojo primero
+    return pickAdaptive(BANK.filter(q=>servable(q) && (q[2]==="t" || q[2]==="p" || PROFE.has(q[0]))), 25, st);
   }
   const pool = BANK.filter(q=> servable(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
   if(mode==="lo") return shuffle(pool.filter(q=>subOf(q[1])===lo));
   if(mode==="all") return shuffle(pool);
   if(mode==="calc"){ const c=pool.filter(q=>isGen(q) && isGiven(q)); return shuffle(c.map(q=>({q,p:priority(q,st)})).sort((a,b)=>b.p-a.p).slice(0,15).map(x=>x.q)); }
-  return pickAdaptive(pool, Math.min(20, pool.length), st);
+  return pickAdaptive(pool, Math.min(25, pool.length), st);
 }
 
 // ---------- persistencia: progreso.json dentro del propio artefacto ----------
@@ -2645,7 +2645,7 @@ function renderSetup(){
   const nw = BANK.filter(q=>servable(q) && ((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
   $("#allCount").textContent = `${BANK.filter(q=>servable(q) && isGiven(q)).length} preguntas de lo dado + ${BANK.filter(q=>q[2]==="a").length} de ATPL aún no dado.`;
-  $("#trialCount").textContent = `30 preguntas en 1 h: trial y ejercicios de clase, en variante`;
+  $("#trialCount").textContent = `25 preguntas en 1 h: trial y ejercicios de clase, en variante`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}${s[4]==="atpl"?" · ATPL":""}</option>`).join("");
 }

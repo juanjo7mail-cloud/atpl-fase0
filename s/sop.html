@@ -744,7 +744,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro cronometrado <small><span class="row" style="margin-top:6px"><select id="senLen"><option value="full">Completo · 30 preguntas en 36 min</option><option value="half">Exprés · 15 preguntas en 18 min</option><option value="real">Tiempo real · 30 preguntas en 45 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
@@ -1469,14 +1469,14 @@ function selectQuestions(mode, inc, lo, atpl){
   const st = stats();
   if(mode==="trial"){   // preguntas de los trials y ejercicios de clase, una variante al azar de cada una
     const g = {}; BANK.filter(q=>HOT3.has(q[0])).forEach(q=>{ const k=baseOf(q[0]); (g[k]=g[k]||[]).push(q); });
-    return shuffle(Object.values(g).map(a=>a[Math.floor(Math.random()*a.length)]).map(q=>({q,p:priority(q,st)})).sort((x,y)=>y.p-x.p).slice(0,40).map(x=>x.q));   // las 40 más flojas
+    return shuffle(Object.values(g).map(a=>a[Math.floor(Math.random()*a.length)]).map(q=>({q,p:priority(q,st)})).sort((x,y)=>y.p-x.p).slice(0,25).map(x=>x.q));   // las 25 más flojas
   }
   const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
   if(mode==="all") return shuffle(pool);
   // adaptativo: 20 por prioridad, como mucho 5 de un mismo tema y una sola variante por pregunta original
-  const N = Math.min(20, pool.length), MAXLO = 5;
+  const N = Math.min(25, pool.length), MAXLO = 5;
   const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
   const chosen = [], usedB = new Set(), nLO = l => chosen.filter(q=>q[1]===l).length;
   const take = (q, cap=true) => { const b=baseOf(q[0]); if(chosen.includes(q) || usedB.has(b) || (cap && nLO(q[1])>=MAXLO)) return; usedB.add(b); chosen.push(q); };
@@ -1698,7 +1698,7 @@ function renderSetup(){
   const st = stats();
   const nw = BANK.filter(q=>((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
-  $("#trialCount").textContent = `${new Set(BANK.filter(q=>HOT3.has(q[0])).map(q=>baseOf(q[0]))).size} preguntas de los trials y de los ejercicios de clase (salen 40, las más flojas), en variante`;
+  $("#trialCount").textContent = `${new Set(BANK.filter(q=>HOT3.has(q[0])).map(q=>baseOf(q[0]))).size} preguntas de los trials y de los ejercicios de clase (salen 25, las más flojas), en variante`;
   $("#allCount").textContent = `${BANK.filter(isGiven).length} dadas + ${BANK.filter(q=>!isGiven(q)).length} aún no dadas`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");

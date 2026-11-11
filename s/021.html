@@ -1814,7 +1814,7 @@ button.choice:disabled{cursor:default}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senEx" aria-label="Asignatura"><option value="021">021 · 80 preguntas</option><option value="022">022 · 60 preguntas</option><option value="both">021 + 022 seguidos · 140 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
@@ -3427,8 +3427,8 @@ function selectQuestions(mode, inc, lo, atpl){
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c") && (atpl || isGiven(q))));
   if(mode==="all") return shuffle(pool);
-  // adaptativo: 20 por prioridad; como mucho 5 de un mismo tema, al menos 6 del trial y como mucho 6 de temario aún no dado
-  const N = Math.min(20, pool.length), MAXLO = 5, MAXND = 6;
+  // adaptativo: 25 por prioridad; como mucho 5 de un mismo tema, al menos 6 del trial y como mucho 6 de temario aún no dado
+  const N = Math.min(25, pool.length), MAXLO = 5, MAXND = 6;
   const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
   const chosen = [], nLO = l => chosen.filter(q=>q[1]===l).length, nND = () => chosen.filter(q=>!isGiven(q)).length;
   const take = (q, cap=true) => { if(chosen.includes(q) || (cap && nLO(q[1])>=MAXLO) || (!isGiven(q) && nND()>=MAXND)) return; chosen.push(q); };

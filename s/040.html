@@ -1081,7 +1081,7 @@ details.lo.out{border-left-color:var(--line)}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senLen"><option value="full">Completo · 48 preguntas en 72 min (el real da 90)</option><option value="half">Exprés · 24 preguntas en 36 min</option><option value="real">Tiempo real · 48 preguntas en 90 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Solo test, con cronómetro. Variantes del trial, tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Solo test, con cronómetro. Variantes del trial, tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
@@ -2193,20 +2193,21 @@ function selectSenasa(lenKey, inc, atpl){
   }
   return BLOCKS.flatMap(b=>shuffle(chosen.filter(q=>blockOf(q)===b.k)));
 }
+const __t25=(a,st)=>{ const k=q=>{ const r=((st&&st.q)||{})[q[0]]; return (!r||r.last===false)?0:1; }; return shuffle(shuffle(a).sort((x,y)=>k(x)-k(y)).slice(0,25)); };   // trial: 25 por test; primero las no vistas y las falladas
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senLen").value, inc, atpl);
   const st = stats();
   if(mode==="trial"){
     const groups = {};
     BANK.filter(q=>q[2]==="t").forEach(q=>{ const k=baseOf(q[0]); (groups[k]=groups[k]||[]).push(q); });
-    return shuffle(Object.values(groups).map(g=>g[Math.floor(Math.random()*g.length)]));
+    return __t25(Object.values(groups).map(g=>g[Math.floor(Math.random()*g.length)]), st);
   }
   const pool = BANK.filter(q=> servable(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)) && !(atpl && F0ONLY.has(baseOf(q[0]))));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
   if(mode==="all") return shuffle(pool);
   // adaptativo: 20 por prioridad, como mucho 5 de un mismo tema, al menos 6 variantes del trial y una sola variante por original
-  const N = Math.min(20, pool.length), MAXLO = 5;
+  const N = Math.min(25, pool.length), MAXLO = 5;
   const scored = pool.map(q=>({q, p:priority(q,st)})).sort((a,b)=>b.p-a.p);
   const chosen = [], usedB = new Set(), nLO = l => chosen.filter(q=>q[1]===l).length;
   const take = (q, cap=true) => { if(chosen.includes(q) || (cap && nLO(q[1])>=MAXLO)) return; if(isVar(q)){ const b=baseOf(q[0]); if(usedB.has(b)) return; usedB.add(b); } chosen.push(q); };
@@ -2449,7 +2450,7 @@ function renderSetup(){
   $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
   $("#allCount").textContent = `${BANK.filter(q=>servable(q) && isGiven(q)).length} preguntas de lo dado + ${BANK.filter(q=>q[2]==="a").length} de ATPL aún no dado.`;
   const groups = new Set(BANK.filter(q=>q[2]==="t").map(q=>baseOf(q[0])));
-  $("#trialCount").textContent = `${groups.size} preguntas, en variante`;
+  $("#trialCount").textContent = `25 por test, de las ${groups.size} del trial, en variante. Primero las no vistas y las falladas.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
 }
@@ -2511,7 +2512,7 @@ async function finishTest(timeout){
   else if(curMode==="adaptive"){ Object.assign(rec,{limitS:tLimit, usedS, timeout:!!timeout}); }
   state.attempts.push(rec);
   const realS = 90*60/48, perQ = usedS/current.length;
-  const blockHTML = curMode==="adaptive" ? `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el test da unos ${Math.round(45*60/20)} s).</div>` : curMode!=="senasa" ? "" : `
+  const blockHTML = curMode==="adaptive" ? `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el test da unos ${Math.round(45*60/25)} s).</div>` : curMode!=="senasa" ? "" : `
       <div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el real da ${Math.round(realS)} s). ${perQ<=realS?`En el real te sobrarían <b>${Math.max(0,Math.round((90*60-perQ*48)/60))} min</b> para repasar.`:`<span class="fail">A este ritmo no te daría tiempo a repasar en el real.</span>`}<br><b>Fase 0:</b> ${s0}/${n0}${n0?` (${Math.round(s0/n0*100)} %)`:""}${current.length-n0?` · <b>ATPL:</b> ${score-s0}/${current.length-n0}`:""}</div>
       <div class="scroll"><table style="margin-top:8px"><tr><th>Capítulo</th><th>Aciertos</th></tr>${BLOCKS.filter(b=>byBlock[b.k]).map(b=>{const x=byBlock[b.k], p=Math.round(x.ok/x.total*100); return `<tr><td><b>${b.code}</b> ${esc(b.name)}</td><td class="${p>=75?'pass':'fail'}">${x.ok}/${x.total} · ${p} %</td></tr>`;}).join("")}</table></div>`;
   const st = stats(), next = atStake(st).slice(0,2), los = Object.keys(byLO).sort();

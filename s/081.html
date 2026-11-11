@@ -1248,7 +1248,7 @@ details.lo.atpl{border-left-color:var(--magenta)}
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="examen" checked> Simulacro SENASA <small id="examCount"></small>
         <span class="opts"><select id="examLenSel" aria-label="Duración"><option value="full">Completo · 46 preguntas en 72 min (el real da 90)</option><option value="half">Exprés · 23 preguntas en 36 min</option><option value="real">Tiempo real · 46 preguntas en 90 min</option></select></span></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Con el reparto de SENASA. Al menos 4 de clase y 4 de los trials; en cada bloque entran primero tus fallos, lo marcado ★ OJO y tus subcapítulos flojos. Como mucho 4 por subcapítulo.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Con el reparto de SENASA. Al menos 5 de clase y 5 de los trials; en cada bloque entran primero tus fallos, lo marcado ★ OJO y tus subcapítulos flojos. Como mucho 4 por subcapítulo.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
@@ -2523,13 +2523,14 @@ function pickByQuota(pool, N, minTrial, maxPerSub, minExam, minHot){
 }
 let examLen="full", examN=ECQB_TOTAL, examMin=72;
 const LEN={full:{f:1,t:0.8,l:"Completo"}, half:{f:0.5,t:0.4,l:"Exprés"}, real:{f:1,t:1,l:"Tiempo real"}};
+const __t25=(a,st)=>{ const k=q=>{ const r=((st&&st.q)||{})[q[0]]; return (!r||r.last===false)?0:1; }; return shuffle(shuffle(a).sort((x,y)=>k(x)-k(y)).slice(0,25)); };   // trial: 25 por test; primero las no vistas y las falladas
 function selectQuestions(mode, inc, lo){
   const st=stats();
   let pool=BANK.filter(q=> inc || q[2]!=="c");
   const xEl=$("#incX");
   if(xEl && xEl.checked===false) pool=pool.filter(q=>q[2]!=="x");   // el temario ATPL aún no dado solo sale con la casilla marcada, en todos los tests
   if(mode==="slides") return shuffle(pool.filter(q=>q[2]==="s"||q[2]==="e"));
-  if(mode==="trial") return shuffle(pool.filter(q=>isTrial(q)||isExam(q)));
+  if(mode==="trial") return __t25(pool.filter(q=>isTrial(q)||isExam(q)), st);
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo")    return shuffle(pool.filter(q=>subOf(q).slice(0,6)===lo || q[1]===lo));
   if(mode==="all")   return shuffle(pool);
@@ -2539,7 +2540,7 @@ function selectQuestions(mode, inc, lo){
     // ordenadas por capítulo, como en las preguntas reales
     return pickByQuota(pool, examN, 0, null).sort((a,b)=>subOf(a).localeCompare(subOf(b)));
   }
-  return shuffle(pickByQuota(pool, 20, 4, 4, 4, 5));
+  return shuffle(pickByQuota(pool, 25, 5, 5, 5, 6));
 }
 
 // ---------- reloj y ritmo del simulacro ----------
@@ -2856,7 +2857,7 @@ function renderSetup(){
   $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
   $("#allCount").textContent = `${BANK.filter(q=>q[2]!=="x").length} preguntas de lo dado + ${BANK.filter(q=>q[2]==="x").length} de ATPL aún no dado.`;
   $("#examCount").textContent = `Test cronometrado con el reparto oficial de EASA por capítulo (081.01 a 081.08); corrección al final.`;
-  $("#trialCount").textContent = `Las ${BANK.filter(q=>isTrial(q)||isExam(q)).length} preguntas de los trials y de los ejercicios de clase, cada una con una variante al azar.`;
+  $("#trialCount").textContent = `25 por test, de las ${BANK.filter(q=>isTrial(q)||isExam(q)).length} de los trials y de los ejercicios de clase, en variante. Primero las no vistas y las falladas.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = ECQB.map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.id} · ${c.es}</option>`).join("");
 }

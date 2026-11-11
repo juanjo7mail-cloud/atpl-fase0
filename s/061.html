@@ -1310,7 +1310,7 @@ details.lo .body > .formula{margin-top:10px}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senEx" aria-label="Asignatura"><option value="061">061 General Navigation · 55 preguntas</option><option value="062">062 Radio Navigation · 66 preguntas</option><option value="both">061 + 062 seguidos · 121 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>10 ejercicios de cálculo (uno de cada tipo) y 10 de teoría, según tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>12 ejercicios de cálculo (al menos uno de cada tipo) y 13 de teoría, según tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos <small id="calcInfo">Números nuevos cada vez.</small>
         <span class="opts"><select id="calcTypeSel" aria-label="Tipo de cálculo"></select><select id="calcCountSel" aria-label="Número de preguntas"></select></span></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
@@ -4589,11 +4589,12 @@ const isPracId = id => PRAC_IDS.has(id) || /^(pf|nx|sx|cq|kx)/.test(id) || !!GEN
 const isPrac = q => isPracId(q[0]);
 const isHardPrac = q => /^(pf|nx|sx|cq|ap|ie|nd)/.test(q[0]) || /^(v1[2-5]|tr1[147]|u1[0-2])$/.test(q[0]);
 const STYLE_SHARE = {"061":0.5, "062":0.5};   // mitad ejercicios, mitad teoría
+const __t25=(a,st)=>{ const k=q=>{ const r=((st&&st.q)||{})[q[0]]; return (!r||r.last===false)?0:1; }; return shuffle(shuffle(a).sort((x,y)=>k(x)-k(y)).slice(0,25)); };   // trial: 25 por test; primero las no vistas y las falladas
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senEx").value, $("#senLen").value, inc, atpl);
   const st = stats();
   if(mode==="trial"){ const g={}; BANK.filter(isTrialX).forEach(q=>{ const k=trialBase(q[0]); (g[k]=g[k]||[]).push(q); });
-    return shuffle(Object.values(g).map(a=>a[Math.floor(Math.random()*a.length)])); }
+    return __t25(Object.values(g).map(a=>a[Math.floor(Math.random()*a.length)]), st); }
   const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && (inc || q[2]!=="c") && (atpl || isGiven(q))));
@@ -4620,10 +4621,10 @@ function selectQuestions(mode, inc, lo, atpl){
     const c = exOf(t).map(q=>({q,p:sc(q)})).sort((a,b)=>b.p-a.p);
     if(c.length){ exs.push(c[0].q); c.slice(1).forEach(x=>left.push(x)); } });
   left.sort((a,b)=>b.p-a.p);
-  for(const x of left){ if(exs.length>=10) break; if(!exs.includes(x.q)) exs.push(x.q); }
+  for(const x of left){ if(exs.length>=12) break; if(!exs.includes(x.q)) exs.push(x.q); }
   const theory = pool.filter(q=>!isPrac(q) && !GEN[q[0]]), pt = new Map(theory.map(q=>[q[0], priority(q,st)]));
   const sorted = theory.slice().sort((a,b)=>pt.get(b[0])-pt.get(a[0])), th = [], perLO = {}, usedB = new Set();
-  const takeT = (q, cap=true) => { if(th.includes(q) || th.length>=20-exs.length) return;
+  const takeT = (q, cap=true) => { if(th.includes(q) || th.length>=25-exs.length) return;
     if(cap && (perLO[q[1]]||0)>=2) return; if(isTrial(q)){ const b=trialBase?trialBase(q[0]):q[0]; if(usedB.has(b)) return; usedB.add(b); }
     perLO[q[1]]=(perLO[q[1]]||0)+1; th.push(q); };
   for(const q of sorted){ if(th.filter(isTrial).length>=4) break; if(isTrial(q)) takeT(q); }
@@ -4885,7 +4886,7 @@ function renderSetup(){
   const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
   $("#allCount").textContent = `${BANK.filter(isGiven).length} preguntas de lo dado + ${BANK.filter(q=>!isGiven(q)).length} de ATPL aún no dado.`;
-  $("#trialCount").textContent = `${new Set(BANK.filter(isTrialX).map(q=>trialBase(q[0]))).size} preguntas del trial y de los ejercicios de clase, cada una en variante.`;
+  $("#trialCount").textContent = `25 por test, de las ${new Set(BANK.filter(isTrialX).map(q=>trialBase(q[0]))).size} del trial y de los ejercicios de clase, en variante.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
   renderSenOpts();

@@ -1159,7 +1159,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--bg
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senLen"><option value="full">Completo · 34 preguntas en 48 min (el real da 60)</option><option value="half">Exprés · 17 preguntas en 24 min</option><option value="real">Tiempo real · 34 preguntas en 60 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Solo test. Tus fallos, lo que más pesa, TRIAL y ★ OJO.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Solo test. Tus fallos, lo que más pesa, TRIAL y ★ OJO.</small></label>
       <label class="mode"><input type="radio" name="mode" value="voice"> Radio por voz · solo hablando <small>ATC te habla en inglés y contestas por el micrófono, sin escribir. Te dice si está bien, mal o qué te falta según la fraseología OACI/SENASA.
         <span class="row" id="voiceOpts"><select id="vLevel" aria-label="Dificultad de la audición"><option value="easy">Fácil · despacio y sin ruido</option><option value="normal" selected>Normal · algo de ruido</option><option value="hard">Difícil · rápido y con ruido</option><option value="real">Real · frecuencia saturada</option></select>
         <select id="vAccent" aria-label="Acento"><option value="gb">Británico</option><option value="us">Americano</option><option value="random">Al azar</option></select>
@@ -2430,10 +2430,11 @@ function selectProf(){
 }
 const KORDER = {mc:0, fill:1, tf:2, match:3};
 const f0Items = list => list.map(f=>({k:f.t,f}));
+const __t25=(a,st)=>{ const k=q=>{ const r=((st&&st.q)||{})[q[0]]; return (!r||r.last===false)?0:1; }; return shuffle(shuffle(a).sort((x,y)=>k(x)-k(y)).slice(0,25)); };   // trial: 25 por test; primero las no vistas y las falladas
 function selectItems(mode, inc, lo, atpl){
   if(mode==="adaptive") return selectProf();
   if(mode==="senasa") return selectSenasa($("#senLen").value, inc, atpl).map(q=>({k:"mc",q}));
-  if(mode==="trial") return shuffle(BANK.filter(isT)).map(q=>({k:"mc",q}));
+  if(mode==="trial") return __t25(BANK.filter(isT), stats()).map(q=>({k:"mc",q}));
   const st = stats(), pool = mcPool(inc, atpl), f0 = F0.filter(f=>atpl || (SUBMAP[f.lo]||{}).cov!=="atpl");
   let mc = [], ff = [];
   if(mode==="wrong"){ mc = pool.filter(q=>(st.q[q[0]]||{}).last===false); ff = f0.filter(f=>(st.q[f.id]||{}).last===false); }
@@ -2662,7 +2663,7 @@ function renderSetup(){
   const nw = BANK.filter(q=>(st.q[q[0]]||{}).last===false).length + F0.filter(f=>(st.q[f.id]||{}).last===false).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
   $("#allCount").textContent = `${BANK.filter(isGiven).length + F0.length} preguntas de lo dado + ${BANK.filter(q=>!isGiven(q)).length} de ATPL aún no dado.`;
-  $("#trialCount").textContent = `${BANK.filter(isT).length} preguntas del trial, cada una en variante.`;
+  $("#trialCount").textContent = `25 por test, de las ${BANK.filter(isT).length} del trial, en variante.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
 }
@@ -3522,7 +3523,7 @@ try{
 
 // ---------- 1 · Examen Fase 0 de Comunicaciones: 30 preguntas tipo test, 45 min, estilo trial ----------
 try{
-  const F0N = 30;
+  const F0N = 25;
   selectProf = function(){
     const st = stats(), ok = q => isGiven(q) && q[2]!=="c" && q[2]!=="g" && in090(q);
     const pool = BANK.filter(ok), pr = new Map(pool.map(q=>[q[0], priority(q,st)]));
@@ -3538,9 +3539,9 @@ try{
     need(()=>true, F0N);
     return shuffle(out).map(q=>({k:"mc", q}));
   };
-  MODE_LABEL.adaptive = "Test Fase 0 · 30 preguntas · 45 min";
+  MODE_LABEL.adaptive = "Test Fase 0 · 25 preguntas · 45 min";
   const ad = document.querySelector('input[name=mode][value=adaptive]'), lab = ad && ad.closest("label");
-  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Test Fase 0 · 30 preguntas · 45 min <small>El formato estándar de Comunicaciones: solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
+  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Test Fase 0 · 25 preguntas · 45 min <small>El formato estándar de Comunicaciones: solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
     const sn = document.querySelector('input[name=mode][value=senasa]'); if(sn) sn.checked = false; }
 }catch(e){ console.error("com_patch examen", e); }
 
