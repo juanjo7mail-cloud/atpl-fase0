@@ -17,14 +17,14 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="6b77d6ee0ad7";</script>
+<script>window.F0_BUILD="1fa145b2756d";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
 <script src="radio.js"></script>
 <script src="chat.js"></script>
 <script src="ops.js"></script>
-<script src="sim.js"></script>
+<script>window.F0Sim=(function(){var el=null,p=null,me;return me={render:function(e){el=e;e.innerHTML="<p style=\"padding:24px;color:var(--muted)\">Cargando el Sim…</p>";if(!p){p=new Promise(function(ok,ko){var s=document.createElement("script");s.src="sim.js";s.onload=ok;s.onerror=function(){p=null;s.remove();ko();};document.head.appendChild(s);});}p.then(function(){if(el&&window.F0Sim!==me)window.F0Sim.render(el);},function(){if(el)el.innerHTML="<p style=\"padding:24px\">No se pudo cargar el Sim. Revisa la conexión y vuelve a abrir la pestaña.</p>";});},leave:function(){el=null;}};})();</script>
 <script src="hangar.js"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f1d0070793724820ae63bfa8c465ba85"}'></script>
 </head>
@@ -32,6 +32,7 @@
 
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 /* Layout: barra fija con las pestañas (Test + 11 asignaturas); cada asignatura ocupa el resto de la pantalla. */
@@ -788,7 +789,7 @@ let current="test";
 /* enlaces del correo (recuperar contraseña): llegan en la URL como #access_token=…&type=recovery o #error=…; no se toca la URL hasta que la cuenta los lea */
 let authHold=/access_token=|refresh_token=|type=recovery|error_code=|[#&]error=/.test(location.hash);
 const frames={}, ready={}, pendingCmd={};
-function simNew(){ try{ return !localStorage.getItem("f0:simseen2"); }catch(e){ return false; } }
+function simNew(){ try{ return !localStorage.getItem("f0:simseen3"); }catch(e){ return false; } }
 function renderTabs(){
   const lv = k => summary(k).lvl;
   $("#tabs").innerHTML = (isAdmin?`<button class="tab test solo" role="tab" data-v="stats" aria-selected="${current==="stats"}"><b>STATS</b></button>`:"") +
@@ -796,7 +797,7 @@ function renderTabs(){
     (window.F0Ops?`<button class="tab brief solo" role="tab" data-v="ops" aria-selected="${current==="ops"}" aria-label="Briefing: tiempo, pista y cartas de 23 aeródromos"><div class="bf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 21 4l-5 17-4-7-7-2z"/></svg>BRIEFING<i class="lv" title="Datos en vivo"></i></div></button>`:"") +
     (sbUser?`<button class="tab test solo" role="tab" data-v="rank" aria-selected="${current==="rank"}"><b>RANKING</b></button>`:"") +
     (sbUser&&window.F0Radio?`<button class="tab test solo" role="tab" data-v="radio" aria-selected="${current==="radio"}"><b>RADIO</b></button>`:"") +
-    (window.F0Sim?`<button class="tab simt solo" role="tab" data-v="sim" aria-selected="${current==="sim"}" aria-label="Sim: rodaje, despegue, aterrizaje y vectores"><div class="sm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>SIM${simNew()?"<em>NUEVO</em>":""}</div></button>`:"") +
+    (window.F0Sim?`<button class="tab simt solo" role="tab" data-v="sim" aria-selected="${current==="sim"}" aria-label="Sim: juegos de vuelo"><div class="sm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>SIM${simNew()?"<em>NUEVO</em>":""}</div></button>`:"") +
     SUBJ.map(s=>`<button class="tab" role="tab" data-v="${s.k}" aria-selected="${current===s.k}"><b>${s.code}<i class="dot ${lv(s.k)}"></i></b><span>${esc(s.short)}</span></button>`).join("");
   drawMenu(); tabArrows();
 }
@@ -807,7 +808,7 @@ function opsLoad(){   // Leaflet solo se descarga al abrir BRIEFING
 }
 function drawMenu(){
   const lv = k => summary(k).lvl, it=(v,c,n,d)=>`<button role="menuitem" data-v="${v}" aria-current="${current===v}"><span class="mc">${c}</span><span class="mn">${esc(n)}</span><i class="md ${d||""}"></i></button>`;
-  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(window.F0Ops?it("ops","BRIEFING","Tiempo, pista y cartas · 23 aeródromos"):"")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+(window.F0Sim?it("sim","SIM","Rodaje, despegue, aterrizaje y vectores"):"")+"<hr>"+
+  $("#menu").innerHTML = (isAdmin?it("stats","STATS","Estadísticas"):"")+it("test","INICIO","Panel y progreso")+(window.F0Ops?it("ops","BRIEFING","Tiempo, pista y cartas · 23 aeródromos"):"")+(sbUser?it("rank","RANKING","Clasificación por asignatura"):"")+(sbUser&&window.F0Radio?it("radio","RADIO","Radio PTT por frecuencia"):"")+(window.F0Sim?it("sim","SIM","Siete juegos de vuelo"):"")+"<hr>"+
     SUBJ.map(s=>it(s.k,s.code,s.short,lv(s.k))).join("");
 }
 function tabArrows(){
@@ -823,7 +824,7 @@ function show(v, cmd){
   if(sbUser&&MY&&MY.ok&&!MY.name){ openNameAsk(); return; }   // sin nombre y apellidos no se entra
   if(current==="ops"&&v!=="ops"){ try{ window.F0Ops&&window.F0Ops.leave(); }catch(e){} }
   if(current==="sim"&&v!=="sim"){ try{ window.F0Sim&&window.F0Sim.leave(); }catch(e){} }
-  if(v==="sim"){ try{ localStorage.setItem("f0:simseen2","1"); }catch(e){} }
+  if(v==="sim"){ try{ localStorage.setItem("f0:simseen3","1"); }catch(e){} }
   current=v; renderTabs(); try{vswSync();}catch(e){}
   document.querySelectorAll(".view").forEach(el=>el.hidden = el.id!=="v-"+v);
   if(v==="stats"){ renderStats(); }
@@ -1754,8 +1755,8 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
-  {id:"2026-11-10b", items:[
-    {big:true, xl:true, i:"🎮", t:"Nuevo: Sim, juegos de vuelo", d:"Cuatro juegos para volar a tu manera: rodaje por un aeródromo siguiendo las instrucciones de la torre, despegue, aterrizaje con PAPI y viento cruzado, y vectores (rumbo y altitud por una ruta de puntos). Mando de yoke Boeing o de sidestick Airbus; en iPad puedes inclinar el aparato como un yoke. Guarda tu mejor marca.", go:"sim", cta:"Probar el Sim", need:"F0Sim", art:`<img class="nimg" src="sim-collage.webp" width="1126" height="662" alt="Pantallazos de los cuatro juegos del Sim: rodaje, despegue, aterrizaje y vectores" loading="lazy">`},
+  {id:"2026-11-11", items:[
+    {big:true, xl:true, i:"🎮", t:"Sim más real: 7 juegos de vuelo", d:"Modelo de vuelo nuevo con viento, rachas y efecto suelo, panel de seis instrumentos y vuelo de día, al atardecer o de noche. Juegos nuevos: circuito de tráfico, fallo de motor y aproximación ILS entre nubes, además de rodaje, despegue, aterrizaje y vectores. Pedales manuales opcionales y, en iPad, control inclinando el aparato.", go:"sim", cta:"Probar el Sim", need:"F0Sim", art:`<img class="nimg" src="sim-collage.webp" width="1572" height="662" alt="Pantallazos de los juegos del Sim: despegue, aterrizaje, circuito, vectores, fallo de motor e ILS" loading="lazy">`},
     {i:"⚡", t:"AGK 021.09 Sistema eléctrico: apuntes de clase y 29 preguntas nuevas"}
   ]},
   {id:"2026-11-06", items:[
@@ -2006,6 +2007,7 @@ boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); setTime
 #stall.calm{background:#1b7f3b;animation:none;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 @keyframes stallflash{0%,100%{background:#e0101f;filter:brightness(1.15)}50%{background:#4a070d;filter:brightness(.85)}}
 @media (max-width:520px){#stall{font-size:12.5px;gap:6px}#stall .sp{display:none}#stall .sn{font-size:18px}}
+@media (max-width:360px){#stall{white-space:normal;flex-wrap:wrap;gap:3px 6px;font-size:12px}}
 </style>
 <div id="stall" role="status" aria-live="off" hidden><span>⚠ STALL</span><span class="sn" id="stallN">–</span><span id="stallT">días para el examen</span><span class="sp" id="stallP"></span><button type="button" id="stallM" aria-label="Silenciar alarma" title="Silenciar / activar sonido">🔊</button></div>
 <script>

@@ -51,6 +51,7 @@ figure.mfig figcaption{font-size:13.5px;color:var(--muted);margin-top:4px}
 .pfvnote{margin:10px 0;padding:9px 12px;border-radius:8px;border:1.5px dashed var(--line);background:var(--paper);font-size:15px}
 .pfvnote b{font-family:"Barlow Condensed",Barlow,sans-serif;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-right:6px}
 </style>
+<style>@media (max-width:400px){nav{gap:0}nav button{flex:1 1 0;min-width:0;font-size:15px;padding-left:2px;padding-right:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}</style>
 </head><body>
 <title>050 Meteorology · Meteorología</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
@@ -1338,7 +1339,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
     <div class="body">
   <div class="atplbox"><b>ATPL · aún no dado en clase</b>
     <p>Esto no entró en MET-1 a MET-4. Está montado desde los objetivos de aprendizaje de EASA, que es lo que mide el examen.</p></div>
-  <p>Un <span class="en">jet stream</span> es una banda estrecha de viento muy fuerte justo bajo la tropopausa. Para que se llame jet, el núcleo tiene que alcanzar <b>80 kt</b> o más.</p>
+  <p>Un <span class="en">jet stream</span> es una banda estrecha de viento muy fuerte justo bajo la tropopausa. Para que se llame jet, el núcleo tiene que alcanzar <b>60 kt</b> o más (en la carta SIGWX solo se dibujan los de 80 kt o más).</p>
   <ul>
     <li><b>Por qué existe:</b> un gradiente HORIZONTAL de temperatura fuerte entre dos masas hace que el gradiente de presión crezca con la altura. Ese «viento térmico» es el jet. Sin contraste de masas, no hay jet.</li>
     <li><b>Jet del frente polar:</b> en torno a <b>FL300</b>, latitudes 40–60°, serpenteante, discontinuo. En invierno es <b>más fuerte</b> y baja de latitud.</li>
@@ -2858,7 +2859,7 @@ const REFS = {
 };
 // ---------- repaso adicional para el temario ATPL ----------
 Object.assign(REFS, {
- jet:"Jet stream: banda estrecha de viento con núcleo de 80 kt o más, justo bajo la tropopausa, de oeste a este. Lo produce un gradiente HORIZONTAL de temperatura fuerte (viento térmico). El del frente polar va sobre FL300 en latitudes 40-60°, y en invierno es más intenso y baja de latitud; el subtropical, sobre FL400 en 25-30°. La CAT es máxima en el lado FRÍO del núcleo y algo por debajo de la tropopausa.",
+ jet:"Jet stream: banda estrecha de viento con núcleo de 60 kt o más (en el SIGWX se dibuja desde 80 kt), justo bajo la tropopausa, de oeste a este. Lo produce un gradiente HORIZONTAL de temperatura fuerte (viento térmico). El del frente polar va sobre FL300 en latitudes 40-60°, y en invierno es más intenso y baja de latitud; el subtropical, sobre FL400 en 25-30°. La CAT es máxima en el lado FRÍO del núcleo y algo por debajo de la tropopausa.",
  trs:"Ciclón tropical: agua a 26-27 °C o más, latitud entre 5° y 20° (dentro de 5° del ecuador no hay Coriolis), poca cizalladura vertical, final de verano y principio de otoño. Ojo de 20-50 km con aire descendente, viento flojo y cielo casi despejado; los vientos máximos están en la PARED del ojo. En el HN gira antihorario y converge en superficie. Va primero al OESTE con los alisios y hacia los 20-25° recurva al polo.",
  clim:"Zonas climáticas: ecuatorial (calor y lluvia todo el año), tropical (estación húmeda y seca), subtropical (verano seco por el anticiclón, invierno lluvioso: España), templada y polar (poca precipitación, porque el aire frío lleva poco vapor). Marítimo = poca amplitud térmica; continental = amplitud anual y diaria grande. Monzónico lo define la INVERSIÓN ESTACIONAL del viento, no la lluvia.",
  tropclim:"ITCZ: convergen los alisios de los dos hemisferios; baja presión, ascenso, TCU y CB con cimas que pasan de FL500. Migra al hemisferio de verano con uno o dos meses de retraso respecto al sol. Alisios del NORESTE en el HN; la inversión de los alisios (subsidencia del anticiclón subtropical) corta el desarrollo y deja cúmulos someros y visibilidad excelente. Monzón del SUROESTE en verano (húmedo) y del NORESTE en invierno (seco). La visibilidad la estropea polvo, arena y humo. Manda el ciclo DIARIO, no los frentes.",
@@ -3794,7 +3795,7 @@ BASE.push(...BASE_MET3);
 // confidencial, así que no hay preguntas reales). q[7]=1 => "aún no dado".
 const BASE_ATPL = [
  // ===== 050.02.07 Jet streams =====
- ["a1","050.02.07","a","jet","A jet stream is defined as a narrow band of wind whose core speed is at least:",["80 kt","50 kt","100 kt","120 kt"],"Por definición OACI, para hablar de jet stream el núcleo tiene que alcanzar 80 kt o más. Por debajo es simplemente viento fuerte en altura.",1],
+ ["a1","050.02.07","a","jet","A jet stream is defined as a narrow band of wind whose core speed is at least:",["60 kt","30 kt","100 kt","120 kt"],"Por definición (OMM/OACI), un jet stream tiene un núcleo de 60 kt o más. Otra cosa es la carta SIGWX, donde solo se dibujan los de 80 kt o más.",1],
  ["a2","050.02.07","a","jet","The polar front jet stream in mid-latitudes is normally found close to:",["FL300, just below the mid-latitude tropopause","FL180, in the middle of the troposphere","FL450, above the tropical tropopause","FL100, within the friction layer"],"El jet del frente polar va justo bajo la tropopausa de latitudes medias: en torno a FL300. El subtropical está más alto, sobre FL400, porque allí la tropopausa es más alta.",1],
  ["a3","050.02.07","a","jet","In the northern hemisphere, the strongest clear air turbulence of a jet stream is found:",["On the cold side of the core, just below the tropopause","In the very centre of the core, where the speed is highest","On the warm side, well above the tropopause level","At the surface directly beneath the jet core"],"La cizalladura es máxima en el lado FRÍO del núcleo y algo por debajo de la tropopausa, porque ahí el gradiente horizontal de temperatura es más fuerte. El núcleo en sí suele dar un vuelo liso.",1],
  ["a4","050.02.07","a","jet","A jet stream exists because of:",["A strong horizontal temperature gradient between two air masses","The Coriolis effect acting alone on the upper flow","Friction between the troposphere and the tropopause","The vertical motion of air inside the Hadley cell"],"Un gradiente horizontal de temperatura fuerte hace que el gradiente de presión crezca con la altura (viento térmico), y ese viento térmico es el jet. Sin contraste de masas no hay jet.",1],
