@@ -283,6 +283,122 @@ const LAB={
   frame();
 }
 };
+/*F1*/
+/* ---------- Fase 1 · Principios de vuelo: viraje, polar y estabilidad ---------- */
+const bgFill=(x,W,H)=>{ const g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,"#0e2136"); g.addColorStop(1,"#0a1727"); x.fillStyle=g; x.fillRect(0,0,W,H); };
+const arrow=(x,d,x0,y0,dx,dy,col,lab,dash)=>{ const n=Math.hypot(dx,dy); if(n<3*d) return; x.save(); x.strokeStyle=col; x.fillStyle=col; x.lineWidth=3*d; if(dash) x.setLineDash([6*d,5*d]); x.beginPath(); x.moveTo(x0,y0); x.lineTo(x0+dx,y0+dy); x.stroke(); x.setLineDash([]);
+  const ux=dx/n, uy=dy/n, h=9*d; x.beginPath(); x.moveTo(x0+dx+ux*h,y0+dy+uy*h); x.lineTo(x0+dx-uy*h*.55,y0+dy+ux*h*.55); x.lineTo(x0+dx+uy*h*.55,y0+dy-ux*h*.55); x.closePath(); x.fill();
+  if(lab){ x.font=`700 ${12*d}px system-ui,sans-serif`; x.textAlign=dx<-n*.5?"right":"left"; x.fillText(lab,x0+dx+(dx<-n*.5?-12:12)*d,y0+dy+(dy<-n*.5?-6:dy>n*.5?16:4)*d); } x.restore(); };
+const sidePlane=(x,s,col)=>{   // silueta lateral, morro a la derecha, centrada en el 25 % de la cuerda; s = px por metro
+  x.fillStyle=col||"#e6ebf1"; x.beginPath(); x.moveTo(2.6*s,0); x.quadraticCurveTo(2.5*s,-.5*s,1.6*s,-.62*s); x.lineTo(.9*s,-1.05*s); x.lineTo(-.5*s,-1.05*s); x.quadraticCurveTo(-1.6*s,-.5*s,-5*s,-.32*s); x.lineTo(-5.4*s,-1.75*s); x.lineTo(-5.95*s,-1.75*s); x.lineTo(-5.75*s,.02*s); x.lineTo(-1.5*s,.6*s); x.quadraticCurveTo(1.4*s,.75*s,2.6*s,0); x.closePath(); x.fill();
+  x.fillStyle="#9fb0c2"; x.beginPath(); x.ellipse(.15*s,-1.12*s,1.05*s,.13*s,0,0,7); x.fill(); x.beginPath(); x.ellipse(-5.4*s,-.3*s,.75*s,.08*s,0,0,7); x.fill();
+  x.fillStyle="#23364b"; x.beginPath(); x.moveTo(1.55*s,-.6*s); x.lineTo(.95*s,-1*s); x.lineTo(-.4*s,-1*s); x.lineTo(-.4*s,-.55*s); x.closePath(); x.fill(); };
+Object.assign(TTL,{turn:"Lámina interactiva · fuerzas en viraje",polar:"Lámina interactiva · polar y mejor planeo",stab:"Lámina interactiva · estabilidad longitudinal"});
+Object.assign(CAP,{turn:"Viraje nivelado y coordinado. El factor de carga depende solo del alabeo; el radio y el régimen dependen además de la velocidad. Velocidad de pérdida a 1 g: 50 kt.",
+  polar:"Avión de ejemplo con L/D máximo de 12,7. El peso no cambia el alcance en aire en calma: cambia la velocidad a la que se consigue y la tasa de descenso.",
+  stab:"Punto neutro fijo en el 35 % de la cuerda media. Margen estático = punto neutro − centro de gravedad."});
+Object.assign(HTML,{
+ turn:`<figure><canvas data-i="cv" height="360" role="img" aria-label="Avión visto por detrás en viraje con sus fuerzas"></canvas>
+ <div class="ctl"><label>Alabeo <input data-i="bk" type="range" min="0" max="70" step="1" value="30"><output data-i="bkO"></output></label><label>TAS <input data-i="tas" type="range" min="60" max="180" step="1" value="100"><output data-i="tasO"></output></label><button data-i="r1" type="button">Régimen 1 (3°/s)</button></div>
+ <div class="read"><div data-i="nB">Factor de carga<b data-i="rN"></b></div><div>Velocidad de pérdida<b data-i="rVs"></b></div><div>Radio de viraje<b data-i="rR"></b></div><div>Régimen<b data-i="rW"></b></div><div>Vuelta de 360°<b data-i="rT"></b></div></div></figure>`,
+ polar:`<figure><canvas data-i="cv" height="360" role="img" aria-label="Curva polar y trayectoria de planeo"></canvas>
+ <div class="ctl"><label>IAS <input data-i="v" type="range" min="48" max="125" step="1" value="90"><output data-i="vO"></output></label><label>Masa <input data-i="m" type="range" min="800" max="1200" step="20" value="1000"><output data-i="mO"></output></label><label>Viento <input data-i="w" type="range" min="-30" max="30" step="1" value="0"><output data-i="wO"></output></label><button data-i="best" type="button">Ir a mejor planeo</button></div>
+ <div class="read"><div data-i="ldB">L/D<b data-i="rLD"></b></div><div>Ángulo de planeo<b data-i="rG"></b></div><div>Tasa de descenso<b data-i="rS"></b></div><div>Alcance desde 3 000 ft<b data-i="rD"></b></div><div>Mejor planeo a<b data-i="rVb"></b></div></div></figure>`,
+ stab:`<figure><canvas data-i="cv" height="360" role="img" aria-label="Avión de perfil con centro de gravedad y punto neutro"></canvas>
+ <div class="ctl"><label>Centro de gravedad <input data-i="cg" type="range" min="12" max="46" step="0.5" value="24"><output data-i="cgO"></output></label><button data-i="gu" type="button">Ráfaga: morro arriba</button><button data-i="gd" type="button">Ráfaga: morro abajo</button><button data-i="rs" type="button">Reiniciar</button></div>
+ <div class="read"><div>Margen estático<b data-i="rM"></b></div><div data-i="stB">Estabilidad<b data-i="rE"></b></div><div>Fuerza en el mando<b data-i="rF"></b></div><div>Tras la ráfaga<b data-i="rA"></b></div></div></figure>`});
+Object.assign(LAB,{
+ turn(root,E){
+  const c=E.cv, x=c.getContext("2d"), G=9.81; let ph=0, last=0;
+  E.r1.addEventListener("click",()=>{ const v=+E.tas.value*.5144; E.bk.value=Math.round(Math.atan(v*(3*Math.PI/180)/G)*180/Math.PI); });
+  const loop=t=>{ requestAnimationFrame(loop); const dt=Math.min(.05,(t-last)/1000||0); last=t; if(!seen(c)||document.hidden) return;
+    const d=fit(c), W=c.width, H=c.height, b=+E.bk.value, br=b*Math.PI/180, v=+E.tas.value*.5144, n=1/Math.cos(br), R=b>0?v*v/(G*Math.tan(br)):Infinity, om=b>0?G*Math.tan(br)/v:0;
+    bgFill(x,W,H); const two=W>620*d, LW=two?W*.58:W, cx=LW/2, cy=H*.56, u=Math.min(LW/640,H/360)*d/d;
+    // horizonte
+    x.strokeStyle="rgba(150,190,230,.22)"; x.lineWidth=1*d; x.beginPath(); x.moveTo(0,cy+H*.3); x.lineTo(LW,cy+H*.3); x.stroke();
+    // avión visto por detrás (alabeo a la derecha)
+    x.save(); x.translate(cx,cy); x.rotate(br); const s=u*22;
+    x.fillStyle="#c9d2dc"; x.fillRect(-7*s,-.16*s,14*s,.32*s); x.fillStyle="#1d56aa"; x.fillRect(-7*s,-.16*s,1.2*s,.32*s); x.fillRect(5.8*s,-.16*s,1.2*s,.32*s);
+    x.fillStyle="#e9eef4"; x.beginPath(); x.ellipse(0,.55*s,.85*s,1*s,0,0,7); x.fill(); x.fillStyle="#23364b"; x.beginPath(); x.ellipse(0,.25*s,.6*s,.42*s,0,0,7); x.fill();
+    x.fillStyle="#c9d2dc"; x.fillRect(-2.2*s,.5*s,4.4*s,.14*s); x.fillRect(-.07*s,-1.5*s,.14*s,1.6*s);
+    x.strokeStyle="#8b97a6"; x.lineWidth=.08*s; x.beginPath(); x.moveTo(-.5*s,1.3*s); x.lineTo(-1.1*s,2*s); x.moveTo(.5*s,1.3*s); x.lineTo(1.1*s,2*s); x.stroke(); x.fillStyle="#1c2430"; x.beginPath(); x.arc(-1.1*s,2.05*s,.26*s,0,7); x.arc(1.1*s,2.05*s,.26*s,0,7); x.fill();
+    x.restore();
+    // fuerzas
+    const Wl=Math.min(H*.25,92*d), Ll=Wl*n, lx=Math.sin(br)*Ll, ly=-Math.cos(br)*Ll;
+    arrow(x,d,cx,cy,0,Wl,"rgba(255,255,255,.75)","W");
+    arrow(x,d,cx,cy,0,-Wl,"#8df0b4",null,true); arrow(x,d,cx,cy-Wl,lx,0,"#ffc94d",null,true); arrow(x,d,cx,cy,lx,ly,"#6fd08c",null);
+    x.font=`700 ${12*d}px system-ui,sans-serif`; x.textAlign="right"; x.fillStyle="#8df0b4"; x.fillText("L·cos φ = W",cx-10*d,cy-Wl*.55);
+    { const far=cx+lx>LW-170*d, tx=far?cx+lx-6*d:cx+lx+12*d; x.textAlign=far?"right":"left"; x.fillStyle="#6fd08c"; x.fillText("L = "+n.toFixed(2)+" W",tx,cy+ly-14*d); if(b>3){ x.fillStyle="#ffc94d"; x.fillText("L·sen φ (centrípeta)",tx,cy+ly+(far?20:8)*d); } }
+    x.strokeStyle="#ffc94d"; x.lineWidth=1.6*d; x.beginPath(); x.arc(cx,cy,34*d,-Math.PI/2,-Math.PI/2+br); x.stroke(); x.fillStyle="#ffc94d"; x.font=`600 ${12*d}px ui-monospace,Menlo,monospace`; x.textAlign="left"; x.fillText("φ "+b+"°",cx+8*d,cy-42*d);
+    // vista en planta
+    if(two){ const px=LW+ (W-LW)/2, py=H/2, pr=Math.min((W-LW)*.4,H*.38), sc=pr/Math.max(250,Math.min(R,4000));
+      x.fillStyle="#0b1622"; x.fillRect(LW,0,W-LW,H); x.fillStyle="rgba(205,225,245,.7)"; x.font=`600 ${11*d}px ui-monospace,Menlo,monospace`; x.textAlign="left"; x.fillText("vista en planta",LW+12*d,18*d);
+      const rr=isFinite(R)?R*sc:0; ph+=om*dt; if(rr>2){ x.strokeStyle="rgba(143,208,255,.55)"; x.lineWidth=1.5*d; x.setLineDash([5*d,5*d]); x.beginPath(); x.arc(px,py,Math.min(rr,pr*1.6),0,7); x.stroke(); x.setLineDash([]);
+        const r2=Math.min(rr,pr*1.6), ax=px+Math.cos(ph-Math.PI/2)*r2, ay=py+Math.sin(ph-Math.PI/2)*r2; x.save(); x.translate(ax,ay); x.rotate(ph); x.fillStyle="#fff"; x.beginPath(); x.moveTo(11*d,0); x.lineTo(-7*d,-6*d); x.lineTo(-3*d,0); x.lineTo(-7*d,6*d); x.closePath(); x.fill(); x.restore();
+        x.strokeStyle="rgba(255,201,77,.8)"; x.lineWidth=1.2*d; x.beginPath(); x.moveTo(px,py); x.lineTo(ax,ay); x.stroke(); x.fillStyle="#ffc94d"; x.textAlign="center"; x.fillText("R = "+Math.round(R)+" m",px,py+pr*1.6>H-8*d?H-10*d:py+16*d); }
+      else { x.fillStyle="#fff"; x.textAlign="center"; x.fillText("vuelo recto: sin viraje",px,py); } }
+    E.bkO.textContent=b+"°"; E.tasO.textContent=E.tas.value+" kt"; E.rN.textContent=n.toFixed(2)+" g"; E.nB.className=n>=2?"bad":""; E.rVs.textContent=Math.round(50*Math.sqrt(n))+" kt";
+    E.rR.textContent=isFinite(R)?(R>=1852?(R/1852).toFixed(1)+" NM":Math.round(R)+" m"):"—"; E.rW.textContent=(om*180/Math.PI).toFixed(1)+" °/s"; E.rT.textContent=om>0?(360/(om*180/Math.PI)>=120?(6/(om*180/Math.PI)).toFixed(1)+" min":Math.round(360/(om*180/Math.PI))+" s"):"—"; };
+  requestAnimationFrame(loop);
+ },
+ polar(root,E){
+  const c=E.cv, x=c.getContext("2d"), CD0=.03, K=.052, S=16, RHO=1.225, CLB=Math.sqrt(CD0/K), LDB=1/(2*Math.sqrt(CD0*K)); let ph=0, last=0;
+  const vb=m=>Math.sqrt(2*m*9.81/(RHO*S*CLB))/.5144;
+  E.best.addEventListener("click",()=>{ E.v.value=Math.round(vb(+E.m.value)); });
+  const loop=t=>{ requestAnimationFrame(loop); const dt=Math.min(.05,(t-last)/1000||0); last=t; if(!seen(c)||document.hidden) return;
+    const d=fit(c), W=c.width, H=c.height, m=+E.m.value, wk=+E.w.value, vmin=Math.sqrt(2*m*9.81/(RHO*S*1.7))/.5144; let vk=Math.max(+E.v.value,Math.ceil(vmin)); const v=vk*.5144;
+    const cl=2*m*9.81/(RHO*S*v*v), cd=CD0+K*cl*cl, ld=cl/cd, gam=Math.atan(1/ld), sink=v*Math.sin(gam), gs=v*Math.cos(gam)-wk*.5144, dist=gs>0?(914.4/sink)*gs:0;
+    bgFill(x,W,H); const two=W>620*d, PW=two?W*.4:W*.0, px0=46*d, py0=H-40*d, pw=PW-70*d, ph0=H-80*d, X=q=>px0+q/.2*pw, Y=q=>py0-q/1.8*ph0;
+    if(two){ x.strokeStyle="rgba(150,190,230,.35)"; x.lineWidth=1*d; x.beginPath(); x.moveTo(px0,py0-ph0); x.lineTo(px0,py0); x.lineTo(px0+pw,py0); x.stroke();
+      x.fillStyle="rgba(205,225,245,.8)"; x.font=`600 ${11*d}px ui-monospace,Menlo,monospace`; x.textAlign="left"; x.fillText("CL",px0+6*d,py0-ph0+4*d); x.fillText("CD",px0+pw-18*d,py0+16*d);
+      x.strokeStyle="#8fd0ff"; x.lineWidth=2*d; x.beginPath(); for(let q=0;q<=1.72;q+=.02){ const xx=X(CD0+K*q*q), yy=Y(q); q?x.lineTo(xx,yy):x.moveTo(xx,yy); } x.stroke();
+      const tb=CD0+K*CLB*CLB; x.strokeStyle="rgba(141,240,180,.7)"; x.setLineDash([5*d,4*d]); x.beginPath(); x.moveTo(X(0),Y(0)); x.lineTo(X(tb*2.1),Y(CLB*2.1)); x.stroke(); x.setLineDash([]);
+      x.fillStyle="#8df0b4"; x.beginPath(); x.arc(X(tb),Y(CLB),4.5*d,0,7); x.fill(); x.fillText("L/D máx "+LDB.toFixed(1),X(tb)+8*d,Y(CLB)+14*d);
+      x.strokeStyle="rgba(255,201,77,.9)"; x.lineWidth=1.5*d; x.beginPath(); x.moveTo(X(0),Y(0)); x.lineTo(X(cd),Y(cl)); x.stroke(); x.fillStyle="#ffc94d"; x.beginPath(); x.arc(X(cd),Y(cl),5.5*d,0,7); x.fill(); }
+    // planeo de perfil
+    const gx0=PW+26*d, gx1=W-20*d, gy0=54*d, gy1=H-46*d, maxD=13.5, sx=q=>gx0+q/maxD*(gx1-gx0);   // km
+    x.fillStyle="#2f5d3a"; x.fillRect(gx0-10*d,gy1,gx1-gx0+20*d,8*d); x.strokeStyle="rgba(150,190,230,.25)"; x.lineWidth=1*d; x.fillStyle="rgba(205,225,245,.7)"; x.font=`600 ${11*d}px ui-monospace,Menlo,monospace`; x.textAlign="center";
+    for(let k=0;k<=12;k+=2){ x.beginPath(); x.moveTo(sx(k),gy1); x.lineTo(sx(k),gy1+12*d); x.stroke(); x.fillText(k+" km",sx(k),gy1+26*d); }
+    x.textAlign="left"; x.fillText("3 000 ft",gx0+4*d,gy0-10*d);
+    const bestD=(914.4*LDB)/1000; x.strokeStyle="rgba(141,240,180,.55)"; x.setLineDash([5*d,5*d]); x.beginPath(); x.moveTo(gx0,gy0); x.lineTo(sx(Math.min(bestD,maxD)),gy1); x.stroke(); x.setLineDash([]); x.fillStyle="#8df0b4"; x.fillText("mejor planeo, sin viento",sx(Math.min(bestD,maxD))-150*d,gy1-8*d);
+    const dk=Math.min(dist/1000,maxD); x.strokeStyle="#ffc94d"; x.lineWidth=2*d; x.beginPath(); x.moveTo(gx0,gy0); x.lineTo(sx(dk),gy1); x.stroke();
+    ph=(ph+dt*.16)%1; const ax=lerp(gx0,sx(dk),ph), ay=lerp(gy0,gy1,ph), an=Math.atan2(gy1-gy0,sx(dk)-gx0); x.save(); x.translate(ax,ay); x.rotate(an); sidePlane(x,5.5*d); x.restore();
+    if(wk){ const wy=gy0+26*d, dir=wk>0?-1:1; arrow(x,d,(gx0+gx1)/2-dir*30*d,wy,dir*60*d,0,"#8fd0ff",(wk>0?"viento en cara ":"viento en cola ")+Math.abs(wk)+" kt"); }
+    E.vO.textContent=vk+" kt"; E.mO.textContent=m+" kg"; E.wO.textContent=(wk>0?"cara ":wk<0?"cola ":"")+Math.abs(wk)+" kt"; E.rLD.textContent=ld.toFixed(1); E.ldB.className=ld>LDB-.15?"good":"";
+    E.rG.textContent=(gam*180/Math.PI).toFixed(1)+"°"; E.rS.textContent=Math.round(sink*196.85)+" ft/min"; E.rD.textContent=dist>0?(dist/1852).toFixed(1)+" NM":"no avanza"; E.rVb.textContent=Math.round(vb(m))+" kt"; };
+  requestAnimationFrame(loop);
+ },
+ stab(root,E){
+  const c=E.cv, x=c.getContext("2d"), NP=35; let th=0, om=0, last=0, tr=[], tAcc=0, kicked=false;
+  const kick=s=>{ th=s*6; om=0; tr=[]; kicked=true; }; E.gu.addEventListener("click",()=>kick(1)); E.gd.addEventListener("click",()=>kick(-1)); E.rs.addEventListener("click",()=>{ th=0; om=0; tr=[]; kicked=false; });
+  const loop=t=>{ requestAnimationFrame(loop); const dt=Math.min(.05,(t-last)/1000||0); last=t; if(!seen(c)||document.hidden) return;
+    const d=fit(c), W=c.width, H=c.height, cg=+E.cg.value, sm=NP-cg;
+    if(kicked){ const k=sm*.55, cdamp=.9+Math.max(0,sm)*.05; om+=(-k*th-cdamp*om)*dt; th+=om*dt; if(Math.abs(th)>32){ th=32*Math.sign(th); om=0; } tAcc+=dt; if(tAcc>.05){ tAcc=0; tr.push(th); if(tr.length>220) tr.shift(); } }
+    bgFill(x,W,H); const cx=W*.5, cy=H*.42, s=Math.min(W/13.5,H/8.5), mac=1.5*s, xOf=p=>(.375-p/100*1)*mac*1+ .0;   // posición a lo largo de la cuerda (borde de ataque en +0,375·MAC respecto al 25 %... simplificado)
+    const xp=p=>cx+(0.3-p/100)*s*5;   // escala ampliada para que se vea la separación
+    x.strokeStyle="rgba(150,190,230,.2)"; x.lineWidth=1*d; x.setLineDash([6*d,6*d]); x.beginPath(); x.moveTo(20*d,cy); x.lineTo(W-20*d,cy); x.stroke(); x.setLineDash([]);
+    const xcg=xp(cg), xnp=xp(NP), a=-th*Math.PI/180;
+    x.save(); x.translate(xcg,cy); x.rotate(a); x.translate(cx-xcg,0); sidePlane(x,s);
+    // regla de cuerda media
+    x.strokeStyle="rgba(255,255,255,.5)"; x.lineWidth=2*d; x.beginPath(); x.moveTo(xp(0)-cx,1.05*s); x.lineTo(xp(60)-cx,1.05*s); for(let q=0;q<=60;q+=10){ x.moveTo(xp(q)-cx,1.05*s); x.lineTo(xp(q)-cx,.95*s); } x.stroke(); x.fillStyle="rgba(205,225,245,.85)"; x.font=`600 ${10.5*d}px ui-monospace,Menlo,monospace`; x.textAlign="left"; x.fillText("0 % MAC",xp(0)-cx+6*d,1.1*s); x.textAlign="right"; x.fillText("60 %",xp(60)-cx-6*d,1.1*s);
+    // punto neutro y CG
+    const mark=(xx,col,lab,dy)=>{ x.fillStyle=col; x.beginPath(); x.arc(xx-cx,0,.16*s,0,7); x.fill(); x.strokeStyle=col; x.lineWidth=1.5*d; x.beginPath(); x.moveTo(xx-cx,0); x.lineTo(xx-cx,dy*s); x.stroke(); x.font=`700 ${12*d}px system-ui,sans-serif`; x.textAlign="center"; x.fillText(lab,xx-cx,dy*s+(dy>0?14:-6)*d); };
+    mark(xnp,"#8fd0ff","Punto neutro",1.55); mark(xcg,"#ffc94d","CG",2.15);
+    // variación de sustentación en el punto neutro y momento resultante
+    if(kicked&&Math.abs(th)>.4){ const dl=clamp(th*.09,-1.6,1.6)*s; x.save(); x.translate(xnp-cx,0); arrow(x,d,0,0,0,-dl,"#6fd08c","ΔL"); x.restore(); }
+    x.restore();
+    if(kicked&&Math.abs(th)>.4&&Math.abs(sm)>.3){ const rest=sm>0, dir=(th>0?1:-1)*(rest?1:-1); x.strokeStyle=rest?"#8df0b4":"#ff8a7a"; x.lineWidth=3*d; x.beginPath(); x.arc(xcg,cy,1.05*s,dir>0?-.9:Math.PI+.9,dir>0?.5:Math.PI-.5,dir<0); x.stroke();
+      x.fillStyle=rest?"#8df0b4":"#ff8a7a"; x.font=`700 ${13*d}px system-ui,sans-serif`; x.textAlign="center"; x.fillText(rest?"Momento recuperador: el morro vuelve":"Momento que agrava: el morro se va",W/2,26*d); }
+    // registro de cabeceo
+    const gx=24*d, gw=W-48*d, gy=H-58*d, gh=44*d; x.fillStyle="rgba(8,16,26,.6)"; x.fillRect(gx,gy-gh,gw,gh*2); x.strokeStyle="rgba(150,190,230,.3)"; x.lineWidth=1*d; x.beginPath(); x.moveTo(gx,gy); x.lineTo(gx+gw,gy); x.stroke();
+    x.fillStyle="rgba(205,225,245,.7)"; x.font=`600 ${10.5*d}px ui-monospace,Menlo,monospace`; x.textAlign="left"; x.fillText("cabeceo tras la ráfaga",gx+6*d,gy-gh+13*d);
+    if(tr.length>1){ x.strokeStyle=sm>.3?"#8df0b4":sm<-.3?"#ff8a7a":"#ffc94d"; x.lineWidth=2*d; x.beginPath(); tr.forEach((q,i)=>{ const xx=gx+i/220*gw, yy=gy-clamp(q/32,-1,1)*gh*.9; i?x.lineTo(xx,yy):x.moveTo(xx,yy); }); x.stroke(); }
+    E.cgO.textContent=cg.toFixed(1)+" % MAC"; E.rM.textContent=(sm>0?"+":"")+sm.toFixed(1)+" %"; E.rE.textContent=sm>.3?"Estable":sm<-.3?"Inestable":"Neutra"; E.stB.className=sm>.3?"good":sm<-.3?"bad":"";
+    E.rF.textContent=sm>14?"Alta":sm>5?"Media":sm>.3?"Baja":"Nula o invertida"; E.rA.textContent=!kicked?"Pulsa una ráfaga":sm>.3?"Vuelve sola":sm<-.3?"Se aleja cada vez más":"Se queda donde la dejan"; };
+  requestAnimationFrame(loop);
+ }
+});
+/*F1END*/
 let three=null; const needThree=()=>three||(three=new Promise((ok,ko)=>{ if(window.THREE) return ok(); const s=document.createElement("script"); s.src=(window.F0LABS_BASE||"../")+"three.min.js"; s.onload=()=>ok(); s.onerror=ko; document.head.appendChild(s); }));
 function mount(el){
   if(el._lab) return; const k=el.dataset.lab; if(!LAB[k]) return; el._lab=1;
