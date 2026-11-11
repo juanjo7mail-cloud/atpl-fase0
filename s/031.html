@@ -305,7 +305,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 
 <!-- ============ APUNTES ============ -->
 <section id="notes">
-<div class="card"><b>Examen SENASA ATPL · dónde están las 112 preguntas</b>
+<div class="card"><b>SENASA ATPL · dónde están las 112 preguntas</b>
   <div id="examBar"></div>
 </div>
 <div class="card" id="hotCard" hidden><b>Lo que más fallas</b><div id="hotFails"></div></div>
@@ -450,9 +450,9 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <details class="lo" id="lo-031.05.02" data-lo="031.05.02">
 <summary><span class="lonum">031.05.02</span><span class="lotitle">Load and trim sheet</span></summary>
 <div class="body">
-<!--f0pre--><div class="pfvnote"><b>En el vuelo real</b>Esta hoja es solo una parte de la carpeta del vuelo: en la escuela va junto con el plan de vuelo, la meteo y las cartas. Los apuntes de SOP, apartado «Antes del vuelo», lo explican (no entra en examen).</div>
+<!--f0pre--><div class="pfvnote"><b>En el vuelo real</b>Esta hoja es solo una parte de la carpeta del vuelo: en la escuela va junto con el plan de vuelo, la meteo y las cartas. Los apuntes de SOP, apartado «Antes del vuelo», lo explican (no se pregunta).</div>
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>La <b>hoja de masa y centrado</b> en sí <b>no entra</b> en el examen; los <b>cálculos</b> sí: momentos, CG, cargar, mover.</li>
+    <li>La <b>hoja de masa y centrado</b> en sí <b>no se pregunta</b>; los <b>cálculos</b> sí: momentos, CG, cargar, mover.</li>
     <li>En la envolvente, el <b>límite delantero se inclina</b> a pesos altos: si el avión pesa mucho y el CG está muy adelante, el <b>timón de profundidad</b> (elevator) no tiene fuerza para compensarlo.</li>
     <li>La <b>línea discontinua separa categorías</b>: la utility queda dentro de la normal.</li>
   </ul></div>
@@ -810,7 +810,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 
 <!-- ============ MAPA ============ -->
 <section id="map" hidden>
-  <div class="card"><b>Si el examen fuera hoy</b>
+  <div class="card"><b>Si fuera hoy</b>
     <div id="forecast"></div>
     <button class="btn" id="goSim" style="margin-top:10px">Hacer un simulacro SENASA</button>
   </div>
@@ -835,7 +835,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <div id="setup" class="card">
     <b>Elige el test</b>
     <div style="margin-top:8px">
-      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Examen cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senSubj" aria-label="Asignatura"><option value="031">031 Mass and Balance · 25 preguntas</option><option value="032">032 Performance · 45 preguntas</option><option value="033">033 Flight Planning · 42 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
+      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senSubj" aria-label="Asignatura"><option value="031">031 Mass and Balance · 25 preguntas</option><option value="032">032 Performance · 45 preguntas</option><option value="033">033 Flight Planning · 42 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos · 15 preguntas <small>Números nuevos cada vez.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
@@ -2578,7 +2578,7 @@ function renderMap(){
       <div class="bar"><i style="width:${Math.round(c.fails/maxF*100)}%;background:${c.recent?'var(--ok)':'var(--bad)'}"></i></div>
       <div class="muted cmeta">${[...c.lo].map(l=>esc(loLabel(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
     </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
-  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media en el examen (estimación por número de LOs)">≈ Preg.</th><th>Estado</th><th title="Preguntas de Fase 0 (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
+  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media (estimación por número de LOs)">≈ Preg.</th><th>Estado</th><th title="Preguntas de Fase 0 (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
   const groups = BLOCKS.map(b=>({t:`${b.code} · ${b.name} · ${b.n} preguntas`, k:b.k})).concat([{t:"De otras asignaturas (050 Meteorology)", k:"X"}]);
   groups.forEach(g=>{
     rows += `<tr><th colspan="8" style="padding-top:14px">${esc(g.t)}</th></tr>`;

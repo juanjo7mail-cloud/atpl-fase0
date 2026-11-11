@@ -603,8 +603,8 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="comp"><b>Complemento</b><ul><li>Las hojas de ejemplo del SOP son del Cruiser, el C172 y el PA-28 (para el Archer III hay una hoja nueva). Los pesos y brazos de tu avión salen de su propia hoja de pesaje.</li><li>Los tres datos que más cambian de un vuelo a otro: personas, equipaje y <b>combustible</b>.</li></ul></div>
 <div class="flag"><b>Trampa</b> Cumplir <b>una sola</b> condición no basta: un avión con el CG dentro pero por encima del peso máximo al despegue <b>no puede volar</b>, y al revés.</div>
 <h4>Antes de ir al avión</h4>
-<div class="scroll"><table class=""><tr><th>Tema</th><th>Qué dice el SOP</th></tr><tr><td>Planificación</td><td>El avión y el horario se reservan en <b>private radar</b>: los cambios se avisan con <b>24 h</b> de antelación; los horarios están en hora <b>ZULU</b>; mira la misión de tu syllabus; llega a <b>OPS 1 h antes</b> del vuelo.</td></tr><tr><td>Puntualidad y seguridad</td><td>Llega a tiempo a los briefings y a la preparación del vuelo · pasa el control de seguridad al menos <b>15 min antes</b> · lleva siempre el <b>chaleco reflectante</b> en la plataforma.</td></tr><tr><td>Prioridades</td><td>Los <b>exámenes en vuelo</b> tienen prioridad sobre los vuelos de instrucción. Faltar sin justificar puede acarrear sanciones.</td></tr></table></div>
-<!--f0pre--><h4>Antes de volar: la carpeta del vuelo <span class="noex">no entra en examen</span></h4>
+<div class="scroll"><table class=""><tr><th>Tema</th><th>Qué dice el SOP</th></tr><tr><td>Planificación</td><td>El avión y el horario se reservan en <b>private radar</b>: los cambios se avisan con <b>24 h</b> de antelación; los horarios están en hora <b>ZULU</b>; mira la misión de tu syllabus; llega a <b>OPS 1 h antes</b> del vuelo.</td></tr><tr><td>Puntualidad y seguridad</td><td>Llega a tiempo a los briefings y a la preparación del vuelo · pasa el control de seguridad al menos <b>15 min antes</b> · lleva siempre el <b>chaleco reflectante</b> en la plataforma.</td></tr><tr><td>Prioridades</td><td>Las <b>pruebas en vuelo</b> tienen prioridad sobre los vuelos de instrucción. Faltar sin justificar puede acarrear sanciones.</td></tr></table></div>
+<!--f0pre--><h4>Antes de volar: la carpeta del vuelo <span class="noex">no se pregunta</span></h4>
 <p>Es lo que se prepara en OPS antes de ir al avión. Son tres bloques (el esquema de la pantalla de clase):</p>
 <div class="pfv">
 <div class="c" style="--pc:#B8500A"><h5>1 · Masa y centrado, plan de vuelo</h5><ul><li><b>Formulario de control de vuelos</b>: tipo de vuelo (solo, instrucción…) y tripulación a bordo.</li><li><b>Hoja de carga y centrado</b> del avión (una por vuelo).</li><li><b>Mensaje de plan de vuelo</b> (el que se presenta a ATS).</li><li><b>Plan de vuelo operacional</b>: ruta, tiempos y combustible.</li></ul></div>
@@ -719,7 +719,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 </section>
 
 <section id="p-map" hidden>
-  <div class="card"><b>Si el examen fuera hoy</b>
+  <div class="card"><b>Si fuera hoy</b>
     <div id="forecast"></div>
     <button class="btn" id="goSim" style="margin-top:10px">Hacer un simulacro</button>
   </div>
@@ -866,7 +866,7 @@ const REFS = {
  "fz_tab": "Flaps: VFE 75/85/100. Cola: Cruiser 12°·65, C172 10°·80, Piper 1.ª muesca·80. Base: 12°·65 / 20°·70 / 2.ª muesca·70. Final: 30°·60 / 40°·55 / 3.ª muesca·65. Go-around: Cruiser flap 12; C172 y Piper retraen 1 punto. Vuelo lento y pérdida característica: ver SOP.5.",
  "pa_unif": "Piper PA-28 unificado en el SOP (Archer III, Cadet y Warrior): Vx 64 · Vso 45 · Vs1 50 · Vno 122 · Vne 155 · mejor planeo 73.",
  "bil_ex": "Ejemplo Bilbao: viento 090/06 variable 030–130; pista 12 → 5 kt de cara y 3 de través por la izquierda; pista 10 → 6 de cara y ≈1 de través; cola posible en la 30; CAVOK, 19/10, QNH 1027; NOTAM: umbrales desplazados, zona de drones, parada 1 cerrada. C172: rotación 60, ascenso 70, mejor planeo 65; por debajo de 500 ft AGL campo a ±30°.",
- "bf_org": "Antes del vuelo: private radar (cambios con 24 h, hora ZULU, misión del syllabus, llegar 1 h antes a OPS); seguridad 15 min antes; chaleco reflectante en la plataforma; exámenes con prioridad; faltar sin justificar puede sancionarse.",
+ "bf_org": "Antes del vuelo: private radar (cambios con 24 h, hora ZULU, misión del syllabus, llegar 1 h antes a OPS); seguridad 15 min antes; chaleco reflectante en la plataforma; pruebas en vuelo con prioridad; faltar sin justificar puede sancionarse.",
  "bf_bag": "Hay que llevar: uniformidad, licencia PPL/CPL, certificado médico, logbook, cartas de navegación y de aeropuerto, syllabus, plotter y CR3, kneeboard, bolsa de mareo, linterna de noche, masa y centrado, plan de vuelo, chaleco reflectante y auriculares.",
  "mb": "Masa y centrado: obligatoria por ley; una hoja de carga por vuelo; dentro de la envolvente del CG; sin superar el peso máximo al despegue; se comprueba en el safety cockpit.",
  "ext": "Inspección exterior: tras el safety cockpit, empezando por la puerta del piloto; objetivo: que el vuelo no salga con daños, piezas que faltan o parámetros fuera de límites. Ruedas: presión, fugas de líquido de frenos y pastillas.",
@@ -1228,7 +1228,7 @@ Q("bf4","SOP.4.4","p","bf_org","You must go through security at least … before
 Q("bf5","SOP.4.4","p","bf_org","On the platform (apron) you must always wear:",["A reflective vest", "A flashlight", "The headset", "The medical certificate"],"Chaleco reflectante siempre en la plataforma."),
 Q("bf6","SOP.4.4","p","bf_bag","Which of these items is NOT on the «must bring» list of the SOP?",["Passport", "Pilot logbook", "Medical certificate", "Course syllabus"],"En la lista: uniforme, licencia, certificado médico, logbook, cartas de navegación y de aeropuerto, syllabus, plotter y CR3, kneeboard, bolsa de mareo, linterna de noche, masa y centrado, plan de vuelo, chaleco y auriculares. El pasaporte no."),
 Q("bf7","SOP.4.4","p","bf_bag","The flashlight must be carried:",["At night", "Always, day and night", "Only on cross-country flights", "Only on solo flights"],"Linterna: de noche."),
-Q("bf8","SOP.4.4","p","bf_org","Which flights have priority?",["Flight exams over instruction flights", "Instruction flights over flight exams", "Solo flights over all others", "They are all equal"],"Los exámenes en vuelo tienen prioridad sobre los vuelos de instrucción."),
+Q("bf8","SOP.4.4","p","bf_org","Which flights have priority?",["Flight exams over instruction flights", "Instruction flights over flight exams", "Solo flights over all others", "They are all equal"],"Las pruebas en vuelo tienen prioridad sobre los vuelos de instrucción."),
 Q("bf9","SOP.4.4","p","bf_org","Unjustified non-attendance may lead to:",["Penalties", "Nothing", "A free flight", "A theory exam only"],"Faltar sin justificar puede acarrear sanciones."),
 Q("mb1","SOP.4.4","p","mb","The mass and balance (load sheet) is:",["Mandatory by law", "Optional on local flights", "Required only on cross-country flights", "Required only with passengers"],"Masa y centrado: obligatoria por ley."),
 Q("mb2","SOP.4.4","p","mb","How many load sheets are completed?",["One per flight", "One per day", "One per aircraft per week", "Only for the first flight of the day"],"Una hoja de carga por vuelo."),
@@ -1636,7 +1636,7 @@ function renderMap(){
       <div class="bar"><i style="width:${Math.round(c.fails/maxF*100)}%;background:${c.recent?'var(--ok)':'var(--bad)'}"></i></div>
       <div class="muted cmeta">${[...c.lo].map(l=>esc(loLabel(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
     </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
-  let rows = `<tr><th title="Código del tema en el temario">LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media en el examen (estimadas)">≈ Preg.</th><th title="Dado en clase, aún no dado o de otra asignatura">Estado</th><th title="Preguntas del banco (+ las de temario aún no dado)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
+  let rows = `<tr><th title="Código del tema en el temario">LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media (estimadas)">≈ Preg.</th><th title="Dado en clase, aún no dado o de otra asignatura">Estado</th><th title="Preguntas del banco (+ las de temario aún no dado)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
   const groups = BLOCKS.map(b=>({t:`${b.code} · ${b.name} · ${b.n} preguntas`, k:b.k})).concat([{t:"De otras asignaturas (032 · 031)", k:"X"}]);
   groups.forEach(g=>{
     rows += `<tr><th colspan="8" style="padding-top:14px">${esc(g.t)}</th></tr>`;
@@ -2006,7 +2006,7 @@ function initSpdTable(elId, grp, tid){
   draw();
 }
 
-// «unir»: une cada dato con su valor (como la pregunta de unir del examen)
+// «unir»: une cada dato con su valor (como la pregunta de unir)
 function initMatch(elId, grps){
   const el = $("#"+elId); if(!el) return;
   let items=[], done=false;

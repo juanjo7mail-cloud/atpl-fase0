@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="1fa145b2756d";</script>
+<script>window.F0_BUILD="93f45e4a3cca";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -302,6 +302,7 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .nlist li.big.xl b{font-size:23px;line-height:1.15}
 .nlist li.big.xl .go{padding:14px;font-size:17px}
 .nart{display:block;width:100%;height:auto;margin:12px 0 2px;border-radius:12px}
+.sgo{display:flex;flex-direction:column;gap:12px;padding-top:20px}.sgoTag{align-self:flex-start;font:700 12px/1 var(--display);letter-spacing:.08em;font-style:normal;background:#C8102E;color:#fff;padding:6px 10px;border-radius:4px}.sgo .nimg{margin:0}#simGo .btn{width:100%;padding:12px 16px;font-size:16px}
 .nimg{display:block;width:100%;height:auto;margin:12px 0 2px;border-radius:12px;background:#0b1620}
 .nart .tcp{transform-origin:0 0;animation:tcrock 3.4s ease-in-out infinite alternate}
 .nart .tcb{animation:tcball 3.4s ease-in-out infinite alternate}
@@ -543,6 +544,18 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
     <h2 id="nwT">¡Novedades a bordo!</h2>
     <ul class="nlist" id="nwList"></ul>
     <div class="row"><button class="btn" id="nwOk" type="button">¡A volar!</button></div>
+  </div>
+</div>
+
+<div class="sheet" id="simGo" hidden role="alertdialog" aria-modal="true" aria-labelledby="sgoT" aria-describedby="sgoD">
+  <div class="box nbox">
+    <div class="sgo">
+      <em class="sgoTag">SOLO HOY Y MAÑANA · 11 y 12 de noviembre</em>
+      <h2 id="sgoT">Prueba los juegos de vuelo</h2>
+      <img class="nimg" src="sim-collage.webp" alt="Siete juegos de vuelo: rodaje, despegue, aterrizaje, circuito, vectores, fallo de motor y aproximación ILS" width="1572" height="662">
+      <p id="sgoD">Siete juegos para practicar rodaje, despegue, aterrizaje, circuito de tráfico, vectores, fallo de motor y aproximación ILS, con viento, rachas y vuelo de noche. Entra, juega al menos uno y, si algo falla o no se entiende, cuéntalo en el buzón de sugerencias.</p>
+      <div class="row"><button class="btn" id="sgoGo" type="button">Ir a los juegos</button></div>
+    </div>
   </div>
 </div>
 
@@ -1478,7 +1491,7 @@ function sgnSave(){ try{ localStorage.setItem(sgnKey(),JSON.stringify(sgnS)); }c
 function sgnDone(){ sgnLoad().done=true; sgnSave(); sgnHide(); }
 function sgnHide(){ if(sgnEl){ sgnEl.remove(); sgnEl=null; } }
 function sgnBusy(){
-  if(["#news","#login","#nameAsk","#devNote","#sugBox","#pwReset","#sheet","#search"].some(q=>{ const e=$(q); return e&&!e.hidden; })||$("#msOv")) return true;
+  if(["#news","#simGo","#login","#nameAsk","#devNote","#sugBox","#pwReset","#sheet","#search"].some(q=>{ const e=$(q); return e&&!e.hidden; })||$("#msOv")) return true;
   try{ return [...document.querySelectorAll("iframe")].some(f=>{ const q=f.contentDocument&&f.contentDocument.getElementById("quiz"); return q&&!q.hidden; }); }catch(e){ return false; }
 }
 function sgnShow(force){
@@ -1756,7 +1769,7 @@ function drawRank(){
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
   {id:"2026-11-11", items:[
-    {big:true, xl:true, i:"🎮", t:"Sim más real: 7 juegos de vuelo", d:"Modelo de vuelo nuevo con viento, rachas y efecto suelo, panel de seis instrumentos y vuelo de día, al atardecer o de noche. Juegos nuevos: circuito de tráfico, fallo de motor y aproximación ILS entre nubes, además de rodaje, despegue, aterrizaje y vectores. Pedales manuales opcionales y, en iPad, control inclinando el aparato.", go:"sim", cta:"Probar el Sim", need:"F0Sim", art:`<img class="nimg" src="sim-collage.webp" width="1572" height="662" alt="Pantallazos de los juegos del Sim: despegue, aterrizaje, circuito, vectores, fallo de motor e ILS" loading="lazy">`},
+    {big:true, xl:true, sim:1, i:"🎮", t:"Sim más real: 7 juegos de vuelo", d:"Modelo de vuelo nuevo con viento, rachas y efecto suelo, panel de seis instrumentos y vuelo de día, al atardecer o de noche. Juegos nuevos: circuito de tráfico, fallo de motor y aproximación ILS entre nubes, además de rodaje, despegue, aterrizaje y vectores. Pedales manuales opcionales y, en iPad, control inclinando el aparato.", go:"sim", cta:"Probar el Sim", need:"F0Sim", art:`<img class="nimg" src="sim-collage.webp" width="1572" height="662" alt="Pantallazos de los juegos del Sim: despegue, aterrizaje, circuito, vectores, fallo de motor e ILS" loading="lazy">`},
     {i:"⚡", t:"AGK 021.09 Sistema eléctrico: apuntes de clase y 29 preguntas nuevas"}
   ]},
   {id:"2026-11-06", items:[
@@ -1766,7 +1779,7 @@ const NEWS=[
     {i:"🛰️", t:"Nueva pestaña BRIEFING · 23 aeródromos con METAR, TAF y cartas AIP", d:"Elige aeródromo (Cuatro Vientos por defecto) y mira antes de volar: METAR y TAF con su categoría, el viento contra cada pista, los mínimos de la escuela, el mapa satélite con la carta AIP de rodaje encima (calles, holding points), las frecuencias y los avisos de la AIP. Tráfico en vivo en Cuatro Vientos. Horas en UTC.", big:true, go:"ops", need:"F0Ops"}
   ]},
   {id:"2026-11-04b", items:[
-    {i:"👁️", t:"Factores Humanos · ejercicios de vista y oído, y adaptativo de examen (25 preguntas, 45 min)"}
+    {i:"👁️", t:"Factores Humanos · ejercicios de vista y oído, y adaptativo (25 preguntas, 45 min)"}
   ]},
   {id:"2026-11-04a", items:[
     {i:"🧠", t:"Factores Humanos · temario completo, trial y tests actualizados"},
@@ -1828,7 +1841,7 @@ const NEWS=[
   ]},
   {id:"2026-10-26b", items:[
     {i:"🧮", t:"Navegación: «Solo cálculos»", d:"Nuevo modo en 061·062: 20 preguntas de puro cálculo (QDM/QDR, RMI, ADF, deriva, interceptaciones, DME, HSI, códigos Q…). Los números cambian cada vez."},
-    {i:"🎯", t:"Preguntas más trampa", d:"En Comunicaciones el enunciado ya no da la fórmula y las respuestas se parecen más, como en el examen real. También hemos mejorado otras asignaturas."}
+    {i:"🎯", t:"Preguntas más trampa", d:"En Comunicaciones el enunciado ya no da la fórmula y las respuestas se parecen más, como en las preguntas reales. También hemos mejorado otras asignaturas."}
   ]},
   {id:"2026-10-26", items:[
     {i:"🎛️", t:"Vista de instrumentos", d:"Arriba, junto al buscador, hay un interruptor: Tarjetas o Instrumentos. En el panel cada asignatura es un reloj cuya aguja marca la media de tus 5 últimos tests (verde = aprobado)."}
@@ -1843,7 +1856,7 @@ const NEWS=[
     {i:"🟢", t:"Quién está en línea", d:"Arriba, junto a tu cuenta, ves cuántos compañeros hay conectados ahora; pulsa para ver sus nombres."}
   ]},
   {id:"2026-10-25", items:[
-    {i:"🎙️", t:"Examen de Comunicaciones", d:"30 preguntas tipo test en 45 minutos, estilo trial, con más peso en propagación y algún código Q."},
+    {i:"🎙️", t:"Test de Comunicaciones", d:"30 preguntas tipo test en 45 minutos, estilo trial, con más peso en propagación y algún código Q."},
     {i:"🎧", t:"Escucha ATIS", d:"Oye un ATIS en varios acentos y dificultades y rellena lo que dice. No cuenta para la media."},
     {i:"🔑", t:"Recuperar contraseña", d:"¿Te la olvidas? Pulsa «¿Olvidaste la contraseña?» al entrar y te llega un email.", web:true},
     {i:"☑️", t:"Temario ATPL desmarcado", d:"Los tests parten solo del temario dado; marca la casilla si quieres incluir el ATPL."}
@@ -1867,8 +1880,8 @@ const NEWS=[
 function newsSeen(){ try{ return localStorage.getItem("f0:news")||""; }catch(e){ return "~"; } }
 function newsMark(){ try{ localStorage.setItem("f0:news", NEWS.reduce((m,n)=>n.id>m?n.id:m,"")); }catch(e){} }
 function showNews(){
-  const seen=newsSeen(); if(seen==="~"||!$("#news").hidden) return;
-  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>(!x.web||sb)&&(!x.need||window[x.need]));
+  const seen=newsSeen(); if(seen==="~"||!$("#news").hidden||simGoOn()) return;
+  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>(!x.web||sb)&&(!x.need||window[x.need])&&!(x.sim&&simGoDone()));
   if(!items.length){ if(NEWS.some(n=>n.id>seen) && !sb) newsMark(); return; }
   if(!$("#devNote").hidden||!$("#login").hidden||!$("#nameAsk").hidden||!$("#pwReset").hidden) return;
   items.sort((a,b)=>(b.big?1:0)-(a.big?1:0));
@@ -1879,6 +1892,25 @@ function showNews(){
 function closeNews(){ newsMark(); $("#news").hidden=true; }
 $("#nwOk").addEventListener("click",closeNews);
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#news").hidden) closeNews(); });
+
+/* ===================== aviso obligatorio de los juegos (11 y 12 de noviembre) ===================== */
+// Sale en la siguiente conexión de cada dispositivo y no se puede cerrar: el único botón abre la pestaña Sim y ya no vuelve a salir. Caduca el 13-nov a las 00:00 (hora local).
+const SIMGO_END=new Date(2026,10,13).getTime(), SIMGO_KEY="f0:simgo1";
+function simGoDone(){ try{ return !!localStorage.getItem(SIMGO_KEY); }catch(e){ return true; } }
+function simGoOn(){ return Date.now()<SIMGO_END && !simGoDone() && !!window.F0Sim; }
+function simGoTry(){
+  if(!simGoOn()){ if(Date.now()>=SIMGO_END||simGoDone()) clearInterval(simGoT); return; }
+  if(!$("#simGo").hidden) return;
+  if(["#devNote","#login","#nameAsk","#pwReset","#news","#sugBox"].some(q=>{ const e=$(q); return e&&!e.hidden; })||$("#msOv")) return;
+  $("#simGo").hidden=false; $("#sgoGo").focus();
+}
+let simGoT=null;
+function simGoStart(){ if(simGoT||Date.now()>=SIMGO_END||simGoDone()) return; simGoT=setInterval(simGoTry,1500); setTimeout(simGoTry,800); }
+$("#sgoGo").addEventListener("click",()=>{
+  try{ localStorage.setItem(SIMGO_KEY,"1"); }catch(e){}
+  clearInterval(simGoT); $("#simGo").hidden=true; show("sim"); window.scrollTo(0,0);
+});
+$("#simGo").addEventListener("keydown",e=>{ if(e.key==="Tab"){ e.preventDefault(); $("#sgoGo").focus(); } });
 
 /* ===================== logros: avisos de celebración ===================== */
 // galón nuevo · cada 10 h de estudio · cada 15 tests · racha (7, 14, 30…) · asignatura preparada · subes en el ranking
@@ -1910,7 +1942,7 @@ function msCheck(){
   msSave(); ev.forEach(msPush);
 }
 function msPush(e){ msQueue.push(e); msNext(); }
-function msBlocked(){ return ["#devNote","#login","#nameAsk","#pwReset","#news"].some(q=>{ const el=document.querySelector(q); return el&&!el.hidden; }) || !!document.getElementById("msOv"); }
+function msBlocked(){ return ["#devNote","#login","#nameAsk","#pwReset","#news","#simGo"].some(q=>{ const el=document.querySelector(q); return el&&!el.hidden; }) || !!document.getElementById("msOv"); }
 function msNext(){
   if(msBusy||!msQueue.length) return;
   if(msBlocked()){ setTimeout(msNext,2500); return; }
@@ -1994,7 +2026,7 @@ const boot = (async ()=>{
     if(owner && db){ await loadAllCloud(); $("#saveBtn").classList.add("cloud"); $("#saveTxt").textContent="En tu cuenta"; renderDash(); renderTabs(); }
   }catch(e){}
 })();
-boot.then(()=>{ setTimeout(deviceNote, 400); setTimeout(showNews, 1000); setTimeout(()=>{ msReady=true; msCheck(); msRank(); },2500); });
+boot.then(()=>{ setTimeout(deviceNote, 400); simGoStart(); setTimeout(showNews, 1000); setTimeout(()=>{ msReady=true; msCheck(); msRank(); },2500); });
 </script>
 <!--stall:start-->
 <style>

@@ -312,7 +312,7 @@ details.lo.out{border-left-color:var(--line)}
 
 <!-- ============ APUNTES ============ -->
 <section id="notes">
-<div class="card"><b>Examen SENASA ATPL · dónde están las 48 preguntas</b>
+<div class="card"><b>SENASA ATPL · dónde están las 48 preguntas</b>
   <div id="examBar"></div>
 </div>
 <div class="card" id="hotCard" hidden><b>Lo que más fallas</b><div id="hotFails"></div></div>
@@ -1055,7 +1055,7 @@ details.lo.out{border-left-color:var(--line)}
 
 <!-- ============ MAPA ============ -->
 <section id="map" hidden>
-  <div class="card"><b>Si el examen fuera hoy</b>
+  <div class="card"><b>Si fuera hoy</b>
     <div id="forecast"></div>
     <button class="btn" id="goSim" style="margin-top:10px">Hacer un simulacro SENASA</button>
   </div>
@@ -1080,7 +1080,7 @@ details.lo.out{border-left-color:var(--line)}
   <div id="setup" class="card">
     <b>Elige el test</b>
     <div style="margin-top:8px">
-      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Examen cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senLen"><option value="full">Completo · 48 preguntas en 72 min (el real da 90)</option><option value="half">Exprés · 24 preguntas en 36 min</option><option value="real">Tiempo real · 48 preguntas en 90 min</option></select></span></small></label>
+      <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senLen"><option value="full">Completo · 48 preguntas en 72 min (el real da 90)</option><option value="half">Exprés · 24 preguntas en 36 min</option><option value="real">Tiempo real · 48 preguntas en 90 min</option></select></span></small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Solo test, con cronómetro. Variantes del trial, tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
@@ -1302,7 +1302,7 @@ const REFS = {
 "cult": "Cultura de seguridad (Reason): informed, reporting, learning, flexible y just. Just culture: el error honesto no se castiga, la negligencia grave sí (no es lo mismo que non-punitive). Cultura abierta: se notifica para aprender.",
 "sms": "SMS: gestión sistemática de la seguridad basada en identificar peligros y gestionar el riesgo.",
 "thr3": "EASA da tres umbrales de hipoxia: reacción 7.000 ft, alteración 10–12.000 ft, crítico 22.000 ft. Una persona sana compensa hasta unos 10–12.000 ft. Las cuatro fases del curso (10 · 15 · 20 · 25) son otra forma de contarlo.",
-"tucE": "TUC EASA (sentado): 20.000 ft 30 min · 30.000 ft 1–2 min · 35.000 ft 30–90 s · 40.000 ft 15–20 s. La tabla del curso da otros tiempos a 20.000 ft: en el examen EASA, esta.",
+"tucE": "TUC EASA (sentado): 20.000 ft 30 min · 30.000 ft 1–2 min · 35.000 ft 30–90 s · 40.000 ft 15–20 s. La tabla del curso da otros tiempos a 20.000 ft: en las preguntas EASA, esta.",
 "bp": "Pulso en reposo 60–80/min. Gasto cardíaco = frecuencia × volumen por latido (~5 L/min). Tensión 120/80 mmHg (sistólica al contraer, diastólica al relajar). Hipertensión = gran factor del ictus; hiper e hipotensión pueden dejarte sin certificado. Anemia: poca hemoglobina.",
 "gz": "+Gz: la sangre baja hacia los pies → greyout → blackout → pérdida de conocimiento (G-LOC). Influyen la magnitud, la duración y la rapidez de aplicación.",
 "coE": "CO: la hemoglobina lo prefiere más de 200 veces al O₂. Síntomas: dolor de cabeza, mareo, somnolencia. Sospecha → calefacción OFF, ventilar, oxígeno, aterrizar.",
@@ -1791,7 +1791,7 @@ const BASE = [
  ["pv08~3", "040.02.02", "p", "eye", "A weak convex lens, half lenses or look-over spectacles correct:", ["Presbyopia", "Myopia", "Astigmatism", "Autokinesis"], "Presbicia: lente convexa débil."],
  ["pv09", "040.02.02", "o", "eye", "—", ["—", "·", "··", "···"], ""],
  ["pv09~1", "040.02.02", "p", "eye", "A pilot with myopia or hypermetropia may usually keep the licence if the corrected vision is at least:", ["6/9 in each eye and 6/6 with both eyes", "6/6 in each eye", "6/12 in each eye and 6/9 with both eyes", "6/18 with both eyes"], "6/9 en cada ojo y 6/6 con los dos, leyendo letra pequeña a 30 cm."],
- ["pv09~2", "040.02.02", "p", "eye", "Corrected vision of 6/6 with both eyes is equivalent to reading a car number-plate at about:", ["40 metres", "23 metres", "10 metres", "100 metres"], "6/6 ≈ 40 m, frente a los 23 m del examen de conducir."],
+ ["pv09~2", "040.02.02", "p", "eye", "Corrected vision of 6/6 with both eyes is equivalent to reading a car number-plate at about:", ["40 metres", "23 metres", "10 metres", "100 metres"], "6/6 ≈ 40 m, frente a los 23 m de la prueba de conducir."],
  ["pv09~3", "040.02.02", "p", "eye", "A pilot with corrected vision must be able to read normal small print in good light at a distance of:", ["30 cm", "3 cm", "1 m", "5 m"], "Letra pequeña a 30 cm."],
  ["pv10", "040.02.02", "o", "eye", "—", ["—", "·", "··", "···"], ""],
  ["pv10~1", "040.02.02", "p", "eye", "A pilot who needs spectacles in order to fly must carry:", ["A spare pair that is easily accessible", "Contact lenses only", "Nothing, if the spectacles are new", "A spare pair, kept in the baggage hold"], "Si usa lentillas, además lleva siempre unas gafas normales."],
@@ -2385,7 +2385,7 @@ function renderMap(){
       <div class="bar"><i style="width:${Math.round(c.fails/maxF*100)}%;background:${c.recent?'var(--ok)':'var(--bad)'}"></i></div>
       <div class="muted cmeta">${[...c.lo].map(l=>esc(loLabel(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
     </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
-  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media en el examen">≈ Preg.</th><th>Estado</th><th title="Preguntas de Fase 0 (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
+  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media">≈ Preg.</th><th>Estado</th><th title="Preguntas de Fase 0 (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
   const groups = BLOCKS.map(b=>({t:`${b.code} · ${b.name} · ${b.n} preguntas`, k:b.k})).concat([{t:"De otras asignaturas (050)", k:"X"}]);
   groups.forEach(g=>{
     rows += `<tr><th colspan="8" style="padding-top:14px">${esc(g.t)}</th></tr>`;
@@ -2511,7 +2511,7 @@ async function finishTest(timeout){
   else if(curMode==="adaptive"){ Object.assign(rec,{limitS:tLimit, usedS, timeout:!!timeout}); }
   state.attempts.push(rec);
   const realS = 90*60/48, perQ = usedS/current.length;
-  const blockHTML = curMode==="adaptive" ? `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el examen da unos ${Math.round(45*60/20)} s).</div>` : curMode!=="senasa" ? "" : `
+  const blockHTML = curMode==="adaptive" ? `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el test da unos ${Math.round(45*60/20)} s).</div>` : curMode!=="senasa" ? "" : `
       <div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el real da ${Math.round(realS)} s). ${perQ<=realS?`En el real te sobrarían <b>${Math.max(0,Math.round((90*60-perQ*48)/60))} min</b> para repasar.`:`<span class="fail">A este ritmo no te daría tiempo a repasar en el real.</span>`}<br><b>Fase 0:</b> ${s0}/${n0}${n0?` (${Math.round(s0/n0*100)} %)`:""}${current.length-n0?` · <b>ATPL:</b> ${score-s0}/${current.length-n0}`:""}</div>
       <div class="scroll"><table style="margin-top:8px"><tr><th>Capítulo</th><th>Aciertos</th></tr>${BLOCKS.filter(b=>byBlock[b.k]).map(b=>{const x=byBlock[b.k], p=Math.round(x.ok/x.total*100); return `<tr><td><b>${b.code}</b> ${esc(b.name)}</td><td class="${p>=75?'pass':'fail'}">${x.ok}/${x.total} · ${p} %</td></tr>`;}).join("")}</table></div>`;
   const st = stats(), next = atStake(st).slice(0,2), los = Object.keys(byLO).sort();

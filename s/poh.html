@@ -456,7 +456,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <summary><span class="lonum">POH.7.3</span><span class="lotitle">Annunciator panel y seis instrumentos</span></summary>
 <div class="body">
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>Lo más importante y lo más probable en el examen: el <b>panel de las 3 luces</b> (Annunciator Panel) y <b>qué fallo indica cada luz</b>.</li>
+    <li>Lo más importante y lo más probable: el <b>panel de las 3 luces</b> (Annunciator Panel) y <b>qué fallo indica cada luz</b>.</li>
     <li>Seis instrumentos, de izquierda a derecha: anemómetro (pitot), horizonte artificial, altímetro, coordinador de virajes, giro direccional y VSI.</li>
   </ul></div>
   <div class="key"><b>Clave</b>De izquierda a derecha: <b>bomba de vacío</b> · <b>alternador</b> · <b>presión de aceite</b>.</div>
@@ -671,7 +671,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 </section>
 
 <section id="p-map" hidden>
-  <div class="card"><b>Si el examen fuera hoy</b>
+  <div class="card"><b>Si fuera hoy</b>
     <div id="forecast"></div>
     <button class="btn" id="goSim" style="margin-top:10px">Hacer un test</button>
   </div>
@@ -1555,7 +1555,7 @@ function renderMap(){
       <div class="bar"><i style="width:${Math.round(c.fails/maxF*100)}%;background:${c.recent?'var(--ok)':'var(--bad)'}"></i></div>
       <div class="muted cmeta">${[...c.lo].map(l=>esc(loLabel(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
     </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
-  let rows = `<tr><th title="Código del tema en el temario">LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media en el examen (estimadas)">≈ Preg.</th><th title="Dado en clase, aún no dado o de otra asignatura">Estado</th><th title="Preguntas del banco (+ las de temario aún no dado)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
+  let rows = `<tr><th title="Código del tema en el temario">LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media (estimadas)">≈ Preg.</th><th title="Dado en clase, aún no dado o de otra asignatura">Estado</th><th title="Preguntas del banco (+ las de temario aún no dado)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
   const groups = BLOCKS.map(b=>({t:`${b.code} · ${b.name} · ${b.n} preguntas`, k:b.k})).concat([{t:"De otras asignaturas (032 · 031)", k:"X"}]);
   groups.forEach(g=>{
     rows += `<tr><th colspan="8" style="padding-top:14px">${esc(g.t)}</th></tr>`;
