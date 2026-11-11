@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="a9b4315635b1";</script>
+<script>window.F0_BUILD="afe26bda10d9";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -978,7 +978,7 @@ function renderDash(){
       ${flight(m)}
       <div class="stats">${m.n?`<span>Último <b>${m.last} %</b></span><span>Media 5 últimos <b>${m.avg5} %</b></span><span><b>${m.n}</b> tests</span>`:`<span>Aún no has hecho ningún test</span>`}</div>
       <div class="acts">
-        <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo · ${s.k==="090"?30:20}</button>
+        <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo · ${s.k==="010"?20:25}</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Ir a la asignatura</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">Más tipos de test</button>
         ${dueCount(s.k)?`<button class="btn ghost wide" type="button" data-review="${s.k}" title="${dueCount(s.k)} pendientes de hoy · se completa hasta 20 con tus falladas y preguntas nuevas">🔁 Repasar hoy · 20</button>`:""}
