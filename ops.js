@@ -432,6 +432,9 @@ function skyUpdate(){
   sk.style.setProperty("--cc",rgb(cc)); sk.style.setProperty("--vl",vl.toFixed(2)); sk.style.setProperty("--ra",W.rain.toFixed(2)); sk.style.setProperty("--sn",W.snow.toFixed(2)); sk.style.setProperty("--fg",W.fog.toFixed(2));
   sk.style.background="linear-gradient(180deg,"+rgb(top)+","+rgb(bot)+")";
   const lum=(0.299*(top[0]+bot[0])+0.587*(top[1]+bot[1])+0.114*(top[2]+bot[2]))/510; $("#opTop",R).classList.toggle("lt",lum>0.6);
+  if(window.F0Real){   // cielo realista (mismo motor que la cabecera y la tarjeta de Inicio); la lluvia, la nieve y la niebla siguen encima
+    let cv=sk.querySelector("canvas.rs"); if(!cv){ cv=document.createElement("canvas"); cv.className="rs"; cv.style.cssText="position:absolute;inset:0;width:100%;height:100%;display:block"; sk.insertBefore(cv,sk.firstChild); sk.classList.add("real"); }
+    window.F0Real.sky(cv,{cover:W.cov}); $("#opTop",R).classList.remove("lt"); }
   sk.style.setProperty("--st",cl01(1-(alt+3)/14).toFixed(2));
   const place=(el,a,op)=>{ el.style.left=Math.max(5,Math.min(95,50+a.az/110*44))+"%"; el.style.bottom=Math.max(-20,a.alt/70*70)+"%"; el.style.opacity=(op*cl01((a.alt+4)/6)).toFixed(2); };
   const sun=$("#opSun",R), moon=$("#opMoon",R);
@@ -500,6 +503,8 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op *{box-sizing:border-box}
 .op .muted{color:var(--mu)}
 .op a{color:var(--k1)}
+.op .sk.real .orb,.op .sk.real .star,.op .sk.real .wx .cd,.op .sk.real .wx .veil{display:none!important}
+.op .op-top.skyh .sk.real::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,14,28,.55),rgba(6,14,28,.2) 55%,rgba(6,14,28,.3));pointer-events:none}
 .op .op-top{background:var(--hd);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px))}
 .op .op-top .id b{display:block;font:700 40px/1 "Barlow Condensed",Barlow,sans-serif;letter-spacing:.04em}
 .op .op-top .id span{color:#9AA5B1;font-size:14px}

@@ -147,14 +147,15 @@ function drawTakeoff(cv,env,t,tt,o){
   let K;
   if(!o.cycle) K=TO(tt);
   else{   // despegue → 2 s → aterrizaje por la pista contraria → rodaje hasta el final → media vuelta → despegue
-    const TA=14.5, P=2, AP=5, vd=28, ad=2.6, RO=vd/ad, TU=2.4, CY=TA+P+AP+RO+TU, u=tt%CY;
+    const TA=14.5, P=2, AP=5, vd=28, ad=2.6, RO=vd/ad, TU=4.6, CY=TA+P+AP+RO+TU, u=tt%CY;
     if(u<TA+P) K=TO(u);
     else{ const s=u-TA-P, camEnd=TO(TA+P).cam, xtd=vd*vd/(2*ad);
       if(s<AP+RO){ let xp, alt=0, pitch, v;
         if(s<AP){ const q=1-s/AP; xp=xtd+29*(AP-s); alt=9*Math.pow(q,1.7); pitch=(1.5+4.5*sstep(AP-2.2,AP,s))*D2R; v=29; }
         else{ const r=s-AP; xp=xtd-(vd*r-.5*ad*r*r); pitch=6*(1-sstep(0,1.6,r))*D2R; v=vd-ad*r; }
         K={xw:xp, alt, pitch, v, dir:-1, cam:lerp(camEnd, xp-viewM*lerp(.62,fx0,sstep(3,AP+RO,s)), sstep(0,4.5,s))}; }
-      else{ const r=sstep(0,1,(s-AP-RO)/TU); K={xw:0, alt:0, pitch:0, v:0, dir:-Math.cos(Math.PI*r), cam:-viewM*fx0}; } } }
+      else{ const r=sstep(0,1,(s-AP-RO)/TU), an=Math.PI*r; K={xw:-5*Math.sin(an), alt:0, pitch:0, v:3*Math.sin(an), dir:-Math.cos(an), turn:Math.sin(an), cam:-viewM*fx0}; } } }
+  if(K.td==null&&o.cycle){ const u=tt%(14.5+2+5+28/2.6+4.6), s=u-21.5; K.td=(s>=0&&s<1.6)?s/1.6:-1; }
   const xw=K.xw, alt=K.alt, pitch=K.pitch, v=K.v, cam=K.cam, X=m=>(m-cam)*pm;
   const y1=H*(o.y1||.72), y2=H*(o.y2||.9), yc=(y1+y2)/2-h*.01;
   skyBase(ctx,w,hz,env,t);
@@ -167,6 +168,17 @@ function drawTakeoff(cv,env,t,tt,o){
   const far=.34, fx=m=>(m-cam*far)*pm*.28+w*.3, bc=css(mix(haze,mul([170,176,182],env.amb),.6)), bd=css(mix(haze,mul([90,98,108],env.amb),.62));
   [[60,26,7],[98,34,8.5],[150,22,6],[420,30,7.5],[470,40,9]].forEach(b=>{ const x=fx(b[0]), bw=b[1]*pm*.28, bh=b[2]*pm*.28; if(x>w||x+bw<0) return; ctx.fillStyle=bc; ctx.fillRect(x,hz-bh,bw,bh+1); ctx.fillStyle=bd; ctx.fillRect(x,hz-bh,bw,bh*.16); ctx.fillRect(x+bw*.12,hz-bh*.62,bw*.5,bh*.62); });
   { const x=fx(250), th=17*pm*.28; ctx.fillStyle=bc; ctx.fillRect(x,hz-th,3.2*pm*.28,th); ctx.fillStyle=bd; ctx.fillRect(x-1.6*pm*.28,hz-th-2.6*pm*.28,6.4*pm*.28,2.8*pm*.28); if(env.night>.3){ ctx.fillStyle=`rgba(255,60,40,${.9*((t%2)<1?1:.2)})`; ctx.fillRect(x+pm*.3,hz-th-3.4*pm*.28,2,2); } }
+  if(env.night>.12){ const N=sstep(.12,.7,env.night), u=pm*.28; ctx.save(); ctx.globalCompositeOperation="lighter";
+    const glow=(x,y,r,c,a)=>{ const q=ctx.createRadialGradient(x,y,0,x,y,r); q.addColorStop(0,`rgba(${c},${a})`); q.addColorStop(1,`rgba(${c},0)`); ctx.fillStyle=q; ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); };
+    [[60,26,7],[98,34,8.5],[150,22,6],[420,30,7.5],[470,40,9]].forEach((b,bi)=>{ const x=fx(b[0]), bw=b[1]*u, bh=b[2]*u; if(x>w+40||x+bw<-40) return;
+      ctx.fillStyle=`rgba(255,214,140,${.85*N})`; for(let k=0;k<Math.floor(b[1]/5);k++){ if((k*7+bi*3)%4===0) continue; ctx.fillRect(x+bw*.08+k*5*u,hz-bh*.42,Math.max(1.2,1.6*u),Math.max(1.2,1.4*u)); }
+      const lx=x+bw*.5, ly=hz-bh-1.5*u; glow(lx,ly,Math.max(5,9*u),"255,236,190",.95*N); const q=ctx.createLinearGradient(0,ly,0,hz+h*.05); q.addColorStop(0,`rgba(255,232,180,${.34*N})`); q.addColorStop(1,"rgba(255,232,180,0)"); ctx.fillStyle=q; ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(lx-bw*.7,hz+h*.05); ctx.lineTo(lx+bw*.7,hz+h*.05); ctx.closePath(); ctx.fill(); });
+    { const x=fx(250)+1.6*u, y=hz-17*u-3.6*u, ph=(t*.9)%2, on=ph<.16||(ph>1&&ph<1.16); if(on) glow(x,y,Math.max(8,16*u),ph<1?"120,255,150":"255,255,255",.95*N); glow(x,hz-17*u-1.2*u,Math.max(3,5*u),"255,230,170",.8*N); }
+    for(let i=0;i<70;i++){ const xx=((i*137.5+cam*pm*.03)%(w+60)+w+60)%(w+60)-30, yy=hz-h*.006-((i*29)%9)*h*.004; glow(xx,yy,h*.012,(i%5===0)?"255,170,110":"255,226,170",.55*N); }
+    for(let m=Math.floor(cam/60)*60;m<cam+viewM+60;m+=60){ glow(X(m+45),y1+h*.004,h*(.012+.02*N),"255,246,214",.8*N); }
+    for(let m=Math.floor(cam/30)*30;m<cam+viewM+30;m+=30){ glow((m-cam*.8)*pm*.8+w*.1,lerp(hz,y1,.55),h*.016,"70,120,255",.75*N); }
+    for(let m=Math.floor(cam/15)*15;m<cam+viewM+15;m+=15){ glow(X(m+7),(y1+y2)/2-h*.01,h*.011,"255,255,235",.6*N); }
+    ctx.restore(); }
   // hierba
   const G=(c,k)=>css(mul(tint(c,mix([255,255,255],env.sun,.3)),env.amb*k));
   let g=ctx.createLinearGradient(0,hz,0,y1); g.addColorStop(0,css(mix(haze,mul([112,124,80],env.amb),.55))); g.addColorStop(1,G([104,118,66],.95)); ctx.fillStyle=g; ctx.fillRect(0,hz,w,y1-hz+1);
@@ -183,13 +195,14 @@ function drawTakeoff(cv,env,t,tt,o){
   g=ctx.createLinearGradient(0,y2,0,H); g.addColorStop(0,G([92,108,56],.9)); g.addColorStop(1,G([66,82,40],.85)); ctx.fillStyle=g; ctx.fillRect(0,y2,w,H-y2);
   ctx.strokeStyle=G([120,134,74],.9); ctx.lineWidth=1; ctx.beginPath(); for(let m=Math.floor(cam/1.5)*1.5;m<cam+viewM+2;m+=1.5){ const x=X(m), q=noise(m*.31,.7); ctx.moveTo(x,y2+h*.02+q*h*.07); ctx.lineTo(x+h*.012,y2+h*.02+q*h*.07-h*.03*q); } ctx.stroke();
   // sombra
-  const px=X(xw), py=yc-alt*pm, s=pm*.083, sh=clamp(1-alt/14,0,1);
+  const tn=K.turn||0, px=X(xw), py=yc-alt*pm+tn*(y2-yc)*.55, s=pm*.083*(1+.14*tn), sh=clamp(1-alt/14,0,1);
   if(env.el>1||env.night>.5){ const off=env.el>1?clamp(1/Math.tan(Math.max(env.el,6)*D2R),0,4)*(env.az<180?1:-1)*pm*.8:0; ctx.fillStyle=`rgba(0,0,0,${(.34*env.amb+.08)*sh*(1-.5*sstep(.6,1,env.cover))})`; ctx.beginPath(); ctx.ellipse(px+6*s*K.dir+off*.25+alt*pm*.3*K.dir,yc+h*.012,48*s*(1+alt*.03),Math.max(1.4,2.6*s),0,0,7); ctx.fill(); }
   // luces de borde y manga
   for(let m=Math.floor(cam/60)*60;m<cam+viewM+60;m+=60){ const x=X(m+15), y=y2-h*.004; ctx.fillStyle="#3a3d42"; ctx.fillRect(x-1,y-h*.02,2,h*.02);
     const A=.25+.75*sstep(.1,.6,env.night), q=ctx.createRadialGradient(x,y-h*.024,0,x,y-h*.024,h*(.02+.07*env.night)); q.addColorStop(0,`rgba(255,246,214,${A})`); q.addColorStop(1,"rgba(255,246,214,0)"); ctx.fillStyle=q; ctx.beginPath(); ctx.arc(x,y-h*.024,h*(.02+.07*env.night),0,7); ctx.fill(); }
   { const m0=Math.floor((cam+40)/260)*260+120, x=(m0-cam)*pm, yb=hz+h*.085, ph=5*pm*.8; ctx.strokeStyle=css(mul([210,214,220],env.amb)); ctx.lineWidth=Math.max(1,h*.006); ctx.beginPath(); ctx.moveTo(x,yb); ctx.lineTo(x,yb-ph); ctx.stroke();
     const fl=Math.sin(t*5)*.12; ctx.fillStyle=css(mul([232,96,30],.35+.65*env.amb)); ctx.beginPath(); ctx.moveTo(x,yb-ph); ctx.lineTo(x+2.6*pm,yb-ph+pm*(.5+fl)); ctx.lineTo(x+2.6*pm,yb-ph+pm*(.9+fl)); ctx.lineTo(x,yb-ph+pm*.8); ctx.closePath(); ctx.fill(); }
+  if(K.td>=0){ const q=K.td, sx=X(28*28/(2*2.6))+q*pm*9; ctx.fillStyle=`rgba(225,228,232,${.42*(1-q)})`; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.arc(sx+i*pm*1.3*q,yc-h*.012-q*h*.05*(1+i*.3),h*(.014+.03*q)*(1+i*.2),0,7); ctx.fill(); } }
   // avión
   const fade=o.cycle?1:sstep(0,.8,tt)*(1-sstep(T-1,T-.2,tt))*(tt<T?1:0); ctx.globalAlpha=fade; if(px>-80*s&&px<w+80*s&&py>-40*s) plane(ctx,px,py,s,pitch,env,t,K.dir); ctx.globalAlpha=1;
   // calima sobre el horizonte
@@ -203,15 +216,19 @@ const still=()=>!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduc
 const fit=(c)=>{ const dpr=Math.min(2,window.devicePixelRatio||1), w=Math.round(c.clientWidth*dpr), h=Math.round(c.clientHeight*dpr); if(!w||!h) return false; if(c.width!==w||c.height!==h){ c.width=w; c.height=h; c._ck=""; } return true; };
 let cover=.25;
 function header(c,o){
-  if(!c||c._on) return; c._on=1; let t0=performance.now(), last=0;
-  const tick=now=>{ requestAnimationFrame(tick); if(document.hidden||now-last<33) return; last=now; if(!fit(c)) return;
-    const st=still(), tt=st?9:(now-t0)/1000, env=envAt(new Date(),cover), oo=Object.assign({cycle:true},typeof o==="function"?o(c.clientHeight):o);
-    try{ drawTakeoff(c,env,now/1000,tt,oo); }catch(e){ if(!c._err){ c._err=1; console.error("F0Real",e); } }
-    if(st) last=now+15000; };
-  requestAnimationFrame(tick);
+  if(!c||c._on) return; c._on=1; const clk=()=>(window.performance&&performance.now)?performance.now():Date.now(); let t0=clk(), last=0, raf=0, seen=0;
+  const frame=()=>{ const now=clk(); if(now-last<30) return; last=now; seen=now; if(document.hidden||!fit(c)) return;
+    const env=envAt(new Date(),cover), oo=Object.assign({cycle:true},typeof o==="function"?o(c.clientHeight):o);
+    try{ drawTakeoff(c,env,now/1000,(now-t0)/1000,oo); }catch(e){ if(!c._err){ c._err=1; try{ console.error("F0Real",e); }catch(_){} } } };
+  const tick=()=>{ raf=requestAnimationFrame(tick); frame(); };
+  raf=requestAnimationFrame(tick);
+  setInterval(()=>{ if(document.hidden) return; if(clk()-seen>400){ try{ cancelAnimationFrame(raf); }catch(e){} frame(); raf=requestAnimationFrame(tick); } },250);   // Safari móvil: si rAF se queda parado, se pinta por temporizador y se rearma
+  ["pageshow","focus","orientationchange"].forEach(ev=>window.addEventListener(ev,()=>{ last=0; frame(); }));
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ last=0; try{ cancelAnimationFrame(raf); }catch(e){} raf=requestAnimationFrame(tick); } });
 }
-function sky(c){
-  if(!c) return; const draw=()=>{ if(document.hidden||!c.isConnected||!fit(c)) return; try{ drawSky(c,envAt(new Date(),cover),performance.now()/1000); }catch(e){} };
+function sky(c,o){
+  if(!c) return; if(o&&o.cover!=null) c._cov=clamp(+o.cover||0,0,1); if(c._iv&&c.isConnected) return;
+  const draw=()=>{ if(document.hidden||!c.isConnected||!fit(c)) return; try{ drawSky(c,envAt(new Date(),c._cov!=null?c._cov:cover),performance.now()/1000); }catch(e){} };
   draw(); if(c._iv) clearInterval(c._iv); c._iv=setInterval(()=>{ if(!c.isConnected){ clearInterval(c._iv); return; } draw(); },still()?30000:300);
 }
 window.F0Real={header,sky,setCover:v=>{ if(v!=null&&isFinite(v)) cover=clamp(+v,0,1); },envAt,drawTakeoff,drawSky};
