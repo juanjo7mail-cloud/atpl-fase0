@@ -243,7 +243,8 @@ function infer(list){
 }
 
 /* ---------- mapa ---------- */
-const PLANE='<svg viewBox="0 0 20 20" width="26" height="26" style="transform:rotate({r}deg)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z" fill="#FFC400" stroke="#14181D" stroke-width="1.1"/></svg>';
+const PLANE='<svg viewBox="0 0 20 20" width="26" height="26" style="transform:rotate({r}deg)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z" fill="{c}" stroke="{s}" stroke-width="1.1"/></svg>';
+const isFS=a=>/^FSM/i.test((a.f||"").trim());   // Flyschool: indicativo FSM en Flightradar → azul y blanco
 const CHART={url:"ops-lecu-adc.jpg",ovl:"ops-lecu-ovl.png",b:[[40.36659176,-3.79715401],[40.37154104,-3.77206957]]};
 function setMode(m){
   S.mode=m; const M=S.map, R=S.root; if(!M) return;
@@ -273,9 +274,10 @@ function drawMap(act){
 }
 function drawTraffic(){
   const L=window.L, M=S.map; if(!L||!M) return; if(S.trl) S.trl.clearLayers(); else S.trl=L.layerGroup().addTo(M);
-  (S.tr||[]).forEach(a=>{ if(a.lat==null) return; const alt=a.gnd?"tierra":(a.alt!=null?Math.round(a.alt/100)*100+" ft":"");
-    const m=L.marker([a.lat,a.lon],{icon:L.divIcon({className:"op-ac",html:PLANE.replace("{r}",a.tr||0)+`<span><b>${esc(a.f||a.r||a.h||"")}</b>${esc(alt)}</span>`,iconSize:[26,26],iconAnchor:[13,13]}),zIndexOffset:500});
-    m.bindPopup(`<b>${esc(a.f||"—")}</b> ${esc(a.r||"")}<br>${esc(a.t||"")}<br>${esc(alt)}${a.g!=null?" · "+Math.round(a.g)+" kt":""}${a.tr!=null?" · rumbo "+Math.round(a.tr)+"º":""}`); m.addTo(S.trl); });
+  (S.tr||[]).slice().sort((x,y)=>isFS(x)-isFS(y)).forEach(a=>{ if(a.lat==null) return; const fs=isFS(a), alt=a.gnd?"tierra":(a.alt!=null?Math.round(a.alt/100)*100+" ft":"");
+    const ico=(fs?PLANE.replace("{c}","#FFFFFF").replace("{s}","#0B4FA8").replace("stroke-width=\"1.1\"","stroke-width=\"1.6\""):PLANE.replace("{c}","#FFC400").replace("{s}","#14181D")).replace("{r}",a.tr||0);
+    const m=L.marker([a.lat,a.lon],{icon:L.divIcon({className:"op-ac"+(fs?" fs":""),html:ico+`<span><b>${esc(a.f||a.r||a.h||"")}</b>${esc(alt)}</span>`,iconSize:[26,26],iconAnchor:[13,13]}),zIndexOffset:fs?900:500});
+    m.bindPopup(`<b>${esc(a.f||"—")}</b> ${fs?"· Flyschool":""} ${esc(a.r||"")}<br>${esc(a.t||"")}<br>${esc(alt)}${a.g!=null?" · "+Math.round(a.g)+" kt":""}${a.tr!=null?" · rumbo "+Math.round(a.tr)+"º":""}`); m.addTo(S.trl); });
 }
 function initMap(){
   const L=window.L, el=$("#opMap",S.root); if(!el) return;
@@ -348,7 +350,7 @@ function fill(){
    <tr class="res"><th>¿Se puede?</th><td></td><td>${chips(evF)}</td><td>${chips(evS)}</td></tr></tbody></table>
    <p class="nt">${open?"":(AD.other&&st.adOpen?"De noche: ":"Fuera de horario: ")+"el resto de límites no aplican. "}Orientativo: decide el HT o el CFI.</p>`;
   const pe=$("#opPist",R); if(pe) pe.innerHTML=pistHTML(e);
-  const ts=$("#opTrSt",R); if(ts) ts.textContent=S.tr?("✈ "+S.tr.length+" aviones · ADS-B · "+fz(S.trAt)+" Z"):"ADS-B no disponible";
+  const ts=$("#opTrSt",R); if(ts) ts.textContent=S.tr?("✈ "+S.tr.length+" aviones"+(S.tr.some(isFS)?" · "+S.tr.filter(isFS).length+" Flyschool":"")+" · ADS-B · "+fz(S.trAt)+" Z"):"ADS-B no disponible"+(S.trWhy?" ("+S.trWhy+")":"");
 }
 /* Distancias declaradas (AIP AD 2.12/2.13, uso civil, sin salidas por intersección): [pista, elev. umbral ft, TORA, TODA, ASDA, LDA] por pares de cabeceras */
 const DD={"LEVD":[["05",2767,3005,3305,3005,3005],["23",2775,3005,3211,3005,3005]],"LEBG":[["04",2941,2099,2099,2099,2099],["22",2962,2099,2099,2099,2099]],"LESA":[["03",2595,2513,2513,2788,2513],["21",2586,2513,2513,2788,2513]],"LEAB":[["09",2281,2700,3080,2700,2700],["27",2301,2700,3080,2700,2700]],"LEBA":[["03",291,2076,2136,2076,2050],["21",305,2241,2301,2241,2050]],"LEBZ":[["13",578,2852,3152,3152,2852],["31",608,2852,3152,3152,2852]],"LETL":[["18",3297,2539,2539,2825,2539],["36",3366,2825,2825,2825,2539]],"LELN":[["05",2994,3000,3000,3000,3000],["23",2996,3000,3000,3000,3000]],"LELO":[["11",1156,2200,2260,2200,2200],["29",1139,2200,2260,2200,2200]],"LESO":[["04",10,1590,1753,1590,1427],["22",14,1590,1753,1590,1427]],"LEGR":[["09",1842,2900,2960,2900,2900],["27",1860,2900,2960,2900,2900]],"LEZL":[["09",83,3364,3424,3364,3364],["27",111,3364,3424,3364,3364]],"LELC":[["04R",12,2320,2516,2320,2320],["22L",6,2320,2508,2320,2320],["04L",29,1317,1377,1746,1577],["22R",17,1268,1328,1714,1577]],"LEPP":[["15",1467,2205,2285,2205,2205],["33",1500,2405,2505,2405,1907]],"LEXJ":[["11",11,2320,2380,2320,2320],["29",12,2320,2380,2320,2320]],"LEAS":[["11",399,2205,2355,2205,2205],["29",399,2205,2325,2205,2205]],"LECH":[["06",1093,2700,2770,2770,2700],["24",1182,2700,2770,2770,2700]],"LEAM":[["07",26,3165,3225,3165,3050],["25",70,3165,3260,3165,3165]],"LEJR":[["02",68,2300,2300,2300,2300],["20",93,2300,2300,2300,2300]],"LELL":[["13",485,899,899,899,899],["31",445,899,899,899,899]]}, DDN={"LETL":"36: umbral desplazado 286 m (LDA < TORA).","LEPP":"33: umbral desplazado 500 m.","LEAM":"07: umbral desplazado 115 m.","LESO":"Ambos umbrales desplazados 163 m.","LELL":"13: últimos 150 m inutilizables (aterrizaje y despegue). 31: umbral desplazado 150 m y últimos 150 m inutilizables para despegar. Pista útil real: 899 m.","LELC":"Base militar: la AIP no la publica para civiles. Pistas 04L/22R solo militares (valores militares).","LEBG":"Salida por intersección C: pista 04 → 822 m; 22 → 1292 m (de día, VMC, envergadura ≤ 15 m, avisar al AFIS).","LEAB":"ASDA civil. Las intersecciones no publican LDA."};
@@ -459,7 +461,7 @@ function load(){
 }
 function loadTr(){
   const f0=S.opt&&S.opt.fetchTr, g=S.gen; if(!f0) return;
-  f0(S.opt.multi?AD.icao:undefined).then(r=>{ if(g!==S.gen) return; if(!r||!r.ac) throw 0; S.tr=r.ac; S.trAt=new Date(); }).catch(()=>{ if(g===S.gen) S.tr=null; }).then(()=>{ if(!S.root||g!==S.gen) return; drawTraffic(); if(S.data) fill(); });
+  f0(S.opt.multi?AD.icao:undefined).then(r=>{ if(g!==S.gen) return; if(!r||!r.ac) throw 0; S.tr=r.ac; S.trAt=new Date(); S.trWhy=""; }).catch(e=>{ if(g===S.gen){ S.tr=null; S.trWhy=String(e&&e.message||"sin respuesta").slice(0,40); } }).then(()=>{ if(!S.root||g!==S.gen) return; drawTraffic(); if(S.data) fill(); });
 }
 const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD;--hd:#1C2128;--am:#FFC400;--vfr:#1E9E44;--mvfr:#2F6FD0;--ifr:#D23A2F;--lifr:#B02FA5;--ok:#1E8A42;--no:#C9372C;--mid:#B7791F;--okb:#E3F3E8;--nob:#FBE5E3;--midb:#FFF1D6;--k1:#0B5CAD;--k2:#8A4B00;--k3:#5A3E9B;--k4:#9A2A2A;--k5:#0B7A6B;
  min-height:65vh;background:var(--bg);color:var(--ink);font:15px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -533,6 +535,8 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .op-ac svg{filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
 .op .op-ac span{position:absolute;left:24px;top:2px;white-space:nowrap;font:600 11px/1.15 Barlow,sans-serif;color:#fff;background:rgba(20,24,29,.82);border-radius:3px;padding:1px 4px}
 .op .op-ac span b{display:block;font-size:12px}
+.op .op-ac.fs svg{filter:drop-shadow(0 0 3px #0B4FA8) drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.op .op-ac.fs span{background:#0B4FA8;color:#fff;border:1px solid #fff}
 .op .leaflet-container{font-family:Barlow,system-ui,sans-serif}
 .op .op-side{display:grid;gap:14px;align-content:start}
 .op .rwy{display:flex;gap:14px;align-items:center}

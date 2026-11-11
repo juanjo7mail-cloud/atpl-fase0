@@ -33,19 +33,25 @@ async function first(kind, key, list) {
   }
   return null;
 }
-// Tráfico ADS-B en vivo (comunidad adsb.lol; si falla, airplanes.live). Radio 15 NM alrededor de Cuatro Vientos. Caché 8 s.
-const trUrls = icao => { const p = AERO[icao] || AERO.LECU; return ["https://api.adsb.lol/v2/point/" + p[0] + "/" + p[1] + "/15", "https://api.airplanes.live/v2/point/" + p[0] + "/" + p[1] + "/15"]; };
+// Tráfico ADS-B en vivo. Radio 15 NM alrededor del aeródromo. Pregunta a cuatro redes comunitarias a la vez y se queda con la primera que contesta bien;
+// si todas fallan, devuelve el motivo de cada una (campo why) para poder diagnosticarlo.
+const trSrc = icao => { const p = AERO[icao] || AERO.LECU, a = p[0], o = p[1];
+  return [["adsb.lol", "https://api.adsb.lol/v2/point/" + a + "/" + o + "/15"], ["airplanes.live", "https://api.airplanes.live/v2/point/" + a + "/" + o + "/15"],
+    ["adsb.fi", "https://opendata.adsb.fi/api/v2/lat/" + a + "/lon/" + o + "/dist/15"], ["adsb.one", "https://api.adsb.one/v2/point/" + a + "/" + o + "/15"]]; };
 async function traffic(icao) {
-  for (const url of trUrls(icao)) {
+  const why = [];
+  const one = async ([name, url]) => {
     try {
-      const r = await fetch(url, { headers: { "User-Agent": "atpl-fase0-ops/1.0" }, cf: { cacheTtl: 10, cacheEverything: true } }); if (!r.ok) continue;
-      const j = await r.json(); if (!Array.isArray(j.ac)) continue;
-      return j.ac.filter(a => a.lat != null && a.lon != null).slice(0, 80).map(a => ({
+      const r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (compatible; atpl-fase0-ops/1.1)", "Accept": "application/json" }, signal: AbortSignal.timeout(6000) });
+      if (!r.ok) { why.push(name + ": HTTP " + r.status); throw 0; }
+      const j = await r.json(), arr = j.ac || j.aircraft;
+      if (!Array.isArray(arr)) { why.push(name + ": respuesta sin lista"); throw 0; }
+      return { src: name, ac: arr.filter(a => a.lat != null && a.lon != null).slice(0, 120).map(a => ({
         h: a.hex, f: (a.flight || "").trim(), r: a.r || "", t: a.t || "", lat: a.lat, lon: a.lon,
-        gnd: a.alt_baro === "ground", alt: typeof a.alt_baro === "number" ? a.alt_baro : null, g: a.gs != null ? a.gs : null, tr: a.track != null ? a.track : (a.true_heading != null ? a.true_heading : null) }));
-    } catch (e) { /* siguiente fuente */ }
-  }
-  return null;
+        gnd: a.alt_baro === "ground", alt: typeof a.alt_baro === "number" ? a.alt_baro : null, g: a.gs != null ? a.gs : null, tr: a.track != null ? a.track : (a.true_heading != null ? a.true_heading : null) })) };
+    } catch (e) { if (e) why.push(name + ": " + (e.name || "error")); throw 0; }
+  };
+  try { const r = await Promise.any(trSrc(icao).map(one)); return { ac: r.ac, src: r.src }; } catch (e) { return { ac: null, why }; }
 }
 // Memoria en el propio isolate: la Cache API no funciona en *.workers.dev, así que agrupamos las peticiones aquí.
 const MEMO = new Map();
@@ -96,7 +102,7 @@ export default {
     const u = new URL(req.url);
     const q = (u.searchParams.get("icao") || "").toUpperCase(), icao = AERO[q] ? q : "LECU";   // solo aeródromos de la lista
     if (u.pathname === "/api/traffic") {
-      const o = await memo("tr:" + icao, 15000, async () => { const ac = await traffic(icao); return { ok: !!ac, ac: ac || [], at: Date.now() }; });
+      const o = await memo("tr:" + icao, 15000, async () => { const r = await traffic(icao); return { ok: !!r.ac, ac: r.ac || [], src: r.src, why: r.why, at: Date.now() }; });
       return J(o, o.ok, 15);
     }
     if (u.pathname === "/api/notam") {
