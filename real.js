@@ -93,9 +93,10 @@ function drawSky(cv,env,t){
 /* ---------- escena 1: despegue ---------- */
 const asph=document.createElement("canvas"); asph.width=256; asph.height=64;
 (function(){ const c=asph.getContext("2d"), im=c.createImageData(256,64); for(let i=0;i<256*64;i++){ const v=118+rnd()*34+(rnd()<.03?30:0); im.data[i*4]=im.data[i*4+1]=im.data[i*4+2]=v; im.data[i*4+3]=255; } c.putImageData(im,0,0); })();
-function plane(ctx,px,py,s,pitch,env,t,gear){
+function plane(ctx,px,py,s,pitch,env,t,dir){
   const L=mix([255,255,255],env.sun,.35), k=.36+.64*env.amb, C=c=>css(mul(tint(c,L),k));
-  ctx.save(); ctx.translate(px,py); ctx.rotate(-pitch); ctx.scale(s,s); ctx.translate(-6,-19); ctx.lineJoin="round";
+  dir=dir==null?1:dir; if(Math.abs(dir)<.05) dir=dir<0?-.05:.05;
+  ctx.save(); ctx.translate(px,py); ctx.scale(dir,1); ctx.rotate(-pitch); ctx.scale(s,s); ctx.translate(-6,-19); ctx.lineJoin="round";
   // estabilizador y deriva
   ctx.fillStyle=C([226,230,236]); ctx.beginPath(); ctx.moveTo(-34,-5); ctx.quadraticCurveTo(-41,-12,-46,-23); ctx.lineTo(-52,-23); ctx.lineTo(-50.5,-3); ctx.closePath(); ctx.fill();
   ctx.fillStyle=C([24,84,170]); ctx.beginPath(); ctx.moveTo(-44.6,-19); ctx.lineTo(-51.7,-19); ctx.lineTo(-51.4,-14); ctx.lineTo(-42.2,-14); ctx.closePath(); ctx.fill();
@@ -139,10 +140,22 @@ function plane(ctx,px,py,s,pitch,env,t,gear){
 function drawTakeoff(cv,env,t,tt,o){
   o=o||{}; const ctx=cv.getContext("2d"), w=cv.width, H=cv.height, pm=H*(o.pm||.105), h=pm/.105, hz=H*(o.hz||.62), T=18, a=2.4, t0=1.2, tr=11.3, tl=12.5;
   ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
-  const tg=Math.max(0,tt-t0), tq=Math.min(tg,tl-t0), vl=a*(tl-t0), xw=.5*a*tq*tq+(tg>tq?vl*(tg-tq)*1.04:0), v=tg>tq?vl*1.04:a*tg;
-  const ta=Math.max(0,tt-tl), alt=3.4*ta*ta/(ta+1.3), pitch=(sstep(tr,tl,tt)*7.5+sstep(tl,tl+2,tt)*2.5)*D2R;
-  const tc=tl+1.6, xc=tt<=tc?xw:(.5*a*(tl-t0)*(tl-t0)+vl*1.04*(tc-tl))+vl*1.04*1.3*(1-Math.exp(-(tt-tc)/1.3));
-  const viewM=w/pm, cam=xc-viewM*lerp(o.x0||.2,o.x1||.5,sstep(0,12,tt)), X=m=>(m-cam)*pm;
+  const viewM=w/pm, fx0=o.x0||.2, fx1=o.x1||.5;
+  const TO=q=>{ const tg=Math.max(0,q-t0), tq=Math.min(tg,tl-t0), vl=a*(tl-t0), xw=.5*a*tq*tq+(tg>tq?vl*(tg-tq)*1.04:0), ta=Math.max(0,q-tl), tc=tl+1.6;
+    const xc=q<=tc?xw:(.5*a*(tl-t0)*(tl-t0)+vl*1.04*(tc-tl))+vl*1.04*1.3*(1-Math.exp(-(q-tc)/1.3));
+    return {xw, alt:3.4*ta*ta/(ta+1.3), pitch:(sstep(tr,tl,q)*7.5+sstep(tl,tl+2,q)*2.5)*D2R, cam:xc-viewM*lerp(fx0,fx1,sstep(0,12,q)), dir:1, v:tg>tq?vl*1.04:a*tg}; };
+  let K;
+  if(!o.cycle) K=TO(tt);
+  else{   // despegue → 2 s → aterrizaje por la pista contraria → rodaje hasta el final → media vuelta → despegue
+    const TA=14.5, P=2, AP=5, vd=28, ad=2.6, RO=vd/ad, TU=2.4, CY=TA+P+AP+RO+TU, u=tt%CY;
+    if(u<TA+P) K=TO(u);
+    else{ const s=u-TA-P, camEnd=TO(TA+P).cam, xtd=vd*vd/(2*ad);
+      if(s<AP+RO){ let xp, alt=0, pitch, v;
+        if(s<AP){ const q=1-s/AP; xp=xtd+29*(AP-s); alt=9*Math.pow(q,1.7); pitch=(1.5+4.5*sstep(AP-2.2,AP,s))*D2R; v=29; }
+        else{ const r=s-AP; xp=xtd-(vd*r-.5*ad*r*r); pitch=6*(1-sstep(0,1.6,r))*D2R; v=vd-ad*r; }
+        K={xw:xp, alt, pitch, v, dir:-1, cam:lerp(camEnd, xp-viewM*lerp(.62,fx0,sstep(3,AP+RO,s)), sstep(0,4.5,s))}; }
+      else{ const r=sstep(0,1,(s-AP-RO)/TU); K={xw:0, alt:0, pitch:0, v:0, dir:-Math.cos(Math.PI*r), cam:-viewM*fx0}; } } }
+  const xw=K.xw, alt=K.alt, pitch=K.pitch, v=K.v, cam=K.cam, X=m=>(m-cam)*pm;
   const y1=H*(o.y1||.72), y2=H*(o.y2||.9), yc=(y1+y2)/2-h*.01;
   skyBase(ctx,w,hz,env,t);
   const sxp=w*lerp(.1,.9,clamp((env.az-60)/240,0,1)); sunDisc(ctx,sxp,hz-(env.el/38)*hz,Math.max(3,h*.035),env,hz);
@@ -159,7 +172,7 @@ function drawTakeoff(cv,env,t,tt,o){
   let g=ctx.createLinearGradient(0,hz,0,y1); g.addColorStop(0,css(mix(haze,mul([112,124,80],env.amb),.55))); g.addColorStop(1,G([104,118,66],.95)); ctx.fillStyle=g; ctx.fillRect(0,hz,w,y1-hz+1);
   // asfalto
    ctx.save(); ctx.beginPath(); ctx.rect(0,y1,w,y2-y1); ctx.clip();
-  const sc=(y2-y1)/64; ctx.save(); ctx.translate(-((cam*pm)%(256*sc*4)),y1); ctx.scale(sc*4,sc); ctx.fillStyle=ctx.createPattern(asph,"repeat"); ctx.fillRect(0,0,(w/(sc*4))+260,64); ctx.restore();
+  const sc=(y2-y1)/64; ctx.save(); { const P=256*sc*4; ctx.translate(-((((cam*pm)%P)+P)%P),y1); } ctx.scale(sc*4,sc); ctx.fillStyle=ctx.createPattern(asph,"repeat"); ctx.fillRect(0,0,(w/(sc*4))+260,64); ctx.restore();
   ctx.fillStyle=css(mul(tint([36,38,42],mix([255,255,255],env.sun,.25)),1),lerp(.92,.62,env.amb)); ctx.fillRect(0,y1,w,y2-y1);
   ctx.fillStyle="rgba(12,12,14,.34)"; for(let m=Math.floor(cam/90)*90;m<cam+viewM+90;m+=90){ ctx.fillRect(X(m+8),yc-h*.022,46*pm,h*.012); ctx.fillRect(X(m+30),yc+h*.014,38*pm,h*.011); }
   const wl=css(mul(tint([236,236,230],mix([255,255,255],env.sun,.3)),.3+.7*env.amb)); ctx.fillStyle=wl;
@@ -171,14 +184,14 @@ function drawTakeoff(cv,env,t,tt,o){
   ctx.strokeStyle=G([120,134,74],.9); ctx.lineWidth=1; ctx.beginPath(); for(let m=Math.floor(cam/1.5)*1.5;m<cam+viewM+2;m+=1.5){ const x=X(m), q=noise(m*.31,.7); ctx.moveTo(x,y2+h*.02+q*h*.07); ctx.lineTo(x+h*.012,y2+h*.02+q*h*.07-h*.03*q); } ctx.stroke();
   // sombra
   const px=X(xw), py=yc-alt*pm, s=pm*.083, sh=clamp(1-alt/14,0,1);
-  if(env.el>1||env.night>.5){ const off=env.el>1?clamp(1/Math.tan(Math.max(env.el,6)*D2R),0,4)*(env.az<180?1:-1)*pm*.8:0; ctx.fillStyle=`rgba(0,0,0,${(.34*env.amb+.08)*sh*(1-.5*sstep(.6,1,env.cover))})`; ctx.beginPath(); ctx.ellipse(px+6*s+off*.25+alt*pm*.3,yc+h*.012,48*s*(1+alt*.03),Math.max(1.4,2.6*s),0,0,7); ctx.fill(); }
+  if(env.el>1||env.night>.5){ const off=env.el>1?clamp(1/Math.tan(Math.max(env.el,6)*D2R),0,4)*(env.az<180?1:-1)*pm*.8:0; ctx.fillStyle=`rgba(0,0,0,${(.34*env.amb+.08)*sh*(1-.5*sstep(.6,1,env.cover))})`; ctx.beginPath(); ctx.ellipse(px+6*s*K.dir+off*.25+alt*pm*.3*K.dir,yc+h*.012,48*s*(1+alt*.03),Math.max(1.4,2.6*s),0,0,7); ctx.fill(); }
   // luces de borde y manga
   for(let m=Math.floor(cam/60)*60;m<cam+viewM+60;m+=60){ const x=X(m+15), y=y2-h*.004; ctx.fillStyle="#3a3d42"; ctx.fillRect(x-1,y-h*.02,2,h*.02);
     const A=.25+.75*sstep(.1,.6,env.night), q=ctx.createRadialGradient(x,y-h*.024,0,x,y-h*.024,h*(.02+.07*env.night)); q.addColorStop(0,`rgba(255,246,214,${A})`); q.addColorStop(1,"rgba(255,246,214,0)"); ctx.fillStyle=q; ctx.beginPath(); ctx.arc(x,y-h*.024,h*(.02+.07*env.night),0,7); ctx.fill(); }
   { const m0=Math.floor((cam+40)/260)*260+120, x=(m0-cam)*pm, yb=hz+h*.085, ph=5*pm*.8; ctx.strokeStyle=css(mul([210,214,220],env.amb)); ctx.lineWidth=Math.max(1,h*.006); ctx.beginPath(); ctx.moveTo(x,yb); ctx.lineTo(x,yb-ph); ctx.stroke();
     const fl=Math.sin(t*5)*.12; ctx.fillStyle=css(mul([232,96,30],.35+.65*env.amb)); ctx.beginPath(); ctx.moveTo(x,yb-ph); ctx.lineTo(x+2.6*pm,yb-ph+pm*(.5+fl)); ctx.lineTo(x+2.6*pm,yb-ph+pm*(.9+fl)); ctx.lineTo(x,yb-ph+pm*.8); ctx.closePath(); ctx.fill(); }
   // avión
-  const fade=sstep(0,.8,tt)*(1-sstep(T-1,T-.2,tt))*(tt<T?1:0); ctx.globalAlpha=fade; plane(ctx,px,py,s,pitch,env,t); ctx.globalAlpha=1;
+  const fade=o.cycle?1:sstep(0,.8,tt)*(1-sstep(T-1,T-.2,tt))*(tt<T?1:0); ctx.globalAlpha=fade; if(px>-80*s&&px<w+80*s&&py>-40*s) plane(ctx,px,py,s,pitch,env,t,K.dir); ctx.globalAlpha=1;
   // calima sobre el horizonte
   const hg=ctx.createLinearGradient(0,hz-h*.1,0,hz+h*.05); hg.addColorStop(0,css(haze,0)); hg.addColorStop(.7,css(haze,.4)); hg.addColorStop(1,css(haze,0)); ctx.fillStyle=hg; ctx.fillRect(0,hz-h*.1,w,h*.15);
   return {kt:v*1.944, alt:alt*3.281};
@@ -190,10 +203,10 @@ const still=()=>!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduc
 const fit=(c)=>{ const dpr=Math.min(2,window.devicePixelRatio||1), w=Math.round(c.clientWidth*dpr), h=Math.round(c.clientHeight*dpr); if(!w||!h) return false; if(c.width!==w||c.height!==h){ c.width=w; c.height=h; c._ck=""; } return true; };
 let cover=.25;
 function header(c,o){
-  if(!c||c._on) return; c._on=1; const CY=30; let t0=performance.now(), last=0;
+  if(!c||c._on) return; c._on=1; let t0=performance.now(), last=0;
   const tick=now=>{ requestAnimationFrame(tick); if(document.hidden||now-last<33) return; last=now; if(!fit(c)) return;
-    const st=still(), tt=st?9:((now-t0)/1000)%CY, env=envAt(new Date(),cover);
-    try{ drawTakeoff(c,env,now/1000,tt,typeof o==="function"?o(c.clientHeight):o); const k=Math.max(1-sstep(0,.5,tt),sstep(CY-.5,CY,tt)); if(k>0&&!st){ const x=c.getContext("2d"); x.fillStyle=css(mix(env.hor,[10,20,34],.5),k); x.fillRect(0,0,c.width,c.height); } }catch(e){ if(!c._err){ c._err=1; console.error("F0Real",e); } }
+    const st=still(), tt=st?9:(now-t0)/1000, env=envAt(new Date(),cover), oo=Object.assign({cycle:true},typeof o==="function"?o(c.clientHeight):o);
+    try{ drawTakeoff(c,env,now/1000,tt,oo); }catch(e){ if(!c._err){ c._err=1; console.error("F0Real",e); } }
     if(st) last=now+15000; };
   requestAnimationFrame(tick);
 }
