@@ -2715,7 +2715,7 @@ function answered(it,i){
   if(it.k==="match") return [...document.querySelectorAll(`select[data-i="${i}"]`)].every(s=>s.value);
   return !!document.querySelector(`input[name=r${i}]:checked`);
 }
-function updProg(){ $("#progress").textContent = `Respondidas ${current.filter((it,i)=>answered(it,i)).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${SEN_LEN[curLen].label.toLowerCase()}`:MODE_LABEL[curMode]}`; }
+function updProg(){ $("#progress").textContent = `Respondidas ${current.filter((it,i)=>answered(it,i)).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${SEN_LEN[curLen].label.toLowerCase()}`:(MODE_LABEL[curMode]||"Test")}`; }
 function refText(it){ const keys = it.ref ? [it.ref] : (LO_REFS[it.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>finishTest(false));
 async function finishTest(timeout){

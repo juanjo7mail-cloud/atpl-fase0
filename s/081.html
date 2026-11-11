@@ -2705,7 +2705,7 @@ function examBar(){
 // la tarjeta de arriba de Apuntes enseña solo la regla, no el apunte entero
 function shortRule(ref){
   const t = (REFS[ref]||"").trim();
-  const parts = t.split(/(?<=\.)\s+/);
+  const parts = t.replace(/\.\s+/g,".\u0001").split("\u0001");
   let out = "";
   for(const p of parts){ if(out && (out+" "+p).length > 185) break; out = out ? out+" "+p : p; }
   return out || t.slice(0,185);

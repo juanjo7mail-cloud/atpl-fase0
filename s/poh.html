@@ -694,8 +694,9 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
   <div id="setup" class="card">
     <b>Elige el test</b>
     <div style="margin-top:8px">
-      <label class="mode"><input type="radio" name="mode" value="plane" checked> Test por avión <small><span class="row" style="margin-top:6px"><select id="acSel"></select></span>Solo preguntas de ese avión: 30 por prioridad.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="plane" checked> Test por avión <small><span class="row" style="margin-top:6px"><select id="acSel"></select></span>Solo preguntas de ese avión: 20 por prioridad.</small></label>
       <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 20 preguntas · 45 min <small>Tus fallos y lo que más pesa, de los tres aviones.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small>Las preguntas que fallaste la última vez, de los tres aviones.</small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
     </div>
     <label class="row" style="margin:10px 0 4px"><input type="checkbox" id="incTrial"> Incluir temario aún no dado</label>
@@ -1390,6 +1391,7 @@ function selectSenasa(lenKey, inc, atpl){
 function selectQuestions(mode, inc, lo, atpl){
   const st = stats(), plane = mode==="plane";
   const pool = BANK.filter(q=> (inc || q[2]!=="c") && (plane ? acOf(q).includes($("#acSel").value) : (atpl || isGiven(q))));
+  if(mode==="wrong") return shuffle(BANK.filter(q=>(inc || q[2]!=="c") && (st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
   // por avión o adaptativo (30): por prioridad, como mucho 6 (o 5) de un mismo tema y una sola variante por pregunta original
   const N = Math.min(20, pool.length), MAXLO = plane ? 6 : 5;
@@ -1650,7 +1652,7 @@ $("#startBtn").addEventListener("click",()=>{
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
-function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="plane" ? "Test del "+AC_NAME[curAc] : {adaptive:"Adaptativo",lo:"Un tema"}[curMode]}`; }
+function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="plane" ? "Test del "+AC_NAME[curAc] : ({adaptive:"Adaptativo",lo:"Un tema",wrong:"Mis fallos"}[curMode]||"Test")}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>finishTest(false));
 async function finishTest(timeout){

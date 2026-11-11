@@ -2689,7 +2689,7 @@ $("#startBtn").addEventListener("click",()=>{
   updProg(); window.scrollTo({top:0});
 });
 const MODE_NAME = {adaptive:"Adaptativo",fase0:"Fase 0",calc:"Solo cálculos",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"SENASA"};
-function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curSubj} ${SEN_LEN(curSubj)[curLen].label.toLowerCase()}`:MODE_NAME[curMode]}`; }
+function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curSubj} ${SEN_LEN(curSubj)[curLen].label.toLowerCase()}`:(MODE_NAME[curMode]||"Test")}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[subOf(q.lo)]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>{
   const un = current.filter(q=>q.ans===null).length;

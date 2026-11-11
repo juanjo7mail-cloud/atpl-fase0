@@ -3297,7 +3297,7 @@ $("#startBtn").addEventListener("click",()=>{
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
-function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${(curMode==="senasa"?`Simulacro SENASA ${SEN_LEN[curLen].label.toLowerCase()}`:{adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un LO",all:"Banco completo"}[curMode])}`; }
+function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${(curMode==="senasa"?`Simulacro SENASA ${SEN_LEN[curLen].label.toLowerCase()}`:{adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un LO",all:"Banco completo"}[curMode]||"Test")}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>finishTest(false));
 async function finishTest(timeout){

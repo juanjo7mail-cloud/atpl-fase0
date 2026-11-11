@@ -4711,7 +4711,7 @@ function renderFailTop(){
   const el=$("#failTop"); if(!el) return;
   const tc = topConcepts().filter(c=>!c.recent).slice(0,3);
   $("#failCard").hidden = !tc.length;
-  el.innerHTML = tc.map(c=>{ const lo=Object.entries(c.loc).sort((a,b)=>b[1]-a[1])[0][0], ref=Object.entries(c.refs).sort((a,b)=>b[1]-a[1])[0][0];
+  el.innerHTML = tc.map(c=>{ const lo=(Object.entries(c.loc).sort((a,b)=>b[1]-a[1])[0]||[[...c.lo][0]||""])[0], ref=(Object.entries(c.refs).sort((a,b)=>b[1]-a[1])[0]||[""])[0];
     return `<div class="fitem"><div class="crow"><b>${esc(c.name)}</b><span class="muted">${c.fails} fallos de ${c.n}</span></div><div class="muted small">${esc(loLabel(lo))}</div><p>${CONCEPT_RULE[c.name]||esc(REFS[ref]||"")}</p><div class="row">${c.vis?`<button class="btn sec" data-go="${c.vis}">Ver el visual</button>`:''}<button class="btn sec" data-go="lo-${lo}">Ir al tema</button></div></div>`; }).join("");
   el.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>openNotes(b.dataset.go)));
 }
@@ -4925,7 +4925,7 @@ $("#startBtn").addEventListener("click",()=>{
   updProg(); window.scrollTo({top:0});
 });
 const MODE_NAME = {adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro SENASA",calc:"Solo cálculo",slides:"Presentaciones + trial"};
-function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curEx==="both"?"061 + 062":curEx} · ${senLen(curEx,curLen).label.toLowerCase()}`:MODE_NAME[curMode]}`; }
+function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curEx==="both"?"061 + 062":curEx} · ${senLen(curEx,curLen).label.toLowerCase()}`:(MODE_NAME[curMode]||"Test")}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>finishTest(false));
 async function finishTest(timeout){

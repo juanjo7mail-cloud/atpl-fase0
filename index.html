@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="423883958819";</script>
+<script>window.F0_BUILD="6b77d6ee0ad7";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -84,7 +84,7 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 .arr:hover svg{transform:scale(1.2)}
 .menu{position:fixed;z-index:15;left:max(8px,env(safe-area-inset-left,0px));width:min(360px,calc(100vw - 16px));max-height:calc(100dvh - 130px);overflow:auto;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 34px rgba(10,20,30,.35);padding:6px}
 .menu[hidden]{display:none}
-.menu button{display:grid;grid-template-columns:96px 1fr auto;gap:2px 10px;align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:7px;padding:9px 10px;cursor:pointer;min-height:44px}
+.menu button{display:grid;grid-template-columns:122px 1fr auto;gap:2px 10px;align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:7px;padding:9px 10px;cursor:pointer;min-height:44px}
 .menu button:hover,.menu button:focus-visible{background:var(--accentbg)}
 .menu button[aria-current="true"]{background:var(--accentbg);box-shadow:inset 3px 0 0 var(--accent)}
 .menu .mc{font:700 17px/1.1 var(--display);color:var(--accent);white-space:nowrap}
@@ -209,6 +209,7 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 @media (max-width:640px){.vsw .lbs{display:none}}
 @media (max-width:430px){.brand .bt{display:none}.pnl .g .btns button:not(.go){flex:1;padding:6px 4px;font-size:12px}}
 @media (max-width:640px){.vsw .lb{display:none}.vsw{padding:3px 6px}}
+@media (max-width:430px){.row1:has(#onBtn:not([hidden])) .brand .bt small{display:none}}
 #panel{display:none}
 .vp #grid,.vp #kpis{display:none}.vp #panel{display:block}
 .pnl{position:relative;border-radius:18px;padding:16px 16px 20px;background:radial-gradient(120% 90% at 50% 0%,#233647 0,#14212d 55%,#0c151d 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 1px #0a1118,0 14px 40px rgba(10,23,36,.35);isolation:isolate;color:#E3ECF2}
@@ -964,7 +965,7 @@ function renderDash(){
       ${flight(m)}
       <div class="stats">${m.n?`<span>Último <b>${m.last} %</b></span><span>Media 5 últimos <b>${m.avg5} %</b></span><span><b>${m.n}</b> tests</span>`:`<span>Aún no has hecho ningún test</span>`}</div>
       <div class="acts">
-        <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo · 30</button>
+        <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo · ${s.k==="090"?30:20}</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Ir a la asignatura</button>
         <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">Más tipos de test</button>
         ${dueCount(s.k)?`<button class="btn ghost wide" type="button" data-review="${s.k}" title="${dueCount(s.k)} pendientes de hoy · se completa hasta 20 con tus falladas y preguntas nuevas">🔁 Repasar hoy · 20</button>`:""}

@@ -3715,7 +3715,7 @@ $("#startBtn").addEventListener("click",()=>{
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
-function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curEx==="both"?"021 + 022":curEx} · ${senLen(curEx,curLen).label.toLowerCase()}`:MODE_NAME[curMode]}`; }
+function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curEx==="both"?"021 + 022":curEx} · ${senLen(curEx,curLen).label.toLowerCase()}`:(MODE_NAME[curMode]||"Test")}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 function visLink(id){ const c = CONCEPT_OF[id]; return c && c[1] ? ` <button class="linkbtn" data-go="${c[1]}">ver el visual</button>` : ""; }
 $("#finishBtn").addEventListener("click", ()=>finishTest(false));
