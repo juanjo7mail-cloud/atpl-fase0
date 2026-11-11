@@ -450,7 +450,8 @@ function brief(fetchWx){
     const m=parseMetar(r.metar.raw), now=new Date(), od=obsDate(m,now), sv=AD; AD=AD0; let st; try{ st=adState(now); }finally{ AD=sv; }
     const w=m.wind, wt=!w?"—":(w.spd===0&&!w.gst?"Viento calma":(w.vrb?"VRB":pad3(w.dir)+"º")+" "+w.spd+(w.gst?"G"+w.gst:"")+" kt"),
       vv=m.vis==null||m.vis>=9999?"≥10 km":(m.vis>=1000?(Math.round(m.vis/100)/10)+" km":m.vis+" m");
-    return {cat:flightCat(m),temp:m.temp,wind:wt,vis:vv,qnh:m.qnh,ad:st.adOpen,adTxt:st.adOpen?"abierto":"cerrado",age:od?Math.round((now-od)/6e4):null};
+    const cv=(m.raw.split(/\s+(?:TEMPO|BECMG|NOSIG|RMK)\b/)[0].match(/\b(FEW|SCT|BKN|OVC)\d{3}/g)||[]).reduce((x,c)=>Math.max(x,{FEW:.25,SCT:.45,BKN:.7,OVC:1}[c.slice(0,3)]),0);
+    return {cov:cv,cat:flightCat(m),temp:m.temp,wind:wt,vis:vv,qnh:m.qnh,ad:st.adOpen,adTxt:st.adOpen?"abierto":"cerrado",age:od?Math.round((now-od)/6e4):null};
   });
 }
 function load(){

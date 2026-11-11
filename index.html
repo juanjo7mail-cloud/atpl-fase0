@@ -17,12 +17,13 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="afe26bda10d9";</script>
+<script>window.F0_BUILD="b004dd7e292d";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
 <script src="radio.js"></script>
 <script src="chat.js"></script>
+<script src="real.js"></script>
 <script src="ops.js"></script>
 <script>window.F0Sim=(function(){var el=null,p=null,me;return me={render:function(e){el=e;e.innerHTML="<p style=\"padding:24px;color:var(--muted)\">Cargando el Sim…</p>";if(!p){p=new Promise(function(ok,ko){var s=document.createElement("script");s.src="sim.js";s.onload=ok;s.onerror=function(){p=null;s.remove();ko();};document.head.appendChild(s);});}p.then(function(){if(el&&window.F0Sim!==me)window.F0Sim.render(el);},function(){if(el)el.innerHTML="<p style=\"padding:24px\">No se pudo cargar el Sim. Revisa la conexión y vuelve a abrir la pestaña.</p>";});},leave:function(){el=null;}};})();</script>
 <script src="hangar.js"></script>
@@ -107,7 +108,8 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 #brief .b1,#brief .b2{display:contents}
 #brief button{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;width:100%;text-align:left;border:1px solid #6B4A10;border-radius:12px;padding:9px 14px;cursor:pointer;color:#fff;background:linear-gradient(180deg,#14304A,#0B1B2E);position:relative;overflow:hidden;font:600 14.5px/1.25 var(--body);min-height:48px}
 #brief .sky{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;border-radius:inherit;background:var(--sky,transparent);transition:background 2s}
-#brief .sky::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,14,28,.62),rgba(6,14,28,.3) 60%,rgba(6,14,28,.12))}
+#brief .sky canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#brief .sky::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,14,28,.55),rgba(6,14,28,.22) 55%,rgba(6,14,28,.04))}
 #brief .sky .star{position:absolute;border-radius:50%;background:#fff;opacity:var(--st,0)}
 #brief .sky .orb{position:absolute;width:38px;height:38px;margin:0 0 -19px -19px;border-radius:50%;transition:left 20s linear,bottom 20s linear,opacity 1s}
 #brief .sky .orb.moon{width:30px;height:30px;margin:0 0 -15px -15px;box-shadow:0 0 14px rgba(244,241,222,.35)}
@@ -329,7 +331,7 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 @media (prefers-reduced-motion:reduce){.rbf{animation:none;transform:rotate(-3deg)}#lgForm.pulled .rbf{animation:none}}
 /* ---- pista de aeropuerto en la cabecera ---- */
 .top .art{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block}
-.top .veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--head) 0,color-mix(in srgb,var(--head) 70%,transparent) 30%,color-mix(in srgb,var(--head) 30%,transparent) 100%),linear-gradient(180deg,transparent 38%,color-mix(in srgb,var(--head) 88%,transparent) 62%)}
+.top .veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(8,18,32,.8) 0,rgba(8,18,32,.4) 280px,rgba(8,18,32,.06) 46%,rgba(8,18,32,.06) 60%,rgba(8,18,32,.5) 100%),linear-gradient(180deg,transparent 0 var(--r1,48px),color-mix(in srgb,var(--head) 92%,transparent) calc(var(--r1,48px) + 2px))}
 .art .rw{position:absolute;left:0;right:0;top:5px;height:36px;background:linear-gradient(#3A556B,#27415A);border-top:1.6px solid rgba(255,255,255,.5);border-bottom:1.6px solid rgba(255,255,255,.5)}
 .art .edge{position:absolute;left:0;right:0;height:8px;background:radial-gradient(circle,#FFE08A 1.9px,transparent 2.5px) 10px 50%/38px 8px repeat-x;animation:twk 3.4s ease-in-out infinite}
 .art .e1{top:-11px}.art .e2{bottom:-11px;animation-delay:-1.7s}
@@ -481,7 +483,8 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 <div id="gaPop" class="pop" hidden role="dialog" aria-label="Galones"></div>
 <div id="onPop" hidden role="dialog" aria-label="Compañeros en línea"></div>
 <header class="top">
-  <div class="art" aria-hidden="true"><div class="rw"><i class="edge e1"></i><i class="edge e2"></i><i class="thr tl"></i><i class="thr tr"></i><i class="cl"></i><i class="tz z1"></i><i class="tz z2"></i><b class="num nl">09</b><b class="num nr">27</b><div class="fly"><i class="sh"></i><svg class="rpl" viewBox="0 0 100 34" width="72" height="24.5"><g class="gear"><path d="M52 21.5v6.2M16 21.5v5.6" stroke="#9FB0BF" stroke-width="1.6" stroke-linecap="round"/><circle cx="52" cy="28.8" r="2.5" fill="#0F2233"/><circle cx="16" cy="28.3" r="2.1" fill="#0F2233"/></g><path d="M84 13.6 99.5 15.2 98.8 17.4 83 16.6z" fill="#B8C7D4"/><path d="M79.5 11.4 89 1.2H96.2L93.8 11.4z" fill="#C8102E"/><path d="M4.5 17.8c0-5.2 5.1-7.6 12.5-7.6h60c8 0 15.5 1.2 21 3.4v4.2c0 3.2-3.5 5-9 5H15c-6.500 0-10.500-1.200-10.500-5z" fill="#fff"/><path d="M5.200 19.500H97.800v1.700H5.700z" fill="#C8102E"/><path d="M9.400 12.600q3.200-1.900 8.200-1.900v3.500H8.300z" fill="#14304A"/><path d="M23 14.400H76" stroke="#14304A" stroke-width="1.9" stroke-dasharray="1.700 2.800" stroke-linecap="round"/><path d="M37 17.400H60L68 27.800H59.500z" fill="#DCE5EC" stroke="#9FB3C4" stroke-width=".6" stroke-linejoin="round"/><rect x="41" y="21.600" width="14" height="6.200" rx="3.100" fill="#8FA5B8"/><ellipse cx="42.200" cy="24.700" rx="1.600" ry="2.900" fill="#14304A"/><circle class="stb" cx="93.500" cy="2" r="1.400" fill="#fff"/><circle class="stb" cx="46" cy="22.800" r="1.100" fill="#FF4D4D"/></svg></div></div><i class="twy"></i></div><div class="veil"></div>
+  <canvas class="art" id="hdrCv" aria-hidden="true"></canvas>
+  <div class="veil"></div>
   <div class="row1">
     <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(-7 32 32)"><rect x="3" y="18" width="58" height="32" rx="7" fill="#8E0B20"/><rect x="3" y="14" width="58" height="32" rx="7" fill="#C8102E"/><rect x="8" y="19" width="48" height="22" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="1.6" stroke-dasharray="3.2 2.4"/><circle cx="15" cy="30" r="5" fill="#fff"/><circle cx="15" cy="30" r="2.4" fill="#8E0B20"/><text x="39" y="37" font-family="Arial Black,Impact,Arial,sans-serif" font-weight="900" font-size="15.5" letter-spacing=".5" text-anchor="middle" fill="#fff">SBF</text></g></svg><span class="bt">ATPL<small>by Juanjo Ruano</small></span></div>
     <button class="vsw" id="vsw" type="button" role="switch" aria-checked="false" aria-label="Vista de Inicio: tarjetas o instrumentos" title="Cambiar la vista de Inicio"><span class="tgl"><i class="nut"></i><i class="lev"></i></span><span class="lbs"><span class="lb on">Instrumentos</span><span class="lb off">Tarjetas</span></span></button>
@@ -941,17 +944,15 @@ function dueCount(k){
 
 /* Tarjeta compacta «BRIEFING» en INICIO (solo en modo prueba): resumen de LECU en una línea → abre la pestaña */
 let BR={t:0,d:null,busy:false};
+try{ if(window.F0Real) window.F0Real.header($("#hdrCv"),h=>{ const r=$(".top .row1"), y=r?r.offsetTop:0, v=$(".top .veil"); if(v&&v._y!==y){ v._y=y; v.style.setProperty("--r1",(y+48)+"px"); } return {hz:(y+14)/h,y1:(y+28)/h,y2:(y+45)/h,pm:7.2/h,x0:.28,x1:.44}; }); }catch(e){}
 $("#brief").addEventListener("click",e=>{ if(e.target.closest("button[data-v]")) show("ops"); });
 function zulu(){ return new Date().toISOString().slice(11,16)+" Z"; }
 function skyApply(){
   const z=$("#brief .bz"); if(z) z.textContent=zulu();
-  const el=$("#brief .sky"); if(!el||!(window.F0Ops&&window.F0Ops.skyCard)) return;
-  let k; try{ k=window.F0Ops.skyCard(new Date()); }catch(e){ return; }
-  if(!el.firstChild) el.innerHTML=k.stars+'<div class="orb sun"></div><div class="orb moon"></div>';
-  el.style.setProperty("--sky",k.bg); el.style.setProperty("--st",k.st);
-  const put=(o,a)=>{ o.style.left=a.l+"%"; o.style.bottom=a.b+"%"; o.style.opacity=a.o; };
-  const sun=el.querySelector(".sun"), moon=el.querySelector(".moon");
-  put(sun,k.sun); sun.style.background=k.sun.bg; put(moon,k.moon); if(moon.dataset.s!==k.moon.svg){ moon.innerHTML=k.moon.svg; moon.dataset.s=k.moon.svg; }
+  const el=$("#brief .sky"); if(!el||!window.F0Real) return;
+  if(!el.firstChild) el.innerHTML="<canvas></canvas>";
+  if(BR.d&&BR.d.cov!=null) window.F0Real.setCover(BR.d.cov);
+  window.F0Real.sky(el.firstChild);
 }
 setInterval(()=>{ if(!document.hidden) skyApply(); },60000);
 function drawBrief(){
