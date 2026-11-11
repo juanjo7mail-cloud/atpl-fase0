@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Fase 0">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="4f445f6aa909";</script>
+<script>window.F0_BUILD="f207c8499c16";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -162,6 +162,22 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:16px;row-gap:16px}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:12px;min-width:0;box-shadow:0 1px 2px rgba(20,48,74,.05)}
 .card .acts{align-self:start}
+/* ---- barra de pestañas compacta: una sola línea ---- */
+.tabbar{border-top:1px solid rgba(255,255,255,.07)}
+.tabbar .tabs{gap:0;align-items:stretch}
+.tabbar .tab{flex-direction:row;align-items:center;gap:7px;height:38px;padding:0 11px;border-bottom:2px solid transparent;border-radius:6px 6px 0 0;transition:background .15s,color .15s}
+.tabbar .tab:hover{background:rgba(255,255,255,.06)}
+.tabbar .tab b{font:700 14.5px/1 var(--display);letter-spacing:.05em}
+.tabbar .tab span{font:500 12.5px/1 var(--body);color:#9FB4C6}
+.tabbar .tab .dot{margin-left:0;width:6px;height:6px;order:3}
+.tabbar .tab[aria-selected="true"]{background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.03));border-bottom-color:#5CC8C8}
+.tabbar .tab[aria-selected="true"] span{color:#E6EEF5}
+.tabbar .tab.solo b{font-size:13px;letter-spacing:.14em}
+.tabbar .tab.brief,.tabbar .tab.simt{padding:0 5px}
+.tabbar .tab.brief .bf,.tabbar .tab.simt .sm{height:24px;border-radius:6px;font-size:13px;letter-spacing:.1em;padding:0 9px}
+.tabbar .tab.brief[aria-selected="true"]{border-bottom-color:#E8B14A}
+.tabbar .tab.simt + .tab{margin-left:7px;box-shadow:-1px 0 0 rgba(255,255,255,.14)}
+@media (max-width:640px){.tabbar .tab{height:36px;padding:0 9px}.tabbar .tab span{font-size:12px}}
 /* ---- indicadores de Inicio: módulos de panel con ventana retroiluminada ---- */
 .kpi{position:relative;border:1px solid #0a0e13;border-radius:9px;padding:11px 8px 9px;color:#c7d2dc;
   background:radial-gradient(circle at 9px 9px,#8d97a3 0 1.6px,#1b222b 2px 3.4px,transparent 3.8px),radial-gradient(circle at calc(100% - 9px) 9px,#8d97a3 0 1.6px,#1b222b 2px 3.4px,transparent 3.8px),radial-gradient(circle at 9px calc(100% - 9px),#8d97a3 0 1.6px,#1b222b 2px 3.4px,transparent 3.8px),radial-gradient(circle at calc(100% - 9px) calc(100% - 9px),#8d97a3 0 1.6px,#1b222b 2px 3.4px,transparent 3.8px),linear-gradient(180deg,#2c3743,#18202a);
