@@ -419,6 +419,80 @@ const FB={
  turn:"<b>Viraje nivelado</b><ul><li>Factor de carga n = 1 / cos φ: 1,15 a 30°, 1,41 a 45°, 2 a 60°.</li><li>La velocidad de pérdida crece con √n.</li><li>A más velocidad con el mismo alabeo: más radio y menos régimen de viraje.</li></ul>",
  polar:"<b>Polar y mejor planeo</b><ul><li>El mejor planeo se da a L/D máximo: la tangente a la polar desde el origen.</li><li>Más peso: mismo alcance en aire en calma, pero a más velocidad y con más tasa de descenso.</li><li>Viento en cara acorta el alcance; viento en cola lo alarga.</li></ul>",
  stab:"<b>Estabilidad longitudinal</b><ul><li>CG por delante del punto neutro: estable (vuelve sola), mandos más duros.</li><li>CG en el punto neutro: neutra.</li><li>CG por detrás: inestable.</li></ul>"};
+/*F3*/
+/* ---------- Meteorología · viento, rumbo y deriva ---------- */
+Object.assign(TTL,{wind:"Lámina interactiva · el viento y el avión"});
+Object.assign(CAP,{wind:"Vista desde arriba, con el norte arriba. El viento se nombra por la dirección de la que VIENE. Veer: rola en sentido horario (270° → 300°). Back: rola en sentido antihorario (270° → 240°)."});
+Object.assign(FB,{wind:"<b>Viento, rumbo y deriva</b><ul><li>El viento se nombra por donde viene: 270° viene del oeste y empuja hacia el este.</li><li>Veer = rola en sentido horario; back = antihorario.</li><li>Viento por la derecha: deriva a la izquierda; se corrige con el morro a la derecha (hacia el viento).</li><li>De cara: baja la velocidad sobre el suelo. De cola: sube.</li></ul>"});
+Object.assign(HTML,{wind:`<figure><canvas data-i="cv" height="420" role="img" aria-label="Avión visto desde arriba con el viento, el rumbo y la trayectoria"></canvas>
+<div class="ctl"><label>Viento de <input data-i="wd" type="range" min="0" max="359" step="1" value="330"><output data-i="wdO"></output></label><label>Fuerza <input data-i="ws" type="range" min="0" max="50" step="1" value="25"><output data-i="wsO"></output></label><label>Ruta <input data-i="tk" type="range" min="0" max="359" step="1" value="90"><output data-i="tkO"></output></label></div>
+<div class="ctl" style="border-top:1px solid #22344a"><button data-i="back" type="button">↺ Back 30°</button><button data-i="veer" type="button">↻ Veer 30°</button><button data-i="pH" type="button">De cara</button><button data-i="pT" type="button">De cola</button><button data-i="pR" type="button">Por la derecha</button><button data-i="pL" type="button">Por la izquierda</button><button data-i="fix" type="button" aria-pressed="true">Corregir deriva</button></div>
+<div class="read"><div>El viento entra<b data-i="rRel"></b></div><div>Rumbo (heading)<b data-i="rH"></b></div><div>Trayectoria (track)<b data-i="rT"></b></div><div data-i="dB">Deriva / corrección<b data-i="rD"></b></div><div>Velocidad sobre el suelo<b data-i="rG"></b></div></div></figure>`});
+Object.assign(LAB,{
+ wind(root,E){
+  const c=E.cv, x=c.getContext("2d"), TAS=100, R=Math.PI/180, n3=v=>String(Math.round(((v%360)+360)%360)||360).padStart(3,"0");
+  let wd=+E.wd.value, tgt=wd, fix=true, last=0, pos=[0,0], T=0, msg="", msgT=0;
+  const parts=Array.from({length:70},()=>[Math.random(),Math.random(),Math.random()]);
+  const setW=(v,m)=>{ tgt=v; if(m){ msg=m; msgT=3.2; } };
+  E.wd.addEventListener("input",()=>{ wd=tgt=+E.wd.value; });
+  E.veer.addEventListener("click",()=>setW(tgt+30,"VEER · rola en sentido horario ↻"));
+  E.back.addEventListener("click",()=>setW(tgt-30,"BACK · rola en sentido antihorario ↺"));
+  [["pH",0],["pT",180],["pR",90],["pL",-90]].forEach(p=>E[p[0]].addEventListener("click",()=>setW(+E.tk.value+p[1],"")));
+  E.fix.addEventListener("click",()=>{ fix=!fix; E.fix.setAttribute("aria-pressed",fix); pos=[0,0]; });
+  E.tk.addEventListener("input",()=>{ pos=[0,0]; });
+  const hash=(i,j)=>{ let h=(i*374761393+j*668265263)^(i*i*31); h=(h^(h>>13))*1274126177; return ((h^(h>>16))>>>0)/4294967295; };
+  const vec=(deg,len)=>[Math.sin(deg*R)*len,-Math.cos(deg*R)*len];
+  const loop=t=>{ requestAnimationFrame(loop); const dt=Math.min(.05,(t-last)/1000||0); last=t; T+=dt; if(!seen(c)||document.hidden) return;
+    const d=fit(c), W=c.width, H=c.height; if(Math.abs(tgt-wd)>.3){ wd+=clamp(tgt-wd,-55*dt,55*dt); E.wd.value=Math.round(((wd%360)+360)%360); } else { wd=tgt=((tgt%360)+360)%360; }
+    const ws=+E.ws.value, tk=+E.tk.value, rel=(((wd-tk)%360)+540)%360-180;   // viento respecto a la ruta: + por la derecha
+    const wv=vec(wd+180,ws);   // hacia donde empuja
+    let hdg, tmg, gs, wca=0;
+    if(fix){ const s=clamp(ws*Math.sin(rel*R)/TAS,-1,1); wca=Math.asin(s)/R; hdg=tk+wca; gs=TAS*Math.cos(wca*R)-ws*Math.cos(rel*R); tmg=tk; }
+    else { hdg=tk; const a=vec(hdg,TAS), g=[a[0]+wv[0],a[1]+wv[1]]; gs=Math.hypot(g[0],g[1]); tmg=Math.atan2(g[0],-g[1])/R; }
+    const drift=(((tmg-hdg)%360)+540)%360-180, gv=vec(tmg,gs), k=.9*d;   // px por kt·s
+    pos[0]+=gv[0]*dt*k; pos[1]+=gv[1]*dt*k;
+    // distancia a la ruta deseada (pasa por el origen); si se aleja mucho, se reinicia
+    const tn=vec(tk+90,1), off=pos[0]*tn[0]+pos[1]*tn[1]; if(Math.abs(off)>H*.36){ pos=[0,0]; }
+    const cx=W*.5, cy=H*.52;
+    // terreno: parcelas que se desplazan bajo el avión
+    const cs=92*d, ox=((-pos[0]%cs)+cs)%cs, oy=((-pos[1]%cs)+cs)%cs, i0=Math.floor(pos[0]/cs), j0=Math.floor(pos[1]/cs);
+    for(let i=-1;i<=Math.ceil(W/cs)+1;i++) for(let j=-1;j<=Math.ceil(H/cs)+1;j++){ const gi=i+i0-Math.floor(cx/cs), gj=j+j0-Math.floor(cy/cs), h=hash(gi,gj), h2=hash(gi+91,gj-37);
+      const col=h<.3?[96,118,62]:h<.55?[122,132,74]:h<.75?[146,138,86]:h<.9?[84,108,60]:[70,96,58]; x.fillStyle=`rgb(${col[0]+h2*14|0},${col[1]+h2*12|0},${col[2]+h2*10|0})`;
+      const px=(i-1)*cs+ox+(cx%cs), py=(j-1)*cs+oy+(cy%cs); x.fillRect(px,py,cs+1,cs+1);
+      if(h2>.55){ x.strokeStyle="rgba(40,60,30,.16)"; x.lineWidth=1*d; x.beginPath(); for(let q=1;q<6;q++){ if(h>.5){ x.moveTo(px+q*cs/6,py); x.lineTo(px+q*cs/6,py+cs); } else { x.moveTo(px,py+q*cs/6); x.lineTo(px+cs,py+q*cs/6); } } x.stroke(); }
+      x.strokeStyle="rgba(30,45,25,.35)"; x.lineWidth=1*d; x.strokeRect(px,py,cs,cs); }
+    x.fillStyle="rgba(8,16,26,.30)"; x.fillRect(0,0,W,H);
+    // ruta deseada (fija en el terreno)
+    const o=[cx-pos[0],cy-pos[1]], rv=vec(tk,W+H); x.strokeStyle="rgba(255,255,255,.85)"; x.lineWidth=2.5*d; x.setLineDash([14*d,10*d]); x.beginPath(); x.moveTo(o[0]-rv[0],o[1]-rv[1]); x.lineTo(o[0]+rv[0],o[1]+rv[1]); x.stroke(); x.setLineDash([]);
+    { const lp=vec(tk,H*.3); x.fillStyle="#fff"; x.font=`700 ${12*d}px system-ui,sans-serif`; x.textAlign="center"; x.fillText("RUTA "+n3(tk)+"°",clamp(o[0]+lp[0]+tn[0]*16*d,60*d,W-60*d),clamp(o[1]+lp[1]+tn[1]*16*d,20*d,H-12*d)); }
+    // viento: trazos que cruzan el mapa
+    if(ws>0){ const wu=vec(wd+180,1), L=(10+ws*.9)*d; x.strokeStyle="rgba(190,225,255,.55)"; x.lineWidth=1.6*d; x.lineCap="round"; x.beginPath();
+      for(const p of parts){ p[0]+=wu[0]*ws*dt*.012*(.6+p[2]); p[1]+=wu[1]*ws*dt*.012*(.6+p[2]); p[0]=(p[0]%1+1)%1; p[1]=(p[1]%1+1)%1; const px=p[0]*W, py=p[1]*H; x.moveTo(px,py); x.lineTo(px-wu[0]*L,py-wu[1]*L); } x.stroke(); }
+    // sombra y avión (apunta al rumbo)
+    const plane=(px,py,a,col,sc)=>{ x.save(); x.translate(px,py); x.rotate(a*R); x.scale(sc,sc); x.fillStyle=col; x.beginPath();
+      x.moveTo(0,-30); x.quadraticCurveTo(4.5,-24,4.5,-12); x.lineTo(34,-3); x.lineTo(34,3); x.lineTo(4.5,4); x.lineTo(3.2,20); x.lineTo(12,25); x.lineTo(12,28.5); x.lineTo(0,27); x.lineTo(-12,28.5); x.lineTo(-12,25); x.lineTo(-3.2,20); x.lineTo(-4.5,4); x.lineTo(-34,3); x.lineTo(-34,-3); x.lineTo(-4.5,-12); x.quadraticCurveTo(-4.5,-24,0,-30); x.closePath(); x.fill(); x.restore(); };
+    plane(cx+10*d,cy+14*d,hdg,"rgba(0,0,0,.28)",1.5*d); plane(cx,cy,hdg,"#f4f6f9",1.5*d);
+    x.save(); x.translate(cx,cy); x.rotate(hdg*R); x.fillStyle="#1d56aa"; x.fillRect(-51*d,-4.5*d,9*d,9*d); x.fillRect(42*d,-4.5*d,9*d,9*d); x.fillStyle="#23364b"; x.fillRect(-4*d,-27*d,8*d,9*d); x.restore();
+    // vectores: rumbo y trayectoria
+    const hv=vec(hdg,H*.3), tv=vec(tmg,H*.3*clamp(gs/TAS,.45,1.5));
+    arrow(x,d,cx,cy,hv[0],hv[1],"#ffffff","HDG "+n3(hdg)+"°"); arrow(x,d,cx,cy,tv[0],tv[1],"#ffc94d","TRK "+n3(tmg)+"°",true);
+    if(Math.abs(drift)>1.2){ const a0=(hdg-90)*R, a1=(tmg-90)*R; x.strokeStyle="#ffc94d"; x.lineWidth=2*d; x.beginPath(); x.arc(cx,cy,H*.18,a0,a1,drift<0); x.stroke(); const mv=vec((hdg+tmg)/2+(Math.abs(hdg-tmg)>180?180:0),H*.215); x.fillStyle="#ffc94d"; x.font=`700 ${13*d}px ui-monospace,Menlo,monospace`; x.textAlign="center"; x.fillText(Math.abs(Math.round(drift))+"°",cx+mv[0],cy+mv[1]+4*d); }
+    // flecha grande de viento y rosa
+    const rc=[70*d,74*d], rr=46*d; x.fillStyle="rgba(8,16,26,.78)"; x.beginPath(); x.arc(rc[0],rc[1],rr+14*d,0,7); x.fill(); x.strokeStyle="rgba(205,225,245,.5)"; x.lineWidth=1*d; x.beginPath(); x.arc(rc[0],rc[1],rr,0,7); x.stroke();
+    x.fillStyle="rgba(205,225,245,.9)"; x.font=`700 ${11*d}px system-ui,sans-serif`; x.textAlign="center"; [["N",0],["E",90],["S",180],["W",270]].forEach(q=>{ const v=vec(q[1],rr+7*d); x.fillText(q[0],rc[0]+v[0],rc[1]+v[1]+4*d); });
+    if(ws>0){ const f=vec(wd,rr-3*d), tI=vec(wd+180,rr*.55); arrow(x,d,rc[0]+f[0],rc[1]+f[1],tI[0]-f[0],tI[1]-f[1],"#8fd0ff",null); }
+    x.fillStyle="#8fd0ff"; x.font=`700 ${13*d}px ui-monospace,Menlo,monospace`; x.textAlign="left"; x.fillText("VIENTO "+n3(wd)+"° / "+ws+" kt",rc[0]+rr+22*d,rc[1]-6*d);
+    x.fillStyle="rgba(205,225,245,.85)"; x.font=`600 ${11.5*d}px system-ui,sans-serif`; x.fillText("viene del "+["N","NE","E","SE","S","SW","W","NW"][Math.round((((wd%360)+360)%360)/45)%8]+" y empuja hacia el "+["S","SW","W","NW","N","NE","E","SE"][Math.round((((wd%360)+360)%360)/45)%8],rc[0]+rr+22*d,rc[1]+12*d);
+    if(msgT>0){ msgT-=dt; x.globalAlpha=clamp(msgT,0,1); x.fillStyle="#ffc94d"; x.font=`800 ${22*d}px "Barlow Condensed","Arial Narrow",sans-serif`; x.textAlign="center"; x.fillText(msg,W/2,H-22*d); x.globalAlpha=1; }
+    if(!fix&&Math.abs(off)>18*d){ x.fillStyle="#ff8a7a"; x.font=`700 ${13*d}px system-ui,sans-serif`; x.textAlign="right"; x.fillText("Sin corregir: el viento te saca de la ruta",W-14*d,24*d); }
+    // lecturas
+    const ar=Math.abs(rel), side=rel>0?"derecha":"izquierda", where=ws===0?"Sin viento":ar<15?"De cara":ar>165?"De cola":ar>75&&ar<105?"Por la "+side:(ar<90?"De cara y por la "+side:"De cola y por la "+side);
+    E.wdO.textContent=n3(wd)+"°"; E.wsO.textContent=ws+" kt"; E.tkO.textContent=n3(tk)+"°"; E.rRel.textContent=where; E.rH.textContent=n3(hdg)+"°"; E.rT.textContent=n3(tmg)+"°"; E.rG.textContent=Math.round(gs)+" kt";
+    E.rD.textContent=fix?(Math.abs(wca)<.5?"0°":"WCA "+Math.abs(Math.round(wca))+"° a la "+(wca>0?"derecha":"izquierda")):(Math.abs(drift)<.5?"0°":"Deriva "+Math.abs(Math.round(drift))+"° a la "+(drift>0?"derecha":"izquierda")); E.dB.className=(!fix&&Math.abs(drift)>=.5)?"bad":""; };
+  requestAnimationFrame(loop);
+ }
+});
+/*F3END*/
 function fail(L,e){ if(!L||L.dead) return; L.dead=true; try{ console.error("F0Lab",L.k,e); }catch(_){} try{ if(L.rnd){ L.rnd.dispose(); L.rnd.forceContextLoss&&L.rnd.forceContextLoss(); } }catch(_){}
   L.el.innerHTML='<p class="lt">'+TTL[L.k]+'</p><div class="fb">'+(FB[L.k]||"")+'<p class="fbn">La lámina interactiva no se ha podido mostrar en este dispositivo. <button type="button">Reintentar</button></p></div>';
   const b=L.el.querySelector("button"); if(b) b.addEventListener("click",()=>{ L.el._lab=0; build(L.el); }); }
