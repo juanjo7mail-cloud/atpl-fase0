@@ -32,6 +32,7 @@ const CSS=`
 .f0lab .ctl button[aria-pressed="true"]{background:#ffc94d;border-color:#ffc94d;color:#1b1608}
 .f0lab .ctl button:focus-visible,.f0lab .ctl input:focus-visible{outline:2px solid #ffc94d;outline-offset:2px}
 .f0lab .read{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:#22344a;font:500 12px/1.2 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#9fb3c8}
+.f0lab .dx{background:#0f1b29;color:#dbe6f1;padding:10px 14px;border-top:1px solid #22344a;font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:3em}.f0lab .dx b{color:#ffc94d}
 .f0lab .read div{background:#0f1b29;padding:9px 12px}.f0lab .read b{display:block;font-size:19px;font-weight:600;color:#fff;font-variant-numeric:tabular-nums}
 .f0lab .read .bad b{color:#ff8a7a}.f0lab .read .good b{color:#8df0b4}
 .f0lab .v3{position:relative;height:380px;background:linear-gradient(180deg,#0e2136,#0a1727);touch-action:none;cursor:grab}
@@ -493,6 +494,219 @@ Object.assign(LAB,{
  }
 });
 /*F3END*/
+/*F2*/
+/* ---------- Fase 2 · AGK: giróscopo 3D, pitot-estática con obstrucciones y hélices ---------- */
+Object.assign(TTL,{gyro:"Modelo 3D · giróscopo: rigidez y precesión",pitot:"Lámina interactiva · pitot-estática y obstrucciones",prop:"Lámina interactiva · paso fijo y velocidad constante"});
+Object.assign(CAP,{gyro:"Arrastra para girar la vista. Rigidez: el eje de un rotor que gira rápido sigue apuntando al mismo punto del espacio aunque se mueva el soporte. Precesión: una fuerza aplicada al rotor actúa 90° más adelante en el sentido de giro. Más RPM: más rigidez y precesión más lenta.",
+ pitot:"El tiempo corre 20 veces más rápido para que el cambio de altitud se vea. La aguja verde fina marca el valor real. El anemómetro compara la presión total (pitot) con la estática; el altímetro y el variómetro solo usan la estática.",
+ prop:"Sección de la pala al 75 % del radio, vista desde la punta. Ángulo de ataque = ángulo de pala − ángulo de avance. Para comparar, las RPM se fijan con el mando en las dos hélices; en una de paso fijo real, las RPM suben y bajan con la velocidad."});
+Object.assign(FB,{gyro:"<b>Giróscopo</b><ul><li>Rigidez: el eje del rotor mantiene su dirección en el espacio. Aumenta con las RPM y con la masa lejos del eje.</li><li>Precesión: una fuerza aplicada al rotor actúa 90° más adelante en el sentido de giro.</li><li>Más RPM: más rigidez y menos precesión para la misma fuerza.</li></ul>",
+ pitot:"<b>Obstrucciones del sistema pitot-estática</b><ul><li>Estática bloqueada: altímetro congelado, variómetro a cero; el anemómetro marca de menos al subir y de más al bajar.</li><li>Pitot bloqueado con drenaje libre: el anemómetro cae a cero.</li><li>Pitot y drenaje bloqueados: el anemómetro se comporta como un altímetro (sube al ascender, baja al descender).</li></ul>",
+ prop:"<b>Paso fijo y velocidad constante</b><ul><li>Ángulo de ataque de la pala = ángulo de pala − ángulo de avance (depende de TAS y RPM).</li><li>Paso fijo: solo es eficiente en una combinación de TAS y RPM.</li><li>Velocidad constante: el governor cambia el ángulo de pala para mantener las RPM; paso fino a baja velocidad, paso grueso a alta.</li></ul>"});
+Object.assign(HTML,{gyro:`<figure><div class="v3" data-i="v3"><div class="ld" data-i="ld">Cargando el modelo 3D…</div><div class="msg" data-i="msg"></div></div>
+<div class="ctl"><label>Rotor <input data-i="rpm" type="range" min="0" max="24000" step="500" value="15000"><output data-i="rpmO"></output></label><label>Girar el soporte <input data-i="yaw" type="range" min="-180" max="180" step="1" value="0"></label><label>Inclinar el soporte <input data-i="tilt" type="range" min="-35" max="35" step="1" value="0"></label></div>
+<div class="ctl" style="border-top:1px solid #22344a"><button data-i="push" type="button" aria-pressed="false">Aplicar fuerza arriba</button><button data-i="dir" type="button">Invertir el giro del rotor</button><button data-i="rst" type="button">Recolocar</button></div>
+<div class="read"><div data-i="gRb">Rigidez<b data-i="gR"></b></div><div>Precesión<b data-i="gP"></b></div><div>Eje desviado de su dirección inicial<b data-i="gD"></b></div></div></figure>`,
+pitot:`<figure><canvas data-i="cv" height="470" role="img" aria-label="Esquema del sistema pitot-estática con anemómetro, altímetro y variómetro"></canvas>
+<div class="ctl"><button data-i="bP" type="button" aria-pressed="false">Bloquear pitot</button><button data-i="bD" type="button" aria-pressed="false">Bloquear drenaje</button><button data-i="bS" type="button" aria-pressed="false">Bloquear estática</button><button data-i="rst" type="button">Reiniciar</button></div>
+<div class="ctl" style="border-top:1px solid #22344a"><button data-i="vU" type="button" aria-pressed="false">▲ Ascenso</button><button data-i="vL" type="button" aria-pressed="true">Nivelado</button><button data-i="vD" type="button" aria-pressed="false">▼ Descenso</button><label>IAS real <input data-i="ias" type="range" min="60" max="160" step="1" value="110"><output data-i="iasO"></output></label></div>
+<div class="dx" data-i="dx"></div>
+<div class="read"><div data-i="pAb">Anemómetro indica<b data-i="pA"></b></div><div data-i="pHb">Altímetro indica<b data-i="pH"></b></div><div data-i="pVb">Variómetro indica<b data-i="pV"></b></div><div>Altitud real<b data-i="pR"></b></div></div></figure>`,
+prop:`<figure><canvas data-i="cv" height="480" role="img" aria-label="Sección de pala de una hélice de paso fijo y de otra de velocidad constante con sus vectores de velocidad"></canvas>
+<div class="ctl"><label>TAS <input data-i="tas" type="range" min="0" max="180" step="1" value="112"><output data-i="tasO"></output></label><label>RPM <input data-i="rpm" type="range" min="1800" max="2700" step="50" value="2400"><output data-i="rpmO"></output></label><button data-i="bTO" type="button">Despegue</button><button data-i="bCR" type="button">Crucero</button><button data-i="bDV" type="button">Descenso rápido</button></div>
+<div class="read"><div>Ángulo de avance<b data-i="hP"></b></div><div data-i="hFb">Paso fijo · ángulo de ataque<b data-i="hF"></b></div><div data-i="hCb">Vel. constante · ángulo de ataque<b data-i="hC"></b></div><div>Rendimiento fijo / constante<b data-i="hE"></b></div></div></figure>`});
+Object.assign(LAB,{
+ gyro(root,E){
+  const box=E.v3, T=window.THREE, W0=()=>box.clientWidth, H0=()=>box.clientHeight;
+  const rnd=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:"low-power"}); rnd.setPixelRatio(Math.min(1.5,window.devicePixelRatio||1)); box.insertBefore(rnd.domElement,box.firstChild); E.ld.remove(); if(E._L){ E._L.rnd=rnd; rnd.domElement.addEventListener("webglcontextlost",ev=>{ ev.preventDefault(); fail(E._L,new Error("contexto WebGL perdido")); }); }
+  const scene=new T.Scene(), cam=new T.PerspectiveCamera(38,1,.1,200);
+  scene.add(new T.HemisphereLight(0xdfeeff,0x26323f,1.0)); const sun=new T.DirectionalLight(0xfff2dd,1.25); sun.position.set(6,10,7); scene.add(sun); const fill=new T.DirectionalLight(0x9cc4ff,.45); fill.position.set(-7,3,-6); scene.add(fill);
+  const M=(c,o)=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:.4,metalness:.35},o||{})), gold=M(0xd9a441,{metalness:.75,roughness:.28}), steel=M(0xc9d2dc,{metalness:.7,roughness:.3}), blue=M(0x2f6fc4), dark=M(0x3a4656,{roughness:.5}), mark=M(0x5a3d0a,{metalness:.2});
+  const base=new T.Group(), outer=new T.Group(), inner=new T.Group(), rotor=new T.Group(); scene.add(base,outer,inner); inner.add(rotor);
+  const add=(p,g,m,x,y,z)=>{ const o=new T.Mesh(g,m); o.position.set(x||0,y||0,z||0); p.add(o); return o; };
+  // rotor (eje de giro = Y local del cardán interior)
+  add(rotor,new T.CylinderGeometry(1.45,1.45,.3,56),gold); add(rotor,new T.CylinderGeometry(.32,.32,.5,24),steel);
+  for(let i=0;i<3;i++){ const g=new T.Group(); g.rotation.y=i*2.094; rotor.add(g); add(g,new T.BoxGeometry(.7,.32,.16),mark,.85,0,0); }
+  add(inner,new T.CylinderGeometry(.06,.06,3.8,12),steel); add(inner,new T.TorusGeometry(1.9,.07,12,72),steel);
+  [1,-1].forEach(s=>{ add(inner,new T.CylinderGeometry(.05,.05,.42,10),dark,s*2.1,0,0).rotation.z=Math.PI/2; });
+  add(outer,new T.TorusGeometry(2.3,.07,12,80),blue); [1,-1].forEach(s=>add(outer,new T.CylinderGeometry(.05,.05,.44,10),dark,0,s*2.52,0));
+  add(base,new T.TorusGeometry(2.74,.09,12,90),dark); add(base,new T.CylinderGeometry(.12,.12,.4,12),dark,0,-2.95,0); add(base,new T.CylinderGeometry(1.5,1.8,.22,40),dark,0,-3.2,0);
+  const nose=add(base,new T.ConeGeometry(.22,.7,16),M(0xffc94d,{emissive:0x4a3200}),2.0,-3.2,0); nose.rotation.z=-Math.PI/2;
+  // dirección inicial en el espacio y flechas de fuerza
+  const ref=new T.Mesh(new T.CylinderGeometry(.025,.025,9,6),new T.MeshBasicMaterial({color:0xffc94d,transparent:true,opacity:.45})); scene.add(ref);
+  const aF=new T.ArrowHelper(new T.Vector3(1,0,0),new T.Vector3(),1.5,0xff6b5a,.42,.26), aE=new T.ArrowHelper(new T.Vector3(1,0,0),new T.Vector3(),1.5,0x6fd08c,.42,.26); scene.add(aF,aE);
+  const mkTag=(col,html)=>{ const t=document.createElement("div"); t.className="tag"; t.style.color=col; t.innerHTML=html; box.appendChild(t); return t; };
+  const tAx=mkTag("#ffd98a","Eje del rotor"), tF=mkTag("#ff8a7a","Fuerza aplicada"), tE=mkTag("#8df0b4","Actúa aquí<small>90° después</small>"), tB=mkTag("#cfe0f0","Soporte (avión)");
+  const Y=new T.Vector3(0,1,0), Z=new T.Vector3(0,0,1), a=new T.Vector3(1,0,0), a0=new T.Vector3(1,0,0), u=new T.Vector3(), w=new T.Vector3(), p=new T.Vector3(), pe=new T.Vector3(), t1=new T.Vector3(), t2=new T.Vector3(), v=new T.Vector3();
+  const Bq=new T.Quaternion(), Bp=new T.Quaternion(), q1=new T.Quaternion(), q2=new T.Quaternion(), mb=new T.Matrix4();
+  const setB=(g,x,y,z)=>{ mb.makeBasis(x,y,z); g.quaternion.setFromRotationMatrix(mb); };
+  let az=.95, el=.3, dist=13.5, drag=null, s=1, push=false, last=0, spin=0, moved=0;
+  box.addEventListener("pointerdown",e=>{ drag=[e.clientX,e.clientY]; box.setPointerCapture(e.pointerId); box.style.cursor="grabbing"; });
+  box.addEventListener("pointermove",e=>{ if(!drag) return; az-=(e.clientX-drag[0])*.008; el=clamp(el+(e.clientY-drag[1])*.006,-.4,1.3); drag=[e.clientX,e.clientY]; });
+  ["pointerup","pointercancel"].forEach(ev=>box.addEventListener(ev,()=>{ drag=null; box.style.cursor="grab"; }));
+  E.push.addEventListener("click",()=>{ push=!push; E.push.setAttribute("aria-pressed",push); });
+  E.dir.addEventListener("click",()=>{ s=-s; });
+  E.rst.addEventListener("click",()=>{ E.yaw.value=0; E.tilt.value=0; a.set(1,0,0); a0.set(1,0,0); Bp.identity(); push=false; E.push.setAttribute("aria-pressed",false); moved=0; });
+  ["yaw","tilt"].forEach(k=>E[k].addEventListener("input",()=>{ moved=2.5; }));
+  const place=(tag,pt,w_,h_)=>{ v.copy(pt).project(cam); tag.style.left=clamp((v.x*.5+.5)*w_,55,w_-55)+"px"; tag.style.top=clamp((-v.y*.5+.5)*h_,64,h_-16)+"px"; };
+  function frame(t){
+    requestAnimationFrame(frame); const dt=Math.min(.05,(t-last)/1000||0); last=t; if(!seen(box)||document.hidden) return;
+    const w_=W0(), h_=H0(); if(rnd.domElement.width!==Math.round(w_*rnd.getPixelRatio())||rnd.domElement.height!==Math.round(h_*rnd.getPixelRatio())){ rnd.setSize(w_,h_,false); cam.aspect=w_/h_; cam.updateProjectionMatrix(); }
+    const rpm=+E.rpm.value, rig=sst(0,5000,rpm); E.rpmO.textContent=rpm.toLocaleString("es-ES")+" rpm";
+    q1.setFromAxisAngle(Y,-E.yaw.value*Math.PI/180); q2.setFromAxisAngle(Z,E.tilt.value*Math.PI/180); Bq.copy(q1).multiply(q2);
+    // rigidez: sin giro, el rozamiento arrastra el eje con el soporte
+    q1.copy(Bp).invert(); q2.copy(Bq).multiply(q1); t1.copy(a).applyQuaternion(q2); a.lerp(t1,1-rig).normalize(); Bp.copy(Bq);
+    u.copy(Y).applyQuaternion(Bq); p.copy(u).addScaledVector(a,-a.dot(u)).normalize();
+    let om=0;
+    if(push){ if(rig>.02){ om=Math.min(1.5,4.5/Math.max(.5,rpm/1000)); t1.copy(p).cross(a); a.addScaledVector(t1,om*dt*s*rig); } a.addScaledVector(p,-(1-rig)*.9*dt); a.normalize(); }
+    const k=a.dot(u); if(Math.abs(k)>.8){ a.addScaledVector(u,-(k-Math.sign(k)*.8)).normalize(); if(push&&rig<.5){ push=false; E.push.setAttribute("aria-pressed",false); } }
+    w.copy(u).cross(a).normalize(); p.copy(u).addScaledVector(a,-a.dot(u)).normalize();
+    base.quaternion.copy(Bq); t1.copy(w).cross(u); setB(outer,w,u,t1); t2.copy(w).cross(a); setB(inner,w,a,t2);
+    spin+=s*(rpm?Math.min(.62,.06+rpm/24000*.56):0); rotor.rotation.y=spin;
+    ref.quaternion.setFromUnitVectors(Y,a0);
+    pe.copy(a).cross(p).multiplyScalar(s);
+    aF.visible=tF.hidden=false; aE.visible=push&&rig>.3; tF.hidden=!push; tE.hidden=!aE.visible; aF.visible=push;
+    if(push){ aF.setDirection(a); aF.position.copy(p).multiplyScalar(1.3).addScaledVector(a,-1.75); aE.setDirection(a); aE.position.copy(pe).multiplyScalar(1.3).addScaledVector(a,-1.75); }
+    moved=Math.max(0,moved-dt); const dev=Math.acos(clamp(a.dot(a0),-1,1))*57.3, off=Math.abs(+E.yaw.value)>3||Math.abs(+E.tilt.value)>3;
+    E.msg.innerHTML=push?(rig>.3?"Precesión<small>La fuerza empuja arriba, pero el rotor responde 90° más adelante en el sentido de giro: el eje se va de lado en vez de inclinarse.</small>":"Sin giro no hay giróscopo<small>El rotor parado se inclina justo por donde lo empujas.</small>")
+      :off?(rig>.9?"Rigidez en el espacio<small>El soporte se mueve, pero el eje del rotor sigue apuntando al mismo sitio.</small>":rig>.05?"Rotor lento: poca rigidez<small>El rozamiento de los cardanes arrastra en parte el eje con el soporte.</small>":"Rotor parado: sin rigidez<small>El eje se va con el soporte, como cualquier objeto.</small>")
+      :"Gira el soporte o aplica una fuerza<small>La línea amarilla marca la dirección inicial del eje en el espacio.</small>";
+    E.gR.textContent=rpm===0?"Nula":rpm<5000?"Baja":rpm<12000?"Media":"Alta"; E.gRb.className=rpm<5000?"bad":rpm>=12000?"good":"";
+    E.gP.textContent=push&&rig>.02?Math.round(om*rig*57.3)+" °/s":"—"; E.gD.textContent=Math.round(dev)+"°";
+    cam.position.set(Math.cos(az)*Math.cos(el)*dist,Math.sin(el)*dist,Math.sin(az)*Math.cos(el)*dist); cam.lookAt(0,-.3,0); rnd.render(scene,cam);
+    place(tAx,t1.copy(a).multiplyScalar(2.25),w_,h_); place(tB,t1.set(2.3,-3.75,0).applyQuaternion(Bq),w_,h_);
+    if(push){ place(tF,t1.copy(p).multiplyScalar(1.3).addScaledVector(a,-2.1),w_,h_); if(aE.visible) place(tE,t1.copy(pe).multiplyScalar(1.3).addScaledVector(a,-2.2),w_,h_); }
+  }
+  frame(0);
+ },
+ pitot(root,E){
+  const c=E.cv, x=c.getContext("2d"), K=20;
+  const P=h=>1013.25*Math.pow(1-6.8756e-6*h,5.2559), Hof=p=>(1-Math.pow(p/1013.25,1/5.2559))/6.8756e-6, q=v=>.6125*Math.pow(v*.5144,2)/100, Vof=dp=>Math.sqrt(Math.max(0,dp)*100/.6125)/.5144;
+  let alt=4000, vs=0, bp=false, bd=false, bs=false, PsL=P(alt), PtL=PsL+q(+E.ias.value), vsi=0, altP=alt, last=0, T=0;
+  const tog=(b,f)=>b.addEventListener("click",()=>{ const v=f(); b.setAttribute("aria-pressed",v); });
+  tog(E.bP,()=>bp=!bp); tog(E.bD,()=>bd=!bd); tog(E.bS,()=>bs=!bs);
+  const setV=v=>{ vs=v; E.vU.setAttribute("aria-pressed",v>0); E.vL.setAttribute("aria-pressed",v===0); E.vD.setAttribute("aria-pressed",v<0); };
+  E.vU.addEventListener("click",()=>setV(1000)); E.vL.addEventListener("click",()=>setV(0)); E.vD.addEventListener("click",()=>setV(-1000));
+  E.rst.addEventListener("click",()=>{ bp=bd=bs=false; [E.bP,E.bD,E.bS].forEach(b=>b.setAttribute("aria-pressed",false)); alt=4000; setV(0); E.ias.value=110; PsL=P(alt); PtL=PsL+q(110); altP=alt; vsi=0; });
+  const dial=(d,cx,cy,r,name,bad,nx,ny,sub)=>{ let g=x.createRadialGradient(cx-r*.3,cy-r*.35,r*.1,cx,cy,r*1.12); g.addColorStop(0,"#5b6878"); g.addColorStop(1,"#1a2330"); x.fillStyle=g; x.beginPath(); x.arc(cx,cy,r*1.12,0,7); x.fill();
+    x.fillStyle="#0b1119"; x.beginPath(); x.arc(cx,cy,r,0,7); x.fill(); x.strokeStyle=bad?"#ff6b5a":"#3c4a5c"; x.lineWidth=(bad?3:1.5)*d; x.beginPath(); x.arc(cx,cy,r*1.06,0,7); x.stroke();
+    x.fillStyle="#9fb3c8"; x.font=`700 ${Math.max(9*d,r*.15)}px "Barlow Condensed","Arial Narrow",sans-serif`; x.textAlign="center"; x.fillText(name,cx+r*nx,cy+r*ny); if(sub){ x.font=`500 ${Math.max(7.5*d,r*.1)}px system-ui,sans-serif`; x.fillText(sub,cx+r*nx,cy+r*ny+r*.13); } };
+  const tick=(cx,cy,r,an,len,wd)=>{ x.lineWidth=wd; x.beginPath(); x.moveTo(cx+Math.cos(an)*r*(.94-len),cy+Math.sin(an)*r*(.94-len)); x.lineTo(cx+Math.cos(an)*r*.94,cy+Math.sin(an)*r*.94); x.stroke(); };
+  const num=(cx,cy,r,an,tx)=>{ x.fillText(tx,cx+Math.cos(an)*r*.64,cy+Math.sin(an)*r*.64+r*.06); };
+  const needle=(d,cx,cy,r,an,len,col,wd)=>{ x.strokeStyle=col; x.lineWidth=wd*d; x.lineCap="round"; x.beginPath(); x.moveTo(cx-Math.cos(an)*r*.14,cy-Math.sin(an)*r*.14); x.lineTo(cx+Math.cos(an)*r*len,cy+Math.sin(an)*r*len); x.stroke(); x.lineCap="butt"; };
+  const hub=(d,cx,cy,r)=>{ x.fillStyle="#cfd8e2"; x.beginPath(); x.arc(cx,cy,r*.07,0,7); x.fill(); };
+  const ice=(d,px,py,r)=>{ x.fillStyle="#eaf4ff"; x.beginPath(); for(let i=0;i<9;i++){ const an=i/9*6.283, rr=r*(.8+.35*((i*37)%5)/5); x.lineTo(px+Math.cos(an)*rr,py+Math.sin(an)*rr); } x.closePath(); x.fill(); x.strokeStyle="#ff6b5a"; x.lineWidth=2.5*d; x.beginPath(); x.moveTo(px-r*.5,py-r*.5); x.lineTo(px+r*.5,py+r*.5); x.moveTo(px+r*.5,py-r*.5); x.lineTo(px-r*.5,py+r*.5); x.stroke(); };
+  const loop=t=>{ requestAnimationFrame(loop); const dt=Math.min(.05,(t-last)/1000||0); last=t; if(!seen(c)||document.hidden) return; T+=dt;
+    const d=fit(c), W=c.width, H=c.height, ias=+E.ias.value; E.iasO.textContent=ias+" kt";
+    alt+=vs/60*dt*K; if(alt>=12000){ alt=12000; setV(0); } if(alt<=0){ alt=0; setV(0); }
+    const Ps=P(alt), Pt=Ps+q(ias), f=Math.min(1,dt*6);
+    if(!bs) PsL+=(Ps-PsL)*f; if(!bp) PtL+=(Pt-PtL)*f; else if(!bd) PtL+=(Ps-PtL)*Math.min(1,dt*.9);
+    const iasI=Vof(PtL-PsL), altI=Hof(PsL); if(dt>0){ const vt=(altI-altP)/dt*60/K; vsi+=(vt-vsi)*Math.min(1,dt*3); } altP=altI;
+    bgFill(x,W,H);
+    const sm=W<560*d, r=Math.min(W*.142,H*.2), cy=H*.71, CX=[W*.18,W*.5,W*.82], yP=H*.1, yS=H*.31, xT=W*.045, xTe=CX[0]-r*.15, COLP="#ff8a7a", COLS="#6fb4ff", GR="#7d8a99";
+    // aire de impacto
+    x.strokeStyle="rgba(190,220,255,.35)"; x.lineWidth=1.5*d; for(let i=0;i<5;i++){ const ph=((T*(.5+ias/200)+i*.2)%1), yy=yP-16*d+i*8*d; x.beginPath(); x.moveTo(xT-W*.06+ph*W*.05,yy); x.lineTo(xT-W*.06+ph*W*.05+12*d,yy); x.stroke(); }
+    // tuberías
+    const pipe=(pts,col,trap)=>{ x.strokeStyle="#0a121c"; x.lineWidth=9*d; x.lineJoin="round"; x.beginPath(); pts.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.stroke(); x.strokeStyle=trap?GR:col; x.lineWidth=4.5*d; if(trap) x.setLineDash([7*d,5*d]); x.stroke(); x.setLineDash([]); };
+    const xa=xTe, xb=CX[0]+r*.5;
+    pipe([[xa,yP],[xa,cy-r]],COLP,bp);
+    const xS=W*.4; pipe([[xS,yS],[CX[2],yS],[CX[2],cy-r]],COLS,bs); pipe([[xb,yS],[xS,yS]],COLS,bs); pipe([[xb,yS],[xb,cy-r]],COLS,bs); pipe([[CX[1],yS],[CX[1],cy-r]],COLS,bs);
+    // tubo pitot con drenaje
+    x.fillStyle="#b9c3cf"; x.beginPath(); x.moveTo(xT,yP-7*d); x.lineTo(xTe,yP-7*d); x.lineTo(xTe,yP+7*d); x.lineTo(xT,yP+7*d); x.lineTo(xT-10*d,yP+3*d); x.lineTo(xT-10*d,yP-3*d); x.closePath(); x.fill();
+    x.fillStyle="#0b1119"; x.fillRect(xT-10*d,yP-2*d,xTe-xT+6*d,4*d); const xD=xT+(xTe-xT)*.55; x.fillRect(xD-2*d,yP,4*d,9*d);
+    if(bp&&!bd&&PtL-Ps>.3){ x.fillStyle="rgba(255,138,122,.8)"; for(let i=0;i<3;i++){ const ph=(T*1.4+i/3)%1; x.beginPath(); x.arc(xD,yP+10*d+ph*16*d,2*d*(1-ph),0,7); x.fill(); } }
+    if(bp) ice(d,xT-9*d,yP,10*d); if(bd) ice(d,xD,yP+9*d,7*d);
+    // toma estática
+    x.fillStyle="#b9c3cf"; x.beginPath(); x.arc(xS,yS,13*d,0,7); x.fill(); x.fillStyle="#0b1119"; x.beginPath(); x.arc(xS,yS,3.5*d,0,7); x.fill(); if(bs) ice(d,xS,yS,10*d);
+    // rótulos
+    x.textAlign="left"; x.font=`700 ${(sm?10:12)*d}px system-ui,sans-serif`; x.fillStyle=COLP; x.fillText(sm?"PITOT":"TUBO PITOT · presión total",xT-8*d,yP-14*d); x.fillStyle="#cfe0f0"; x.font=`600 ${(sm?9.5:11)*d}px system-ui,sans-serif`; x.textAlign=sm?"right":"left"; x.fillText("drenaje",xD+(sm?-7:8)*d,yP+22*d);
+    x.fillStyle=COLS; x.font=`700 ${(sm?10:12)*d}px system-ui,sans-serif`; x.textAlign="center"; x.fillText(sm?"ESTÁTICA":"TOMA ESTÁTICA",xS,yS-19*d);
+    x.font=`600 ${(sm?10:11.5)*d}px ui-monospace,Menlo,Consolas,monospace`; x.textAlign="left"; x.fillStyle=bp&&bd?"#cfd6de":COLP; x.fillText((bp&&bd?"atrapada · ":"")+PtL.toFixed(0)+" hPa",xTe+12*d,yP+4*d); x.textAlign="right";
+    x.fillStyle=bs?"#cfd6de":COLS; x.fillText((bs?"atrapada · ":"")+PsL.toFixed(0)+" hPa",W-10*d,yS-9*d);
+    // anemómetro
+    const eA=Math.abs(iasI-ias)>4, eH=Math.abs(altI-alt)>60, eV=Math.abs(vsi-vs)>150;
+    let cx=CX[0]; dial(d,cx,cy,r,"IAS · kt",eA,0,-.3); x.strokeStyle="#e9eef4"; x.fillStyle="#e9eef4"; x.font=`600 ${r*.17}px system-ui,sans-serif`; x.textAlign="center";
+    const aA=v=>-Math.PI/2+clamp(v,0,200)/200*5.24; for(let v=0;v<=200;v+=10){ tick(cx,cy,r,aA(v),v%20?.07:.13,(v%20?1:2)*d); if(v%40===0&&v) num(cx,cy,r,aA(v),v); }
+    needle(d,cx,cy,r,aA(ias),.8,"rgba(141,240,180,.75)",1.5); needle(d,cx,cy,r,aA(iasI),.82,"#fff",3); hub(d,cx,cy,r);
+    // altímetro
+    cx=CX[1]; dial(d,cx,cy,r,"ALT · ft",eH,0,-.3); x.strokeStyle="#e9eef4"; x.fillStyle="#e9eef4"; x.font=`600 ${r*.19}px system-ui,sans-serif`;
+    for(let i=0;i<50;i++){ const an=-Math.PI/2+i/50*6.2832; tick(cx,cy,r,an,i%5?.06:.13,(i%5?1:2)*d); if(i%5===0) num(cx,cy,r,an,i/5); }
+    x.fillStyle="#0e1620"; x.fillRect(cx-r*.34,cy+r*.12,r*.68,r*.24); x.fillStyle="#fff"; x.font=`700 ${r*.19}px ui-monospace,Menlo,Consolas,monospace`; x.fillText(String(Math.round(altI/10)*10),cx,cy+r*.3);
+    needle(d,cx,cy,r,-Math.PI/2+(alt%1000)/1000*6.2832,.8,"rgba(141,240,180,.75)",1.5); needle(d,cx,cy,r,-Math.PI/2+altI/10000*6.2832,.5,"#fff",5); needle(d,cx,cy,r,-Math.PI/2+(altI%1000)/1000*6.2832,.84,"#fff",2.5); hub(d,cx,cy,r);
+    // variómetro
+    cx=CX[2]; dial(d,cx,cy,r,"VSI",eV,.36,-.02,sm?"":"ft/min ×1000"); x.strokeStyle="#e9eef4"; x.fillStyle="#e9eef4"; x.font=`600 ${r*.18}px system-ui,sans-serif`;
+    const aV=v=>Math.PI+clamp(v,-2000,2000)/2000*2.62; for(let v=-2000;v<=2000;v+=250){ tick(cx,cy,r,aV(v),v%500?.07:.13,(v%500?1:2)*d); if(v%1000===0) num(cx,cy,r,aV(v),Math.abs(v/1000)); }
+    x.font=`600 ${r*.13}px system-ui,sans-serif`; x.fillStyle="#9fb3c8"; x.fillText("UP",cx-r*.28,cy-r*.2); x.fillText("DN",cx-r*.28,cy+r*.3);
+    needle(d,cx,cy,r,aV(vs),.8,"rgba(141,240,180,.75)",1.5); needle(d,cx,cy,r,aV(vsi),.82,"#fff",3); hub(d,cx,cy,r);
+    // estado bajo cada instrumento
+    const st=(cx,ok,tx)=>{ x.font=`700 ${(sm?9.5:12)*d}px system-ui,sans-serif`; x.textAlign="center"; x.fillStyle=ok?"#8df0b4":"#ff8a7a"; x.fillText(tx,cx,cy+r*1.12+20*d); };
+    st(CX[0],!eA,eA?(iasI<ias?"MARCA DE MENOS":"MARCA DE MÁS"):"CORRECTO"); st(CX[1],!eH,eH?"CONGELADO":"CORRECTO"); st(CX[2],!eV,eV?"SE QUEDA EN CERO":"CORRECTO");
+    // lecturas y diagnóstico
+    E.pA.textContent=Math.round(iasI)+" kt"; E.pAb.className=eA?"bad":"good"; E.pH.textContent=(Math.round(altI/10)*10).toLocaleString("es-ES")+" ft"; E.pHb.className=eH?"bad":"good"; E.pV.textContent=(Math.round(vsi/50)*50)+" ft/min"; E.pVb.className=eV?"bad":"good"; E.pR.textContent=(Math.round(alt/10)*10).toLocaleString("es-ES")+" ft";
+    const m=[]; if(bs) m.push("<b>Estática bloqueada:</b> el altímetro se congela y el variómetro se queda en cero. El anemómetro marca de menos al subir y de más al bajar.");
+    if(bp&&!bd) m.push("<b>Pitot bloqueado con el drenaje libre:</b> la presión total se escapa por el drenaje y el anemómetro cae a cero.");
+    if(bp&&bd) m.push("<b>Pitot y drenaje bloqueados:</b> la presión total queda atrapada y el anemómetro se comporta como un altímetro: sube al ascender y baja al descender.");
+    if(!bp&&bd) m.push("<b>Solo el drenaje bloqueado:</b> el anemómetro marca bien, pero el agua no puede salir del tubo.");
+    if(!m.length) m.push("Todo libre: los tres instrumentos marcan bien. Bloquea una toma y cambia de altitud para ver el error."); else if(vs===0&&(bs||(bp&&bd))) m.push("Pulsa Ascenso o Descenso para ver cómo crece el error.");
+    const h=m.join(" "); if(E.dx._h!==h){ E.dx._h=h; E.dx.innerHTML=h; }
+  };
+  loop(0);
+ },
+ prop(root,E){
+  const c=E.cv, x=c.getContext("2d"), R75=.71, BF=22, AOPT=4, RD=Math.PI/180;
+  const sec=(tas,rpm,beta)=>{ const vr=rpm*2*Math.PI/60*R75, vf=tas*.5144, phi=Math.atan2(vf,vr)/RD, a=beta-phi, cl=a<=14?.1*(a+2):Math.max(.3,1.6-(a-14)*.12), cd=.012+.045*cl*cl+(a>14?(a-14)*.03:0); let eta=0; if(cl>0&&vf>0){ const g=Math.atan2(cd,cl); eta=Math.tan(phi*RD)/Math.tan(phi*RD+g); } return {phi,a,cl,eta:clamp(eta,0,1),vr,vf}; };
+  const csB=(tas,rpm)=>clamp(sec(tas,rpm,0).phi+AOPT,12,48);
+  let bc=csB(+E.tas.value,+E.rpm.value), last=0, tgt=null;
+  const pre=(t,r)=>{ tgt=[t,r]; }; E.bTO.addEventListener("click",()=>pre(45,2700)); E.bCR.addEventListener("click",()=>pre(112,2400)); E.bDV.addEventListener("click",()=>pre(165,2400));
+  ["tas","rpm"].forEach(k=>E[k].addEventListener("input",()=>{ tgt=null; }));
+  const verdict=S=>S.cl<=0?["La pala frena el avión","#ff8a7a"]:S.a>14?["Pala en pérdida","#ff8a7a"]:Math.abs(S.a-AOPT)<=2.5?["Ángulo de ataque óptimo","#8df0b4"]:S.a>AOPT?["Demasiado ángulo de ataque","#ffc94d"]:["Poco ángulo de ataque","#ffc94d"];
+  const panel=(d,px,py,pw,ph,title,sub,beta,S,col)=>{
+    const sm=pw<300*d, Lc=Math.min(pw*.46,150*d), ox=px+pw*.6, oy=py+ph*.66, b=beta*RD, f=S.phi*RD;
+    x.fillStyle="rgba(255,255,255,.035)"; x.fillRect(px+4*d,py+4*d,pw-8*d,ph-8*d);
+    x.textAlign="left"; x.fillStyle=col; x.font=`800 ${(sm?15:19)*d}px "Barlow Condensed","Arial Narrow",sans-serif`; x.fillText(title,px+12*d,py+24*d); x.fillStyle="#9fb3c8"; x.font=`600 ${(sm?10:12)*d}px system-ui,sans-serif`; x.fillText(sub,px+12*d,py+40*d);
+    const V=verdict(S); x.fillStyle=V[1]; x.font=`700 ${(sm?11:13)*d}px system-ui,sans-serif`; x.fillText(sm?V[0]:V[0]+" · α "+S.a.toFixed(0)+"°",px+12*d,py+(sm?56:59)*d);
+    // plano de rotación
+    x.strokeStyle="rgba(207,224,240,.4)"; x.lineWidth=1*d; x.setLineDash([5*d,5*d]); x.beginPath(); x.moveTo(px+10*d,oy); x.lineTo(px+pw-10*d,oy); x.stroke(); x.setLineDash([]);
+    x.fillStyle="rgba(207,224,240,.6)"; x.font=`500 ${(sm?9:10.5)*d}px system-ui,sans-serif`; x.textAlign="right"; x.fillText("plano de rotación",px+pw-12*d,oy+13*d);
+    // perfil de la pala
+    x.save(); x.translate(ox,oy); x.rotate(b); const g=x.createLinearGradient(0,-Lc*.14,0,Lc*.06); g.addColorStop(0,"#f1f4f8"); g.addColorStop(1,"#8794a5"); x.fillStyle=g; x.beginPath(); x.moveTo(-Lc/2,0); x.bezierCurveTo(-Lc*.5,-Lc*.13,-Lc*.1,-Lc*.17,Lc/2,0); x.bezierCurveTo(Lc*.1,Lc*.035,-Lc*.45,Lc*.05,-Lc/2,0); x.fill();
+    x.strokeStyle=col; x.lineWidth=1.3*d; x.setLineDash([4*d,4*d]); x.beginPath(); x.moveTo(-Lc*.95,0); x.lineTo(Lc*.5,0); x.stroke(); x.setLineDash([]); x.restore();
+    // ángulo de pala
+    x.strokeStyle=col; x.lineWidth=2*d; x.beginPath(); x.arc(ox,oy,Lc*.7,Math.PI,Math.PI+b); x.stroke(); x.fillStyle=col; x.font=`700 ${(sm?10.5:12.5)*d}px system-ui,sans-serif`; x.textAlign="right"; x.fillText("pala "+beta.toFixed(0)+"°",Math.max(px+56*d,ox-Lc*.72-4*d),oy+16*d);
+    // triángulo de velocidades, con la punta en el borde de ataque
+    const lx=ox-Math.cos(b)*Lc/2, ly=oy-Math.sin(b)*Lc/2, sc=pw*.34/200, n=Math.hypot(S.vr,S.vf)*sc, sx=lx-Math.cos(f)*n, sy=ly-Math.sin(f)*n;
+    arrow(x,d,sx,sy,S.vr*sc,0,"#6fb4ff",""); x.fillStyle="#6fb4ff"; x.font=`700 ${(sm?10:12)*d}px system-ui,sans-serif`; x.textAlign="center"; x.fillText(sm?"RPM":"giro (RPM)",sx+S.vr*sc*.5,sy-8*d); arrow(x,d,sx+S.vr*sc,sy,0,S.vf*sc-9*d,"#8df0b4",""); arrow(x,d,sx,sy,(lx-sx)-Math.cos(f)*9*d,(ly-sy)-Math.sin(f)*9*d,"#ffffff","");
+    if(S.vf*sc>20*d){ x.fillStyle="#8df0b4"; x.font=`700 ${(sm?10:12)*d}px system-ui,sans-serif`; x.textAlign="left"; x.fillText(sm?"TAS":"avance (TAS)",sx+S.vr*sc+6*d,sy+S.vf*sc*.5); }
+    // ángulo de ataque
+    const ac=S.cl<=0||S.a>14?"#ff8a7a":Math.abs(S.a-AOPT)<=2.5?"#8df0b4":"#ffc94d", ra=Math.min(n*.55,58*d); x.strokeStyle=ac; x.lineWidth=3*d; x.beginPath(); x.arc(lx,ly,ra,Math.PI+Math.min(f,b),Math.PI+Math.max(f,b)); x.stroke();
+    
+    // tracción
+    const th=clamp(S.cl*(S.vr*S.vr+S.vf*S.vf)/42000,-1,1.25)*ph*.2; if(Math.abs(th)>6*d) arrow(x,d,ox+(sm?-Lc*.12:Lc*.12),oy-(th>0?Lc*.1:-Lc*.06),0,-th,th>0?"#ffc94d":"#ff8a7a",th>0?"tracción":"frena");
+  };
+  const loop=t=>{ requestAnimationFrame(loop); const dt=Math.min(.05,(t-last)/1000||0); last=t; if(!seen(c)||document.hidden) return;
+    if(tgt){ const a=+E.tas.value, b=+E.rpm.value, na=a+clamp(tgt[0]-a,-90*dt,90*dt), nb=b+clamp(tgt[1]-b,-700*dt,700*dt); E.tas.value=Math.abs(tgt[0]-na)<1?tgt[0]:na; E.rpm.value=Math.abs(tgt[1]-nb)<50?tgt[1]:nb; if(+E.tas.value===tgt[0]&&+E.rpm.value===tgt[1]) tgt=null; }
+    const d=fit(c), W=c.width, H=c.height, tas=+E.tas.value, rpm=+E.rpm.value; E.tasO.textContent=Math.round(tas)+" kt"; E.rpmO.textContent=rpm+" rpm";
+    const bt=csB(tas,rpm); bc+=clamp(bt-bc,-40*dt,40*dt); const SF=sec(tas,rpm,BF), SC=sec(tas,rpm,bc);
+    bgFill(x,W,H); const ph=H*.63, sm=W<560*d;
+    panel(d,0,0,W/2,ph,"PASO FIJO","La pala no se mueve",BF,SF,"#ffc94d"); panel(d,W/2,0,W/2,ph,sm?"VEL. CONSTANTE":"VELOCIDAD CONSTANTE",bt<=12.01?"Tope de paso fino":bt>=47.99?"Tope de paso grueso":bc<BF?"Paso fino (fine)":"Paso grueso (coarse)",bc,SC,"#8df0b4");
+    x.strokeStyle="#22344a"; x.lineWidth=1*d; x.beginPath(); x.moveTo(W/2,8*d); x.lineTo(W/2,ph-4*d); x.stroke();
+    // gráfica de rendimiento
+    const gx=46*d, gy=ph+22*d, gw=W-gx-16*d, gh=H-gy-30*d, X=v=>gx+v/180*gw, Yv=e=>gy+gh-e*gh;
+    x.fillStyle="rgba(255,255,255,.03)"; x.fillRect(gx,gy,gw,gh); x.strokeStyle="rgba(207,224,240,.18)"; x.fillStyle="#9fb3c8"; x.font=`500 ${10.5*d}px system-ui,sans-serif`;
+    x.textAlign="right"; [0,.5,1].forEach(e=>{ x.beginPath(); x.moveTo(gx,Yv(e)); x.lineTo(gx+gw,Yv(e)); x.stroke(); x.fillText(e*100+" %",gx-6*d,Yv(e)+4*d); });
+    x.textAlign="center"; for(let v=0;v<=180;v+=30){ x.beginPath(); x.moveTo(X(v),gy); x.lineTo(X(v),gy+gh); x.stroke(); x.fillText(v+(v===180?" kt":""),X(v),gy+gh+14*d); }
+    x.textAlign="left"; x.fillStyle="#cfe0f0"; x.font=`700 ${11*d}px system-ui,sans-serif`; x.fillText("Rendimiento de la hélice según la TAS, a "+rpm+" rpm",gx,gy-7*d);
+    const curve=(fn,col)=>{ x.strokeStyle=col; x.lineWidth=2.5*d; x.beginPath(); for(let v=0;v<=180;v+=2){ const e=fn(v); v?x.lineTo(X(v),Yv(e)):x.moveTo(X(v),Yv(e)); } x.stroke(); };
+    curve(v=>sec(v,rpm,BF).eta,"#ffc94d"); curve(v=>sec(v,rpm,csB(v,rpm)).eta,"#8df0b4");
+    x.strokeStyle="rgba(255,255,255,.55)"; x.lineWidth=1*d; x.beginPath(); x.moveTo(X(tas),gy); x.lineTo(X(tas),gy+gh); x.stroke();
+    [[SF.eta,"#ffc94d"],[SC.eta,"#8df0b4"]].forEach(p=>{ x.fillStyle=p[1]; x.beginPath(); x.arc(X(tas),Yv(p[0]),5*d,0,7); x.fill(); x.strokeStyle="#0a1727"; x.lineWidth=1.5*d; x.stroke(); });
+    E.hP.textContent=SF.phi.toFixed(0)+"°"; E.hF.textContent=SF.a.toFixed(0)+"°"; E.hFb.className=SF.cl<=0||SF.a>14?"bad":Math.abs(SF.a-AOPT)<=2.5?"good":""; E.hC.textContent=SC.a.toFixed(0)+"° · pala "+bc.toFixed(0)+"°"; E.hCb.className=SC.cl<=0||SC.a>14?"bad":Math.abs(SC.a-AOPT)<=2.5?"good":"";
+    E.hE.textContent=Math.round(SF.eta*100)+" % / "+Math.round(SC.eta*100)+" %";
+  };
+  loop(0);
+ }
+});
+/*F2END*/
 function fail(L,e){ if(!L||L.dead) return; L.dead=true; try{ console.error("F0Lab",L.k,e); }catch(_){} try{ if(L.rnd){ L.rnd.dispose(); L.rnd.forceContextLoss&&L.rnd.forceContextLoss(); } }catch(_){}
   L.el.innerHTML='<p class="lt">'+TTL[L.k]+'</p><div class="fb">'+(FB[L.k]||"")+'<p class="fbn">La lámina interactiva no se ha podido mostrar en este dispositivo. <button type="button">Reintentar</button></p></div>';
   const b=L.el.querySelector("button"); if(b) b.addEventListener("click",()=>{ L.el._lab=0; build(L.el); }); }
@@ -502,7 +716,7 @@ function build(el){
   el.innerHTML='<p class="lt">'+TTL[k]+'</p>'+HTML[k]+'<p class="cap">'+CAP[k]+'</p>';
   const E={}; el.querySelectorAll("[data-i]").forEach(n=>{ E[n.dataset.i]=n; }); E._L=L;
   const go=()=>{ if(L.dead) return; CUR=L; try{ LAB[k](el,E); }catch(e){ fail(L,e); } CUR=null; };
-  if(k==="axes"){ const c=document.createElement("canvas"); let gl=null; try{ gl=c.getContext("webgl2")||c.getContext("webgl"); }catch(e){} if(!gl){ fail(L,new Error("sin WebGL")); return; }
+  if(k==="axes"||k==="gyro"){ const c=document.createElement("canvas"); let gl=null; try{ gl=c.getContext("webgl2")||c.getContext("webgl"); }catch(e){} if(!gl){ fail(L,new Error("sin WebGL")); return; }
     needThree().then(go,e=>fail(L,e)); }
   else go();
 }

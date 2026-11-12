@@ -328,7 +328,7 @@ const CSS=`
 .rd .lg li.empty{background:transparent;border:1px dashed var(--line);box-shadow:none;color:var(--muted)}
 .rd .lg .m{color:#5B6670;font-size:11.5px;font-weight:600}
 .rd .lg .tx{font:italic 600 13px var(--body);margin-top:3px;color:#33414D}
-@media (prefers-color-scheme:dark){.strip,.rd .lg li{background:#E8E2C8}}
+@media (max-width:0px){.strip,.rd .lg li{background:#E8E2C8}}
 @media (max-width:420px){.keys{grid-template-columns:repeat(3,minmax(0,1fr))}.keys b{font-size:17px}.rcard{min-height:88px}.lcd .fr{font-size:clamp(42px,17vw,60px)}}
 @media (prefers-reduced-motion:reduce){#rdPtt.tx,#rdPtt.shake,.strip.talk .tg{animation:none}.rcard{transition:none}}
 `;

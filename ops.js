@@ -318,9 +318,9 @@ function fill(){
   const ce=e.cavok?"CAVOK":e.ceil!=null?e.ceil.toLocaleString("es-ES")+" ft":((e.clouds&&e.clouds.length)?"Sin techo":"Despejado");
   $("#opTiles",R).innerHTML=tile("Viento",e.wind&&e.wind.spd===0&&!e.wind.gst?"Calma":(e.wind?(e.wind.vrb?"VRB":pad3(e.wind.dir)+"º")+" · "+e.wind.spd+" kt":"—"),e.wind&&e.wind.gst?"rachas "+e.wind.gst+" kt":(e.wind&&e.wind.var?"varía "+e.wind.var[0]+"–"+e.wind.var[1]+"º":""),wCompass(e.wind),"wd")
    +tile("Visibilidad",visTxt(e.vis),wxTxt(e)==="Ninguno"?"":wxTxt(e),"","vs")
-   +tile("Nubes",ce,e.cavok?"":((e.clouds||[]).map(x=>x.t+" "+(x.h/100)).join(" · ")))
-   +tile("Temp.",e.temp!=null?e.temp+" ºC":"—",e.dew!=null?"rocío "+e.dew+" ºC":"")
-   +tile("QNH hPa",e.qnh?String(e.qnh):"—","");
+   +tile("Nubes",ce,e.cavok?"":((e.clouds||[]).map(x=>x.t+" "+(x.h/100)).join(" · ")),"","cl")
+   +tile("Temp.",e.temp!=null?e.temp+" ºC":"—",e.dew!=null?"rocío "+e.dew+" ºC":"","","tp")
+   +tile("QNH hPa",e.qnh?String(e.qnh):"—","","","qn");
   const rm=S.rawMode!==false; const cx=$("#opRawT",R); if(cx) cx.checked=rm;
   const hist=(d.hist&&d.hist.length?d.hist:[d.metar]).slice(0,5);
   $("#opMet",R).innerHTML=hist.map((r,i)=>{ const q=i===0?e:parseMetar(r), ob=obsDate(q,now), ag=ob?Math.round((now-ob)/60000):null; return wrow(flightCat(q),rm?rawHtml(r.replace(/^METAR\s+/,"")):esc(decShort(q)),ag); }).join("")+(!AD.other&&/\sAUTO\s/.test(d.metar)?'<div class="auto">METAR automático: no informa de precipitación (AIP).</div>':"");
@@ -497,7 +497,7 @@ function loadTr(){
 }
 const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD;--hd:#1C2128;--am:#FFC400;--vfr:#1E9E44;--mvfr:#2F6FD0;--ifr:#D23A2F;--lifr:#B02FA5;--ok:#1E8A42;--no:#C9372C;--mid:#B7791F;--okb:#E3F3E8;--nob:#FBE5E3;--midb:#FFF1D6;--k1:#0B5CAD;--k2:#8A4B00;--k3:#5A3E9B;--k4:#9A2A2A;--k5:#0B7A6B;
  min-height:65vh;background:var(--bg);color:var(--ink);font:15px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .op{--bg:#0D1013;--pn:#161A1F;--ink:#E6E9EC;--mu:#8E98A3;--ln:#2A3037;--hd:#090B0E;--okb:#12301E;--nob:#3A1917;--midb:#33290F;--ok:#4CC97A;--no:#F0746B;--mid:#E3B341;--k1:#6CB4FF;--k2:#E9A95B;--k3:#B7A2F2;--k4:#F08E8E;--k5:#5CD1BE}
+@media (max-width:0px){:root:not([data-theme="light"]) .op{--bg:#0D1013;--pn:#161A1F;--ink:#E6E9EC;--mu:#8E98A3;--ln:#2A3037;--hd:#090B0E;--okb:#12301E;--nob:#3A1917;--midb:#33290F;--ok:#4CC97A;--no:#F0746B;--mid:#E3B341;--k1:#6CB4FF;--k2:#E9A95B;--k3:#B7A2F2;--k4:#F08E8E;--k5:#5CD1BE}
 }
 :root[data-theme="dark"] .op{--bg:#0D1013;--pn:#161A1F;--ink:#E6E9EC;--mu:#8E98A3;--ln:#2A3037;--hd:#090B0E;--okb:#12301E;--nob:#3A1917;--midb:#33290F;--ok:#4CC97A;--no:#F0746B;--mid:#E3B341;--k1:#6CB4FF;--k2:#E9A95B;--k3:#B7A2F2;--k4:#F08E8E;--k5:#5CD1BE}
 .op *{box-sizing:border-box}
@@ -779,6 +779,43 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .op-top .tm{margin-left:0}
 .op .sign{font-size:44px}
 }
+/* acabado de sala de operaciones: relieve, jerarquía e iconos; la estructura no cambia */
+.op{--bg:#E3E7EC;--ln:#CBD2DA;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,0) 240px),repeating-linear-gradient(0deg,rgba(23,40,62,.04) 0 1px,transparent 1px 32px),repeating-linear-gradient(90deg,rgba(23,40,62,.04) 0 1px,transparent 1px 32px),var(--bg)}
+.op .pn{border-radius:10px;border-color:#C3CBD5;background:linear-gradient(180deg,#FFFFFF,#FAFBFC);box-shadow:0 1px 0 #fff inset,0 1px 2px rgba(16,28,45,.07),0 10px 24px -14px rgba(16,28,45,.35)}
+.op .pn>h2{position:relative;padding:11px 14px 10px 28px;background:linear-gradient(180deg,#F6F8FA,#EAEEF2);border-bottom:1px solid #CBD2DA;border-radius:9px 9px 0 0;color:#263342;font-size:16.5px;letter-spacing:.12em;box-shadow:0 1px 0 #fff inset}
+.op .pn>h2::before{content:"";position:absolute;left:13px;top:50%;width:4px;height:16px;margin-top:-8px;border-radius:2px;background:linear-gradient(180deg,#FFC400,#E39B00);box-shadow:0 0 0 1px rgba(120,80,0,.22)}
+.op .pn>h2 small{color:#5E6873;font-variant-numeric:tabular-nums}
+.op .tl{border-color:#C7CFD8;border-radius:9px;padding:11px 13px;background:linear-gradient(180deg,#FFFFFF,#F2F4F7);box-shadow:0 1px 0 #fff inset,0 -2px 0 rgba(16,28,45,.045) inset,0 1px 2px rgba(16,28,45,.08)}
+.op .tl small{display:flex;align-items:center;gap:6px;font-size:11.5px;letter-spacing:.14em;color:#4E5A67}
+.op .tl b{font-size:28px;color:#111922;font-variant-numeric:tabular-nums}
+.op .tl span{color:#4E5A67}
+.op .tl.wd small::before,.op .tl.vs small::before,.op .tl.cl small::before,.op .tl.tp small::before,.op .tl.qn small::before{content:"";width:15px;height:15px;flex:none;background:#0B5CAD;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
+.op .tl.wd{--ic:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 3v18%22/%3E%3Cpath d=%22M4 5l15 2.5v5L4 15z%22/%3E%3Cpath d=%22M9 5.9v8.3M14 6.7v6.6%22/%3E%3C/svg%3E')}
+.op .tl.vs{--ic:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z%22/%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%222.8%22/%3E%3C/svg%3E')}
+.op .tl.cl{--ic:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M7 18.5h10a4 4 0 0 0 .6-7.96A5.5 5.5 0 0 0 7 9.6 4.5 4.5 0 0 0 7 18.5z%22/%3E%3C/svg%3E')}
+.op .tl.tp{--ic:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M10 14.2V5a2 2 0 0 1 4 0v9.2a4 4 0 1 1-4 0z%22/%3E%3Cpath d=%22M12 9v8%22/%3E%3C/svg%3E')}
+.op .tl.qn{--ic:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%229%22/%3E%3Cpath d=%22M12 12l4-5%22/%3E%3Cpath d=%22M12 5v1.5M5 12h1.5M17.5 12H19%22/%3E%3C/svg%3E')}
+.op .op-top{box-shadow:0 2px 0 rgba(0,0,0,.25),0 10px 24px -12px rgba(8,16,28,.6);position:relative;z-index:1}
+.op .op-top .id b{text-shadow:0 2px 6px rgba(0,0,0,.45)}
+.op .op-top .id span{color:#D5DEE8;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.op .cat,.op .ad{border-radius:7px;padding:5px 13px;box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 -2px 0 rgba(0,0,0,.18) inset,0 6px 14px -6px rgba(0,0,0,.6)}
+.op .op-top .tm small{color:#E3EAF2;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.op .op-top .tm b{text-shadow:0 2px 8px rgba(0,0,0,.55)}
+.op .op-sub{background:linear-gradient(180deg,#FFFFFF,#F4F6F8);border-bottom-color:#CBD2DA;font-variant-numeric:tabular-nums;color:#4E5A67}
+.op .op-tabs{background:linear-gradient(180deg,#FBFCFD,#EEF1F4);border-bottom-color:#C3CBD5;box-shadow:0 6px 14px -12px rgba(16,28,45,.5)}
+.op .op-tabs button,.op .op-tabs a{font:700 15.5px "Barlow Condensed",Barlow,sans-serif;letter-spacing:.09em;text-transform:uppercase;padding:12px 15px 10px}
+.op .op-tabs button.on{background:linear-gradient(180deg,rgba(255,196,0,0),rgba(255,196,0,.14))}
+.op .op-tabs a{font-size:14px;letter-spacing:.06em}
+.op .tbl th,.op .tf th,.op .mn thead th{background:#F1F4F7;color:#4E5A67;border-bottom:1px solid #CBD2DA}
+.op .tbl.pst tr.best{box-shadow:4px 0 0 var(--ok) inset}
+.op .tbl td,.op .mn td,.op .tf td{font-variant-numeric:tabular-nums}
+.op .sign{box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 3px 8px -2px rgba(0,0,0,.45);background:linear-gradient(180deg,#1A1A1A,#000)}
+.op .raw{background:#F1F4F7;border-color:#C7CFD8;box-shadow:0 1px 3px rgba(16,28,45,.08) inset}
+.op .hs{display:flex;align-items:center;gap:10px;color:#3B4856}
+.op .hs::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#CBD2DA,transparent)}
+.op #opMap,.op .op-wy{box-shadow:0 3px 10px -4px rgba(0,0,0,.5) inset}
+.op .op-note{color:#4E5A67}
+@media (max-width:560px){.op .tl{padding:9px 10px;min-height:80px}.op .tl b{font-size:21px}.op .tl small{font-size:10.5px;letter-spacing:.1em;gap:5px}.op .pn>h2{font-size:15px;letter-spacing:.08em;padding-left:26px}.op .op-tabs button,.op .op-tabs a{font-size:14.5px;padding:11px 11px 9px;letter-spacing:.06em}}
 `;
 const FQ0=[["TWR","118.705","Torre","ok"],["GND (GMC)","121.805","Rodaje","ok"],["ATIS","118.230","Información","ok"],["Emergencia","121.500","H24","ok"],["TWR (reserva)","122.505","Back-up","ok"]];
 S.rad={a:0,s:1};

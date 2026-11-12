@@ -15,9 +15,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fase 0">
-<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<meta name="color-scheme" content="only light">
+<style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="7b2fea8e9ac9";</script>
+<script>window.F0_BUILD="6736a819f0e7";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -45,7 +46,7 @@
   --body:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;
   --bar:104px; --head:#14304A;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+@media (max-width:0px){:root:not([data-theme="light"]){
   --bg:#0F1B26; --paper:#172634; --ink:#E3ECF2; --muted:#94A9BA; --line:#2B3F50;
   --accent:#5CC8C8; --blue:#7EB3DE; --ok:#5CC98F; --warn:#E7BD55; --bad:#F0827D;
   --okbg:#16301F; --warnbg:#2E2715; --accentbg:#173133; --bluebg:#18293A; --head:#0A1724; --btn:#5CC8C8; color-scheme:dark}}
@@ -246,7 +247,7 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 
 .card .stats{align-self:center}
 .card{--sc:var(--scl);border-top:4px solid var(--sc,var(--line))}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .card{--sc:var(--scd)}}
+@media (max-width:0px){:root:not([data-theme="light"]) .card{--sc:var(--scd)}}
 :root[data-theme="dark"] .card{--sc:var(--scd)}
 .chead{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto 1fr;align-items:center;align-content:start;gap:6px 12px;min-width:0}
 .chead .nm{grid-column:1/-1;align-self:start}
@@ -259,7 +260,8 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .chip.low{border-color:var(--warn);color:var(--warn);background:var(--warnbg)}
 .stats{display:flex;gap:16px;font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums;flex-wrap:wrap}
 .stats b{color:var(--ink);font-weight:600}
-.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.acts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+@media (max-width:480px){.card.fold .acts .btn{white-space:normal;font-size:13px;letter-spacing:.05em;padding:10px 6px 9px}.card.fold .acts .btn.wide:not(.ghost){font-size:14px}.fd .ttl{font-size:21px}}
 .acts .btn{text-align:center;padding:11px 6px;white-space:nowrap;letter-spacing:.1px}
 .btn{border:1px solid var(--btn,var(--ink));background:var(--btn,var(--ink));color:var(--paper);border-radius:5px;padding:8px 12px;font:600 15px/1.1 var(--display);letter-spacing:.3px;cursor:pointer}
 .btn.sec{background:transparent;color:var(--ink);border-color:var(--ink)}
@@ -349,7 +351,7 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .rk-chips button{flex:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:20px;padding:6px 12px;font:600 13px var(--body);cursor:pointer;white-space:nowrap}
 .rk-chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 :root[data-theme="dark"] .rk-chips button[aria-pressed="true"]{color:#0A1724}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rk-chips button[aria-pressed="true"]{color:#0A1724}}
+@media (max-width:0px){:root:not([data-theme="light"]) .rk-chips button[aria-pressed="true"]{color:#0A1724}}
 .rk-tbl tr.me td{background:var(--accentbg)}
 .rk-tbl td.pos{width:38px}
 .pd{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font:700 14px var(--display);background:var(--bg);border:1px solid var(--line)}
