@@ -359,7 +359,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 @media (max-width:560px){#hotCard.card,#failCard.card{padding:9px 12px 3px}#hotCard .hot p,#failCard .fitem p{font-size:13px}}
 </style>
 <meta name="color-scheme" content="only light">
-<style>:root{color-scheme:only light}@media (max-width:400px){nav{gap:0}nav button{flex:1 1 0;min-width:0;font-size:15px;padding-left:2px;padding-right:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}</style>
+<style id="f0-mob">:root{color-scheme:only light}@media (max-width:560px){.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}}</style>
+<script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
 </head>
 <body>
 <div class="wrap">
@@ -695,7 +696,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <tr><td><b>Critical</b></td><td>20 – 25.000 ft</td><td>Pérdida de conocimiento casi sin aviso, coma y muerte</td></tr>
   </table></div>
   <div class="scroll"><table>
-  <tr><th>ft</th><th>TUC</th><th>PDF: sentado · actividad · descompresión rápida</th></tr>
+  <tr><th>ft</th><th>TUC</th><th>sentado · actividad · descompresión rápida</th></tr>
   <tr><td>15–18.000</td><td>20–30 min</td><td>~40 min · ~30 min · 20–25 min</td></tr>
   <tr><td>22.000</td><td>5–10 min</td><td>(20.000: 10 · 5 · 3 min)</td></tr>
   <tr><td>25.000</td><td><b>3–5 min</b></td><td>5 min · 3 min · 2 min</td></tr>
@@ -920,7 +921,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <div class="opts" id="rwyOpts"></div>
     <p id="rwyFb" aria-live="polite"></p>
   </div>
-  <div class="flag"><b>Trampa:</b> adaptación completa a la oscuridad: el PDF dice 20–30 min, la clave del trial <b>30–40 min</b>.</div>
+  <div class="flag"><b>Trampa:</b> adaptación completa a la oscuridad: el temario dice 20–30 min, la clave del trial <b>30–40 min</b>.</div>
   </div>
 </div>
 </details>
@@ -1039,7 +1040,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <tr class="al"><td><b>Violation</b></td><td colspan="2">a propósito, contra la norma</td><td>Sabes que no se puede y lo haces igual</td><td>Bajar de la mínima «para ver el suelo»</td></tr>
   </table></div>
   <ul><li>Errores <b>latentes</b> (escondidos en el sistema: diseño, procedimientos) y <b>activos</b> (los comete quien opera, con efecto inmediato).</li></ul>
-  <div class="flag"><b>Trampa:</b> el test del PDF divide el error humano en <b>dos</b>: faults y slips.</div>
+  <div class="flag"><b>Trampa:</b> el test del temario divide el error humano en <b>dos</b>: faults y slips.</div>
   <div class="flag"><b>Trampa:</b> la <b>violation</b> no es un error involuntario: es deliberada. Las omisiones suelen venir de una <b>interrupción</b>.</div>
   
 </div>
@@ -1112,7 +1113,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   </table></div>
   <div class="flag"><b>Trampa:</b> por encima de 36.000 ft la ISA es −56,5 °C fija. Con la fórmula saldrían ISA +14 y ISA +32 en las filas marcadas.</div>
   <div class="flag"><b>Trampa:</b> densidad <b>1,225 kg/m³</b>. Por encima de 36.000 ft no apliques la fórmula.</div>
-  <div class="flag"><b>Trampa:</b> −30 °C a 18.000 ft es <b>más frío</b> que la ISA (−21 °C); la clave del test del PDF («High») está mal.</div>
+  <div class="flag"><b>Trampa:</b> −30 °C a 18.000 ft es <b>más frío</b> que la ISA (−21 °C); la clave del test del temario («High») está mal.</div>
 </div>
 </details>
 </section>
@@ -1152,8 +1153,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row chk"><input type="checkbox" id="incTrial"> <span>Incluir temario ATPL aún no dado<small>Sin marcar, solo sale lo dado y lo que entra en Fase 0.</small></span></label>
-    <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las de clase y del trial.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incTrial"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale lo dado y lo que entra en el temario base.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las del temario y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
   </div>
@@ -1422,14 +1423,14 @@ const BASE = [
  ["a5~1", "X.050", "p", "trop", "Compared with the poles, the tropopause over the equator is:", ["Higher", "Lower", "At the same height", "Not present"], "Ecuador alto (17 km), polos bajo (9 km). 36.090 ft es solo la media ISA."],
  ["a5~2", "X.050", "p", "trop", "Over the equator, the tropopause is found at about:", ["17 km", "9 km", "11 km", "5 km"], "Ecuador alto (17 km), polos bajo (9 km). 36.090 ft es solo la media ISA."],
  ["a6","040.02.01","o","comp","—",["—","·","··","···"],""],
- ["a6~1", "040.02.01", "p", "comp", "Up to what height do the proportions of the gases in the atmosphere stay constant (except ozone)?", ["At least 60 km", "About 10,000 ft", "Only up to 11 km", "About 1 km"], "El PDF: las proporciones son constantes hasta al menos 60 km (salvo el ozono). Lo que baja es la presión parcial."],
- ["a6~2", "040.02.01", "p", "comp", "At 35,000 ft, the percentage of oxygen in the air is about:", ["21 %", "5 %", "10 %", "0 %"], "El PDF: las proporciones son constantes hasta al menos 60 km (salvo el ozono). Lo que baja es la presión parcial."],
+ ["a6~1", "040.02.01", "p", "comp", "Up to what height do the proportions of the gases in the atmosphere stay constant (except ozone)?", ["At least 60 km", "About 10,000 ft", "Only up to 11 km", "About 1 km"], "En el temario: las proporciones son constantes hasta al menos 60 km (salvo el ozono). Lo que baja es la presión parcial."],
+ ["a6~2", "040.02.01", "p", "comp", "At 35,000 ft, the percentage of oxygen in the air is about:", ["21 %", "5 %", "10 %", "0 %"], "En el temario: las proporciones son constantes hasta al menos 60 km (salvo el ozono). Lo que baja es la presión parcial."],
  ["a7","X.050","o","isa","—",["—","·","··","···"],""],
  ["a7~1", "X.050", "p", "isa", "What is the main purpose of the International Standard Atmosphere?", ["A common reference for navigation and performance", "To describe the real atmosphere on any given day", "To set the minimum temperature for any flight", "To define the height of the ozone layer"], "Marco de referencia común para navegación y actuaciones."],
  ["a7~2", "X.050", "p", "isa", "ISA stands for:", ["International Standard Atmosphere", "International Safety Altitude", "Indicated Standard Altitude", "ICAO Surface Atmosphere"], "Marco de referencia común para navegación y actuaciones."],
  ["a8","X.050","o","isa","—",["—","·","··","···"],""],
- ["a8~1", "X.050", "p", "isa", "In the ISA, the air density at mean sea level is:", ["1.225 kg/m³", "12.25 kg/m³", "1013.25 kg/m³", "0.1225 kg/m³"], "1,225 kg/m³. La errata de la diapositiva (12,25) es diez veces mayor."],
- ["a8~2", "X.050", "p", "isa", "In the ISA, the temperature and pressure at mean sea level are:", ["15 °C and 1013.25 hPa", "0 °C and 1013.25 hPa", "15 °C and 1225 hPa", "20 °C and 1013.25 hPa"], "Densidad 1,225 kg/m³. La diapositiva pone 12,25: es una errata (diez veces más)."],
+ ["a8~1", "X.050", "p", "isa", "In the ISA, the air density at mean sea level is:", ["1.225 kg/m³", "12.25 kg/m³", "1013.25 kg/m³", "0.1225 kg/m³"], "1,225 kg/m³. La errata habitual (12,25) es diez veces mayor."],
+ ["a8~2", "X.050", "p", "isa", "In the ISA, the temperature and pressure at mean sea level are:", ["15 °C and 1013.25 hPa", "0 °C and 1013.25 hPa", "15 °C and 1225 hPa", "20 °C and 1013.25 hPa"], "Densidad 1,225 kg/m³. Algunos textos ponen 12,25: es una errata (diez veces más)."],
  ["a9","X.050","o","isa","—",["—","·","··","···"],""],
  ["a9~1", "X.050", "p", "isa", "In the ISA troposphere, climbing 5,000 ft lowers the temperature by about:", ["10 °C", "5 °C", "2 °C", "20 °C"], "≈ 2 °C por cada 1.000 ft → 10 °C."],
  ["a9~2", "X.050", "p", "isa", "In the ISA, a temperature decrease of about 2 °C corresponds to a climb of:", ["1,000 ft", "100 ft", "27 ft", "10,000 ft"], "−1,98 °C cada 1.000 ft (≈ 2 °C)."],
@@ -1460,14 +1461,14 @@ const BASE = [
  ["a18~2", "X.050", "p", "dev", "At 39,000 ft the outside air temperature is −50 °C. The ISA deviation is:", ["ISA +6.5", "ISA −6.5", "ISA +13", "ISA −50"], "Por encima de 36.000 ft, ISA = −56,5. −50 − (−56,5) = +6.5. (Con la fórmula saldría +13.)"],
  ["a19","X.050","o","isa","—",["—","·","··","···"],""],
  ["a19~1", "X.050", "p", "isa", "What ISA temperature should be used at FL 450?", ["−56.5 °C", "−75 °C", "−45 °C", "−65 °C"], "Por encima de 36.000 ft: −56,5 °C fijo."],
- ["a19~2", "X.050", "p", "isa", "In the ISA, the temperature at 36,000 ft and at 50,000 ft is:", ["−56.5 °C at both", "−57 °C and −85 °C", "−56.5 °C and −70 °C", "−42 °C and −56.5 °C"], "Nota de la diapositiva: por encima de 36.000 ft, directamente −56,5 °C."],
+ ["a19~2", "X.050", "p", "isa", "In the ISA, the temperature at 36,000 ft and at 50,000 ft is:", ["−56.5 °C at both", "−57 °C and −85 °C", "−56.5 °C and −70 °C", "−42 °C and −56.5 °C"], "Nota del temario: por encima de 36.000 ft, directamente −56,5 °C."],
  ["da1", "X.050", "c", "da", "On a hot day at an airfield, compared with ISA conditions, the density altitude will be:", ["Higher, and aircraft performance will be worse", "Lower, and aircraft performance will be better", "The same as the pressure altitude", "Lower, and aircraft performance will be worse"], "Calor → aire menos denso → el avión «se cree» más alto: altitud de densidad MÁS alta. Es el par que tenías invertido en MET."],
  ["da2", "040.02.01", "c", "da", "The partial pressure of oxygen available to a pilot, and so the risk of hypoxia, depends mainly on:", ["The pressure altitude (cabin altitude)", "The density altitude", "The outside air temperature", "The humidity of the air"], "Dalton: presión parcial = 21 % × presión total. Manda la presión, no la temperatura ni la densidad."],
  ["gl1","040.02.01","o","boyle","—",["—","·","··","···"],""],
  ["gl1~1", "040.02.01", "p", "boyle", "At constant temperature, if the pressure on a fixed mass of gas is halved, its volume will:", ["Double", "Halve", "Stay the same", "Increase four times"], "Boyle: V inversamente proporcional a P."],
  ["gl1~2", "040.02.01", "p", "boyle", "If the pressure acting on a gas is doubled at constant temperature, its volume will:", ["Halve", "Double", "Remain the same", "Increase four times"], "Más presión → menos volumen. P₁/P₂ = V₂/V₁."],
  ["gl2","040.02.01","o","boyle","—",["—","·","··","···"],""],
- ["gl2~1", "040.02.01", "p", "boyle", "Which gas law explains why the air in the middle ear expands during a climb?", ["Boyle's law", "Henry's law", "Charles's law", "Dalton's law"], "Al bajar sube la presión y el volumen del aire de la botella se reduce: Boyle (la foto de la diapositiva)."],
+ ["gl2~1", "040.02.01", "p", "boyle", "Which gas law explains why the air in the middle ear expands during a climb?", ["Boyle's law", "Henry's law", "Charles's law", "Dalton's law"], "Al bajar sube la presión y el volumen del aire de la botella se reduce: Boyle (el esquema clásico)."],
  ["gl2~2", "040.02.01", "p", "boyle", "An empty bottle is closed tightly at sea level and taken up to 8,000 ft. The bottle will:", ["Swell, because the outside pressure is lower", "Be crushed, because the outside pressure is higher", "Not change", "Shrink, because the temperature is lower"], "Boyle al revés: fuera hay menos presión → el aire de dentro se expande."],
  ["gl3", "040.02.01", "c", "boyle", "As an aircraft climbs, gas trapped in the body (middle ear, sinuses, gut) will:", ["Expand, because the surrounding pressure decreases", "Contract, because the surrounding pressure decreases", "Dissolve into the blood", "Stay the same, because body temperature is constant"], "Boyle: menos presión → más volumen."],
  ["gl4","040.02.01","o","charles","—",["—","·","··","···"],""],
@@ -1522,11 +1523,11 @@ const BASE = [
  ["h12~1", "040.02.01", "p", "types", "Hypoxia caused by alcohol or narcotics, which prevent the cells from using oxygen, is:", ["Histotoxic hypoxia", "Hypoxic hypoxia", "Anaemic hypoxia", "Stagnant hypoxia"], "Falla la célula: no puede usar el O₂ que le llega."],
  ["h12~2", "040.02.01", "p", "types", "In histotoxic hypoxia the problem is that:", ["The cells cannot use the oxygen that reaches them", "There is not enough oxygen in the inhaled air", "The blood cannot carry the oxygen", "The blood flow is too slow"], "Falla la célula: no puede usar el O₂ que le llega."],
  ["h13","040.02.01","o","types","—",["—","·","··","···"],""],
- ["h13~1", "040.02.01", "p", "types", "Carbon monoxide from a leaking cabin heater mainly causes:", ["Anaemic hypoxia", "Histotoxic hypoxia", "Hypoxic hypoxia", "Hyperventilation"], "El CO ocupa la hemoglobina: falla la sangre → anaemic. El PDF lo pone en «Smoking and Anemic Hypoxia»."],
- ["h13~2", "040.02.01", "p", "types", "Haemoglobin has a much greater affinity for ___ than for oxygen:", ["Carbon monoxide", "Nitrogen", "Water vapour", "Argon"], "El CO ocupa la hemoglobina: falla la sangre → anaemic. El PDF lo pone en «Smoking and Anemic Hypoxia»."],
+ ["h13~1", "040.02.01", "p", "types", "Carbon monoxide from a leaking cabin heater mainly causes:", ["Anaemic hypoxia", "Histotoxic hypoxia", "Hypoxic hypoxia", "Hyperventilation"], "El CO ocupa la hemoglobina: falla la sangre → anaemic. El temario lo pone en «Smoking and Anemic Hypoxia»."],
+ ["h13~2", "040.02.01", "p", "types", "Haemoglobin has a much greater affinity for ___ than for oxygen:", ["Carbon monoxide", "Nitrogen", "Water vapour", "Argon"], "El CO ocupa la hemoglobina: falla la sangre → anaemic. El temario lo pone en «Smoking and Anemic Hypoxia»."],
  ["h14","040.02.01","o","fact","—",["—","·","··","···"],""],
- ["h14~1", "040.02.01", "p", "fact", "Which of the following is NOT in the course list of factors that influence hypoxia?", ["Runway length", "Rate of climb", "Time at altitude", "Physical activity"], "Factores de la diapositiva: altitud, ascenso, temperatura, tiempo, actividad física, maniobras, fallo, factores personales."],
- ["h14~2", "040.02.01", "p", "fact", "Two pilots fly at the same altitude. Which factor can make one of them suffer hypoxia earlier?", ["Greater physical activity", "A different radio frequency", "A different heading", "The colour of the aircraft"], "Factores de la diapositiva: altitud, ascenso, temperatura, tiempo, actividad física, maniobras, fallo, factores personales."],
+ ["h14~1", "040.02.01", "p", "fact", "Which of the following is NOT in the course list of factors that influence hypoxia?", ["Runway length", "Rate of climb", "Time at altitude", "Physical activity"], "Factores del temario: altitud, ascenso, temperatura, tiempo, actividad física, maniobras, fallo, factores personales."],
+ ["h14~2", "040.02.01", "p", "fact", "Two pilots fly at the same altitude. Which factor can make one of them suffer hypoxia earlier?", ["Greater physical activity", "A different radio frequency", "A different heading", "The colour of the aircraft"], "Factores del temario: altitud, ascenso, temperatura, tiempo, actividad física, maniobras, fallo, factores personales."],
  ["h15","040.02.01","o","phase","—",["—","·","··","···"],""],
  ["h15~1", "040.02.01", "p", "phase", "Up to what altitude are hypoxia symptoms not usually observed (indifferent phase)?", ["10,000 ft", "15,000 ft", "20,000 ft", "25,000 ft"], "Indiferente: 0–10.000 ft, normalmente sin síntomas."],
  ["h15~2", "040.02.01", "p", "phase", "Flying at 8,000 ft, a healthy pilot is in which phase of hypoxia?", ["Indifferent phase", "Compensatory phase", "Disturbance phase", "Critical phase"], "Indiferente: 0–10.000 ft, normalmente sin síntomas."],
@@ -1597,8 +1598,8 @@ const BASE = [
  ["rs5", "040.02.01", "n", "co2", "What mainly makes us breathe faster or deeper?", ["An increase in the level of carbon dioxide in the blood", "A decrease in the level of nitrogen in the blood", "An increase in the level of oxygen in the blood", "A decrease in body temperature"], "★ la descompensación de CO₂ regula la respiración."],
  ["rs6", "040.02.01", "c", "co2", "Hyperventilation lowers the level of CO₂ in the blood. As a result, the urge to breathe:", ["Decreases", "Increases", "Does not change", "Becomes controlled by nitrogen"], "Como el control es el CO₂, si baja el CO₂ baja el impulso de respirar."],
  ["rs7","040.02.01","o","hyv","—",["—","·","··","···"],""],
- ["rs7~1", "040.02.01", "p", "hyv", "An increase in the rate and/or depth of breathing that upsets the CO₂ balance is called:", ["Hyperventilation", "Hypoxia", "Hypoventilation", "Decompression sickness"], "Definición de la diapositiva."],
- ["rs7~2", "040.02.01", "p", "hyv", "Hyperventilation upsets the balance between:", ["The CO₂ produced and the CO₂ eliminated", "Oxygen and nitrogen in the air", "Blood pressure and heart rate", "The partial pressures of nitrogen"], "Definición de la diapositiva."],
+ ["rs7~1", "040.02.01", "p", "hyv", "An increase in the rate and/or depth of breathing that upsets the CO₂ balance is called:", ["Hyperventilation", "Hypoxia", "Hypoventilation", "Decompression sickness"], "Definición del temario."],
+ ["rs7~2", "040.02.01", "p", "hyv", "Hyperventilation upsets the balance between:", ["The CO₂ produced and the CO₂ eliminated", "Oxygen and nitrogen in the air", "Blood pressure and heart rate", "The partial pressures of nitrogen"], "Definición del temario."],
  ["rs8", "040.02.01", "c", "hyv", "During hyperventilation, the level of carbon dioxide in the blood:", ["Decreases, because too much CO₂ is breathed out", "Increases, because CO₂ is retained", "Stays constant", "Is replaced by nitrogen"], "Se expulsa más CO₂ del que se produce → CO₂ bajo."],
  ["rs9","040.02.01","o","hyv","—",["—","·","··","···"],""],
  ["rs9~1", "040.02.01", "p", "hyv", "Which of the following is NOT a typical symptom of hyperventilation syndrome?", ["Cyanosis", "Dizziness", "Tingling (paraesthesia)", "Palpitations"], "La cianosis es de hipoxia; el resto están en la tabla de hiperventilación."],
@@ -1628,8 +1629,8 @@ const BASE = [
  ["tr2~3", "040.02.03", "t", "incap", "Which of these does NOT make a pilot unfit to fly?", ["Wearing prescribed corrective glasses", "Gastro-enteritis", "Vomiting and diarrhoea the day before", "Taking antibiotics for an infection"], "Gastroenteritis: no apto (deshidratación, incapacitación súbita)."],
  ["tr3","040.02.01","o","co","—",["—","·","··","···"],""],
  ["tr3~1", "040.02.01", "t", "co", "Compared with a non-smoker, a heavy smoker will usually experience the symptoms of hypoxia:", ["At a lower altitude", "At a higher altitude", "At the same altitude", "Only above 25,000 ft"], "El CO del tabaco resta capacidad a la sangre: la hipoxia llega antes, más abajo."],
- ["tr3~2", "040.02.01", "t", "co", "Because of the carbon monoxide in tobacco smoke, a heavy smoker, even at sea level:", ["Already has less oxygen-carrying capacity in the blood", "Has more oxygen in the blood than a non-smoker", "Is protected against hypoxia", "Has normal oxygen transport"], "Clave del trial: a cualquier altitud (el CO ya ocupa hemoglobina incluso en tierra). El PDF lo concreta: lo nota 4.000–5.000 ft más abajo. Si no está «any», la buena es «a lower cabin altitude»."],
- ["tr3~3", "040.02.01", "t", "co", "Which statement about smoking and hypoxia is NOT correct?", ["A smoker tolerates altitude better than a non-smoker", "Carbon monoxide takes part of the haemoglobin", "A smoker can notice hypoxia several thousand feet lower", "It reduces the oxygen carried by the blood"], "Clave del trial: a cualquier altitud (el CO ya ocupa hemoglobina incluso en tierra). El PDF lo concreta: lo nota 4.000–5.000 ft más abajo. Si no está «any», la buena es «a lower cabin altitude»."],
+ ["tr3~2", "040.02.01", "t", "co", "Because of the carbon monoxide in tobacco smoke, a heavy smoker, even at sea level:", ["Already has less oxygen-carrying capacity in the blood", "Has more oxygen in the blood than a non-smoker", "Is protected against hypoxia", "Has normal oxygen transport"], "Clave del trial: a cualquier altitud (el CO ya ocupa hemoglobina incluso en tierra). El temario lo concreta: lo nota 4.000–5.000 ft más abajo. Si no está «any», la buena es «a lower cabin altitude»."],
+ ["tr3~3", "040.02.01", "t", "co", "Which statement about smoking and hypoxia is NOT correct?", ["A smoker tolerates altitude better than a non-smoker", "Carbon monoxide takes part of the haemoglobin", "A smoker can notice hypoxia several thousand feet lower", "It reduces the oxygen carried by the blood"], "Clave del trial: a cualquier altitud (el CO ya ocupa hemoglobina incluso en tierra). El temario lo concreta: lo nota 4.000–5.000 ft más abajo. Si no está «any», la buena es «a lower cabin altitude»."],
  ["tr4","040.02.02","o","eye","—",["—","·","··","···"],""],
  ["tr4~1", "040.02.02", "t", "eye", "A pilot fully adapted to darkness looks at a bright light. Night vision can be lost after an exposure of only:", ["1–2 seconds", "30 seconds", "1 minute", "5 minutes"], "Basta 1–2 segundos de luz intensa para perder la adaptación."],
  ["tr4~2", "040.02.02", "t", "eye", "To protect night vision, a pilot adapted to the dark should avoid:", ["Even a brief exposure to bright white light", "Dim red lighting on the instrument panel", "Looking outside the cockpit at night", "Scanning the instruments at regular intervals"], "Basta 1–2 segundos de luz intensa para perder la adaptación."],
@@ -1650,7 +1651,7 @@ const BASE = [
  ["tr8~1", "040.02.02", "t", "eye", "Full dark adaptation of the eyes takes about:", ["30–40 minutes", "5–10 minutes", "1–2 minutes", "2 hours"], "Adaptación completa a la oscuridad: 30–40 min."],
  ["tr8~2", "040.02.02", "t", "eye", "Before a night flight, how long does it take to reach full night vision?", ["About 30–40 minutes", "About 5 minutes", "About 1 minute", "About 2 hours"], "Adaptación completa a la oscuridad: 30–40 min."],
  ["tr8~3", "040.02.02", "t", "eye", "A pilot needs full night vision for a 22:00 departure. He should start avoiding bright light at about:", ["21:20–21:30", "21:55–22:00", "21:45–21:50", "19:30–20:00"], "Adaptación completa: 30–40 min."],
- ["tr8~4", "040.02.02", "t", "eye", "How long should a pilot allow for full adaptation to night vision in normal conditions?", ["30–40 minutes", "10–20 minutes", "5–10 minutes", "50–60 minutes"], "Adaptación completa a la oscuridad: 30–40 min (clave del trial; el PDF dice 20–30)."],
+ ["tr8~4", "040.02.02", "t", "eye", "How long should a pilot allow for full adaptation to night vision in normal conditions?", ["30–40 minutes", "10–20 minutes", "5–10 minutes", "50–60 minutes"], "Adaptación completa a la oscuridad: 30–40 min (clave del trial; el temario dice 20–30)."],
  ["tr8~5", "040.02.02", "t", "eye", "After 20 minutes in the dark, a pilot's eyes are:", ["Not yet fully dark-adapted", "Fully dark-adapted", "Adapted, but only the cones", "Adapted for the rest of the flight"], "Faltan unos 10–20 min más: la adaptación completa es de 30–40 min."],
  ["tr8~6", "040.02.02", "t", "eye", "Night vision reaches its maximum after about:", ["30–40 minutes in the dark", "10 seconds in the dark", "1–2 minutes in the dark", "2 hours in the dark"], "Luz: unos 10 s. Oscuridad completa: 30–40 min."],
  ["tr8~7", "040.02.02", "t", "eye", "From entering a dark room to full dark adaptation, the eye needs roughly:", ["Half an hour or a bit more", "Only about ten seconds", "About five minutes", "About three hours"], "30–40 min. Los 10 s son de la adaptación a la luz."],
@@ -1709,38 +1710,38 @@ const BASE = [
  ["q12~1", "X.050", "t", "trop", "In the troposphere, the temperature normally:", ["Decreases with height", "Increases with height", "Stays constant", "Changes only at night"], "En la troposfera baja con la altura (0,65 °C/100 m). «Always» es falso: en la tropopausa se queda constante."],
  ["q12~2", "X.050", "t", "trop", "Why is «the temperature always decreases with height» false?", ["Above the tropopause it stays constant", "Because it always increases with height", "Because it only decreases over the sea", "It is not false: it is always true"], "En la troposfera baja con la altura (0,65 °C/100 m). «Always» es falso: en la tropopausa se queda constante."],
  ["q13","X.050","o","dev","—",["—","·","··","···"],""],
- ["q13~1", "X.050", "t", "dev", "At 18,000 ft the temperature is −30 °C. Compared with ISA it is:", ["About 9 °C colder (ISA −9)", "About 9 °C warmer (ISA +9)", "Within ±5 °C of ISA", "Exactly ISA"], "ISA a 18.000 ft = −21 °C. −30 − (−21) = −9. La clave del PDF («High») está mal."],
+ ["q13~1", "X.050", "t", "dev", "At 18,000 ft the temperature is −30 °C. Compared with ISA it is:", ["About 9 °C colder (ISA −9)", "About 9 °C warmer (ISA +9)", "Within ±5 °C of ISA", "Exactly ISA"], "ISA a 18.000 ft = −21 °C. −30 − (−21) = −9. La clave del temario («High») está mal."],
  ["q13~2", "X.050", "t", "dev", "At 18,000 ft the ISA temperature is:", ["−21 °C", "−36 °C", "−30 °C", "−56.5 °C"], "15 − 2 × 18 = −21 °C."],
  ["q14","X.050","o","dev","—",["—","·","··","···"],""],
  ["q14~1", "X.050", "t", "dev", "At 7,000 ft the outside temperature is +5 °C. The ISA deviation is:", ["ISA +4", "ISA −4", "ISA +10", "ISA +5"], "ISA = 15 − 14 = +1. 5 − 1 = +4."],
  ["q14~2", "X.050", "t", "dev", "At 7,000 ft the ISA temperature is:", ["+1 °C", "+15 °C", "−1 °C", "+7 °C"], "ISA a 7.000 ft = 15 − 14 = +1 °C. 5 − 1 = +4 → dentro de ±5."],
  ["q15","X.050","o","isa2","—",["—","·","··","···"],""],
- ["q15~1", "X.050", "t", "isa2", "The ISA lapse rate in the troposphere is about:", ["0.65 °C per 100 m (1.98 °C per 1,000 ft)", "6.5 °C per 100 m (19.8 °C per 1,000 ft)", "2 °C per 100 ft (20 °C per 1,000 ft)", "1 °C per 27 ft (37 °C per 1,000 ft)"], "1,98 °C cada 1.000 ft = 0,65 °C cada 100 m. (En el PDF la opción «−6,5 °C/1000 m» también sería correcta: es lo mismo.)"],
- ["q15~2", "X.050", "t", "isa2", "1.98 °C per 1,000 ft is the same as about:", ["0.65 °C per 100 m", "6.5 °C per 100 m", "1.98 °C per 100 m", "0.198 °C per 1,000 m"], "1,98 °C cada 1.000 ft = 0,65 °C cada 100 m. (En el PDF la opción «−6,5 °C/1000 m» también sería correcta: es lo mismo.)"],
+ ["q15~1", "X.050", "t", "isa2", "The ISA lapse rate in the troposphere is about:", ["0.65 °C per 100 m (1.98 °C per 1,000 ft)", "6.5 °C per 100 m (19.8 °C per 1,000 ft)", "2 °C per 100 ft (20 °C per 1,000 ft)", "1 °C per 27 ft (37 °C per 1,000 ft)"], "1,98 °C cada 1.000 ft = 0,65 °C cada 100 m. (En el temario la opción «−6,5 °C/1000 m» también sería correcta: es lo mismo.)"],
+ ["q15~2", "X.050", "t", "isa2", "1.98 °C per 1,000 ft is the same as about:", ["0.65 °C per 100 m", "6.5 °C per 100 m", "1.98 °C per 100 m", "0.198 °C per 1,000 m"], "1,98 °C cada 1.000 ft = 0,65 °C cada 100 m. (En el temario la opción «−6,5 °C/1000 m» también sería correcta: es lo mismo.)"],
  ["q21","040.02.01","o","dalton","—",["—","·","··","···"],""],
  ["q21~1", "040.02.01", "t", "dalton", "Which law explains «each gas in the air pushes with its own share of the total pressure»?", ["Dalton's law", "Boyle's law", "Henry's law", "Charles's law"], "Suma de presiones parciales, de gases que no reaccionan entre sí."],
  ["q21~2", "040.02.01", "t", "dalton", "According to Dalton's law, if the total pressure halves while the air still has 21 % oxygen, the partial pressure of oxygen:", ["Also halves", "Stays the same", "Doubles", "Becomes 21 % of the sea-level value"], "Suma de presiones parciales, de gases que no reaccionan entre sí."],
  ["q22","040.02.01","o","charles","—",["—","·","··","···"],""],
  ["q22~1", "040.02.01", "t", "charles", "A balloon is heated while the pressure stays the same. Its volume will:", ["Increase", "Decrease", "Stay the same", "First decrease, then increase"], "Más temperatura → más volumen (a presión constante). «Inversely» es la trampa."],
- ["q22~2", "040.02.01", "t", "charles", "In Charles's law, the temperature must be used as:", ["Absolute temperature: °C + 273 (kelvin)", "Degrees Celsius", "Degrees Fahrenheit", "Any unit, it does not matter"], "El PDF: T absoluta = °C + 273."],
+ ["q22~2", "040.02.01", "t", "charles", "In Charles's law, the temperature must be used as:", ["Absolute temperature: °C + 273 (kelvin)", "Degrees Celsius", "Degrees Fahrenheit", "Any unit, it does not matter"], "En el temario: T absoluta = °C + 273."],
  ["q23","040.02.01","o","henry","—",["—","·","··","···"],""],
  ["q23~1", "040.02.01", "t", "henry", "Which law is used to work out the risk of decompression sickness (the bends) in divers?", ["Henry's law", "Charles's law", "Boyle's law", "Dalton's law"], "Henry = gas disuelto en un líquido."],
  ["q23~2", "040.02.01", "t", "henry", "The more pressure a gas exerts on a liquid, the more of that gas:", ["Dissolves in the liquid", "Escapes from the liquid", "Turns into a solid", "Stays above the liquid"], "Henry = gas disuelto en un líquido."],
  ["q24","040.02.01","o","boyle","—",["—","·","··","···"],""],
  ["q24~1", "040.02.01", "t", "boyle", "Which law says «more pressure, less volume» at constant temperature?", ["Boyle-Mariotte's law", "Charles's law", "Henry's law", "Dalton's law of partial pressures"], "Boyle-Mariotte."],
- ["q24~2", "040.02.01", "t", "boyle", "A gas at 1 bar occupies 6 litres. At constant temperature, at 2 bar it will occupy:", ["3 litres", "12 litres", "6 litres", "1.5 litres"], "Boyle: doble presión → mitad de volumen (como el dibujo del PDF, de 1.00 a 2.00)."],
+ ["q24~2", "040.02.01", "t", "boyle", "A gas at 1 bar occupies 6 litres. At constant temperature, at 2 bar it will occupy:", ["3 litres", "12 litres", "6 litres", "1.5 litres"], "Boyle: doble presión → mitad de volumen (como el dibujo del temario, de 1.00 a 2.00)."],
  ["q25","040.02.01","o","law","—",["—","·","··","···"],""],
  ["q25~1", "040.02.01", "t", "law", "Which gas laws are relevant to the pilot in flight?", ["Boyle, Charles, Dalton and Henry", "Only Boyle's law, for trapped gases", "Only Dalton's law, for hypoxia", "Only Henry's law, for diving"], "Las cuatro importan en vuelo."],
  ["q25~2", "040.02.01", "t", "law", "Match in order — trapped gas expanding in the climb · hypoxia · decompression sickness:", ["Boyle · Dalton · Henry", "Henry · Boyle · Dalton", "Dalton · Henry · Boyle", "Charles · Charles · Charles"], "Las cuatro importan en vuelo."],
  ["q31","040.02.01","o","tuc2","—",["—","·","··","···"],""],
  ["q31~1", "040.02.01", "t", "tuc2", "Compared with the time of useful consciousness, the effective performance time is:", ["Always shorter, and it varies with the person", "Always longer, as it includes the recovery", "Exactly the same, they are synonyms", "Fixed at 5 minutes at any altitude"], "EPT siempre más corta que el TUC y variable según la persona y la situación."],
- ["q31~2", "040.02.01", "t", "tuc2", "Above 40,000 ft, the effective performance time is approximately:", ["5–6 seconds", "1 minute", "30 seconds", "2 minutes"], "PDF: unos 5–6 s."],
+ ["q31~2", "040.02.01", "t", "tuc2", "Above 40,000 ft, the effective performance time is approximately:", ["5–6 seconds", "1 minute", "30 seconds", "2 minutes"], "Unos 5–6 s."],
  ["q32","040.02.01","o","phase","—",["—","·","··","···"],""],
  ["q32~1", "040.02.01", "t", "phase", "Order the four stages of hypoxia from the lowest to the highest altitude:", ["Indifferent → compensatory → disturbance → critical", "Compensatory → indifferent → critical → disturbance", "Indifferent → disturbance → compensatory → critical", "Critical → disturbance → compensatory → indifferent"], "Indiferente → compensatoria → alteración → crítica."],
  ["q32~2", "040.02.01", "t", "phase", "Which stage of hypoxia comes right after the indifferent stage?", ["Compensatory", "Disturbance", "Critical", "Recovery"], "Indiferente → compensatoria → alteración → crítica."],
  ["q33","040.02.01","o","fact","—",["—","·","··","···"],""],
  ["q33~1", "040.02.01", "t", "fact", "Which of these increases the susceptibility to hypoxia?", ["Poor physical condition, illness or fatigue", "Good physical fitness", "Flying lower", "Breathing supplemental oxygen"], "Sí: la forma física es uno de los factores."],
- ["q33~2", "040.02.01", "t", "fact", "Why does cold make hypoxia worse?", ["Shivering increases the body's demand for oxygen", "Cold air contains no oxygen", "Cold slows the aircraft", "It does not: cold protects against hypoxia"], "PDF: tiritar gasta oxígeno."],
+ ["q33~2", "040.02.01", "t", "fact", "Why does cold make hypoxia worse?", ["Shivering increases the body's demand for oxygen", "Cold air contains no oxygen", "Cold slows the aircraft", "It does not: cold protects against hypoxia"], "Tiritar gasta oxígeno."],
  ["q34","040.02.01","o","def","—",["—","·","··","···"],""],
  ["q34~1", "040.02.01", "t", "def", "A pilot whose brain and tissues are not receiving enough oxygen is suffering from:", ["Hypoxia", "Hyperventilation", "Decompression sickness", "Vertigo"], "Falta de oxígeno en células y tejidos."],
  ["q34~2", "040.02.01", "t", "def", "«Hypo» + «oxia» literally means:", ["Less oxygen than normal", "More oxygen than normal", "Without carbon dioxide", "Fast breathing"], "Falta de oxígeno en células y tejidos."],
@@ -1748,14 +1749,14 @@ const BASE = [
  ["q35~1", "040.02.01", "t", "types", "After drinking alcohol, the cells cannot use oxygen properly. This is:", ["Histotoxic hypoxia", "Anaemic hypoxia", "Hypoxic hypoxia", "Ischaemic hypoxia"], "Histotóxica: la célula no puede usar el O₂."],
  ["q35~2", "040.02.01", "t", "types", "In which type of hypoxia does oxygen reach the cells, but they cannot use it?", ["Histotoxic (cytotoxic)", "Hypoxic (altitude)", "Anaemic (hypaemic)", "Stagnant (ischaemic)"], "Histotóxica: la célula no puede usar el O₂."],
  ["q41","040.02.01","o","resp2","—",["—","·","··","···"],""],
- ["q41~1", "040.02.01", "t", "resp2", "The body can store oxygen permanently:", ["False: so we must breathe all the time", "True: it is stored in the alveoli", "True: it is stored in the brain", "True: in the muscles, for days"], "PDF: no podemos almacenarlo; por eso respiramos sin parar."],
+ ["q41~1", "040.02.01", "t", "resp2", "The body can store oxygen permanently:", ["False: so we must breathe all the time", "True: it is stored in the alveoli", "True: it is stored in the brain", "True: in the muscles, for days"], "No podemos almacenarlo; por eso respiramos sin parar."],
  ["q41~2", "040.02.01", "t", "resp2", "Respiration brings ___ into the cells and removes ___:", ["Oxygen · carbon dioxide", "Carbon dioxide · oxygen", "Nitrogen · oxygen", "Oxygen · nitrogen"], "Llevar oxígeno hasta las células (y sacar el CO₂)."],
  ["q42","040.02.01","o","gas","—",["—","·","··","···"],""],
  ["q42~1", "040.02.01", "t", "gas", "In the alveoli, carbon dioxide moves:", ["From the blood into the lungs, to be breathed out", "From the lungs into the blood, to be carried away", "From the alveoli into the bronchi, to be stored", "It stays in the blood and does not move at all"], "El CO₂ pasa de la sangre al pulmón para expulsarlo."],
  ["q42~2", "040.02.01", "t", "gas", "In the alveoli, oxygen moves from ___ and CO₂ moves from ___:", ["The air into the blood · the blood into the air", "The blood into the air · the air into the blood", "The air into the bones · the bones into the air", "Both from the blood into the air"], "El CO₂ pasa de la sangre al pulmón para expulsarlo."],
  ["q43","040.02.01","o","resp2","—",["—","·","··","···"],""],
- ["q43~1", "040.02.01", "t", "resp2", "Normal breathing at rest is about:", ["12–20 breaths per minute (about 16)", "4–8 breaths per minute (about 6)", "30–40 breaths per minute (about 35)", "50–70 breaths per minute (about 60)"], "PDF: 12–20 por minuto, media 16."],
- ["q43~2", "040.02.01", "t", "resp2", "On average, an adult at rest breathes about how many times per minute?", ["16", "6", "40", "100"], "PDF: 12–20 por minuto, media 16."],
+ ["q43~1", "040.02.01", "t", "resp2", "Normal breathing at rest is about:", ["12–20 breaths per minute (about 16)", "4–8 breaths per minute (about 6)", "30–40 breaths per minute (about 35)", "50–70 breaths per minute (about 60)"], "12–20 por minuto, media 16."],
+ ["q43~2", "040.02.01", "t", "resp2", "On average, an adult at rest breathes about how many times per minute?", ["16", "6", "40", "100"], "12–20 por minuto, media 16."],
  ["q44","040.02.01","o","gas","—",["—","·","··","···"],""],
  ["q44~1", "040.02.01", "t", "gas", "Oxygen passes from the alveoli into the blood by:", ["Diffusion through the alveolar and capillary walls", "Being pumped in by the diaphragm muscles", "Being stored first in the bronchi and bronchioles", "Dissolving first in the walls of the trachea"], "Verdadero: atraviesa la pared de los alvéolos."],
  ["q44~2", "040.02.01", "t", "gas", "Once in the blood, oxygen attaches mainly to:", ["Haemoglobin in the red blood cells", "Proteins of the white blood cells", "The water in the blood plasma", "The nitrogen dissolved in the blood"], "Verdadero: atraviesa la pared de los alvéolos."],
@@ -1781,8 +1782,8 @@ const BASE = [
  ["q71~1", "040.02.02", "t", "leans", "After a long, steady turn the pilot rolls wings level. The balance organs make him feel:", ["A turn in the opposite direction", "Perfectly level", "A climb", "A stronger turn in the same direction"], "The leans: tras un viraje prolongado, al nivelar sientes que viras al lado contrario."],
  ["q71~2", "040.02.02", "t", "leans", "A pilot who feels he is still turning after rolling level, and leans his body to compensate, is suffering from:", ["The leans (somatogyral)", "Hypoxic hypoxia", "Autokinesis at night", "Presbyopia with age"], "The leans: tras un viraje prolongado, al nivelar sientes que viras al lado contrario."],
  ["q72","040.02.02","o","leans","—",["—","·","··","···"],""],
- ["q72~1", "040.02.02", "t", "leans", "Spatial disorientation was a contributory factor in about what share of general aviation accidents?", ["37 %", "3 %", "80 %", "100 %"], "PDF: 37 %."],
- ["q72~2", "040.02.02", "t", "leans", "Of the accidents caused directly by spatial disorientation, the share that are fatal is:", ["Over 80 %", "About 10 %", "About 37 %", "None"], "Más del 80 % de los accidentes causados directamente por desorientación espacial son mortales (PDF 2.7)."],
+ ["q72~1", "040.02.02", "t", "leans", "Spatial disorientation was a contributory factor in about what share of general aviation accidents?", ["37 %", "3 %", "80 %", "100 %"], "37 %."],
+ ["q72~2", "040.02.02", "t", "leans", "Of the accidents caused directly by spatial disorientation, the share that are fatal is:", ["Over 80 %", "About 10 %", "About 37 %", "None"], "Más del 80 % de los accidentes causados directamente por desorientación espacial son mortales."],
  ["q73","040.02.02","o","eust","—",["—","·","··","···"],""],
  ["q73~1", "040.02.02", "t", "eust", "The tube that connects the middle ear with the throat and lets the pressure equalise is the:", ["Eustachian tube", "Cochlea", "Auditory canal (meatus)", "Semicircular canal"], "La trompa de Eustaquio."],
  ["q73~2", "040.02.02", "t", "eust", "Ear pain during descent, because the pressure cannot equalise across the eardrum, is called:", ["Otic barotrauma", "Vertigo", "Autokinesis", "Presbyopia"], "El barotrauma ótico aparece cuando la trompa de Eustaquio no iguala la presión entre el oído medio y el exterior."],
@@ -1793,7 +1794,7 @@ const BASE = [
  ["q75~1", "040.02.02", "t", "ear", "Which parts of the ear contain air, and which contain liquid?", ["Outer and middle: air · inner: liquid", "Outer: liquid · middle and inner: air", "All three: liquid", "All three: air"], "Externo y medio llevan aire; el interno, líquido (cóclea y canales semicirculares)."],
  ["q75~2", "040.02.02", "t", "ear", "The cochlea and the semicircular canals are in the:", ["Inner ear", "Middle ear", "Outer ear", "Eustachian tube"], "La cóclea y los canales semicirculares están en el oído interno."],
  ["q61", "040.02.02", "o", "eye", "—", ["—", "·", "··", "···"], ""],
- ["q61~1", "040.02.02", "t", "eye", "Does a lack of oxygen affect sight?", ["Yes", "No", "Sometimes", "It depends on the health of the individual"], "Sí: rods y cones son extensión del nervio óptico y les afecta la falta de oxígeno, el exceso de alcohol, las drogas y la medicación (PDF 2.6)."],
+ ["q61~1", "040.02.02", "t", "eye", "Does a lack of oxygen affect sight?", ["Yes", "No", "Sometimes", "It depends on the health of the individual"], "Sí: rods y cones son extensión del nervio óptico y les afecta la falta de oxígeno, el exceso de alcohol, las drogas y la medicación."],
  ["q61~2", "040.02.02", "t", "eye", "Rods and cones are very much affected by:", ["A shortage of oxygen, excess alcohol and drugs", "Only a shortage of oxygen, not alcohol", "Only very bright light, not oxygen", "Nothing, they are protected by the retina"], "Son terminaciones del nervio óptico (una extensión del cerebro): la falta de O₂, el alcohol, las drogas y la medicación los afectan."],
  ["q61~3", "040.02.02", "t", "eye", "Which of these can reduce the performance of the rods and cones?", ["A lack of oxygen", "A well-lit cockpit", "A spare pair of spectacles", "A short flight"], "Falta de oxígeno, exceso de alcohol, drogas y medicación les afectan."],
  ["q61~4", "040.02.02", "t", "eye", "At high altitude without supplemental oxygen, vision:", ["Can deteriorate", "Always improves", "Is not affected at all", "Improves only in daylight"], "La falta de oxígeno afecta a la vista."],
@@ -1891,8 +1892,8 @@ const BASE = [
  ["pv17~2", "040.02.02", "p", "ear", "The outer, middle and inner ear are the ___ sections of the ear.", ["three", "two", "four", "five"], "Tres secciones."],
  ["pv17~3", "040.02.02", "p", "ear", "Which of these is NOT a section of the ear?", ["The fovea", "The outer ear", "The middle ear", "The inner ear"], "La fóvea es de la retina."],
  ["q83","040.03.02","o","etypes","—",["—","·","··","···"],""],
- ["q83~1", "040.03.02", "t", "etypes", "A pilot correctly decides to do the engine fire drill but presses the wrong switch. This is a:", ["Slip (right intention, wrong execution)", "Fault (wrong intention, right execution)", "Violation", "Omission"], "Según el PDF: faults y slips."],
- ["q83~2", "040.03.02", "t", "etypes", "A pilot performs a drill perfectly, but it was the wrong drill for that emergency. This is a:", ["Fault", "Slip", "Omission", "Violation"], "Según el PDF: faults y slips."],
+ ["q83~1", "040.03.02", "t", "etypes", "A pilot correctly decides to do the engine fire drill but presses the wrong switch. This is a:", ["Slip (right intention, wrong execution)", "Fault (wrong intention, right execution)", "Violation", "Omission"], "Según el temario: faults y slips."],
+ ["q83~2", "040.03.02", "t", "etypes", "A pilot performs a drill perfectly, but it was the wrong drill for that emergency. This is a:", ["Fault", "Slip", "Omission", "Violation"], "Según el temario: faults y slips."],
  ["a20","X.050","o","trop2","—",["—","·","··","···"],""],
  ["a20~1", "X.050", "p", "trop2", "Which trace gas is the most significant for the weather?", ["Water vapour", "Argon gas", "Neon gas", "Helium gas"], "¾ del peso y casi toda la meteorología."],
  ["a20~2", "X.050", "p", "trop2", "Without water vapour in the atmosphere there would be:", ["No weather", "No nitrogen", "No pressure", "No tropopause"], "¾ del peso y casi toda la meteorología."],
@@ -1916,16 +1917,16 @@ const BASE = [
  ["h36~2", "040.02.01", "p", "smoke", "Smoking mainly causes:", ["Anaemic hypoxia (CO takes the haemoglobin)", "Hypoxic hypoxia (less oxygen in the air)", "Stagnant hypoxia (the blood flow slows)", "Hyperventilation (too much CO₂ is lost)"], "Más abajo: el CO ya le quita hemoglobina."],
  ["h37","040.02.01","o","tuc2","—",["—","·","··","···"],""],
  ["h37~1", "040.02.01", "p", "tuc2", "Which of these makes the time of useful consciousness shorter?", ["Workload, smoking and obesity", "Being fit and resting", "A progressive instead of an explosive decompression", "Flying lower"], "No es hasta el desmayo: es el tiempo útil para reaccionar."],
- ["h37~2", "040.02.01", "p", "tuc2", "According to the PDF table, at 25,000 ft, sitting quietly, after a progressive decompression the TUC is about:", ["5 minutes", "40 minutes", "25 seconds", "10 seconds"], "No es hasta el desmayo: es el tiempo útil para reaccionar."],
+ ["h37~2", "040.02.01", "p", "tuc2", "According to the syllabus table, at 25,000 ft, sitting quietly, after a progressive decompression the TUC is about:", ["5 minutes", "40 minutes", "25 seconds", "10 seconds"], "No es hasta el desmayo: es el tiempo útil para reaccionar."],
  ["h38","040.02.01","o","stage2","—",["—","·","··","···"],""],
- ["h38~1", "040.02.01", "p", "stage2", "According to the PDF, when should the pilot put on the oxygen mask?", ["When the altitude approaches 10,000 ft", "Only after feeling symptoms", "Only above 25,000 ft", "Never in a light aircraft"], "Euforia: te sientes genial y no reaccionas."],
+ ["h38~1", "040.02.01", "p", "stage2", "According to the syllabus, when should the pilot put on the oxygen mask?", ["When the altitude approaches 10,000 ft", "Only after feeling symptoms", "Only above 25,000 ft", "Never in a light aircraft"], "Euforia: te sientes genial y no reaccionas."],
  ["h38~2", "040.02.01", "p", "stage2", "In an emergency with oxygen masks, you should put on yours:", ["First, before helping anyone else", "After helping the passengers", "Only if the captain orders it", "Never"], "Euforia: te sientes genial y no reaccionas."],
  ["h39","040.02.01","o","stage2","—",["—","·","··","···"],""],
  ["h39~1", "040.02.01", "p", "stage2", "In the indifferent stage, which function can already be affected (from as low as 5,000 ft)?", ["Night vision", "Hearing", "Sense of smell", "Balance"], "Fase de alteración."],
  ["h39~2", "040.02.01", "p", "stage2", "In the compensatory stage, the body defends itself by:", ["More breathing, cardiac output and blood pressure", "Stopping breathing for a short time to save O₂", "Lowering the heart rate to reduce the O₂ demand", "Producing nitrogen to replace the missing oxygen"], "Fase de alteración."],
  ["rs15","040.02.01","o","hyv2","—",["—","·","··","···"],""],
- ["rs15~1", "040.02.01", "p", "hyv2", "Above 10,000 ft, if in doubt between hypoxia and hyperventilation, you should:", ["Use oxygen first; if no rapid improvement, treat hyperventilation", "Treat as hyperventilation first, and only then use oxygen", "Do nothing until the symptoms are clear enough", "Climb to a higher level to get out of the problem"], "PDF: la máscara no cura la hiperventilación (falta CO₂, no O₂)."],
- ["rs15~2", "040.02.01", "p", "hyv2", "Hyperventilation typically produces numbness and tingling in the:", ["Lips, fingertips and toes", "Ears and the back of the neck", "Lower back and shoulders", "Knees and elbows"], "PDF: la máscara no cura la hiperventilación (falta CO₂, no O₂)."],
+ ["rs15~1", "040.02.01", "p", "hyv2", "Above 10,000 ft, if in doubt between hypoxia and hyperventilation, you should:", ["Use oxygen first; if no rapid improvement, treat hyperventilation", "Treat as hyperventilation first, and only then use oxygen", "Do nothing until the symptoms are clear enough", "Climb to a higher level to get out of the problem"], "La máscara no cura la hiperventilación (falta CO₂, no O₂)."],
+ ["rs15~2", "040.02.01", "p", "hyv2", "Hyperventilation typically produces numbness and tingling in the:", ["Lips, fingertips and toes", "Ears and the back of the neck", "Lower back and shoulders", "Knees and elbows"], "La máscara no cura la hiperventilación (falta CO₂, no O₂)."],
  ["rs16","040.02.01","o","resp2","—",["—","·","··","···"],""],
  ["rs16~1", "040.02.01", "p", "resp2", "Normal breathing is controlled by:", ["The autonomic nervous system", "Conscious effort, all the time", "The balance organs of the inner ear", "The stomach and the digestive system"], "Ventilación, intercambio y uso en la célula."],
  ["rs16~2", "040.02.01", "p", "resp2", "Air is drawn into the lungs when:", ["The chest enlarges and its inner pressure falls", "The heart pumps the air into the lungs", "The stomach contracts and pushes the air", "The pressure in the chest rises above outside"], "Ventilación, intercambio y uso en la célula."],
@@ -1950,7 +1951,7 @@ const BASE = [
  ["cv6","040.02.01","o","vessels","—",["—","·","··","···"],""],
  ["cv6~1", "040.02.01", "p", "vessels", "Approximately, the blood of the systemic circulation is distributed as:", ["30 % arteries, 5 % capillaries, 65 % veins", "65 % arteries, 5 % capillaries, 30 % veins", "5 % arteries, 30 % capillaries, 65 % veins", "A third in each"], "30 % arterias · 5 % capilares · 65 % venas."],
  ["cv6~2", "040.02.01", "p", "vessels", "What share of the systemic blood is in the capillaries at any moment?", ["About 5 %", "About 30 %", "About 65 %", "About 50 %"], "30 % arterias · 5 % capilares · 65 % venas."],
- ["cv7", "040.02.01", "c", "circ", "The pulmonary artery carries:", ["Oxygen-poor blood from the heart to the lungs", "Oxygen-rich blood from the lungs to the heart", "Oxygen-rich blood to the body", "Air to the lungs"], "Trampa: «arteria» = sale del corazón, aunque la sangre vaya pobre en O₂ (dibujo del PDF)."],
+ ["cv7", "040.02.01", "c", "circ", "The pulmonary artery carries:", ["Oxygen-poor blood from the heart to the lungs", "Oxygen-rich blood from the lungs to the heart", "Oxygen-rich blood to the body", "Air to the lungs"], "Trampa: «arteria» = sale del corazón, aunque la sangre vaya pobre en O₂ (dibujo del temario)."],
  ["cv8","040.02.01","o","cvfunc","—",["—","·","··","···"],""],
  ["cv8~1", "040.02.01", "p", "cvfunc", "Besides carbohydrates, the body can obtain energy from:", ["Proteins and fats", "Nitrogen", "Carbon dioxide", "Plasma water"], "Carbohidratos; también proteínas y grasas."],
  ["cv8~2", "040.02.01", "p", "cvfunc", "The tissues need oxygen to:", ["Burn (oxidise) food and produce energy", "Make the blood in the veins turn blue", "Equalise the pressure in the middle ear", "Store carbon dioxide for later use"], "Carbohidratos; también proteínas y grasas."],
@@ -2048,7 +2049,7 @@ const BASE = [
  ["A95", "040.03.06", "a", "stress", "Stress is the result of:", ["Perceived demands compared with perceived ability", "The real difficulty of the task alone", "A lack of sleep, and nothing else", "Flying in bad weather, and nothing else"], "Estrés = demanda percibida frente a capacidad percibida. Es subjetivo y acumulativo."],
  ["A98", "040.03.06", "a", "fatigue", "Which is a typical symptom of fatigue?", ["Reduced scan and more errors", "Improved short-term memory", "Faster reaction times", "Better crew communication"], "Fatiga: escaneo reducido, más errores, menos comunicación, irritabilidad."],
  ["A99", "040.03.06", "a", "fatigue", "Short-term fatigue is usually cured by:", ["Rest and sleep", "Caffeine", "Oxygen", "Exercise in flight"], "La de corto plazo se arregla descansando; la crónica necesita mucho más."],
-["q81~1","040.03.01","t","mem","How many unrelated items can normally be held in short-term memory at one time?",["7 ± 2","8 ± 2","6 ± 2","5 ± 2"],"Memoria a corto plazo: 7 ± 2 elementos sin relación (Miller), como dice el curso (PDF 2.8)."],
+["q81~1","040.03.01","t","mem","How many unrelated items can normally be held in short-term memory at one time?",["7 ± 2","8 ± 2","6 ± 2","5 ± 2"],"Memoria a corto plazo: 7 ± 2 elementos sin relación (Miller), como dice el curso."],
 ["q81~2","040.03.01","t","mem","A pilot receives a long departure clearance and cannot write it down. Roughly how many unrelated items can he hold in short-term memory?",["About 7 ± 2","About 3","About 15","About 20"],"Capacidad limitada: 7 ± 2 elementos; por eso la autorización se apunta."],
 ["q82~1","040.03.01","t","attn","What are the two types of attention?",["Selective and divided","Cognitive and intuitive","Intuitive and behavioural","Divided and intuitive"],"Selective (eliges qué atender; tu indicativo te salta) y divided (reparto de tiempo entre tareas)."],
 ["q82~2","040.03.01","t","attn","A pilot flying a visual approach looks outside and checks the instruments in turn. This is an example of:",["Divided attention","Selective attention","Intuitive attention","Passive attention"],"El procesador central dedica una fracción de segundo a cada tarea, una tras otra: atención dividida."],
@@ -2064,10 +2065,10 @@ const BASE = [
 ["q93~2","040.03.06","t","stress","The cause of stress is called a:",["Stressor","Stress limit","Coping strategy","Arousal"],"Los stressors causan el estrés."],
  ["q94~1", "040.03.06", "t", "fatigue", "Which statement about fatigue is correct?", ["It builds up over time: it is cumulative", "It disappears after a single cup of coffee", "It is instantly recognised by the sufferer", "It affects only the body, never the mind"], "La fatiga, como el estrés, es acumulativa."],
 ["q94~2","040.03.06","t","fatigue","In what way does fatigue differ from simple tiredness?",["It is more insidious: the pilot may be unaware of it for a long time","It is always instantly recognised by the sufferer","It is easy to admit to the crew","It is caused only by jet lag"],"El cansancio se nota y se admite; la fatiga es insidiosa y cuesta reconocerla."],
- ["q94~3", "040.03.06", "t", "fatigue", "Fatigue, similar to stress, is:", ["Just for some pilots", "Long term", "Mnemonics", "None of the above"], "Clave del PDF 2.9 y del trial: «just for some pilots» (como el estrés, no afecta igual a todos)."],
- ["q94~4", "040.03.06", "t", "fatigue", "Fatigue, like stress, affects:", ["Just some pilots, not all alike", "Every pilot in exactly the same way", "Only pilots who fly long-haul routes", "Only pilots who are over fifty"], "Clave del PDF 2.9 y del trial: «just for some pilots»."],
- ["q94~5", "040.03.06", "t", "fatigue", "According to the course, fatigue (similar to stress) is:", ["Just for some pilots", "A mnemonic", "Always obvious to the pilot", "Removed by a cup of coffee"], "Clave del PDF 2.9 y del trial: «just for some pilots»."],
- ["q94~6", "040.03.06", "t", "fatigue", "Fatigue, similar to stress, is something that happens to:", ["Some pilots more than to others", "All pilots equally", "Nobody who sleeps 6 hours", "Only student pilots"], "Clave del PDF 2.9 y del trial: «just for some pilots»."],
+ ["q94~3", "040.03.06", "t", "fatigue", "Fatigue, similar to stress, is:", ["Just for some pilots", "Long term", "Mnemonics", "None of the above"], "Clave del trial: «just for some pilots» (como el estrés, no afecta igual a todos)."],
+ ["q94~4", "040.03.06", "t", "fatigue", "Fatigue, like stress, affects:", ["Just some pilots, not all alike", "Every pilot in exactly the same way", "Only pilots who fly long-haul routes", "Only pilots who are over fifty"], "Clave del trial: «just for some pilots»."],
+ ["q94~5", "040.03.06", "t", "fatigue", "According to the course, fatigue (similar to stress) is:", ["Just for some pilots", "A mnemonic", "Always obvious to the pilot", "Removed by a cup of coffee"], "Clave del trial: «just for some pilots»."],
+ ["q94~6", "040.03.06", "t", "fatigue", "Fatigue, similar to stress, is something that happens to:", ["Some pilots more than to others", "All pilots equally", "Nobody who sleeps 6 hours", "Only student pilots"], "Clave del trial: «just for some pilots»."],
 ["q95~1","040.03.06","t","stress","Successfully completing a stressful task will, in a similar future situation:",["Reduce the stress experienced","Increase the stress experienced","Have no effect on the stress","Make the pilot more sensitive to stressors"],"La experiencia ayuda a combatir el estrés: completar con éxito una tarea estresante lo reduce la próxima vez."],
 ["q95~2","040.03.06","t","stress","Which of these increases a pilot's resistance to stress?",["Experience","Unfamiliar procedures","Poor briefing","Sleep deprivation"],"Experiencia, aprendizaje y CRM son las armas contra el estrés."],
 ["q101~1","040.03.04","t","sa","Unexplained discrepancies between instruments are a signal of:",["Bad (lost) situational awareness","An electrical system malfunction","Insufficient preparation","Good situational awareness"],"Instrumentos que no cuadran: señal de pérdida de situational awareness."],
@@ -2363,7 +2364,7 @@ function examBar(){
   return BLOCKS.map(b=>`<div class="xrow"><div class="xlab"><b>${b.code}</b> ${b.n}</div><div class="xtrack"><div class="xsegs" style="width:${b.n/maxN*100}%">${
     SUB.filter(s=>s[1]===b.k).map(s=>{ const l=s[0], x=st.lo[l];
       return `<button class="seg ${segKind(l,st)}" style="flex:${W[l]}" data-go="lo-${l}" title="${l} · ${esc(s[3])} — ≈ ${fmt1(W[l])} preg. · ${x?pct1(x.m)+" %":"sin practicar"}"></button>`; }).join("")}</div></div></div>`).join("")
-   + `<p class="xleg"><span><i class="seg full"></i>dado y por encima del 75 %</span><span><i class="seg part"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · aún no dado</span></p>`;
+   + `<p class="xleg"><span><i class="seg full"></i>dado y por encima del 75 %</span><span><i class="seg part"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></p>`;
 }
 function renderNotesMeta(){
   const st = stats();
@@ -2456,7 +2457,7 @@ function renderMap(){
       <div class="bar"><i style="width:${Math.round(c.fails/maxF*100)}%;background:${c.recent?'var(--ok)':'var(--bad)'}"></i></div>
       <div class="muted cmeta">${[...c.lo].map(l=>esc(loLabel(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
     </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
-  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media">≈ Preg.</th><th>Estado</th><th title="Preguntas de Fase 0 (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
+  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media">≈ Preg.</th><th>Estado</th><th title="Preguntas del temario base (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
   const groups = BLOCKS.map(b=>({t:`${b.code} · ${b.name} · ${b.n} preguntas`, k:b.k})).concat([{t:"De otras asignaturas (050)", k:"X"}]);
   groups.forEach(g=>{
     rows += `<tr><th colspan="8" style="padding-top:14px">${esc(g.t)}</th></tr>`;
@@ -2518,7 +2519,7 @@ function renderSetup(){
   const st = stats();
   const nw = BANK.filter(q=>servable(q) && ((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
-  $("#allCount").textContent = `${BANK.filter(q=>servable(q) && isGiven(q)).length} preguntas de lo dado + ${BANK.filter(q=>q[2]==="a").length} de ATPL aún no dado.`;
+  $("#allCount").textContent = `${BANK.filter(q=>servable(q) && isGiven(q)).length} preguntas de lo dado + ${BANK.filter(q=>q[2]==="a").length} de ampliación ATPL.`;
   const groups = new Set(BANK.filter(q=>q[2]==="t").map(q=>baseOf(q[0])));
   $("#trialCount").textContent = `25 por test, de las ${groups.size} del trial, en variante. Primero las no vistas y las falladas.`;
   const selected = $("#loSel").value;
@@ -2583,7 +2584,7 @@ async function finishTest(timeout){
   state.attempts.push(rec);
   const realS = 90*60/48, perQ = usedS/current.length;
   const blockHTML = curMode==="adaptive" ? `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el test da unos ${Math.round(45*60/25)} s).</div>` : curMode!=="senasa" ? "" : `
-      <div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el real da ${Math.round(realS)} s). ${perQ<=realS?`En el real te sobrarían <b>${Math.max(0,Math.round((90*60-perQ*48)/60))} min</b> para repasar.`:`<span class="fail">A este ritmo no te daría tiempo a repasar en el real.</span>`}<br><b>Fase 0:</b> ${s0}/${n0}${n0?` (${Math.round(s0/n0*100)} %)`:""}${current.length-n0?` · <b>ATPL:</b> ${score-s0}/${current.length-n0}`:""}</div>
+      <div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el real da ${Math.round(realS)} s). ${perQ<=realS?`En el real te sobrarían <b>${Math.max(0,Math.round((90*60-perQ*48)/60))} min</b> para repasar.`:`<span class="fail">A este ritmo no te daría tiempo a repasar en el real.</span>`}<br><b>Temario base:</b> ${s0}/${n0}${n0?` (${Math.round(s0/n0*100)} %)`:""}${current.length-n0?` · <b>ATPL:</b> ${score-s0}/${current.length-n0}`:""}</div>
       <div class="scroll"><table style="margin-top:8px"><tr><th>Capítulo</th><th>Aciertos</th></tr>${BLOCKS.filter(b=>byBlock[b.k]).map(b=>{const x=byBlock[b.k], p=Math.round(x.ok/x.total*100); return `<tr><td><b>${b.code}</b> ${esc(b.name)}</td><td class="${p>=75?'pass':'fail'}">${x.ok}/${x.total} · ${p} %</td></tr>`;}).join("")}</table></div>`;
   const st = stats(), next = atStake(st).slice(0,2), los = Object.keys(byLO).sort();
   $("#result").innerHTML = `
@@ -2804,7 +2805,7 @@ function quizButtons(box, opts, correct, fb, expl, onDone){
   const box = document.getElementById("visTypes"); if(!box) return;
   const CASES = [["Subes a 18.000 ft sin oxígeno en un avión sin presurizar.","hypoxic","Falla el AIRE: poca presión del O₂ que respiras."],
     ["La calefacción de cabina pierde gases del escape (CO).","anaemic","Falla la SANGRE: el CO ocupa la hemoglobina."],
-    ["Eres fumador habitual: parte de tu hemoglobina lleva CO.","anaemic","Falla la SANGRE (el PDF lo pone en anaemic). Notas la hipoxia 4.000–5.000 ft más abajo."],
+    ["Eres fumador habitual: parte de tu hemoglobina lleva CO.","anaemic","Falla la SANGRE (el temario lo pone en anaemic). Notas la hipoxia 4.000–5.000 ft más abajo."],
     ["Tienes anemia: poca hemoglobina.","anaemic","Falla la SANGRE: no puede cargar suficiente O₂."],
     ["En un viraje con muchas G la sangre se queda en las piernas.","stagnant","Falla la CIRCULACIÓN: la sangre no llega."],
     ["Llevas horas inmóvil y la sangre circula mal.","stagnant","Falla la CIRCULACIÓN (estancamiento o inactividad)."],
@@ -3165,7 +3166,8 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   new MutationObserver(ms=>{ for(const m of ms) m.addedNodes.forEach(n=>{ if(n.nodeType!==1) return; if(n.matches&&n.matches(".expl")){ decorate(n.parentNode); } else if(n.querySelector&&n.querySelector(".expl")) decorate(n); }); }).observe(document.body,{childList:true,subtree:true});
   window.F0GO={resolve,best};
 }catch(e){ console.error("f0go",e); } })();
-</script><!--/f0go--><script>/* Rotación real de preguntas (Adaptativo y Trial).
+</script><!--/f0go--><script>window.__F0CL={"gl10":0,"tr5~1":0,"tr5":0,"tr5~2":0,"a2~2":1,"a2":1,"q12~1":1,"q12":1,"gl9":2,"q23~1":2,"q23":2,"h12~2":3,"h12":3,"q35~2":3,"q35":3,"cv5~1":4,"cv5":4,"cv7":4,"A97":5,"rs16~1":5,"rs16":5};</script>
+<script>/* Rotación real de preguntas (Adaptativo y Trial).
    Antes: la prioridad solo se atenuaba un poco por lo servido en los últimos tests, así que las falladas y las "clave"
    volvían una y otra vez y el Trial (≈90 preguntas) se agotaba en 3 tests y empezaba a repetir.
    Ahora: MAZO BARAJADO persistente por asignatura y modo (Fisher-Yates).
@@ -3174,6 +3176,71 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
      (falladas o sin ver) van en la primera mitad de la vuelta, las acertadas después, y nada de lo del último test se repite seguido.
    · Preguntas con el mismo enunciado y distinto id (p. ej. la de clase y la del banco de la escuela) cuentan como una.
    · El mazo se guarda en el dispositivo (localStorage); si no hay almacenamiento funciona igual dentro de la sesión. */
+/* ===== FAMILIA DE PREGUNTA (todas las asignaturas y modos) =====
+   Un test nunca lleva dos preguntas de la misma familia. La familia se agrupa por la PREGUNTA MADRE, no por la variante generada:
+   · id madre (t9101, t9101a y t9101b son la misma: se quita la letra final de variante);
+   · grupos de equivalentes curados (dupclusters/<asignatura>.json, inyectados en el build como window.__F0CL);
+   · mismo generador numérico (varias plantillas que usan la misma fórmula);
+   · mismo enunciado una vez quitados los números (y la misma figura);
+   · conceptos con muchos enunciados distintos (p. ej. las cartas SIGWX de «¿en qué ciudad hay lluvia / tormenta / nieve?»).
+   window.__famKeys(q) devuelve las claves; window.__famGuard(lista, modo) quita lo repetido y lo sustituye por otra de la misma asignatura. */
+(function(){
+  try{
+    const CLm=window.__F0CL||{};
+    const norm=t=>String(t||"").toLowerCase().replace(/[^a-z0-9áéíóúñ%°]+/g," ").trim();
+    const baseId=id=>String(id).replace(/~\d+$/,"").replace(/(\d)[a-z]$/,"$1");
+    const qOf=it=>Array.isArray(it)?it:(it&&it.k==="mc"&&it.q?it.q:null);
+    const FAMS=[[/given the following sigwx|following sigwx/i,"sigwx"]].concat(window.__F0FAM||[]);
+    const cache=new Map();
+    const genName=id=>{ try{ if(typeof GEN_050!=="undefined"&&GEN_050&&GEN_050[id]) return GEN_050[id].name||"gen050"; }catch(e){} try{ if(typeof NUMGEN!=="undefined"&&NUMGEN&&NUMGEN[id]) return NUMGEN[id].name||("numgen"+id); }catch(e){} return null; };
+    const famKeys=q=>{
+      const id=q[0]; if(cache.has(id)) return cache.get(id);
+      const k=["b:"+baseId(id)], stem=String(q[4]||"");
+      const c=CLm[id]!==undefined?CLm[id]:CLm[baseId(id)]; if(c!==undefined) k.push("c:"+c);
+      FAMS.forEach(f=>{ if(f[0].test(stem)) k.push("f:"+f[1]); });
+      const g=genName(id); if(g) k.push("g:"+g);
+      if(stem.length>=40 && stem!=="—"){ const t=norm(stem.replace(/\d+/g,"#")); if(t.split(" ").length>=6) k.push("t:"+t+"|"+(typeof q[8]==="string"?q[8]:"")); }
+      cache.set(id,k); return k;
+    };
+    window.__famKeys=famKeys;
+    const NOGUARD=/^(calc|voice|atis|plane|signals)$/;
+    window.__famGuard=function(list,mode){
+      if(!Array.isArray(list)||NOGUARD.test(mode)) return list;
+      const seen=new Set(), out=[], todo=[]; let dup=0;
+      list.forEach((it,i)=>{ const q=qOf(it); if(!q){ out.push(it); return; }
+        const ks=famKeys(q);
+        if(ks.some(x=>seen.has(x))){ dup++; out.push(null); todo.push(i); return; }
+        ks.forEach(x=>seen.add(x)); out.push(it); });
+      if(!dup) return list;
+      const replace=!/^(all|wrong|lo)$/.test(mode);
+      if(replace){
+        const pool=(typeof BANK!=="undefined"&&Array.isArray(BANK))?BANK:[];
+        const hot=(mode==="trial"||mode==="adaptive")&&typeof window.F0HOT==="function"?window.F0HOT:null;
+        const have=new Set(out.map(it=>{ const q=it&&qOf(it); return q&&q[0]; }).filter(Boolean));
+        const srcs=new Set(out.map(it=>{ const q=it&&qOf(it); return q&&q[2]; }).filter(Boolean));
+        const par=lo=>String(lo).split(".").slice(0,3).join(".");
+        todo.forEach(i=>{
+          const orig=list[i], q=qOf(orig);
+          const ok=p=>p[4]&&p[4]!=="—"&&p[2]!=="o"&&!have.has(p[0])&&(!hot||hot(p))&&(p[2]!=="p"||q[2]==="p")&&(p[2]!=="y"||q[2]==="y")&&!!p[7]===!!q[7]&&!famKeys(p).some(x=>seen.has(x));
+          const tiers=[p=>p[2]===q[2]&&p[1]===q[1], p=>p[2]===q[2]&&par(p[1])===par(q[1]), p=>p[2]===q[2], p=>srcs.has(p[2])&&par(p[1])===par(q[1])];
+          let pick=null;
+          for(const t of tiers){ const c=pool.filter(p=>ok(p)&&t(p)); if(c.length){ pick=c[Math.floor(Math.random()*c.length)]; break; } }
+          if(pick){ have.add(pick[0]); famKeys(pick).forEach(x=>seen.add(x)); out[i]=Array.isArray(orig)?pick:{k:"mc",q:pick}; }
+        });
+      }
+      window.__famLast={mode:mode,dups:dup,replaced:out.filter(Boolean).length-(list.length-dup)};
+      return out.filter(Boolean);
+    };
+    const wrap=f=>function(list,mode){
+      const rev=!!(window.__f0rev&&mode==="wrong");
+      let r=f.apply(this,arguments);
+      if(rev) return r;
+      try{ return window.__famGuard(r,mode); }catch(e){ try{ console.error("fam",e); }catch(_){} return r; }
+    };
+    if(typeof window.F0DEDUP==="function" && !window.F0DEDUP.__fam){ const w=wrap(window.F0DEDUP); w.__fam=true; window.F0DEDUP=w; }
+  }catch(e){ try{ console.error("fam",e); }catch(_){} }
+})();
+
 (function(){
   try{
     const PATH=location.pathname.replace(/[^a-z0-9]+/gi,"_"), mem={};
@@ -3202,7 +3269,8 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
       m=m||"trial"; const D=load(m), S=new Set(D.s), last=new Set(D.l||[]);
       const out=[], sb=new Set(), stx=new Set();
       const rank=q=>(failedLast(st,q[0])||unseen(st,q[0]))?0:1;
-      const take=(arr)=>{ for(const q of arr){ if(out.length>=n) break; const b=base(q[0]), t=norm(q[4]); if(sb.has(b)||(t&&stx.has(t))) continue; sb.add(b); if(t) stx.add(t); out.push(q); } };
+      const fk=new Set();
+      const take=(arr)=>{ for(const q of arr){ if(out.length>=n) break; const b=base(q[0]), t=norm(q[4]); if(sb.has(b)||(t&&stx.has(t))) continue; const ks=window.__famKeys?window.__famKeys(q):[]; if(ks.some(x=>fk.has(x))) continue; ks.forEach(x=>fk.add(x)); sb.add(b); if(t) stx.add(t); out.push(q); } };
       take(fy(a.filter(q=>!S.has(base(q[0])))).sort((x,y)=>rank(x)-rank(y)));
       const fromOld=out.length;
       if(out.length<n){   // mazo corto: vuelta nueva. Se barajan todas; no dominadas primero, y lo del último test al final.

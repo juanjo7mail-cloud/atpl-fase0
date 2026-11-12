@@ -116,7 +116,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 @media (max-width:560px){#hotCard.card,#failCard.card{padding:9px 12px 3px}#hotCard .hot p,#failCard .fitem p{font-size:13px}}
 </style>
 <meta name="color-scheme" content="only light">
-<style>:root{color-scheme:only light}@media (max-width:400px){nav{gap:0}nav button{flex:1 1 0;min-width:0;font-size:15px;padding-left:2px;padding-right:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}</style>
+<style id="f0-mob">:root{color-scheme:only light}@media (max-width:560px){.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}}</style>
+<script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
 </head><body>
 <title>050 Meteorology · Meteorología</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
@@ -655,14 +656,14 @@ td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)
   <p>Al ascender baja la presión, la cápsula se expande y la aguja gira <strong>en sentido horario</strong> indicando más altura. Al descender la presión aumenta, la cápsula se comprime y la aguja gira en sentido antihorario.</p>
 
   <div class="note">
-    <span class="tag">Definición literal del PDF</span>
+    <span class="tag">Definición literal</span>
     <p>«El datum respecto al cual se calibra la escala del altímetro es un valor de presión. Hay que darle al altímetro un valor de presión desde el que empezar a medir antes de que pueda indicar una separación vertical de utilidad para el piloto.» Ese valor se selecciona en la <strong>subescala ajustable</strong>, y es <strong>el nivel de presión que el altímetro asume como cero pies</strong>.</p>
   </div>
 
   <h3>Los reglajes</h3>
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Reglaje</th><th>Definición del PDF</th><th>Lo que lees</th></tr></thead>
+      <thead><tr><th>Reglaje</th><th>Definición del temario</th><th>Lo que lees</th></tr></thead>
       <tbody>
         <tr><td class="k">QNH</td><td>La presión atmosférica al nivel medio del mar. La pasa al piloto una <strong>dependencia ATS</strong>.</td><td><strong>Altitud</strong>: distancia vertical sobre el nivel medio del mar</td></tr>
         <tr><td class="k">QFE</td><td>El valor de presión de un aeródromo y una hora concretos, corregido a la <strong>elevación oficial</strong>.</td><td><strong>Altura</strong> sobre ese aeródromo</td></tr>
@@ -672,7 +673,7 @@ td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)
   <p>Las elevaciones de terreno y obstáculos en las cartas aeronáuticas vienen en <strong>pies sobre el nivel del mar</strong>, por eso con QNH puesto la lectura es directamente comparable con la carta.</p>
 
   <h3>El nudo: por qué densidad y altimetría parecen contradecirse</h3>
-  <p>En densidad aprendes que a más presión, más densidad, y que la presión baja al subir. En altimetría parece que a más hectopascales, más altura. No se contradicen porque hablan de cosas distintas, y las dos salen de la misma frase del PDF: <em>«pressure, temperature and density all decrease as altitude is gained»</em>.</p>
+  <p>En densidad aprendes que a más presión, más densidad, y que la presión baja al subir. En altimetría parece que a más hectopascales, más altura. No se contradicen porque hablan de cosas distintas, y las dos salen de la misma frase del temario: <em>«pressure, temperature and density all decrease as altitude is gained»</em>.</p>
 
   <div class="axiom">
     <span class="k">La regla única</span>
@@ -682,7 +683,7 @@ td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)
 
   <p>El número de la subescala no es una altura: es una orden, <em>«llama cero al nivel donde la presión valga esto»</em>. Como más presión significa estar más abajo, <strong>meter un número más alto pone el cero más abajo</strong>, y medir desde más abajo da una cifra mayor. Subescala y aguja se mueven en el mismo sentido.</p>
 
-  <p>De ahí sale directamente dónde está el nivel de 1013 el día que vuelas, que es lo que preguntan las cuestiones 5 y 6 del PDF:</p>
+  <p>De ahí sale directamente dónde está el nivel de 1013 el día que vuelas, que es lo que preguntan las cuestiones 5 y 6 del temario:</p>
 
   <div class="diagram">
     <div class="panels">
@@ -770,7 +771,7 @@ td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)
     <p class="sub">Las dos filas rojas son exactamente los dos refranes, y son los dos casos peligrosos. Las dos verdes son sus inversas y no matan a nadie, pero el reglaje deja de servir para aterrizar. Fíjate en la columna de isobaras: junto va con sobre-lee, separado va con sub-lee, y eso es lo que hace que frío y baja presión se comporten igual.</p>
   </div>
   <div class="caution note">
-    <span class="tag">No es contenido del PDF</span>
+    <span class="tag">Complemento</span>
     <p>Esta sección entera es método de cálculo, montado a partir de lo que sí dicen los dos módulos. No la busques en el texto. Está aquí porque resuelve las preguntas 10 y 11, que son las que más cuestan.</p>
   </div>
 
@@ -868,8 +869,8 @@ td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)
     <p class="dia-cap">Aquí el nivel de 1013 está dibujado por debajo del mar, que es el caso de QNH bajo — el de la pregunta 11. Con QNH alto ese peldaño sube por encima de la línea del mar y el orden se invierte. El signo lo decide siempre si el QNH es mayor o menor que 1013, nunca una fórmula memorizada.</p>
   </div>
 
-  <h4>Pruébalo tú: mueve el QNH y la elevación</h4>
-  <p class="vistip">Es tu punto más flojo con diferencia. Mueve los dos controles y mira dónde se coloca el nivel de 1013 hPa respecto al mar. El botón <b>Ponme a prueba</b> te saca un caso al azar.</p>
+  <h4>Práctica interactiva: mueve el QNH y la elevación</h4>
+  <p class="vistip">Mueve los dos controles y mira dónde se coloca el nivel de 1013 hPa respecto al mar. El botón <b>Ponme a prueba</b> te saca un caso al azar.</p>
   <div class="vis" id="visAlt"></div>
 
   <h3>Fórmula 1 · cambio de subescala</h3>
@@ -896,7 +897,7 @@ corrección de temperatura = Altitud indicada × 4% × (desviación ISA ÷ 10)</
     <p>La corrección de presión vale <strong>cero cuando llevas el QNH local puesto</strong>, porque entonces la subescala y el QNH son el mismo número. Solo aparece cuando vuelas con 1013.</p>
   </div>
 
-  <p>Y aquí está lo que responde tu pregunta: <strong>no hay una fórmula distinta para la altitud indicada</strong>. Es la misma relación despejada.</p>
+  <p>En resumen: <strong>no hay una fórmula distinta para la altitud indicada</strong>. Es la misma relación despejada.</p>
 
   <div class="fbox">
     <span class="ft">Los tres despejes</span>
@@ -938,28 +939,28 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   <details class="lo" id="lo-050.01.03" data-lo="050.01.03">
     <summary><span class="lonum">050.01.03</span><span class="lotitle">Atmospheric pressure</span></summary>
     <div class="body">
-  <p>Para cálculos sencillos <strong>por debajo de 5.000 ft sobre el nivel del mar</strong>, el PDF indica asumir <strong>30 pies por milibar</strong>. Cuando el problema trabaja entre niveles de presión en altura, usa <strong>27 pies por milibar</strong>. El enunciado normalmente te dice cuál usar; si no lo dice, mira la altitud.</p>
+  <p>Para cálculos sencillos <strong>por debajo de 5.000 ft sobre el nivel del mar</strong>, el temario indica asumir <strong>30 pies por milibar</strong>. Cuando el problema trabaja entre niveles de presión en altura, usa <strong>27 pies por milibar</strong>. El enunciado normalmente te dice cuál usar; si no lo dice, mira la altitud.</p>
 
   <div class="problem">
-    <span class="ptitle">Problema 1 del PDF</span>
+    <span class="ptitle">Caso práctico 1</span>
     <p>Aeródromo a 1.000 ft sobre MSL. El QFE observado es 980 mb. ¿Cuál es el QNH?</p>
     <span class="sol">1000 ÷ 30 = 33 mb  →  QNH = 980 + 33 = 1013 mb</span>
   </div>
 
   <div class="problem">
-    <span class="ptitle">Problema 2 del PDF</span>
+    <span class="ptitle">Caso práctico 2</span>
     <p>Aeródromo a 2.100 ft sobre MSL con QNH de 1005 mb. ¿Cuál es el QFE?</p>
     <span class="sol">2100 ÷ 30 = 70 mb  →  QFE = 1005 − 70 = 935 mb</span>
   </div>
 
   <div class="problem">
-    <span class="ptitle">Problema 3 del PDF</span>
+    <span class="ptitle">Caso práctico 3</span>
     <p>De A (QNH 1020, elevación 1.000 ft) a B (QNH 1010, elevación 500 ft), sin cambiar la subescala. ¿Qué indicará el altímetro al aterrizar en B?</p>
     <span class="sol">Diferencia de presión:  1020 − 1010 = 10 mb<br>Separación vertical:  10 × 27 = 270 ft<br>Indicación en B:  500 + 270 = 770 ft</span>
   </div>
 
   <div class="caution note">
-    <span class="tag">Errata del PDF</span>
+    <span class="tag">Errata habitual en los textos</span>
     <p>En el Problema 3 el texto dice «el nivel de 1020 mb está 300 ft por debajo del de 1010 mb» y acto seguido suma 270. La cifra correcta es <strong>270</strong>, que es la que usa en el cálculo y la que lleva a los 770 ft. Ese «300» es un error de redacción.</p>
   </div>
 
@@ -1054,7 +1055,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <p>Densidad es <strong>masa por unidad de volumen</strong>, <code>ρ = M/V</code>. La gravedad mantiene más aire por unidad de volumen cerca del suelo, así que <strong>la densidad es máxima en la superficie terrestre</strong> y disminuye con la altitud.</p>
 
   <h3>Las tres formas de expresarla</h3>
-  <p>El PDF las da explícitamente y las preguntas las usan como distractores <em>entre sí</em>: te define una y te ofrece las otras dos como opciones. Hay que poder recitar cuál es cuál, no solo reconocerlas.</p>
+  <p>El temario las da explícitamente y las preguntas las usan como distractores <em>entre sí</em>: te define una y te ofrece las otras dos como opciones. Hay que poder recitar cuál es cuál, no solo reconocerlas.</p>
 
   <div class="tablewrap">
     <table>
@@ -1139,14 +1140,14 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
     <p class="dia-cap">El mismo aeródromo al nivel del mar, tres días distintos. Barra verde y roja: la altitud de densidad. El avión no se mueve del sitio, pero en el día caluroso despega como si lo hiciera desde 2.400 ft de montaña. Cifras con la regla derivada de 120 ft por grado de desviación ISA.</p>
   </div>
 
-  <h4>Pruébalo tú: de dónde sale la altitud de densidad</h4>
+  <h4>Práctica interactiva: de dónde sale la altitud de densidad</h4>
   <p class="vistip">Presión alta, temperatura baja y aire seco dan densidad alta, y densidad alta es buen rendimiento. Mueve los controles y mira cuánto se separa la altitud de densidad de la de presión.</p>
   <div class="vis" id="visDens"></div>
 
   <h3>Los tres efectos</h3>
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Factor</th><th>Relación</th><th>Razón que da el PDF</th></tr></thead>
+      <thead><tr><th>Factor</th><th>Relación</th><th>Razón que da el temario</th></tr></thead>
       <tbody>
         <tr><td class="k">Presión</td><td class="k" style="color:var(--ok)">Directamente proporcional</td><td>Al aumentar la presión el aire se comprime, se reduce el volumen y aumenta la densidad.</td></tr>
         <tr><td class="k">Temperatura</td><td class="k" style="color:var(--bad)">Inversamente proporcional</td><td>Al calentar un volumen de aire se expande y la masa contenida en la unidad de volumen es menor.</td></tr>
@@ -1155,7 +1156,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
     </table>
   </div>
 
-  <p>La fórmula que lo unifica todo, en la notación del propio PDF: <code>P · V = R · T</code>.</p>
+  <p>La fórmula que lo unifica todo, en la notación del propio temario: <code>P · V = R · T</code>.</p>
 
   <h3>Con la altura y con la latitud</h3>
   <p><strong>Con la altura</strong> compiten dos efectos: baja la presión (hace bajar la densidad) y baja la temperatura (la haría subir). Gana la presión, así que <strong>la densidad disminuye al aumentar la altura</strong>.</p>
@@ -1224,10 +1225,10 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
 
 
   <h3>Desviación ISA</h3>
-  <p>Las observaciones meteorológicas se dan en cifras absolutas, pero para cálculos de performance o correcciones de instrumento se usan siempre <strong>relativas a la ISA</strong>. En los cálculos el PDF autoriza el atajo de <strong>2 °C por cada 1000 ft</strong> en lugar de 1,98.</p>
+  <p>Las observaciones meteorológicas se dan en cifras absolutas, pero para cálculos de performance o correcciones de instrumento se usan siempre <strong>relativas a la ISA</strong>. En los cálculos el temario autoriza el atajo de <strong>2 °C por cada 1000 ft</strong> en lugar de 1,98.</p>
 
   <div class="problem">
-    <span class="ptitle">Ejemplo del PDF · 8000 ft, OAT +6 °C</span>
+    <span class="ptitle">Ejemplo de examen · 8000 ft, OAT +6 °C</span>
     <span class="sol">Temperatura ISA a 8000 ft:  8 × (−2) = −16  →  −16 + 15 = −1 °C<br>Desviación:  +6 − (−1) = +7  →  ISA + 7</span>
   </div>
 
@@ -1404,7 +1405,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <details class="lo atpl" id="lo-050.02.07" data-lo="050.02.07">
     <summary><span class="lonum">050.02.07</span><span class="lotitle">Jet streams</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · aún no dado en clase</b>
+  <div class="atplbox"><b>ATPL · ampliación</b>
     <p>Esto no entró en MET-1 a MET-4. Está montado desde los objetivos de aprendizaje de EASA, que es lo que se mide.</p></div>
   <p>Un <span class="en">jet stream</span> es una banda estrecha de viento muy fuerte justo bajo la tropopausa. Para que se llame jet, el núcleo tiene que alcanzar <b>60 kt</b> o más (en la carta SIGWX solo se dibujan los de 80 kt o más).</p>
   <ul>
@@ -1740,7 +1741,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <div class="axiom">
     <span class="k">La escalera del viento, tal como la explicó en clase</span>
     <p><strong>Sin viento</strong> la humedad se queda pegada al suelo y sale rocío &nbsp;→&nbsp; <strong>1 a 5 kt: NIEBLA</strong> &nbsp;→&nbsp; <strong>5 a 10 kt: NEBLINA</strong> &nbsp;→&nbsp; <strong>más de 10 kt: la capa se levanta y es un ESTRATO</strong>.</p>
-    <p class="sub">Es una regla de aula para entender que todo depende de cuánto se mezcle el aire, y no cuadra al dedillo con las cifras del PDF (radiación con 2 a 8 kt, advección con hasta 15 kt). <strong>Manda el PDF</strong>; esta escalera sirve para razonar el porqué.</p>
+    <p class="sub">Es una regla de aula para entender que todo depende de cuánto se mezcle el aire, y no cuadra al dedillo con las cifras del temario (radiación con 2 a 8 kt, advección con hasta 15 kt). <strong>Manda la cifra oficial</strong>; esta escalera sirve para razonar el porqué.</p>
   </div>
   <h4>Los cinco tipos de niebla</h4>
   <div class="tablewrap">
@@ -1757,8 +1758,8 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </div>
 
   <div class="caution note">
-    <span class="tag">Corrección a los apuntes del cuaderno</span>
-    <p>En el cuaderno pone que la niebla de advección <em>«puede aguantar con viento de 15 a 25 kt»</em>. El PDF oficial dice lo contrario: se forma con viento <strong>de hasta 15 kt</strong>, y <strong>por encima de 15 kt se levanta y se convierte en estrato</strong>. Quédate con la versión del PDF.</p>
+    <span class="tag">Nota de precisión</span>
+    <p>En muchos apuntes pone que la niebla de advección <em>«puede aguantar con viento de 15 a 25 kt»</em>. El criterio oficial dice lo contrario: se forma con viento <strong>de hasta 15 kt</strong>, y <strong>por encima de 15 kt se levanta y se convierte en estrato</strong>. Quédate con la versión oficial.</p>
   </div>
     </div>
   </details>
@@ -1871,7 +1872,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
 
   <div class="note">
     <span class="tag">Cómo lo va a preguntar</span>
-    <p>En Fase 0 <strong>no hay fotos</strong>: se pregunta por el nombre y la abreviatura, no por la imagen (eso llega en el ATPL). Hay que saber decirlas en inglés y reconocer la abreviatura.</p>
+    <p>En temario base <strong>no hay fotos</strong>: se pregunta por el nombre y la abreviatura, no por la imagen (eso llega en el ATPL). Hay que saber decirlas en inglés y reconocer la abreviatura.</p>
   </div>
     </div>
   </details>
@@ -1954,7 +1955,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
 
   <div class="axiom">
     <span class="k">Dónde está la nube: el lío de los apuntes</span>
-    <p>La nube de un frente la fabrica <strong>el aire cálido al ascender</strong>, así que <strong>pertenece al sector cálido</strong>. Pero como sube <em>por encima</em> de la cuña de aire frío, desde el suelo la ves <strong>sobre la zona fría</strong>. Por eso en los apuntes de clase aparece escrito de las dos maneras seguidas: las dos frases describen lo mismo visto desde sitios distintos.</p>
+    <p>La nube de un frente la fabrica <strong>el aire cálido al ascender</strong>, así que <strong>pertenece al sector cálido</strong>. Pero como sube <em>por encima</em> de la cuña de aire frío, desde el suelo la ves <strong>sobre la zona fría</strong>. Por eso en muchos apuntes aparece escrito de las dos maneras seguidas: las dos frases describen lo mismo visto desde sitios distintos.</p>
   </div>
   <h4>Oclusión</h4>
   <p>El frente frío va más rápido que el cálido, lo <strong>alcanza</strong> y levanta el sector cálido del suelo. Se forma cuando la presión de la borrasca <strong>deja de caer</strong> (<span class="en">frontolysis</span>), es decir, al final de la vida de la depresión.</p>
@@ -1970,8 +1971,8 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <p>El tiempo de una oclusión suele ser malo porque concentra todo el mal tiempo frontal en una banda más estrecha, con nubes mezcladas (CB embebidos en NS), y como aparece cuando la borrasca ya se mueve poco, <strong>dura mucho</strong>. Las oclusiones se desplazan más o menos a la velocidad de un frente frío.</p>
 
   <div class="caution note">
-    <span class="tag">Corrección a los apuntes del cuaderno</span>
-    <p>En el cuaderno la pendiente del frente frío aparece como <em>«2 %»</em>. El PDF dice <strong>1:80</strong>, que es un 1,25 %. La del cálido, 1:150, sí coincide con el 0,66 % del cuaderno.</p>
+    <span class="tag">Nota de precisión</span>
+    <p>En muchos apuntes la pendiente del frente frío aparece como <em>«2 %»</em>. El temario dice <strong>1:80</strong>, que es un 1,25 %. La del cálido, 1:150, sí coincide con el 0,66 % de esos apuntes.</p>
   </div>
     </div>
   </details>
@@ -2008,15 +2009,15 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </ul>
   <div class="flag"><b>Trampa</b>
     <p>«Anticiclón = buen tiempo» vale para la nube de desarrollo, no para la <b>visibilidad</b>. El anticiclón frío de invierno es justo la situación de niebla que cierra aeropuertos.</p></div>
-  <div class="atplbox"><b>ATPL · aún no dado</b>
+  <div class="atplbox"><b>ATPL · ampliación ATPL</b>
     <p>Tipos que se distinguen: <b>anticiclón cálido</b> (subtropical, se extiende hasta altos niveles, permanente, como el de las Azores) y <b>anticiclón frío</b> (térmico, somero, invernal, como el siberiano). El <b>anticiclón de bloqueo</b> se queda clavado y desvía las borrascas: misma situación durante días.</p></div>
     </div>
   </details>
   <details class="lo atpl" id="lo-050.07.04" data-lo="050.07.04">
     <summary><span class="lonum">050.07.04</span><span class="lotitle">Tropical revolving storms</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · aún no dado en clase</b>
-    <p>Capítulo entero sin dar en Fase 0 y con peso real. Recreado desde los LO de EASA.</p></div>
+  <div class="atplbox"><b>ATPL · ampliación</b>
+    <p>Capítulo entero sin dar en temario base y con peso real. Recreado desde los LO de EASA.</p></div>
   <p><b>Ciclón tropical</b> (<span class="en">tropical revolving storm</span>): la borrasca más profunda que existe. Según la zona se llama huracán (Atlántico y Pacífico este), tifón (Pacífico oeste) o ciclón (Índico).</p>
   <h4>Las condiciones para que nazca</h4>
   <ul>
@@ -2073,7 +2074,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
     <li>Prolongación alargada de una baja = <span class="en">trough</span> (vaguada), con más turbulencia.</li>
     <li><span class="en">Col</span> (collado): zona neutra entre dos altas y dos bajas. Sin cambios de presión, viento flojo, nubes bajas, llovizna y niebla.</li>
   </ul>
-  <div class="atplbox"><b>ATPL · aún no dado</b>
+  <div class="atplbox"><b>ATPL · ampliación ATPL</b>
     <p>Las <b>no frontales</b>, que son las de este subcapítulo: <b>térmica</b> (calentamiento del suelo en verano, somera), <b>orográfica</b> a sotavento de una cordillera, <b>de sotavento</b> (<span class="en">lee depression</span>), <b>polar</b> (aire polar sobre mar más cálido, con convección fuerte) y <b>secundaria</b>, que se forma en la periferia de una borrasca principal y suele ser más activa que ella.</p></div>
     </div>
   </details>
@@ -2083,7 +2084,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <details class="lo atpl" id="lo-050.08.02" data-lo="050.08.02">
     <summary><span class="lonum">050.08.02</span><span class="lotitle">Tropical climatology</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · aún no dado en clase</b>
+  <div class="atplbox"><b>ATPL · ampliación</b>
     <p>El subcapítulo más pesado de Climatología: 22 objetivos de aprendizaje de los 37 del capítulo.</p></div>
   <h4>La ITCZ</h4>
   <p><b>Zona de Convergencia Intertropical</b>: donde convergen los alisios de los dos hemisferios. Es una <b>baja presión</b>: convergencia, ascenso y cumulonimbos de gran desarrollo, con cimas que pasan de FL500.</p>
@@ -2110,7 +2111,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <details class="lo atpl" id="lo-050.08.03" data-lo="050.08.03">
     <summary><span class="lonum">050.08.03</span><span class="lotitle">Typical weather situations in the mid-latitudes</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · aún no dado en clase</b></div>
+  <div class="atplbox"><b>ATPL · ampliación</b></div>
   <p>Las latitudes medias viven en el <b>flujo del oeste</b> del frente polar: borrascas y frentes que pasan uno detrás de otro, con tiempo que cambia cada pocos días.</p>
   <ul>
     <li><b>Anticiclón de bloqueo</b>: se queda clavado y desvía las borrascas. Tiempo persistente; en invierno, inversión, estratos y niebla.</li>
@@ -2123,8 +2124,8 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <details class="lo atpl" id="lo-050.08.01" data-lo="050.08.01">
     <summary><span class="lonum">050.08.01</span><span class="lotitle">Climatic zones</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · aún no dado en clase</b>
-    <p>Todo el capítulo 050.08 (8 preguntas, casi un 10 %) se quedó fuera de Fase 0. Esto es lo que piden los LO.</p></div>
+  <div class="atplbox"><b>ATPL · ampliación</b>
+    <p>Todo el capítulo 050.08 (8 preguntas, casi un 10 %) se quedó fuera de temario base. Esto es lo que piden los LO.</p></div>
   <p>Clasificación por latitud y por continentalidad:</p>
   <div class="tablewrap"><table>
     <thead><tr><th>Zona</th><th>Temperatura</th><th>Precipitación</th></tr></thead>
@@ -2147,7 +2148,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <details class="lo atpl" id="lo-050.08.04" data-lo="050.08.04">
     <summary><span class="lonum">050.08.04</span><span class="lotitle">Local winds and associated weather</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · aún no dado en clase</b>
+  <div class="atplbox"><b>ATPL · ampliación</b>
     <p>En MET-2 se dieron las brisas, el Foehn y los vientos de ladera (están en 050.02.04). Lo que falta son los vientos locales <b>con nombre propio</b>, que es lo que pregunta este subcapítulo.</p></div>
   <div class="tablewrap"><table>
     <thead><tr><th>Viento</th><th>Dónde</th><th>Qué es</th></tr></thead>
@@ -2213,7 +2214,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </ul></div>
 
   <div class="axiom">
-    <span class="k">La frase de clase</span>
+    <span class="k">La frase clave</span>
     <p>Lo más fuerte de la tormenta está <strong>entre la segunda y la tercera fase</strong>.</p>
     <p class="sub">La pregunta típica va al revés: <em>lo que marca el comienzo de la fase madura son los primeros rayos y la primera lluvia desde la base</em>. En la fase 1 solo hay ascendentes y aún no cae nada.</p>
   </div>
@@ -2299,7 +2300,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <details class="lo atpl" id="lo-050.09.05" data-lo="050.09.05">
     <summary><span class="lonum">050.09.05</span><span class="lotitle">Tornadoes</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · aún no dado en clase</b></div>
+  <div class="atplbox"><b>ATPL · ampliación</b></div>
   <p><b>Tornado</b>: columna de aire en rotación violenta que une la base del cumulonimbo con el suelo.</p>
   <ul>
     <li>Si la columna <b>no llega al suelo</b> es <span class="en">funnel cloud</span>; sobre agua, <span class="en">waterspout</span> (tromba marina, normalmente más débil).</li>
@@ -2312,7 +2313,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <details class="lo atpl" id="lo-050.09.07" data-lo="050.09.07">
     <summary><span class="lonum">050.09.07</span><span class="lotitle">Stratospheric conditions</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · aún no dado en clase</b></div>
+  <div class="atplbox"><b>ATPL · ampliación</b></div>
   <ul>
     <li>En la estratosfera la temperatura <b>sube</b> con la altura (ozono absorbiendo UV): capa muy <b>estable</b> y prácticamente <b>sin vapor de agua</b>. Vuelo liso, sin nubes ni engelamiento.</li>
     <li>La excepción es la <b>CAT</b> cerca del jet, justo bajo la tropopausa.</li>
@@ -2569,7 +2570,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
       </tbody>
     </table>
   </div>
-  <p class="dia-cap">Regla de clase: si la probabilidad fuese mayor del 40 % no se pondría PROB, se cifraría directamente.</p>
+  <p class="dia-cap">Regla práctica: si la probabilidad fuese mayor del 40 % no se pondría PROB, se cifraría directamente.</p>
     </div>
   </details>
   <details class="lo" id="lo-050.10.04" data-lo="050.10.04">
@@ -2768,8 +2769,8 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir temario ATPL aún no dado<small>Sin marcar, solo sale lo dado y lo que entra en Fase 0.</small></span></label>
-    <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las de clase y del trial.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale lo dado y lo que entra en el temario base.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las del temario y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
   </div>
@@ -2794,7 +2795,7 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
 </div>
 
 <footer>
-  Syllabus y reparto de preguntas: EASA, AMC1 ARA.FCL.300(b). Contenido: apuntes de clase MET-1 a MET-4, PDF 3.8, 3.9 y 3.10 y Guía MET de AEMET (AU-GUI-0102). Las preguntas marcadas ATPL son recreaciones a partir de los objetivos de aprendizaje: el banco ECQB es confidencial.
+  Syllabus y reparto de preguntas: EASA, AMC1 ARA.FCL.300(b). Contenido: apuntes de Meteorología y Guía MET de AEMET (AU-GUI-0102). Las preguntas marcadas ATPL son recreaciones a partir de los objetivos de aprendizaje: el banco ECQB es confidencial.
 </footer>
 
 </div>
@@ -2918,7 +2919,7 @@ const REFS = {
  storm:"Tres condiciones para la tormenta: inestabilidad, humedad y un disparo que inicie el ascenso. Ciclo en tres fases: DEVELOPMENT o cumulus (solo ascendentes, aún no precipita), MATURITY (ascendentes y descendentes a la vez; empieza la lluvia y los rayos, granizo, engelamiento y turbulencia severa, se forma el yunque) y DISSIPATING (solo descendentes frías). Lo más violento está entre la segunda y la tercera fase. Microburst: corriente descendente violenta que al llegar al suelo se abre en todas direcciones; primero da viento en cara y luego en cola.",
  turb:"Dentro de la onda de montaña el aire va liso y el avión solo sube y baja; la turbulencia severa está DEBAJO, en el rotor. Turbulencia = remolinos (eddies) en el flujo normal; racha (gust) = aumento breve del viento. Categorías: LIGHT; MODERATE = desviaciones de rumbo y altitud; SEVERE = moderada más pérdida momentánea del control. Es subjetiva para cada avión. Mecánica: obstáculos físicos, a sotavento y a baja cota, normalmente ligera. Térmica o convectiva: por el calentamiento del suelo, ligera pero muy incómoda, máxima en verano al mediodía solar. De estela: torbellinos de punta de ala, según la categoría del avión de delante. Ondas de montaña: viento de más de 15 kt a menos de 30° de la perpendicular a la cordillera y aire ESTABLE; aumenta con la altura y es máxima sobre la cima y en la primera ondulación; se ven como cap cloud y altocúmulos lenticulares.",
  vis:"Niebla (FG): visibilidad menor de 1.000 m por gotas de agua, RH cerca del 100 %. Neblina (BR): 1.000 m o más, gotas muy pequeñas, RH por encima del 95 %. Calima (HZ): partículas SÓLIDAS secas (arena, polvo, humo), y no se cifra por encima de 5.000 m. La mala visibilidad va con estabilidad, inversión y viento flojo. La niebla es un estrato que toca el suelo.",
- fog:"Dos mecanismos: por ENFRIAMIENTO (radiación, advección y orográfica) y por APORTE DE AGUA (frontal y sea smoke). Escalera de viento de clase: sin viento sale rocío, de 1 a 5 kt niebla, de 5 a 10 kt neblina y por encima de 10 kt la capa se levanta y es un estrato (regla de aula; valen las cifras del PDF). Radiación: el suelo irradia de noche y enfría el aire por debajo del rocío; cielo despejado, humedad alta y viento de 2 a 8 kt (en calma sale rocío); solo sobre tierra, primero en valles, y en anticiclones, dorsales y collados; se deshace con el sol o con viento fuerte que la sube a estrato. Advección: aire cálido y húmedo sobre superficie fría, viento de HASTA 15 kt; por encima de 15 kt se levanta a estrato. Orográfica o hill fog: aire húmedo que sube la ladera, visibilidad de 200 m o menos, local. Steaming fog o humo ártico: aire frío sobre agua más cálida, aire muy estable, hasta 500 ft; se deshace si el viento arrecia o cambia. Frontal: en frente cálido u ocluido, banda de hasta 200 NM que viaja con el frente.",
+ fog:"Dos mecanismos: por ENFRIAMIENTO (radiación, advección y orográfica) y por APORTE DE AGUA (frontal y sea smoke). Escalera de viento: sin viento sale rocío, de 1 a 5 kt niebla, de 5 a 10 kt neblina y por encima de 10 kt la capa se levanta y es un estrato (regla de aula; valen las cifras del temario). Radiación: el suelo irradia de noche y enfría el aire por debajo del rocío; cielo despejado, humedad alta y viento de 2 a 8 kt (en calma sale rocío); solo sobre tierra, primero en valles, y en anticiclones, dorsales y collados; se deshace con el sol o con viento fuerte que la sube a estrato. Advección: aire cálido y húmedo sobre superficie fría, viento de HASTA 15 kt; por encima de 15 kt se levanta a estrato. Orográfica o hill fog: aire húmedo que sube la ladera, visibilidad de 200 m o menos, local. Steaming fog o humo ártico: aire frío sobre agua más cálida, aire muy estable, hasta 500 ft; se deshace si el viento arrecia o cambia. Frontal: en frente cálido u ocluido, banda de hasta 200 NM que viaja con el frente.",
  frentes:"Masa de aire: gran volumen de temperatura y humedad uniformes; se forma en altas presiones, así que EN ORIGEN SIEMPRE ES ESTABLE. Polar hacia latitudes bajas se calienta por abajo y se inestabiliza; tropical hacia latitudes altas se enfría por abajo y se estabiliza. PM, PC, TM y TC. Frente: el cálido, menos denso, siempre acaba encima. CÁLIDO: pendiente 1:150, avanza a 2/3 del geostrófico, nubes estratiformes CI→CS→AS→NS, precipitación creciente en banda ancha, visibilidad que empeora hasta niebla frontal, presión que deja de caer, viento que rola a la derecha y temperatura que sube. FRÍO: pendiente 1:80, avanza al geostrófico completo, CU y CB, chubascos y granizo en banda estrecha, visibilidad muy buena al pasar, presión que sube, viento que rola a la derecha de golpe y temperatura que se desploma. LOS DOS hacen rolar el viento a la derecha en el HN. Oclusión: el frío alcanza al cálido y levanta el sector cálido; cálida (invierno, banda ancha, estable, lluvia engelante) y fría (verano, banda estrecha, CB y NS).",
  info:"Indicador OACI de cuatro letras: L sur de Europa, LE España, y las dos últimas el aeródromo (LEMD, LEVS, LEDA). Viento: G de gusting para rachas y un segundo grupo dddVddd si la dirección es variable (06003KT 350V100 = de 060° con 3 kt, oscilando entre 350° y 100°). Observaciones: METAR (rutinario), SPECI (especial), ATIS, VOLMET. Pronósticos: TAF, TREND, GAMET/AIRMET, SIGMET. METAR: fecha y hora en seis cifras UTC, temperatura y rocío (M para negativos), nubes en centenares de pies SOBRE EL AERÓDROMO, 9999 = 10 km o más, grupos no disponibles con barras, QNH truncado al entero inferior, RVR solo por debajo de 1.500 m. CAVOK: visibilidad 10 km o más, sin nubes bajo 1.500 m (5.000 ft) o la MSA, SIN CB NI TCU a ninguna altura, y sin fenómenos significativos. TAF: mismo código, de 9 a 24 horas; los de 9 h cada 3 h y los de 12–24 h cada 6 h. TREND: 2 horas; NOSIG sin cambios, BECMG cambio sin retorno, TEMPO menos de 1 hora cada vez, FM/TL/AT, PROB solo si la probabilidad es del 40 % o menos. SIGMET: solo fenómenos severos. GAMET: área en texto, de superficie a FL150, cuatro veces al día. AIRMET: baja cota, lo que no venía en el GAMET. VOLMET: radiodifusión continua en VHF. ATIS y torre dan el viento en MAGNÉTICO; METAR y TAF, en verdadero.",
  codes:"WX = intensidad + descriptor + fenómeno. Intensidad: - leve, nada moderado, + fuerte, VC en las proximidades (8 a 16 km). Descriptores: MI baja, BC bancos, PR parcial, DR levantado bajo 2 m, BL levantado desde 2 m, SH chubascos, TS tormenta, FZ engelante. Precipitación: DZ llovizna, RA lluvia, SN nieve, SG cinarra, PL hielo granulado, GR granizo, GS granizo pequeño o nieve granulada. Oscurecimiento: BR neblina, FG niebla, FU humo, VA cenizas volcánicas, DU polvo, SA arena, HZ calima. Otros: PO remolinos, SQ turbonadas, FC tornado o tromba, SS tempestad de arena, DS tempestad de polvo. Tiempo reciente con prefijo RE. Solo se cifra el tipo de nube para CB y TCU.",
@@ -3058,7 +3059,7 @@ const BASE_MET2 = [
  ["w13","050.02.01","n","vmed","According to the class notes, which north is used for wind direction in aviation and which by meteorologists?",["Aviation: magnetic; meteorologists: true","Aviation: true; meteorologists: magnetic","Both use magnetic north","Both use true north"],"Dirección magnética en aviación, verdadera (geográfica) para los meteorólogos. Hay dos nortes y cada uno tiene su usuario."],
  ["w14","050.02.02","n","vfuerzas","The pressure gradient force acts:",["From high to low pressure, at right angles to the isobars","From low to high pressure, at right angles to the isobars","Parallel to the isobars","From high to low pressure, parallel to the isobars"],"De alta a baja y cortando las isobaras a 90°. Paralelo a las isobaras es el geostrófico, que ya incluye Coriolis."],
  ["w15","050.02.02","n","vfuerzas","The Coriolis effect is zero:",["At the equator","At the poles","At 30° latitude","At 60° latitude"],"Proporcional a la latitud: cero en el ecuador (sen 0° = 0) y máximo en los polos."],
- ["w16","050.02.02","n","vfuerzas","The Coriolis effect increases with:",["Increasing wind speed and increasing latitude","Increasing wind speed and decreasing latitude","Decreasing wind speed and increasing latitude","Increasing temperature"],"Las dos proporcionalidades de clase: a la velocidad (sin viento no hay Coriolis) y a la latitud. La temperatura no pinta nada."],
+ ["w16","050.02.02","n","vfuerzas","The Coriolis effect increases with:",["Increasing wind speed and increasing latitude","Increasing wind speed and decreasing latitude","Decreasing wind speed and increasing latitude","Increasing temperature"],"Las dos proporcionalidades: a la velocidad (sin viento no hay Coriolis) y a la latitud. La temperatura no pinta nada."],
  ["w17","050.02.02","n","vfuerzas","In the northern hemisphere, the Coriolis effect deflects moving air:",["To the right","To the left","Upwards","Towards the low pressure"],"A la derecha en el hemisferio norte, a la izquierda en el sur. Hacia la baja empuja la PGF, no Coriolis."],
  ["w18","050.02.02","n","vfuerzas","The geostrophic wind results from a balance between:",["The pressure gradient force and the Coriolis effect","The pressure gradient force and friction","The Coriolis effect and centrifugal force","Friction and centrifugal force"],"Wg = PGF + Coriolis. Si se añade la centrífuga es el gradient wind; la fricción entra solo en la capa de rozamiento."],
  ["w19","050.02.02","n","vfuerzas","In the northern hemisphere, the wind around a low pressure system circulates:",["Anticlockwise","Clockwise","Directly towards the centre","Directly away from the centre"],"Borrasca en el HN: antihorario. Anticiclón: horario. En el sur se invierten."],
@@ -3206,7 +3207,7 @@ const VARIANTS = {
 };
 // Trial y diapositivas: SIEMPRE variante, para razonarlas y no reconocerlas. El resto: 40 % original.
 function variantOf(q){
-  if(typeof GEN_050!=="undefined" && GEN_050[q[0]]){ const g = GEN_050[q[0]](); return {text:g.text, opts:g.opts, expl:g.expl, v:true, gen:true}; }
+  if(typeof GEN_050!=="undefined" && GEN_050[q[0]]){ const g = GEN_050[q[0]](); return {text:g.text, opts:g.opts, expl:g.expl, v:true, gen:true, img:g.img||null}; }
   const vs = VARIANTS[q[0]];
   const siempre = q[2]==="t" || q[2]==="s";
   if(!vs || (!siempre && Math.random() < 0.4)) return {text:q[4], opts:q[5], expl:q[6], v:false};
@@ -3279,7 +3280,7 @@ const BASE_MET3 = [
  ["c32","050.09.01","n","ice","The temperature range in which icing must be expected, according to the class notes, is:",["0 °C to −45 °C","0 °C to −10 °C","+10 °C to 0 °C","−45 °C to −60 °C"],"De 0 a −45 °C, siempre que haya humedad, nube o precipitación. La franja de 0 a −10 °C es la del clear ice en concreto."],
  ["c33","050.05.02","n","prec","Drizzle, rain, freezing rain, snow and hail are abbreviated respectively:",["DZ, RA, FZRA, SN, GR","DR, RN, FR, SW, HL","DZ, RN, FZ, SN, HA","DR, RA, FZRA, SW, GR"],"Las cinco: DZ, RA, FZRA, SN y GR."],
  ["c34","050.05.02","n","prec","A shower (chubasco) is:",["A lot of precipitation in a short time, from cumuliform cloud","Light continuous rain lasting for hours","Precipitation that evaporates before reaching the ground","Any precipitation below 0 °C"],"Mucha agua en poco tiempo y con viento. La lluvia uniforme, de nube estratiforme, deja más cantidad total pero repartida."],
- ["c35","050.05.01","n","prec","Precipitation is only called precipitation when:",["It reaches the ground","It leaves the cloud base","It is liquid","It falls from a cumuliform cloud"],"Definición literal de clase. Si se evapora por el camino es virga."]
+ ["c35","050.05.01","n","prec","Precipitation is only called precipitation when:",["It reaches the ground","It leaves the cloud base","It is liquid","It falls from a cumuliform cloud"],"Definición literal. Si se evapora por el camino es virga."]
 ];
 
 const VARIANTS_MET3 = {
@@ -3310,7 +3311,7 @@ const VARIANTS_MET3 = {
  s25:[["Warm, moist air flowing over a cold sea is most likely to produce:",["Advection fog","Radiation fog","Frontal fog","Haze"],"Aire cálido y húmedo desplazándose en horizontal sobre una superficie fría: niebla de advección."]],
  s26:[["Convection is:",["Vertical motion of air","Horizontal motion of air","The same as advection","Air descending in an anticyclone"],"Pregunta al revés: convección = vertical; advección = horizontal."]],
  c2:[["If a mass of air is warmed without changing its moisture content, its relative humidity:",["Decreases","Increases","Stays the same","Reaches 100 %"],"Al revés: más temperatura admite más vapor, así que el mismo vapor es un porcentaje menor."]],
- c5:[["Which of the following is NOT required to form a cloud?",["A rise in temperature","Water vapour","Condensation nuclei","Cooling of the air mass"],"Se forma enfriando, no calentando. Los otros tres son las tres condiciones de clase."]],
+ c5:[["Which of the following is NOT required to form a cloud?",["A rise in temperature","Water vapour","Condensation nuclei","Cooling of the air mass"],"Se forma enfriando, no calentando. Los otros tres son las tres condiciones."]],
  c7:[["Adiabatic expansion of a rising air mass means that it:",["Cools as it expands","Warms as it expands","Cools as it is compressed","Keeps a constant temperature"]]],
  c10:[["The rule of thumb for the cloud base uses:",["125 m for every degree of spread between temperature and dew point","125 ft for every degree of spread","25 m for every degree of spread","1000 m for every degree of spread"]]],
  c11:[["The OAT is +25 °C and the dew point is +5 °C. The estimated cloud base is approximately:",["2500 m AGL","1250 m AGL","3750 m AGL","500 m AGL"],"(25 − 5) × 125 = 2.500 m AGL. Mucha separación entre temperatura y rocío, nube alta."]],
@@ -3444,6 +3445,323 @@ function gCloudBase(){
 }
 const GEN_050 = {t3:gTAFperiod, t5:gMETARdew, t20:gStrongWind, d15:gPAlt, d17:gPAlt, d18:gPAlt, d19:gQFEpair, d25:gQFEpair, d21:gMetricRule, d23:gMetricRule, d27:gTrueAlt, d28:gTrueAlt, d29:gTrueAlt, d30:gSubChange, d31:gSubChange, d39:gISAdev, w8:gWindFrom, x8:gWindVar, c11:gCloudBase};
 // <<END gen050x>>
+// <<BEGIN gen050y>>
+// ===== 050 · bloque «y»: variantes dinámicas de las preguntas oficiales (trial y exámenes) =====
+// Cada generador cambia valores, estaciones, cartas, ciudades o el enfoque, y mantiene el mismo fondo de la pregunta madre.
+// Se apoya en nvR / nvP / nvShuf / nvN / m2 / m3 del bloque anterior.
+
+// ---------- Carta SIGWX esquemática (SVG propio, mismo estilo que sg1–sg4) ----------
+const SGX = {
+  ORDER: ["Madrid","Barcelona","Alicante","Málaga"],
+  CITY: {Madrid:[-3.7,40.42], Barcelona:[2.17,41.39], Alicante:[-0.5,38.35], "Málaga":[-4.42,36.72]},
+  COAST: [[-9.3,42.9],[-8.4,43.4],[-7.7,43.8],[-5.8,43.6],[-3.8,43.5],[-3.0,43.4],[-1.8,43.4],[-0.5,42.8],[1.5,42.6],[3.2,42.4],[3.1,41.9],[2.2,41.4],[1.2,41.1],[0.9,40.7],[0.1,40.0],[-0.3,39.5],[0.2,38.8],[-0.5,38.3],[-0.9,37.6],[-1.8,36.9],[-2.2,36.7],[-3.5,36.7],[-4.4,36.7],[-5.4,36.1],[-5.6,36.0],[-6.3,36.5],[-6.9,37.2],[-7.4,37.2],[-8.9,37.0],[-8.8,38.4],[-9.5,38.7],[-9.4,39.6],[-8.9,41.1],[-8.8,42.1],[-9.3,42.9]],
+  FRONTS: [[[70,70],[95,200],[120,330],[150,470]], [[520,40],[470,90],[400,120],[330,200]], [[40,120],[90,200],[120,300],[150,420]], [[60,60],[90,180],[110,300],[140,430]], [[50,100],[85,210],[115,320],[135,450]]],
+  COL: {r:"#0b3d91", t:"#c0392b", s:"#1f6f8b"},
+  P: (lo,la) => [(lo+10.3)*47, (45.2-la)*62]
+};
+const sgxF = v => v.toFixed(1);
+function sgxScallop(cx,cy,rx,ry,n=16){
+  const pts = []; for(let i=0;i<n;i++) pts.push([cx+rx*Math.cos(2*Math.PI*i/n), cy+ry*Math.sin(2*Math.PI*i/n)]);
+  let d = "M"+sgxF(pts[0][0])+" "+sgxF(pts[0][1]);
+  for(let i=1;i<=n;i++){ const p = pts[i%n], q = pts[i-1], r = sgxF(Math.hypot(p[0]-q[0],p[1]-q[1])*.62); d += ` A${r} ${r} 0 0 1 ${sgxF(p[0])} ${sgxF(p[1])}`; }
+  return d+"Z";
+}
+function sgxSym(k,x,y,s){
+  if(k==="r") return `<circle cx="${sgxF(x)}" cy="${sgxF(y)}" r="${sgxF(7*s)}" fill="#0b3d91"/>`;
+  if(k==="t") return `<path d="M${sgxF(x-8*s)} ${sgxF(y-14*s)} l${sgxF(12*s)} ${sgxF(12*s)} l${sgxF(-8*s)} ${sgxF(2*s)} l${sgxF(10*s)} ${sgxF(14*s)} l${sgxF(-4*s)} ${sgxF(-12*s)}" fill="none" stroke="#c0392b" stroke-width="${sgxF(3.2*s)}" stroke-linejoin="round"/>`;
+  let o = ""; for(const a of [0,60,120]){ const dx = Math.cos(a*Math.PI/180)*10*s, dy = Math.sin(a*Math.PI/180)*10*s; o += `<line x1="${sgxF(x-dx)}" y1="${sgxF(y-dy)}" x2="${sgxF(x+dx)}" y2="${sgxF(y+dy)}" stroke="#1f6f8b" stroke-width="3"/>`; }
+  return o;
+}
+function sgxFront(pts){
+  const col = "#1d4ed8"; let s = `<path d="M${pts.map(p=>sgxF(p[0])+" "+sgxF(p[1])).join(" L")}" fill="none" stroke="${col}" stroke-width="4"/>`;
+  const L = [0]; for(let i=1;i<pts.length;i++) L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
+  for(let t=20; t<L[L.length-1]-10; t+=40){
+    let i = 0; for(let j=0;j<L.length;j++) if(L[j]<=t) i = j;
+    i = Math.min(i, pts.length-2);
+    const f = (t-L[i])/(L[i+1]-L[i]), x = pts[i][0]+(pts[i+1][0]-pts[i][0])*f, y = pts[i][1]+(pts[i+1][1]-pts[i][1])*f;
+    const a = Math.atan2(pts[i+1][1]-pts[i][1], pts[i+1][0]-pts[i][0]), nx = -Math.sin(a), ny = Math.cos(a);
+    s += `<polygon points="${sgxF(x-Math.cos(a)*9)},${sgxF(y-Math.sin(a)*9)} ${sgxF(x+Math.cos(a)*9)},${sgxF(y+Math.sin(a)*9)} ${sgxF(x-nx*16)},${sgxF(y-ny*16)}" fill="${col}"/>`;
+  }
+  return s;
+}
+// spec = 4 letras (Madrid, Barcelona, Alicante, Málaga): r lluvia · t tormenta · s nieve · n nada; + cifra del frente
+function sgxSvg(spec){
+  const W = 760, H = 640, K = spec.slice(0,4), fr = (+spec[4]||0) % SGX.FRONTS.length, ff = 'font-family="Arial,sans-serif"';
+  let c = `<rect width="${W}" height="${H}" fill="#e8f1fa"/>`;
+  c += `<polygon points="${SGX.COAST.map(q=>SGX.P(q[0],q[1]).map(sgxF).join(",")).join(" ")}" fill="#f4efe2" stroke="#6b6b6b" stroke-width="2.5" stroke-linejoin="round"/>`;
+  c += sgxFront(SGX.FRONTS[fr]);
+  SGX.ORDER.forEach((city,i)=>{ const k = K[i]; if(k==="n"||!SGX.COL[k]) return;
+    const p = SGX.P(SGX.CITY[city][0], SGX.CITY[city][1]), cx = p[0]+(k!=="t"?8:-6), cy = p[1]-6, col = SGX.COL[k];
+    c += `<path d="${sgxScallop(cx,cy,78,58)}" fill="${col}" fill-opacity=".10" stroke="${col}" stroke-width="3.2"/>`;
+    (k!=="t"?[[-30,-16],[24,-20],[-4,26]]:[[-26,-14],[26,-12],[0,24]]).forEach(d=>{ c += sgxSym(k,cx+d[0],cy+d[1],1); }); });
+  SGX.ORDER.forEach(city=>{ const p = SGX.P(SGX.CITY[city][0], SGX.CITY[city][1]);
+    c += `<circle cx="${sgxF(p[0])}" cy="${sgxF(p[1])}" r="8" fill="#111" stroke="#fff" stroke-width="2.5"/>`;
+    c += city==="Barcelona" ? `<text x="${sgxF(p[0]-14)}" y="${sgxF(p[1]+44)}" font-size="27" font-weight="700" fill="#111" stroke="#fff" stroke-width="5" paint-order="stroke" text-anchor="end" ${ff}>${city}</text>`
+      : `<text x="${sgxF(p[0]+14)}" y="${sgxF(p[1]+(city==="Málaga"?36:34))}" font-size="27" font-weight="700" fill="#111" stroke="#fff" stroke-width="5" paint-order="stroke" ${ff}>${city}</text>`; });
+  c += `<text x="14" y="34" font-size="23" font-weight="700" fill="#222" ${ff}>SIGWX · SFC – FL100 · VALID 12 UTC</text>`;
+  const lx = 526, ly = 486;
+  c += `<rect x="${lx}" y="${ly}" width="228" height="144" rx="8" fill="#fff" stroke="#888" stroke-width="2"/><text x="${lx+12}" y="${ly+26}" font-size="20" font-weight="700" ${ff} fill="#222">LEGEND</text>`;
+  [["r","Rain"],["t","Thunderstorm"],["s","Snow"]].forEach((it,i)=>{ const yy = ly+50+i*27; c += sgxSym(it[0],lx+28,yy-6,.9)+`<text x="${lx+56}" y="${yy}" font-size="19" ${ff} fill="#222">${it[1]}</text>`; });
+  const yy = ly+50+3*27;
+  c += `<path d="M${lx+12} ${yy-6} h40" stroke="#1d4ed8" stroke-width="4"/><polygon points="${lx+22},${yy-6} ${lx+34},${yy-6} ${lx+28},${yy-20}" fill="#1d4ed8"/><text x="${lx+62}" y="${yy}" font-size="19" ${ff} fill="#222">Cold front</text>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">${c}</svg>`;
+}
+const sgxUri = spec => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(sgxSvg(spec));
+function gSIGWX(){
+  const kinds = nvShuf(["r","t","s","n"]), fr = nvR(0,SGX.FRONTS.length-1), spec = kinds.join("")+fr;
+  const city = k => SGX.ORDER[kinds.indexOf(k)];
+  const W = {r:"rain", t:"thunderstorms", s:"snow"}, WE = {r:"la lluvia (punto azul)", t:"la tormenta (rayo rojo)", s:"la nieve (asterisco)"};
+  const kind = nvP(["ask","ask","ask","none","what"]);
+  const base = "En la carta, cada fenómeno se dibuja dentro de un área festoneada con su símbolo: punto azul = lluvia, rayo rojo = tormenta, asterisco = nieve. ";
+  if(kind==="ask"){
+    const k = nvP(["r","t","s"]), ans = city(k);
+    const txt = k==="r" ? nvP(["Given the following SIGWX, in which of those cities do we expect rain to happen?","According to the SIGWX chart below, in which of these cities should we expect rain?","Looking at the SIGWX, which of those cities is inside an area of rain?"])
+      : k==="t" ? nvP(["Given the following SIGWX, in which of those cities do we expect thunderstorms?","According to the SIGWX chart below, which of those cities is affected by thunderstorms?","Looking at the SIGWX, in which city is a thunderstorm forecast?"])
+      : nvP(["Given the following SIGWX, in which of those cities do we expect snow?","According to the SIGWX chart below, in which city should we expect snow?","Looking at the SIGWX, which of those cities is inside an area of snow?"]);
+    return {text:txt, opts:[ans,...SGX.ORDER.filter(c=>c!==ans)], expl:base+`${ans} está dentro del área de ${WE[k]}. ${city("n")} queda fuera de todas las áreas: sin fenómeno significativo. El frente frío es solo la línea azul con triángulos; no dice por sí solo dónde llueve.`, v:true, img:"sgx:"+spec};
+  }
+  if(kind==="none"){
+    const ans = city("n");
+    return {text:nvP(["Given the following SIGWX, in which of those cities do we expect no significant weather?","According to the SIGWX chart below, which of these cities lies outside all the areas of significant weather?"]),
+      opts:[ans,...SGX.ORDER.filter(c=>c!==ans)], expl:base+`${ans} es la única ciudad que no está dentro de ningún área dibujada: no hay fenómeno significativo previsto. ${city("r")}: lluvia; ${city("t")}: tormenta; ${city("s")}: nieve.`, v:true, img:"sgx:"+spec};
+  }
+  const c = nvP(SGX.ORDER), k = kinds[SGX.ORDER.indexOf(c)];
+  const lab = {r:"Rain", t:"Thunderstorms", s:"Snow", n:"No significant weather"};
+  return {text:nvP([`According to the SIGWX chart below, what weather should we expect at ${c}?`,`Given the following SIGWX, which phenomenon is forecast for ${c}?`]),
+    opts:[lab[k],...["r","t","s","n"].filter(x=>x!==k).map(x=>lab[x])], expl:base+(k==="n"?`${c} no está dentro de ninguna área: sin fenómeno significativo.`:`${c} está dentro del área de ${WE[k]}.`), v:true, img:"sgx:"+spec};
+}
+
+// ---------- METAR sintético ----------
+const metStn = ["EGPD","EGNV","EGPU","EGNT","EGNC","EGNM","EGLL","EGCC","EGPH","LEMD","LEBL","LEVC","LEPA","LEAL","LEMG","LEBB","LEZL","LEGR"];
+const metWx = ["RA","-RA","+RA","SHRA","-SHRA","TSRA","DZ","BR","FG","HZ","SN","-SN","VCSH","VCTS"];
+const metSg = x => (x<0?"M":"")+m2(Math.abs(x));
+function mkMETAR(o){
+  o = o||{};
+  const stn = o.stn||nvP(metStn), dir = o.dir||nvR(1,36)*10, spd = o.spd!==undefined?o.spd:nvR(3,25), gust = o.gust!==undefined?o.gust:(Math.random()<.3?spd+nvR(8,15):0);
+  const cavok = o.cavok!==undefined?o.cavok:(Math.random()<.12), vis = o.vis||nvP([9999,9999,8000,7000,6000,5000,4000,3000,1500]);
+  const wx = cavok?"":(o.wx!==undefined?o.wx:(vis<9999||Math.random()<.35?nvP(metWx):""));
+  const n = o.layers!==undefined?o.layers.length:nvP([1,2,2,3]), lay = [];
+  if(!cavok){ if(o.layers) o.layers.forEach(l=>lay.push(l)); else { let h = nvR(8,40)*5; const am = ["FEW","SCT","BKN","OVC"]; for(let i=0;i<n;i++){ lay.push([nvP(i===0?["FEW","SCT","BKN"]:am), h]); h += nvR(8,30)*5; } } }
+  const t = o.t!==undefined?o.t:nvR(-6,28), dp = o.dp!==undefined?o.dp:t-nvR(0,9), q = o.q||nvR(985,1035), day = nvR(1,28), hh = nvR(0,23), mm = nvP([0,20,30,50]);
+  const wind = `${m3(dir)}${m2(spd)}${gust?"G"+m2(gust):""}KT`;
+  const cloud = cavok?"":(lay.length?lay.map(l=>l[0]+m3(l[1])).join(" "):"NSC");
+  const raw = `${stn} ${m2(day)}${m2(hh)}${m2(mm)}Z ${wind} ${cavok?"CAVOK":String(vis).padStart(4,"0")}${wx?" "+wx:""}${cloud?" "+cloud:""} ${metSg(t)}/${metSg(dp)} Q${q}${o.trend?" "+o.trend:""}`;
+  const ceil = lay.filter(l=>l[0]==="BKN"||l[0]==="OVC").map(l=>l[1])[0];
+  return {raw, stn, dir, spd, gust, cavok, vis, wx, lay, t, dp, q, ceil:ceil===undefined?null:ceil*100};
+}
+const metTemp = x => `${x<0?"−":""}${m2(Math.abs(x))} °C`;
+function gMETARfield(){
+  const M = mkMETAR({cavok:false,gust:Math.random()<.35?undefined:0}); const kinds = ["dew","temp","qnh","wdir","wspd","vis"]; if(M.ceil!==null) kinds.push("ceil","ceil"); if(M.lay.length) kinds.push("amount");
+  const k = nvP(kinds), head = nvP(["Please study the following METAR: ","Read the following METAR: ","Given the following METAR: "]), tail = ".";
+  if(k==="dew") return {text:`${head}${M.raw}${tail} What is the current dew point at this airfield?`, opts:nvOpts(M.dp,[M.t,M.t-M.dp,M.dp+10,-M.dp],metTemp,3), expl:`En el grupo ${metSg(M.t)}/${metSg(M.dp)} el primero es la temperatura (${metTemp(M.t)}) y el segundo el punto de rocío (${metTemp(M.dp)}). La M es «menos».`, v:true};
+  if(k==="temp") return {text:`${head}${M.raw}${tail} What is the air temperature?`, opts:nvOpts(M.t,[M.dp,M.t-M.dp,M.t+10,-M.t],metTemp,3), expl:`En ${metSg(M.t)}/${metSg(M.dp)}, la temperatura es la primera cifra: ${metTemp(M.t)}.`, v:true};
+  if(k==="qnh") return {text:`${head}${M.raw}${tail} What QNH is reported?`, opts:nvOpts(M.q,[M.q-10,M.q+10,M.q-1000>0?M.q-1000:M.q+7,M.spd+1000],x=>`${x} hPa`,1), expl:`Q${M.q}: el grupo con Q es el QNH en hectopascales.`, v:true};
+  if(k==="wdir") return {text:`${head}${M.raw}${tail} From which direction is the wind blowing?`, opts:nvOpts(M.dir,[(M.dir+180)%360||360,(M.dir+90)%360||360,(M.dir+270)%360||360],x=>`${m3(x)}°`,10), expl:`Las tres primeras cifras del grupo de viento son la dirección DESDE la que sopla: ${m3(M.dir)}°. ${m3((M.dir+180)%360||360)}° sería hacia dónde va.`, v:true};
+  if(k==="wspd") return {text:`${head}${M.raw}${tail} What is the mean wind speed?`, opts:nvOpts(M.spd,M.gust?[M.gust,M.spd+10,M.dir/10]:[M.spd+10,M.dir/10,M.spd*2],x=>`${x} kt`,2), expl:`Tras la dirección van las dos cifras de la velocidad media: ${M.spd} kt${M.gust?`; la G${m2(M.gust)} son las rachas (${M.gust} kt), no la media`:""}.`, v:true};
+  if(k==="vis"){ const km = M.vis>=9999?"10 km or more":`${nvN(M.vis/1000,1)} km`; const f = v=>v>=9999?"10 km or more":`${nvN(v/1000,1)} km`;
+    return {text:`${head}${M.raw}${tail} What is the prevailing visibility?`, opts:nvStr(km,[f(M.vis*10),f(Math.max(100,M.vis/10)),M.vis>=9999?"5 km":f(9999)],i=>`${i+1} km`), expl:`El grupo de cuatro cifras ${String(M.vis).padStart(4,"0")} es la visibilidad en METROS: ${M.vis>=9999?"9999 significa 10 km o más":nvN(M.vis)+" m = "+nvN(M.vis/1000,1)+" km"}.`, v:true}; }
+  if(k==="ceil") return {text:`${head}${M.raw}${tail} What is the ceiling (height of the lowest broken or overcast layer)?`, opts:nvOpts(M.ceil,[...M.lay.filter(l=>l[0]==="FEW"||l[0]==="SCT").map(l=>l[1]*100),M.ceil+500,Math.max(100,M.ceil-500),M.ceil*10],x=>`${nvN(x)} ft`,100), expl:`El techo es la base de la capa más baja con 5 octas o más (BKN u OVC): ${nvN(M.ceil)} ft sobre el aeródromo. FEW y SCT no forman techo.`, v:true};
+  const L = nvP(M.lay), A = {FEW:"Few (1–2 oktas)",SCT:"Scattered (3–4 oktas)",BKN:"Broken (5–7 oktas)",OVC:"Overcast (8 oktas)"};
+  return {text:`${head}${M.raw}${tail} What cloud amount is reported with a base at ${nvN(L[1]*100)} ft?`, opts:[A[L[0]],...Object.keys(A).filter(x=>x!==L[0]).map(x=>A[x])], expl:`${L[0]}${m3(L[1])}: ${L[0]} = ${A[L[0]]}; la base va en centenares de pies sobre el aeródromo (${nvN(L[1]*100)} ft).`, v:true};
+}
+// Tendencia / abreviaturas del METAR (NOSIG y compañía)
+const metAbbr = [["NOSIG","No significant change expected in the next 2 hours"],["BECMG","Becoming: a gradual change to the conditions that follow"],["TEMPO","Temporarily: fluctuations lasting less than one hour each time and covering less than half of the period"],["NSW","No significant weather"],["CAVOK","Ceiling and visibility OK"],["SKC","Sky clear"],["NSC","No significant cloud"],["VRB","Variable wind direction"],["RE","Recent weather since the previous report"],["FM","From (a given time)"],["TL","Until (a given time)"],["VV","Vertical visibility (sky obscured)"]];
+function gMETtrend(){
+  const it = nvP(metAbbr), wrong = nvShuf(metAbbr.filter(x=>x[0]!==it[0])).slice(0,3).map(x=>x[1]);
+  const ctx = ["NOSIG","BECMG","TEMPO"].includes(it[0]) ? `Please study the following METAR: ${mkMETAR({trend:it[0]==="NOSIG"?"NOSIG":it[0]+(it[0]==="BECMG"?" FM1500 9999 NSW":" 4000 SHRA")}).raw}. ` : "";
+  return {text:`${ctx}${nvP(["What does "+it[0]+" stand for?","In the METAR, the abbreviation "+it[0]+" means:"])}`, opts:[it[1],...wrong], expl:`${it[0]}: ${it[1]}.${it[0]==="NOSIG"?" Va al final del METAR y sustituye a la tendencia cuando no se espera ningún cambio importante.":""}`, v:true};
+}
+// Códigos de tiempo presente
+const metCodes = [["RA","Rain"],["-RA","Light rain"],["+RA","Heavy rain"],["DZ","Drizzle"],["-DZ","Light drizzle"],["SN","Snow"],["-SN","Light snow"],["+SN","Heavy snow"],["SG","Snow grains"],["PL","Ice pellets"],["GR","Hail"],["GS","Small hail or snow pellets"],["SHRA","Rain showers"],["-SHRA","Light rain showers"],["+SHRA","Heavy rain showers"],["SHSN","Snow showers"],["TS","Thunderstorm without precipitation"],["TSRA","Thunderstorm with rain"],["+TSRA","Thunderstorm with heavy rain"],["VCTS","Thunderstorm in the vicinity of the aerodrome"],["VCSH","Showers in the vicinity of the aerodrome"],["FZRA","Freezing rain"],["FZDZ","Freezing drizzle"],["FZFG","Freezing fog"],["FG","Fog"],["BR","Mist"],["HZ","Haze"],["BCFG","Fog in patches"],["MIFG","Shallow fog"],["BLSN","Blowing snow (above 2 m)"],["DRSN","Low drifting snow (below 2 m)"],["FU","Smoke"],["VA","Volcanic ash"],["DU","Widespread dust"],["SQ","Squalls"],["FC","Funnel cloud, tornado or waterspout"]];
+function gWXcode(){
+  const it = nvP(metCodes), kind = nvP(["decode","decode","code","metar"]);
+  const others = nvShuf(metCodes.filter(x=>x[0]!==it[0] && x[1]!==it[1]));
+  const near = others.filter(x=>x[0].replace(/[+-]/g,"").includes(it[0].replace(/[+-]/g,"").slice(-2))||it[0].replace(/[+-]/g,"").includes(x[0].replace(/[+-]/g,"").slice(-2)));
+  const wr = [...near,...others].filter((x,i,a)=>a.findIndex(y=>y[0]===x[0])===i).slice(0,3);
+  const note = "Orden del grupo: intensidad (− ligera, sin signo moderada, + fuerte) o VC, descriptor (SH, TS, FZ, BL, DR, MI, BC) y fenómeno (RA, SN, DZ, FG…). ";
+  if(kind==="code") return {text:nvP([`What abbreviation is used in METARs to signify ${it[1].toLowerCase()}?`,`How would «${it[1].toLowerCase()}» be coded in a METAR?`]), opts:[it[0],...wr.map(x=>x[0])], expl:`${it[1]} = ${it[0]}. ${note}`, v:true};
+  if(kind==="metar"){ const M = mkMETAR({cavok:false,wx:it[0],vis:/FG|BR|HZ|FZFG|BCFG|MIFG|DU|FU|VA/.test(it[0])?nvP([800,2000,4000,5000]):nvP([3000,5000,7000])}); return {text:`Please study the following METAR: ${M.raw}. What does «${it[0]}» mean?`, opts:[it[1],...wr.map(x=>x[1])], expl:`${it[0]} = ${it[1]}. ${note}`, v:true}; }
+  return {text:nvP([`In a METAR, the group «${it[0]}» means:`,`What does «${it[0]}» mean in a METAR or TAF?`]), opts:[it[1],...wr.map(x=>x[1])], expl:`${it[0]} = ${it[1]}. ${note}`, v:true};
+}
+// ¿Se puede operar en VFR con este METAR? (techo 1500 ft y visibilidad 5 km)
+function gVFRmetar(){
+  const case_ = nvP(["ok","ok","ceil","ceil","vis"]); let vis = nvP([9999,9999,8000,7000,6000,5000]), lay;
+  if(case_==="ceil") lay = [[nvP(["BKN","OVC"]), nvP([4,6,8,10,12,14])]];
+  else if(case_==="ok") lay = nvP([[["SCT",nvP([8,10,12])],["BKN",nvP([18,20,25,30,40])]],[["FEW",nvP([10,15])]],[["BKN",nvP([16,20,25,35])]],[["SCT",nvP([5,8,10])]]]);
+  else { vis = nvP([4000,3500,3000,2000,1500]); lay = [["FEW",nvP([15,20,30])]]; }
+  const M = mkMETAR({cavok:false,vis,layers:lay,wx:vis<5000?nvP(["BR","HZ","-RA"]):nvP(["","","-RA"])});
+  const O = ["Yes, visibility and ceiling are both at or above the VFR minima","No, the ceiling is below 1,500 ft","No, the visibility is below 5 km","Yes, only the visibility matters at a controlled aerodrome"];
+  const idx = case_==="ok"?0:case_==="ceil"?1:2;
+  const why = case_==="ok"?`Visibilidad ${nvN(M.vis)} m (≥ 5 km) y ${M.ceil===null?"sin techo (FEW/SCT no cuentan)":"techo "+nvN(M.ceil)+" ft (≥ 1.500 ft)"}: se cumplen los dos mínimos.`:case_==="ceil"?`Techo de ${nvN(M.ceil)} ft (${lay[0][0]}${m3(lay[0][1])}): por debajo de 1.500 ft no hay condiciones VFR en un aeródromo controlado.`:`Visibilidad de ${nvN(M.vis)} m: menos de 5 km, no hay condiciones VFR aunque no haya techo.`;
+  return {text:nvP(["Can a controlled aerodrome be operated in VFR with the following METAR? METAR ","Is VFR flight possible at this controlled aerodrome with the following METAR? METAR "])+M.raw, opts:[O[idx],...O.filter((_,i)=>i!==idx)], expl:why+" El techo es la capa más baja con 5 octas o más (BKN u OVC); FEW y SCT no lo forman.", v:true};
+}
+// Cuatro METAR: ¿cuál tiene el viento más flojo / más fuerte, menos visibilidad, QNH más alto…?
+function gMETARcmp(){
+  const st = nvShuf(["EGNV","EGNT","EGNC","EGNM","EGPD","EGPU","EGPH","EGCC"]).slice(0,4), kind = nvP(["wlow","whigh","vis","qnh","temp"]);
+  const day = nvR(1,28), tm = `${m2(day)}${m2(nvR(0,23))}${nvP(["20","50","30"])}Z`;
+  const pick = (n,lo,hi,step) => { const s = new Set(); while(s.size<n) s.add(nvR(lo/step,hi/step)*step); return nvShuf([...s]); };
+  const W = pick(4,5,28,1), V = nvShuf([9999,8000,6000,4000,2500,1200]).slice(0,4), Q = pick(4,990,1030,1), T = pick(4,-4,24,1);
+  const Ms = st.map((s,i)=>mkMETAR({stn:s,spd:W[i],gust:0,cavok:false,vis:kind==="vis"?V[i]:9999,t:kind==="temp"?T[i]:8,dp:kind==="temp"?T[i]-3:3,q:kind==="qnh"?Q[i]:1020,layers:[["FEW",nvP([20,30])]],wx:""}));
+  Ms.forEach((M,i)=>{ M.raw = M.raw.replace(/^(\w{4}) \d{6}Z/, `$1 ${tm}`); });
+  const list = Ms.map(m=>m.raw).join("; ");
+  let i, txt, ex;
+  if(kind==="wlow"){ i = W.indexOf(Math.min(...W)); txt = "Which airfield has the lowest wind strength?"; ex = `Se compara solo la velocidad: ${Ms.map(m=>m.stn+" "+m.spd+" kt").join(", ")}. El más flojo es ${st[i]}.`; }
+  else if(kind==="whigh"){ i = W.indexOf(Math.max(...W)); txt = "Which airfield has the strongest wind?"; ex = `Velocidades: ${Ms.map(m=>m.stn+" "+m.spd+" kt").join(", ")}. La más fuerte es ${st[i]}; la dirección no cuenta.`; }
+  else if(kind==="vis"){ i = V.indexOf(Math.min(...V)); txt = "Which airfield has the lowest visibility?"; ex = `Visibilidades (m): ${Ms.map(m=>m.stn+" "+m.vis).join(", ")}. La menor es ${st[i]}.`; }
+  else if(kind==="qnh"){ i = Q.indexOf(Math.max(...Q)); txt = "Which airfield reports the highest QNH?"; ex = `QNH: ${Ms.map(m=>m.stn+" Q"+m.q).join(", ")}. El más alto es ${st[i]}.`; }
+  else { i = T.indexOf(Math.min(...T)); txt = "Which airfield reports the lowest temperature?"; ex = `Temperaturas (primer grupo): ${Ms.map(m=>m.stn+" "+metSg(m.t)).join(", ")}. La más baja es ${st[i]} (la M es «menos»: M03 es más fría que 02).`; }
+  return {text:`Please study the four METARs below. ${txt} ${list}`, opts:[st[i],...st.filter((_,k)=>k!==i)], expl:ex, v:true};
+}
+// TAF: ¿qué nube se espera a una hora dada?
+function gTAFat(){
+  const stn = nvP(["LEBB","LEMD","LEBL","LEVC","LEPA","LEAL","LEMG","LEZL"]), d = nvR(1,26), H = nvP([6,7,8,9,10,11,12,13,14,15,16]), early = Math.random()<.3, mk = (a,h)=>[nvP(a),h];
+  const C = n => ["SCT","BKN","FEW","OVC"][n]; const used = new Set(), cl = (a,hs)=>{ let c; do{ c = nvP(a)+m3(nvP(hs)); }while(used.has(c)); used.add(c); return c; };
+  const C0 = cl(["SCT","FEW"],[30,35,40,45]), C1 = cl(["SCT","FEW","BKN"],[12,15,18,20,25]), Ct1 = cl(["BKN"],[8,9,10,11,12]), Ct2 = cl(["BKN","OVC"],[15,17,19,22]);
+  const bs = nvP([20,21,22]), be = nvP([0,1,2]);   // BECMG de día d a las bs hasta el día d+1 a las be
+  const ts1 = H-nvR(3,5), te1 = H-nvR(1,2), ts2 = H+nvR(1,2), te2 = ts2+nvR(2,5);
+  const dd = x=>m2(x), dh = (day,h)=>dd(day)+m2(h);
+  const taf = `TAF ${stn} ${dd(d)}1700Z ${dh(d,18)}/${dh(d+1,18)} ${m3(nvR(1,36)*10)}${m2(nvR(5,12))}KT 9999 ${C0} BECMG ${dh(d,bs)}/${dh(d+1,be)} SHRA ${C1} PROB40 TEMPO ${dh(d+1,Math.max(0,ts1))}/${dh(d+1,Math.max(1,te1))} 3000 RA ${Ct1} PROB30 TEMPO ${dh(d+1,ts2)}/${dh(d+1,Math.min(17,te2))} 3000 RA ${Ct2}`;
+  const tq = early ? `${dd(d)} at ${m2(nvR(18,bs-1))}:00Z` : `${dd(d+1)} at ${m2(H)}:00Z`, ans = early?C0:C1;
+  const wr = [Ct1,Ct2,early?C1:C0];
+  return {text:`Given the following TAF: ${taf.replace(/^TAF /,"")}. What cloud base can we expect on the ${tq}?`, opts:[ans,...wr], expl:early?`A las ${tq.split(" at ")[1]} del día ${d} el cambio gradual (BECMG) todavía no ha empezado (empieza a las ${bs}Z) y ningún TEMPO está activo: sigue lo inicial, ${C0}.`:`El día ${d+1} a las ${m2(H)}Z el BECMG ya terminó (acabó a las ${m2(be)}Z) y manda ${C1}. El primer TEMPO (${m2(Math.max(0,ts1))}–${m2(Math.max(1,te1))}Z) ya acabó y el segundo (${m2(ts2)}–${m2(Math.min(17,te2))}Z) aún no ha empezado, así que ${Ct1} y ${Ct2} no se esperan a esa hora.`, v:true};
+}
+// Viento en superficie frente al de altura (fricción: más flojo y retrocedido)
+function gSurfWind(){
+  if(Math.random()<.2) return {text:"The wind at 2000 ft altitude is 240/35, the most likely surface wind at an inland airfield is...", opts:["220/20","250/40","270/20","220/40"], expl:"La fricción reduce la velocidad (aprox. a la mitad o dos tercios) y hace que el viento en superficie retroceda (gire a la izquierda) respecto al de altura, en el hemisferio norte.", v:true};
+  const sea = Math.random()<.3, d = nvR(2,34)*10, s = nvP([20,25,30,35,40,45,50,60]), back = sea?10:nvP([20,30]), f = sea?.7:nvP([.5,.55,.6]);
+  const sd = (d-back+360)%360||360, ss = Math.max(5,Math.round(s*f/5)*5), fmt = (a,b)=>`${m3(a)}/${m2(b)}`;
+  const wr = [fmt((d+back)%360||360,ss), fmt(sd,Math.min(99,Math.round(s*1.2/5)*5)), fmt(d,s)];
+  const q = nvP([`The wind at 2000 ft altitude is ${fmt(d,s)}, the most likely surface wind ${sea?"over the open sea":"at an inland airfield"} is...`,`If the wind at altitude is ${fmt(d,s)}, the most likely wind on the surface ${sea?"over the sea":"at an inland airfield"} is:`]);
+  return {text:q, opts:nvStr(fmt(sd,ss),wr,i=>fmt((sd+10*i)%360||360,ss+5*i)), expl:`Por la fricción el viento en superficie es MÁS FLOJO (${sea?"unos 2/3 – 3/4":"entre la mitad y 2/3"} del de altura) y RETROCEDE (gira a la izquierda en el hemisferio norte: unos ${sea?10:"20–30"}° ${sea?"sobre el mar":"sobre tierra"}). ${fmt(d,s)} → ${fmt(sd,ss)}. Veer hacia ${m3((d+back)%360||360)}° sería el error clásico.`, v:true};
+}
+// Base de la nube por la diferencia T − Td y el gradiente dado
+function gCloudBaseL(){
+  const L = nvP([2,2,2.5,3]), t = nvR(10,32), sp = nvP([2,4,6,8,10,12])*(L===2?1:L===2.5?5/ (L===2.5?1:1):1);
+  const spread = L===2?nvP([2,4,6,8,10,12]):L===2.5?nvP([5,10]):nvP([3,6,9]), dp = t-spread, base = Math.round(spread/L*1000), f = x=>`${nvN(Math.round(x))} ft`;
+  return {text:nvP([`The surface temperature is ${t} °C, and the dew point is ${dp} °C. Approximately what height would you expect the cloud base to be, given that the average environmental lapse rate up to 10 000 ft AGL is ${L} °C per 1000 ft?`,`The surface temperature is ${t} °C and the dew point is ${dp} °C. Approximately what is the height of the cloud base, if the temperature falls ${L} °C per 1000 ft?`]),
+    opts:nvOpts(base,[spread*400,spread*1000,Math.round(spread*L*100),Math.round(spread/L*500)],f,250), expl:`Diferencia T − Td = ${spread} °C. Con ${L} °C por 1000 ft: ${spread} / ${L} × 1000 = ${nvN(base)} ft. Con la regla de 400 ft por °C saldrían ${nvN(spread*400)} ft; el enunciado da el gradiente, así que se usa ese.`, v:true};
+}
+// ---------- Variantes conceptuales escritas a mano (mismo fondo, otra forma) ----------
+const V6 = (t,ok,a,b,c,e) => [t,[ok,a,b,c],e];
+const VARIANTS_V6 = {
+ t1: [V6("Which type of vertical current dominates the final stage of a thunderstorm cell?","Downdrafts","Updrafts","Updrafts and downdrafts of equal strength","There are no vertical currents","En la fase de disipación mandan las descendentes frías: cortan el aire cálido ascendente y la célula se deshace."),
+      V6("A thunderstorm cell has lost its updraft: the rain is easing and only cold downdrafts remain. Which stage is this?","Dissipating stage","Cumulus stage","Mature stage","Initial growth stage","Sin ascendentes, solo descendentes y lluvia que amaina: es la fase de disipación."),
+      V6("Which statement about the dissipating stage of a thunderstorm is correct?","Downdrafts spread through the cell and cut off its supply of warm air","The updrafts are at their strongest","Lightning, hail and turbulence are at their peak","The cell has only just begun to grow","Las descendentes cortan el suministro de aire cálido; el pico de rayos, granizo y turbulencia fue antes, en la fase madura.")],
+ t2: [V6("Structural icing in flight requires visible moisture and:","A temperature at or below 0 °C, with supercooled liquid water","A temperature above +10 °C","Dry air at any temperature","Only ice crystals","El engelamiento exige agua líquida superenfriada: gotas de nube o lluvia a 0 °C o menos que se congelan al tocar el avión."),
+      V6("Which cloud condition presents NO airframe icing hazard?","Cirrus made only of ice crystals","Altocumulus at −8 °C","Cumulus congestus at −5 °C","Nimbostratus at −3 °C","Los cirros son cristales de hielo: no hay agua líquida que se congele sobre el avión. En los otros tres hay gotas superenfriadas."),
+      V6("In cloud, the icing hazard is greatest when the outside air temperature is between:","0 °C and −20 °C","+10 °C and +20 °C","−40 °C and −60 °C","+5 °C and +10 °C","Entre 0 y −20 °C abundan las gotas superenfriadas; por debajo de −40 °C casi todo el agua ya es hielo.")],
+ t4: [V6("The ISA assumes at mean sea level a temperature and pressure of:","+15 °C and 1013.25 hPa","0 °C and 1013.25 hPa","+15 °C and 1025 hPa","+20 °C and 1013.25 hPa","ISA a nivel del mar: +15 °C, 1013,25 hPa y densidad de 1,225 kg/m³."),
+      V6("The ISA density at mean sea level is:","1.225 kg/m³","1.013 kg/m³","0.652 kg/m³","12.25 kg/m³","ISA: 1,225 kg/m³ a nivel del mar. Los otros valores son distractores."),
+      V6("Which of these values is correct for the ISA at mean sea level?","1013.25 hPa","1031.25 hPa","1113.25 hPa","1003.25 hPa","1013,25 hPa. Los distractores juegan con transponer cifras: léelo dos veces.")],
+ t14: [V6("In the ISA, the temperature at FL100 is:","−5 °C","+5 °C","−15 °C","−20 °C","15 − 2 × 10 = −5 °C (1,98 °C por cada 1000 ft ≈ 2)."),
+       V6("The ISA temperature at the tropopause (36,090 ft) is:","−56.5 °C","−65 °C","−40 °C","−45 °C","Hasta 36.090 ft baja a 1,98 °C/1000 ft: 15 − 71,5 = −56,5 °C, y por encima es isotermo."),
+       V6("Below the tropopause, the ISA temperature falls with height at about:","6.5 °C per km","1 °C per km","10 °C per km","0.65 °C per km","6,5 °C/km, que es lo mismo que 1,98 °C por 1000 ft.")],
+ t18: [V6("The layer of the atmosphere directly above the troposphere is the:","Stratosphere","Mesosphere","Thermosphere","Exosphere","Orden desde el suelo: troposfera, estratosfera, mesosfera, termosfera, exosfera."),
+       V6("The boundary between the troposphere and the stratosphere is the:","Tropopause","Stratopause","Mesopause","Ionopause","Tropopausa = límite troposfera/estratosfera; estratopausa = estratosfera/mesosfera."),
+       V6("In which layer does the temperature rise with height because of ozone absorbing ultraviolet radiation?","Stratosphere","Troposphere","Mesosphere","Tropopause","El ozono de la estratosfera absorbe UV y la calienta con la altura.")],
+ t9105: [V6("In the ISA, the tropopause is at:","11 km (36,090 ft)","8 km (26,000 ft)","16 km (52,000 ft)","5 km (16,000 ft)","ISA: 11 km ≈ 36.090 ft, con −56,5 °C."),
+         V6("The tropopause is normally highest over the:","Equator","Poles","Mid-latitudes in winter","Arctic in summer","Sobre el ecuador llega a 16–18 km; en los polos baja a 8 km."),
+         V6("Compared with temperate latitudes, the tropopause over the poles is:","Lower (about 8 km)","Higher (about 16 km)","At the same height","Not defined","En los polos el aire es más frío y la troposfera menos profunda: 8 km aprox.")],
+ t9116: [V6("Most weather phenomena (clouds, precipitation, thunderstorms) occur in the:","Troposphere","Stratosphere","Mesosphere","Tropopause","El vapor de agua y la convección están en la troposfera."),
+         V6("The layer in which the temperature decreases with height on average is the:","Troposphere","Stratosphere","Ozone layer","Exosphere","En la troposfera la temperatura baja con la altura; en la estratosfera sube."),
+         V6("About three quarters of the mass of the atmosphere is found in the:","Troposphere","Stratosphere","Mesosphere","Ionosphere","La troposfera contiene aproximadamente el 75 % de la masa de la atmósfera.")],
+ t6: [V6("Frontal fog forms mainly when:","Rain from warm air above falls into the colder air below and saturates it","Warm moist air moves over a cold sea","The ground cools by radiation on a clear night","Cold dry air moves over a warm sea","La lluvia del aire cálido evapora en el frío de abajo y lo satura: niebla frontal, típica del frente cálido."),
+      V6("Fog that forms ahead of a warm front, in the cold air under the frontal rain, is called:","Frontal fog","Radiation fog","Advection fog","Steam fog","Niebla frontal (de precipitación)."),],
+ t7: [V6("Which cloud is the visual signature of mountain waves?","Lenticular","Cumulonimbus","Stratus","Cirrostratus","Los lenticulares se quedan inmóviles en la cresta de la onda: delatan ondas de montaña, con turbulencia y rotores."),
+      V6("Smooth lens-shaped clouds that remain stationary on the lee side of a ridge indicate:","Mountain waves, with strong turbulence and rotors","Fair weather and calm air","An approaching warm front","Radiation fog forming","Aunque parezcan tranquilos, avisan de ondas de montaña y turbulencia fuerte bajo ellas.")],
+ t9104: [V6("Which cloud is the visual signature of mountain waves?","Lenticular","Cumulonimbus","Stratus","Cirrostratus","Los lenticulares se quedan inmóviles en la cresta de la onda: delatan ondas de montaña."),
+         V6("Lenticular clouds are formed by:","Stable moist air forced to oscillate downwind of a ridge","Unstable air rising from heated ground","Warm air moving over a cold sea","Frontal lifting only","Aire estable que oscila tras una barrera: en las crestas de la onda condensa y forma lentes."),
+         V6("Smooth lens-shaped clouds that stay in the same place on the lee side of a ridge are a sign of:","Mountain waves, with strong turbulence and downdrafts","Fair weather and calm air","An approaching warm front","Radiation fog forming","Aunque parezcan tranquilos, avisan de ondas de montaña y turbulencia fuerte.")],
+ t13: [V6("Which of these conditions would favour the formation of lenticular clouds?","Stable air and strong wind blowing across a ridge","Unstable air and light wind","Calm conditions over flat land","A warm front over the sea","Hace falta viento fuerte perpendicular a la cordillera y una capa estable para que el aire oscile."),],
+ t8: [V6("The geostrophic wind is the result of the balance between:","The pressure gradient force and the Coriolis force","The pressure gradient force and friction","Coriolis force and friction","Centrifugal force and friction","Geostrófico = gradiente de presión equilibrado con Coriolis; sin fricción y con isobaras rectas."),
+      V6("Above the friction layer, with straight isobars, the wind blows:","Parallel to the isobars, with low pressure on its left in the northern hemisphere","Across the isobars towards low pressure","Parallel to the isobars, with low pressure on its right in the northern hemisphere","Across the isobars towards high pressure","Ley de Buys-Ballot: de espaldas al viento, la baja presión queda a la izquierda en el hemisferio norte."),
+      V6("For the same pressure gradient, the geostrophic wind is stronger at:","Lower latitudes","Higher latitudes","The poles","It does not depend on the latitude","Coriolis es menor cerca del ecuador, así que hace falta más velocidad para equilibrar el mismo gradiente.")],
+ t9129: [V6("The pressure gradient force acts:","From high pressure towards low pressure, perpendicular to the isobars","Along the isobars","From low pressure towards high pressure","Parallel to the wind at all times","El gradiente empuja el aire de alta a baja presión, perpendicular a las isobaras."),
+         V6("Closely spaced isobars on a surface chart indicate:","A strong pressure gradient and strong wind","Light winds","Calm conditions","A weak depression","Isobaras juntas = gradiente fuerte = viento fuerte."),
+         V6("In the northern hemisphere the Coriolis force deflects the moving air to the:","Right","Left","North","South","En el hemisferio norte Coriolis desvía a la derecha; en el sur, a la izquierda.")],
+ t9103: [V6("Advection fog forms when:","Warm moist air moves over a colder surface","The ground cools by radiation on a clear, calm night","Cold air moves over a warm sea","Rain falls through cold air","La advección es movimiento horizontal: aire cálido y húmedo sobre superficie fría. Puede formarse de día o de noche y persiste con viento."),
+         V6("Which fog needs a clear sky, light winds and a long night?","Radiation fog","Advection fog","Steam fog","Frontal fog","La niebla de radiación necesita cielo despejado, viento flojo y noche larga."),
+         V6("«Haar» or sea fog is a form of:","Advection fog","Radiation fog","Hill fog","Frontal fog","Aire cálido y húmedo sobre mar frío: niebla de advección.")],
+ t9124: [V6("Hoar frost is formed by:","Direct sublimation of water vapour into ice on a surface below 0 °C","Supercooled droplets freezing on impact","Rain freezing on a cold surface","Fog droplets freezing in the air","La escarcha es vapor que pasa a hielo directamente sobre una superficie por debajo de 0 °C y del punto de rocío."),
+         V6("On which kind of night is hoar frost most likely to form on an aircraft parked outside?","Clear, calm, cold night with moist air","Cloudy night with strong wind","Warm night with drizzle","Night with freezing rain","Cielo despejado y calma: la superficie se enfría por radiación bajo 0 °C y bajo el rocío."),
+         V6("Which of these is a deposit of ice crystals that forms directly from water vapour?","Hoar frost","Clear ice","Rime ice","Glaze","Hoar frost; el rime y el clear ice vienen de gotas superenfriadas.")],
+ t9120: [V6("Which type of ice is the most dangerous because it spreads and is hard to remove?","Clear ice","Rime ice","Hoar frost","Frost on the ground","El hielo claro (transparente) se extiende y es duro y pesado."),
+         V6("Clear ice is most likely to form at temperatures between:","0 °C and −10 °C","−20 °C and −30 °C","−40 °C and −50 °C","+10 °C and +20 °C","Gotas grandes superenfriadas cerca de 0 °C: se extienden antes de congelar. El rime aparece más frío.")],
+ t9126: [V6("Rime ice forms mostly from:","Small supercooled droplets that freeze instantly on impact","Large supercooled droplets that spread before freezing","Rain at +5 °C","Dry snow","Gotas pequeñas que se congelan al instante: hielo opaco y rugoso."),
+         V6("Which ice is opaque, white and rough?","Rime ice","Clear ice","Glaze","Hoar frost on the ground","El rime tiene aspecto blanco y rugoso por el aire atrapado entre las gotas congeladas.")],
+ t9106: [V6("Which of these is typical of an anticyclone?","Descending air, light winds and, often, haze or fog","Strong convergence and widespread rain","Cumulonimbus and squalls","Strong upward motion","En el anticiclón el aire desciende (subsidencia), diverge en superficie y el tiempo es estable."),
+         V6("In the northern hemisphere, the surface wind around a high-pressure system blows:","Clockwise and outwards","Anticlockwise and inwards","Clockwise and inwards","Anticlockwise and outwards","Alrededor de un anticiclón, en el hemisferio norte, giro horario y salida hacia fuera por la fricción."),
+         V6("Which would you NOT expect in the centre of a high-pressure system?","Widespread rain and cumulonimbus","Light winds","Subsiding air","Haze or radiation fog","En el centro de una alta hay aire descendente y calma; la lluvia generalizada es de las depresiones.")],
+ t9130: [V6("Subsidence (descending air) is typical of:","An anticyclone","A depression","A cold front","A trough","Subsidencia = anticiclón."),
+         V6("Which weather is typical of an anticyclone in summer?","Clear skies and good visibility","Extensive nimbostratus","Heavy showers","Strong squalls","Aire descendente y estable: cielos despejados.")],
+ t9130a: [V6("In the northern hemisphere, the surface wind around a depression blows:","Anticlockwise and inwards","Clockwise and outwards","Clockwise and inwards","Anticlockwise and outwards","Alrededor de una baja, en el hemisferio norte, giro antihorario y entrada hacia el centro (convergencia)."),
+          V6("Ascending air, cloud and precipitation are typical of:","A depression","An anticyclone","A ridge","A col with clear skies","La baja converge en superficie y el aire asciende: nubes y precipitación.")],
+ t19: [V6("In the northern hemisphere, the surface wind around a depression blows:","Anticlockwise and inwards","Clockwise and outwards","Clockwise and inwards","Anticlockwise and outwards","Alrededor de una baja, giro antihorario y hacia dentro."),
+       V6("Which of these is characteristic of a low-pressure system?","Convergence at low levels and rising air","Descending air and clear skies","Strong divergence at the surface","Calm and cloudless conditions","La baja converge abajo y el aire sube: nubes y precipitación.")],
+ t9110: [V6("Which front is typically associated with cumulonimbus, heavy showers and squalls?","A cold front","A warm front","A warm occlusion","A ridge of high pressure","El frente frío empuja bruscamente el aire cálido hacia arriba: cumulonimbos y tormentas."),
+         V6("At which type of front do you expect nimbostratus and continuous rain over a wide area?","A warm front","A fast-moving cold front","A ridge of high pressure","A col","El frente cálido asciende despacio: capas estratiformes y lluvia continua."),
+         V6("Squalls and a sudden veer of the wind are typical of the passage of:","A cold front","A warm front","A stationary front","A ridge","Con el frente frío el viento vira con rapidez y hay rachas.")],
+ t9111: [V6("A sea breeze blows:","From the sea towards the land during the day","From the land towards the sea during the day","From the sea towards the land at night","Parallel to the coast at all times","De día la tierra se calienta más que el mar: el aire sube y entra aire fresco del mar."),
+         V6("The sea breeze normally reaches its maximum:","In the early afternoon","At dawn","Around midnight","In the middle of the night","La brisa marina es máxima cuando el contraste térmico tierra-mar es mayor: primeras horas de la tarde."),
+         V6("A land breeze blows:","From the land towards the sea at night","From the sea towards the land at night","From the land towards the sea at noon","From the sea towards the land in the early afternoon","De noche la tierra se enfría más: el aire frío fluye hacia el mar.")],
+ t9111a: [V6("A sea breeze blows:","From the sea towards the land during the day","From the land towards the sea during the day","From the sea towards the land at night","Parallel to the coast at all times","De día la tierra se calienta más que el mar."),
+          V6("The land breeze at a coastal aerodrome blows:","At night, from the land towards the sea","During the afternoon, from the sea towards the land","At night, from the sea towards the land","At noon, from the land towards the sea","De noche el aire más frío de tierra fluye hacia el mar.")],
+ t17: [V6("A sea breeze blows:","From the sea towards the land during the day","From the land towards the sea during the day","From the sea towards the land at night","Parallel to the coast at all times","De día la tierra se calienta más que el mar."),
+       V6("The sea breeze normally reaches its maximum:","In the early afternoon","At dawn","Around midnight","In the middle of the night","Máximo cuando el contraste térmico es mayor: primeras horas de la tarde.")],
+ t9112: [V6("Which of these is typical of unstable air?","Cumuliform cloud, showers and good visibility","Layered cloud and drizzle","Fog and low stratus","Haze and smooth flight","Aire inestable: cumuliformes, chubascos, turbulencia y buena visibilidad fuera de las precipitaciones."),
+         V6("In unstable air, the environmental lapse rate is:","Greater than the dry adiabatic lapse rate","Less than the saturated adiabatic lapse rate","Equal to zero (isothermal)","Negative (inversion)","Si el ambiente se enfría más deprisa que la burbuja que asciende, esta sigue subiendo: inestabilidad absoluta."),
+         V6("Smooth air, poor visibility with haze and low stratus point to air that is:","Stable","Unstable","Conditionally unstable","Absolutely unstable","Aire estable: capas, calima, poca turbulencia y mala visibilidad.")],
+ t9112a: [V6("Which of these is typical of stable air?","Layered cloud, poor visibility and smooth flight","Cumulus and showers","Towering cumulus","Strong vertical currents","Aire estable: nubes en capas, calima y vuelo suave."),
+          V6("An inversion layer makes the air above it:","Very stable","Unstable","Turbulent","Saturated","En una inversión la temperatura sube con la altura: el movimiento vertical se frena (estabilidad máxima).")],
+ t9113: [V6("Thermal (convective) turbulence is most intense:","In the afternoon of a hot day over land","At night over the sea","In stable air with a strong inversion","In smooth stratiform cloud","Los térmicos nacen del calentamiento del suelo: de día, sobre tierra y cerca de la superficie."),
+         V6("Turbulence caused by heating of the surface is typically found:","Close to the ground, in the lower layers","Above the tropopause","In clear air at FL350","Only in winter","La turbulencia térmica es de capa baja y diurna.")],
+ t9115: [V6("Which report is issued in addition to the routine METARs when conditions change significantly?","SPECI","TAF","SIGMET","VOLMET","El SPECI es el informe especial: sale entre dos METAR cuando hay un cambio significativo."),
+         V6("A SPECI is:","A special aerodrome weather report issued when significant changes occur","A forecast valid for 9 hours","A warning for the en-route phase","A weather broadcast on VHF","SPECI = informe especial de aeródromo, con el mismo formato que el METAR.")],
+ t9109: [V6("In a TAF, BECMG indicates:","A gradual change to new conditions that are expected to last","Temporary fluctuations","A probability of the phenomenon","An instantaneous change","BECMG = becoming: cambio gradual a nuevas condiciones."),
+         V6("In a TAF, TEMPO is used for fluctuations that:","Last less than one hour each time and cover less than half of the period","Are permanent","Last more than two hours","Are certain to occur","TEMPO: fluctuaciones temporales, menos de una hora cada vez y menos de la mitad del periodo."),
+         V6("PROB30 in a TAF means:","A 30 % probability that the phenomenon will occur","A phenomenon lasting 30 minutes","A wind of 30 kt","A 30 % reduction in visibility","PROB30/PROB40 = probabilidad (30 o 40 %) de que ocurra lo que sigue."),
+         V6("A TAF is:","A forecast for an aerodrome, normally valid for 9 to 30 hours","An observation made every half hour","A warning for severe phenomena","A broadcast for aircraft in flight","El TAF es el pronóstico de aeródromo.")],
+ t9118: [V6("In a cold occlusion, the air behind the cold front is:","Colder than the air ahead of the warm front","Warmer than the air ahead of the warm front","The same temperature as the air ahead of the warm front","Always tropical air","Oclusión fría: lo más frío va detrás y el frente frío se mete bajo el aire que hay delante del cálido."),
+         V6("Occluded fronts form when:","The cold front overtakes the warm front","The warm front overtakes the cold front","Two cold fronts meet over the sea","A ridge builds up","El frente frío, más rápido, alcanza al cálido y levanta el sector cálido."),
+         V6("In a warm occlusion, the cold front:","Rides up over the colder wedge ahead of the warm front","Undercuts the colder air ahead of the warm front","Stops moving","Disappears","Oclusión cálida: el aire tras el frente frío es menos frío que el de delante del cálido y por eso sube sobre él.")],
+ t9118a: [V6("In a cold occlusion, the air behind the cold front is:","Colder than the air ahead of the warm front","Warmer than the air ahead of the warm front","The same temperature as the air ahead of the warm front","Always tropical air","Oclusión fría: lo más frío va detrás."),
+          V6("Occluded fronts form when:","The cold front overtakes the warm front","The warm front overtakes the cold front","Two cold fronts meet over the sea","A ridge builds up","El frente frío, más rápido, alcanza al cálido.")],
+ t9125: [V6("The foehn is warm because:","Air descending on the lee side warms at the dry adiabatic rate after losing its moisture","It comes from the tropics","It is heated by the sun on the windward side","It crosses a warm sea","Al subir condensa y suelta calor latente; al bajar seco se calienta 3 °C/1000 ft: llega más cálido y seco."),
+         V6("Where is the foehn felt?","On the lee side of a mountain range","On the windward side of a mountain range","Over the open sea","At the top of a depression","El foehn es un viento descendente en sotavento."),
+         V6("The foehn is a:","Warm, dry, descending wind","Cold, humid, ascending wind","Warm, humid, ascending wind","Cold, dry, descending wind","Föhn = catabático cálido y seco.")],
+ w24: [V6("The Ferrel cell is found between about:","30° and 60° latitude","0° and 30° latitude","60° latitude and the pole","The equator only","Hadley 0–30°, Ferrel 30–60°, polar 60–90°."),
+       V6("Which cell lies between the equator and about 30° of latitude?","Hadley cell","Ferrel cell","Polar cell","Walker cell","La celda de Hadley: sube en el ecuador y baja hacia los 30°.")],
+ w25: [V6("The belt of semi-permanent high pressure at about 30° of latitude is caused by:","Descending air at the end of the Hadley cell","Ascending air in the Ferrel cell","The polar front","The equatorial trough","En el borde de la celda de Hadley el aire desciende: anticiclones subtropicales."),
+       V6("Which cell dominates the mid-latitudes (30°–60°)?","Ferrel cell","Hadley cell","Polar cell","Walker cell","Entre 30° y 60° domina la celda de Ferrel.")],
+ w26: [V6("The vertical extent of the cells of the general circulation is limited by the:","Tropopause","Stratopause","Mesopause","Ionosphere","Las celdas son troposféricas: las limita la tropopausa."),],
+ w28: [V6("Over the sea, friction reduces the surface wind to about:","70 % of the gradient wind","50 % of the gradient wind","30 % of the gradient wind","The same speed","Sobre el mar la fricción es menor que sobre tierra (≈ 50 %): el viento queda en torno al 70 %.")],
+ k12: [V6("Mountain waves are most likely when:","A wind above 15 kt blows within 30° of perpendicular across a ridge, with a stable layer","Light and variable winds blow over flat terrain","The air is unstable with no wind","The wind blows parallel to the ridge","Hace falta viento fuerte casi perpendicular a la cresta y una capa estable.")],
+ k13: [V6("The rotor of a mountain wave is found:","Under the crest of the wave, near the ground on the lee side","Ahead of the mountain on the windward side","Above the tropopause","Over flat terrain","El rotor es una circulación turbulenta cerca del suelo, bajo la cresta de la onda, en sotavento."),
+       V6("Which hazard is typical of the lee side of a mountain in strong wind?","Severe turbulence and strong downdrafts","Smooth, calm air","Light variable wind only","Advection fog only","En sotavento: turbulencia severa, rotor y descendentes fuertes.")],
+ k20: [V6("Radiation fog is most likely to dissipate:","Shortly after sunrise, when the ground heats up","In the middle of the night","When the sky clears at night","When the wind drops to calm","Al calentar el suelo el sol, la niebla se eleva o se evapora."),
+       V6("Which wind speed is most favourable for radiation fog?","Light, about 2 to 5 kt","Calm","Over 20 kt","Over 30 kt","Con calma total solo hay rocío; con viento fuerte hay mezcla y se forma stratus. Lo ideal: viento muy flojo.")],
+ k60: [V6("In the METAR group «SCT030CB», CB means:","Cumulonimbus","Cumulus broken","Cloud base","Cirrus band","CB (y TCU) son los únicos tipos que se cifran, porque exigen evitarlos."),
+       V6("Which of these cloud types is added to the height group in a METAR?","Towering cumulus (TCU)","Stratus","Altocumulus","Cirrus","Solo TCU y CB.")],
+ c15: [V6("Which of these METAR groups still allows CAVOK to be used?","Visibility 10 km, FEW060, no significant weather","Visibility 9 km and no cloud","Visibility 10 km and SCT040","Visibility 10 km and FEW025CB","CAVOK: visibilidad ≥ 10 km, sin nubes bajo 5.000 ft (o la altitud mínima de sector, la mayor), sin CB/TCU y sin fenómenos significativos."),
+       V6("Which of these would prevent CAVOK from being reported?","A towering cumulus at 8000 ft","FEW at 6000 ft","Visibility of 10 km","No weather phenomena","Un TCU o CB impide CAVOK aunque esté alto.")],
+ t21: [V6("Which cloud type produces continuous moderate or heavy rain over a wide area?","Nimbostratus","Stratus","Cirrus","Cumulus humilis","El nimbostrato da lluvia continua; el stratus, a lo sumo llovizna."),
+       V6("Hail is most likely to fall from:","Cumulonimbus","Stratocumulus","Altostratus","Cirrostratus","El granizo se forma en las ascendentes fuertes del cumulonimbo.")],
+ t23: [V6("Ahead of a warm front, the clouds arrive in the order:","Cirrus, cirrostratus, altostratus, nimbostratus","Cumulonimbus, then nimbostratus, then cirrus","Stratus, then cirrus","Altocumulus, then cumulus","Frente cálido de lejos a cerca: Ci, Cs, As, Ns."),
+       V6("A halo around the sun is often an early sign of:","An approaching warm front","A cold front passing","A stationary anticyclone","Radiation fog","El halo lo producen los cristales de hielo del cirrostrato, que precede al frente cálido.")],
+ t12: [V6("Radiation fog is most likely on a night with:","A clear sky, light wind and moist air","Overcast sky and strong wind","Rain and strong wind","A warm front overhead","Cielo despejado: la superficie se enfría por radiación; viento flojo y aire húmedo.")]
+};
+// ---------- Registro ----------
+(function(){
+  Object.keys(VARIANTS_V6).forEach(k=>{ VARIANTS[k] = (VARIANTS[k]||[]).concat(VARIANTS_V6[k]); });
+  Object.assign(GEN_050, {
+    t9140:gSIGWX, t9141:gSIGWX, t9142:gSIGWX, t9143:gSIGWX, t9144:gSIGWX, t9145:gSIGWX, t9146:gSIGWX, t9147:gSIGWX,
+    t9128:gMETARfield, t9102:gMETtrend, t9127:gVFRmetar, t9114:gMETARcmp, t9119:gTAFat,
+    t9101:gSurfWind, t9101a:gSurfWind, t9101b:gSurfWind, t9108:gCloudBaseL, t9108a:gCloudBaseL,
+    t9122:gWXcode, k51:gWXcode, k52:gWXcode, k53:gWXcode, k54:gWXcode, k55:gWXcode, k56:gWXcode, k57:gWXcode, k58:gWXcode, k59:gWXcode
+  });
+})();
+// <<END gen050y>>
+
 // Variantes nuevas: cada pregunta del trial y de las diapositivas pasa a tener
 // al menos tres formas distintas (original + 2). Mismo fondo, otra forma.
 const VARIANTS_V5 = {
@@ -3679,9 +3997,9 @@ const IMGP = {
 };
 const pickImg = k => { if(!k) return null; if(k.slice(0,4)==="sym:") return k;
   const l = IMGP[k]; return l ? l[Math.floor(Math.random()*l.length)] : null; };
-const imgSrc = k => k.slice(0,4)==="sym:" ? "sym/"+k.slice(4)+".png" : "img/"+k+".jpg";
+const imgSrc = k => k.slice(0,4)==="sym:" ? "sym/"+k.slice(4)+".png" : k.slice(0,4)==="sgx:" ? sgxUri(k.slice(4)) : "img/"+k+".jpg";
 const isSym  = k => k.slice(0,4)==="sym:";
-const isChart = k => /^sg\d/.test(k);
+const isChart = k => /^sg(\d|x:)/.test(k);
 
 const BASE_NUBES = [
  ["p1","050.04.01","p","nubes","Identify the cloud in the photograph:",["Cirrus","Altocumulus","Stratocumulus","Nimbostratus"],"Filamentos blancos sueltos, como mechones de pelo, muy arriba y sin sombra propia: cirros. Los cúmulos de cualquier piso tienen masas redondeadas, no hebras.",0,"ci"],
@@ -3750,13 +4068,13 @@ const BASE_MET4 = [
  // ---- 030.12 tormentas ----
  ["k1","050.09.04","n","storm","During which stage of a thunderstorm are updraughts and downdraughts present AT THE SAME TIME?",["The mature stage","The cumulus (development) stage","The dissipating stage","The anvil stage"],"Fase madura: conviven las dos corrientes, y por eso es la de la lluvia, los rayos y la turbulencia severa. En la fase cumulus solo hay ascendentes y en la de disipación solo descendentes.",0],
  ["k2","050.09.04","n","storm","In the dissipating stage of a thunderstorm the cloud contains:",["Only downdraughts","Only updraughts","Updraughts and downdraughts","No vertical currents at all"],"Solo descendentes frías: se acabó el combustible y la nube se deshace, dejando el yunque.",0],
- ["k3","050.09.04","n","storm","According to the class notes, the most violent weather of a thunderstorm occurs:",["Between the mature and the dissipating stage","At the very beginning of the cumulus stage","Only after the storm has dissipated","Before any cloud has formed"],"La frase literal de clase: lo más fuerte está entre la segunda y la tercera fase, cuando las descendentes ya están plenamente desarrolladas.",0],
+ ["k3","050.09.04","n","storm","According to the class notes, the most violent weather of a thunderstorm occurs:",["Between the mature and the dissipating stage","At the very beginning of the cumulus stage","Only after the storm has dissipated","Before any cloud has formed"],"La frase literal: lo más fuerte está entre la segunda y la tercera fase, cuando las descendentes ya están plenamente desarrolladas.",0],
  ["k4","050.09.03","n","storm","A microburst is:",["A violent downdraught that spreads out in all directions when it hits the ground","A sudden brief increase in wind speed of at least 10 kt above the mean value","A small tornado hanging under a cumulonimbus which never reaches the ground","A strong updraught at the leading edge of a storm, ahead of the gust front"],"Es una corriente descendente violenta. Al llegar al suelo se abre: el avión primero gana viento en cara y luego lo pierde de golpe y pasa a viento en cola.",0],
  ["k5","050.09.04","n","storm","Which set of conditions is required for a thunderstorm to develop?",["Unstable air, plenty of moisture and a trigger to start the ascent","Stable air, dry atmosphere and high pressure","Unstable air, dry atmosphere and a surface inversion","Stable air, plenty of moisture and subsidence"],"Las tres a la vez. Sin humedad no hay nube, sin inestabilidad el aire no sigue subiendo solo, y sin disparo no arranca.",0],
 
  // ---- turbulencia ----
  ["k6","050.09.02","n","turb","Turbulence that causes deviations in heading and altitude, but without loss of control, is classified as:",["Moderate","Light","Severe","Extreme"],"Moderada: se desvía el rumbo y la altitud. La severa añade la pérdida MOMENTÁNEA del control.",0],
- ["k7","050.09.02","n","turb","Severe turbulence is defined as moderate turbulence plus:",["A momentary loss of control of the aircraft","A permanent loss of control","Structural damage to the airframe","An increase in airspeed"],"La definición de clase es exactamente esa: moderada más pérdida momentánea del control.",0],
+ ["k7","050.09.02","n","turb","Severe turbulence is defined as moderate turbulence plus:",["A momentary loss of control of the aircraft","A permanent loss of control","Structural damage to the airframe","An increase in airspeed"],"La definición del temario es exactamente esa: moderada más pérdida momentánea del control.",0],
  ["k8","050.09.02","n","turb","Turbulence categories are:",["Subjective to each aircraft: the same air is more severe in a light aircraft","Fixed by ICAO in metres per second and identical for every aircraft type","Measured only by ground based radar and reported in the aerodrome METAR","Exactly the same for every aircraft type, whatever its mass and its speed"],"Es una clasificación subjetiva. La misma turbulencia puede ser severa en una avioneta y moderada en un reactor.",0],
  ["k9","050.02.06","n","turb","Mechanical turbulence is caused by:",["Physical obstacles such as buildings or mountains, and is found downwind of them at low level","Vertical currents produced by the heating of the ground, strongest in the early afternoon","The wingtip vortices of a preceding aircraft, which depend on its weight and its speed","Wind shear close to the tropopause on the cold side of the polar front jet stream core"],"Es la del obstáculo físico: el aire se rompe en remolinos a sotavento del obstáculo y a baja cota. Normalmente es ligera.",0],
  ["k10","050.02.06","n","turb","Thermal (convective) turbulence is strongest:",["In summer, around solar noon","In winter, at night","Over the sea at dawn","At the tropopause"],"Depende del calentamiento del suelo, así que es máxima cuando el sol pega más fuerte. Es ligera pero muy incómoda.",0],
@@ -3843,7 +4161,7 @@ const BASE_EXTRA = [
  ["x2","050.04.02","n","fog","Fog types can be grouped by the mechanism that saturates the air. Which group does frontal fog belong to?",["Adding water, together with sea smoke","Cooling, together with radiation fog","Cooling, together with advection fog","Neither: it forms by compression"],"Frontal y sea smoke saturan el aire AÑADIÉNDOLE agua (lluvia que se evapora, mar que evapora). Radiación, advección y orográfica lo saturan ENFRIÁNDOLO.",0],
  ["x3","050.04.02","n","fog","Which three fog types form by COOLING the air to its dew point?",["Radiation, advection and orographic","Frontal, sea smoke and radiation","Advection, frontal and orographic","Sea smoke, orographic and frontal"],"Las tres enfrían: el suelo de noche, una superficie fría, o el ascenso por la ladera. Las otras dos añaden agua.",0],
  ["x4","050.04.02","n","fog","According to the rule given in class, with no wind at all the result is:",["Dew, because the moisture stays on the ground without mixing","Thick fog, because nothing disperses it","Mist, because the droplets stay suspended","Stratus at 1000 ft"],"Sin mezcla no se forma la capa: el agua se deposita como rocío. Hace falta algo de viento, de 1 a 5 kt, para que haya niebla.",0],
- ["x5","050.04.02","n","fog","According to the rule given in class, a wind above 10 kt will turn the layer into:",["Stratus, because the layer is lifted off the ground","Thicker fog, because the wind brings in more moisture","Haze, because the solid particles are stirred upwards","Freezing precipitation out of the lifted stratus layer"],"Es la misma idea que el PDF: en cuanto el viento mezcla lo suficiente, la capa se despega del suelo y deja de ser niebla para ser un estrato.",0],
+ ["x5","050.04.02","n","fog","According to the rule given in class, a wind above 10 kt will turn the layer into:",["Stratus, because the layer is lifted off the ground","Thicker fog, because the wind brings in more moisture","Haze, because the solid particles are stirred upwards","Freezing precipitation out of the lifted stratus layer"],"Es la misma idea: en cuanto el viento mezcla lo suficiente, la capa se despega del suelo y deja de ser niebla para ser un estrato.",0],
  ["x6","050.02.05","n","turb","Flying through a mountain wave itself, the ride is:",["Smooth: the aircraft simply rises and falls with the wave","Always severely turbulent, whatever the height flown","Impossible below 15 kt of wind across the mountain range","Exactly the same as flying inside a cumulonimbus cloud"],"La onda en sí es un flujo laminar: se sube y se baja sin zarandeo. Lo que hay que evitar es el rotor que queda DEBAJO, que sí puede dar turbulencia severa.",0],
  ["x7","050.06.02","n","frentes","At a front, the cloud is formed by the warm air rising, but seen from the ground it lies:",["Above the wedge of cold air","Entirely within the warm sector at ground level","Behind the surface position of the front in every case","Below the cold air"],"La nube la fabrica el aire cálido al ascender, así que es del sector cálido; pero asciende POR ENCIMA de la cuña fría, y desde el suelo se ve sobre la zona fría. Las dos frases de los apuntes dicen lo mismo.",0],
  ["x8","050.10.01","n","info","In a METAR, the group 350V100 following the wind means:",["The wind direction is varying between 350° and 100°","The wind speed varies between 350 and 100 units","Visibility varies between 350 and 100 metres","The runway heading is between 350° and 100°"],"Es el grupo de dirección variable, dddVddd. Va detrás del viento medio: 06003KT 350V100 es viento de 060° con 3 kt oscilando entre 350° y 100°.",0],
@@ -4398,7 +4716,7 @@ function priority(q, st){
   if(PROFE.has(q[0])) p += 1.8;
   if(q[2]==="t") p += 1.5;
   if(q[2]==="s"||q[2]==="m") p += 0.6;
-  if(q[2]==="a") p += 1.2;               // ATPL aún no dado
+  if(q[2]==="a") p += 1.2;               // ampliación ATPL
   return Math.max(.2,p) * (0.8 + Math.random()*0.4);
 }
 function poolFor(incAtpl, incComp, withPhoto){
@@ -4592,7 +4910,7 @@ function examBar(){
         return `<button class="seg ${segKind(l,st)}" style="flex:${SUBEST[l]}" data-go="lo-${l}" title="${esc(l+" · "+SUBEN[l])} — ≈ ${fmt1(SUBEST[l])} preg. · ${x?Math.round(x.m*100)+" % de dominio":"sin practicar"}"></button>`;
       }).join("")}</div></div></div>`;
   }).join("")
-  + `<p class="xleg"><span><i class="seg full"></i>dado y por encima del 75 %</span><span><i class="seg part"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · aún no dado</span></p>`;
+  + `<p class="xleg"><span><i class="seg full"></i>dado y por encima del 75 %</span><span><i class="seg part"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></p>`;
 }
 function renderNotesMeta(){
   const st = stats();
@@ -4761,7 +5079,7 @@ function renderMap(){
       <div class="muted cmeta">${[...c.lo].sort().map(l=>esc(loLabelEs(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
     </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
 
-  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media. EASA solo publica el reparto por capítulo: dentro, es una estimación por número de objetivos de aprendizaje ATPL(A)">≈ Preg.</th><th>Estado</th><th title="Preguntas de Fase 0 (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 respuestas (entre paréntesis, el total)">Dominio</th><th title="Tus últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10 o más y sin bajar · Casi listo ≥ 75 % · Bajando ≥ 75 % pero a peor · Reforzar &lt; 75 % · Pocos datos &lt; 5">Mi valoración</th></tr>`;
+  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media. EASA solo publica el reparto por capítulo: dentro, es una estimación por número de objetivos de aprendizaje ATPL(A)">≈ Preg.</th><th>Estado</th><th title="Preguntas del temario base (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 respuestas (entre paréntesis, el total)">Dominio</th><th title="Tus últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10 o más y sin bajar · Casi listo ≥ 75 % · Bajando ≥ 75 % pero a peor · Reforzar &lt; 75 % · Pocos datos &lt; 5">Mi valoración</th></tr>`;
   const groups = CHAPTERS.map(c=>({t:`${c[0]} · ${c[2]} · ${c[3]} preguntas`, k:c[0]}))
                          .concat([{t:"De otras asignaturas (061 · 033 · 022 · 010)", k:"050.00"}]);
   groups.forEach(g=>{
@@ -4792,14 +5110,14 @@ function renderSetup(){
   const nat = BANK.filter(q=>q[7]).length;
   $("#simCount").textContent = `Test cronometrado con el reparto oficial de EASA por capítulo; corrección al final.`;
   $("#wrongCount").textContent = (nw ? `${nw} preguntas con la última respuesta incorrecta` : "Sin fallos pendientes") + (nwt?`; ${nwt} más del trial.`:".");
-  $("#allCount").textContent = `${BANK.filter(q=>q[2]!=="p" && !q[7]).length} preguntas de lo dado + ${BANK.filter(q=>q[2]!=="p" && q[7]).length} de ATPL aún no dado.`;
+  $("#allCount").textContent = `${BANK.filter(q=>q[2]!=="p" && !q[7]).length} preguntas de lo dado + ${BANK.filter(q=>q[2]!=="p" && q[7]).length} de ampliación ATPL.`;
   const nf = BANK.filter(q=>q[2]==="p").length;
   const nfw = BANK.filter(q=>q[2]==="p" && (st.q[q[0]]||{}).last===false).length;
   $("#fotoCount").textContent = `Identificar la nube en la foto. La imagen cambia cada vez.`;
   $("#simbCount").textContent = `Los doce del SIGWX que entran.`;
   const nt = BANK.filter(q=>q[2]==="t"||q[2]==="m"||q[2]==="s").length;
   const ntw = BANK.filter(q=>(q[2]==="t"||q[2]==="m"||q[2]==="s") && (st.q[q[0]]||{}).last===false).length;
-  $("#trialCount").textContent = `25 por test, de las ${nt} del trial y de los ejercicios de clase, en variante${ntw?`. ${ntw} aún falladas`:""}.`;
+  $("#trialCount").textContent = `25 por test, de las ${nt} del trial y de los ejercicios de aplicación, en variante${ntw?`. ${ntw} aún falladas`:""}.`;
   const los = [...new Set(BANK.filter(q=>!q[7]&&q[2]!=="p").map(q=>q[1]))].sort((a,b)=>SUBORDER.indexOf(a)-SUBORDER.indexOf(b));
   const sel = $("#loSel").value;
   $("#loSel").innerHTML = los.map(l=>`<option value="${l}" ${l===sel?'selected':''}>${esc(loLabelEs(l))}</option>`).join("");
@@ -4836,7 +5154,7 @@ $("#startBtn").addEventListener("click",()=>{
   if(!qs.length){ $("#startMsg").textContent = "No hay preguntas con esa selección."; return; }
   $("#startMsg").textContent = "";
   const st = stats();
-  current = qs.map(q=>{ const V = variantOf(q); return {id:q[0],lo:q[1],src:q[2],text:V.text,expl:V.expl,nuevo:q[7],variant:V.v,gen:V.gen,img:q[8]?pickImg(q[8]):null,
+  current = qs.map(q=>{ const V = variantOf(q); return {id:q[0],lo:q[1],src:q[2],text:V.text,expl:V.expl,nuevo:q[7],variant:V.v,gen:V.gen,img:V.img||(q[8]?pickImg(q[8]):null),
     opts:shuffle(V.opts.map((t,i)=>({t,ok:i===0}))),ans:null,
     tag:(st.q[q[0]]||{}).last===false ? "fallada antes" : focusActive(q[0],st) ? "refuerzo" : !st.q[q[0]] ? "nueva" : ""}; });
   let lastCh="";
@@ -4846,7 +5164,7 @@ $("#startBtn").addEventListener("click",()=>{
       head=`<div class="chaphead" style="margin:26px 0 10px"><h2 style="font-size:20px">${lastCh} · ${esc(CHES[lastCh])}</h2><span class="wtag">${CHQ[lastCh]} preg. oficiales</span></div>`; }
     return head+`
     <div class="q ${q.tag==='fallada antes'||q.tag==='refuerzo'?'focus':''}" id="q${i}">
-      <div class="qhead"><span>${i+1} / ${current.length} · ${esc(loLabel(q.lo))}</span><span>${!NOTAG.has(q.id)&&q.src==="t"?'<span class="tag tr">TRIAL</span> ':''}${!NOTAG.has(q.id)&&PROFE.has(q.id)?'<span class="tag pf">★ OJO</span> ':''}${q.src==="s"?'<span class="tag s">diapositiva</span> ':''}${q.src==="p"?'<span class="tag p">foto</span> ':''}${q.src==="m"?'<span class="tag m">PDF oficial</span> ':''}${q.src==="y"?'<span class="tag y">símbolo</span> ':''}${q.src==="g"?'<span class="tag g">generada</span> ':''}${!NOTAG.has(q.id)&&q.variant?'<span class="tag v">variante</span> ':''}${!NOTAG.has(q.id)&&q.nuevo?'<span class="tag at">ATPL · no dado</span>':''}${isOut(q.lo)?'<span class="tag dp">otra asignatura</span>':''}</span></div>
+      <div class="qhead"><span>${i+1} / ${current.length} · ${esc(loLabel(q.lo))}</span><span>${!NOTAG.has(q.id)&&q.src==="t"?'<span class="tag tr">TRIAL</span> ':''}${!NOTAG.has(q.id)&&PROFE.has(q.id)?'<span class="tag pf">★ OJO</span> ':''}${q.src==="s"?'<span class="tag s">temario</span> ':''}${q.src==="p"?'<span class="tag p">foto</span> ':''}${q.src==="m"?'<span class="tag m">oficial</span> ':''}${q.src==="y"?'<span class="tag y">símbolo</span> ':''}${q.src==="g"?'<span class="tag g">generada</span> ':''}${!NOTAG.has(q.id)&&q.variant?'<span class="tag v">variante</span> ':''}${!NOTAG.has(q.id)&&q.nuevo?'<span class="tag at">ATPL · no dado</span>':''}${isOut(q.lo)?'<span class="tag dp">otra asignatura</span>':''}</span></div>
       ${q.img?`<div class="qimg${isSym(q.img)?" symq":isChart(q.img)?" chartq":""}"><img src="${imgSrc(q.img)}" alt="${isSym(q.img)?"Símbolo de tiempo significativo para identificar":isChart(q.img)?"Carta SIGWX de baja cota con cuatro ciudades":"Fotografía de una nube para identificar"}" loading="lazy"></div>`:""}
       <div class="qtext">${esc(q.text)}</div>
       ${q.opts.map((o,j)=>`<label class="choice"><input type="radio" name="r${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${esc(o.t)}</span></label>`).join("")}
@@ -4898,10 +5216,10 @@ $("#finishBtn").addEventListener("click", async ()=>{
     extra = `<div style="margin-top:14px"><b>Por capítulo</b>${chs.map(c=>{
         const b=byCH[c], p=Math.round(b.ok/b.total*100);
         return `<div class="chrow"><span>${c} · ${esc(CHES[c])}</span><span class="n">${b.ok}/${b.total} · ${p} %</span></div>`;
-      }).join("")}${desv.length?`<p class="muted" style="font-size:14px;margin:6px 0 0">El reparto no es el oficial porque falta banco en ${desv.map(c=>c[0]).join(", ")}: esas preguntas se han repartido entre los demás capítulos. Marca «Incluir temario ATPL aún no dado» para que salga exacto.</p>`:""}</div>
-      <div style="margin-top:12px"><b>Fase 0 contra ATPL</b>
-        <div class="chrow"><span>Temario dado en clase</span><span class="n">${okF}/${nF}${nF?` · ${Math.round(okF/nF*100)} %`:""}</span></div>
-        <div class="chrow"><span>ATPL aún no dado</span><span class="n">${okA}/${nA}${nA?` · ${Math.round(okA/nA*100)} %`:""}</span></div></div>
+      }).join("")}${desv.length?`<p class="muted" style="font-size:14px;margin:6px 0 0">El reparto no es el oficial porque falta banco en ${desv.map(c=>c[0]).join(", ")}: esas preguntas se han repartido entre los demás capítulos. Marca «Incluir ampliación ATPL» para que salga exacto.</p>`:""}</div>
+      <div style="margin-top:12px"><b>temario base contra ATPL</b>
+        <div class="chrow"><span>Temario base</span><span class="n">${okF}/${nF}${nF?` · ${Math.round(okF/nF*100)} %`:""}</span></div>
+        <div class="chrow"><span>ampliación ATPL</span><span class="n">${okA}/${nA}${nA?` · ${Math.round(okA/nA*100)} %`:""}</span></div></div>
       <div style="margin-top:12px"><b>Ritmo</b>
         <div class="chrow"><span>Tiempo empleado</span><span class="n">${mmss(elapsed)}</span></div>
         <div class="chrow"><span>Segundos por pregunta</span><span class="n">${perQ.toFixed(1)} s <span class="muted">(real: ${realPerQ.toFixed(0)} s)</span></span></div>
@@ -5176,7 +5494,8 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   addEventListener("message",function(e){ const d=e.data; if(d&&d.t==="f0-cmd") window.__f0rev=!!d.review; });
   window.F0REVIEW={due:()=>dueSet().length};
 }catch(e){ console.error("review_patch",e); } })();
-</script><!--/f0rev--><!--f0addq--><script>(function(){try{const Q=[["t9101","050.02.02","t",null,"The wind at 2000 ft altitude is 240/35, the most likely surface wind at an inland airfield is...",["220/20","250/40","270/20","220/40"],"La fricción reduce la velocidad (aprox. a la mitad o dos tercios) y hace que el viento en superficie retroceda (gire a la izquierda) respecto al de altura, en el hemisferio norte."],["t9101a","050.02.02","t",null,"If the wind at altitude is 240/40, the most likely wind on the surface at an inland airfield is:",["220/20","240/15","300/55","190/10"],"Superficie: menos velocidad y retrocedido unos 20–30° respecto al viento en altura."],["t9101b","050.02.02","t",null,"Compared with the wind at 2000 ft, the surface wind over land is normally:",["Weaker and backed","Stronger and backed","Weaker and veered","Stronger and veered"],"Por fricción el viento en superficie es más flojo y retrocede (hemisferio norte)."],["t9102","050.10.01","t",null,"Please study the following METAR: EGPD 171420Z 21008KT 8000 RA SCT021 BKN029 06/05 Q0997 NOSIG. What does NOSIG stand for?",["No significant change.","No sign.","No snow or gales.","North showers and hail."],"NOSIG: no se espera cambio significativo en las próximas 2 horas."],["t9103","050.04.02","t",null,"The type of fog that develops rapidly both day and night is...",["Advection.","Radiation.","Haar.","Sea fog."],"La niebla de advección se forma por aire húmedo y cálido moviéndose sobre una superficie fría, de día o de noche. La de radiación solo de noche con cielo despejado."],["t9104","050.02.05","t",null,"Lenticular clouds are most likely to form...",["In orographic lift or mountain waves.","Over flat land or lakes.","In calm conditions.","In a layer of fog over land."],"Los lenticulares se forman en la cresta de las ondas de montaña."],["t9104a","050.02.05","t",null,"Lenticular clouds observed above the top of a range of hills seen from an aircraft approaching from the leeward side of the range indicate the possibility of...",["Mountain waves","Mountain breeze","Katabatic winds","Radiation fog"],"Lenticulares = ondas de montaña: turbulencia fuerte sotavento y rotores."],["t9105","050.01.01","t",null,"The actual height of the tropopause varies considerably; at what approximate height is the tropopause assumed to be in the temperate latitudes?",["36000 ft","45000 ft","26000 ft","6000 ft"],"En latitudes templadas (y en la ISA) la tropopausa está a 11 km ≈ 36 000 ft."],["t9106","050.07.02","t",null,"Which of the following conditions would you NOT expect to see during anticyclonic conditions where the centre of high pressure is established overhead?",["Low pressures on the surface","Cold temperatures","Haze","Fog"],"En un anticiclón la presión en superficie es alta. Aire descendente: calma, calima y nieblas."],["t9108","050.03.01","t",null,"The surface temperature is 25 °C, and the dew point is 21 °C. Approximately what height would you expect the cloud base to be, given that the average environmental lapse rate up to 10 000 ft AGL is 2 °C per 1000 ft?",["2000 ft","1000 ft","6000 ft","500 ft"],"El enunciado da el gradiente (2 °C por 1000 ft): base ≈ (T − Td) / 2 × 1000 = 4 / 2 × 1000 = 2000 ft. Con la regla de 400 ft por °C saldrían 1600 ft; 1000 ft no sale con ningún método."],["t9108a","050.03.01","t",null,"The surface temperature is 20 °C and the dew point is 15 °C. Approximately what is the height of the cloud base above the ground?",["2000 ft","500 ft","5000 ft","1000 ft"],"(20 − 15) × 400 = 2000 ft."],["t9109","050.10.03","t",null,"What is a TAF?",["A Terminal Aerodrome Forecast.","A Typical Airport Forecast.","A Terminal Aerodrome Flight conditions report.","A Total Aerodrome Forecast."],"TAF = Terminal Aerodrome Forecast (pronóstico de aeródromo)."],["t9110","050.06.02","t",null,"Which of the following frontal systems is most likely to produce thunderstorm activity?",["A cold front.","A warm front.","A ridge of high pressure.","An occluded front."],"El frente frío levanta el aire cálido bruscamente: cúmulos de gran desarrollo y tormentas."],["t9111","050.02.04","t",null,"You are flying to an airport that is situated close to the sea, like Alicante, during the warmest time of the day. What kind of winds would you expect on the surface?",["Airflow flowing from the sea towards the land","Air flowing from the right side of the shoreline towards the left side","Airflow flowing from the land towards the sea","Air flowing from the left side of the shoreline towards the right side"],"Brisa marina: de día la tierra se calienta, el aire sube y el aire fresco del mar entra hacia la tierra."],["t9111a","050.02.04","t",null,"During the night, near the coast and with light winds, the surface wind generally blows:",["From the land towards the sea","From the sea towards the land","Parallel to the coast only","Upslope only"],"Brisa terral: de noche la tierra se enfría antes que el mar."],["t9112","050.03.03","t",null,"Unstable air is characterised by...",["Cumulus cloud, showers and generally good visibility.","Cumulus cloud, drizzle and generally poor visibility.","Layered cloud, showers and generally good visibility.","Layered cloud, showers and generally poor visibility."],"Aire inestable: nubes de desarrollo vertical (cúmulos), chubascos y buena visibilidad. Estable: estratos, llovizna y mala visibilidad."],["t9112a","050.03.03","t",null,"Stable air is characterised by:",["Layered cloud, drizzle and poor visibility","Cumulus cloud and showers","Cumulonimbus and hail","Good visibility and strong turbulence"],"Aire estable: estratos, llovizna, mala visibilidad y poca turbulencia."],["t9113","050.09.02","t",null,"Thermal turbulence is prone to be found:",["Close to the ground","Downwind of a mountain","In winter","At night"],"La turbulencia térmica (convectiva) aparece de día, cerca del suelo, sobre superficies calentadas."],["t9114","050.10.01","t",null,"Please study the four METARs below. Which airfield has the lowest wind strength? EGNV 121120Z 30011KT 9999 FEW020 08/03 Q1022; EGNT 121120Z 30009KT 9999 FEW020 08/03 Q1022; EGNC 121120Z 28011KT 9999 FEW030 07/03 Q1023; EGNM 121120Z 30021KT 9999 FEW030 08/04 Q1022",["EGNT","EGNC","EGNV","EGNM"],"EGNT: 300/09 kt, el más flojo. EGNV y EGNC: 11 kt; EGNM: 21 kt."],["t9115","050.10.01","t",null,"A SPECI is a weather report for weather changes similar to:",["A METAR","A TAF","A GAMET","A SIGWX"],"SPECI: informe especial cuando hay un cambio significativo; tiene el mismo formato que el METAR."],["t9116","050.01.01","t",null,"The first layer of the atmosphere, closest to the earth, is called the...",["Troposphere.","Stratopause.","Tropopause.","Stratosphere."],"De abajo arriba: troposfera, tropopausa, estratosfera…"],["t9118","050.06.02","t",null,"An occluded front in which the cold side of the cold front is colder than the cold side of the warm front is called:",["Cold occluded front","Warm occluded front","No","Yes"],"Oclusión fría: el aire tras el frente frío es más frío que el aire delante del frente cálido, y el frente frío «se mete» bajo él."],["t9118a","050.06.02","t",null,"In a warm occlusion, the air behind the cold front is:",["Warmer than the air ahead of the warm front","Colder than the air ahead of the warm front","The same temperature","Saturated only"],"Oclusión cálida: el aire tras el frente frío es más cálido que el que hay delante del frente cálido."],["t9119","050.10.03","t",null,"Given the following TAF: LEBB 171700Z 1718/1818 02008KT 9999 SCT040 TX12/1812Z TN09/1807Z BECMG 1722/1800 SHRA SCT018 PROB40 TEMPO 1805/1807 3000 RA BKN010 PROB30 TEMPO 1809/1815 3000 RA BKN019. What cloud base can we expect on the 18th at 08:00Z?",["SCT018","BKN010","BKN019","SCT040"],"A las 08Z de día 18 la BECMG (cambio completo a las 00Z) ya manda: SCT018. El TEMPO de 05–07Z ya terminó y el de 09–15Z aún no ha empezado."],["t9120","050.09.01","t",null,"When is rime and/or clear icing most likely to occur?",["Flying through supercooled water droplets","Flying through rain","Flying through ice","Flying through snow"],"Hielo estructural: gotas de agua superenfriada que se congelan al contacto con el avión."],["t9121","050.10.01","t",null,"Please study the following TAF: EGNV 171103Z 1712/1721 20018KT 9999 SCT022 BECMG 1712/1715 20022G32KT TEMPO 1712/1720 7000 RA PROB40 TEMPO 1715/1718 20025G44KT 3000 +RA BKN014 BECMG 1717/1720 27014KT. What does «+RA» mean?",["Strong (heavy) rain","Resolution advisory","Strong rime ice","A long runway"],"«+» intensidad fuerte; «−» ligera; sin signo, moderada. RA = lluvia."],["t9121a","050.10.01","t",null,"In a METAR, the group «-RA» means:",["Light rain","Heavy rain","Rain showers","Recent rain"],"«−» ligera; «+» fuerte."],["t9122","050.10.01","t",null,"What abbreviation is used in METARs to signify drizzle?",["DZ","RN","-RN","DR"],"DZ = llovizna (drizzle). RA = lluvia; SN = nieve."],["t9124","050.04.02","t",null,"Hoar frost will occur when...",["Moist air saturates at dew points below 0 °C","Moist air comes into contact with a warm fast moving surface.","Moist air condenses at dew points above 0 °C","Moist freezing air comes into contact with a warm surface"],"La escarcha (hoar frost) es sublimación directa: el vapor pasa a hielo cuando el punto de rocío está por debajo de 0 °C."],["t9125","050.02.05","t",null,"Foehn wind is a:",["Katabatic, warm and dry","Anabatic, warm and humid","Anabatic, cold and dry","Katabatic, warm and humid"],"Föhn: viento descendente (catabático), cálido y seco en sotavento tras ascender y perder humedad."],["t9126","050.09.01","t",null,"What type of ice usually forms when small supercooled water droplets freeze on a cold surface, producing a rough opaque deposit?",["Rime ice","Mixed ice","Clear ice","Wet ice"],"Hielo rime: gotas pequeñas, congelación rápida, blanco y opaco."],["t9127","050.10.01","t",null,"Can a controlled aerodrome be operated in VFR with the following METAR? METAR LEVS 251030Z 20013KT 200V260 9999 BKN013 14/12 Q1016",["No","Yes","Maybe","I don’t know"],"Techo de 1300 ft (BKN013): por debajo de 1500 ft no hay condiciones VMC en aeródromo controlado."],["t9128","050.10.01","t",null,"Please study the following METAR: EGPU 171150Z 22013KT 190V250 9999 VCSH FEW033 BKN041 08/05 Q0998. What is the current dew point at this airfield?",["05 °C","17 °C","08 °C","11 °C"],"En el grupo 08/05 el primer valor es la temperatura y el segundo el punto de rocío."],["t9129","050.02.02","t",null,"The force that causes a parcel of air to move is called the pressure gradient force; it will tend to move that parcel of air from an area of...",["High pressure to an area of low pressure.","Low pressure to an area of high pressure.","High pressure to an area of high pressure.","Low pressure to an area of low pressure."],"La fuerza del gradiente de presión va de altas a bajas presiones."],["t9130","050.07.02","t",null,"High pressure systems are characterised by:",["Subsidence","Frequent storms","Ascending air currents","Converging air currents"],"Anticiclón: aire descendente (subsidencia), divergente en superficie, buen tiempo."],["t9130a","050.07.02","t",null,"Low pressure systems are characterised by:",["Ascending air and cloud","Subsidence","Clear skies","Diverging air at the surface"],"Depresión: convergencia en superficie, ascenso, nubes y precipitación."],["t9140","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect rain to happen?",["Barcelona","Alicante","Málaga","Madrid"],"La lluvia se da dentro del área festoneada con el símbolo de lluvia (●). Las demás ciudades quedan fuera de esa área. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg1"],["t9141","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect rain to happen?",["Málaga","Alicante","Barcelona","Madrid"],"La lluvia se da dentro del área festoneada con el símbolo de lluvia (●). Las demás ciudades quedan fuera de esa área. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg2"],["t9142","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect rain to happen?",["Madrid","Alicante","Barcelona","Málaga"],"La lluvia se da dentro del área festoneada con el símbolo de lluvia (●). Las demás ciudades quedan fuera de esa área. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg3"],["t9143","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect rain to happen?",["Alicante","Barcelona","Málaga","Madrid"],"La lluvia se da dentro del área festoneada con el símbolo de lluvia (●). Las demás ciudades quedan fuera de esa área. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg4"],["t9144","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect thunderstorms?",["Madrid","Alicante","Barcelona","Málaga"],"Las tormentas se marcan con el símbolo de rayo dentro de un área festoneada: solo la ciudad situada dentro de ella las tendrá. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg1"],["t9145","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect snow?",["Barcelona","Alicante","Málaga","Madrid"],"La nieve se marca con el símbolo ✱ dentro de un área festoneada: solo esa ciudad queda dentro. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg2"],["t9146","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect thunderstorms?",["Málaga","Alicante","Barcelona","Madrid"],"Las tormentas se marcan con el símbolo de rayo dentro de un área festoneada: solo la ciudad situada dentro de ella las tendrá. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg3"],["t9147","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect snow?",["Madrid","Alicante","Barcelona","Málaga"],"La nieve se marca con el símbolo ✱ dentro de un área festoneada: solo esa ciudad queda dentro. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg4"]];const have=new Set(BASE.map(q=>q[0]));Q.forEach(q=>{if(!have.has(q[0]))BASE.push(q);});try{if(typeof ALLQ!=="undefined"&&ALLQ!==BASE){const h2=new Set(ALLQ.map(q=>q[0]));Q.forEach(q=>{if(!h2.has(q[0]))ALLQ.push(q);});}}catch(e){}const HOT=["t9101","t9101a","t9101b","t9102","t9103","k20","t9104","t9104a","t9105","t9106","t9108","t9108a","t9109","t9110","t9111","t9111a","t9112","t9112a","t9113","t9114","t9115","t9116","t9118","t9118a","t9119","t9120","t9121","t9121a","t9122","t9124","t9125","t9126","t9127","t9128","t9129","t9130","t9130a","t9140","t9141","t9142","t9143","t9144","t9145","t9146","t9147"];try{if(typeof SUBMAP!=="undefined")Q.forEach(q=>{const s=SUBMAP[q[1]];if(s&&s.cov==="atpl"&&HOT.includes(q[0]))s.cov="part";});}catch(e){}try{if(typeof PROFE!=="undefined")HOT.forEach(i=>PROFE.add(i));}catch(e){}try{if(typeof HOT3!=="undefined")HOT.forEach(i=>HOT3.add(i));}catch(e){}try{if(typeof NOTAG!=="undefined")["t9101","t9101a","t9101b","t9102","t9103","t9104","t9104a","t9105","t9106","t9108","t9108a","t9109","t9110","t9111","t9111a","t9112","t9112a","t9113","t9114","t9115","t9116","t9118","t9118a","t9119","t9120","t9121","t9121a","t9122","t9124","t9125","t9126","t9127","t9128","t9129","t9130","t9130a","t9140","t9141","t9142","t9143","t9144","t9145","t9146","t9147"].forEach(i=>NOTAG.add(i));}catch(e){}try{(function(){const fn=typeof selectQuestions==="function"?"selectQuestions":(typeof selectItems==="function"?"selectItems":null);if(!fn)return;const orig=window[fn],HX=new Set(["t9101","t9101a","t9101b","t9102","t9103","t9104","t9104a","t9105","t9106","t9108","t9108a","t9109","t9110","t9111","t9111a","t9112","t9112a","t9113","t9114","t9115","t9116","t9118","t9118a","t9119","t9120","t9121","t9121a","t9122","t9124","t9125","t9126","t9127","t9128","t9129","t9130","t9130a","t9140","t9141","t9142","t9143","t9144","t9145","t9146","t9147"]),SRC=new Set(["t", "o", "e"]);const hot=q=>SRC.has(q[2])||HX.has(q[0])||(typeof PROFE!=="undefined"&&PROFE.has(q[0]))||(typeof HOT3!=="undefined"&&HOT3.has(q[0]))||(typeof NOTAG!=="undefined"&&NOTAG.has(q[0]))||(typeof isProf==="function"&&isProf(q))||(typeof isTrial==="function"&&isTrial(q))||(typeof isExam==="function"&&isExam(q));window.F0HOT=hot;const gid=x=>Array.isArray(x)?x[0]:(x&&x.q?x.q[0]:(x&&x.id!==undefined?x.id:(x&&x.f?x.f.id:null)));const bs=i=>String(i).replace(/^(t\d+).*$/,"$1");window[fn]=function(mode){const a=arguments;if(mode!=="adaptive"&&mode!=="trial")return orig.apply(this,a);const full=BANK;let res;try{BANK=full.filter(hot);res=orig.apply(this,a);}finally{BANK=full;}if(mode==="adaptive"&&Array.isArray(res)&&res.length){try{const want=Math.floor(res.length*0.050000000000000044+1e-9);if(want>0){let ex;try{BANK=full.filter(q=>!hot(q));ex=orig.apply(this,a);}finally{BANK=full;}const have=new Set(res.map(gid));ex=(ex||[]).filter(x=>!have.has(gid(x)));for(let i=ex.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ex[i],ex[j]]=[ex[j],ex[i]];}ex.slice(0,want).forEach(x=>{const k=Math.floor(Math.random()*res.length);res[k]=x;});}}catch(e){BANK=full;}}return res;};})();}catch(e){console.error("hot",e);}buildBank();try{renderSetup();}catch(e){}try{renderNotesMeta();}catch(e){}}catch(e){console.error("addq",e);}})();</script><!--/f0addq--><script>/* Rotación real de preguntas (Adaptativo y Trial).
+</script><!--/f0rev--><!--f0addq--><script>(function(){try{const Q=[["t9101","050.02.02","t",null,"The wind at 2000 ft altitude is 240/35, the most likely surface wind at an inland airfield is...",["220/20","250/40","270/20","220/40"],"La fricción reduce la velocidad (aprox. a la mitad o dos tercios) y hace que el viento en superficie retroceda (gire a la izquierda) respecto al de altura, en el hemisferio norte."],["t9101a","050.02.02","t",null,"If the wind at altitude is 240/40, the most likely wind on the surface at an inland airfield is:",["220/20","240/15","300/55","190/10"],"Superficie: menos velocidad y retrocedido unos 20–30° respecto al viento en altura."],["t9101b","050.02.02","t",null,"Compared with the wind at 2000 ft, the surface wind over land is normally:",["Weaker and backed","Stronger and backed","Weaker and veered","Stronger and veered"],"Por fricción el viento en superficie es más flojo y retrocede (hemisferio norte)."],["t9102","050.10.01","t",null,"Please study the following METAR: EGPD 171420Z 21008KT 8000 RA SCT021 BKN029 06/05 Q0997 NOSIG. What does NOSIG stand for?",["No significant change.","No sign.","No snow or gales.","North showers and hail."],"NOSIG: no se espera cambio significativo en las próximas 2 horas."],["t9103","050.04.02","t",null,"The type of fog that develops rapidly both day and night is...",["Advection.","Radiation.","Haar.","Sea fog."],"La niebla de advección se forma por aire húmedo y cálido moviéndose sobre una superficie fría, de día o de noche. La de radiación solo de noche con cielo despejado."],["t9104","050.02.05","t",null,"Lenticular clouds are most likely to form...",["In orographic lift or mountain waves.","Over flat land or lakes.","In calm conditions.","In a layer of fog over land."],"Los lenticulares se forman en la cresta de las ondas de montaña."],["t9104a","050.02.05","t",null,"Lenticular clouds observed above the top of a range of hills seen from an aircraft approaching from the leeward side of the range indicate the possibility of...",["Mountain waves","Mountain breeze","Katabatic winds","Radiation fog"],"Lenticulares = ondas de montaña: turbulencia fuerte sotavento y rotores."],["t9105","050.01.01","t",null,"The actual height of the tropopause varies considerably; at what approximate height is the tropopause assumed to be in the temperate latitudes?",["36000 ft","45000 ft","26000 ft","6000 ft"],"En latitudes templadas (y en la ISA) la tropopausa está a 11 km ≈ 36 000 ft."],["t9106","050.07.02","t",null,"Which of the following conditions would you NOT expect to see during anticyclonic conditions where the centre of high pressure is established overhead?",["Low pressures on the surface","Cold temperatures","Haze","Fog"],"En un anticiclón la presión en superficie es alta. Aire descendente: calma, calima y nieblas."],["t9108","050.03.01","t",null,"The surface temperature is 25 °C, and the dew point is 21 °C. Approximately what height would you expect the cloud base to be, given that the average environmental lapse rate up to 10 000 ft AGL is 2 °C per 1000 ft?",["2000 ft","1000 ft","6000 ft","500 ft"],"El enunciado da el gradiente (2 °C por 1000 ft): base ≈ (T − Td) / 2 × 1000 = 4 / 2 × 1000 = 2000 ft. Con la regla de 400 ft por °C saldrían 1600 ft; 1000 ft no sale con ningún método."],["t9108a","050.03.01","t",null,"The surface temperature is 20 °C and the dew point is 15 °C. Approximately what is the height of the cloud base above the ground?",["2000 ft","500 ft","5000 ft","1000 ft"],"(20 − 15) × 400 = 2000 ft."],["t9109","050.10.03","t",null,"What is a TAF?",["A Terminal Aerodrome Forecast.","A Typical Airport Forecast.","A Terminal Aerodrome Flight conditions report.","A Total Aerodrome Forecast."],"TAF = Terminal Aerodrome Forecast (pronóstico de aeródromo)."],["t9110","050.06.02","t",null,"Which of the following frontal systems is most likely to produce thunderstorm activity?",["A cold front.","A warm front.","A ridge of high pressure.","An occluded front."],"El frente frío levanta el aire cálido bruscamente: cúmulos de gran desarrollo y tormentas."],["t9111","050.02.04","t",null,"You are flying to an airport that is situated close to the sea, like Alicante, during the warmest time of the day. What kind of winds would you expect on the surface?",["Airflow flowing from the sea towards the land","Air flowing from the right side of the shoreline towards the left side","Airflow flowing from the land towards the sea","Air flowing from the left side of the shoreline towards the right side"],"Brisa marina: de día la tierra se calienta, el aire sube y el aire fresco del mar entra hacia la tierra."],["t9111a","050.02.04","t",null,"During the night, near the coast and with light winds, the surface wind generally blows:",["From the land towards the sea","From the sea towards the land","Parallel to the coast only","Upslope only"],"Brisa terral: de noche la tierra se enfría antes que el mar."],["t9112","050.03.03","t",null,"Unstable air is characterised by...",["Cumulus cloud, showers and generally good visibility.","Cumulus cloud, drizzle and generally poor visibility.","Layered cloud, showers and generally good visibility.","Layered cloud, showers and generally poor visibility."],"Aire inestable: nubes de desarrollo vertical (cúmulos), chubascos y buena visibilidad. Estable: estratos, llovizna y mala visibilidad."],["t9112a","050.03.03","t",null,"Stable air is characterised by:",["Layered cloud, drizzle and poor visibility","Cumulus cloud and showers","Cumulonimbus and hail","Good visibility and strong turbulence"],"Aire estable: estratos, llovizna, mala visibilidad y poca turbulencia."],["t9113","050.09.02","t",null,"Thermal turbulence is prone to be found:",["Close to the ground","Downwind of a mountain","In winter","At night"],"La turbulencia térmica (convectiva) aparece de día, cerca del suelo, sobre superficies calentadas."],["t9114","050.10.01","t",null,"Please study the four METARs below. Which airfield has the lowest wind strength? EGNV 121120Z 30011KT 9999 FEW020 08/03 Q1022; EGNT 121120Z 30009KT 9999 FEW020 08/03 Q1022; EGNC 121120Z 28011KT 9999 FEW030 07/03 Q1023; EGNM 121120Z 30021KT 9999 FEW030 08/04 Q1022",["EGNT","EGNC","EGNV","EGNM"],"EGNT: 300/09 kt, el más flojo. EGNV y EGNC: 11 kt; EGNM: 21 kt."],["t9115","050.10.01","t",null,"A SPECI is a weather report for weather changes similar to:",["A METAR","A TAF","A GAMET","A SIGWX"],"SPECI: informe especial cuando hay un cambio significativo; tiene el mismo formato que el METAR."],["t9116","050.01.01","t",null,"The first layer of the atmosphere, closest to the earth, is called the...",["Troposphere.","Stratopause.","Tropopause.","Stratosphere."],"De abajo arriba: troposfera, tropopausa, estratosfera…"],["t9118","050.06.02","t",null,"An occluded front in which the cold side of the cold front is colder than the cold side of the warm front is called:",["Cold occluded front","Warm occluded front","No","Yes"],"Oclusión fría: el aire tras el frente frío es más frío que el aire delante del frente cálido, y el frente frío «se mete» bajo él."],["t9118a","050.06.02","t",null,"In a warm occlusion, the air behind the cold front is:",["Warmer than the air ahead of the warm front","Colder than the air ahead of the warm front","The same temperature","Saturated only"],"Oclusión cálida: el aire tras el frente frío es más cálido que el que hay delante del frente cálido."],["t9119","050.10.03","t",null,"Given the following TAF: LEBB 171700Z 1718/1818 02008KT 9999 SCT040 TX12/1812Z TN09/1807Z BECMG 1722/1800 SHRA SCT018 PROB40 TEMPO 1805/1807 3000 RA BKN010 PROB30 TEMPO 1809/1815 3000 RA BKN019. What cloud base can we expect on the 18th at 08:00Z?",["SCT018","BKN010","BKN019","SCT040"],"A las 08Z de día 18 la BECMG (cambio completo a las 00Z) ya manda: SCT018. El TEMPO de 05–07Z ya terminó y el de 09–15Z aún no ha empezado."],["t9120","050.09.01","t",null,"When is rime and/or clear icing most likely to occur?",["Flying through supercooled water droplets","Flying through rain","Flying through ice","Flying through snow"],"Hielo estructural: gotas de agua superenfriada que se congelan al contacto con el avión."],["t9121","050.10.01","t",null,"Please study the following TAF: EGNV 171103Z 1712/1721 20018KT 9999 SCT022 BECMG 1712/1715 20022G32KT TEMPO 1712/1720 7000 RA PROB40 TEMPO 1715/1718 20025G44KT 3000 +RA BKN014 BECMG 1717/1720 27014KT. What does «+RA» mean?",["Strong (heavy) rain","Resolution advisory","Strong rime ice","A long runway"],"«+» intensidad fuerte; «−» ligera; sin signo, moderada. RA = lluvia."],["t9121a","050.10.01","t",null,"In a METAR, the group «-RA» means:",["Light rain","Heavy rain","Rain showers","Recent rain"],"«−» ligera; «+» fuerte."],["t9122","050.10.01","t",null,"What abbreviation is used in METARs to signify drizzle?",["DZ","RN","-RN","DR"],"DZ = llovizna (drizzle). RA = lluvia; SN = nieve."],["t9124","050.04.02","t",null,"Hoar frost will occur when...",["Moist air saturates at dew points below 0 °C","Moist air comes into contact with a warm fast moving surface.","Moist air condenses at dew points above 0 °C","Moist freezing air comes into contact with a warm surface"],"La escarcha (hoar frost) es sublimación directa: el vapor pasa a hielo cuando el punto de rocío está por debajo de 0 °C."],["t9125","050.02.05","t",null,"Foehn wind is a:",["Katabatic, warm and dry","Anabatic, warm and humid","Anabatic, cold and dry","Katabatic, warm and humid"],"Föhn: viento descendente (catabático), cálido y seco en sotavento tras ascender y perder humedad."],["t9126","050.09.01","t",null,"What type of ice usually forms when small supercooled water droplets freeze on a cold surface, producing a rough opaque deposit?",["Rime ice","Mixed ice","Clear ice","Wet ice"],"Hielo rime: gotas pequeñas, congelación rápida, blanco y opaco."],["t9127","050.10.01","t",null,"Can a controlled aerodrome be operated in VFR with the following METAR? METAR LEVS 251030Z 20013KT 200V260 9999 BKN013 14/12 Q1016",["No","Yes","Maybe","I don’t know"],"Techo de 1300 ft (BKN013): por debajo de 1500 ft no hay condiciones VMC en aeródromo controlado."],["t9128","050.10.01","t",null,"Please study the following METAR: EGPU 171150Z 22013KT 190V250 9999 VCSH FEW033 BKN041 08/05 Q0998. What is the current dew point at this airfield?",["05 °C","17 °C","08 °C","11 °C"],"En el grupo 08/05 el primer valor es la temperatura y el segundo el punto de rocío."],["t9129","050.02.02","t",null,"The force that causes a parcel of air to move is called the pressure gradient force; it will tend to move that parcel of air from an area of...",["High pressure to an area of low pressure.","Low pressure to an area of high pressure.","High pressure to an area of high pressure.","Low pressure to an area of low pressure."],"La fuerza del gradiente de presión va de altas a bajas presiones."],["t9130","050.07.02","t",null,"High pressure systems are characterised by:",["Subsidence","Frequent storms","Ascending air currents","Converging air currents"],"Anticiclón: aire descendente (subsidencia), divergente en superficie, buen tiempo."],["t9130a","050.07.02","t",null,"Low pressure systems are characterised by:",["Ascending air and cloud","Subsidence","Clear skies","Diverging air at the surface"],"Depresión: convergencia en superficie, ascenso, nubes y precipitación."],["t9140","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect rain to happen?",["Barcelona","Alicante","Málaga","Madrid"],"La lluvia se da dentro del área festoneada con el símbolo de lluvia (●). Las demás ciudades quedan fuera de esa área. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg1"],["t9141","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect rain to happen?",["Málaga","Alicante","Barcelona","Madrid"],"La lluvia se da dentro del área festoneada con el símbolo de lluvia (●). Las demás ciudades quedan fuera de esa área. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg2"],["t9142","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect rain to happen?",["Madrid","Alicante","Barcelona","Málaga"],"La lluvia se da dentro del área festoneada con el símbolo de lluvia (●). Las demás ciudades quedan fuera de esa área. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg3"],["t9143","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect rain to happen?",["Alicante","Barcelona","Málaga","Madrid"],"La lluvia se da dentro del área festoneada con el símbolo de lluvia (●). Las demás ciudades quedan fuera de esa área. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg4"],["t9144","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect thunderstorms?",["Madrid","Alicante","Barcelona","Málaga"],"Las tormentas se marcan con el símbolo de rayo dentro de un área festoneada: solo la ciudad situada dentro de ella las tendrá. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg1"],["t9145","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect snow?",["Barcelona","Alicante","Málaga","Madrid"],"La nieve se marca con el símbolo ✱ dentro de un área festoneada: solo esa ciudad queda dentro. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg2"],["t9146","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect thunderstorms?",["Málaga","Alicante","Barcelona","Madrid"],"Las tormentas se marcan con el símbolo de rayo dentro de un área festoneada: solo la ciudad situada dentro de ella las tendrá. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg3"],["t9147","050.10.02","t",null,"Given the following SIGWX, in which of those cities do we expect snow?",["Madrid","Alicante","Barcelona","Málaga"],"La nieve se marca con el símbolo ✱ dentro de un área festoneada: solo esa ciudad queda dentro. Una ciudad fuera de las áreas dibujadas no tiene fenómeno significativo.",null,"sg4"]];const have=new Set(BASE.map(q=>q[0]));Q.forEach(q=>{if(!have.has(q[0]))BASE.push(q);});try{if(typeof ALLQ!=="undefined"&&ALLQ!==BASE){const h2=new Set(ALLQ.map(q=>q[0]));Q.forEach(q=>{if(!h2.has(q[0]))ALLQ.push(q);});}}catch(e){}const HOT=["t9101","t9101a","t9101b","t9102","t9103","k20","t9104","t9104a","t9105","t9106","t9108","t9108a","t9109","t9110","t9111","t9111a","t9112","t9112a","t9113","t9114","t9115","t9116","t9118","t9118a","t9119","t9120","t9121","t9121a","t9122","t9124","t9125","t9126","t9127","t9128","t9129","t9130","t9130a","t9140","t9141","t9142","t9143","t9144","t9145","t9146","t9147"];try{if(typeof SUBMAP!=="undefined")Q.forEach(q=>{const s=SUBMAP[q[1]];if(s&&s.cov==="atpl"&&HOT.includes(q[0]))s.cov="part";});}catch(e){}try{if(typeof PROFE!=="undefined")HOT.forEach(i=>PROFE.add(i));}catch(e){}try{if(typeof HOT3!=="undefined")HOT.forEach(i=>HOT3.add(i));}catch(e){}try{if(typeof NOTAG!=="undefined")["t9101","t9101a","t9101b","t9102","t9103","t9104","t9104a","t9105","t9106","t9108","t9108a","t9109","t9110","t9111","t9111a","t9112","t9112a","t9113","t9114","t9115","t9116","t9118","t9118a","t9119","t9120","t9121","t9121a","t9122","t9124","t9125","t9126","t9127","t9128","t9129","t9130","t9130a","t9140","t9141","t9142","t9143","t9144","t9145","t9146","t9147"].forEach(i=>NOTAG.add(i));}catch(e){}try{(function(){const fn=typeof selectQuestions==="function"?"selectQuestions":(typeof selectItems==="function"?"selectItems":null);if(!fn)return;const orig=window[fn],HX=new Set(["t9101","t9101a","t9101b","t9102","t9103","t9104","t9104a","t9105","t9106","t9108","t9108a","t9109","t9110","t9111","t9111a","t9112","t9112a","t9113","t9114","t9115","t9116","t9118","t9118a","t9119","t9120","t9121","t9121a","t9122","t9124","t9125","t9126","t9127","t9128","t9129","t9130","t9130a","t9140","t9141","t9142","t9143","t9144","t9145","t9146","t9147"]),SRC=new Set(["t", "o", "e"]);const hot=q=>SRC.has(q[2])||HX.has(q[0])||(typeof PROFE!=="undefined"&&PROFE.has(q[0]))||(typeof HOT3!=="undefined"&&HOT3.has(q[0]))||(typeof NOTAG!=="undefined"&&NOTAG.has(q[0]))||(typeof isProf==="function"&&isProf(q))||(typeof isTrial==="function"&&isTrial(q))||(typeof isExam==="function"&&isExam(q));window.F0HOT=hot;const gid=x=>Array.isArray(x)?x[0]:(x&&x.q?x.q[0]:(x&&x.id!==undefined?x.id:(x&&x.f?x.f.id:null)));const bs=i=>String(i).replace(/^(t\d+).*$/,"$1");window[fn]=function(mode){const a=arguments;if(mode!=="adaptive"&&mode!=="trial")return orig.apply(this,a);const full=BANK;let res;try{BANK=full.filter(hot);res=orig.apply(this,a);}finally{BANK=full;}if(mode==="adaptive"&&Array.isArray(res)&&res.length){try{const want=Math.floor(res.length*0.050000000000000044+1e-9);if(want>0){let ex;try{BANK=full.filter(q=>!hot(q));ex=orig.apply(this,a);}finally{BANK=full;}const have=new Set(res.map(gid));ex=(ex||[]).filter(x=>!have.has(gid(x)));for(let i=ex.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ex[i],ex[j]]=[ex[j],ex[i]];}ex.slice(0,want).forEach(x=>{const k=Math.floor(Math.random()*res.length);res[k]=x;});}}catch(e){BANK=full;}}return res;};})();}catch(e){console.error("hot",e);}buildBank();try{renderSetup();}catch(e){}try{renderNotesMeta();}catch(e){}}catch(e){console.error("addq",e);}})();</script><!--/f0addq--><script>window.__F0CL={"s20":0,"t21":0,"k2":1,"t1":1,"m10":2,"w3":2,"c3":3,"s11":3,"k1":4,"s15":4,"s2":16,"w31":5,"t8":14,"w18":6,"m13":7,"s5":7,"d1":8,"d2":8,"d8":9,"d9":9,"d6":10,"d7":10,"t9104":11,"t7":11,"t13":11,"t9126":12,"t9120":12,"t9103":13,"t6":13,"t12":13,"t9129":14,"t9130":15,"t9106":15,"t9130a":15,"t19":15,"t9111":16,"t9111a":16,"t17":16,"t14":17,"t9105":17,"t4":17,"t16":17,"t9116":17};</script>
+<script>/* Rotación real de preguntas (Adaptativo y Trial).
    Antes: la prioridad solo se atenuaba un poco por lo servido en los últimos tests, así que las falladas y las "clave"
    volvían una y otra vez y el Trial (≈90 preguntas) se agotaba en 3 tests y empezaba a repetir.
    Ahora: MAZO BARAJADO persistente por asignatura y modo (Fisher-Yates).
@@ -5185,6 +5504,71 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
      (falladas o sin ver) van en la primera mitad de la vuelta, las acertadas después, y nada de lo del último test se repite seguido.
    · Preguntas con el mismo enunciado y distinto id (p. ej. la de clase y la del banco de la escuela) cuentan como una.
    · El mazo se guarda en el dispositivo (localStorage); si no hay almacenamiento funciona igual dentro de la sesión. */
+/* ===== FAMILIA DE PREGUNTA (todas las asignaturas y modos) =====
+   Un test nunca lleva dos preguntas de la misma familia. La familia se agrupa por la PREGUNTA MADRE, no por la variante generada:
+   · id madre (t9101, t9101a y t9101b son la misma: se quita la letra final de variante);
+   · grupos de equivalentes curados (dupclusters/<asignatura>.json, inyectados en el build como window.__F0CL);
+   · mismo generador numérico (varias plantillas que usan la misma fórmula);
+   · mismo enunciado una vez quitados los números (y la misma figura);
+   · conceptos con muchos enunciados distintos (p. ej. las cartas SIGWX de «¿en qué ciudad hay lluvia / tormenta / nieve?»).
+   window.__famKeys(q) devuelve las claves; window.__famGuard(lista, modo) quita lo repetido y lo sustituye por otra de la misma asignatura. */
+(function(){
+  try{
+    const CLm=window.__F0CL||{};
+    const norm=t=>String(t||"").toLowerCase().replace(/[^a-z0-9áéíóúñ%°]+/g," ").trim();
+    const baseId=id=>String(id).replace(/~\d+$/,"").replace(/(\d)[a-z]$/,"$1");
+    const qOf=it=>Array.isArray(it)?it:(it&&it.k==="mc"&&it.q?it.q:null);
+    const FAMS=[[/given the following sigwx|following sigwx/i,"sigwx"]].concat(window.__F0FAM||[]);
+    const cache=new Map();
+    const genName=id=>{ try{ if(typeof GEN_050!=="undefined"&&GEN_050&&GEN_050[id]) return GEN_050[id].name||"gen050"; }catch(e){} try{ if(typeof NUMGEN!=="undefined"&&NUMGEN&&NUMGEN[id]) return NUMGEN[id].name||("numgen"+id); }catch(e){} return null; };
+    const famKeys=q=>{
+      const id=q[0]; if(cache.has(id)) return cache.get(id);
+      const k=["b:"+baseId(id)], stem=String(q[4]||"");
+      const c=CLm[id]!==undefined?CLm[id]:CLm[baseId(id)]; if(c!==undefined) k.push("c:"+c);
+      FAMS.forEach(f=>{ if(f[0].test(stem)) k.push("f:"+f[1]); });
+      const g=genName(id); if(g) k.push("g:"+g);
+      if(stem.length>=40 && stem!=="—"){ const t=norm(stem.replace(/\d+/g,"#")); if(t.split(" ").length>=6) k.push("t:"+t+"|"+(typeof q[8]==="string"?q[8]:"")); }
+      cache.set(id,k); return k;
+    };
+    window.__famKeys=famKeys;
+    const NOGUARD=/^(calc|voice|atis|plane|signals)$/;
+    window.__famGuard=function(list,mode){
+      if(!Array.isArray(list)||NOGUARD.test(mode)) return list;
+      const seen=new Set(), out=[], todo=[]; let dup=0;
+      list.forEach((it,i)=>{ const q=qOf(it); if(!q){ out.push(it); return; }
+        const ks=famKeys(q);
+        if(ks.some(x=>seen.has(x))){ dup++; out.push(null); todo.push(i); return; }
+        ks.forEach(x=>seen.add(x)); out.push(it); });
+      if(!dup) return list;
+      const replace=!/^(all|wrong|lo)$/.test(mode);
+      if(replace){
+        const pool=(typeof BANK!=="undefined"&&Array.isArray(BANK))?BANK:[];
+        const hot=(mode==="trial"||mode==="adaptive")&&typeof window.F0HOT==="function"?window.F0HOT:null;
+        const have=new Set(out.map(it=>{ const q=it&&qOf(it); return q&&q[0]; }).filter(Boolean));
+        const srcs=new Set(out.map(it=>{ const q=it&&qOf(it); return q&&q[2]; }).filter(Boolean));
+        const par=lo=>String(lo).split(".").slice(0,3).join(".");
+        todo.forEach(i=>{
+          const orig=list[i], q=qOf(orig);
+          const ok=p=>p[4]&&p[4]!=="—"&&p[2]!=="o"&&!have.has(p[0])&&(!hot||hot(p))&&(p[2]!=="p"||q[2]==="p")&&(p[2]!=="y"||q[2]==="y")&&!!p[7]===!!q[7]&&!famKeys(p).some(x=>seen.has(x));
+          const tiers=[p=>p[2]===q[2]&&p[1]===q[1], p=>p[2]===q[2]&&par(p[1])===par(q[1]), p=>p[2]===q[2], p=>srcs.has(p[2])&&par(p[1])===par(q[1])];
+          let pick=null;
+          for(const t of tiers){ const c=pool.filter(p=>ok(p)&&t(p)); if(c.length){ pick=c[Math.floor(Math.random()*c.length)]; break; } }
+          if(pick){ have.add(pick[0]); famKeys(pick).forEach(x=>seen.add(x)); out[i]=Array.isArray(orig)?pick:{k:"mc",q:pick}; }
+        });
+      }
+      window.__famLast={mode:mode,dups:dup,replaced:out.filter(Boolean).length-(list.length-dup)};
+      return out.filter(Boolean);
+    };
+    const wrap=f=>function(list,mode){
+      const rev=!!(window.__f0rev&&mode==="wrong");
+      let r=f.apply(this,arguments);
+      if(rev) return r;
+      try{ return window.__famGuard(r,mode); }catch(e){ try{ console.error("fam",e); }catch(_){} return r; }
+    };
+    if(typeof window.F0DEDUP==="function" && !window.F0DEDUP.__fam){ const w=wrap(window.F0DEDUP); w.__fam=true; window.F0DEDUP=w; }
+  }catch(e){ try{ console.error("fam",e); }catch(_){} }
+})();
+
 (function(){
   try{
     const PATH=location.pathname.replace(/[^a-z0-9]+/gi,"_"), mem={};
@@ -5213,7 +5597,8 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
       m=m||"trial"; const D=load(m), S=new Set(D.s), last=new Set(D.l||[]);
       const out=[], sb=new Set(), stx=new Set();
       const rank=q=>(failedLast(st,q[0])||unseen(st,q[0]))?0:1;
-      const take=(arr)=>{ for(const q of arr){ if(out.length>=n) break; const b=base(q[0]), t=norm(q[4]); if(sb.has(b)||(t&&stx.has(t))) continue; sb.add(b); if(t) stx.add(t); out.push(q); } };
+      const fk=new Set();
+      const take=(arr)=>{ for(const q of arr){ if(out.length>=n) break; const b=base(q[0]), t=norm(q[4]); if(sb.has(b)||(t&&stx.has(t))) continue; const ks=window.__famKeys?window.__famKeys(q):[]; if(ks.some(x=>fk.has(x))) continue; ks.forEach(x=>fk.add(x)); sb.add(b); if(t) stx.add(t); out.push(q); } };
       take(fy(a.filter(q=>!S.has(base(q[0])))).sort((x,y)=>rank(x)-rank(y)));
       const fromOld=out.length;
       if(out.length<n){   // mazo corto: vuelta nueva. Se barajan todas; no dominadas primero, y lo del último test al final.
