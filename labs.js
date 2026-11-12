@@ -707,6 +707,171 @@ Object.assign(LAB,{
  }
 });
 /*F2END*/
+/*F4*/
+/* ---------- Fase 3 · Meteorología: frentes, nivel de condensación y viento geostrófico / de gradiente ---------- */
+Object.assign(TTL,{front:"Lámina interactiva · frentes en corte transversal",lcl:"Lámina interactiva · formación de nubes y nivel de condensación",geo:"Lámina interactiva · viento geostrófico y de gradiente"});
+Object.assign(CAP,{front:"Corte vertical con la pendiente muy exagerada; hemisferio norte. El frente avanza de izquierda a derecha y pasa por encima del observador. Pendiente real: frío 1:50 a 1:80, cálido 1:150 aprox. La nubosidad del frente cálido llega unos 500 NM por delante.",
+ lcl:"El aire que sube sin saturar se enfría 3 °C cada 1 000 ft (DALR); una vez saturado, unos 1,8 °C cada 1 000 ft (SALR). Regla práctica: base de la nube (ft) ≈ (temperatura − punto de rocío) × 400.",
+ geo:"Vista desde arriba. Geostrófico: gradiente de presión y Coriolis se equilibran, viento paralelo a las isobaras. Con isobaras curvas aparece la fuerza centrífuga: alrededor de una baja el viento es menor que el geostrófico; alrededor de una alta, mayor. El rozamiento frena el viento y lo desvía hacia la baja."});
+Object.assign(FB,{front:"<b>Frentes</b><ul><li>Frío: pendiente fuerte, Cb y chubascos en banda estrecha; al paso baja la temperatura, sube la presión y el viento rola a NW (veer).</li><li>Cálido: pendiente suave, Ci → Cs → As → Ns y lluvia continua por delante; al paso sube la temperatura y el viento rola a SW.</li><li>Ocluido: el frío alcanza al cálido y levanta el aire cálido; mezcla de ambos, con Cb embebidos.</li><li>Estacionario: no avanza; tiempo de frente cálido débil y persistente.</li></ul>",
+ lcl:"<b>Nivel de condensación</b><ul><li>El aire que asciende se enfría a 3 °C/1 000 ft (DALR) hasta saturarse.</li><li>Base de la nube (ft) ≈ (T − punto de rocío) × 400.</li><li>Atmósfera estable: nubes estratiformes. Inestable: cumuliformes (Cu, Cb).</li><li>Foehn: el aire baja a sotavento más cálido y seco.</li></ul>",
+ geo:"<b>Viento geostrófico y de gradiente</b><ul><li>Geostrófico: gradiente de presión = Coriolis; paralelo a isobaras rectas.</li><li>Hemisferio norte: baja presión a la izquierda del viento (Buys Ballot); giro antihorario en las bajas y horario en las altas. En el sur, al revés.</li><li>Baja: viento de gradiente menor que el geostrófico. Alta: mayor.</li><li>Rozamiento: menos velocidad y el viento cruza las isobaras hacia la baja.</li></ul>"});
+Object.assign(HTML,{front:`<figure><canvas data-i="cv" height="440" role="img" aria-label="Corte transversal de un frente con sus masas de aire, nubes y precipitación"></canvas>
+<div class="ctl"><button data-i="b_cold" type="button" aria-pressed="true">Frío</button><button data-i="b_warm" type="button" aria-pressed="false">Cálido</button><button data-i="b_occ" type="button" aria-pressed="false">Ocluido</button><button data-i="b_stat" type="button" aria-pressed="false">Estacionario</button></div>
+<div class="ctl" style="border-top:1px solid #22344a"><button data-i="play" type="button" aria-pressed="false">▶ Paso del frente</button><label>Posición <input data-i="pos" type="range" min="0" max="100" step="0.5" value="12"></label></div>
+<div class="dx" data-i="dx"></div>
+<div class="read"><div>Temperatura<b data-i="fT"></b></div><div>Presión<b data-i="fP"></b></div><div>Viento<b data-i="fW"></b></div><div>Nubes sobre el observador<b data-i="fC"></b></div></div></figure>`,
+lcl:`<figure><canvas data-i="cv" height="450" role="img" aria-label="Aire que asciende y se enfría hasta el nivel de condensación, donde se forma la nube"></canvas>
+<div class="ctl"><button data-i="mO" type="button" aria-pressed="true">Ascenso orográfico</button><button data-i="mC" type="button" aria-pressed="false">Ascenso convectivo</button><button data-i="un" type="button" aria-pressed="false">Atmósfera inestable</button></div>
+<div class="ctl" style="border-top:1px solid #22344a"><label>Temperatura <input data-i="t" type="range" min="0" max="35" step="1" value="20"><output data-i="tO"></output></label><label>Punto de rocío <input data-i="td" type="range" min="-10" max="35" step="1" value="12"><output data-i="tdO"></output></label><label data-i="hmL">Montaña <input data-i="hm" type="range" min="500" max="3500" step="100" value="2200"><output data-i="hmO"></output></label></div>
+<div class="read"><div>Temperatura − rocío<b data-i="cS"></b></div><div>Base de la nube<b data-i="cB"></b></div><div>Nube<b data-i="cN"></b></div><div data-i="cXb"><span data-i="cXl"></span><b data-i="cX"></b></div></div></figure>`,
+geo:`<figure><canvas data-i="cv" height="430" role="img" aria-label="Isobaras con una parcela de aire y las fuerzas de gradiente de presión, Coriolis y centrífuga"></canvas>
+<div class="ctl"><button data-i="gS" type="button" aria-pressed="true">Isobaras rectas</button><button data-i="gL" type="button" aria-pressed="false">Baja presión</button><button data-i="gH" type="button" aria-pressed="false">Alta presión</button><button data-i="hem" type="button">Hemisferio norte</button><button data-i="fr" type="button" aria-pressed="false">Rozamiento en superficie</button></div>
+<div class="ctl" style="border-top:1px solid #22344a"><label>Separación de isobaras <input data-i="sp" type="range" min="100" max="600" step="10" value="300"><output data-i="spO"></output></label><label>Latitud <input data-i="lat" type="range" min="15" max="75" step="1" value="45"><output data-i="latO"></output></label></div>
+<div class="dx" data-i="dx"></div>
+<div class="read"><div>Viento geostrófico<b data-i="gG"></b></div><div data-i="gVb">Viento resultante<b data-i="gV"></b></div><div>Sentido<b data-i="gD"></b></div></div></figure>`});
+const puff=(x,cx,cy,w,h,col,seed)=>{ const s=seed||1, rb=Math.min(h*.5,w*.2), n=Math.max(4,Math.round(w/rb*.8)), rnd=i=>Math.abs(Math.sin((i+1)*s*12.9898)); x.fillStyle=col; x.beginPath();
+ for(let i=0;i<n;i++){ const f=i/(n-1), r=rb*(.75+.3*rnd(i)), px=cx-w/2+rb+(w-2*rb)*f; x.moveTo(px+r,cy+h/2-r); x.arc(px,cy+h/2-r,r,0,6.2832); if(h>rb*2.2){ const r2=rb*(.7+.35*rnd(i+9)), p2=cx-w/2+rb*1.2+(w-2.4*rb)*f; x.moveTo(p2+r2,cy-h/2+r2); x.arc(p2,cy-h/2+r2,r2,0,6.2832); } }
+ if(h>rb*2.2) x.rect(cx-w/2+rb*.5,cy-h/2+rb*.8,w-rb,h-rb*1.6); x.rect(cx-w/2+rb*.6,cy+h/2-rb*.9,w-rb*1.2,rb*.9); x.fill(); };
+const tower=(x,cx,yb,yt,w,anvil,seed)=>{ const Hh=yb-yt, n=Math.max(4,Math.round(Hh/(w*.28))); for(let k=0;k<=n;k++){ const f=k/n, r=w*.5*(1-.36*f)*(.9+.2*Math.abs(Math.sin((k+1)*(seed||1)*7.3))), py=yb-r*.9-f*(Hh-r*1.5-w*.15), g=Math.round(150+85*f); x.fillStyle=`rgba(${g},${g+10},${Math.min(255,g+26)},.97)`; x.beginPath(); x.arc(cx+Math.sin(k*2.1)*w*.1,py,r,0,6.2832); x.fill(); }
+ x.fillStyle="rgba(150,163,183,.97)"; x.fillRect(cx-w*.42,yb-w*.2,w*.84,w*.2); if(anvil){ x.fillStyle="rgba(238,243,249,.96)"; x.beginPath(); x.ellipse(cx+w*.12,yt+Hh*.035,w*.95,Math.max(4,Hh*.045),0,0,6.2832); x.fill(); } };
+Object.assign(LAB,{
+ front(root,E){
+  const c=E.cv, x=c.getContext("2d"), KS=["cold","warm","occ","stat"], TY={cold:["FRENTE FRÍO","#5aaeff"],warm:["FRENTE CÁLIDO","#ff7a66"],occ:["FRENTE OCLUIDO","#c99bff"],stat:["FRENTE ESTACIONARIO","#e9eef4"]};
+  let ty="cold", last=0, T=0, play=false;
+  KS.forEach(k=>E["b_"+k].addEventListener("click",()=>{ ty=k; KS.forEach(j=>E["b_"+j].setAttribute("aria-pressed",j===k)); E.pos.value=ty==="warm"||ty==="occ"?4:14; }));
+  E.play.addEventListener("click",()=>{ play=!play; if(play&&+E.pos.value>=99) E.pos.value=0; E.play.setAttribute("aria-pressed",play); }); E.pos.addEventListener("input",()=>{ play=false; E.play.setAttribute("aria-pressed",false); });
+  const sf={cold:h=>-.3*Math.pow(h,1.7),warm:h=>.95*h,stat:h=>.62*h,occw:h=>.75*h};
+  const CL={cold:[[-.03,.06,.95,.17,"Cb",1],[-.24,.1,.3,.1,"Cu"],[-.42,.1,.24,.08,"Cu"],[.2,.12,.22,.13,"Sc"],[.42,.46,.53,.12,"Ac"]],
+   warm:[[.12,.04,.38,.28,"Ns"],[.37,.36,.5,.22,"As"],[.58,.6,.68,.2,"Cs"],[.8,.8,.85,.16,"Ci"],[-.22,.05,.13,.3,"St / Sc"]],
+   occ:[[.03,.04,.46,.36,"Ns"],[-.02,.3,.95,.13,"Cb",1],[.36,.4,.52,.2,"As"],[.56,.62,.7,.2,"Cs"],[.76,.8,.85,.14,"Ci"],[-.31,.1,.26,.09,"Cu"]],
+   stat:[[.07,.04,.3,.32,"Ns / St"],[.36,.34,.46,.24,"As"],[.6,.6,.66,.2,"Cs"]]};
+  const PR={cold:[[-.1,.03,.08,1],[-.27,-.21,.1,.5]],warm:[[-.02,.3,.06,.7],[-.34,-.08,.05,.25]],occ:[[-.14,.2,.06,.9],[-.33,-.28,.1,.5]],stat:[[-.06,.22,.05,.4]]};
+  const obs=d=>{ const pa=(a,b)=>sst(a,b,d); let t,p,r;
+    if(ty==="cold"){ const k=pa(.02,-.05); t=18-8*k; p=d>0?1002+6*sst(0,.5,d):1002+10*sst(0,-.4,d); r=d>.3?["Sc / Cu dispersos","Sector cálido: templado y visibilidad moderada.","SW 15 kt","baja despacio"]:d>.04?["Cu que crecen, Cb a la vista","Se acerca la línea de chubascos.","SW 20 kt, racheado","baja"]:d>-.1?["Cb","Paso del frente: chubascos fuertes, posible tormenta, rachas y turbulencia. La temperatura cae.","rola a NW (veer), rachas","mínimo y sube de golpe"]:["Cu aislados","Aire frío: muy buena visibilidad y algún chubasco aislado.","NW 20 kt","sube"]; }
+    else if(ty==="warm"){ const k=pa(.03,-.06); t=8+7*k; p=d>0?1004+10*sst(0,.8,d):1004-1.5*sst(0,-.5,d); r=d>.7?["Ci","Cirros que avanzan: primera señal del frente, todavía lejos.","S 10 kt","empieza a bajar"]:d>.48?["Cs","El cielo se vela; halo alrededor del sol.","S 12 kt","baja"]:d>.27?["As","Sol borroso; empieza la lluvia débil.","S–SE 15 kt","baja"]:d>.0?["Ns","Lluvia continua, techo bajo y mala visibilidad. Riesgo de engelamiento en la capa.","S–SE 20 kt","baja de forma continua"]:d>-.08?["Ns que se rompe","Paso del frente: cesa la lluvia continua y sube la temperatura.","rola a SW (veer)","deja de bajar"]:["St / Sc","Sector cálido: llovizna, bruma y visibilidad pobre.","SW 15 kt","estable o baja poco"]; }
+    else if(ty==="occ"){ const k=pa(.03,-.06); t=9-2.5*k; p=d>0?1000+9*sst(0,.7,d):1000+9*sst(0,-.4,d); r=d>.65?["Ci / Cs","Nubes altas que se espesan, como en un frente cálido.","S 12 kt","baja"]:d>.2?["As → Ns","Lluvia continua que aumenta.","S–SE 20 kt","baja"]:d>-.12?["Ns con Cb embebidos","Paso de la oclusión: lluvia fuerte y tormentas ocultas dentro de la capa.","rola a W–NW (veer)","mínimo"]:["Cu","Chubascos y mejora de la visibilidad.","NW 18 kt","sube"]; }
+    else { const k=pa(.03,-.06); t=10+5*k; p=1012; r=d>.5?["Cs / As","Capa alta y media que apenas cambia.","flojo, paralelo al frente","casi sin cambios"]:d>-.06?["Ns / St","Lluvia o llovizna persistente: el frente no avanza y el tiempo puede durar días.","flojo, paralelo al frente","casi sin cambios"]:["St / Sc","Al otro lado del frente: aire más cálido, poca variación.","flojo, paralelo al frente","casi sin cambios"]; }
+    return {t,p,r}; };
+  const loop=t=>{ requestAnimationFrame(loop); const dt=Math.min(.05,(t-last)/1000||0); last=t; if(!seen(c)||document.hidden) return; T+=dt;
+    if(play){ const v=+E.pos.value+(ty==="stat"?1.5:7)*dt; E.pos.value=Math.min(100,v); if(v>=100){ play=false; E.play.setAttribute("aria-pressed",false); } }
+    const d=fit(c), W=c.width, H=c.height, sm=W<560*d, gy=H*.8, top=H*.1, Y=h=>gy-h*(gy-top), xF=lerp(-.32,1.1,+E.pos.value/100)*W, ox=W*.5, dd=(ox-xF)/W, col=TY[ty][1];
+    bgFill(x,W,H); x.fillStyle="rgba(255,130,85,.22)"; x.fillRect(0,0,W,gy);
+    const poly=(f,right,fill)=>{ x.beginPath(); x.moveTo(xF,gy); for(let h=0;h<=1.2;h+=.05) x.lineTo(xF+f(h)*W,Y(h)); x.lineTo(right?W+60:-60,Y(1.2)); x.lineTo(right?W+60:-60,gy); x.closePath(); x.fillStyle=fill; x.fill(); };
+    const line=(f,cl)=>{ x.strokeStyle=cl; x.lineWidth=3*d; x.beginPath(); for(let h=0;h<=1.2;h+=.05) h?x.lineTo(xF+f(h)*W,Y(h)):x.moveTo(xF,gy); x.stroke(); };
+    const BL="#1c5fae", lab=(tx,px,py,cl)=>{ x.font=`800 ${(sm?11:14)*d}px "Barlow Condensed","Arial Narrow",sans-serif`; x.textAlign="center"; x.fillStyle=cl; x.fillText(tx,clamp(px,50*d,W-50*d),py); };
+    x.save(); x.beginPath(); x.rect(0,0,W,gy); x.clip();
+    if(ty==="cold"){ poly(sf.cold,false,"rgba(40,110,210,.5)"); line(sf.cold,col); lab("AIRE FRÍO",xF-.2*W,Y(.07),"#bfe0ff"); lab("AIRE CÁLIDO",xF+.24*W,Y(.07),"#ffd0c4"); }
+    else if(ty==="warm"){ poly(sf.warm,true,"rgba(40,110,210,.5)"); line(sf.warm,col); lab("AIRE FRÍO",xF+.42*W,Y(.07),"#bfe0ff"); lab("AIRE CÁLIDO",xF-.2*W,Y(.28),"#ffd0c4"); }
+    else if(ty==="occ"){ poly(sf.cold,false,"rgba(40,110,210,.55)"); poly(sf.occw,true,"rgba(70,150,230,.36)"); line(sf.cold,"#5aaeff"); line(sf.occw,"#ff7a66"); lab("AIRE FRÍO",xF-.2*W,Y(.07),"#bfe0ff"); lab("AIRE FRESCO",xF+.36*W,Y(.07),"#cfe6ff"); lab("AIRE CÁLIDO, ELEVADO",xF+.26*W,Y(.8),"#ffd0c4"); }
+    else { poly(sf.stat,true,"rgba(40,110,210,.5)"); line(sf.stat,col); lab("AIRE FRÍO",xF+.36*W,Y(.07),"#bfe0ff"); lab("AIRE CÁLIDO",xF-.2*W,Y(.28),"#ffd0c4"); }
+    // precipitación
+    PR[ty].forEach(p=>{ const x0=xF+p[0]*W, x1=xF+p[1]*W, y0=Y(p[2]); x.strokeStyle=`rgba(190,220,255,${.25+.5*p[3]})`; x.lineWidth=(p[3]>.8?1.8:1.2)*d; x.beginPath(); for(let px=x0,i=0;px<x1;px+=(p[3]>.8?7:10)*d,i++){ const ph=((T*(1.2+p[3])+i*.37)%1), L=(gy-y0); for(let k=0;k<3;k++){ const yy=y0+((ph+k/3)%1)*L; x.moveTo(px,yy); x.lineTo(px-3*d,Math.min(gy,yy+(8+10*p[3])*d)); } } x.stroke(); });
+    // nubes
+    CL[ty].forEach((q,i)=>{ const cx=xF+q[0]*W, w=q[3]*W, yb=Y(q[1]), yt=Y(q[2]), hi=q[1]>.55, cb=q[5];
+      if(q[4]==="Ci"){ x.strokeStyle="rgba(255,255,255,.75)"; x.lineWidth=1.6*d; for(let k=0;k<5;k++){ x.beginPath(); const sx=cx-w/2+k*w/5; x.moveTo(sx,yb-k%2*6*d); x.quadraticCurveTo(sx+w*.1,yt-4*d,sx+w*.2,yt-k%2*5*d); x.stroke(); } }
+      else if(cb){ tower(x,cx,yb,yt,Math.min(w,(yb-yt)*.5),true,i+2); if(Math.sin(T*5+i)>.93){ x.strokeStyle="#fff3a8"; x.lineWidth=2.5*d; x.beginPath(); x.moveTo(cx,yb-(yb-yt)*.2); x.lineTo(cx-8*d,yb+10*d); x.lineTo(cx+4*d,yb+14*d); x.lineTo(cx-6*d,gy-8*d); x.stroke(); } }
+      else puff(x,cx,(yb+yt)/2,w,Math.max(12*d,yb-yt),hi?"rgba(235,241,248,.55)":q[4][0]==="N"||q[4][0]==="S"&&q[4][1]==="t"?"rgba(150,165,185,.93)":q[4]==="As"?"rgba(190,202,218,.8)":"rgba(228,235,244,.94)",i+1);
+      x.font=`800 ${(sm?11:13)*d}px system-ui,sans-serif`; x.textAlign="center"; x.fillStyle="#0c1622"; const ly=q[4]==="Ci"||hi?yt-7*d:(yb+yt)/2+5*d; if(q[4]==="Ci"||hi) x.fillStyle="#fff"; x.fillText(q[4],cx,cb?(yb+yt)/2:ly); });
+    x.restore();
+    // suelo, símbolo del frente y observador
+    x.fillStyle="#263a2c"; x.fillRect(0,gy,W,H-gy); x.fillStyle="#34503b"; x.fillRect(0,gy,W,3*d);
+    const sy=gy+15*d, u=9*d; x.strokeStyle=col; x.fillStyle=col; x.lineWidth=2.5*d; x.beginPath(); x.moveTo(xF-4.5*u,sy); x.lineTo(xF+4.5*u,sy); x.stroke();
+    for(let i=0;i<4;i++){ const px=xF-3.4*u+i*2.3*u, tri=ty==="cold"||(ty!=="warm"&&i%2===0), dn=ty==="stat"&&!tri; x.fillStyle=ty==="occ"?col:tri?"#5aaeff":"#ff7a66"; x.beginPath(); if(tri){ x.moveTo(px-u*.6,sy); x.lineTo(px,sy-u); x.lineTo(px+u*.6,sy); } else x.arc(px,sy,u*.6,dn?0:Math.PI,dn?Math.PI:0); x.closePath(); x.fill(); }
+    x.font=`800 ${(sm?11:13)*d}px "Barlow Condensed","Arial Narrow",sans-serif`; x.textAlign="center"; x.fillStyle=col; x.fillText(TY[ty][0]+(ty==="stat"?" · no avanza":" →"),clamp(xF,70*d,W-70*d),sy+22*d);
+    x.strokeStyle="rgba(255,201,77,.6)"; x.lineWidth=1.2*d; x.setLineDash([4*d,5*d]); x.beginPath(); x.moveTo(ox,top); x.lineTo(ox,gy); x.stroke(); x.setLineDash([]);
+    x.fillStyle="#ffc94d"; x.beginPath(); x.moveTo(ox-7*d,gy); x.lineTo(ox-4*d,gy-18*d); x.lineTo(ox+4*d,gy-18*d); x.lineTo(ox+7*d,gy); x.closePath(); x.fill(); x.fillRect(ox-8*d,gy-25*d,16*d,7*d); x.font=`700 ${(sm?9.5:11)*d}px system-ui,sans-serif`; x.fillText("OBSERVADOR",ox,top-5*d);
+    const o=obs(dd); E.fT.textContent=o.t.toFixed(0)+" °C"; E.fP.textContent=o.p.toFixed(0)+" hPa · "+o.r[3]; E.fW.textContent=o.r[2]; E.fC.textContent=o.r[0]; if(E.dx._h!==o.r[1]){ E.dx._h=o.r[1]; E.dx.textContent=o.r[1]; }
+  };
+  loop(0);
+ },
+ lcl(root,E){
+  const c=E.cv, x=c.getContext("2d"), TOP=5000; let oro=true, un=false, last=0, T=0;
+  const md=v=>{ oro=v; E.mO.setAttribute("aria-pressed",v); E.mC.setAttribute("aria-pressed",!v); E.hmL.style.opacity=v?1:.4; E.hm.disabled=!v; };
+  E.mO.addEventListener("click",()=>md(true)); E.mC.addEventListener("click",()=>md(false)); E.un.addEventListener("click",()=>{ un=!un; E.un.setAttribute("aria-pressed",un); });
+  E.t.addEventListener("input",()=>{ if(+E.td.value>+E.t.value) E.td.value=E.t.value; }); E.td.addEventListener("input",()=>{ if(+E.td.value>+E.t.value) E.td.value=E.t.value; });
+  const bump=z=>Math.abs(z)<1?Math.pow(Math.cos(Math.PI*z/2),2):0, ft=m=>Math.round(m*3.2808/100)*100, tcol=t=>{ const k=clamp((t+20)/55,0,1); return `rgb(${Math.round(90+165*k)},${Math.round(150+40*Math.sin(k*3.14))},${Math.round(255-170*k)})`; };
+  const loop=t=>{ requestAnimationFrame(loop); const dt=Math.min(.05,(t-last)/1000||0); last=t; if(!seen(c)||document.hidden) return; T+=dt;
+    const d=fit(c), W=c.width, H=c.height, sm=W<560*d, t0=+E.t.value, td=+E.td.value, hm=+E.hm.value, sp=t0-td, L=125*sp; E.tO.textContent=t0+" °C"; E.tdO.textContent=td+" °C"; E.hmO.textContent=ft(hm).toLocaleString("es-ES")+" ft";
+    const gy=H*.9, ty=H*.07, Y=m=>gy-m/TOP*(gy-ty), DW=W*(sm?.3:.25), sx=DW, sw=W-DW, Tp=m=>m<=L?t0-m/100:t0-L/100-(m-L)*.006;
+    bgFill(x,W,H);
+    const cloudOro=oro&&L<hm, topC=oro?(cloudOro?(un?Math.min(TOP-150,hm+2200):hm+250):0):(L<TOP-300?(un?Math.min(TOP-150,L+3300):L+380):0), hasC=topC>0;
+    // escena: terreno
+    const mx=sx+sw*.56, mw=sw*.3, ter=px=>oro?hm*bump((px-mx)/mw):0;
+    if(oro){ x.fillStyle="#2f4a39"; x.beginPath(); x.moveTo(sx,gy); for(let px=sx;px<=W;px+=6*d) x.lineTo(px,Y(ter(px))); x.lineTo(W,gy); x.closePath(); x.fill(); if(hm>2600){ x.fillStyle="#e9eef4"; x.beginPath(); for(let px=mx-mw*.3;px<=mx+mw*.3;px+=4*d){ const a=ter(px); if(a>2600) x.lineTo(px,Y(a)); } x.lineTo(mx,Y(2700)); x.closePath(); x.fill(); } }
+    else { x.fillStyle="#6b5a2e"; x.fillRect(sx+sw*.34,gy-3*d,sw*.32,3*d); x.strokeStyle="rgba(255,170,80,.5)"; x.lineWidth=1.5*d; for(let i=0;i<5;i++){ const px=sx+sw*(.38+i*.06), ph=(T*.8+i*.3)%1; x.beginPath(); x.moveTo(px,gy-6*d-ph*14*d); x.quadraticCurveTo(px+4*d,gy-14*d-ph*14*d,px,gy-22*d-ph*14*d); x.stroke(); } }
+    x.fillStyle="#263a2c"; x.fillRect(0,gy,W,H-gy);
+    // nube
+    if(hasC){ const yb=Y(L), yt=Y(topC), cx=oro?mx-mw*(un?.12:.2):sx+sw*.5, w=oro?(un?mw*.9:mw*1.25):sw*(un?.3:.26);
+      if(un) tower(x,cx,yb,yt,Math.min(w,(yb-yt)*.55),topC>=TOP-200,3);
+      else if(oro){ x.fillStyle="rgba(205,214,226,.93)"; x.beginPath(); let st=false; for(let px=mx-mw;px<=mx+mw*.25;px+=5*d){ const a=ter(px); if(a>=L||px>mx){ const yy=Y(Math.max(a,L)); st?x.lineTo(px,yy):x.moveTo(px,yy); st=true; } } for(let px=mx+mw*.25;px>=mx-mw;px-=5*d){ const a=ter(px); if(a>=L||px>mx) x.lineTo(px,Y(Math.max(a,L)+320+140*Math.sin(px*.05/d))); } x.closePath(); x.fill(); }
+      else puff(x,cx,(yb+yt)/2,w,Math.max(14*d,yb-yt),"rgba(228,235,244,.95)",4);
+      if((un||oro)&&topC-L>700){ x.strokeStyle="rgba(190,220,255,.6)"; x.lineWidth=1.3*d; x.beginPath(); for(let i=0;i<9;i++){ const px=cx-w*.3+i*w*.07, g0=Y(Math.max(L,ter(px))), g1=Y(ter(px)), ph=(T*1.6+i*.31)%1, yy=g0+ph*(g1-g0); if(g1-g0>10*d){ x.moveTo(px,yy); x.lineTo(px-3*d,Math.min(g1,yy+10*d)); } } x.stroke(); } }
+    // parcelas de aire
+    for(let i=0;i<22;i++){ const u=(T*.07+i/22)%1; let px,alt;
+      if(oro){ px=sx+u*sw; alt=ter(px)+90+((i%3)*110); }
+      else { const lim=hasC?topC:Math.min(TOP,L,un?TOP:1800); px=sx+sw*.5+Math.sin(i*2.4)*sw*.045; alt=u*lim; }
+      let tp=Tp(alt), wet=alt>=L&&hasC; if(oro&&cloudOro&&px>mx){ tp=Tp(hm)+(hm-ter(px))/100; wet=false; } if(oro&&!cloudOro&&px>mx) wet=false;
+      x.fillStyle=wet?"rgba(255,255,255,.95)":tcol(tp); x.beginPath(); x.arc(px,Y(alt),(wet?2.6:3.4)*d,0,6.2832); x.fill(); }
+    if(oro){ arrow(x,d,sx+12*d,Y(700),sw*.1,0,"rgba(207,224,240,.8)","viento"); }
+    // nivel de condensación
+    if(L<TOP){ x.strokeStyle="#ffc94d"; x.lineWidth=1.5*d; x.setLineDash([7*d,5*d]); x.beginPath(); x.moveTo(0,Y(L)); x.lineTo(W,Y(L)); x.stroke(); x.setLineDash([]); x.fillStyle="#ffc94d"; x.font=`700 ${(sm?10.5:12.5)*d}px system-ui,sans-serif`; x.textAlign="right"; x.fillText((sm?"Condensación · ":"Nivel de condensación · ")+ft(L).toLocaleString("es-ES")+" ft",W-8*d,Y(L)-6*d); }
+    // foehn
+    let lee=null; if(oro){ lee=cloudOro?Tp(hm)+hm/100:t0; x.font=`700 ${(sm?10.5:12.5)*d}px system-ui,sans-serif`; x.textAlign="right"; x.fillStyle=cloudOro?"#ffb38a":"#cfe0f0"; x.fillText((sm?"Sotavento ":"Sotavento (Foehn): ")+lee.toFixed(0)+" °C",W-8*d,gy+17*d); x.textAlign="left"; x.fillStyle="#cfe0f0"; x.fillText((sm?"Barlovento ":"Barlovento: ")+t0+" °C",sx+10*d,gy+17*d); }
+    // diagrama de temperatura
+    x.fillStyle="rgba(8,16,26,.6)"; x.fillRect(0,0,DW,gy); x.strokeStyle="#22344a"; x.lineWidth=1*d; x.beginPath(); x.moveTo(DW,0); x.lineTo(DW,gy); x.stroke();
+    const X=v=>8*d+(v+35)/72*(DW-16*d); x.font=`500 ${(sm?8.5:10)*d}px system-ui,sans-serif`; x.textAlign="left"; x.fillStyle="#9fb3c8"; x.strokeStyle="rgba(207,224,240,.14)";
+    for(let m=0;m<=TOP;m+=1000){ x.beginPath(); x.moveTo(0,Y(m)); x.lineTo(DW,Y(m)); x.stroke(); if(m&&m<TOP) x.fillText(ft(m).toLocaleString("es-ES")+" ft",4*d,Y(m)-3*d); }
+    const pl=(fn,cl,to)=>{ x.strokeStyle=cl; x.lineWidth=2.5*d; x.beginPath(); for(let m=0;m<=to;m+=100) m?x.lineTo(X(fn(m)),Y(m)):x.moveTo(X(fn(0)),Y(0)); x.stroke(); };
+    pl(Tp,"#ff9a6b",TOP); pl(m=>td-m*.002,"#6fd0ff",Math.min(TOP,L)); x.fillStyle="#ffc94d"; if(L<TOP){ x.beginPath(); x.arc(X(Tp(L)),Y(L),4.5*d,0,6.2832); x.fill(); }
+    x.font=`700 ${(sm?9:11)*d}px system-ui,sans-serif`; x.fillStyle="#ff9a6b"; x.textAlign="right"; x.fillText("T "+t0+"°",DW-5*d,gy-6*d); x.fillStyle="#6fd0ff"; x.textAlign="left"; x.fillText("Td "+td+"°",5*d,gy-6*d);
+    x.fillStyle="#cfe0f0"; x.textAlign="left"; x.font=`700 ${(sm?9:10.5)*d}px system-ui,sans-serif`; x.fillText(sm?"T y Td al subir":"Temperatura y rocío al subir",5*d,13*d);
+    // lecturas
+    E.cS.textContent=sp+" °C"; E.cB.textContent=sp===0?"En el suelo":L>=TOP?"Por encima de 16 000 ft":ft(L).toLocaleString("es-ES")+" ft";
+    E.cN.textContent=!hasC?(oro?"Sin nube: la montaña no llega al nivel":"Sin nube: aire demasiado seco"):sp===0?(un?"Cb desde el suelo":"Niebla / St"):un?(topC>=TOP-200?"Cb (cumulonimbo)":"Cu congestus"):oro?"Estratiforme orográfica (St / Ns)":"Cu humilis (buen tiempo)";
+    E.cXl.textContent=oro?"Sotavento":"Cima de la nube"; E.cX.textContent=oro?(lee.toFixed(0)+" °C"+(cloudOro?" · +"+(lee-t0).toFixed(0)+" °C":"")):hasC?(topC>=TOP-200?"Hasta la tropopausa":ft(topC).toLocaleString("es-ES")+" ft"):"—"; E.cXb.className=oro&&cloudOro?"bad":"";
+  };
+  md(true); loop(0);
+ },
+ geo(root,E){
+  const c=E.cv, x=c.getContext("2d"), KT=1.9438; let mode="S", nh=true, fr=false, last=0, T=0, th=-1.2, px0=0;
+  const M={S:E.gS,L:E.gL,H:E.gH}; Object.keys(M).forEach(k=>M[k].addEventListener("click",()=>{ mode=k; Object.keys(M).forEach(j=>M[j].setAttribute("aria-pressed",j===k)); }));
+  E.hem.addEventListener("click",()=>{ nh=!nh; E.hem.textContent=nh?"Hemisferio norte":"Hemisferio sur"; }); E.fr.addEventListener("click",()=>{ fr=!fr; E.fr.setAttribute("aria-pressed",fr); });
+  const parts=Array.from({length:46},(_, i)=>[Math.random(),Math.random()]);
+  const loop=t=>{ requestAnimationFrame(loop); const dt=Math.min(.05,(t-last)/1000||0); last=t; if(!seen(c)||document.hidden) return; T+=dt;
+    const d=fit(c), W=c.width, H=c.height, sm=W<560*d, s=+E.sp.value, lat=+E.lat.value, f=1.458e-4*Math.sin(lat*Math.PI/180), P0=.3333/s, r=3000*s; E.spO.textContent=s+" km / 4 hPa"; E.latO.textContent=lat+"° "+(nh?"N":"S");
+    let P=P0, lim=false; if(mode==="H"&&P>f*f*r/4){ P=f*f*r/4; lim=true; }
+    const Vg=P0/f, Vr=mode==="S"?Vg:mode==="L"?(-f*r+Math.sqrt(f*f*r*r+4*r*P))/2:(f*r-Math.sqrt(Math.max(0,f*f*r*r-4*r*P)))/2, V=fr?Vr*.6:Vr, co=f*V, cf=mode==="S"?0:V*V/r;
+    bgFill(x,W,H); const sp=lerp(24,58,(s-100)/500)*d*(sm?.8:1), cx=W/2, cy=H/2, low=mode!=="H", dir=mode==="S"?(nh?1:-1):((mode==="L")===nh?-1:1), tw=fr?.52:0;
+    x.strokeStyle="rgba(207,224,240,.5)"; x.fillStyle="#cfe0f0"; x.lineWidth=1.3*d; x.font=`600 ${(sm?9.5:11)*d}px ui-monospace,Menlo,Consolas,monospace`; x.textAlign="left";
+    if(mode==="S"){ for(let i=-6;i<=6;i++){ const yy=cy+i*sp; if(yy<6*d||yy>H-6*d) continue; x.beginPath(); x.moveTo(0,yy); x.lineTo(W,yy); x.stroke(); x.fillText(1012+i*4,6*d,yy-4*d); }
+      x.font=`800 ${(sm?13:16)*d}px "Barlow Condensed","Arial Narrow",sans-serif`; x.fillStyle="#ff8a7a"; x.fillText("BAJA PRESIÓN",W-(sm?96:130)*d,18*d); x.fillStyle="#6fb4ff"; x.fillText("ALTA PRESIÓN",W-(sm?96:130)*d,H-9*d); }
+    else { for(let i=1;i<=9;i++){ x.beginPath(); x.arc(cx,cy,i*sp,0,6.2832); x.stroke(); if(i*sp<H/2-4*d) x.fillText(low?992+i*4:1036-i*4,cx+3*d,cy-i*sp-3*d); }
+      x.font=`800 ${(sm?26:34)*d}px "Barlow Condensed","Arial Narrow",sans-serif`; x.textAlign="center"; x.fillStyle=low?"#ff8a7a":"#6fb4ff"; x.fillText(low?"B":"A",cx,cy+11*d); x.font=`700 ${10*d}px system-ui,sans-serif`; x.fillText(low?"baja · low":"alta · high",cx,cy+24*d); }
+    // flujo
+    const spd=clamp(V*KT/40,.15,1.6); x.fillStyle="rgba(190,220,255,.55)";
+    parts.forEach((p,i)=>{ if(mode==="S"){ p[0]=(p[0]+dir*spd*dt*.12+1)%1; if(fr){ p[1]-=spd*dt*.05; if(p[1]<0) p[1]=1; } x.fillRect(p[0]*W,p[1]*H,7*d,1.6*d); }
+      else { let rr=(.12+p[1]*.88)*Math.max(W,H)*.6; const a=p[0]*6.2832; p[0]=(p[0]+dir*spd*dt*14*d/rr+1)%1; if(fr){ p[1]+=(low?-1:1)*spd*dt*.05; if(p[1]<0) p[1]=1; if(p[1]>1) p[1]=0; } x.beginPath(); x.arc(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr,1.6*d,0,6.2832); x.fill(); } });
+    // parcela y fuerzas
+    let qx,qy,tx,ty,lx,ly; if(mode==="S"){ px0=(px0+dir*spd*dt*.06+1)%1; qx=W*(.25+.5*px0); qy=cy+sp*.5; tx=dir; ty=0; lx=0; ly=-1; }
+    else { const R=3*sp; th+=dir*spd*dt*.35; qx=cx+Math.cos(th)*R; qy=cy+Math.sin(th)*R; tx=-Math.sin(th)*dir; ty=Math.cos(th)*dir; lx=(low?-1:1)*Math.cos(th); ly=(low?-1:1)*Math.sin(th); }
+    const K=(sm?46:64)*d/Math.max(P0,co+cf,1e-6), wx=tx*Math.cos(tw)+lx*Math.sin(tw), wy=ty*Math.cos(tw)+ly*Math.sin(tw);
+    arrow(x,d,qx,qy,lx*P*K,ly*P*K,"#ff8a7a",sm?"PGF":"Gradiente de presión"); { const h=nh?1:-1; arrow(x,d,qx,qy,-wy*h*co*K,wx*h*co*K,"#6fb4ff","Coriolis"); }
+    if(cf>P0*.02){ const ox=mode==="S"?0:Math.cos(th), oy=mode==="S"?0:Math.sin(th); arrow(x,d,qx,qy,ox*cf*K,oy*cf*K,"#c99bff",sm?"Centríf.":"Centrífuga"); }
+    if(fr) arrow(x,d,qx,qy,-wx*P0*.5*K,-wy*P0*.5*K,"#aeb9c6",sm?"Roz.":"Rozamiento"); const vl=clamp(V*KT*2.2,24,150)*d*(sm?.7:1); arrow(x,d,qx,qy,wx*vl,wy*vl,"#ffffff",Math.round(V*KT)+" kt");
+    x.fillStyle="#ffc94d"; x.beginPath(); x.arc(qx,qy,6*d,0,6.2832); x.fill(); x.strokeStyle="#0a1727"; x.lineWidth=1.5*d; x.stroke();
+    // lecturas
+    E.gG.textContent=Math.round(Vg*KT)+" kt"; E.gV.textContent=Math.round(V*KT)+" kt"; E.gVb.className=lim?"bad":"";
+    E.gD.textContent=mode==="S"?(nh?"Baja presión a la izquierda":"Baja presión a la derecha"):((dir<0?"Antihorario":"Horario")+(fr?(low?", hacia dentro":", hacia fuera"):""));
+    const m=mode==="S"?"<b>Geostrófico:</b> el gradiente de presión empuja hacia la baja y Coriolis desvía "+(nh?"a la derecha":"a la izquierda")+" hasta equilibrarlo. El viento queda paralelo a las isobaras, más fuerte cuanto más juntas estén y cuanto menor sea la latitud."
+      :mode==="L"?"<b>Viento de gradiente en una baja:</b> la centrífuga ayuda a Coriolis, así que hace falta menos velocidad: el viento es menor que el geostrófico. Giro "+(nh?"antihorario":"horario")+" en el hemisferio "+(nh?"norte":"sur")+"."
+      :"<b>Viento de gradiente en una alta:</b> la centrífuga ayuda al gradiente y Coriolis tiene que compensar a los dos: el viento es mayor que el geostrófico. Giro "+(nh?"horario":"antihorario")+" en el hemisferio "+(nh?"norte":"sur")+"."+(lim?" Con esta curvatura y latitud una alta no admite un gradiente tan fuerte: por eso en los anticiclones las isobaras están separadas y el viento es flojo.":"");
+    const h=m+(fr?" <b>Con rozamiento:</b> el viento pierde velocidad, Coriolis se debilita y el viento cruza las isobaras hacia la baja (unos 30° sobre tierra, 10° sobre el mar).":""); if(E.dx._h!==h){ E.dx._h=h; E.dx.innerHTML=h; }
+  };
+  loop(0);
+ }
+});
+/*F4END*/
 function fail(L,e){ if(!L||L.dead) return; L.dead=true; try{ console.error("F0Lab",L.k,e); }catch(_){} try{ if(L.rnd){ L.rnd.dispose(); L.rnd.forceContextLoss&&L.rnd.forceContextLoss(); } }catch(_){}
   L.el.innerHTML='<p class="lt">'+TTL[L.k]+'</p><div class="fb">'+(FB[L.k]||"")+'<p class="fbn">La lámina interactiva no se ha podido mostrar en este dispositivo. <button type="button">Reintentar</button></p></div>';
   const b=L.el.querySelector("button"); if(b) b.addEventListener("click",()=>{ L.el._lab=0; build(L.el); }); }
