@@ -71,7 +71,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 @media (max-width:560px){#hotCard.card,#failCard.card{padding:9px 12px 3px}#hotCard .hot p,#failCard .fitem p{font-size:13px}}
 </style>
 <meta name="color-scheme" content="only light">
-<style id="f0-mob">:root{color-scheme:only light}@media (max-width:560px){.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}}</style>
+<style id="f0-mob">:root{color-scheme:only light}html .q,html .q *,html .expl,html .expl *,html #hist *{min-width:0;overflow-wrap:anywhere;word-wrap:break-word}html .q .choice{align-items:flex-start;flex-wrap:nowrap;max-width:100%}html .q .choice>span{flex:1 1 auto;min-width:0}html .q .choice>input{flex:0 0 auto}html .qhead{flex-wrap:wrap;gap:4px 12px}html .q img,html .q svg,html .q figure,html .expl img,html .expl svg{max-width:100%;height:auto}html .q table,html .expl table{display:block;max-width:100%;overflow-x:auto}html .q pre,html .q code,html .expl code{white-space:pre-wrap}@media (min-width:600px) and (max-width:1400px){html .wrap{max-width:880px;padding-left:24px;padding-right:24px}html .q{padding:16px 20px}html .qtext{font-size:18px;line-height:1.5}html .choice{font-size:17px;line-height:1.45;padding:12px 14px;min-height:48px}html .expl{font-size:16px;line-height:1.5}}.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}</style>
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
 </head><body>
 <title>POH Cruiser, Cessna y Piper</title>
@@ -2384,13 +2384,29 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     };
     window.__famKeys=famKeys;
     const NOGUARD=/^(calc|voice|atis|plane|signals)$/;
+    /* Parecido de contenido: dos madres distintas que preguntan lo mismo (p. ej. varias de «washout») no pueden convivir en un test */
+    const STOP=new Set("the of a an is in to and for on at by with as are be that this which from it its or what when than if not how does do can will each has have into more most only both same other all one two following given following correct statement true false because".split(" "));
+    const sigCache=new Map();
+    const sig=q=>{ const id=q[0]; if(sigCache.has(id)) return sigCache.get(id);
+      const st=String(q[4]||""), op=Array.isArray(q[5])&&typeof q[5][0]==="string"?q[5][0]:"";
+      let r=null;
+      if((st.match(/\d+/g)||[]).length<2 && st!=="—"){
+        const w=new Set((norm(st+" "+op).match(/[a-z]{4,}/g)||[]).filter(x=>!STOP.has(x)));
+        const fam=/\bwashout\b/i.test(st+" "+op)?"washout":null;
+        const ws=new Set((norm(st).match(/[a-z]{4,}/g)||[]).filter(x=>!STOP.has(x)));
+        if(w.size>=5||ws.size>=2||fam) r={w,ws,fam};
+      }
+      sigCache.set(id,r); return r; };
+    const near=(q,acc)=>{ const a=sig(q); if(!a) return false;
+      return acc.some(b=>{ if(a.fam&&a.fam===b.fam) return true; let i=0; a.w.forEach(x=>{ if(b.w.has(x)) i++; }); const u=a.w.size+b.w.size-i; if(a.w.size>=5&&b.w.size>=5&&u>0&&i/u>=0.5) return true;
+        if(a.ws.size>=2&&b.ws.size>=2){ let j=0; a.ws.forEach(x=>{ if(b.ws.has(x)) j++; }); return j/(a.ws.size+b.ws.size-j)>=(Math.min(a.ws.size,b.ws.size)>=3?0.5:0.99); } return false; }); };
     window.__famGuard=function(list,mode){
       if(!Array.isArray(list)||NOGUARD.test(mode)) return list;
-      const seen=new Set(), out=[], todo=[]; let dup=0;
+      const seen=new Set(), out=[], todo=[], acc=[]; let dup=0;
       list.forEach((it,i)=>{ const q=qOf(it); if(!q){ out.push(it); return; }
         const ks=famKeys(q);
-        if(ks.some(x=>seen.has(x))){ dup++; out.push(null); todo.push(i); return; }
-        ks.forEach(x=>seen.add(x)); out.push(it); });
+        if(ks.some(x=>seen.has(x))||near(q,acc)){ dup++; out.push(null); todo.push(i); return; }
+        ks.forEach(x=>seen.add(x)); const sg=sig(q); if(sg) acc.push(sg); out.push(it); });
       if(!dup) return list;
       const replace=!/^(all|wrong|lo)$/.test(mode);
       if(replace){
@@ -2401,11 +2417,11 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
         const par=lo=>String(lo).split(".").slice(0,3).join(".");
         todo.forEach(i=>{
           const orig=list[i], q=qOf(orig);
-          const ok=p=>p[4]&&p[4]!=="—"&&p[2]!=="o"&&!have.has(p[0])&&(!hot||hot(p))&&(p[2]!=="p"||q[2]==="p")&&(p[2]!=="y"||q[2]==="y")&&!!p[7]===!!q[7]&&!famKeys(p).some(x=>seen.has(x));
+          const ok=p=>p[4]&&p[4]!=="—"&&p[2]!=="o"&&!have.has(p[0])&&(!hot||hot(p))&&(p[2]!=="p"||q[2]==="p")&&(p[2]!=="y"||q[2]==="y")&&!!p[7]===!!q[7]&&!famKeys(p).some(x=>seen.has(x))&&!near(p,acc);
           const tiers=[p=>p[2]===q[2]&&p[1]===q[1], p=>p[2]===q[2]&&par(p[1])===par(q[1]), p=>p[2]===q[2], p=>srcs.has(p[2])&&par(p[1])===par(q[1])];
           let pick=null;
           for(const t of tiers){ const c=pool.filter(p=>ok(p)&&t(p)); if(c.length){ pick=c[Math.floor(Math.random()*c.length)]; break; } }
-          if(pick){ have.add(pick[0]); famKeys(pick).forEach(x=>seen.add(x)); out[i]=Array.isArray(orig)?pick:{k:"mc",q:pick}; }
+          if(pick){ have.add(pick[0]); famKeys(pick).forEach(x=>seen.add(x)); const sg2=sig(pick); if(sg2) acc.push(sg2); out[i]=Array.isArray(orig)?pick:{k:"mc",q:pick}; }
         });
       }
       window.__famLast={mode:mode,dups:dup,replaced:out.filter(Boolean).length-(list.length-dup)};
