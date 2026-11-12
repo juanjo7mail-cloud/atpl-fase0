@@ -102,6 +102,18 @@ body .wrap details.lo .body h3,body .wrap details.lo .body h4{font-size:14px;let
 body .wrap details.lo .body table{font-size:13.5px}
 body .wrap .card{padding-left:14px;padding-right:14px}
 }
+
+/* «Lo que más fallas»: tarjeta compacta (rótulo pequeño, regla en 2-3 líneas, botones discretos en una fila) */
+#hotCard.card,#failCard.card{padding:10px 14px 4px;margin:10px 0}
+#hotCard.card>b,#failCard.card>b{display:block;font:600 11px/1 "IBM Plex Mono",ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:7px;border-bottom:1px solid var(--rule,var(--line))}
+#hotCard .hot,#failCard .fitem{border-top:1px solid var(--rule,var(--line));padding:8px 0 9px;position:relative}
+#hotCard .hot:first-child,#failCard .fitem:first-child{border-top:0}
+#hotCard .hot .crow b,#failCard .fitem .crow b{font-size:15px;line-height:1.25}
+#hotCard .hot .fail,#failCard .fitem .muted:not(.small){font:600 11.5px/1.2 "IBM Plex Mono",ui-monospace,Menlo,monospace;white-space:nowrap}
+#hotCard .hot p,#failCard .fitem p{margin:3px 0 6px;font-size:13.5px;line-height:1.4;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#hotCard .hot .row,#failCard .fitem .row{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+#hotCard .hot .btn.sm,#failCard .fitem .btn.sm{min-height:0;padding:4px 10px;font-size:12.5px;line-height:1.2;border-radius:3px;font-weight:600}
+@media (max-width:560px){#hotCard.card,#failCard.card{padding:9px 12px 3px}#hotCard .hot p,#failCard .fitem p{font-size:13px}}
 </style>
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light}@media (max-width:400px){nav{gap:0}nav button{flex:1 1 0;min-width:0;font-size:15px;padding-left:2px;padding-right:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}</style>
@@ -1333,7 +1345,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <div class="key"><b>La regla, en una línea</b>
     <p>Ponte de espaldas al viento: en el <b>hemisferio norte</b> la <b>baja presión queda a tu IZQUIERDA</b>; en el <b>sur</b>, a tu derecha. Es la <span class="en">Buys Ballot's law</span> y resuelve todas estas preguntas sin dibujar nada.</p></div>
 
-  <div class="f0lab" data-lab="wind"></div>
+  <div class="f0lab" id="visRolarLab" data-lab="wind"></div>
 
   <h4>Lo que cae de aquí, resuelto</h4>
   <div class="tablewrap">
@@ -2758,7 +2770,6 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
     </div>
     <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir temario ATPL aún no dado<small>Sin marcar, solo sale lo dado y lo que entra en Fase 0.</small></span></label>
     <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las de clase y del trial.</small></span></label>
-    <p class="muted">Formato oficial: 4 opciones, corrección al final, 75 % para aprobar. Muchas preguntas salen con otra redacción, otros números o al revés (etiqueta «variante»): hay que razonarlas, no reconocerlas. Las del trial y las de las diapositivas salen <b>siempre</b> con otra redacción, nunca con el enunciado original.</p>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
   </div>
@@ -4149,7 +4160,7 @@ const CONCEPTS = [
  ["Altitud de presión, QNH y QFE", /qnh|qfe|sub-scale|pressure altitude|transition (level|altitude)|flight level|aerodrome (has an )?elevation|reduction of aerodrome pressure|ft per hpa|hpa set|fixed constant rather than|aerodrome above sea level|vertical distance measured|altimeter/i, "visAlt"],
  ["Altitud de densidad y densidad del aire", /density altitude|air density|densest|lowest density|highest density|water vapour.*density|lift and drag|three factors affecting density|fixed mass of air|atmospheric pressure (decreases|is defined)|force per unit area/i, "visDens"],
  ["La ISA: capas y temperaturas", /icao standard atmosphere|\bisa\b|tropopause|stratopause|stratosphere|mesosphere|thermosphere|lapse rate|−56\.5|20 km and 32 km/i, "diaCapas"],
- ["Dónde te da el viento y hacia dónde rola", /standing in the (northern|southern) hemisphere|polar frontal depression|continually (back|veer)|\bbacks\b|\bveers\b|where is the wind coming from|flying (from|towards) an area of (low|high) pressure|travelling west to east|wind around (a|an) (low|anticyclone)|circulates/i, "visRolar"],
+ ["Dónde te da el viento y hacia dónde rola", /standing in the (northern|southern) hemisphere|polar frontal depression|continually (back|veer)|\bbacks\b|\bveers\b|where is the wind coming from|flying (from|towards) an area of (low|high) pressure|travelling west to east|wind around (a|an) (low|anticyclone)|circulates/i, "visRolarLab"],
  ["Fuerzas del viento: Coriolis, geostrófico y gradiente", /coriolis|geostrophic|gradient wind|centrifugal|pressure gradient force|friction layer|backs|veers|continually (back|veer)|deflects moving air|flying (from|towards) an area of (low|high) pressure/i, "visViento"],
  ["Vientos locales: brisas, Foehn y ladera", /sea breeze|land breeze|foehn|katabatic|anabatic|valley breeze|mountain breeze|coastal airfield|downwind over the sea|up a sunlit slope|down the slope|hill or mountain at night/i, "diaLocal"],
  ["Medición del viento: dirección e intensidad", /wind is (given|reported|blowing)|runway 09|lined up on runway|half feather|knots.*wind|direction.*from which|reported as \d{3}\/|\d{3}\/\d+ kt/i, "diaMedida"],
@@ -4695,9 +4706,14 @@ document.querySelector("nav").addEventListener("keydown",e=>{
   showTab(TABS[n]); document.querySelector(`nav [data-tab="${TABS[n]}"]`).focus();
 });
 // abre los apuntes en un tema o en un visual
+function __anchorFallback(id){   // si falta el ancla exacta: sube por el código (lo-050.01.06.01 → lo-050.01.06 → …); si no hay, la primera sección de apuntes. Así ningún botón «Ir al tema» queda muerto.
+  let el=null; const m=/^(lo-|ch-)?(.*)$/.exec(String(id)), pre=m[1]||"", code=m[2];
+  if(/^[0-9.]+$/.test(code)){ let c=code; while(!el && c.includes(".")){ c=c.replace(/\.[^.]*$/,""); el=document.getElementById(pre+c)||document.getElementById("lo-"+c)||document.getElementById("ch-"+c); } }
+  return el || document.querySelector("details.lo");
+}
 function openNotes(id){
   showTab("notes");
-  const el = document.getElementById(id); if(!el) return;
+  const el = document.getElementById(id) || __anchorFallback(id); if(!el) return;
   let d = el.tagName==="DETAILS" ? el : el.closest("details");
   while(d){ d.open = true; d = d.parentElement && d.parentElement.closest("details"); }
   setTimeout(()=>el.scrollIntoView({behavior:"smooth", block: el.tagName==="DETAILS" ? "start" : "center"}), 60);

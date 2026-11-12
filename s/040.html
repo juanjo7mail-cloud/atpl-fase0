@@ -345,6 +345,18 @@ body .wrap details.lo .body h3,body .wrap details.lo .body h4{font-size:14px;let
 body .wrap details.lo .body table{font-size:13.5px}
 body .wrap .card{padding-left:14px;padding-right:14px}
 }
+
+/* «Lo que más fallas»: tarjeta compacta (rótulo pequeño, regla en 2-3 líneas, botones discretos en una fila) */
+#hotCard.card,#failCard.card{padding:10px 14px 4px;margin:10px 0}
+#hotCard.card>b,#failCard.card>b{display:block;font:600 11px/1 "IBM Plex Mono",ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:7px;border-bottom:1px solid var(--rule,var(--line))}
+#hotCard .hot,#failCard .fitem{border-top:1px solid var(--rule,var(--line));padding:8px 0 9px;position:relative}
+#hotCard .hot:first-child,#failCard .fitem:first-child{border-top:0}
+#hotCard .hot .crow b,#failCard .fitem .crow b{font-size:15px;line-height:1.25}
+#hotCard .hot .fail,#failCard .fitem .muted:not(.small){font:600 11.5px/1.2 "IBM Plex Mono",ui-monospace,Menlo,monospace;white-space:nowrap}
+#hotCard .hot p,#failCard .fitem p{margin:3px 0 6px;font-size:13.5px;line-height:1.4;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#hotCard .hot .row,#failCard .fitem .row{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+#hotCard .hot .btn.sm,#failCard .fitem .btn.sm{min-height:0;padding:4px 10px;font-size:12.5px;line-height:1.2;border-radius:3px;font-weight:600}
+@media (max-width:560px){#hotCard.card,#failCard.card{padding:9px 12px 3px}#hotCard .hot p,#failCard .fitem p{font-size:13px}}
 </style>
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light}@media (max-width:400px){nav{gap:0}nav button{flex:1 1 0;min-width:0;font-size:15px;padding-left:2px;padding-right:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}</style>
@@ -2331,8 +2343,13 @@ document.querySelector("nav").addEventListener("keydown",e=>{ if(e.key!=="ArrowR
   const cur=TABS.indexOf(document.querySelector('nav [aria-selected="true"]').dataset.tab), n=(cur+(e.key==="ArrowRight"?1:TABS.length-1))%TABS.length;
   showTab(TABS[n]); document.querySelector(`nav [data-tab="${TABS[n]}"]`).focus(); });
 // abre los apuntes en un LO o en un visual
+function __anchorFallback(id){   // si falta el ancla exacta: sube por el código (lo-050.01.06.01 → lo-050.01.06 → …); si no hay, la primera sección de apuntes. Así ningún botón «Ir al tema» queda muerto.
+  let el=null; const m=/^(lo-|ch-)?(.*)$/.exec(String(id)), pre=m[1]||"", code=m[2];
+  if(/^[0-9.]+$/.test(code)){ let c=code; while(!el && c.includes(".")){ c=c.replace(/\.[^.]*$/,""); el=document.getElementById(pre+c)||document.getElementById("lo-"+c)||document.getElementById("ch-"+c); } }
+  return el || document.querySelector("details.lo");
+}
 function openNotes(id){
-  showTab("notes"); const el=document.getElementById(id); if(!el) return;
+  showTab("notes"); const el=document.getElementById(id)||__anchorFallback(id); if(!el) return;
   let d = el.tagName==="DETAILS" ? el : el.closest("details"); while(d){ d.open=true; d=d.parentElement.closest("details"); }
   setTimeout(()=>el.scrollIntoView({behavior:"smooth",block:el.tagName==="DETAILS"?"start":"center"}),60);
 }
