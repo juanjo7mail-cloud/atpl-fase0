@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="383482254366";</script>
+<script>window.F0_BUILD="6c0131406d23";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -387,6 +387,20 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .nlist li.big.xl{padding:18px 16px 16px;border-width:2px;box-shadow:0 8px 26px rgba(14,124,134,.25)}
 .nlist li.big.xl b{font-size:23px;line-height:1.15}
 .nlist li.big.xl .go{padding:14px;font-size:17px}
+.labann{margin:12px 0 2px;border:1px solid #27313c;border-radius:2px;background:#fffefa;box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(40,30,10,.2)}
+.labann .lh,.labann .lf{display:flex;justify-content:space-between;gap:8px;font:600 10.5px/1.25 "IBM Plex Mono",ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase}
+.labann .lh{padding:7px 10px;background:#27313c;color:#e8eef3;border-bottom:1px solid #06090d}
+.labann .lh span:last-child{color:#ffd27a}
+.labann .lr{display:grid;grid-template-columns:46px minmax(0,1fr) 16px;gap:10px;align-items:start;width:100%;padding:11px 10px;text-align:left;background:none;border:0;border-bottom:1px solid #cfc6ad;border-radius:0;cursor:pointer;font:inherit;color:#27313c}
+.labann .lr:hover,.labann .lr:focus-visible{background:#f3efe2;outline:2px solid #0b5a66;outline-offset:-2px}
+.labann .lc{font:700 14px/1 "IBM Plex Mono",ui-monospace,Menlo,monospace;color:#0b5a66;border:1px solid #0b5a66;background:#e3efe9;border-radius:2px;padding:6px 0;text-align:center}
+.labann .ln{display:block;font:700 16px/1.2 var(--body);color:#1d2732}
+.labann .lt{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.labann .lt i{font:500 11px/1.1 "IBM Plex Mono",ui-monospace,Menlo,monospace;font-style:normal;padding:3px 6px;border:1px solid #b9ae93;border-radius:2px;background:#fffdf7;color:#3b4652}
+.labann .lt i.d3{background:#27313c;border-color:#27313c;color:#ffd27a}
+.labann .la{font:700 15px/1 var(--body);color:#0b5a66;align-self:center}
+.labann .lf{padding:7px 10px;border-top:1px solid #27313c;background:#f3efe2;color:#5b6672;letter-spacing:.04em;text-transform:none;font-weight:500}
+@media (max-width:480px){.labann .lr{grid-template-columns:40px minmax(0,1fr) 12px;gap:8px;padding:9px 8px}.labann .lc{font-size:12px;padding:5px 0}.labann .ln{font-size:15px}.labann .lt{gap:3px;margin-top:5px}.labann .lt i{font-size:10px;padding:2px 5px}.labann .lh{font-size:9.5px;letter-spacing:.08em}}
 .nart{display:block;width:100%;height:auto;margin:12px 0 2px;border-radius:12px}
 .sgo{display:flex;flex-direction:column;gap:12px;padding-top:20px}.sgoTag{align-self:flex-start;font:700 12px/1 var(--display);letter-spacing:.08em;font-style:normal;background:#C8102E;color:#fff;padding:6px 10px;border-radius:4px}.sgo .nimg{margin:0}#simGo .btn{width:100%;padding:12px 16px;font-size:16px}
 .nimg{display:block;width:100%;height:auto;margin:12px 0 2px;border-radius:12px;background:#0b1620}
@@ -1861,6 +1875,9 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
+  {id:"2026-11-12", items:[
+    {big:true, xl:true, i:"🛩️", t:"Láminas 2D y modelos 3D para estudiar", d:"Mueve los controles y mira qué pasa: los conceptos más difíciles de Principios de vuelo, AGK y Meteorología se entienden jugando con ellos.", art:`<div class="labann"><div class="lh"><span>Láminas interactivas</span><span>12 × 2D · 2 × 3D</span></div><button class="lr" type="button" data-go="081"><span class="lc">081</span><span><b class="ln">Principles of Flight</b><span class="lt"><i>Túnel de viento</i><i>Estabilidad longitudinal</i><i>Fuerzas en viraje</i><i>Polar y mejor planeo</i><i class="d3">3D · Ejes y mandos</i></span></span><span class="la" aria-hidden="true">→</span></button><button class="lr" type="button" data-go="021"><span class="lc">021</span><span><b class="ln">AGK</b><span class="lt"><i>Los cuatro tiempos</i><i>Altímetro y reglaje</i><i>Pitot-estática y obstrucciones</i><i>Paso fijo y velocidad constante</i><i class="d3">3D · Giróscopo</i><i class="d3">3D · Ejes y mandos</i></span></span><span class="la" aria-hidden="true">→</span></button><button class="lr" type="button" data-go="050"><span class="lc">050</span><span><b class="ln">Meteorología</b><span class="lt"><i>Frentes en corte</i><i>Nubes y nivel de condensación</i><i>Viento geostrófico y de gradiente</i><i>Viento, rumbo y deriva</i><i>Altímetro y reglaje</i></span></span><span class="la" aria-hidden="true">→</span></button><div class="lf">Toca una asignatura: cada lámina está dentro del tema que explica</div></div>`}
+  ]},
   {id:"2026-11-11", items:[
     {big:true, xl:true, sim:1, i:"🎮", t:"Sim más real: 7 juegos de vuelo", d:"Modelo de vuelo nuevo con viento, rachas y efecto suelo, panel de seis instrumentos y vuelo de día, al atardecer o de noche. Juegos nuevos: circuito de tráfico, fallo de motor y aproximación ILS entre nubes, además de rodaje, despegue, aterrizaje y vectores. Pedales manuales opcionales y, en iPad, control inclinando el aparato.", go:"sim", cta:"Probar el Sim", need:"F0Sim", art:`<img class="nimg" src="sim-collage.webp" width="1572" height="662" alt="Pantallazos de los juegos del Sim: despegue, aterrizaje, circuito, vectores, fallo de motor e ILS" loading="lazy">`},
     {i:"⚡", t:"AGK 021.09 Sistema eléctrico: apuntes de clase y 29 preguntas nuevas"}
@@ -1974,13 +1991,13 @@ function newsSeen(){ try{ return localStorage.getItem("f0:news")||""; }catch(e){
 function newsMark(){ try{ localStorage.setItem("f0:news", NEWS.reduce((m,n)=>n.id>m?n.id:m,"")); }catch(e){} }
 function showNews(){
   const seen=newsSeen(); if(seen==="~"||!$("#news").hidden||simGoOn()) return;
-  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>(!x.web||sb)&&(!x.need||window[x.need])&&!(x.sim&&simGoDone()));
+  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>(!x.web||sb)&&(!x.need||window[x.need])&&!(x.sim&&simGoDone())).map(x=>x.sim&&Date.now()>=SIMGO_END?{...x,big:false}:x);   // pasada la promo, el Sim queda como una línea más y las láminas van arriba
   if(!items.length){ if(NEWS.some(n=>n.id>seen) && !sb) newsMark(); return; }
   if(!$("#devNote").hidden||!$("#login").hidden||!$("#nameAsk").hidden||!$("#pwReset").hidden) return;
   items.sort((a,b)=>(b.big?1:0)-(a.big?1:0));
   $("#nwList").innerHTML=items.map(x=>x.big?`<li class="big${x.xl?" xl":""}"><span class="ni" aria-hidden="true">${x.i}</span><div><em>NUEVO</em><b>${esc(x.t)}</b>${x.d?`<span class="t">${esc(x.d)}</span>`:""}${x.art||""}${x.go&&(x.go!=="ops"||window.F0Ops)?`<button class="btn go" type="button" data-go="${x.go}">${x.cta?esc(x.cta):"Abrir "+(x.go==="ops"?"OPS":"ya")} →</button>`:""}</div></li>`:`<li><span class="ni" aria-hidden="true">${x.i}</span><div><b>${esc(x.t)}</b></div></li>`).join("");
   $("#nwList").querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{ closeNews(); show(b.dataset.go); window.scrollTo(0,0); }));
-  $("#news").hidden=false; $("#nwOk").focus();
+  $("#news").hidden=false; $("#nwOk").focus({preventScroll:true}); const nb=$("#news .box"); if(nb) nb.scrollTop=0;
 }
 function closeNews(){ newsMark(); $("#news").hidden=true; }
 $("#nwOk").addEventListener("click",closeNews);
@@ -1991,14 +2008,16 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#news").hidden
 const SIMGO_END=new Date(2026,10,13).getTime(), SIMGO_KEY="f0:simgo1";
 function simGoDone(){ try{ return !!localStorage.getItem(SIMGO_KEY); }catch(e){ return true; } }
 function simGoOn(){ return Date.now()<SIMGO_END && !simGoDone() && !!window.F0Sim; }
+function simGoExpire(){ clearInterval(simGoT); simGoT=null; try{ $("#simGo").hidden=true; }catch(e){} setTimeout(showNews,300); }   // al caducar la promo (aunque la web siga abierta) el aviso se retira y sale el pop-up de novedades
 function simGoTry(){
+  if(Date.now()>=SIMGO_END&&simGoT){ simGoExpire(); return; }
   if(!simGoOn()){ if(Date.now()>=SIMGO_END||simGoDone()) clearInterval(simGoT); return; }
   if(!$("#simGo").hidden) return;
   if(["#devNote","#login","#nameAsk","#pwReset","#news","#sugBox"].some(q=>{ const e=$(q); return e&&!e.hidden; })||$("#msOv")) return;
   $("#simGo").hidden=false; $("#sgoGo").focus();
 }
 let simGoT=null;
-function simGoStart(){ if(simGoT||Date.now()>=SIMGO_END||simGoDone()) return; simGoT=setInterval(simGoTry,1500); setTimeout(simGoTry,800); }
+function simGoStart(){ if(simGoT||Date.now()>=SIMGO_END||simGoDone()) return; simGoT=setInterval(simGoTry,1500); setTimeout(simGoTry,800); const left=SIMGO_END-Date.now(); if(left>0&&left<2147e6) setTimeout(()=>{ if(simGoT) simGoExpire(); },left+400); }
 $("#sgoGo").addEventListener("click",()=>{
   try{ localStorage.setItem(SIMGO_KEY,"1"); }catch(e){}
   clearInterval(simGoT); $("#simGo").hidden=true; show("sim"); window.scrollTo(0,0);
