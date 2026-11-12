@@ -4589,7 +4589,9 @@ const isPracId = id => PRAC_IDS.has(id) || /^(pf|nx|sx|cq|kx)/.test(id) || !!GEN
 const isPrac = q => isPracId(q[0]);
 const isHardPrac = q => /^(pf|nx|sx|cq|ap|ie|nd)/.test(q[0]) || /^(v1[2-5]|tr1[147]|u1[0-2])$/.test(q[0]);
 const STYLE_SHARE = {"061":0.5, "062":0.5};   // mitad ejercicios, mitad teoría
-const __t25=(a,st)=>{ const k=q=>{ const r=((st&&st.q)||{})[q[0]]; return (!r||r.last===false)?0:1; }; return shuffle(shuffle(a).sort((x,y)=>k(x)-k(y)).slice(0,25)); };   // trial: 25 por test; primero las no vistas y las falladas
+const __t25=(a,st)=>{   // trial: 25 por test. Orden: no vistas → falladas (salvo las del test anterior) → acertadas, de la más antigua a la más reciente. Una sola variante por pregunta.
+  const age=window.__rotAge||(()=>99), base=id=>String(id).replace(/(\d)[a-z]$/,"$1"), k=q=>{ const r=((st&&st.q)||{})[q[0]], g=age(q[0]); if(!r) return 0; if(r.last===false) return g<=1?2:1; return g<=2?5:(g<=4?4:3); };
+  const seen=new Set(), out=[]; for(const q of shuffle(a).sort((x,y)=>k(x)-k(y))){ const b=base(q[0]); if(seen.has(b)) continue; seen.add(b); out.push(q); if(out.length>=25) break; } return shuffle(out); };
 function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senEx").value, $("#senLen").value, inc, atpl);
   const st = stats();
@@ -5776,6 +5778,20 @@ body .wrap .prof>b:first-child,body .wrap .flag>b:first-child,body .wrap .comp>b
 body .wrap .prof>b:first-child{color:var(--ok,#1c7a45)}
 @media (max-width:640px){body .wrap{margin:0;border-radius:0;padding:16px 14px 40px;box-shadow:none}body .wrap details.lo .body{font-size:16.5px}}
 </style>
+<script>/* Rotación de preguntas: lo servido en los últimos tests pierde prioridad, para que trial y adaptativo no repitan siempre las mismas.
+   La antigüedad sale del propio historial de tests (se sincroniza con la cuenta), no de un contador aparte. */
+(function(){
+  try{
+    let key="", map=new Map();
+    const atts=()=>{ let a=[]; try{ if(typeof countedAttempts==="function") a=countedAttempts(); else if(typeof included==="function") a=included(); }catch(e){} return Array.isArray(a)?a:[]; };
+    const build=()=>{ const a=atts().filter(x=>x&&x.items&&x.items.length).slice().sort((x,y)=>new Date(x.date)-new Date(y.date)), k=a.length+"|"+(a.length?a[a.length-1].date:"");
+      if(k===key) return; key=k; map=new Map(); const last=a.slice(-6); last.forEach((at,i)=>{ const ago=last.length-i; at.items.forEach(it=>{ if(it&&it.q!=null) map.set(String(it.q),ago); }); }); };
+    window.__rotAge=id=>{ build(); return map.get(String(id))||99; };
+    if(typeof priority==="function"){ const P=priority;
+      priority=function(q,st){ let p=P(q,st); try{ const g=window.__rotAge(q[0]); if(g<=3){ const s=st&&st.q&&st.q[q[0]], failed=s&&s.last===false; p*=failed?[1,.7,.9,1][g]:[1,.25,.5,.75][g]; } }catch(e){} return p; }; }
+  }catch(e){ try{ console.error("rot",e); }catch(_){} }
+})();
+</script>
 </body>
 </html>
 

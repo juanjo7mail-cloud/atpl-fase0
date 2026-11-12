@@ -3989,6 +3989,20 @@ body .wrap .prof>b:first-child,body .wrap .flag>b:first-child,body .wrap .comp>b
 body .wrap .prof>b:first-child{color:var(--ok,#1c7a45)}
 @media (max-width:640px){body .wrap{margin:0;border-radius:0;padding:16px 14px 40px;box-shadow:none}body .wrap details.lo .body{font-size:16.5px}}
 </style>
+<script>/* Rotación de preguntas: lo servido en los últimos tests pierde prioridad, para que trial y adaptativo no repitan siempre las mismas.
+   La antigüedad sale del propio historial de tests (se sincroniza con la cuenta), no de un contador aparte. */
+(function(){
+  try{
+    let key="", map=new Map();
+    const atts=()=>{ let a=[]; try{ if(typeof countedAttempts==="function") a=countedAttempts(); else if(typeof included==="function") a=included(); }catch(e){} return Array.isArray(a)?a:[]; };
+    const build=()=>{ const a=atts().filter(x=>x&&x.items&&x.items.length).slice().sort((x,y)=>new Date(x.date)-new Date(y.date)), k=a.length+"|"+(a.length?a[a.length-1].date:"");
+      if(k===key) return; key=k; map=new Map(); const last=a.slice(-6); last.forEach((at,i)=>{ const ago=last.length-i; at.items.forEach(it=>{ if(it&&it.q!=null) map.set(String(it.q),ago); }); }); };
+    window.__rotAge=id=>{ build(); return map.get(String(id))||99; };
+    if(typeof priority==="function"){ const P=priority;
+      priority=function(q,st){ let p=P(q,st); try{ const g=window.__rotAge(q[0]); if(g<=3){ const s=st&&st.q&&st.q[q[0]], failed=s&&s.last===false; p*=failed?[1,.7,.9,1][g]:[1,.25,.5,.75][g]; } }catch(e){} return p; }; }
+  }catch(e){ try{ console.error("rot",e); }catch(_){} }
+})();
+</script>
 </body>
 </html>
 
