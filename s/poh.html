@@ -2659,4 +2659,53 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ console.error("multi",e); }
 })();
 </script>
+<script>/* Pestaña Test: sin subtítulos bajo cada modalidad + tarjetas compactas y centradas.
+   - Los textos explicativos (<small>) desaparecen de la vista; el contenido se conserva como tooltip (title) de la tarjeta.
+   - Los controles (desplegables, opciones de voz/ATIS, panel Multitema) se mantienen.
+   - Cubre también los textos que escriben los scripts después (nº de fallos, preguntas del trial, banco completo). */
+(function(){
+  try{
+    if(document.getElementById("f0-modes-css")) return;
+    const st=document.createElement("style"); st.id="f0-modes-css";
+    st.textContent=
+'#test #setup label.mode>small:not(:has(select,.row,.opts,details,input,button,textarea)){display:none!important}'+
+'#test #setup label.mode>small[hidden]{display:none!important}'+
+'#test #setup label.mode{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:10px;row-gap:0;padding:12px 14px;margin:6px 0;min-height:50px;line-height:1.3;text-align:left}'+
+'#test #setup label.mode>input[type=radio]{margin:0;grid-column:1;align-self:center}'+
+'#test #setup label.mode>small,#test #setup label.mode>span{grid-column:2;margin:10px 0 0!important;min-width:0}'+
+'#test #setup label.mode>small:has(select,.row,.opts,details){margin-top:10px!important}'+
+'#test #setup label.mode .row,#test #setup label.mode .opts{margin:8px 0 0!important}'+
+'#test #setup label.mode>small>select,#test #setup label.mode>span select{margin-top:0}'+
+'@media (max-width:560px){#test #setup label.mode{padding:12px;column-gap:9px}}';
+    document.head.appendChild(st);
+
+    const SKIP="select,input,button,textarea,details,.row,.opts";
+    function strip(sm,tips){
+      [...sm.childNodes].forEach(n=>{
+        if(n.nodeType===3){ const t=n.textContent.replace(/\s+/g," ").trim(); if(t){ tips.push(t); n.remove(); } }
+        else if(n.nodeType===1 && /^(SPAN|B|I|EM|STRONG|BR)$/.test(n.tagName) && !n.matches(SKIP) && !n.querySelector(SKIP)){
+          const t=n.textContent.replace(/\s+/g," ").trim(); if(t) tips.push(t); n.remove();
+        }
+      });
+    }
+    function clean(){
+      const s=document.getElementById("setup"); if(!s) return;
+      s.querySelectorAll("label.mode").forEach(l=>{
+        const tips=[];
+        l.querySelectorAll(":scope>small").forEach(sm=>{
+          strip(sm,tips);
+          if(!sm.children.length && !sm.textContent.trim()) sm.hidden=true;
+        });
+        if(tips.length){ const t=tips.join(" · "); if(l.title!==t) l.title=t; }
+      });
+    }
+    let q=0; const sched=()=>{ if(q) return; q=requestAnimationFrame(()=>{ q=0; clean(); }); };
+    clean();
+    const s0=document.getElementById("setup")||document.body;
+    new MutationObserver(m=>{ if(m.some(x=>{const t=x.target.nodeType===3?x.target.parentElement:x.target; return t&&t.closest&&t.closest("#setup label.mode, #setup");})) sched(); })
+      .observe(document.body,{childList:true,subtree:true,characterData:true});
+    window.__f0CleanModes=clean;
+  }catch(e){ console.error("modes",e); }
+})();
+</script>
 </body></html>
