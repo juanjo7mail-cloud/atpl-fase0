@@ -5766,7 +5766,8 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     const dd=()=>{ if(typeof F0DEDUP==="function") return F0DEDUP; return window.__famGuard||null; };
     const prio=(items)=>{ let st=null; try{ st=stats(); }catch(e){}
       const rank=it=>{ const id=idOf(it); const r=st&&st.q?st.q[id]:null; return r? (r.last===false?0:1) : 0.5; };
-      return items.map(it=>({it,r:rank(it)+Math.random()*0.45})).sort((a,b)=>a.r-b.r).map(x=>x.it); };
+      const key=it=>{ try{ const q=Array.isArray(it)?it:(it&&it.q); return (typeof isExam==="function"&&Array.isArray(q)&&isExam(q))?-0.7:0; }catch(e){ return 0; } };   // las clave de clase van delante dentro de su tema
+      return items.map(it=>({it,r:rank(it)+key(it)+Math.random()*0.45})).sort((a,b)=>a.r-b.r).map(x=>x.it); };
     const accept=(picked,cand)=>{ const g=window.__famGuard; if(typeof g!=="function") return !picked.some(p=>idOf(p)===idOf(cand));
       let r; try{ r=g(picked.concat([cand]),"multi"); }catch(e){ return true; }
       return Array.isArray(r) && r.length===picked.length+1 && r[r.length-1]===cand && picked.every((p,i)=>r[i]===p); };
