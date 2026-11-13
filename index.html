@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="de3f8752d448";</script>
+<script>window.F0_BUILD="a26e5727259b";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -234,8 +234,9 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .fd .ttl{font:700 23px/1.05 var(--display);letter-spacing:.04em;text-transform:uppercase}
 .fd .sub{font:500 11.5px/1.3 var(--body);color:#5b6672;min-height:2.6em}
 .fd svg.spk{display:block;width:100%;height:50px;background:linear-gradient(rgba(60,110,160,.14) 1px,transparent 1px) 0 0/100% 10px,linear-gradient(90deg,rgba(60,110,160,.14) 1px,transparent 1px) 0 0/10px 100%}
-.fd .st3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font:500 11px/1.25 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#5b6672;border-top:1px dotted #9aa3ad;padding-top:6px;margin-top:auto}
+.fd .st3{display:grid;grid-template-columns:repeat(4,minmax(0,auto));justify-content:space-between;gap:6px;white-space:nowrap;font:500 11px/1.25 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#5b6672;border-top:1px dotted #9aa3ad;padding-top:6px;margin-top:auto}
 .fd .st3 b{display:block;font-size:15px;font-weight:600;color:#27313c;font-variant-numeric:tabular-nums}
+@media (max-width:400px){.fd .st3{font-size:10px;gap:4px}.fd .st3 b{font-size:14px}}
 .fd .front{position:absolute;left:0;right:0;bottom:0;height:46px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(0,0,0,.06)),color-mix(in srgb,var(--c) 34%,#d2ae72);box-shadow:0 -1px 0 rgba(255,255,255,.35) inset,0 -2px 5px rgba(0,0,0,.18);overflow:hidden}
 .fd .front::before{content:"";position:absolute;inset:0;background:var(--grain);opacity:.4;mix-blend-mode:multiply}
 .fd .front span{position:absolute;left:16px;right:16px;bottom:15px;font:600 11px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:rgba(40,26,8,.62);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -429,7 +430,8 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 @media (prefers-reduced-motion:reduce){.rbf{animation:none;transform:rotate(-3deg)}#lgForm.pulled .rbf{animation:none}}
 /* ---- pista de aeropuerto en la cabecera ---- */
 .top .art{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block}
-.top .veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(8,18,32,.8) 0,rgba(8,18,32,.4) 280px,rgba(8,18,32,.06) 46%,rgba(8,18,32,.06) 60%,rgba(8,18,32,.5) 100%),linear-gradient(180deg,transparent 0 var(--r1,48px),color-mix(in srgb,var(--head) 92%,transparent) calc(var(--r1,48px) + 2px))}
+.top .veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(8,18,32,.8) 0,rgba(8,18,32,.4) min(280px,30%),rgba(8,18,32,.06) 46%,rgba(8,18,32,.06) 60%,rgba(8,18,32,.5) 100%),linear-gradient(180deg,transparent 0 var(--r1,48px),color-mix(in srgb,var(--head) 92%,transparent) calc(var(--r1,48px) + 2px))}
+@media (max-width:640px){.top .veil{background:linear-gradient(90deg,rgba(8,18,32,.78) 0,rgba(8,18,32,.58) 50%,rgba(8,18,32,.7) 100%),linear-gradient(180deg,transparent 0 var(--r1,48px),color-mix(in srgb,var(--head) 92%,transparent) calc(var(--r1,48px) + 2px))}}
 .art .rw{position:absolute;left:0;right:0;top:5px;height:36px;background:linear-gradient(#3A556B,#27415A);border-top:1.6px solid rgba(255,255,255,.5);border-bottom:1.6px solid rgba(255,255,255,.5)}
 .art .edge{position:absolute;left:0;right:0;height:8px;background:radial-gradient(circle,#FFE08A 1.9px,transparent 2.5px) 10px 50%/38px 8px repeat-x;animation:twk 3.4s ease-in-out infinite}
 .art .e1{top:-11px}.art .e2{bottom:-11px;animation-delay:-1.7s}
@@ -856,9 +858,10 @@ function attemptsOf(k){
 function summary(k){
   const at=attemptsOf(k), last5=at.slice(-5);
   const avg5 = last5.length ? Math.round(last5.reduce((s,a)=>s+a.pct,0)/last5.length) : null;
+  const avgAll = at.length ? Math.round(at.reduce((s,a)=>s+a.pct,0)/at.length) : null;   // media histórica: todos los tests hechos
   let lvl="none", label="Sin empezar";
   if(at.length){ if(avg5>=85 && at.length>=3){lvl="ok";label="Preparado";} else if(avg5>=75){lvl="mid";label="Casi listo";} else {lvl="low";label="Reforzar";} }
-  return {n:at.length, last: at.length?at[at.length-1].pct:null, avg5, lvl, label, series: at.slice(-14).map(a=>a.pct)};
+  return {n:at.length, last: at.length?at[at.length-1].pct:null, avg5, avgAll, lvl, label, series: at.slice(-14).map(a=>a.pct)};
 }
 function fspark(m){   // últimos tests sobre papel milimetrado, con la línea de aprobado al 75 %
   const h=(m.series||[]).slice(-12), W=240, H=50, y=v=>H-4-(Math.max(40,v)-40)/60*(H-10), l75=`<line x1="0" x2="${W}" y1="${y(75)}" y2="${y(75)}" stroke="#b3202f" stroke-width="1" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"/>`;
@@ -1082,7 +1085,7 @@ function renderDash(){
       <div class="fd"><div class="back"></div><div class="ftab">${s.code}</div><i class="clip"></i>
         <div class="fsh"><div class="hd">ATPL(A) · Ficha de estudio</div><div class="ttl">${esc(s.short)}</div><div class="sub">${s.name!==s.short?esc(s.name):""}</div>
           ${fspark(m)}
-          <div class="st3">${m.n?`<span>Último<b>${m.last} %</b></span><span>Media 5<b>${m.avg5} %</b></span><span>Tests<b>${m.n}</b></span>`:`<span style="grid-column:1/-1">Aún no has hecho ningún test</span>`}</div></div>
+          <div class="st3">${m.n?`<span>Último<b>${m.last} %</b></span><span>Media 5<b>${m.avg5} %</b></span><span title="Media de todos los tests hechos (${m.n})">Media total<b>${m.avgAll} %</b></span><span>Tests<b>${m.n}</b></span>`:`<span style="grid-column:1/-1">Aún no has hecho ningún test</span>`}</div></div>
         <span class="ink ${m.lvl}">${m.label}</span><div class="front"><span>${esc(s.short)}</span></div></div>
       <div class="acts">
         <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo · ${s.k==="010"?20:25}</button>
