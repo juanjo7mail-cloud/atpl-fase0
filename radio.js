@@ -12,7 +12,7 @@ const FREQS=[
 ];
 const ROLES={atc:"ATC", pil:"Piloto", ear:"Solo escucho"};
 const ICON={atc:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 33h24M14 33V22l6-9 6 9v11"/><path d="M20 13V6M15 9c1.5-2 3-3 5-3s3.500 1 5 3"/><circle cx="20" cy="26" r="2"/></svg>',pil:'<svg viewBox="0 0 40 40" fill="currentColor" aria-hidden="true"><g transform="rotate(-45 20 20) translate(2 2) scale(1.8)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z"/></g></svg>',ear:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M7 24v-4a13 13 0 0 1 26 0v4"/><rect x="5" y="23" width="7" height="11" rx="3" fill="currentColor"/><rect x="28" y="23" width="7" height="11" rx="3" fill="currentColor"/></svg>'};
-const ROLE_SUB={atc:"profesor · torre",pil:"alumno · avión",ear:"solo oyes"};
+const ROLE_SUB={atc:"instructor · torre",pil:"alumno · avión",ear:"solo oyes"};
 const CHUNK=1280;                 // bytes por trozo = 160 ms a 8 kHz
 const LS=k=>"f0:radio:"+k;
 const get=(k,d)=>{ try{ return localStorage.getItem(LS(k))||d; }catch(e){ return d; } };

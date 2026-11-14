@@ -310,9 +310,9 @@ function intro(){
   panel.innerHTML=`${bar()}
    <div class="tagrow"><span class="aog">AOG · AIRCRAFT ON GROUND</span><span class="mono">Tecnam P2006T · EC-ATP · WO-0075 · Hangar 3</span></div>
    <h3 id="fh-lt">La web está en el hangar</h3>
-   <p>Revisión previa a los exámenes de Fase 0. Se ha abierto el capó, se han levantado los gatos y hay dos mecánicos dentro del motor. Nadie despega hasta que el ingeniero firme el certificado de puesta en servicio (CRS).</p>
+   <p>Revisión previa a los exámenes. Se ha abierto el capó, se han levantado los gatos y hay dos mecánicos dentro del motor. Nadie despega hasta que el ingeniero firme el certificado de puesta en servicio (CRS).</p>
    <div class="wo">
-    <div><b>Defecto reportado</b><span>Exámenes Fase 0 · 17 y 19 de noviembre</span></div>
+    <div><b>Defecto reportado</b><span>Exámenes · 17 y 19 de noviembre</span></div>
     <div><b>Acción correctiva</b><span>9 preguntas, una por asignatura</span></div>
     <div><b>Para firmar el CRS</b><span>${NEED} de ${TOTAL} correctas (75 %)</span></div>
    </div>

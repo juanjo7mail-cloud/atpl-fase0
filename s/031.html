@@ -37,6 +37,7 @@ fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await 
 .pfvnote{margin:10px 0;padding:9px 12px;border-radius:8px;border:1.5px dashed var(--line);background:var(--paper);font-size:15px}
 .pfvnote b{font-family:"Barlow Condensed",Barlow,sans-serif;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-right:6px}
 </style>
+<style id="f16css">.f16t ul{margin:4px 0 0;padding-left:18px}.f16t li{margin:4px 0}.f16q{background:color-mix(in srgb,#2f6fb0 9%,transparent);border-left:3px solid #2f6fb0;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.f16q b:first-child{display:block;margin-bottom:2px}</style>
 <style id="f0-pub">details.lo>summary{cursor:pointer}:root{--magenta:#0E7C86;--accent:#0E7C86;--compbg:#E3F1F1;--f0none:#B9C7D2}@media (max-width:0px){:root:not([data-theme="light"]){--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}}:root[data-theme="dark"]{--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}.seg.atpl{background:var(--f0none)!important}mark.f0hit{background:#FFE58A;color:#14304A;border-radius:2px;padding:0 1px}mark.f0hit.first{outline:2px solid #0E7C86;outline-offset:1px}</style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -404,6 +405,8 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <h4>Mueve el CG</h4>
   <div id="visFwd"></div>
   <div class="comp"><b>Complemento</b>El CG va hacia donde va la masa: si una pata de tren se recoge hacia delante, al bajarla el CG se retrasa un poco (el caso típico del A320).</div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>CG <b>adelantado</b>: más estable, más fuerza en el mando, <b>mayor</b> velocidad de pérdida y más consumo. CG <b>retrasado</b>: menos estable, mandos ligeros, menor velocidad de pérdida y mejor alcance.</li><li>El límite delantero lo fija la <b>controlabilidad</b> (poder rotar y hacer la recogida); el trasero, la <b>estabilidad</b>.</li></ul></div>
+<div class="f16q f16t"><b>Duda frecuente · ¿Por qué con el CG delante sube la velocidad de pérdida?</b>Porque la cola tiene que empujar más hacia abajo para equilibrar, y el ala debe sustentar el peso <b>más</b> esa carga: es como si el avión pesara más.</div>
 </div>
 </details>
 
@@ -449,6 +452,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <tr><td>Por performance</td><td>Despegue y aterrizaje: pista, altitud, temperatura, viento. Puede ser menor que la estructural</td></tr>
   </table></div>
   <div class="comp"><b>ATPL</b>Las bodegas tienen sus propios límites: <b>carga por superficie</b> (kg/m²), <b>carga lineal</b> (kg/m) y masa máxima por compartimento.</div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li><b>MZFM</b>: masa máxima sin combustible utilizable. Por encima de ella solo se puede añadir combustible.</li><li><b>MTOM</b> es al soltar frenos; <b>MTM</b> (taxi o rampa) incluye el combustible de rodaje.</li><li>La carga de pago admisible es la <b>menor</b> de las tres que salen de MZFM, MTOM y MLM.</li></ul></div>
 </div>
 </details>
 
@@ -461,6 +465,8 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <li><b>Masas estándar</b> (Part-CAT): tripulante de vuelo <b>85 kg</b> · TCP <b>75 kg</b> · niño (2–12 años) <b>35 kg</b>.</li>
     <li><b>Carga de pago máxima</b> = la menor de: MZFM − DOM · MTOM − (DOM + TOF) · MLM + trip − (DOM + TOF).</li>
   </ul></div>
+<div class="f0viz" data-viz="balance"></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li><b>DOM</b> = masa operativa en seco: avión + tripulación + catering + equipo, sin combustible utilizable ni carga de pago.</li><li><b>ZFM</b> = DOM + carga de pago. <b>TOM</b> = ZFM + combustible al despegue. <b>LM</b> = TOM − combustible del viaje.</li><li>La <b>carga útil</b> (useful load) incluye el combustible; la <b>carga de pago</b> (traffic load) no.</li></ul></div>
 </div>
 </details>
 
@@ -498,6 +504,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <li>Se pesa en <b>hangar cerrado</b>, nivelado, con básculas calibradas, una por cada pata. BEM = suma de lecturas · CG = Σ (lectura × brazo) ÷ BEM.</li>
     <li>Con masas individuales, el avión se <b>vuelve a pesar cada 4 años</b> (y tras modificaciones importantes).</li>
   </ul></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>El avión se pesa <b>nivelado</b>, en hangar cerrado, con los fluidos que diga el manual.</li><li>En operación comercial se pesa de nuevo cada <b>4 años</b> (9 años si se usan masas de flota).</li></ul></div>
 </div>
 </details>
 
@@ -507,6 +514,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <div class="body">
   <div class="key"><b>Clave</b>El BEM y su brazo vienen en la documentación de masa y centrado del avión. Warrior: <b>1531,09 lb · 88,51 in · 135.516,21 lb·in</b>.</div>
   <div class="comp"><b>ATPL</b>Si el avión no está en su configuración estándar (equipo añadido o quitado), se corrige el DOM y su momento antes de cargar.</div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>La <b>BEM</b> y su CG salen del último informe de pesada del avión concreto, no del manual genérico.</li><li>Momento = masa × brazo; a menudo se da como <b>índice</b> (momento dividido por una constante) para manejar números pequeños.</li></ul></div>
 </div>
 </details>
 
@@ -521,6 +529,8 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   </ul></div>
   <div class="key"><b>Clave</b>Método <b>aritmético</b>: tabla masa × brazo = momento, totales, y CG = Σ momentos ÷ Σ masas. Método <b>gráfico</b>: el punto en la envolvente.</div>
   <div class="comp"><b>ATPL · índice</b><b>Index method</b>: índice = (brazo − brazo de referencia) × masa ÷ constante. Convierte momentos enormes en números pequeños, fáciles de sumar en la trim sheet.</div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>CG = <b>momento total ÷ masa total</b>. Los brazos por delante del datum son negativos.</li><li>Para pasar a porcentaje: <b>% MAC = (CG − LEMAC) ÷ MAC × 100</b>.</li></ul></div>
+<div class="f16q f16t"><b>Duda frecuente · ¿Cuánta masa tengo que mover para corregir el CG?</b><b>masa a mover ÷ masa total = cambio de CG ÷ distancia que se mueve la masa</b>. La masa total no cambia.</div>
 </div>
 </details>
 
@@ -528,7 +538,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <details class="lo" id="lo-031.05.02" data-lo="031.05.02">
 <summary><span class="lonum">031.05.02</span><span class="lotitle">Load and trim sheet</span></summary>
 <div class="body">
-<!--f0pre--><div class="pfvnote"><b>En el vuelo real</b>Esta hoja es solo una parte de la carpeta del vuelo: en la escuela va junto con el plan de vuelo, la meteo y las cartas. Los apuntes de SOP, apartado «Antes del vuelo», lo explican (no se pregunta).</div>
+<!--f0pre--><div class="pfvnote"><b>En el vuelo real</b>Esta hoja es solo una parte de la carpeta del vuelo: en la práctica va junto con el plan de vuelo, la meteo y las cartas. Los apuntes de SOP, apartado «Antes del vuelo», lo explican (no se pregunta).</div>
   <div class="profe"><b>★ IMPORTANTE</b><ul>
     <li>La <b>hoja de masa y centrado</b> en sí <b>no se pregunta</b>; los <b>cálculos</b> sí: momentos, CG, cargar, mover.</li>
     <li>En la envolvente, el <b>límite delantero se inclina</b> a pesos altos: si el avión pesa mucho y el CG está muy adelante, el <b>timón de profundidad</b> (elevator) no tiene fuerza para compensarlo.</li>
@@ -547,6 +557,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <li><b>Load sheet</b> (aviones grandes): las <b>masas</b> (DOM, carga de pago, combustible, ZFM, TOM, LM) frente a sus máximos. <b>Trim sheet</b>: el <b>centrado</b> (CG o índice) y el reglaje del estabilizador.</li>
     <li><b>LMC</b> (last-minute change): cambio pequeño de carga después de emitir la hoja, dentro de un margen que fija el operador.</li>
   </ul></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>En la hoja de carga se comprueba el CG al menos con la <b>ZFM</b> y con la <b>TOM</b>; el combustible que se quema mueve el CG durante el vuelo.</li><li>Los <b>cambios de última hora</b> (LMC) tienen un máximo admitido; si se supera, hay que rehacer la hoja.</li></ul></div>
 </div>
 </details>
 
@@ -579,17 +590,20 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 
 <details class="lo atpl" id="lo-031.06.01" data-lo="031.06.01">
 <summary><span class="lonum">031.06.01</span><span class="lotitle">Types of cargo</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Carga general, a granel, en contenedores (ULD) y especial: animales vivos, perecederos, valores, mercancías peligrosas.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Carga general, a granel, en contenedores (ULD) y especial: animales vivos, perecederos, valores, mercancías peligrosas.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Carga <b>a granel</b>, en <b>palés</b> o en <b>contenedores</b> (ULD); las mercancías peligrosas van declaradas y segregadas.</li><li>La carga debe quedar repartida para respetar los límites de cada compartimento, además del CG.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-031.06.02" data-lo="031.06.02">
 <summary><span class="lonum">031.06.02</span><span class="lotitle">Floor-area load and running-load limitations</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b><b>Floor-area load</b> = masa ÷ superficie de apoyo (<b>kg/m²</b>). <b>Running load</b> = masa ÷ longitud a lo largo del fuselaje (<b>kg/m</b>). Si se pasa, se reparte la carga con un palé o una plancha más grande.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b><b>Floor-area load</b> = masa ÷ superficie de apoyo (<b>kg/m²</b>). <b>Running load</b> = masa ÷ longitud a lo largo del fuselaje (<b>kg/m</b>). Si se pasa, se reparte la carga con un palé o una plancha más grande.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Carga por superficie</b> (kg/m²) = masa ÷ área de apoyo. <b>Carga lineal</b> (kg/m) = masa ÷ longitud en el sentido del eje del avión.</li><li>Para cumplir se usa un <b>repartidor</b> (palé o tablón), cuya masa también cuenta.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-031.06.03" data-lo="031.06.03">
 <summary><span class="lonum">031.06.03</span><span class="lotitle">Securement of load</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>La carga se amarra para que no se mueva: si se desplaza, <b>cambia el CG</b> y puede dañar la estructura o bloquear salidas.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>La carga se amarra para que no se mueva: si se desplaza, <b>cambia el CG</b> y puede dañar la estructura o bloquear salidas.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>La carga se amarra para resistir fuerzas en <b>todas las direcciones</b>; la mayor exigencia es hacia delante.</li><li>Una carga que se desplaza cambia el CG en vuelo y puede dejarlo fuera de límites.</li></ul></div>
+</div>
 </details>
 <h2 class="subj">032 · Performance <span class="wtag">45 preg. · 2 h</span></h2>
 
@@ -600,7 +614,8 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <div class="body"><div class="comp"><b>ATPL</b><ul>
   <li><b>Clase A</b>: multimotores turbohélice de más de 9 asientos o más de 5700 kg, y <b>todos los reactores multimotor</b>. <b>Clase B</b>: hélice, <b>9 asientos o menos y 5700 kg o menos</b>. <b>Clase C</b>: pistón grandes.</li>
   <li><b>Gross</b>: la media de la flota en condiciones ideales. <b>Net</b> = gross menos un margen de seguridad (es la que se usa para obstáculos).</li>
-</ul></div></div>
+</ul></div><div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Clase A</b>: multimotores de turbina y turbohélices grandes. <b>Clase B</b>: hélice, 9 pasajeros o menos y 5 700 kg o menos. <b>Clase C</b>: pistón grandes.</li><li>Trayectoria <b>neta</b> = trayectoria bruta menos un margen reglamentario.</li></ul></div>
+</div>
 </details>
 
 <!-- ===== 032.01.02 ===== -->
@@ -631,17 +646,22 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <tr><th></th><th>Máximo alcance</th><th>Máxima autonomía</th></tr>
   <tr><td>Reactor</td><td><b>1,32 VMD</b></td><td><b>VMD</b> (mínima resistencia)</td></tr>
   <tr><td>Hélice</td><td><b>VMD</b> (mejor L/D)</td><td><b>VMP</b> (mínima potencia)</td></tr>
-</table></div>Viento de cara: vuela un poco <b>más rápido</b> para el máximo alcance. Más peso: velocidades óptimas más altas.</div></div>
+</table></div>Viento de cara: vuela un poco <b>más rápido</b> para el máximo alcance. Más peso: velocidades óptimas más altas.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Máxima <b>autonomía</b> (hélice): velocidad de mínima potencia. Máximo <b>alcance</b> (hélice): velocidad de mínima resistencia, la de mejor L/D.</li><li>En un reactor es al revés de lo que parece: autonomía máxima a mínima resistencia y alcance máximo a una velocidad mayor (1,32 × Vmd).</li><li>Con viento en cara conviene volar algo <b>más rápido</b> para el máximo alcance.</li></ul></div>
+</div>
 </details>
 
 <details class="lo" id="lo-032.01.04" data-lo="032.01.04">
 <summary><span class="lonum">032.01.04</span><span class="lotitle">Climbing</span></summary>
-<div class="body"><!--p2:032.01.04--><div class="profe"><b>★ IMPORTANTE</b><ul><li><span class="formula">sen γ = (T − D) ÷ W</span>: para subir hace falta T &gt; D.</li><li>Menos densidad (calor, altitud) → menos empuje → <b>menor</b> ángulo de ascenso. Avión más ligero → <b>mayor</b> ángulo.</li><li><b>Vx</b>: mayor ángulo (más altitud en menos distancia, para librar un obstáculo). <b>Vy</b>: mayor régimen (más altitud en menos tiempo, más ft/min). <b>Vy &gt; Vx</b>: para pasar de Vx a Vy se baja el morro.</li><li>Al subir, Vx y Vy se acercan y se igualan en el <b>techo absoluto</b>. En el ascenso el factor de carga es <b>menor que 1</b>.</li></ul></div><!--/p2:032.01.04--><div class="comp"><b>ATPL</b><b>Vx</b> = máximo ángulo · <b>Vy</b> = máximo régimen. Al subir se acercan y se igualan en el <b>techo absoluto</b>. Techo de servicio (pistón): <b>100 ft/min</b>. Viento de cara: más <b>gradiente sobre el suelo</b>, el régimen no cambia.</div></div>
+<div class="body"><!--p2:032.01.04--><div class="profe"><b>★ IMPORTANTE</b><ul><li><span class="formula">sen γ = (T − D) ÷ W</span>: para subir hace falta T &gt; D.</li><li>Menos densidad (calor, altitud) → menos empuje → <b>menor</b> ángulo de ascenso. Avión más ligero → <b>mayor</b> ángulo.</li><li><b>Vx</b>: mayor ángulo (más altitud en menos distancia, para librar un obstáculo). <b>Vy</b>: mayor régimen (más altitud en menos tiempo, más ft/min). <b>Vy &gt; Vx</b>: para pasar de Vx a Vy se baja el morro.</li><li>Al subir, Vx y Vy se acercan y se igualan en el <b>techo absoluto</b>. En el ascenso el factor de carga es <b>menor que 1</b>.</li></ul></div><!--/p2:032.01.04--><div class="comp"><b>ATPL</b><b>Vx</b> = máximo ángulo · <b>Vy</b> = máximo régimen. Al subir se acercan y se igualan en el <b>techo absoluto</b>. Techo de servicio (pistón): <b>100 ft/min</b>. Viento de cara: más <b>gradiente sobre el suelo</b>, el régimen no cambia.</div><div class="f0viz" data-viz="climb"></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Vx</b> = mejor <b>ángulo</b> (máximo exceso de empuje). <b>Vy</b> = mejor <b>régimen</b> (máximo exceso de potencia).</li><li>El viento cambia el <b>ángulo</b> respecto al suelo, pero <b>no el régimen</b> de ascenso.</li><li>Con la altitud Vx aumenta y Vy disminuye (en IAS): se juntan en el <b>techo absoluto</b>.</li></ul></div>
+<div class="f16q f16t"><b>Duda frecuente · Para librar un obstáculo, ¿Vx o Vy?</b><b>Vx</b>: ganas más altura por distancia recorrida. Vy te lleva antes a una altitud, pero habiendo recorrido más suelo.</div>
+</div>
 </details>
 
 <details class="lo" id="lo-032.01.05" data-lo="032.01.05">
 <summary><span class="lonum">032.01.05</span><span class="lotitle">Descending</span></summary>
-<div class="body"><!--p2:032.01.05--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Mismo L/D = mismo ángulo de planeo</b>. El avión más pesado vuela más rápido y tiene más régimen de descenso, pero recorre la misma distancia. Más L/D = menos ángulo = mejor planeo.</li><li>Para el máximo alcance en planeo, un avión pesado vuela a <b>mayor velocidad</b> (el mismo ángulo).</li></ul></div><div class="key"><b>Clave</b><span class="formula">distancia = altura × L/D</span>. Con L/D = 10 y 6000 ft: 1 de altura → 10 de distancia; 60 000 ft ÷ 6076 ≈ <b>9,9 NM</b> (≈ 10 NM).</div><!--/p2:032.01.05--><div class="comp"><b>ATPL</b>Máximo alcance en planeo con el ángulo de ataque de <b>mejor L/D</b>. El peso no cambia el alcance en aire en calma; el avión pesado planea <b>más rápido</b>.</div></div>
+<div class="body"><!--p2:032.01.05--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Mismo L/D = mismo ángulo de planeo</b>. El avión más pesado vuela más rápido y tiene más régimen de descenso, pero recorre la misma distancia. Más L/D = menos ángulo = mejor planeo.</li><li>Para el máximo alcance en planeo, un avión pesado vuela a <b>mayor velocidad</b> (el mismo ángulo).</li></ul></div><div class="key"><b>Clave</b><span class="formula">distancia = altura × L/D</span>. Con L/D = 10 y 6000 ft: 1 de altura → 10 de distancia; 60 000 ft ÷ 6076 ≈ <b>9,9 NM</b> (≈ 10 NM).</div><!--/p2:032.01.05--><div class="comp"><b>ATPL</b>Máximo alcance en planeo con el ángulo de ataque de <b>mejor L/D</b>. El peso no cambia el alcance en aire en calma; el avión pesado planea <b>más rápido</b>.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>El <b>ángulo de planeo</b> solo depende de L/D: el peso <b>no lo cambia</b>; un avión más pesado planea igual de lejos pero más rápido.</li><li>El viento sí cambia la distancia sobre el suelo: en cola se llega más lejos.</li><li>Mínimo régimen de descenso: a velocidad de mínima potencia, menor que la de mejor planeo.</li></ul></div>
+</div>
 </details>
 
 <h2>032.02 · Performance Class B: theory <span class="wtag">6 preg. · 13 %</span></h2>
@@ -661,19 +681,22 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <tr><td>Viento</td><td>no más del <b>50 %</b> de cara, no menos del <b>150 %</b> de cola</td></tr>
   <tr><td>Pendiente</td><td>+<b>5 %</b> por cada 1 % hacia arriba (despegue) o hacia abajo (aterrizaje)</td></tr>
   <tr><td>Hierba seca (despegue)</td><td>× <b>1,2</b></td></tr>
-</table></div>Pendiente (%) = diferencia de elevación ÷ longitud × 100 (las dos en la misma unidad).</div></div>
+</table></div>Pendiente (%) = diferencia de elevación ÷ longitud × 100 (las dos en la misma unidad).</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Lo que <b>alarga</b> el despegue: masa alta, altitud de densidad alta, viento en cola, pendiente arriba, pista blanda, mojada o con hierba.</li><li>En los cálculos se cuenta solo el <b>50 % del viento en cara</b> y el <b>150 % del viento en cola</b>.</li><li>Un 10 % más de masa alarga la carrera de despegue alrededor de un <b>20 %</b>.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-032.02.04" data-lo="032.02.04">
 <summary><span class="lonum">032.02.04</span><span class="lotitle">Climb, cruise and descent</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Más temperatura o altitud → menos régimen de ascenso y techo más bajo.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Más temperatura o altitud → menos régimen de ascenso y techo más bajo.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>En un monomotor hay que poder aterrizar con seguridad tras un fallo de motor: la ruta se planifica con eso en mente.</li><li>El techo de servicio es donde el régimen de ascenso baja a <b>100 ft/min</b> (hélice).</li></ul></div>
+</div>
 </details>
 
 <h2>032.03 · Performance Class B: use of data <span class="wtag">3 preg. · 7 %</span></h2>
 
 <details class="lo atpl" id="lo-032.03.03" data-lo="032.03.03">
 <summary><span class="lonum">032.03.03</span><span class="lotitle">Use of aeroplane performance data</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Las gráficas se entran con <b>altitud de presión y OAT</b>, luego masa, viento y obstáculo. El resultado es la distancia <b>sin factorizar</b>: luego aplicas los factores (× 1,25 despegue, ÷ 0,7 aterrizaje).</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Las gráficas se entran con <b>altitud de presión y OAT</b>, luego masa, viento y obstáculo. El resultado es la distancia <b>sin factorizar</b>: luego aplicas los factores (× 1,25 despegue, ÷ 0,7 aterrizaje).</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Antes de entrar en una tabla comprueba las <b>condiciones</b> que supone: flaps, potencia, pista seca y pavimentada, técnica.</li><li><b>Interpolar</b> está permitido; <b>extrapolar</b> fuera de la tabla, no.</li></ul></div>
+</div>
 </details>
 
 <h2>032.04 · Performance Class A: theory <span class="wtag">18 preg. · 40 %</span></h2>
@@ -687,49 +710,59 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <li>Segundo segmento, gradiente bruto mínimo con un motor: <b>2,4 %</b> bimotor · 2,7 % tri · <b>3,0 %</b> cuatrimotor. Trayectoria neta: libra obstáculos por <b>35 ft</b>; neto = bruto − 0,8 % (bimotor).</li>
   <li><b>Flex / assumed temperature</b>: reducción máxima <b>25 %</b>; nunca en pista contaminada. <b>Improved climb</b>: sube V1, VR y V2 usando pista sobrante para ganar masa limitada por ascenso.</li>
   <li>Más flap al despegue: menos pista pero <b>peor gradiente</b>. Aquaplaning: ≈ <b>9 √p</b> kt (p en psi). VMBE: límite de energía de frenos.</li>
-</ul></div></div>
+</ul></div><div class="flag f16t"><b>Trampas de examen</b><ul><li><b>V1</b>: velocidad de decisión. <b>VR</b>: rotación. <b>V2</b>: velocidad de seguridad en el despegue con un motor parado, alcanzada a 35 ft.</li><li>Orden obligado: <b>VMCG ≤ V1 ≤ VR</b> y V1 ≤ VMBE; <b>V2 ≥ 1,13 × VSR</b> y ≥ 1,1 × VMCA.</li><li><b>Campo compensado</b>: TODA = ASDA; la distancia de despegue iguala a la de aceleración-parada.</li><li>Pista mojada: la altura de pantalla baja a <b>15 ft</b> y la V1 se reduce.</li></ul></div>
+<div class="f16q f16t"><b>Duda frecuente · ¿Qué pasa si subo o bajo la V1?</b>V1 más <b>alta</b>: necesitas más distancia para parar y menos para seguir. V1 más <b>baja</b>: al revés.</div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-032.04.02" data-lo="032.04.02">
 <summary><span class="lonum">032.04.02</span><span class="lotitle">Climb</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Más temperatura o altitud de presión → menos empuje y menos gradiente. Ascenso a IAS constante y luego a Mach constante.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Más temperatura o altitud de presión → menos empuje y menos gradiente. Ascenso a IAS constante y luego a Mach constante.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Segundo segmento: tren arriba, flaps de despegue, V2 y un motor parado. Gradiente mínimo <b>2,4 %</b> (bimotor), 2,7 % (trimotor), 3,0 % (cuatrimotor).</li><li>El segundo segmento suele ser el <b>más limitante</b> en masa por ascenso.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-032.04.03" data-lo="032.04.03">
 <summary><span class="lonum">032.04.03</span><span class="lotitle">Cruise</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Más masa → altitud óptima <b>más baja</b>. <b>LRC</b> ≈ 99 % del alcance específico máximo, algo más rápido. <b>Cost index</b> = coste del tiempo ÷ coste del combustible: CI 0 = máximo alcance.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Más masa → altitud óptima <b>más baja</b>. <b>LRC</b> ≈ 99 % del alcance específico máximo, algo más rápido. <b>Cost index</b> = coste del tiempo ÷ coste del combustible: CI 0 = máximo alcance.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>La <b>altitud óptima</b> sube a medida que el avión pierde masa: de ahí el ascenso escalonado (step climb).</li><li><b>Coffin corner</b>: en altura se juntan la velocidad de bataneo de baja y la de alta; el margen se estrecha con masa alta y con factor de carga.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-032.04.04" data-lo="032.04.04">
 <summary><span class="lonum">032.04.04</span><span class="lotitle">En-route one-engine-inoperative</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b><b>Drift-down</b>: tras fallar un motor, bajar a la velocidad de drift-down (cerca de la mejor L/D) hasta la <b>altitud de estabilización</b>, con la trayectoria neta <b>2000 ft</b> por encima del terreno.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b><b>Drift-down</b>: tras fallar un motor, bajar a la velocidad de drift-down (cerca de la mejor L/D) hasta la <b>altitud de estabilización</b>, con la trayectoria neta <b>2000 ft</b> por encima del terreno.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Drift-down</b>: con un motor parado se mantiene la velocidad de mejor L/D con empuje máximo continuo y el avión desciende hasta su altitud de estabilización.</li><li>La trayectoria <b>neta</b> debe librar el terreno por <b>2 000 ft</b> durante el descenso y quedar con pendiente positiva a 1 000 ft sobre el obstáculo.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-032.04.05" data-lo="032.04.05">
 <summary><span class="lonum">032.04.05</span><span class="lotitle">Descent</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Descenso de máximo alcance a ralentí cerca de la velocidad de <b>mejor L/D</b>. Gestión de energía: empezar a tiempo (regla de 3 NM por cada 1000 ft).</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Descenso de máximo alcance a ralentí cerca de la velocidad de <b>mejor L/D</b>. Gestión de energía: empezar a tiempo (regla de 3 NM por cada 1000 ft).</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Descenso a Mach constante y luego a CAS constante: al pasar de uno a otro cambia el ángulo.</li><li>Con viento en cola el punto de inicio del descenso (TOD) se <b>adelanta</b>.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-032.04.06" data-lo="032.04.06">
 <summary><span class="lonum">032.04.06</span><span class="lotitle">Approach and landing</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Distancia de aterrizaje dentro del <b>60 %</b> de la LDA (reactores) o del <b>70 %</b> (turbohélices); mojado, <b>+15 %</b>. VREF ≥ <b>1,23 VSR0</b>. Gradientes: approach climb (un motor) <b>2,1 %</b> bimotor · landing climb (todos) <b>3,2 %</b>. Quick turnaround: enfriar frenos antes del siguiente despegue.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Distancia de aterrizaje dentro del <b>60 %</b> de la LDA (reactores) o del <b>70 %</b> (turbohélices); mojado, <b>+15 %</b>. VREF ≥ <b>1,23 VSR0</b>. Gradientes: approach climb (un motor) <b>2,1 %</b> bimotor · landing climb (todos) <b>3,2 %</b>. Quick turnaround: enfriar frenos antes del siguiente despegue.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li><b>VREF</b> = 1,23 × VSR0 (o 1,3 × VS0) a 50 ft sobre el umbral.</li><li>Distancia de aterrizaje requerida en seco: la real debe caber en el <b>60 %</b> de la LDA (reactores) o el 70 % (turbohélices). En mojado, un <b>15 %</b> más.</li><li>Gradiente de aproximación frustrada (un motor parado): <b>2,1 %</b> en bimotor; de aterrizaje frustrado (todos los motores): <b>3,2 %</b>.</li></ul></div>
+</div>
 </details>
 
 <h2>032.05 · Performance Class A: use of data <span class="wtag">6 preg. · 13 %</span></h2>
 
 <details class="lo atpl" id="lo-032.05.01" data-lo="032.05.01">
 <summary><span class="lonum">032.05.01</span><span class="lotitle">Take-off</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b><b>RTOM</b> = la menor de todas las masas limitantes (pista, ascenso, obstáculos, frenos, neumáticos, estructural). El viento de cara y la pista larga la suben; el calor, la altitud y el viento de cola la bajan. El límite por ascenso no depende de la pista.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b><b>RTOM</b> = la menor de todas las masas limitantes (pista, ascenso, obstáculos, frenos, neumáticos, estructural). El viento de cara y la pista larga la suben; el calor, la altitud y el viento de cola la bajan. El límite por ascenso no depende de la pista.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Clase C: la distancia de despegue se factoriza según haya o no fallo de motor.</li><li>Los datos son siempre los del manual de vuelo del avión concreto.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-032.05.02" data-lo="032.05.02">
 <summary><span class="lonum">032.05.02</span><span class="lotitle">Drift-down and stabilising altitude</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>La altitud de estabilización baja con <b>más masa</b> y <b>más temperatura</b>.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>La altitud de estabilización baja con <b>más masa</b> y <b>más temperatura</b>.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>La <b>altitud de estabilización</b> es la que el avión puede mantener con un motor parado; depende de la masa y de la temperatura.</li><li>Cuanto más pesado y más calor, más baja.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-032.05.03" data-lo="032.05.03">
 <summary><span class="lonum">032.05.03</span><span class="lotitle">Landing</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Más altitud de presión o temperatura → más distancia de aterrizaje.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Más altitud de presión o temperatura → más distancia de aterrizaje.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>En Clase C el aterrizaje debe caber en el <b>70 %</b> de la LDA.</li><li>En pista mojada se añade un <b>15 %</b>.</li></ul></div>
+</div>
 </details>
 <h2 class="subj">033 · Flight Planning and Monitoring <span class="wtag">42 preg. · 2 h</span></h2>
 
@@ -737,7 +770,8 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 
 <details class="lo" id="lo-033.01.01" data-lo="033.01.01">
 <summary><span class="lonum">033.01.01</span><span class="lotitle">VFR navigation plan</span></summary>
-<div class="body"><!--p2:033.01.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li>El <b>operational flight plan</b> (OFPL) es obligatorio.</li><li>Esquema de preparación <b>A-W-A-R-E</b>: <b>A</b>erodrome (AIP, NOTAM) · <b>W</b>eather · <b>A</b>ircraft (procedimientos, emergencias, limitaciones, performance) · <b>R</b>oute (OFPL, mapa, combustible) · <b>E</b>mergency.</li></ul></div><!--/p2:033.01.01--><div class="comp"><b>ATPL</b>Escala 1:500 000 → 1 cm = <b>5 km</b>. VFR por encima de 3000 ft AGL: rumbo magnético 000–179 → miles <b>impares + 500</b>; 180–359 → <b>pares + 500</b>. Tiempo = distancia ÷ GS · combustible = tiempo × consumo. Variación oeste se suma («west is best»).</div></div>
+<div class="body"><!--p2:033.01.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li>El <b>operational flight plan</b> (OFPL) es obligatorio.</li><li>Esquema de preparación <b>A-W-A-R-E</b>: <b>A</b>erodrome (AIP, NOTAM) · <b>W</b>eather · <b>A</b>ircraft (procedimientos, emergencias, limitaciones, performance) · <b>R</b>oute (OFPL, mapa, combustible) · <b>E</b>mergency.</li></ul></div><!--/p2:033.01.01--><div class="comp"><b>ATPL</b>Escala 1:500 000 → 1 cm = <b>5 km</b>. VFR por encima de 3000 ft AGL: rumbo magnético 000–179 → miles <b>impares + 500</b>; 180–359 → <b>pares + 500</b>. Tiempo = distancia ÷ GS · combustible = tiempo × consumo. Variación oeste se suma («west is best»).</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Rumbo magnético = rumbo verdadero ∓ variación (<b>este resta, oeste suma</b>). El viento del parte está en verdaderos; el de torre, en magnéticos.</li><li>La altitud de seguridad VFR se calcula sobre el obstáculo más alto del tramo, no sobre la elevación media.</li></ul></div>
+</div>
 </details>
 
 <h2>033.02 · Flight planning for IFR flights <span class="wtag">13 preg. · 31 %</span></h2>
@@ -749,14 +783,17 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <li><b>SID</b>: de la pista a la ruta · <b>STAR</b>: de la ruta a la aproximación. Rutas «U…» = superiores.</li>
   <li>Por debajo de la altitud de transición, <b>QNH</b>; por encima del nivel de transición, <b>1013,25</b>. IFR: rumbos 000–179 niveles <b>impares</b>; 180–359, <b>pares</b>.</li>
   <li>Mínimo IFR: <b>1000 ft</b> sobre el obstáculo más alto en 8 km (2000 ft en montaña). A IAS constante, al subir la TAS <b>aumenta</b>.</li>
-</ul></div></div>
+</ul></div><div class="flag f16t"><b>Trampas de examen</b><ul><li><b>MEA</b>: asegura obstáculos y recepción de ayudas. <b>MOCA</b>: solo obstáculos. <b>MORA</b> de rejilla: 1 000 ft de margen (2 000 ft si el terreno supera 5 000 ft).</li><li><b>MSA</b>: 1 000 ft de margen en 25 NM alrededor de la ayuda.</li></ul></div>
+</div>
 </details>
 
 <h2>033.03 · Fuel planning <span class="wtag">11 preg. · 26 %</span></h2>
 
 <details class="lo" id="lo-033.03.01" data-lo="033.03.01">
 <summary><span class="lonum">033.03.01</span><span class="lotitle">General</span></summary>
-<div class="body"><!--p2:033.03.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li>La <b>fuel policy</b> es una norma: hay que seguirla.</li><li>Combustible a bordo: start-up, taxi, trip, contingencia, alternativo y final reserve. Todo esto hay que tenerlo en rampa.</li></ul></div><!--/p2:033.03.01--><div class="comp"><b>ATPL</b>El combustible se planifica con la meteo, retrasos de ATC, NOTAM, la masa y la ruta prevista. Reserva final: <b>30 min</b> turbina (a 1500 ft) · <b>45 min</b> pistón.</div></div>
+<div class="body"><!--p2:033.03.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li>La <b>fuel policy</b> es una norma: hay que seguirla.</li><li>Combustible a bordo: start-up, taxi, trip, contingencia, alternativo y final reserve. Todo esto hay que tenerlo en rampa.</li></ul></div><!--/p2:033.03.01--><div class="comp"><b>ATPL</b>El combustible se planifica con la meteo, retrasos de ATC, NOTAM, la masa y la ruta prevista. Reserva final: <b>30 min</b> turbina (a 1500 ft) · <b>45 min</b> pistón.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Combustible mínimo: <b>rodaje + viaje + contingencia + alternativo + reserva final + adicional</b>; el <b>extra</b> queda a criterio del comandante.</li><li>Contingencia básica: el <b>5 %</b> del combustible de viaje (o 5 min a 1 500 ft, lo que sea mayor).</li><li>Reserva final: <b>30 min</b> a 1 500 ft en espera (reactor) o <b>45 min</b> (pistón).</li></ul></div>
+<div class="f16q f16t"><b>Duda frecuente · ¿Cuándo declaro MAYDAY FUEL?</b>Cuando calculas que aterrizarás en el aeródromo más cercano donde es seguro hacerlo con <b>menos de la reserva final</b>. «MINIMUM FUEL» solo avisa de que no admites más demoras.</div>
+</div>
 </details>
 
 <details class="lo" id="lo-033.03.02" data-lo="033.03.02">
@@ -770,24 +807,29 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 
 <details class="lo atpl" id="lo-033.03.03" data-lo="033.03.03">
 <summary><span class="lonum">033.03.03</span><span class="lotitle">Specific fuel-calculation procedures</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b><b>Contingencia reducida</b>: 3 % del trip con un alternativo en ruta. <b>Aeródromo aislado</b> (turbina): <b>2 h</b> de crucero sobre el destino, reserva final incluida. <b>Tankering</b>: llevar combustible de más desde donde es más barato.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b><b>Contingencia reducida</b>: 3 % del trip con un alternativo en ruta. <b>Aeródromo aislado</b> (turbina): <b>2 h</b> de crucero sobre el destino, reserva final incluida. <b>Tankering</b>: llevar combustible de más desde donde es más barato.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Sin alternativo de destino (aeródromo aislado u otros casos) hace falta combustible <b>adicional</b>.</li><li>Con <b>punto de decisión</b> o reclearance se reduce la contingencia, pero hay que cumplir las dos opciones de planificación.</li></ul></div>
+</div>
 </details>
 
 <h2>033.04 · Pre-flight preparation <span class="wtag">6 preg. · 14 %</span></h2>
 
 <details class="lo" id="lo-033.04.01" data-lo="033.04.01">
 <summary><span class="lonum">033.04.01</span><span class="lotitle">Notice to airmen (NOTAM) briefing</span></summary>
-<div class="body"><!--p2:033.04.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>AIP</b>: 3 partes que hay que saber: <b>GEN</b> (general), <b>ENR</b> (en ruta) y <b>AD</b> (aeródromos; ahí están las <b>VAC</b>, cartas de aproximación visual).</li><li><b>NOTAM</b> (cambios de menos de 3 meses) → <b>Supplement</b> (más de 3 meses) → <b>Amendments</b> (cambios definitivos, permanentes).</li><li>NOTAM: mensaje con información sobre aeródromos, instalaciones, servicios o peligros.</li></ul></div><!--/p2:033.04.01--><div class="comp"><b>ATPL</b><b>NOTAM</b>: aviso de un cambio en una instalación, servicio, procedimiento o peligro. Ciclo <b>AIRAC</b>: <b>28 días</b>. Antes de volar: meteo, NOTAM, horarios y servicios de salida, destino y alternativos.</div></div>
+<div class="body"><!--p2:033.04.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>AIP</b>: 3 partes que hay que saber: <b>GEN</b> (general), <b>ENR</b> (en ruta) y <b>AD</b> (aeródromos; ahí están las <b>VAC</b>, cartas de aproximación visual).</li><li><b>NOTAM</b> (cambios de menos de 3 meses) → <b>Supplement</b> (más de 3 meses) → <b>Amendments</b> (cambios definitivos, permanentes).</li><li>NOTAM: mensaje con información sobre aeródromos, instalaciones, servicios o peligros.</li></ul></div><!--/p2:033.04.01--><div class="comp"><b>ATPL</b><b>NOTAM</b>: aviso de un cambio en una instalación, servicio, procedimiento o peligro. Ciclo <b>AIRAC</b>: <b>28 días</b>. Antes de volar: meteo, NOTAM, horarios y servicios de salida, destino y alternativos.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>NOTAM: la línea <b>Q)</b> codifica el asunto; <b>B)</b> inicio y <b>C)</b> fin (EST = estimado, PERM = permanente); <b>D)</b> horario; <b>E)</b> texto.</li><li>Series: <b>NOTAMN</b> nuevo, <b>NOTAMR</b> reemplaza, <b>NOTAMC</b> cancela.</li><li>SNOWTAM: validez máxima de <b>8 horas</b>.</li></ul></div>
+</div>
 </details>
 
 <details class="lo" id="lo-033.04.02" data-lo="033.04.02">
 <summary><span class="lonum">033.04.02</span><span class="lotitle">Meteorological briefing</span></summary>
-<div class="body"><!--p2:033.04.02--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>AMA</b> (Autoservicio Meteorológico Aeronáutico): el servicio web de AEMET para preparar el vuelo.</li></ul></div><div class="scroll"><table class="deftable"><tr><th>Producto</th><th>Validez / cobertura</th></tr><tr><td>METAR</td><td>Cada 30 minutos</td></tr><tr><td>TAF</td><td>Hasta 24 h (OACI: de 9 a 30 h según el aeródromo)</td></tr><tr><td>SIGWX</td><td>6 horas; en la práctica, hasta FL150</td></tr><tr><td>GAMET</td><td>Previsión de área para vuelos a baja cota (OACI: hasta FL100; en la práctica, «muy baja altitud, unos 2000-3000 ft»)</td></tr></table></div><!--/p2:033.04.02--><div class="comp"><b>ATPL</b><b>METAR</b> = observación · <b>TAF</b> = pronóstico de aeródromo. El plan de navegación se actualiza con el último viento y temperatura.</div></div>
+<div class="body"><!--p2:033.04.02--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>AMA</b> (Autoservicio Meteorológico Aeronáutico): el servicio web de AEMET para preparar el vuelo.</li></ul></div><div class="scroll"><table class="deftable"><tr><th>Producto</th><th>Validez / cobertura</th></tr><tr><td>METAR</td><td>Cada 30 minutos</td></tr><tr><td>TAF</td><td>Hasta 24 h (OACI: de 9 a 30 h según el aeródromo)</td></tr><tr><td>SIGWX</td><td>6 horas; en la práctica, hasta FL150</td></tr><tr><td>GAMET</td><td>Previsión de área para vuelos a baja cota (OACI: hasta FL100; en la práctica, «muy baja altitud, unos 2000-3000 ft»)</td></tr></table></div><!--/p2:033.04.02--><div class="comp"><b>ATPL</b><b>METAR</b> = observación · <b>TAF</b> = pronóstico de aeródromo. El plan de navegación se actualiza con el último viento y temperatura.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>METAR: viento en <b>grados verdaderos</b>. El viento que da la torre o el ATIS es <b>magnético</b>.</li><li><b>CAVOK</b>: visibilidad de 10 km o más, sin nubes por debajo de 5 000 ft o de la MSA más alta, sin CB ni TCU y sin tiempo significativo.</li><li>TAF: <b>BECMG</b> es un cambio que se queda; <b>TEMPO</b> es temporal, de menos de una hora cada vez.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-033.04.03" data-lo="033.04.03">
 <summary><span class="lonum">033.04.03</span><span class="lotitle">Point of equal time (PET) and point of safe return (PSR)</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b><span class="formula">PET = D × H ÷ (O + H)</span> · <span class="formula">PSR = E × O × H ÷ (O + H)</span> · D distancia total · O velocidad sobre el suelo de ida · H de vuelta · E autonomía segura (horas).</div></div>
+<div class="body"><div class="comp"><b>ATPL</b><span class="formula">PET = D × H ÷ (O + H)</span> · <span class="formula">PSR = E × O × H ÷ (O + H)</span> · D distancia total · O velocidad sobre el suelo de ida · H de vuelta · E autonomía segura (horas).</div><div class="f0viz" data-viz="pet"></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li><b>PET</b> (punto de igual tiempo): distancia = D × H ÷ (O + H), con O y H las velocidades sobre el suelo de ida y de vuelta. Se desplaza <b>hacia el viento</b>.</li><li><b>PSR</b> (punto de retorno seguro): tiempo = E × H ÷ (O + H), con E la autonomía segura. Cualquier viento <b>acorta</b> el PSR.</li><li>Sin viento, el PET está en la mitad de la ruta; el PSR no tiene por qué.</li></ul></div>
+</div>
 </details>
 
 <h2>033.05 · ICAO flight plan (ATS flight plan) <span class="wtag">1 preg. · 2 %</span></h2>
@@ -801,24 +843,28 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <tr><td>Casilla 15</td><td>Velocidad <b>N0120</b> = 120 kt TAS · nivel F350 o A045 · ruta</td></tr>
   <tr><td>Casilla 18</td><td>REG/ matrícula · DOF/ fecha</td></tr>
   <tr><td>Casilla 19</td><td>Autonomía y personas a bordo</td></tr>
-</table></div>Mensaje <b>FPL</b> = plan nuevo.</div></div>
+</table></div>Mensaje <b>FPL</b> = plan nuevo.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Casilla 8: reglas (I, V, Y, Z). <b>Y</b> = empieza IFR; <b>Z</b> = empieza VFR.</li><li>Casilla 15: velocidad (N = nudos, M = Mach, K = km/h) y nivel (F = nivel de vuelo, A = altitud en cientos de pies).</li><li>Casilla 16: duración total prevista (EET) hasta el destino; casilla 19: <b>autonomía</b> y personas a bordo.</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-033.05.02" data-lo="033.05.02">
 <summary><span class="lonum">033.05.02</span><span class="lotitle">Repetitive flight plan (RPL)</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Vuelos IFR regulares con las mismas características, en al menos <b>10 ocasiones</b>.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Vuelos IFR regulares con las mismas características, en al menos <b>10 ocasiones</b>.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>El <b>RPL</b> es para vuelos IFR regulares que se repiten al menos <b>10 veces</b> o durante 10 días consecutivos.</li><li>Un cambio puntual se comunica al ATS; si cambia el tipo de avión o la categoría de estela, se presenta un plan individual.</li></ul></div>
+</div>
 </details>
 
 <h2>033.06 · Flight monitoring and in-flight replanning <span class="wtag">5 preg. · 12 %</span></h2>
 
 <details class="lo atpl" id="lo-033.06.01" data-lo="033.06.01">
 <summary><span class="lonum">033.06.01</span><span class="lotitle">Flight monitoring</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Regla <b>1 en 60</b>: error de derrota = desvío × 60 ÷ distancia recorrida. Comprobar combustible real frente al plan. <b>MINIMUM FUEL</b>: cualquier cambio te haría aterrizar por debajo de la reserva final · <b>MAYDAY FUEL</b>: vas a aterrizar por debajo.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Regla <b>1 en 60</b>: error de derrota = desvío × 60 ÷ distancia recorrida. Comprobar combustible real frente al plan. <b>MINIMUM FUEL</b>: cualquier cambio te haría aterrizar por debajo de la reserva final · <b>MAYDAY FUEL</b>: vas a aterrizar por debajo.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>En cada punto de control se compara el combustible <b>real</b> con el <b>previsto</b> y se recalcula el que habrá en destino.</li><li>Se notifica al ATC si la hora estimada a un punto cambia en <b>más de 2 min</b> (en textos antiguos, 3 min).</li></ul></div>
+</div>
 </details>
 
 <details class="lo atpl" id="lo-033.06.02" data-lo="033.06.02">
 <summary><span class="lonum">033.06.02</span><span class="lotitle">In-flight replanning</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Se replanifica cuando el combustible, la meteo o ATC hacen inseguro el plan original: nuevo destino o alternativo.</div></div>
+<div class="body"><div class="comp"><b>ATPL</b>Se replanifica cuando el combustible, la meteo o ATC hacen inseguro el plan original: nuevo destino o alternativo.</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Replanificar en vuelo es un cálculo completo: viaje al nuevo destino + contingencia + alternativo + reserva final.</li><li>La decisión de desviarse se toma con el combustible que <b>quedará</b> al llegar, no con el que hay ahora.</li></ul></div>
+</div>
 </details>
 
 <h2>De otras asignaturas</h2>
@@ -832,6 +878,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   </ul></div>
   <div class="key"><b>Clave</b>Nivel del mar: <b>15 °C · 1013,25 hPa · 29,92 inHg</b>. Baja <b>2 °C cada 1000 ft</b> (1,98).</div>
   <div class="dmini"><div><b>5000 ft</b><span>ISA 5 °C</span></div><div><b>10 000 ft</b><span>ISA −5 °C</span></div><div><b>36 090 ft</b><span>−56,5 °C</span></div></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>ISA al nivel del mar: <b>15 °C, 1013,25 hPa, 1,225 kg/m³</b>. Gradiente: <b>−1,98 °C por 1 000 ft</b> hasta 36 090 ft; desde ahí, <b>−56,5 °C</b> constante.</li><li>Desviación ISA = temperatura real − temperatura ISA <b>a esa altitud</b>.</li><li>1 hPa ≈ <b>27 ft</b> cerca del nivel del mar (30 ft como regla), pero ≈ 50 ft a 18 000 ft.</li></ul></div>
 </div>
 </details>
 
@@ -909,7 +956,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel" aria-label="Tema"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row chk"><input type="checkbox" id="incTrial"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale lo dado y lo que entra en el temario base.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incTrial"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale el temario base.</small></span></label>
     <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las del temario y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
@@ -1039,7 +1086,7 @@ const GEN = {
      expl:`m × d = M × ΔCG → d = ${M} × ${fe(dcg,3)} ÷ ${m} = ${fe(ans,2)} m.`,
      steps:["Reposicionar: <b>m × distancia = M × ΔCG</b>.", `d = ${M} × ${fe(dcg,3)} ÷ ${m} = <b>${fe(ans,2)} m</b>.`]}; }
 };
-const GEN_NAMES = {k1:"CG con varias masas",k2:"Cargar una masa",k3:"Descargar una masa",k4:"Mover una masa",k5:"Masa movida (tipo deberes)",k6:"CG en % MAC",k7:"CG desde el % MAC",k8:"Masa máxima hasta el límite",k9:"Escalera de masas",k10:"Unidades",k11:"Distancia a mover",t1a:"Masa desde momento y brazo",t1b:"Brazo desde momento y masa",t1c:"Momento en lb·in",t1f:"Momento delante del datum"};
+const GEN_NAMES = {k1:"CG con varias masas",k2:"Cargar una masa",k3:"Descargar una masa",k4:"Mover una masa",k5:"Masa movida",k6:"CG en % MAC",k7:"CG desde el % MAC",k8:"Masa máxima hasta el límite",k9:"Escalera de masas",k10:"Unidades",k11:"Distancia a mover",t1a:"Masa desde momento y brazo",t1b:"Brazo desde momento y masa",t1c:"Momento en lb·in",t1f:"Momento delante del datum"};
 
 
 // ---------- generadores nuevos (PFP-2, altimetría y ATPL) ----------
@@ -1496,7 +1543,7 @@ function initHW(){
   const box=$("#visHW");
   const X=v=>110+v*55, XE=v=>150+v*60;
   box.innerHTML=`<div class="vis">
-   <p style="margin:0 0 6px"><b>1 · Mover un objeto (deberes de PFP-1).</b> Masa total <b>380 kg</b>. Un objeto se mueve desde <b>1,5 m por delante del datum</b> hasta <b>+7,5 m</b>. El CG pasa del <b>16 %</b> al <b>24 % de la MAC</b>, que mide <b>4 m</b> y empieza en +2 m. ¿Cuánto pesa el objeto?</p>
+   <p style="margin:0 0 6px"><b>1 · Mover un objeto.</b> Masa total <b>380 kg</b>. Un objeto se mueve desde <b>1,5 m por delante del datum</b> hasta <b>+7,5 m</b>. El CG pasa del <b>16 %</b> al <b>24 % de la MAC</b>, que mide <b>4 m</b> y empieza en +2 m. ¿Cuánto pesa el objeto?</p>
    <svg viewBox="0 0 700 190" role="img" aria-label="Esquema de los deberes">${ST}
     <line x1="40" x2="680" y1="120" y2="120" stroke="var(--ink)" stroke-width="2"/>
     ${[-1.5,0,2,6,7.5].map(v=>`<line x1="${X(v)}" x2="${X(v)}" y1="114" y2="126" stroke="var(--ink)"/><text class="tx" x="${X(v)}" y="142" text-anchor="middle">${v>0?'+':''}${String(v).replace(".",",")} m</text>`).join("")}
@@ -1514,7 +1561,7 @@ function initHW(){
    <div class="row" style="margin-top:8px"><b>Más como este</b><span class="muted" style="font-size:14px">mismo planteamiento, otros números</span></div>
    <div id="hwQ"></div>
    <hr style="border:0;border-top:1px dashed var(--line);margin:16px 0">
-   <p style="margin:0 0 6px"><b>2 · Quitar los dos motores (PFP-2).</b> Masa total <b>35 000 kg</b>, MAC <b>3,75 m</b> con el LEMAC en el datum. El CG está al <b>42 % MAC</b>; se quitan los dos motores, a <b>6,25 m</b>, y el CG pasa al <b>15 % MAC</b>. ¿Cuánto pesa cada motor?</p>
+   <p style="margin:0 0 6px"><b>2 · Quitar los dos motores.</b> Masa total <b>35 000 kg</b>, MAC <b>3,75 m</b> con el LEMAC en el datum. El CG está al <b>42 % MAC</b>; se quitan los dos motores, a <b>6,25 m</b>, y el CG pasa al <b>15 % MAC</b>. ¿Cuánto pesa cada motor?</p>
    <svg viewBox="0 0 700 150" role="img" aria-label="Esquema del ejercicio de los motores">${ST}
     ${PLANE(60,110,1.5)}
     <line x1="${XE(0)}" x2="${XE(0)}" y1="14" y2="140" stroke="var(--magenta)" stroke-width="2" stroke-dasharray="6 4"/><text class="hd" x="${XE(0)+4}" y="24" style="fill:var(--magenta)">DATUM = LEMAC</text>
@@ -2159,7 +2206,7 @@ const P2ROWS = [
  P2("pb01b","032.02.03","tofac","Which runway slope gives the shortest take-off run and the longest landing distance?","Downslope (downhill)",["Upslope (uphill)","A level runway","The slope has no effect on the distances"],"Bajada: despegue más corto y aterrizaje más largo. Subida: despegue más largo y aterrizaje más corto."),
  P2("pb02a","031.01.02","cgfwd","The CG is slightly too far forward. What is the main problem?","The elevator may be ineffective, especially at take-off and landing",["The aeroplane becomes unstable and very sensitive in pitch","The stall speed decreases and the range increases a lot","The nose tends to rise and the tail feels heavy"],"CG muy adelantado: avión estable pero morro pesado; el elevator puede no tener fuerza para levantar el morro en la rotación y en el redondeo."),
  P2("pb02b","031.01.02","cgfwd","With the CG too far forward, the pilot may not be able to:","Raise the nose enough on rotation and in the landing flare",["Keep the wings level with the ailerons","Reach the stall speed in a turn","Use the rudder in a crosswind"],"El morro pesa demasiado: falta autoridad de elevator a baja velocidad (despegue y aterrizaje)."),
- P2("pb03a","033.04.02","wxprod","A TAF is valid for:","Up to 24 hours",["30 minutes","6 hours","3 months"],"TAF = pronóstico de aeródromo; en clase, hasta 24 h (la OACI admite de 9 a 30 h según el aeródromo). METAR = 30 min · SIGWX = 6 h."),
+ P2("pb03a","033.04.02","wxprod","A TAF is valid for:","Up to 24 hours",["30 minutes","6 hours","3 months"],"TAF = pronóstico de aeródromo; lo habitual, hasta 24 h (la OACI admite de 9 a 30 h según el aeródromo). METAR = 30 min · SIGWX = 6 h."),
  P2("pb03b","033.04.02","wxprod","Which aeronautical weather product is a forecast valid for about 24 hours?","TAF",["METAR","SIGWX chart","GAMET"],"METAR es una observación cada 30 min; el SIGWX vale 6 h; el TAF es el pronóstico de aeródromo de unas 24 h."),
  P2("pb04a","032.01.03","power","The power-required curve has a back side in which the induced drag:","Rises dramatically as the speed decreases",["Falls as the speed decreases","Remains constant at any speed","Is much smaller than the parasite drag"],"En el lado de atrás de la curva (velocidad baja, ángulo de ataque alto) la resistencia inducida se dispara y hace falta más potencia para mantenerse."),
  P2("pb04b","032.01.03","power","On the back side of the power curve, flying slower requires:","More power, because induced drag rises quickly",["Less power, because total drag keeps falling","The same power, because lift does not change","More power, because parasite drag rises quickly"],"Por debajo de VMP la resistencia inducida domina y crece al bajar la velocidad: hay que dar más potencia."),
@@ -2236,8 +2283,8 @@ const P2ROWS = [
  P2("pc40","033.04.01","aip","A temporary change that lasts MORE than 3 months is published as an:","AIP Supplement",["NOTAM","AIP Amendment","AIRAC cycle"],"Supplement: temporal de larga duración."),
  P2("pc41","033.04.01","aip","A permanent change to the AIP is published as an:","Amendment",["NOTAM","AIP Supplement","SIGWX"],"Los cambios definitivos van por Amendment."),
  P2("pc42","033.04.02","wxprod","A routine METAR is issued every:","30 minutes",["3 hours","6 hours","24 hours"],"METAR = observación cada 30 min."),
- P2("pc43","033.04.02","wxprod","A SIGWX chart is valid for about:","6 hours",["30 minutes","24 hours","3 months"],"SIGWX = 6 h (en clase, hasta FL150)."),
- P2("pc44","033.04.02","wxprod","The GAMET is:","An area forecast for low-level flights",["A significant weather chart for jet transports","An observation of the aerodrome every 30 minutes","A permanent change to the AIP"],"GAMET = previsión de área para vuelos a baja cota (OACI: hasta FL100). OJO: en clase se dijo «muy baja altitud, unos 2000-3000 ft»."),
+ P2("pc43","033.04.02","wxprod","A SIGWX chart is valid for about:","6 hours",["30 minutes","24 hours","3 months"],"SIGWX = 6 h (el de baja cota, hasta FL150)."),
+ P2("pc44","033.04.02","wxprod","The GAMET is:","An area forecast for low-level flights",["A significant weather chart for jet transports","An observation of the aerodrome every 30 minutes","A permanent change to the AIP"],"GAMET = previsión de área para vuelos a baja cota (OACI: hasta FL100). OJO: algunos bancos lo formulan como «muy baja altitud, unos 2000-3000 ft»."),
  P2("pc45","033.01.01","aware","In flight preparation, A-W-A-R-E stands for:","Aerodrome – Weather – Aircraft – Route – Emergency",["Altitude – Wind – Airspace – Radio – Equipment","Aerodrome – Wind – Airspace – Route – Endurance","Aircraft – Weather – Alternate – Reserve – Engine"],"Esquema: A de Aerodrome (AIP, NOTAM), W de Weather, A de Aircraft, R de Route (OFPL, mapa, fuel), E de Emergency."),
  P2("pc46","033.01.01","aware","The operational flight plan (OFPL) is:","Mandatory",["Optional for flights below 3000 ft","Only needed in IFR","Replaced by the NOTAM"],"El plan operacional de vuelo es obligatorio."),
  P2("pc47","033.03.02","fuelp","Which fuel item is added to taxi, trip, contingency and alternate fuel?","Final reserve fuel",["Zero-fuel mass","Unusable fuel only","The fuel of the previous flight"],"Combustible: start-up + taxi + trip + contingencia + alternativo + final reserve (+ extra)."),
@@ -2263,7 +2310,7 @@ Object.assign(REFS, {
  glide:"Mismo L/D = mismo ángulo de planeo; el avión pesado vuela más rápido y baja más ft/min. Distancia = altura × L/D (6000 ft con L/D 10 → 60 000 ft ≈ 9,9 NM).",
  prop:"Ángulo de pala = cuerda ↔ plano de rotación. Cuerda ↔ viento relativo = ángulo de ataque de la pala.",
  aip:"AIP = GEN + ENR + AD (las VAC están en AD). Cambios: NOTAM (< 3 meses), Supplement (> 3 meses), Amendment (permanente).",
- wxprod:"METAR cada 30 min · TAF hasta 24 h (en clase) · SIGWX 6 h · GAMET: área de vuelos a baja cota · AMA: autoservicio meteorológico aeronáutico de AEMET (web).",
+ wxprod:"METAR cada 30 min · TAF hasta 24 h (9–30 h según aeródromo) · SIGWX 6 h · GAMET: área de vuelos a baja cota · AMA: autoservicio meteorológico aeronáutico de AEMET (web).",
  aware:"A-W-A-R-E: Aerodrome, Weather, Aircraft, Route, Emergency. El plan operacional de vuelo (OFPL) es obligatorio.",
  fuelp:"Combustible: start-up, taxi, trip, contingencia (5 % del trip), alternativo y final reserve (pistón: 45 min al consumo de máxima autonomía). La política de combustible es una norma que hay que seguir."
 });
@@ -2563,7 +2610,7 @@ function examBar(){
   return Object.keys(SUBJ).map(k=>`<p class="subjh">${k} ${esc(SUBJ[k].name)} · ${SUBJ[k].n} preguntas</p>` + BLOCKS.filter(b=>b.s===k).map(b=>`<div class="xrow"><div class="xlab" title="${esc(b.name)}"><b>${b.code}</b> ${b.n}</div><div class="xtrack"><div class="xsegs" style="width:${b.n/maxN*100}%">${
     SUB.filter(s=>s[1]===b.k).map(s=>{ const l=s[0], x=st.lo[l];
       return `<button class="seg ${segKind(l,st)}" style="flex:${W[l]}" data-go="lo-${l}" title="${l} · ${esc(s[3])} — ≈ ${fmt1(W[l])} preg. · ${x?pct1(x.m)+" %":"sin practicar"}"></button>`; }).join("")}</div></div></div>`).join("")).join("")
-   + `<p class="xleg"><span><i class="seg full"></i>dado y por encima del 75 %</span><span><i class="seg part"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></p>`;
+   + `<p class="xleg"><span><i class="seg full"></i>base y por encima del 75 %</span><span><i class="seg part"></i>base, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></p>`;
 }
 function renderNotesMeta(){
   const st = stats();
@@ -3468,4 +3515,5 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ console.error("modes",e); }
 })();
 </script>
+<script src="../viz16.js?v=02185779" defer></script>
 </body></html>

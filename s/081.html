@@ -244,6 +244,7 @@ details.lo.atpl{border-left-color:var(--magenta)}
 #test #setup #startBtn{display:inline-block;font:600 17px/1.2 "Barlow Condensed",Barlow,sans-serif;padding:12px 22px;margin-top:14px;border-radius:4px}
 @media (max-width:560px){#test #setup .mode .row,#test #setup .mode .opts{grid-template-columns:1fr;margin-left:0!important}#test #setup .mode small{margin-left:0}}
 </style>
+<style id="f16css">.f16t ul{margin:4px 0 0;padding-left:18px}.f16t li{margin:4px 0}.f16q{background:color-mix(in srgb,#2f6fb0 9%,transparent);border-left:3px solid #2f6fb0;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.f16q b:first-child{display:block;margin-bottom:2px}</style>
 <style id="f0-pub">details.lo>summary{cursor:pointer}:root{--magenta:#0E7C86;--accent:#0E7C86;--compbg:#E3F1F1;--f0none:#B9C7D2}@media (max-width:0px){:root:not([data-theme="light"]){--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}}:root[data-theme="dark"]{--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}.seg.atpl{background:var(--f0none)!important}mark.f0hit{background:#FFE58A;color:#14304A;border-radius:2px;padding:0 1px}mark.f0hit.first{outline:2px solid #0E7C86;outline-offset:1px}</style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -495,7 +496,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   </div>
 
 
-  <h4>Del trial 1 de la escuela (adelanto de 050.7 / 050.8)</h4>
+  <h4>Preguntas de repaso (adelanto de 050.7 / 050.8)</h4>
   <ul class="fromq">
     <li>In a <b>balanced turn</b> (viraje coordinado) the force acting <b>perpendicular to the wings</b> is the <b>total force</b> (total lift). Its horizontal component is the <b>centripetal force</b>; the <i>centrifugal</i> force is only apparent.</li>
     <li><b>Sweepback</b> (ala en flecha) increases stability about <b>all three axes: longitudinal, lateral and normal</b>.</li>
@@ -680,7 +681,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li>El <b>efecto inicial</b> de bajar flaps es <b>más sustentación</b>. Si el piloto no hace nada, el avión pega un ascenso corto y desagradable: <b>«balloon»</b>.</li>
     <li>Al <b>bajar</b> flaps hay que <b>bajar el morro</b> (reducir el ángulo de ataque). Al <b>quitarlos</b>, al revés: <b>subir el morro</b>, porque se pierde sustentación.</li>
   </ul>
-  <div class="flag"><b>La regla de la escuela:</b> <b>baja el morro antes de poner los flaps y súbelo antes de quitarlos.</b> El <i>momento</i> suele ser de picado, pero el efecto neto sobre la trayectoria es que el avión sube (balloon).</div>
+  <div class="flag"><b>Regla práctica:</b> <b>baja el morro antes de poner los flaps y súbelo antes de quitarlos.</b> El <i>momento</i> suele ser de picado, pero el efecto neto sobre la trayectoria es que el avión sube (balloon).</div>
 
   <h4>Otros efectos de los flaps</h4>
   <ul>
@@ -747,6 +748,9 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 
   <h4>Cómo subir el M<sub>CRIT</sub> ★</h4>
   <ul><li><b>Flecha</b> (sweepback) y <b>perfil fino con poca curvatura</b>. Los <b>vortex generators</b> no suben el M<sub>CRIT</sub>, pero retrasan la separación inducida por la onda.</li></ul>
+<div class="f0viz" data-viz="mach"></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Mcrit</b>: número de Mach de vuelo al que aparece el primer punto con flujo sónico sobre el ala.</li><li>Por encima de Mcrit el centro de presiones se va atrás y el avión tiende a picar: <b>Mach tuck</b>, que corrige el Mach trim.</li><li>Lo que <b>sube</b> el Mcrit: flecha, perfil delgado, perfil supercrítico y regla del área.</li></ul></div>
+<div class="f16q f16t"><b>Duda frecuente · ¿La onda de choque aparece justo a Mcrit?</b>No. A Mcrit solo hay un punto a Mach 1; la onda de choque se forma un poco por encima, cuando ya hay una zona supersónica que debe volver a subsónica.</div>
 </div>
 </details>
 
@@ -870,6 +874,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li>Cerca de la pérdida, el ala que avanza tiene más sustentación y la retrasada menos: si aplicas <b>alerón a la derecha el avión puede alabear a la izquierda</b> (por eso se sale con <b>timón</b>, no con alerones).</li>
   </ul>
   <div class="clave"><b>Recuperación</b> Siempre lo mismo: <b>bajar el ángulo de ataque</b> primero; la potencia, después. De la barrena se sale con <b>PARE</b>: Power idle, Ailerons neutral, Rudder opuesto, Elevator abajo.</div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>La pérdida se produce siempre al mismo <b>ángulo de ataque crítico</b>; la velocidad a la que ocurre sí cambia.</li><li>Velocidad de pérdida con factor de carga: <b>Vs × √n</b>. En un viraje de 60° (n = 2) sube un <b>41 %</b>.</li><li>El CG delantero <b>aumenta</b> la velocidad de pérdida; el hielo la aumenta y además <b>reduce</b> el ángulo crítico.</li></ul></div>
 </div>
 </details>
 
@@ -1180,6 +1185,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li>La velocidad de la punta es la <b>resultante</b> del giro y de la TAS del avión.</li>
     <li>Más palas: más potencia absorbida y <b>menos ruido</b>, a cambio de algo de rendimiento por interferencia.</li>
   </ul>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>Para absorber más potencia: más <b>palas</b>, más <b>cuerda</b> o más <b>diámetro</b> (limitado por la velocidad en la punta y la distancia al suelo).</li><li><b>Solidez</b> = área total de las palas ÷ área del disco.</li></ul></div>
 </div>
 </details>
 
@@ -1325,7 +1331,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row chk"><input type="checkbox" id="incX"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale lo dado y lo que entra en el temario base.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incX"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale el temario base.</small></span></label>
     <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las del temario y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
@@ -1477,7 +1483,7 @@ const EXAMQ = [
 ["ex12","050.8","p","glide","Assuming nil wind, the maximum glide distance will be achieved by flying at what speed?",["The speed giving the minimum drag", "The speed giving the minimum L:D ratio", "Just above the stall speed", "The speed giving the maximum drag"],"Máximo alcance = máximo L/D = mínima resistencia total (VMD). Cuidado con la trampa «minimum L:D ratio»: piden L/D MÁXIMO."],
 ["ex13","050.3","p","vort","The difference between areas of high and low pressure on the upper and lower wing surfaces of an aircraft in flight gives rise to:",["both wingtip and trailing edge vortices", "trailing edge vortices", "leading edge vortices", "wingtip vortices"],"La diferencia de presión entre intradós y extradós genera los dos: torbellinos de punta de ala y de borde de salida (los de punta son los más fuertes)."],
 ["ex14","050.6","p","slat","When a leading edge slot is opened, the stalling speed will:",["Decrease", "Increase", "Remain the same but will occur at a higher angle of attack", "Remain the same but will occur at a lower angle of attack"],"El slot re-energiza la capa límite: sube el CLmax y el ángulo crítico, así que la velocidad de pérdida BAJA."],
-["ex15","050.7","p","axes","The normal axis passes vertically through the CG at 45° to the longitudinal axis.",["FALSE", "TRUE"],"FALSO: el eje normal es perpendicular (90°) al longitudinal; los tres ejes son perpendiculares entre sí. Ojo, en clase pusieron «at 45°» para que fuera falsa."],
+["ex15","050.7","p","axes","The normal axis passes vertically through the CG at 45° to the longitudinal axis.",["FALSE", "TRUE"],"FALSO: el eje normal es perpendicular (90°) al longitudinal; los tres ejes son perpendiculares entre sí. Ojo: «at 45°» es el distractor típico."],
 ["ex16","050.3","p","wash","What is washout?",["Washout is a reduction in the angle of incidence (and consequently the angle of attack) from wing root to wing tip", "Washout is a reduction in the angle of incidence (and consequently the angle of attack) from wing tip to wing root", "Washout is an increase in the angle of attack from wing tip to wing root", "Washout is a reduction in the angle of attack if the vertical stabiliser is deflected"],"De la RAÍZ a la PUNTA la incidencia disminuye. La B es la misma frase al revés (trampa). [opción tapada en la foto: reconstruida]"],
 ["ex17","050.6","p","flappm","Which type of flap would give the greatest change in pitching moment?",["Fowler", "Split", "Plain", "Plain slotted"],"El Fowler sale hacia atrás y baja: es el que más sustentación da y el que más cambia el momento de cabeceo."],
 ["ex18","050.4","p","par","Parasite drag is:",["Composed of form drag, interference drag and skin friction; it is proportional to airspeed", "Composed of form drag, interference drag and skin friction; it is inversely proportional to airspeed", "Composed of form drag, induced drag and skin friction; it is proportional to airspeed", "Composed of form drag, induced drag and skin friction; it is inversely proportional to airspeed"],"Parásita = forma + interferencia + fricción (la inducida NO entra) y crece con la velocidad (∝ V²). La que baja con la velocidad es la inducida."],
@@ -1539,7 +1545,7 @@ const BASE = EXAMQ.concat([
  ["m3","050.2","n","lift","The lift force acts:",["Perpendicular to the relative airflow and the flight path","Parallel to the relative airflow and the flight path","Perpendicular to the chord line","Vertically upwards at all times"],"★ Lift is PERPENDICULAR (90°) to the relative airflow. PARALLEL to it is drag."],
  ["m4","050.2","n","forces","The weight of the aeroplane may be considered to act through the:",["Centre of gravity","Centre of pressure","Aerodynamic centre","Mean aerodynamic chord"],"El peso actúa por el CG."],
  ["m5","050.2","n","lift","The lift coefficient (CL) depends on:",["The angle of attack and the shape of the aerofoil","The air density and the airspeed of the aeroplane","Wing area only","The weight of the aircraft"],"CL = ángulo de ataque + forma del perfil. ρ y V ya están aparte en la fórmula."],
- ["m6","050.2","n","lift","Which of the following can increase the wing area (S) in the lift formula?",["Flaps and slats","The ailerons","Trim tabs","Winglets"],"En clase: S puede variar con flaps y slats."],
+ ["m6","050.2","n","lift","Which of the following can increase the wing area (S) in the lift formula?",["Flaps and slats","The ailerons","Trim tabs","Winglets"],"Clave: S puede variar con flaps y slats."],
  ["m7","050.2","n","wing","The chord line is:",["The straight line joining the leading edge and the trailing edge","The line equidistant between the upper and lower surfaces","The line along the wing span","The line of maximum thickness"],"Cuerda = recta borde de ataque–borde de salida. La equidistante es la mean camber line."],
  ["m8","050.2","n","wing","The mean camber line is:",["The line equidistant between the upper and lower surfaces","The straight line from leading to trailing edge","The line from wing root to wing tip","The line joining the points of maximum thickness"],"Mean camber line = línea media del perfil."],
  ["m9","050.2","n","angles","The pitch angle is the angle between the:",["Longitudinal axis and the horizontal","Chord line and the relative airflow","Chord line and the longitudinal axis","Flight path and the horizontal"],"Pitch = actitud: eje longitudinal ↔ horizonte. Trayectoria ↔ horizonte es el ángulo de subida."],
@@ -1728,7 +1734,7 @@ const BASE = EXAMQ.concat([
  ["t8","050.3","n","span","Wing tip vortices are strongest at:",["High angle of attack and low IAS","Low angle of attack and high IAS","Zero lift","High IAS with flaps retracted"],"Más ángulo → más diferencia de presión → torbellinos más fuertes."],
  ["t9","050.3","n","span","Wing tip vortices are caused by:",["Air flowing from the high pressure below the wing around the tip to the low pressure above","Engine exhaust","Friction on the upper surface","Air flowing from the low pressure above the wing around the tip to the high pressure below"],"La diferencia de presiones hace que el aire de abajo rodee la punta hacia arriba."],
  ["t10","050.3","c","w3d","Increasing the aspect ratio of a wing will generally:",["Reduce induced drag","Increase induced drag","Increase the stalling speed","Have no effect on drag"],"High aspect ratio (long, narrow wing) → REDUCES induced drag."],
- ["t11","050.3","n","span","Spanwise flow on a wing:",["Occurs along the whole wing but is strongest at the tip","Occurs only at the wing root","Occurs only at the wing tip","Only exists when the flaps are extended for landing"],"En clase: se produce en todo el ala, más fuerte en la punta."],
+ ["t11","050.3","n","span","Spanwise flow on a wing:",["Occurs along the whole wing but is strongest at the tip","Occurs only at the wing root","Occurs only at the wing tip","Only exists when the flaps are extended for landing"],"Clave: se produce en todo el ala, más fuerte en la punta."],
  // ===== 081.01.10 · spoilers y aerofrenos (ATPL, aún no dado) =====
  ["sp1","050.6","x","spoiler","The purpose of spoilers is to:",["Reduce the CL/CD ratio, increasing drag and reducing lift","Increase CLmax","Increase the stalling angle of attack and the CLmax of the wing","Reduce the parasite drag"],"Los spoilers destruyen sustentación y añaden resistencia: bajan la relación CL/CD."],
  ["sp2","050.6","x","spoiler","Symmetrical deployment of the spoilers in flight (speed brakes) will:",["Steepen the descent without increasing speed","Increase lift","Reduce the stalling speed","Increase the glide range without changing the speed"],"Speed brakes: más resistencia, senda más picada a la misma velocidad."],
@@ -2791,7 +2797,7 @@ function examBar(){
     subsOf(c.id).map(s=>{ const l=s[0], d=ss.sub[l];
       return `<button class="seg ${segKind(l,ss)}" style="flex:${W[l]}" data-go="${elOf(l)}" title="${l} · ${esc(s[3])} — ≈ ${fmt1(W[l])} preg. · ${d&&d.m!==null?pct1(d.m)+" %":"sin practicar"}"></button>`;
     }).join("")}</div></div></div>`).join("")
-   + `<p class="xleg"><span><i class="seg full"></i>dado y por encima del 75 %</span><span><i class="seg part"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></p>`;
+   + `<p class="xleg"><span><i class="seg full"></i>base y por encima del 75 %</span><span><i class="seg part"></i>base, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></p>`;
 }
 // la tarjeta de arriba de Apuntes enseña solo la regla, no el apunte entero
 function shortRule(ref){
@@ -2946,7 +2952,7 @@ function renderSetup(){
   $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
   $("#allCount").textContent = `${BANK.filter(q=>q[2]!=="x").length} preguntas de lo dado + ${BANK.filter(q=>q[2]==="x").length} de ampliación ATPL.`;
   $("#examCount").textContent = `Test cronometrado con el reparto oficial de EASA por capítulo (081.01 a 081.08); corrección al final.`;
-  $("#trialCount").textContent = `25 por test: 12 de las ${BANK.filter(isExam).length} clave de clase (con sus variantes) y 13 de las otras ${BANK.filter(q=>isTrial(q)&&!isExam(q)).length} de los trials y ejercicios. Primero las no vistas y las falladas.`;
+  $("#trialCount").textContent = `25 por test: 12 de las ${BANK.filter(isExam).length} clave (con sus variantes) y 13 de las otras ${BANK.filter(q=>isTrial(q)&&!isExam(q)).length} de los trials y ejercicios. Primero las no vistas y las falladas.`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = ECQB.map(c=>`<optgroup label="${c.id} · ${c.en}"><option value="${c.id}" ${c.id===selected?'selected':''}>${c.id} · ${c.en} (todo el capítulo)</option>${SUB.filter(x=>x[0].slice(0,6)===c.id).map(x=>`<option value="${x[0]}" ${x[0]===selected?'selected':''}>${x[0]} · ${esc(x[3])}</option>`).join("")}</optgroup>`).join("");
 }
@@ -4239,6 +4245,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ console.error("modes",e); }
 })();
 </script>
+<script src="../viz16.js?v=02185779" defer></script>
 <script src="../labs.js?v=7496b38f" defer></script>
 </body>
 </html>

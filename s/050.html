@@ -51,6 +51,7 @@ figure.mfig figcaption{font-size:13.5px;color:var(--muted);margin-top:4px}
 .pfvnote{margin:10px 0;padding:9px 12px;border-radius:8px;border:1.5px dashed var(--line);background:var(--paper);font-size:15px}
 .pfvnote b{font-family:"Barlow Condensed",Barlow,sans-serif;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-right:6px}
 </style>
+<style id="f16css">.f16t ul{margin:4px 0 0;padding-left:18px}.f16t li{margin:4px 0}.f16q{background:color-mix(in srgb,#2f6fb0 9%,transparent);border-left:3px solid #2f6fb0;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.f16q b:first-child{display:block;margin-bottom:2px}</style>
 <style id="f0-pub">details.lo>summary{cursor:pointer}:root{--magenta:#0E7C86;--accent:#0E7C86;--compbg:#E3F1F1;--f0none:#B9C7D2}@media (max-width:0px){:root:not([data-theme="light"]){--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}}:root[data-theme="dark"]{--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}.seg.atpl{background:var(--f0none)!important}mark.f0hit{background:#FFE58A;color:#14304A;border-radius:2px;padding:0 1px}mark.f0hit.first{outline:2px solid #0E7C86;outline-offset:1px}</style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -625,13 +626,14 @@ td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)
         <li><b>Altitud de transición, nivel de transición y los reglajes asociados</b>: van en <b>010 Derecho Aéreo</b> y <b>022 Instrumentación</b>, junto con el funcionamiento del barómetro aneroide.</li>
       </ul>
       <div class="key"><b>Por qué conviene saberlo igual</b>
-        <p>El test interno sí pregunta estos cálculos, y es el que decide si pasas a vuelo. Están las cuatro preguntas (d27, d28, d29 y d36) en el adaptativo y en el banco completo.</p></div>
-    </div>
+        <p>Estos cálculos salen en los tests de base y se usan a diario en vuelo. Están las cuatro preguntas (d27, d28, d29 y d36) en el adaptativo y en el banco completo.</p></div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>«<b>De alta a baja, o de calor a frío, cuidado ahí abajo</b>»: el avión va más bajo de lo que marca el altímetro.</li><li>Corrección por temperatura: <b>4 % de la altura por cada 10 °C</b> de desviación ISA; con frío, la altitud verdadera es <b>menor</b> que la indicada.</li><li>Por debajo de la altitud de transición se vuela con <b>QNH</b> (altitudes); por encima, con <b>1013</b> (niveles). Al subir se cambia en la altitud de transición; al bajar, en el nivel de transición.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.01.01" data-lo="050.01.01">
     <summary><span class="lonum">050.01.01</span><span class="lotitle">Composition, extent, vertical division</span></summary>
     <div class="body">
-  <p class="sec-label" id="diaComp">MET-1 · 030.1</p>
+  <p class="sec-label" id="diaComp">030.1</p>
   <h4>Composición del aire seco y limpio</h4>
   <p><span class="en">Nitrogen</span> (nitrógeno) <strong>78 %</strong>, <span class="en">oxygen</span> (oxígeno) <strong>21 %</strong>, el <strong>1 %</strong> restante otros gases. Esa proporción se da siempre para <span class="en">dry and clean air</span> (aire seco y limpio) — es la coletilla habitual. El nitrógeno es un <span class="en">inert gas</span>: no reacciona.</p>
 
@@ -667,12 +669,13 @@ td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)
     <p>La <span class="en">tropopause</span> no está a la misma altura en todo el planeta: <strong>9 km en los polos</strong>, <strong>12 km en los trópicos</strong>, <strong>18 km en el ecuador</strong>. Donde hace más calor, la troposfera es más gruesa.</p>
     <p>Y: <strong>el aire prácticamente nunca atraviesa la tropopausa</strong>. Los fenómenos meteorológicos se quedan debajo. Por eso es la frontera operativa del vuelo comercial.</p>
   </div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Tropopausa: unos <b>8 km en los polos</b> y <b>16 km en el ecuador</b>; más alta y <b>más fría</b> sobre el ecuador.</li><li>Casi todo el tiempo atmosférico y el vapor de agua están en la <b>troposfera</b>.</li><li>La proporción de gases (78 % N₂, 21 % O₂) se mantiene constante hasta unos 80 km; lo que baja es la presión.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.01.02" data-lo="050.01.02">
     <summary><span class="lonum">050.01.02</span><span class="lotitle">Air temperature</span></summary>
     <div class="body">
-  <p class="sec-label" id="diaTemp">MET-2 · 030.7</p>
+  <p class="sec-label" id="diaTemp">030.7</p>
   <h4>Cómo se calienta el aire</h4>
   <p>El viento nace de una <strong>distribución irregular de la temperatura</strong>: unas superficies se calientan más que otras, el aire caliente sube, el frío baja a ocupar su sitio, se calienta y vuelve a subir. Ese ciclo es el origen de todo el movimiento del aire.</p>
   <ul>
@@ -956,7 +959,8 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </div>
 
   <p>Las <strong>temperaturas superiores a la ISA afectan negativamente a las prestaciones</strong> en despegue, crucero y ascenso. Hay que consultar las gráficas de performance sobre todo con temperatura alta, altitud alta y mucha carga: los tres a la vez es el escenario crítico.</p>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>ISA al nivel del mar: <b>15 °C, 1013,25 hPa, 1,225 kg/m³</b>. Gradiente: <b>−1,98 °C por 1 000 ft</b> hasta 36 090 ft; desde ahí, <b>−56,5 °C</b> constante.</li><li>Desviación ISA = temperatura real − temperatura ISA <b>a esa altitud</b>.</li><li>1 hPa ≈ <b>27 ft</b> cerca del nivel del mar (30 ft como regla), pero ≈ 50 ft a 18 000 ft.</li></ul></div>
+</div>
   </details>
 </section>
 <section>
@@ -1306,7 +1310,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     </svg>
     <p class="dia-cap">Se suman: banderín 50, pluma entera 10, media 5. Las plumas van en el extremo <strong>del que viene</strong> el viento; el círculo es la estación.</p>
   </div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>El viento se nombra por la dirección <b>de donde viene</b>. <b>Veer</b> = gira en sentido horario; <b>back</b> = en sentido antihorario.</li><li>Racha (<b>gust</b>): aumento breve. Turbonada (<b>squall</b>): dura al menos un minuto.</li><li>En superficie el viento se mide a <b>10 m</b> de altura.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.02.02" data-lo="050.02.02">
     <summary><span class="lonum">050.02.02</span><span class="lotitle">Primary cause of wind</span></summary>
@@ -1389,8 +1394,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   <h4>Gradient wind (viento del gradiente)</h4>
   <p>Se suma la <strong>fuerza centrífuga</strong> a la PGF y a Coriolis: es el viento que gira siguiendo isobaras curvas alrededor de altas y bajas.</p>
   <div class="caution note">
-    <span class="tag">Ojo con la pizarra</span>
-    <p>En la pizarra quedó «viento diagonal a las isobaras, saliendo de H hacia L». Ojo: el <span class="en">gradient wind</span> es el que va <strong>paralelo a isobaras curvas</strong>. El viento que <strong>cruza las isobaras en ángulo hacia la baja</strong> es el de superficie, frenado por la capa de rozamiento (más abajo). Si una opción dice «parallel to curved isobars», es el gradient wind.</p>
+    <span class="tag">Ojo con la confusión típica</span>
+    <p>Es habitual ver escrito «viento diagonal a las isobaras, saliendo de H hacia L». Ojo: el <span class="en">gradient wind</span> es el que va <strong>paralelo a isobaras curvas</strong>. El viento que <strong>cruza las isobaras en ángulo hacia la baja</strong> es el de superficie, frenado por la capa de rozamiento (más abajo). Si una opción dice «parallel to curved isobars», es el gradient wind.</p>
   </div>
   <h4>Cyclostrophic wind (viento ciclostrófico)</h4>
   <ul>
@@ -1482,9 +1487,10 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
       <text x="310" y="184" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">convergencia</text>
       <text x="60" y="184" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">asciende</text>
     </svg>
-    <p class="dia-cap">Las latitudes aproximadas (0°, 30°, 60°, 90°) son un <strong>complemento</strong>: en clase se dio por masas de aire. Anticiclones en la zona subtropical y en el polo; convergencia donde choca el aire polar con el subtropical.</p>
+    <p class="dia-cap">Las latitudes aproximadas (0°, 30°, 60°, 90°) son un <strong>complemento</strong>: aquí se explica por masas de aire. Anticiclones en la zona subtropical y en el polo; convergencia donde choca el aire polar con el subtropical.</p>
   </div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Tres células por hemisferio: <b>Hadley</b> (0–30°), <b>Ferrel</b> (30–60°) y <b>polar</b> (60–90°).</li><li>Bajas en el ecuador (ITCZ) y a 60°; altas a 30° (subtropicales) y en los polos.</li><li>Los <b>alisios</b> soplan del NE en el hemisferio norte y del SE en el sur.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.02.04" data-lo="050.02.04">
     <summary><span class="lonum">050.02.04</span><span class="lotitle">Local winds</span></summary>
@@ -1509,7 +1515,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
           <text x="120" y="40" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">en altura vuelve al mar</text>
           <text x="264" y="92" text-anchor="end" font-family="var(--mono)" font-size="8" fill="var(--muted)">1000–3000 ft</text>
         </svg>
-        <p class="panel-note">Día, aire fresco, <b>desde el mar</b>. Alcance de unas 8–15 NM según la pizarra.</p>
+        <p class="panel-note">Día, aire fresco, <b>desde el mar</b>. Alcance de unas 8–15 NM.</p>
       </div>
       <div class="panel">
         <p class="panel-title">Land breeze · de noche</p>
@@ -1590,7 +1596,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     </svg>
     <p class="dia-cap">Nube de un lado y aire cálido y seco del otro. Complemento: llega más caliente abajo porque ha soltado su humedad como lluvia en barlovento y baja seco, calentándose más deprisa de lo que se enfrió al subir.</p>
   </div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Brisa de <b>mar</b>: de día, del mar a la tierra. Brisa de <b>tierra</b>: de noche, más débil.</li><li><b>Anabático</b>: sube la ladera de día. <b>Catabático</b>: baja de noche, y es el más fuerte de los dos.</li><li><b>Foehn</b>: viento cálido y seco a sotavento, con nubes y precipitación a barlovento.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.02.05" data-lo="050.02.05">
     <summary><span class="lonum">050.02.05</span><span class="lotitle">Mountain waves (standing waves, lee waves)</span></summary>
@@ -1603,7 +1610,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <li>La firma visible son el <strong><span class="en">cap cloud</span></strong> sobre la cima —la «nube de boina»— y los <strong>altocúmulos lenticulares</strong> en las crestas de la onda.</li>
     <li>Dentro de la onda en sí el aire va <strong>liso</strong>: el avión sube y baja sin zarandeo. La turbulencia de verdad está <strong>debajo</strong>, en el rotor, y es la que puede ser severa.</li>
   </ul><!--ph:fuji--><figure class="mfig"><img src="img/ph-fuji.jpg" alt="Lenticulares apiladas sobre una cima" loading="lazy"><figcaption>Lenticulares <strong>apiladas sobre una cima</strong>: lentes lisas e inmóviles. Aire estable y viento fuerte cruzando la montaña: onda de montaña.</figcaption></figure>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Condiciones para onda de montaña: viento <b>perpendicular</b> a la cordillera, de <b>20 kt o más</b> en la cima, que aumenta con la altura, y una capa <b>estable</b> a la altura de las cimas.</li><li>La peor turbulencia está en el <b>rotor</b>, bajo las crestas de la onda y a sotavento.</li><li>Las nubes <b>lenticulares</b> parecen quietas, pero el viento las atraviesa.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.02.06" data-lo="050.02.06">
     <summary><span class="lonum">050.02.06</span><span class="lotitle">Turbulence</span></summary>
@@ -1620,7 +1628,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
       </tbody>
     </table>
   </div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li><b>CAT</b> (turbulencia en aire claro): cerca de los chorros, sobre todo en el lado <b>frío</b> (polar), y sin nubes que la delaten.</li><li>Turbulencia <b>mecánica</b>: viento sobre obstáculos. <b>Térmica</b>: convección, más fuerte por la tarde.</li><li>Moderada: cambios de altitud y actitud, pero con el avión bajo control. Severa: el control se pierde por momentos.</li></ul></div>
+</div>
   </details>
 </section>
 <section>
@@ -1629,7 +1638,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <summary><span class="lonum">050.02.07</span><span class="lotitle">Jet streams</span></summary>
     <div class="body">
   <div class="atplbox"><b>ATPL · ampliación</b>
-    <p>Esto no entró en MET-1 a MET-4. Está montado desde los objetivos de aprendizaje de EASA, que es lo que se mide.</p></div>
+    <p>Ampliación sobre el temario base. Está montado desde los objetivos de aprendizaje de EASA, que es lo que se mide.</p></div>
   <p>Un <span class="en">jet stream</span> es una banda estrecha de viento muy fuerte justo bajo la tropopausa. Para que se llame jet, el núcleo tiene que alcanzar <b>60 kt</b> o más (en la carta SIGWX solo se dibujan los de 80 kt o más).</p>
   <ul>
     <li><b>Por qué existe:</b> un gradiente HORIZONTAL de temperatura fuerte entre dos masas hace que el gradiente de presión crezca con la altura. Ese «viento térmico» es el jet. Sin contraste de masas, no hay jet.</li>
@@ -1640,7 +1649,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   </ul>
   <div class="key"><b>Importante</b>
     <p>La <span class="en">clear air turbulence</span> (CAT) es máxima en el <b>lado frío</b> del núcleo y algo <b>por debajo</b> de la tropopausa, donde la cizalladura es mayor. El núcleo en sí suele dar vuelo liso. Salida recomendada de una CAT: cambiar de nivel y alejarse hacia el lado cálido.</p></div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Se llama corriente en chorro a partir de <b>60 kt</b>.</li><li>El núcleo está en el aire <b>cálido</b>, justo bajo la tropopausa; la peor CAT, en el lado <b>frío</b>.</li><li>En invierno los chorros son más fuertes y están más al sur.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.03.01" data-lo="050.03.01">
     <summary><span class="lonum">050.03.01</span><span class="lotitle">Humidity</span></summary>
@@ -1684,7 +1694,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <li><strong>El punto de rocío nunca puede ser mayor que la OAT</strong> (<span class="en">outside air temperature</span>). Como mucho son iguales, y entonces el aire ya está saturado.</li>
     <li>En el METAR van juntos: <code>30/02</code> es OAT +30 °C y rocío +2 °C. Cuanto más cerca están las dos cifras, más cerca está la saturación.</li>
   </ul>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Humedad relativa</b> = vapor que hay ÷ vapor máximo a esa temperatura. Si baja la temperatura sin cambiar el vapor, la humedad relativa <b>sube</b>.</li><li>El <b>punto de rocío</b> depende de la cantidad de vapor, no de la temperatura del aire.</li><li>Cuanto menor es la diferencia entre temperatura y punto de rocío, más cerca está la saturación (niebla, base de nubes baja).</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.03.02" data-lo="050.03.02">
     <summary><span class="lonum">050.03.02</span><span class="lotitle">Change of state of water</span></summary>
@@ -1728,7 +1739,9 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     </table>
   </div>
   <p>Las nubes también se disipan por <strong>mezcla con aire más seco</strong> de los alrededores o por <strong>corrientes verticales descendentes</strong>. Y una misma nube puede tener a la vez parte de agua líquida y parte de hielo.</p>
-    </div>
+    <div class="f0viz" data-viz="stabil"></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li><b>DALR</b> = 3 °C por 1 000 ft (1 °C/100 m). <b>SALR</b> ≈ 1,8 °C por 1 000 ft (0,6 °C/100 m) de media; es menor porque la condensación <b>libera calor</b>.</li><li>ELR menor que la SALR: estabilidad <b>absoluta</b>. ELR entre SALR y DALR: inestabilidad <b>condicional</b>. ELR mayor que la DALR: inestabilidad <b>absoluta</b>.</li><li>Base de nubes convectivas ≈ <b>(T − punto de rocío) × 400 ft</b>.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.04.01" data-lo="050.04.01">
     <summary><span class="lonum">050.04.01</span><span class="lotitle">Cloud formation and description</span></summary>
@@ -1841,7 +1854,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <span class="tag">Cómo lo va a preguntar</span>
     <p>En temario base <strong>no hay fotos</strong>: se pregunta por el nombre y la abreviatura, no por la imagen (eso llega en el ATPL). Hay que saber decirlas en inglés y reconocer la abreviatura.</p>
   </div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Nubes <b>bajas</b>: hasta 6 500 ft (St, Sc). <b>Medias</b>: 6 500–23 000 ft (Ac, As). <b>Altas</b>: por encima (Ci, Cc, Cs). Ns, Cu y Cb tienen gran desarrollo vertical.</li><li><b>Nimbo</b> = precipitación: Ns da lluvia continua; Cb da chubascos.</li><li>Aire estable → nubes estratiformes; aire inestable → nubes cumuliformes.</li></ul></div>
+</div>
   </details>
 </section>
 <section>
@@ -1862,12 +1876,12 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   </div>
 
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>La <b>escalera del viento</b> de la pizarra: sin viento rocío, de 1 a 5 kt niebla, de 5 a 10 kt neblina y por encima de 10 kt estrato.</li>
+    <li>La <b>escalera del viento</b>: sin viento rocío, de 1 a 5 kt niebla, de 5 a 10 kt neblina y por encima de 10 kt estrato.</li>
     <li>Las cifras que separan <b>niebla (menos de 1.000 m)</b> de <b>neblina (1.000 a 5.000 m)</b>.</li>
   </ul></div>
 
   <div class="axiom">
-    <span class="k">La escalera del viento, tal como la explicó en clase</span>
+    <span class="k">La escalera del viento, paso a paso</span>
     <p><strong>Sin viento</strong> la humedad se queda pegada al suelo y sale rocío &nbsp;→&nbsp; <strong>1 a 5 kt: NIEBLA</strong> &nbsp;→&nbsp; <strong>5 a 10 kt: NEBLINA</strong> &nbsp;→&nbsp; <strong>más de 10 kt: la capa se levanta y es un ESTRATO</strong>.</p>
     <p class="sub">Es una regla de aula para entender que todo depende de cuánto se mezcle el aire, y no cuadra al dedillo con las cifras del temario (radiación con 2 a 8 kt, advección con hasta 15 kt). <strong>Manda la cifra oficial</strong>; esta escalera sirve para razonar el porqué.</p>
   </div>
@@ -1894,7 +1908,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   <details class="lo" id="lo-050.05.01" data-lo="050.05.01">
     <summary><span class="lonum">050.05.01</span><span class="lotitle">Development of precipitation</span></summary>
     <div class="body">
-  <p class="sec-label" id="diaIce">MET-3 · 030.11</p>
+  <p class="sec-label" id="diaIce">030.11</p>
   <div class="axiom">
     <span class="k">Definición exacta</span>
     <p>Hay precipitación cuando el agua llega al suelo.</p>
@@ -1902,7 +1916,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   </div>
   <h4>Cómo crecen las gotas</h4>
   <p><span class="en">Coalescence theory</span> (coalescencia): la gota más grande atrapa a las más pequeñas al caer y así crece hasta poder precipitar.</p>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Bergeron-Findeisen</b> (cristales de hielo): los cristales crecen a costa de las gotas subfundidas; da la precipitación de latitudes medias.</li><li><b>Coalescencia</b>: las gotas chocan y se unen; típica de nubes cálidas tropicales.</li><li>Si no llega al suelo se llama <b>virga</b> y no es precipitación.</li></ul></div>
+</div>
   </details>
 </section>
 <section>
@@ -1934,7 +1949,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
       </tbody>
     </table>
   </div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Llovizna</b> (DZ): gotas de menos de 0,5 mm, de estratos. <b>Chubascos</b> (SH): solo de nubes convectivas (Cu, Cb).</li><li><b>Granizo</b> (GR): solo de Cb. <b>Lluvia engelante</b> (FZRA): gotas subfundidas que se hielan al impacto; indica aire cálido por encima.</li><li>Intensidad en el METAR: − débil, sin signo moderada, + fuerte.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.06.01" data-lo="050.06.01">
     <summary><span class="lonum">050.06.01</span><span class="lotitle">Air masses</span></summary>
@@ -1952,7 +1968,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     </table>
   </div>
   <p>De ahí salen las cuatro: <strong>PM</strong> (<span class="en">Polar Maritime</span>), <strong>PC</strong> (<span class="en">Polar Continental</span>), <strong>TM</strong> (<span class="en">Tropical Maritime</span>) y <strong>TC</strong> (<span class="en">Tropical Continental</span>).</p>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Las masas de aire se nombran por su origen: <b>marítima</b> (húmeda) o <b>continental</b> (seca); <b>tropical</b>, <b>polar</b> o <b>ártica</b>.</li><li>Una masa <b>fría</b> que avanza sobre suelo cálido se <b>inestabiliza</b> (cúmulos, chubascos, buena visibilidad). Una <b>cálida</b> sobre suelo frío se <b>estabiliza</b> (estratos, niebla, mala visibilidad).</li></ul></div>
+</div>
   </details>
 </section>
 <section>
@@ -2012,7 +2029,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   <details class="lo" id="lo-050.07.01" data-lo="050.07.01">
     <summary><span class="lonum">050.07.01</span><span class="lotitle">The principal pressure areas</span></summary>
     <div class="body">
-  <p class="sec-label" id="diaSist">MET-1 y MET-2 · 030.9</p>
+  <p class="sec-label" id="diaSist">030.9</p>
   <ul>
     <li><span class="en">Isobars</span> (isobaras): líneas que unen puntos de <strong>igual presión</strong>. <strong>Muy juntas = mucho viento</strong> y sistemas fuertes.</li>
     <li>Los sistemas de presión se mueven, se crean y se destruyen.</li>
@@ -2064,7 +2081,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   </ul>
   <div class="atplbox"><b>ATPL · ampliación ATPL</b>
     <p>Las <b>no frontales</b>, que son las de este subcapítulo: <b>térmica</b> (calentamiento del suelo en verano, somera), <b>orográfica</b> a sotavento de una cordillera, <b>de sotavento</b> (<span class="en">lee depression</span>), <b>polar</b> (aire polar sobre mar más cálido, con convección fuerte) y <b>secundaria</b>, que se forma en la periferia de una borrasca principal y suele ser más activa que ella.</p></div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Baja <b>térmica</b>: por calentamiento del suelo en verano, poco profunda. Baja <b>orográfica</b>: a sotavento de una cordillera.</li><li><b>Gota fría</b> (cut-off low): aire frío aislado en altura; da tiempo muy inestable aunque en superficie apenas se vea.</li><li>Ciclón tropical: necesita mar a <b>27 °C o más</b>, y no se forma a menos de unos 5° del ecuador porque falta Coriolis.</li></ul></div>
+</div>
   </details>
 </section>
 <section>
@@ -2115,7 +2133,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <li><b>Monzónico</b>: lo define la <b>inversión estacional del viento</b>, no la cantidad de lluvia.</li>
   </ul>
   <div class="key"><b>España</b><p>Subtropical mediterráneo: en verano manda el anticiclón de las Azores (seco) y en invierno bajan las borrascas del frente polar. El interior es continentalizado; las costas, marítimas.</p></div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Clasificación de Köppen: tropical, seco, templado, continental y polar.</li><li><b>ITCZ</b>: sigue al sol con retraso; está más al norte en julio.</li><li>Los <b>monzones</b> son vientos estacionales por el contraste tierra-mar: húmedo en verano, seco en invierno.</li></ul></div>
+</div>
   </details>
   <details class="lo atpl" id="lo-050.08.02" data-lo="050.08.02">
     <summary><span class="lonum">050.08.02</span><span class="lotitle">Tropical climatology</span></summary>
@@ -2155,7 +2174,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <li><b>Gota fría o DANA</b> (otoño en España): bolsa de aire frío aislada en altura que desestabiliza una atmósfera baja cálida y húmeda. Chubascos y tormentas intensas <b>sin frentes definidos</b>.</li>
     <li><b>Tormentas de calor</b> sobre los continentes en verano: máximo a <b>media tarde</b>; sobre el mar, de madrugada.</li>
   </ul>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Anticiclón en verano: buen tiempo y calima. Anticiclón en <b>invierno</b>: inversión, <b>nieblas</b> y estratos persistentes.</li><li>Situación del <b>oeste</b>: paso seguido de frentes. <b>Pantano barométrico</b>: gradiente débil y tormentas de calor en verano.</li></ul></div>
+</div>
   </details>
 </section>
 <section>
@@ -2164,7 +2184,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <summary><span class="lonum">050.08.04</span><span class="lotitle">Local winds and associated weather</span></summary>
     <div class="body">
   <div class="atplbox"><b>ATPL · ampliación</b>
-    <p>En MET-2 se dieron las brisas, el Foehn y los vientos de ladera (están en 050.02.04). Lo que falta son los vientos locales <b>con nombre propio</b>, que es lo que pregunta este subcapítulo.</p></div>
+    <p>Las brisas, el Foehn y los vientos de ladera están en 050.02.04. Lo que falta son los vientos locales <b>con nombre propio</b>, que es lo que pregunta este subcapítulo.</p></div>
   <div class="tablewrap"><table>
     <thead><tr><th>Viento</th><th>Dónde</th><th>Qué es</th></tr></thead>
     <tbody>
@@ -2179,7 +2199,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     </tbody>
   </table></div>
   <div class="key"><b>El patrón</b><p>Casi todos son lo mismo con otro nombre: aire frío que se derrama por gravedad (catabático: Mistral, Bora, Cierzo) o aire que baja por sotavento calentándose a 3 °C/1000 ft (Foehn: Chinook, Siroco al sur de los Alpes).</p></div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Mistral</b>: norte, frío, valle del Ródano. <b>Bora</b>: nordeste, frío y racheado, Adriático. <b>Siroco</b>: sur, cálido, del Sáhara hacia el Mediterráneo.</li><li><b>Harmattan</b>: nordeste, seco y con polvo, África occidental en invierno. <b>Foehn</b>: cálido y seco a sotavento de los Alpes.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.09.01" data-lo="050.09.01">
     <summary><span class="lonum">050.09.01</span><span class="lotitle">Icing</span></summary>
@@ -2226,13 +2247,14 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <div class="body">
   <p><b>Cizalladura</b> (<span class="en">wind shear</span>): cambio de velocidad y/o dirección del viento en una distancia corta, vertical u horizontal. No es turbulencia: es un cambio de viento, y lo que mata es el salto brusco de IAS.</p>
   <ul>
-    <li><b>Microburst</b> (dado en MET-4): descendente violenta que al llegar al suelo se abre en todas direcciones. Primero viento en cara (la IAS sube y el avión tiende a subir), luego descendente, luego viento en cola: la IAS se desploma y el avión se hunde.</li>
+    <li><b>Microburst</b>: descendente violenta que al llegar al suelo se abre en todas direcciones. Primero viento en cara (la IAS sube y el avión tiende a subir), luego descendente, luego viento en cola: la IAS se desploma y el avión se hunde.</li>
     <li><b>Headwind decreciente</b> en aproximación: pérdida de IAS y hundimiento por debajo de la senda. Es el perfil clásico.</li>
     <li><b>Frente de racha</b> (<span class="en">gust front</span>): puede adelantarse <b>15–20 NM</b> a la tormenta. Por eso no se despega con una tormenta cerca.</li>
   </ul>
   <div class="atplbox"><b>ATPL · las otras tres fuentes</b>
-    <p>En clase solo se vio el microburst. Se cuentan cuatro fuentes de cizalladura a baja cota: <b>tormentas</b>, <b>frentes</b> (en el cálido es moderada pero en banda ancha, con inversión; en el frío es brusca y estrecha), <b>inversiones</b> (viento mucho más fuerte encima) y <b>ondas de montaña</b> a sotavento.</p></div>
-    </div>
+    <p>El microburst es solo una de ellas. Se cuentan cuatro fuentes de cizalladura a baja cota: <b>tormentas</b>, <b>frentes</b> (en el cálido es moderada pero en banda ancha, con inversión; en el frío es brusca y estrecha), <b>inversiones</b> (viento mucho más fuerte encima) y <b>ondas de montaña</b> a sotavento.</p></div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>La cizalladura es un <b>cambio de viento</b> en poca distancia; no es turbulencia, aunque suelan ir juntas.</li><li>Si el viento en cara <b>aumenta</b> de golpe, la IAS sube y el avión queda alto; si <b>disminuye</b> o pasa a cola, la IAS cae y el avión se hunde.</li><li>Las inversiones marcadas y los frentes también dan cizalladura, además de las tormentas.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.09.04" data-lo="050.09.04">
     <summary><span class="lonum">050.09.04</span><span class="lotitle">Thunderstorms</span></summary>
@@ -2252,7 +2274,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     </table>
   </div>
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>Lo más violento está <b>entre la segunda y la tercera fase</b>. Lo repitió en clase y lo subrayó en la pizarra.</li>
+    <li>Lo más violento está <b>entre la segunda y la tercera fase</b>. Es pregunta recurrente.</li>
     <li>El <b>microburst</b>: corriente descendente violenta que cambia el ángulo de ataque y puede meterte en pérdida.</li>
   </ul></div>
 
@@ -2271,7 +2293,10 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   <h4>El ciclo, en movimiento</h4>
   <p class="vistip">Dale a «Ver el ciclo» y fíjate en las flechas: en la primera fase solo suben, en la madura suben y bajan a la vez, y en la disipación solo bajan.</p>
   <div class="vis" id="visTormenta"></div>
-    </div>
+    <div class="f0viz" data-viz="tstorm"></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>Tres ingredientes: <b>humedad</b>, <b>inestabilidad</b> y un <b>disparador</b> (calentamiento, orografía, frente, convergencia).</li><li>Tres fases: <b>cúmulo</b> (solo ascendencias), <b>madurez</b> (ascendencias y descendencias; empieza con la primera precipitación y es la más violenta) y <b>disipación</b> (solo descendencias).</li><li>El granizo puede caer fuera de la nube, bajo el yunque; el <b>frente de racha</b> puede adelantarse 15–20 NM.</li><li>Tormentas de <b>masa de aire</b>: aisladas, por la tarde. <b>Frontales</b>: en línea y a cualquier hora.</li></ul></div>
+<div class="f16q f16t"><b>Duda frecuente · ¿Por dónde esquivo una tormenta?</b>Por el lado de <b>barlovento</b>, a 10 NM o más (20 NM si es severa), y nunca por debajo del yunque.</div>
+</div>
   </details>
   <details class="lo atpl" id="lo-050.09.05" data-lo="050.09.05">
     <summary><span class="lonum">050.09.05</span><span class="lotitle">Tornadoes</span></summary>
@@ -2284,7 +2309,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <li>Diámetro de decenas o cientos de metros, vida de minutos a una hora, vientos que pueden pasar de 200 kt.</li>
     <li>En el METAR se cifra <b>FC</b>; si está en superficie, <b>+FC</b>.</li>
   </ul>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Un tornado está asociado a un <b>Cb</b> muy desarrollado, a menudo una supercélula.</li><li>Diámetro típico: de 100 a 150 m. Se mueven a unos 20–40 kt.</li><li>En el mar se llaman <b>mangas marinas</b>.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.09.06" data-lo="050.09.06">
     <summary><span class="lonum">050.09.06</span><span class="lotitle">Inversions</span></summary>
@@ -2295,9 +2321,10 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <li><b>Efecto:</b> tapa el ascenso. Debajo se acumulan humedad, calima y contaminación: estratos, niebla y mala visibilidad. Encima, aire liso y visibilidad excelente.</li>
     <li><b>Para el vuelo:</b> al atravesarla se nota la OAT subiendo y casi siempre <b>cizalladura</b>, porque encima de la inversión el viento es bastante más fuerte.</li>
   </ul>
-  <div class="atplbox"><b>ATPL · matiz que no se dio</b>
-    <p>En clase apareció como «capa donde la temperatura sube». Se pide además la <b>cizalladura asociada</b> y la <b>isotermia</b>, que es el caso intermedio: la temperatura no cambia con la altura.</p></div>
-    </div>
+  <div class="atplbox"><b>ATPL · matiz que se pide</b>
+    <p>La definición corta es «capa donde la temperatura sube». Se pide además la <b>cizalladura asociada</b> y la <b>isotermia</b>, que es el caso intermedio: la temperatura no cambia con la altura.</p></div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Inversión de <b>radiación</b>: noches despejadas y con poco viento; se rompe al calentar el sol. De <b>subsidencia</b>: en los anticiclones. <b>Frontal</b>: en la superficie de un frente.</li><li>Por debajo de una inversión: mala visibilidad y aire en calma. Al atravesarla: <b>cizalladura</b> y cambio de actuaciones.</li></ul></div>
+</div>
   </details>
   <details class="lo atpl" id="lo-050.09.07" data-lo="050.09.07">
     <summary><span class="lonum">050.09.07</span><span class="lotitle">Stratospheric conditions</span></summary>
@@ -2310,12 +2337,13 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <li><b>Nubes estratosféricas polares</b> (nacaradas): 20–30 km sobre las regiones polares en invierno, con menos de −80 °C. Indicador, no peligro.</li>
     <li><b>Radiación cósmica</b> y <b>ozono</b>: aumentan con la altura y con la latitud. Son el límite operativo real a gran altura.</li>
   </ul>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>En la estratosfera baja la temperatura es constante y luego <b>aumenta</b> con la altura, por el ozono.</li><li>Encima de un Cb la tropopausa puede estar más alta y haber turbulencia fuerte; los <b>overshooting tops</b> entran en la estratosfera.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.09.08" data-lo="050.09.08">
     <summary><span class="lonum">050.09.08</span><span class="lotitle">Hazards in mountainous areas</span></summary>
     <div class="body">
-  <p>En MET-4 se dieron las ondas de montaña y el rotor (están en 050.02.05). Este subcapítulo junta <b>todo</b> lo que la montaña le hace al avión.</p>
+  <p>Las ondas de montaña y el rotor están en 050.02.05. Este subcapítulo junta <b>todo</b> lo que la montaña le hace al avión.</p>
   <ul>
     <li><b>Turbulencia y descendentes a sotavento</b>: en el rotor pueden exceder la capacidad de ascenso. Dentro de la onda el aire va liso; debajo, no.</li>
     <li><b>Altímetro</b>: el flujo acelerado sobre la cresta <b>baja la presión local</b>, así que el altímetro SOBRE-LEE y estás más bajo. Se suma al error por aire frío.</li>
@@ -2325,9 +2353,10 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <li><b>Oscurecimiento de montañas</b> (MT OBSC): en el mapa SIGWX, <b>dos montañas rellenas</b>.</li>
     <li><b>Prestaciones</b>: elevación alta + aire cálido = altitud de densidad alta = menos empuje y más carrera de despegue.</li>
   </ul>
-  <div class="atplbox"><b>ATPL · lo que no se dio</b>
-    <p>La parte de <b>altimetría de montaña</b> y la de <b>prestaciones por altitud de densidad</b> no se trataron como peligro de montaña. Aquí sí se preguntan.</p></div>
-    </div>
+  <div class="atplbox"><b>ATPL · lo que se suele olvidar</b>
+    <p>La parte de <b>altimetría de montaña</b> y la de <b>prestaciones por altitud de densidad</b> también cuentan como peligro de montaña y se preguntan.</p></div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>A sotavento hay <b>descendencias</b> que pueden superar la capacidad de ascenso del avión: los puertos se cruzan con margen y en diagonal.</li><li>Con viento fuerte sobre una cordillera el altímetro puede <b>indicar de más</b> por efecto Venturi.</li><li>Aire frío: la altitud real es menor que la indicada, justo donde menos margen hay.</li></ul></div>
+</div>
   </details>
 </section>
 <section>
@@ -2349,13 +2378,14 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   </div>
   <p>La diferencia entre niebla y neblina es el <strong>agente</strong> y la <strong>cifra</strong>: agua en las dos, pero por debajo de 1.000 m es niebla. La calima no es agua, son partículas sólidas, y suele quedar <strong>atrapada bajo una inversión</strong>.</p>
   <p class="dia-cap">La mala visibilidad va casi siempre con <strong>condiciones estables</strong>: inversión y viento flojo. Y la niebla, en el fondo, es un <strong>estrato que toca el suelo</strong>.</p>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Niebla</b>: visibilidad de menos de 1 000 m. <b>Neblina</b> (BR): de 1 000 a 5 000 m, con humedad alta. <b>Calima</b> (HZ): partículas secas.</li><li>Niebla de <b>radiación</b>: solo sobre tierra, noche despejada y viento flojo (2–8 kt). De <b>advección</b>: aire húmedo y cálido sobre superficie fría; aguanta viento más fuerte y puede darse sobre el mar.</li><li>Con el sol bajo y de frente, la visibilidad oblicua es mucho peor que la horizontal.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.10.01" data-lo="050.10.01">
     <summary><span class="lonum">050.10.01</span><span class="lotitle">Observation</span></summary>
     <div class="body">
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li><b>Todos los códigos de la página 21</b> de la Guía MET de AEMET, la tabla de tiempo significativo. En clase quedó apuntado como «MUY IMPORTANTE».</li>
+    <li><b>Todos los códigos de la página 21</b> de la Guía MET de AEMET, la tabla de tiempo significativo. Muy importante.</li>
     <li>Instalar <b>Aeroweather</b> o <b>Windy</b> para practicar METAR y TAF con aeródromos reales.</li>
   </ul></div>
 
@@ -2556,7 +2586,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
       </tbody>
     </table>
   </div>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li>Mapa de <b>superficie</b>: isobaras y frentes. Mapas de <b>altura</b>: isohipsas a una presión fija (850, 700, 500, 300 hPa…).</li><li><b>500 hPa ≈ FL180</b>, 300 hPa ≈ FL300, 200 hPa ≈ FL390, 700 hPa ≈ FL100, 850 hPa ≈ FL050.</li><li>En los mapas SIGWX las alturas van en <b>niveles de vuelo</b> y las nubes en octas o como ISOL, OCNL, FRQ y EMBD.</li></ul></div>
+</div>
   </details>
   <details class="lo" id="lo-050.10.03" data-lo="050.10.03">
     <summary><span class="lonum">050.10.03</span><span class="lotitle">Information for flight planning</span></summary>
@@ -2583,7 +2614,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     </table>
   </div>
   <p class="dia-cap">Regla práctica: si la probabilidad fuese mayor del 40 % no se pondría PROB, se cifraría directamente.</p>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li><b>METAR</b>: observación. <b>TAF</b>: pronóstico de aeródromo. <b>SIGMET</b>: fenómenos peligrosos en ruta. <b>AIRMET</b>: lo mismo para niveles bajos. <b>SPECI</b>: observación especial.</li><li>En el METAR la visibilidad es la <b>predominante</b>; el viento va en verdaderos y es la media de 10 minutos.</li><li><b>TREND</b>: pronóstico de 2 horas añadido al METAR (NOSIG, BECMG, TEMPO).</li></ul></div>
+</div>
   </details>
 </section>
 <section>
@@ -2605,7 +2637,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     </table>
   </div>
   <p class="dia-cap">Los vientos que da la torre también van en <strong>magnético</strong>. Los del METAR y el TAF, en <strong>verdadero</strong>.</p>
-    </div>
+    <div class="flag f16t"><b>Trampas de examen</b><ul><li><b>WAFC</b> (Londres y Washington): pronósticos globales de altura y SIGWX. <b>VAAC</b>: cenizas volcánicas. <b>TCAC</b>: ciclones tropicales.</li><li>La <b>oficina de vigilancia meteorológica</b> (MWO) emite los SIGMET de su FIR.</li><li><b>VOLMET</b> es una emisión continua de partes para aviones en vuelo; <b>ATIS</b> es la información del aeródromo.</li></ul></div>
+</div>
   </details>
 </section>
 </section>
@@ -2769,7 +2802,7 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale lo dado y lo que entra en el temario base.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale el temario base.</small></span></label>
     <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las del temario y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
@@ -2924,7 +2957,7 @@ const REFS = {
  info:"Indicador OACI de cuatro letras: L sur de Europa, LE España, y las dos últimas el aeródromo (LEMD, LEVS, LEDA). Viento: G de gusting para rachas y un segundo grupo dddVddd si la dirección es variable (06003KT 350V100 = de 060° con 3 kt, oscilando entre 350° y 100°). Observaciones: METAR (rutinario), SPECI (especial), ATIS, VOLMET. Pronósticos: TAF, TREND, GAMET/AIRMET, SIGMET. METAR: fecha y hora en seis cifras UTC, temperatura y rocío (M para negativos), nubes en centenares de pies SOBRE EL AERÓDROMO, 9999 = 10 km o más, grupos no disponibles con barras, QNH truncado al entero inferior, RVR solo por debajo de 1.500 m. CAVOK: visibilidad 10 km o más, sin nubes bajo 1.500 m (5.000 ft) o la MSA, SIN CB NI TCU a ninguna altura, y sin fenómenos significativos. TAF: mismo código, de 9 a 24 horas; los de 9 h cada 3 h y los de 12–24 h cada 6 h. TREND: 2 horas; NOSIG sin cambios, BECMG cambio sin retorno, TEMPO menos de 1 hora cada vez, FM/TL/AT, PROB solo si la probabilidad es del 40 % o menos. SIGMET: solo fenómenos severos. GAMET: área en texto, de superficie a FL150, cuatro veces al día. AIRMET: baja cota, lo que no venía en el GAMET. VOLMET: radiodifusión continua en VHF. ATIS y torre dan el viento en MAGNÉTICO; METAR y TAF, en verdadero.",
  codes:"WX = intensidad + descriptor + fenómeno. Intensidad: - leve, nada moderado, + fuerte, VC en las proximidades (8 a 16 km). Descriptores: MI baja, BC bancos, PR parcial, DR levantado bajo 2 m, BL levantado desde 2 m, SH chubascos, TS tormenta, FZ engelante. Precipitación: DZ llovizna, RA lluvia, SN nieve, SG cinarra, PL hielo granulado, GR granizo, GS granizo pequeño o nieve granulada. Oscurecimiento: BR neblina, FG niebla, FU humo, VA cenizas volcánicas, DU polvo, SA arena, HZ calima. Otros: PO remolinos, SQ turbonadas, FC tornado o tromba, SS tempestad de arena, DS tempestad de polvo. Tiempo reciente con prefijo RE. Solo se cifra el tipo de nube para CB y TCU.",
  simbolos:"Los doce en el SIGWX SFC/150: tormenta, turbulencia moderada (UN pico), turbulencia fuerte (DOS picos), ondas orográficas (elipse), niebla extensa (TRES rayas; con dos sería neblina), oscurecimiento de montañas (dos montañas rellenas), llovizna (coma rellena), lluvia (trazos diagonales), nieve (asterisco), chubasco (triángulo hacia ABAJO), granizo (triángulo hacia ARRIBA) y precipitación engelante (onda con punto relleno al principio). El mapa va de superficie a FL150, vale 6 horas y se emite 4 veces al día; la línea festoneada delimita zonas homogéneas; V1 es visibilidad bajo 1.000 m y V5 entre 1.000 y 5.000 m.",
- futuro:"Temario aún no impartido: viene del trial. Se incorpora a los apuntes cuando se dé la clase correspondiente."
+ futuro:"Temario aún no impartido: viene del trial. Pendiente de desarrollar en los apuntes."
 };
 // ---------- repaso adicional para el temario ATPL ----------
 Object.assign(REFS, {
@@ -2939,7 +2972,7 @@ Object.assign(REFS, {
  strat:"Estratosfera: la temperatura sube con la altura, capa muy estable y casi sin vapor de agua: vuelo liso, sin nubes ni engelamiento; la excepción es la CAT cerca del jet. La ceniza volcánica dura meses porque no hay lluvia que la lave, el radar no la ve y funde dentro del motor. Nubes nacaradas a 20-30 km sobre los polos en invierno. Radiación cósmica y ozono aumentan con altura y latitud.",
  mtn:"Montaña: turbulencia severa y descendentes en el rotor a sotavento. El flujo acelerado sobre la cresta baja la presión local, así que el altímetro SOBRE-LEE y estás más bajo; el aire frío de montaña suma al mismo error y ningún reglaje lo corrige. Nubes aviso: cap cloud en la cima, roll cloud en el rotor y lenticulares. Oscurecimiento de montañas (MT OBSC) = dos montañas rellenas en el SIGWX. Elevación alta más aire cálido = altitud de densidad alta = menos prestaciones.",
  ws:"Cizalladura: cambio de velocidad y/o dirección del viento en una distancia corta, vertical u horizontal; no es turbulencia. Cuatro fuentes a baja cota: tormentas (microburst y frente de racha, que se adelanta 15-20 NM), frentes (en el cálido moderada pero en banda ancha con inversión; en el frío brusca y estrecha), inversiones (viento mucho más fuerte encima) y ondas de montaña. Un headwind que disminuye en aproximación hace caer la IAS y hundirse por debajo de la senda.",
- otra:"Esto no se evalúa en 050 Meteorología: el cálculo de altitud verdadera con corrección de temperatura va en 061 Navegación y 033 Planificación, y la altitud de transición y el instrumento en sí, en 010 Derecho Aéreo y 022 Instrumentación. Se queda en el banco porque se dio en clase y cae en el test interno, pero fuera del simulacro SENASA."
+ otra:"Esto no se evalúa en 050 Meteorología: el cálculo de altitud verdadera con corrección de temperatura va en 061 Navegación y 033 Planificación, y la altitud de transición y el instrumento en sí, en 010 Derecho Aéreo y 022 Instrumentación. Se queda en el banco como repaso transversal, pero fuera del simulacro SENASA."
 });
 const LO_REFS = {
  "050.01.01":["comp","capas","tropo"], "050.01.02":["temp","tropo"], "050.01.03":["pres","palt"],
@@ -4910,7 +4943,7 @@ function examBar(){
         return `<button class="seg ${segKind(l,st)}" style="flex:${SUBEST[l]}" data-go="lo-${l}" title="${esc(l+" · "+SUBEN[l])} — ≈ ${fmt1(SUBEST[l])} preg. · ${x?Math.round(x.m*100)+" % de dominio":"sin practicar"}"></button>`;
       }).join("")}</div></div></div>`;
   }).join("")
-  + `<p class="xleg"><span><i class="seg full"></i>dado y por encima del 75 %</span><span><i class="seg part"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></p>`;
+  + `<p class="xleg"><span><i class="seg full"></i>base y por encima del 75 %</span><span><i class="seg part"></i>base, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></p>`;
 }
 function renderNotesMeta(){
   const st = stats();
@@ -5902,5 +5935,6 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ console.error("modes",e); }
 })();
 </script>
+<script src="../viz16.js?v=02185779" defer></script>
 <script src="../labs.js?v=7496b38f" defer></script>
 </body></html>

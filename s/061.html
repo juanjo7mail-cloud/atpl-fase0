@@ -454,6 +454,7 @@ details.lo .body > .formula{margin-top:10px}
 #test #setup #startBtn{display:inline-block;font:600 17px/1.2 "Barlow Condensed",Barlow,sans-serif;padding:12px 22px;margin-top:14px;border-radius:4px}
 @media (max-width:560px){#test #setup .mode .row,#test #setup .mode .opts{grid-template-columns:1fr;margin-left:0!important}#test #setup .mode small{margin-left:0}}
 </style>
+<style id="f16css">.f16t ul{margin:4px 0 0;padding-left:18px}.f16t li{margin:4px 0}.f16q{background:color-mix(in srgb,#2f6fb0 9%,transparent);border-left:3px solid #2f6fb0;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.f16q b:first-child{display:block;margin-bottom:2px}</style>
 <style id="f0-pub">details.lo>summary{cursor:pointer}:root{--magenta:#0E7C86;--accent:#0E7C86;--compbg:#E3F1F1;--f0none:#B9C7D2}@media (max-width:0px){:root:not([data-theme="light"]){--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}}:root[data-theme="dark"]{--magenta:#5CC8C8;--accent:#5CC8C8;--compbg:#173133;--f0none:#3B5163}.seg.atpl{background:var(--f0none)!important}mark.f0hit{background:#FFE58A;color:#14304A;border-radius:2px;padding:0 1px}mark.f0hit.first{outline:2px solid #0E7C86;outline-offset:1px}</style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -756,6 +757,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="body">
 <div class="key"><b>Clave</b>Una buena referencia es <b>grande, única e inconfundible</b>.</div>
 <div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>A baja altura las referencias aparecen <b>tarde</b> y se ven <b>poco tiempo</b>; la visibilidad baja con calima, lluvia o contraluz.</li><li>De noche solo sirve lo <b>iluminado</b>: ciudades, carreteras, faros de aeródromo.</li><li>Cambios de estación y meteo cambian el aspecto del terreno (nieve, inundaciones, cosechas).</li></ul></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>En una carta, las <b>curvas de nivel</b> juntas indican pendiente fuerte; las tintas hipsométricas oscurecen con la altura.</li><li>La elevación máxima de cada cuadrícula (MEF) ya incluye un margen sobre el obstáculo, pero <b>no</b> es una altitud mínima de vuelo.</li></ul></div>
 </div>
 </details>
 
@@ -809,6 +811,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="key"><b>Clave</b>Coinciden sobre un meridiano, sobre el ecuador y en vuelos cortos · la diferencia crece con la <b>latitud</b> y el <b>cambio de longitud</b>.</div>
 
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Conversion angle</b> = ½ convergencia. El great circle va por el lado del <b>polo</b>.</li><li>Hemisferio norte, hacia el este: RL = GC inicial + CA (convergencia 12°, GC 060° → RL 066°).</li></ul></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>A <b>CAS constante en ascenso</b>: TAS y Mach aumentan. A <b>Mach constante en ascenso</b>: CAS y TAS disminuyen (hasta la tropopausa).</li><li>IAS → (error de posición e instrumento) → <b>CAS</b> → (compresibilidad) → <b>EAS</b> → (densidad) → <b>TAS</b>.</li><li>Con aire más frío que ISA, a la misma CAS y altitud de presión, la TAS es <b>menor</b>.</li></ul></div>
 </div>
 </details>
 
@@ -1110,6 +1113,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="body">
 <div class="key"><b>Clave</b><b>SHF</b>, 200 canales · cobertura <b>±40° hasta 20 NM</b> · curvas y segmentadas solo con <b>DME/P</b>.</div>
 <div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Guía horizontal y vertical en aproximación, guía en salida y frustrada, DME/P y datos del sistema.</li><li>Se instala donde los edificios o el terreno impiden un ILS. Sin DME/P, aproximación recta como un ILS.</li><li>El <b>MMR</b> (multimode receiver) recibe ILS, MLS y GPS.</li></ul></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>El <b>MLS</b> trabaja en <b>5 GHz</b> (SHF), con 200 canales: muchos más que el ILS y sin interferencias de FM.</li><li>Permite aproximaciones <b>curvas y segmentadas</b> y cubre ±40° en azimut (hasta ±60°) y hasta 15° (20°) en elevación.</li><li>La distancia la da un <b>DME de precisión</b> (DME/P).</li></ul></div>
 </div>
 </details>
 
@@ -1193,7 +1197,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="body">
 <div class="profe"><b>★ IMPORTANTE</b><ul><li><b>GPS</b> (Global Positioning System, EE. UU., <b>NAVSTAR</b>) · <b>GNSS</b> (Global Navigation Satellite System) es el término general: <b>incluye el GPS</b> y las demás constelaciones.</li><li><b>3 elementos:</b> <b>space</b> (≈ <b>24 satélites</b> activos) · <b>control</b> (red en tierra: antenas y estaciones de control y monitorización) · <b>user</b> (receptor y ordenador de navegación del avión).</li><li><b>Más satélites → más precisión.</b> Varias constelaciones (internacional) → más precisión y fiabilidad.</li><li><b>Trilateración</b>: método matemático para calcular la posición exacta en la Tierra. Satélites <b>1, 2 y 3</b> → latitud y longitud · el <b>4.º</b> → altitud.</li></ul></div>
 <div class="key"><b>Clave</b>Mínimo <b>4 satélites</b> (x, y, z y error de reloj) · <b>RAIM 5</b>, y 6 para excluir uno · peor error: <b>retardo ionosférico</b>.</div>
-<div class="flag"><b>Trampas:</b> trilateración = distancias, no ángulos · en clase: 3 satélites dan lat/long y el 4.º la altitud, pero el 4.º también corrige el reloj · el primer rango es un pseudo-rango por el reloj del RECEPTOR · el P code no es para el SPS · dos frecuencias eliminan casi todo el error ionosférico.</div>
+<div class="flag"><b>Trampas:</b> trilateración = distancias, no ángulos · idea básica: 3 satélites dan lat/long y el 4.º la altitud, pero el 4.º también corrige el reloj · el primer rango es un pseudo-rango por el reloj del RECEPTOR · el P code no es para el SPS · dos frecuencias eliminan casi todo el error ionosférico.</div>
 <figure class="fig" id="fig-trilat"><svg viewBox="0 0 640 262" role="img" aria-label="Trilateración con tres satélites">
 <circle cx="110" cy="60" r="106" fill="var(--blue)" fill-opacity=".07" class="ln cb"/>
 <circle cx="270" cy="60" r="106" fill="var(--warn)" fill-opacity=".07" class="ln cw"/>
@@ -1239,6 +1243,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="key"><b>Clave</b>Prestaciones: <b>accuracy, integrity, continuity</b> (y availability) · PBN <b>no depende del sensor</b>.</div>
 <div class="scroll"><table><tr><th>Término</th><th>Definición</th></tr><tr><td>Accuracy</td><td>Conformidad entre posición real y requerida</td></tr><tr><td>Integrity</td><td>Confianza en la información, con alertas a tiempo</td></tr><tr><td>Continuity</td><td>Funcionar sin interrupciones no programadas</td></tr><tr><td>Availability</td><td>% del tiempo (anual) en que se puede usar</td></tr></table></div>
 <div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Componentes: infraestructura de radioayudas, especificación de navegación y aplicación.</li><li>En aproximación hay guiado lateral lineal y angular; en ruta y terminal, lineal.</li></ul></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>PBN define requisitos de <b>precisión, integridad, continuidad y funcionalidad</b>, sin imponer un sensor concreto.</li><li><b>RNP</b> = RNAV + <b>vigilancia y alerta de prestaciones a bordo</b>. Esa es toda la diferencia.</li><li>Los tres pilares del concepto: infraestructura de ayudas, <b>especificación de navegación</b> y aplicación de navegación.</li></ul></div>
 </div>
 </details>
 
@@ -1253,6 +1258,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div><b>Aproximación</b><span>RNP APCH · RNP AR APCH</span></div>
 </div>
 <div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Funciones básicas: desviación lateral, distancia y rumbo al punto, GS o tiempo, base de datos y aviso de fallo.</li><li>Cumplir una especificación más precisa no garantiza cumplir las funciones de otra menos precisa.</li></ul></div>
+<div class="f0viz" data-viz="rnp"></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>El número es la precisión lateral en NM que debe cumplirse el <b>95 % del tiempo</b> de vuelo: RNAV 5, RNAV 1, RNP 4, RNP 1…</li><li>Oceánico y remoto: <b>RNAV 10 (RNP 10)</b> y <b>RNP 4</b>. Ruta continental: <b>RNAV 5</b>. Terminal: <b>RNAV 1</b> y <b>RNP 1</b>. Aproximación: <b>RNP APCH</b> y <b>RNP AR APCH</b>.</li><li>RNAV 10 se sigue llamando «RNP 10» aunque <b>no exige</b> alerta a bordo.</li></ul></div>
 </div>
 </details>
 
@@ -1261,6 +1268,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="body">
 <div class="key"><b>Clave</b><b>RF</b> = curva de radio constante hasta un fijo · <b>fly-by</b> anticipa el viraje · <b>fly-over</b> obliga a pasar por encima.</div>
 <div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>En un RF: seguir el director de vuelo y respetar las velocidades.</li><li>ARINC 424 (path terminators) codifica SID, STAR y aproximaciones en la base de datos. FRT y offset flight path.</li></ul></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li><b>Fly-by</b>: se anticipa el viraje y no se sobrevuela el punto. <b>Fly-over</b>: se sobrevuela y luego se vira.</li><li>Tramos <b>RF</b> (radio fijo) y <b>FRT</b>: virajes de radio constante; el RF es de procedimientos terminales y de aproximación.</li><li>La base de datos tiene que estar <b>en vigor</b> y el procedimiento se carga de ella por su nombre: no se construye a mano.</li></ul></div>
 </div>
 </details>
 
@@ -1270,6 +1278,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="key"><b>Clave</b><b>TSE</b> = suma geométrica de <b>PDE + FTE + NSE</b> · base de datos válida para el <b>AIRAC</b> en vigor.</div>
 <div class="scroll"><table><tr><th>Error</th><th>Qué es</th></tr><tr><td>PDE</td><td>Diferencia entre la trayectoria definida y la deseada</td></tr><tr><td>FTE</td><td>Error al seguir la trayectoria (piloto o autopiloto)</td></tr><tr><td>NSE</td><td>Precisión del sistema de navegación</td></tr><tr><td>TSE</td><td>Todo junto: de él depende la precisión</td></tr></table></div>
 <div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>EPE (error estimado) frente a la especificación: alerta si no se cumple.</li><li>PDE: comprobaciones de razonabilidad de la base de datos. Pérdida de capacidad PBN: procedimientos de contingencia.</li></ul></div>
+<div class="flag f16t"><b>Trampas de examen</b><ul><li>Mínimos en una carta RNP APCH: <b>LNAV</b> (2D), <b>LNAV/VNAV</b> (baro-VNAV, 3D), <b>LP</b> y <b>LPV</b> (con SBAS).</li><li>El baro-VNAV tiene <b>límite de temperatura</b>: con frío, la senda real es más baja.</li><li>Antes de la aproximación se comprueba la <b>RAIM</b> prevista (o la disponibilidad de SBAS).</li></ul></div>
 </div>
 </details>
 
@@ -1387,7 +1396,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel" aria-label="Tema"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale lo dado y lo que entra en el temario base.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale el temario base.</small></span></label>
     <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las del temario y del trial.</small></span></label>
     <p class="muted small" id="paceNote"></p>
     <button class="btn" id="startBtn">Empezar</button>
@@ -4783,7 +4792,7 @@ function examBar(st){
   return Object.values(EXAMS).map(E=>`<div class="xex"><div class="xexl"><b>${E.code}</b> ${E.name} · ${E.n} preg.</div>${BLOCKS.filter(b=>b.ex===E.code).map(b=>`<div class="xrow"><div class="xrl"><b>${b.code}</b> ${b.n}</div><div class="xrb" style="width:${(b.n/maxN*100).toFixed(1)}%">${
     SUB.filter(s=>s[1]===b.k).map(s=>{ const c=covColor(s[0],st), x=st.lo[s[0]];
       return `<button class="seg ${c}" style="flex:${W[s[0]].toFixed(3)}" data-go="lo-${s[0]}" title="${s[0]} · ${esc(s[3])} · ≈ ${fmt1(W[s[0]])} preg.${x?` · dominio ${pct1(x.m)} % (${x.n10})`:" · sin practicar"}" aria-label="${s[0]} · ${esc(s[3])}"></button>`; }).join("")}</div></div>`).join("")}</div>`).join("") +
-   `<div class="xleg"><span><i class="seg ok"></i>dado y por encima del 75 %</span><span><i class="seg weak"></i>dado, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></div>`;
+   `<div class="xleg"><span><i class="seg ok"></i>base y por encima del 75 %</span><span><i class="seg weak"></i>base, aún flojo o sin practicar</span><span><i class="seg atpl"></i>ATPL · ampliación ATPL</span></div>`;
 }
 function renderFailTop(){
   const el=$("#failTop"); if(!el) return;
@@ -6221,6 +6230,7 @@ try{ LO_REFS["090.15"]=(LO_REFS["090.15"]||[]).concat(["smodes"]); LO_REFS["090.
   }catch(e){ console.error("modes",e); }
 })();
 </script>
+<script src="../viz16.js?v=02185779" defer></script>
 </body>
 </html>
 
