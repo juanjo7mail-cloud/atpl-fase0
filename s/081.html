@@ -3993,6 +3993,51 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ try{ console.error("rot",e); }catch(_){} }
 })();
 </script>
+<script>/* Cabecera del test (reloj + ritmo + «Respondidas X de N»): UNA sola barra fija bajo las pestañas.
+   Antes cada pieza era «sticky» por separado con un top fijo en px (62, 88, 96…): en iPad/tablet las pestañas
+   miden otra altura y las piezas se pisaban y se cortaban. Ahora se agrupan en un contenedor y el «top» se mide en vivo. */
+(function(){
+  try{
+    if(window.__f0tb) return; window.__f0tb=1;
+    const st=document.createElement("style"); st.id="f0-testbar-css";
+    st.textContent=
+'.f0-testbar{position:sticky;top:var(--f0-navh,0px);z-index:8;display:flex;flex-direction:column;gap:6px;background:var(--bg,var(--ground,var(--paper,Canvas)));padding:6px 0 8px;margin:0 0 10px;border-bottom:1px solid var(--line,var(--rule,rgba(128,128,128,.35)));box-shadow:0 7px 8px -9px rgba(0,0,0,.35);overflow:visible}'+
+'.f0-testbar:not(:has(>:not([hidden]))){display:none}'+
+'.f0-testbar>*{position:static!important;top:auto!important;z-index:auto!important;margin:0!important;min-width:0;max-width:100%;box-sizing:border-box}'+
+'.f0-testbar>.progress,.f0-testbar>.pace{background:transparent!important;padding:0!important;line-height:1.25}'+
+'.f0-testbar .clock{position:static!important;margin:0!important;line-height:1.15}'+
+'.f0-testbar .pace>.row{flex-wrap:wrap;gap:6px 12px;align-items:center}'+
+'@media (max-height:520px){.f0-testbar{position:static;box-shadow:none}}';
+    document.head.appendChild(st);
+
+    function wrap(){
+      const q=document.getElementById("quiz"); if(!q || q.querySelector(".f0-testbar")) return;
+      const els=["paceBox","timerBox","timerBar","progress"].map(id=>document.getElementById(id)).filter(e=>e && q.contains(e));
+      if(!els.length) return;
+      els.sort((a,b)=>(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING)?-1:1);
+      const w=document.createElement("div"); w.className="f0-testbar";
+      els[0].parentNode.insertBefore(w,els[0]);
+      els.forEach(e=>w.appendChild(e));
+    }
+    function navH(){
+      let h=0;
+      document.querySelectorAll("nav,header,.tabs,.topbar,#tabs").forEach(n=>{
+        const cs=getComputedStyle(n);
+        if((cs.position==="sticky"||cs.position==="fixed") && parseFloat(cs.top)<=4 && n.offsetHeight>0 && n.offsetHeight<160){
+          h=Math.max(h,(parseFloat(cs.top)||0)+n.offsetHeight);
+        }
+      });
+      return Math.round(h);
+    }
+    let raf=0;
+    function upd(){ cancelAnimationFrame(raf); raf=requestAnimationFrame(()=>{ wrap(); document.documentElement.style.setProperty("--f0-navh",navH()+"px"); }); }
+    wrap(); upd();
+    addEventListener("resize",upd); addEventListener("orientationchange",upd); addEventListener("load",upd);
+    try{ new ResizeObserver(upd).observe(document.body); }catch(e){}
+    document.addEventListener("click",()=>setTimeout(upd,60),true);
+  }catch(e){ console.error("testbar",e); }
+})();
+</script>
 <script>/* Test Multitema / Repaso combinado (todas las asignaturas).
    Marcas varios temas, eliges 15, 25 o 40 preguntas y se reparten a partes iguales entre los temas marcados
    (si un tema tiene menos preguntas de las que le tocan, el resto pasa a los demás). Nunca entran dos preguntas

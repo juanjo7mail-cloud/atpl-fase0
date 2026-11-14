@@ -5405,7 +5405,7 @@ function ui(){
   });
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",ui); else ui();
-})();</script><!--/f0dedup--><!--f0go--><script>/* «Ver en los apuntes»: en cualquier test, al fallar una pregunta sale un enlace al tema de los apuntes (y al párrafo más parecido) y un botón para volver al test. */
+})();</script><!--/f0dedup--><!--f0met14--><script>(function(){try{const Q=[["vm1401","050.02.01","t",null,"A wind said to have a direction of 360° (north) will flow towards:",["The south","The north","The east","The west"],"La dirección del viento es de DONDE viene: 360° = viento del norte, que sopla hacia el sur."],["vm1401a","050.02.01","t",null,"A wind reported as 180° is blowing:",["From the south towards the north","From the north towards the south","From the west towards the east","Towards the south"],"180° = viene del sur, sopla hacia el norte."],["vm1401b","050.02.01","t",null,"A wind from 090° flows towards:",["The west","The east","The north","The south"],"090° = del este, hacia el oeste."],["vm1402","050.02.02","t",null,"In Western Europe (northern hemisphere), an aircraft is flying directly towards the centre of a depression. Which of the following statements is most likely correct?",["The aircraft will experience drift to the right (starboard)","The aircraft will experience a direct tailwind","The aircraft will experience a direct headwind","The aircraft will experience drift to the left (port)"],"Hemisferio norte: el viento circula en sentido antihorario alrededor de la baja (ley de Buys-Ballot). Volando hacia el centro, el viento llega por la izquierda y desplaza el avión a la derecha."],["vm1402a","050.02.02","t",null,"In the northern hemisphere an aircraft is flying directly AWAY from the centre of a low-pressure area. The aircraft will most likely experience:",["Drift to the left (port)","Drift to the right (starboard)","A direct headwind","A direct tailwind"],"Alejándose de la baja el viento llega por la derecha y empuja el avión a la izquierda."],["vm1402b","050.02.02","t",null,"Flying directly towards the centre of a high-pressure area in the northern hemisphere, the aircraft will most likely experience:",["Drift to the left (port)","Drift to the right (starboard)","A direct headwind","A direct tailwind"],"En el anticiclón la circulación es horaria: hacia el centro, el viento llega por la derecha y empuja a la izquierda."],["vm1403","050.10.02","t",null,"How is the sky described in aerodrome forecasts and observations when the cloud cover is nil?",["SKC","NSC","CAVOK","NIL CLOUD"],"SKC = sky clear (cero nubes). NSC = sin nubes significativas (no SKC/CAVOK). CAVOK exige además visibilidad ≥10 km y sin tiempo significativo."],["vm1403a","050.10.02","t",null,"Which abbreviation is used in a METAR when there is no cloud at all?",["SKC","FEW","OVC","NCD"],"SKC = cielo despejado; NCD = ninguna nube detectada (observación automática)."],["vm1403b","050.10.02","t",null,"What does the abbreviation NSC mean in a TAF?",["No significant cloud","No sky clear","No stratus cloud","Nil cloud cover"],"NSC = no significant cloud: no hay nubes por debajo de 5000 ft ni CB/TCU, y tampoco SKC ni CAVOK."],["vm1404","050.06.02","t",null,"On a UK Metform 215 surface chart, the predicted progression speed of a front identified as \"slow\" is:",["Under 5 kt","Under 15 kt","More than 25 kt","Exactly 10 kt"],"Leyenda de la carta de superficie: «slow» = movimiento previsto inferior a 5 kt. (Leído del vídeo: verifícalo en la leyenda de la carta.)"]];const IDS=["vm1401", "vm1401a", "vm1401b", "vm1402", "vm1402a", "vm1402b", "vm1403", "vm1403a", "vm1403b", "vm1404"];const have=new Set(BASE.map(q=>q[0]));Q.forEach(q=>{if(!have.has(q[0]))BASE.push(q);});try{if(typeof ALLQ!=="undefined"&&ALLQ!==BASE){const h2=new Set(ALLQ.map(q=>q[0]));Q.forEach(q=>{if(!h2.has(q[0]))ALLQ.push(q);});}}catch(e){}try{if(typeof PROFE!=="undefined")IDS.forEach(i=>PROFE.add(i));}catch(e){}try{if(typeof HOT3!=="undefined")IDS.forEach(i=>HOT3.add(i));}catch(e){}try{if(typeof NOTAG!=="undefined")IDS.forEach(i=>NOTAG.add(i));}catch(e){}buildBank();try{renderSetup();}catch(e){}try{renderNotesMeta();}catch(e){}}catch(e){console.error("f0met14",e);}})();</script><!--/f0met14--><!--f0go--><script>/* «Ver en los apuntes»: en cualquier test, al fallar una pregunta sale un enlace al tema de los apuntes (y al párrafo más parecido) y un botón para volver al test. */
 (function(){ try{
   const css=document.createElement("style");
   css.textContent=".f0go{display:flex;width:fit-content;max-width:100%;align-items:center;gap:6px;margin:10px 0 2px;padding:7px 12px;border-radius:8px;border:1px solid var(--accent,#0E7C86);background:var(--accentbg,#DFF1F1);color:var(--ink,#14304A);font:600 14px/1.2 var(--body,system-ui,sans-serif);cursor:pointer;min-height:36px}.f0go:hover{filter:brightness(.97)}.f0go:focus-visible{outline:2px solid var(--blue,#2F6FA3);outline-offset:2px}"
@@ -5656,6 +5656,51 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     window.__deckInfo=m=>{ const D=load(m); return {served:D.s.length,cycle:D.c||0,last:D.l}; };
     window.__deckReset=m=>{ delete mem[m]; try{ localStorage.removeItem(KEY(m)); }catch(e){} };
   }catch(e){ try{ console.error("rot",e); }catch(_){} }
+})();
+</script>
+<script>/* Cabecera del test (reloj + ritmo + «Respondidas X de N»): UNA sola barra fija bajo las pestañas.
+   Antes cada pieza era «sticky» por separado con un top fijo en px (62, 88, 96…): en iPad/tablet las pestañas
+   miden otra altura y las piezas se pisaban y se cortaban. Ahora se agrupan en un contenedor y el «top» se mide en vivo. */
+(function(){
+  try{
+    if(window.__f0tb) return; window.__f0tb=1;
+    const st=document.createElement("style"); st.id="f0-testbar-css";
+    st.textContent=
+'.f0-testbar{position:sticky;top:var(--f0-navh,0px);z-index:8;display:flex;flex-direction:column;gap:6px;background:var(--bg,var(--ground,var(--paper,Canvas)));padding:6px 0 8px;margin:0 0 10px;border-bottom:1px solid var(--line,var(--rule,rgba(128,128,128,.35)));box-shadow:0 7px 8px -9px rgba(0,0,0,.35);overflow:visible}'+
+'.f0-testbar:not(:has(>:not([hidden]))){display:none}'+
+'.f0-testbar>*{position:static!important;top:auto!important;z-index:auto!important;margin:0!important;min-width:0;max-width:100%;box-sizing:border-box}'+
+'.f0-testbar>.progress,.f0-testbar>.pace{background:transparent!important;padding:0!important;line-height:1.25}'+
+'.f0-testbar .clock{position:static!important;margin:0!important;line-height:1.15}'+
+'.f0-testbar .pace>.row{flex-wrap:wrap;gap:6px 12px;align-items:center}'+
+'@media (max-height:520px){.f0-testbar{position:static;box-shadow:none}}';
+    document.head.appendChild(st);
+
+    function wrap(){
+      const q=document.getElementById("quiz"); if(!q || q.querySelector(".f0-testbar")) return;
+      const els=["paceBox","timerBox","timerBar","progress"].map(id=>document.getElementById(id)).filter(e=>e && q.contains(e));
+      if(!els.length) return;
+      els.sort((a,b)=>(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING)?-1:1);
+      const w=document.createElement("div"); w.className="f0-testbar";
+      els[0].parentNode.insertBefore(w,els[0]);
+      els.forEach(e=>w.appendChild(e));
+    }
+    function navH(){
+      let h=0;
+      document.querySelectorAll("nav,header,.tabs,.topbar,#tabs").forEach(n=>{
+        const cs=getComputedStyle(n);
+        if((cs.position==="sticky"||cs.position==="fixed") && parseFloat(cs.top)<=4 && n.offsetHeight>0 && n.offsetHeight<160){
+          h=Math.max(h,(parseFloat(cs.top)||0)+n.offsetHeight);
+        }
+      });
+      return Math.round(h);
+    }
+    let raf=0;
+    function upd(){ cancelAnimationFrame(raf); raf=requestAnimationFrame(()=>{ wrap(); document.documentElement.style.setProperty("--f0-navh",navH()+"px"); }); }
+    wrap(); upd();
+    addEventListener("resize",upd); addEventListener("orientationchange",upd); addEventListener("load",upd);
+    try{ new ResizeObserver(upd).observe(document.body); }catch(e){}
+    document.addEventListener("click",()=>setTimeout(upd,60),true);
+  }catch(e){ console.error("testbar",e); }
 })();
 </script>
 <script>/* Test Multitema / Repaso combinado (todas las asignaturas).
