@@ -11,7 +11,7 @@ window.__hub={use:async function(n){return n==="artifact"?{publish:async functio
 fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
 })();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>081 Principles of Flight</title>
+<title>081 · Principles of Flight</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -398,142 +398,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-081.01.04" data-los="081.01.04 081.01.06">
-<summary><span class="lonum">081.01.04 · 06</span><span class="lotitle">Three-dimensional airflow around an aeroplane · Ground effect</span></summary>
-<div class="body">
-  <div class="prof"><b>★ IMPORTANTE</b><ul>
-<li><b>Aspect ratio</b> = b / c = b² / S. Lo llamó lo más importante del bloque.</li>
-<li>La definición de <b>MAC</b>: cuerda por el centro geométrico de la planta, referencia de estabilidad longitudinal.</li>
-<li><b>Spanwise flow</b>: arriba hacia el encastre, abajo hacia la punta; izquierda horario y derecha antihorario vistos desde atrás; más fuerte en la punta y a alto AoA.</li></ul></div>
-  <h4>Three-dimensional wing</h4>
-  <ul>
-    <li><b>Wing area (S)</b>: plan surface area. <b>Wing span (b)</b> (envergadura): tip to tip. <b>Average chord (c)</b>: b × c = S.</li>
-    <li>★ <b>Aspect ratio (AR)</b> (alargamiento) = <b>wing span / average chord</b> = b / c = b² / S.</li>
-    <li><b>Root chord (C<sub>R</sub>)</b> (cuerda en el encastre) · <b>Tip chord (C<sub>T</sub>)</b> (en la punta) · <b>Taper ratio</b> (estrechamiento) = C<sub>T</sub> / C<sub>R</sub>.</li>
-  </ul>
-  <div class="flag"><b>Trampa:</b> AR es <b>span / chord</b>, no al revés. Y un <b>high aspect ratio REDUCE</b> la resistencia inducida, no la aumenta.</div>
-
-  <div class="svgbox wdg" id="vis-ar">
-  <b>Aspect ratio: cambia envergadura y cuerda</b>
-  <div class="ctl"><span>b</span><input type="range" id="arB" min="60" max="200" step="5" value="100" aria-label="envergadura"><span>c</span><input type="range" id="arC" min="8" max="30" step="1" value="12" aria-label="cuerda"></div>
-  <div id="arBox"></div>
-  </div>
-
-  <h4>Mean aerodynamic chord (MAC) ★</h4>
-  <ul><li>The chord drawn through the <b>geographic centre of the plan area</b>. A rectangular wing with this chord and the same span has similar <b>pitching moment</b> characteristics. <b>Primary reference for longitudinal stability</b>.</li></ul>
-
-  <h4>Spanwise flow and wing tip vortices ★</h4>
-  <ul>
-    <li>Air over the upper surface is at <b>lower pressure</b> than beneath. The trailing edge and wing tips are where the flows meet.</li>
-    <li><b>Upper surface: towards the root</b> (encastre). <b>Lower surface: towards the tip</b> (punta).</li>
-    <li>Along the whole wing, <b>strongest at the tip</b>.</li>
-    <li>Viewed from behind: <b>left wing tip clockwise</b>, <b>right wing tip anticlockwise</b>.</li>
-    <li><b>Higher AoA / lower IAS</b> → bigger pressure difference → <b>stronger vortices</b>.</li>
-  </ul>
-
-  <h4>Preguntas de refuerzo</h4>
-  <ul class="fromq">
-    <li><b>Induced drag decreases as airspeed increases</b> (es máxima a baja velocidad / alto AoA).</li>
-    <li>Reducing induced drag: <b>washout, winglets and wing tapering</b>. High aspect ratio also helps.</li>
-    <li><b>Washout</b>: a <b>reduction in the angle of incidence</b> (and so the AoA) <b>from wing root to wing tip</b>.</li>
-    <li><b>Ground effect</b> (efecto suelo): <b>increase in lift and reduction in (induced) drag</b> near the ground. A <b>low wing</b> aircraft is <b>more affected</b> than a high wing.</li>
-    <li><b>Streamlining</b> (carenado, forma aerodinámica): <b>delays airflow separation and reduces form drag</b>.</li>
-    <li>The pressure difference between upper and lower surfaces gives rise to <b>BOTH wingtip AND trailing edge vortices</b> (la opción combinada es la buena).</li>
-    <li><b>Induced drag increases in proportion to the SQUARE of the lift force</b>.</li>
-    <li><b>MAC = Mean Aerodynamic Chord</b> (en el trial lo piden escrito, sin opciones).</li>
-  </ul>
-  <div class="svgbox" id="vis-vortex">
-  <svg viewBox="0 0 700 230" role="img" aria-label="Rear view: wing tip vortices and trailing edge vortices">
-<defs><marker id="vv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--magenta)"/></marker></defs>
-<text x="350" y="22" text-anchor="middle" font-size="13" fill="var(--ink)" font-weight="600">Viewed from BEHIND</text>
-<line x1="110" y1="120" x2="590" y2="120" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
-<circle cx="350" cy="128" r="16" fill="var(--paper)" stroke="var(--ink)" stroke-width="3"/><line x1="350" y1="112" x2="350" y2="72" stroke="var(--ink)" stroke-width="4"/>
-<text x="180" y="104" font-size="12" fill="var(--blue)">LOW pressure above</text>
-<text x="180" y="162" font-size="12" fill="var(--bad)">HIGH pressure below</text>
-<path d="M110 150 A32 32 0 1 1 138 102" fill="none" stroke="var(--magenta)" stroke-width="2.5" marker-end="url(#vv)"/>
-<path d="M590 150 A32 32 0 1 0 562 102" fill="none" stroke="var(--magenta)" stroke-width="2.5" marker-end="url(#vv)"/>
-<text x="95" y="200" text-anchor="middle" font-size="12" fill="var(--magenta)" font-weight="600">LEFT tip: clockwise</text>
-<text x="605" y="200" text-anchor="middle" font-size="12" fill="var(--magenta)" font-weight="600">RIGHT tip: anticlockwise</text>
-<circle cx="200" cy="135" r="7" fill="none" stroke="var(--magenta)" stroke-dasharray="3 2"/><circle cx="250" cy="135" r="7" fill="none" stroke="var(--magenta)" stroke-dasharray="3 2"/><circle cx="450" cy="135" r="7" fill="none" stroke="var(--magenta)" stroke-dasharray="3 2"/><circle cx="500" cy="135" r="7" fill="none" stroke="var(--magenta)" stroke-dasharray="3 2"/><text x="350" y="200" text-anchor="middle" font-size="12" fill="var(--magenta)">+ smaller TRAILING EDGE vortices</text><text x="350" y="216" text-anchor="middle" font-size="12" fill="var(--magenta)">along the whole span</text></svg>
-  <p class="legend" style="margin:6px 0 0">Las dos cosas a la vez: <b>wingtip AND trailing edge vortices</b>. Arriba el aire va hacia la raíz, abajo hacia la punta.</p>
-  </div>
-</div>
-</details>
-
-<details class="lo" id="lo-081.01.09" data-los="081.01.09">
-<summary><span class="lonum">081.01.09</span><span class="lotitle">CLMAX augmentation</span></summary>
-<div class="body">
-  <div class="prof"><b>★ IMPORTANTE</b><ul>
-  <li><b>Flaps: CL<sub>max</sub> ↑ pero el ángulo crítico ↓. Slats: suben LOS DOS.</b> «En ATPL hay muchas preguntas de flaps, slats y ángulo crítico».</li>
-  <li>Los flaps <b>bajan la stall speed</b> y reducen las distancias de despegue y aterrizaje.</li>
-  <li>Al bajar flaps el <b>CP se va hacia atrás</b> → momento de <b>picado</b>; de ahí el <b>efecto balloon</b>.</li>
-  <li>Los <b>Fowler</b> son los de la aviación comercial y los que más momento de cabeceo generan.</li>
-  </ul></div>
-
-  <h4>Para qué sirven (purpose)</h4>
-  <ul>
-    <li><b>Reduce the take-off and landing distances</b>: con la misma pista se puede operar con <b>más peso</b> y llevar <b>más payload</b>.</li>
-    <li>Funcionan subiendo el <b>CL<sub>max</sub></b> del ala, que es lo que fija la <b>stalling speed</b>. Más CL<sub>max</sub> → menos stall speed → se puede volar más despacio.</li>
-    <li>Lo consiguen <b>modificando el perfil</b>: un ala con mucha curvatura (camber) sería buena para despegar y aterrizar pero pésima en crucero, así que se usa un perfil poco curvado y se «le añade» curvatura con los flaps cuando hace falta.</li>
-  </ul>
-
-  <h4>El gráfico que lo resume todo ★</h4>
-  <p>Es <b>la</b> pregunta del tema. Mueve los controles y mira qué le pasa a la curva:</p>
-  <div class="svgbox wdg" id="vis-hl">
-  <b>Flaps y slats sobre la curva de CL</b>
-  <div class="ctl"><span>Flaps</span><input type="range" id="hlFlap" min="0" max="40" step="5" value="0" aria-label="deflexión de flaps">
-   <label class="row" style="gap:6px"><input type="checkbox" id="hlSlat"> Slats</label></div>
-  <div id="hlBox"></div><p class="out" id="hlOut"></p>
-  </div>
-
-  <h4>Tipos de trailing edge flap</h4>
-  <div class="scroll"><table>
-  <tr><th>Tipo</th><th>Cómo es</th><th>Lo que hay que saber</th></tr>
-  <tr><td><b>Plain</b></td><td>Simple charnela (<i>hinged portion</i>) que baja.</td><td>Buen aumento de CL<sub>max</sub>, pero bastante resistencia. Aviones lentos.</td></tr>
-  <tr><td><b>Split</b></td><td>★ <b>La superficie de arriba queda FIJA</b>; solo baja la parte de abajo.</td><td>Como el plain a ángulos bajos, algo más de sustentación a ángulos altos. <b>Más resistencia</b> que el plain (estela más profunda).</td></tr>
-  <tr><td><b>Slotted</b></td><td>Al bajar se abre una <b>ranura</b> entre flap y ala.</td><td>La ranura lleva aire de <b>alta presión de abajo</b> hacia arriba del flap y <b>re-energiza la capa límite</b>: retrasa la separación.</td></tr>
-  <tr><td><b>Fowler</b></td><td>★ Primero va <b>hacia atrás</b> (aumenta la <b>superficie</b>) y luego <b>baja</b> (aumenta la <b>curvatura</b>).</td><td><b>El que más sustentación da y el que menos resistencia</b> de los cuatro. Pero <b>el que más cambia el momento de cabeceo</b>, porque alarga la cuerda hacia atrás.</td></tr>
-  </table></div>
-
-  <h4>Pitching moment: dos efectos que compiten</h4>
-  <ul>
-    <li><b>1. El CP se mueve hacia atrás</b> (<i>moves rearwards</i>) al bajar flaps → brazo de momento más largo → <b>nose-down pitching moment</b> (picado). <span class="muted">Ojo: lo que se mueve es el CP, <b>no el CG</b>.</span></li>
-    <li><b>2. Más downwash en la cola</b> → el ángulo de ataque del estabilizador <b>disminuye</b> → <b>nose-up pitching moment</b> (encabritado).</li>
-    <li>El resultado depende del tipo de flap, de dónde esté el ala y de dónde esté la cola: puede ser picado, encabritado o casi cero.</li>
-  </ul>
-
-  <h4>El efecto balloon ★</h4>
-  <ul>
-    <li>El <b>efecto inicial</b> de bajar flaps es <b>más sustentación</b>. Si el piloto no hace nada, el avión pega un ascenso corto y desagradable: <b>«balloon»</b>.</li>
-    <li>Al <b>bajar</b> flaps hay que <b>bajar el morro</b> (reducir el ángulo de ataque). Al <b>quitarlos</b>, al revés: <b>subir el morro</b>, porque se pierde sustentación.</li>
-  </ul>
-  <div class="flag"><b>La regla de la escuela:</b> <b>baja el morro antes de poner los flaps y súbelo antes de quitarlos.</b> El <i>momento</i> suele ser de picado, pero el efecto neto sobre la trayectoria es que el avión sube (balloon).</div>
-
-  <h4>Otros efectos de los flaps</h4>
-  <ul>
-    <li>El aumento de <b>resistencia es proporcionalmente mayor</b> que el de sustentación → <b>baja el L/D</b>: el avión <b>no planea tan lejos ni asciende tan empinado</b>.</li>
-    <li>En aproximación, a velocidad constante, bajar flaps <b>aumenta el ángulo de descenso</b> sin tener que ir más rápido. Por eso se puede hacer una senda más picada.</li>
-    <li>Sin flaps hay que aterrizar <b>más rápido</b>, porque la stall speed es más alta.</li>
-  </ul>
-
-  <h4>Flap asymmetry (asimetría de flaps)</h4>
-  <ul>
-    <li>Un flap sale y el otro no (fallo mecánico o atasco). El ala con <b>más flap</b> da <b>más sustentación</b> → <b>roll pronunciado hacia el ala con MENOS flap</b>.</li>
-    <li>El ala con <b>menos flap entra en pérdida primero</b>. Si el alabeo supera la autoridad de los alerones, puede acabar en <b>barrena</b>.</li>
-    <li>Por eso se comprueba el movimiento simétrico de los flaps en tierra.</li>
-  </ul>
-
-  <h4>Leading edge devices ★</h4>
-  <ul>
-    <li><b>Leading edge flap</b>: aumenta la curvatura del borde de ataque. <b>Retrasa la separación → sube el ángulo de pérdida y el CL<sub>max</sub></b>.</li>
-    <li><b>Krueger flap</b>: parte de la superficie inferior del borde de ataque que rota hacia delante. En alas en flecha se pone en la <b>parte interior</b> porque es menos eficiente, para favorecer el <b>root stall</b>.</li>
-    <li><b>Slats y slots</b>: abren una ranura bajo el slat que fuerza aire sobre el extradós y <b>re-energiza la capa límite</b>. Permiten volar a <b>mayor ángulo de ataque</b> (en el gráfico, de ~15° a ~25°) y reducen las distancias.</li>
-    <li>★ A diferencia de los flaps, los dispositivos de borde de ataque son <b>todo o nada</b>: <i>fully deployed or retracted</i>, sin posiciones intermedias.</li>
-  </ul>
-  <div class="comp"><b>La frase que lo resume</b>Con <b>FLAPS</b>, el CL<sub>max</sub> sube pero el <b>stalling angle baja</b>, porque bajar el flap <b>aumenta el ángulo de ataque efectivo</b> (el ángulo de pérdida se mide respecto a la cuerda del ala <i>sin</i> flap). Con <b>SLATS</b>, suben <b>los dos</b>.</div>
-</div>
-</details>
-
 <details class="lo" id="lo-081.01.02" data-los="081.01.02 081.01.03">
 <summary><span class="lonum">081.01.02 · 03</span><span class="lotitle">Two-dimensional airflow around an aerofoil · Coefficients</span></summary>
 <div class="body">
@@ -644,6 +508,68 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   </div>
 </details>
 
+<details class="lo" id="lo-081.01.04" data-los="081.01.04 081.01.06">
+<summary><span class="lonum">081.01.04 · 06</span><span class="lotitle">Three-dimensional airflow around an aeroplane · Ground effect</span></summary>
+<div class="body">
+  <div class="prof"><b>★ IMPORTANTE</b><ul>
+<li><b>Aspect ratio</b> = b / c = b² / S. Lo llamó lo más importante del bloque.</li>
+<li>La definición de <b>MAC</b>: cuerda por el centro geométrico de la planta, referencia de estabilidad longitudinal.</li>
+<li><b>Spanwise flow</b>: arriba hacia el encastre, abajo hacia la punta; izquierda horario y derecha antihorario vistos desde atrás; más fuerte en la punta y a alto AoA.</li></ul></div>
+  <h4>Three-dimensional wing</h4>
+  <ul>
+    <li><b>Wing area (S)</b>: plan surface area. <b>Wing span (b)</b> (envergadura): tip to tip. <b>Average chord (c)</b>: b × c = S.</li>
+    <li>★ <b>Aspect ratio (AR)</b> (alargamiento) = <b>wing span / average chord</b> = b / c = b² / S.</li>
+    <li><b>Root chord (C<sub>R</sub>)</b> (cuerda en el encastre) · <b>Tip chord (C<sub>T</sub>)</b> (en la punta) · <b>Taper ratio</b> (estrechamiento) = C<sub>T</sub> / C<sub>R</sub>.</li>
+  </ul>
+  <div class="flag"><b>Trampa:</b> AR es <b>span / chord</b>, no al revés. Y un <b>high aspect ratio REDUCE</b> la resistencia inducida, no la aumenta.</div>
+
+  <div class="svgbox wdg" id="vis-ar">
+  <b>Aspect ratio: cambia envergadura y cuerda</b>
+  <div class="ctl"><span>b</span><input type="range" id="arB" min="60" max="200" step="5" value="100" aria-label="envergadura"><span>c</span><input type="range" id="arC" min="8" max="30" step="1" value="12" aria-label="cuerda"></div>
+  <div id="arBox"></div>
+  </div>
+
+  <h4>Mean aerodynamic chord (MAC) ★</h4>
+  <ul><li>The chord drawn through the <b>geographic centre of the plan area</b>. A rectangular wing with this chord and the same span has similar <b>pitching moment</b> characteristics. <b>Primary reference for longitudinal stability</b>.</li></ul>
+
+  <h4>Spanwise flow and wing tip vortices ★</h4>
+  <ul>
+    <li>Air over the upper surface is at <b>lower pressure</b> than beneath. The trailing edge and wing tips are where the flows meet.</li>
+    <li><b>Upper surface: towards the root</b> (encastre). <b>Lower surface: towards the tip</b> (punta).</li>
+    <li>Along the whole wing, <b>strongest at the tip</b>.</li>
+    <li>Viewed from behind: <b>left wing tip clockwise</b>, <b>right wing tip anticlockwise</b>.</li>
+    <li><b>Higher AoA / lower IAS</b> → bigger pressure difference → <b>stronger vortices</b>.</li>
+  </ul>
+
+  <h4>Preguntas de refuerzo</h4>
+  <ul class="fromq">
+    <li><b>Induced drag decreases as airspeed increases</b> (es máxima a baja velocidad / alto AoA).</li>
+    <li>Reducing induced drag: <b>washout, winglets and wing tapering</b>. High aspect ratio also helps.</li>
+    <li><b>Washout</b>: a <b>reduction in the angle of incidence</b> (and so the AoA) <b>from wing root to wing tip</b>.</li>
+    <li><b>Ground effect</b> (efecto suelo): <b>increase in lift and reduction in (induced) drag</b> near the ground. A <b>low wing</b> aircraft is <b>more affected</b> than a high wing.</li>
+    <li><b>Streamlining</b> (carenado, forma aerodinámica): <b>delays airflow separation and reduces form drag</b>.</li>
+    <li>The pressure difference between upper and lower surfaces gives rise to <b>BOTH wingtip AND trailing edge vortices</b> (la opción combinada es la buena).</li>
+    <li><b>Induced drag increases in proportion to the SQUARE of the lift force</b>.</li>
+    <li><b>MAC = Mean Aerodynamic Chord</b> (en el trial lo piden escrito, sin opciones).</li>
+  </ul>
+  <div class="svgbox" id="vis-vortex">
+  <svg viewBox="0 0 700 230" role="img" aria-label="Rear view: wing tip vortices and trailing edge vortices">
+<defs><marker id="vv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--magenta)"/></marker></defs>
+<text x="350" y="22" text-anchor="middle" font-size="13" fill="var(--ink)" font-weight="600">Viewed from BEHIND</text>
+<line x1="110" y1="120" x2="590" y2="120" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+<circle cx="350" cy="128" r="16" fill="var(--paper)" stroke="var(--ink)" stroke-width="3"/><line x1="350" y1="112" x2="350" y2="72" stroke="var(--ink)" stroke-width="4"/>
+<text x="180" y="104" font-size="12" fill="var(--blue)">LOW pressure above</text>
+<text x="180" y="162" font-size="12" fill="var(--bad)">HIGH pressure below</text>
+<path d="M110 150 A32 32 0 1 1 138 102" fill="none" stroke="var(--magenta)" stroke-width="2.5" marker-end="url(#vv)"/>
+<path d="M590 150 A32 32 0 1 0 562 102" fill="none" stroke="var(--magenta)" stroke-width="2.5" marker-end="url(#vv)"/>
+<text x="95" y="200" text-anchor="middle" font-size="12" fill="var(--magenta)" font-weight="600">LEFT tip: clockwise</text>
+<text x="605" y="200" text-anchor="middle" font-size="12" fill="var(--magenta)" font-weight="600">RIGHT tip: anticlockwise</text>
+<circle cx="200" cy="135" r="7" fill="none" stroke="var(--magenta)" stroke-dasharray="3 2"/><circle cx="250" cy="135" r="7" fill="none" stroke="var(--magenta)" stroke-dasharray="3 2"/><circle cx="450" cy="135" r="7" fill="none" stroke="var(--magenta)" stroke-dasharray="3 2"/><circle cx="500" cy="135" r="7" fill="none" stroke="var(--magenta)" stroke-dasharray="3 2"/><text x="350" y="200" text-anchor="middle" font-size="12" fill="var(--magenta)">+ smaller TRAILING EDGE vortices</text><text x="350" y="216" text-anchor="middle" font-size="12" fill="var(--magenta)">along the whole span</text></svg>
+  <p class="legend" style="margin:6px 0 0">Las dos cosas a la vez: <b>wingtip AND trailing edge vortices</b>. Arriba el aire va hacia la raíz, abajo hacia la punta.</p>
+  </div>
+</div>
+</details>
+
 <details class="lo" id="lo-081.01.05" data-los="081.01.05">
 <summary><span class="lonum">081.01.05</span><span class="lotitle">Total drag</span></summary>
 <div class="body">
@@ -704,6 +630,80 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   </div>
 
   <div class="comp"><b>Complement</b>Esa velocidad es la de <b>máximo alcance sin motor</b> (best glide) y la de máxima autonomía en jet. Si te preguntan «minimum drag speed», es el mismo punto.</div>
+</div>
+</details>
+
+<details class="lo" id="lo-081.01.09" data-los="081.01.09">
+<summary><span class="lonum">081.01.09</span><span class="lotitle">CLMAX augmentation</span></summary>
+<div class="body">
+  <div class="prof"><b>★ IMPORTANTE</b><ul>
+  <li><b>Flaps: CL<sub>max</sub> ↑ pero el ángulo crítico ↓. Slats: suben LOS DOS.</b> «En ATPL hay muchas preguntas de flaps, slats y ángulo crítico».</li>
+  <li>Los flaps <b>bajan la stall speed</b> y reducen las distancias de despegue y aterrizaje.</li>
+  <li>Al bajar flaps el <b>CP se va hacia atrás</b> → momento de <b>picado</b>; de ahí el <b>efecto balloon</b>.</li>
+  <li>Los <b>Fowler</b> son los de la aviación comercial y los que más momento de cabeceo generan.</li>
+  </ul></div>
+
+  <h4>Para qué sirven (purpose)</h4>
+  <ul>
+    <li><b>Reduce the take-off and landing distances</b>: con la misma pista se puede operar con <b>más peso</b> y llevar <b>más payload</b>.</li>
+    <li>Funcionan subiendo el <b>CL<sub>max</sub></b> del ala, que es lo que fija la <b>stalling speed</b>. Más CL<sub>max</sub> → menos stall speed → se puede volar más despacio.</li>
+    <li>Lo consiguen <b>modificando el perfil</b>: un ala con mucha curvatura (camber) sería buena para despegar y aterrizar pero pésima en crucero, así que se usa un perfil poco curvado y se «le añade» curvatura con los flaps cuando hace falta.</li>
+  </ul>
+
+  <h4>El gráfico que lo resume todo ★</h4>
+  <p>Es <b>la</b> pregunta del tema. Mueve los controles y mira qué le pasa a la curva:</p>
+  <div class="svgbox wdg" id="vis-hl">
+  <b>Flaps y slats sobre la curva de CL</b>
+  <div class="ctl"><span>Flaps</span><input type="range" id="hlFlap" min="0" max="40" step="5" value="0" aria-label="deflexión de flaps">
+   <label class="row" style="gap:6px"><input type="checkbox" id="hlSlat"> Slats</label></div>
+  <div id="hlBox"></div><p class="out" id="hlOut"></p>
+  </div>
+
+  <h4>Tipos de trailing edge flap</h4>
+  <div class="scroll"><table>
+  <tr><th>Tipo</th><th>Cómo es</th><th>Lo que hay que saber</th></tr>
+  <tr><td><b>Plain</b></td><td>Simple charnela (<i>hinged portion</i>) que baja.</td><td>Buen aumento de CL<sub>max</sub>, pero bastante resistencia. Aviones lentos.</td></tr>
+  <tr><td><b>Split</b></td><td>★ <b>La superficie de arriba queda FIJA</b>; solo baja la parte de abajo.</td><td>Como el plain a ángulos bajos, algo más de sustentación a ángulos altos. <b>Más resistencia</b> que el plain (estela más profunda).</td></tr>
+  <tr><td><b>Slotted</b></td><td>Al bajar se abre una <b>ranura</b> entre flap y ala.</td><td>La ranura lleva aire de <b>alta presión de abajo</b> hacia arriba del flap y <b>re-energiza la capa límite</b>: retrasa la separación.</td></tr>
+  <tr><td><b>Fowler</b></td><td>★ Primero va <b>hacia atrás</b> (aumenta la <b>superficie</b>) y luego <b>baja</b> (aumenta la <b>curvatura</b>).</td><td><b>El que más sustentación da y el que menos resistencia</b> de los cuatro. Pero <b>el que más cambia el momento de cabeceo</b>, porque alarga la cuerda hacia atrás.</td></tr>
+  </table></div>
+
+  <h4>Pitching moment: dos efectos que compiten</h4>
+  <ul>
+    <li><b>1. El CP se mueve hacia atrás</b> (<i>moves rearwards</i>) al bajar flaps → brazo de momento más largo → <b>nose-down pitching moment</b> (picado). <span class="muted">Ojo: lo que se mueve es el CP, <b>no el CG</b>.</span></li>
+    <li><b>2. Más downwash en la cola</b> → el ángulo de ataque del estabilizador <b>disminuye</b> → <b>nose-up pitching moment</b> (encabritado).</li>
+    <li>El resultado depende del tipo de flap, de dónde esté el ala y de dónde esté la cola: puede ser picado, encabritado o casi cero.</li>
+  </ul>
+
+  <h4>El efecto balloon ★</h4>
+  <ul>
+    <li>El <b>efecto inicial</b> de bajar flaps es <b>más sustentación</b>. Si el piloto no hace nada, el avión pega un ascenso corto y desagradable: <b>«balloon»</b>.</li>
+    <li>Al <b>bajar</b> flaps hay que <b>bajar el morro</b> (reducir el ángulo de ataque). Al <b>quitarlos</b>, al revés: <b>subir el morro</b>, porque se pierde sustentación.</li>
+  </ul>
+  <div class="flag"><b>La regla de la escuela:</b> <b>baja el morro antes de poner los flaps y súbelo antes de quitarlos.</b> El <i>momento</i> suele ser de picado, pero el efecto neto sobre la trayectoria es que el avión sube (balloon).</div>
+
+  <h4>Otros efectos de los flaps</h4>
+  <ul>
+    <li>El aumento de <b>resistencia es proporcionalmente mayor</b> que el de sustentación → <b>baja el L/D</b>: el avión <b>no planea tan lejos ni asciende tan empinado</b>.</li>
+    <li>En aproximación, a velocidad constante, bajar flaps <b>aumenta el ángulo de descenso</b> sin tener que ir más rápido. Por eso se puede hacer una senda más picada.</li>
+    <li>Sin flaps hay que aterrizar <b>más rápido</b>, porque la stall speed es más alta.</li>
+  </ul>
+
+  <h4>Flap asymmetry (asimetría de flaps)</h4>
+  <ul>
+    <li>Un flap sale y el otro no (fallo mecánico o atasco). El ala con <b>más flap</b> da <b>más sustentación</b> → <b>roll pronunciado hacia el ala con MENOS flap</b>.</li>
+    <li>El ala con <b>menos flap entra en pérdida primero</b>. Si el alabeo supera la autoridad de los alerones, puede acabar en <b>barrena</b>.</li>
+    <li>Por eso se comprueba el movimiento simétrico de los flaps en tierra.</li>
+  </ul>
+
+  <h4>Leading edge devices ★</h4>
+  <ul>
+    <li><b>Leading edge flap</b>: aumenta la curvatura del borde de ataque. <b>Retrasa la separación → sube el ángulo de pérdida y el CL<sub>max</sub></b>.</li>
+    <li><b>Krueger flap</b>: parte de la superficie inferior del borde de ataque que rota hacia delante. En alas en flecha se pone en la <b>parte interior</b> porque es menos eficiente, para favorecer el <b>root stall</b>.</li>
+    <li><b>Slats y slots</b>: abren una ranura bajo el slat que fuerza aire sobre el extradós y <b>re-energiza la capa límite</b>. Permiten volar a <b>mayor ángulo de ataque</b> (en el gráfico, de ~15° a ~25°) y reducen las distancias.</li>
+    <li>★ A diferencia de los flaps, los dispositivos de borde de ataque son <b>todo o nada</b>: <i>fully deployed or retracted</i>, sin posiciones intermedias.</li>
+  </ul>
+  <div class="comp"><b>La frase que lo resume</b>Con <b>FLAPS</b>, el CL<sub>max</sub> sube pero el <b>stalling angle baja</b>, porque bajar el flap <b>aumenta el ángulo de ataque efectivo</b> (el ángulo de pérdida se mide respecto a la cuerda del ala <i>sin</i> flap). Con <b>SLATS</b>, suben <b>los dos</b>.</div>
 </div>
 </details>
 
@@ -895,6 +895,59 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 
 <h2 id="ch-081.04">081.04 · Stability <span class="chq">4 preg. · 9 %</span></h2>
 <div class="f0lab" data-lab="stab"></div>
+<details class="lo atpl" id="lo-081.04.01" data-los="081.04.01 081.04.04 081.04.05 081.04.06">
+<summary><span class="lonum">081.04.01 · 04 · 05 · 06</span><span class="lotitle">Static and dynamic stability · Static directional stability · Static lateral stability · Dynamic lateral/directional stability</span></summary>
+<div class="body">
+  <div class="clave"><b>Clave</b> <b>Estática</b> = la tendencia <b>inicial</b>. <b>Dinámica</b> = lo que pasa <b>con el tiempo</b>. Sin estática no puede haber dinámica.</div>
+
+  <h4>Estática y dinámica</h4>
+  <div class="scroll"><table>
+  <tr><th>Tras una perturbación</th><th>Estática</th><th>Dinámica</th></tr>
+  <tr><td>Vuelve sin pasarse</td><td>Estable</td><td>Estable (deadbeat)</td></tr>
+  <tr><td>Oscila con amplitud que baja</td><td>Estable</td><td>Estable</td></tr>
+  <tr><td>Oscila con amplitud que crece</td><td>Estable</td><td><b class="bad">Inestable</b></td></tr>
+  <tr><td>Se va y no vuelve</td><td><b class="bad">Inestable</b></td><td>No aplica</td></tr>
+  </table></div>
+  <div class="svgbox wdg" id="vis-stab">
+  <b>Estática y dinámica: las cuatro respuestas</b>
+  <div class="ctl"><button class="btn sec segbtn" data-sc="damped" aria-pressed="true">Amortiguada</button><button class="btn sec segbtn" data-sc="dead" aria-pressed="false">Deadbeat</button><button class="btn sec segbtn" data-sc="div" aria-pressed="false">Divergente</button><button class="btn sec segbtn" data-sc="unst" aria-pressed="false">Inestable</button></div>
+  <div id="stabBox"></div><p class="out" id="stabOut"></p>
+  </div>
+  <ul>
+    <li><b>Fugoide</b> (phugoid): periodo <b>largo</b>, intercambia velocidad y altura, el <b>AoA casi no cambia</b>. El piloto la corrige sin esfuerzo.</li>
+    <li><b>Short period</b>: oscilación <b>rápida</b> de ángulo de ataque a velocidad casi constante. Tiene que estar bien amortiguada.</li>
+  </ul>
+
+  <h4>Direccional (eje normal) · la veleta</h4>
+  <ul>
+    <li>La da la <b>deriva</b> (fin). Devuelve el morro al viento relativo tras un derrape.</li>
+    <li><b>Sube</b> con más superficie de deriva y con el <b>CG adelantado</b> (más brazo). <b>Baja</b> con el CG atrasado y con fuselaje por delante del CG.</li>
+    <li><b>Dorsal fin</b>: alarga la raíz de la deriva para que <b>no entre en pérdida</b> con derrapes grandes.</li>
+  </ul>
+
+  <h4>Lateral (eje longitudinal) · el diedro</h4>
+  <ul>
+    <li>En un derrape, el <b>diedro</b> hace que el ala que baja vea <b>más ángulo de ataque</b>: más sustentación y el avión se nivela solo.</li>
+    <li>También suman: <b>ala alta</b> (efecto péndulo), <b>flecha</b> (el ala adelantada ve más envergadura efectiva) y la <b>deriva alta</b>.</li>
+    <li><b>Anhedral</b> (diedro negativo): se usa cuando ya sobra estabilidad lateral, típico de ala alta en flecha.</li>
+  </ul>
+  <div class="svgbox wdg" id="vis-dih">
+  <b>Diedro y derrape: de dónde sale la estabilidad lateral</b>
+  <div class="ctl"><span>Diedro</span><input type="range" id="dihR" min="-6" max="10" step="1" value="5" aria-label="ángulo de diedro"><span>Derrape</span><input type="range" id="dihS" min="0" max="20" step="2" value="10" aria-label="ángulo de derrape"></div>
+  <div id="dihBox"></div><p class="out" id="dihOut"></p>
+  </div>
+  <div class="flag"><b>Trampa de siempre:</b> eje <b>longitudinal</b> → estabilidad <b>LATERAL</b>. Eje <b>lateral</b> → estabilidad <b>LONGITUDINAL</b>.</div>
+
+  <h4>Dinámica lateral/direccional: las dos que se pelean</h4>
+  <div class="scroll"><table>
+  <tr><th></th><th>Cuando manda…</th><th>Resultado</th><th>Remedio</th></tr>
+  <tr><td><b>Dutch roll</b></td><td>la <b>lateral</b> sobre la direccional</td><td>Balanceo y guiñada acoplados, rápido e incómodo</td><td><b>Yaw damper</b></td></tr>
+  <tr><td><b>Espiral</b></td><td>la <b>direccional</b> sobre la lateral</td><td>Espiral que se cierra, lenta</td><td>El piloto</td></tr>
+  </table></div>
+  <div class="clave"><b>Qué prefiere el diseñador</b> Dejarlo algo <b>inestable en espiral</b>: es lenta y se corrige. Más diedro <b>empeora</b> el dutch roll.</div>
+</div>
+</details>
+
 <details class="lo" id="lo-081.04.03" data-los="081.04.03 081.05.01 081.05.02 081.05.03 081.05.04 081.05.08">
 <summary><span class="lonum">081.04.03 + 081.05</span><span class="lotitle">Static and dynamic longitudinal stability · General · Pitch (longitudinal) control · Yaw (directional) control · Roll (lateral) control · Trimming</span></summary>
 <div class="body">
@@ -979,59 +1032,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li>Recuerda de 050.5: para que haya barrena el ala tiene que estar <b>en pérdida</b>; es una pérdida con guiñada y caída de ala.</li>
   </ul>
   
-</div>
-</details>
-
-<details class="lo atpl" id="lo-081.04.01" data-los="081.04.01 081.04.04 081.04.05 081.04.06">
-<summary><span class="lonum">081.04.01 · 04 · 05 · 06</span><span class="lotitle">Static and dynamic stability · Static directional stability · Static lateral stability · Dynamic lateral/directional stability</span></summary>
-<div class="body">
-  <div class="clave"><b>Clave</b> <b>Estática</b> = la tendencia <b>inicial</b>. <b>Dinámica</b> = lo que pasa <b>con el tiempo</b>. Sin estática no puede haber dinámica.</div>
-
-  <h4>Estática y dinámica</h4>
-  <div class="scroll"><table>
-  <tr><th>Tras una perturbación</th><th>Estática</th><th>Dinámica</th></tr>
-  <tr><td>Vuelve sin pasarse</td><td>Estable</td><td>Estable (deadbeat)</td></tr>
-  <tr><td>Oscila con amplitud que baja</td><td>Estable</td><td>Estable</td></tr>
-  <tr><td>Oscila con amplitud que crece</td><td>Estable</td><td><b class="bad">Inestable</b></td></tr>
-  <tr><td>Se va y no vuelve</td><td><b class="bad">Inestable</b></td><td>No aplica</td></tr>
-  </table></div>
-  <div class="svgbox wdg" id="vis-stab">
-  <b>Estática y dinámica: las cuatro respuestas</b>
-  <div class="ctl"><button class="btn sec segbtn" data-sc="damped" aria-pressed="true">Amortiguada</button><button class="btn sec segbtn" data-sc="dead" aria-pressed="false">Deadbeat</button><button class="btn sec segbtn" data-sc="div" aria-pressed="false">Divergente</button><button class="btn sec segbtn" data-sc="unst" aria-pressed="false">Inestable</button></div>
-  <div id="stabBox"></div><p class="out" id="stabOut"></p>
-  </div>
-  <ul>
-    <li><b>Fugoide</b> (phugoid): periodo <b>largo</b>, intercambia velocidad y altura, el <b>AoA casi no cambia</b>. El piloto la corrige sin esfuerzo.</li>
-    <li><b>Short period</b>: oscilación <b>rápida</b> de ángulo de ataque a velocidad casi constante. Tiene que estar bien amortiguada.</li>
-  </ul>
-
-  <h4>Direccional (eje normal) · la veleta</h4>
-  <ul>
-    <li>La da la <b>deriva</b> (fin). Devuelve el morro al viento relativo tras un derrape.</li>
-    <li><b>Sube</b> con más superficie de deriva y con el <b>CG adelantado</b> (más brazo). <b>Baja</b> con el CG atrasado y con fuselaje por delante del CG.</li>
-    <li><b>Dorsal fin</b>: alarga la raíz de la deriva para que <b>no entre en pérdida</b> con derrapes grandes.</li>
-  </ul>
-
-  <h4>Lateral (eje longitudinal) · el diedro</h4>
-  <ul>
-    <li>En un derrape, el <b>diedro</b> hace que el ala que baja vea <b>más ángulo de ataque</b>: más sustentación y el avión se nivela solo.</li>
-    <li>También suman: <b>ala alta</b> (efecto péndulo), <b>flecha</b> (el ala adelantada ve más envergadura efectiva) y la <b>deriva alta</b>.</li>
-    <li><b>Anhedral</b> (diedro negativo): se usa cuando ya sobra estabilidad lateral, típico de ala alta en flecha.</li>
-  </ul>
-  <div class="svgbox wdg" id="vis-dih">
-  <b>Diedro y derrape: de dónde sale la estabilidad lateral</b>
-  <div class="ctl"><span>Diedro</span><input type="range" id="dihR" min="-6" max="10" step="1" value="5" aria-label="ángulo de diedro"><span>Derrape</span><input type="range" id="dihS" min="0" max="20" step="2" value="10" aria-label="ángulo de derrape"></div>
-  <div id="dihBox"></div><p class="out" id="dihOut"></p>
-  </div>
-  <div class="flag"><b>Trampa de siempre:</b> eje <b>longitudinal</b> → estabilidad <b>LATERAL</b>. Eje <b>lateral</b> → estabilidad <b>LONGITUDINAL</b>.</div>
-
-  <h4>Dinámica lateral/direccional: las dos que se pelean</h4>
-  <div class="scroll"><table>
-  <tr><th></th><th>Cuando manda…</th><th>Resultado</th><th>Remedio</th></tr>
-  <tr><td><b>Dutch roll</b></td><td>la <b>lateral</b> sobre la direccional</td><td>Balanceo y guiñada acoplados, rápido e incómodo</td><td><b>Yaw damper</b></td></tr>
-  <tr><td><b>Espiral</b></td><td>la <b>direccional</b> sobre la lateral</td><td>Espiral que se cierra, lenta</td><td>El piloto</td></tr>
-  </table></div>
-  <div class="clave"><b>Qué prefiere el diseñador</b> Dejarlo algo <b>inestable en espiral</b>: es lenta y se corrige. Más diedro <b>empeora</b> el dutch roll.</div>
 </div>
 </details>
 
@@ -2003,6 +2003,8 @@ const SUB = [
  ["081.08.02",2,23,"Asymmetric thrust","ATPL"],
  ["081.08.03",0, 1,"Significant points on a polar curve","ATPL"]
 ];
+/*f15natsort*/const __nk=c=>String(c).split(/[.\-_·\s]+/).filter(Boolean).map(t=>/^\d+$/.test(t)?[0,+t,""]:[1,0,t]);const __nc=(a,b)=>{const x=__nk(a[0]),y=__nk(b[0]);for(let i=0;i<Math.max(x.length,y.length);i++){const p=x[i]||[-1,0,""],q=y[i]||[-1,0,""];for(let j=0;j<3;j++){if(p[j]<q[j])return -1;if(p[j]>q[j])return 1}}return 0};SUB.sort(__nc);
+
 const SUBMAP = {}; SUB.forEach(s=>SUBMAP[s[0]]={n:s[1], los:s[2], name:s[3], cls:s[4], ch:s[0].slice(0,6)});
 const CHMAP = {}; ECQB.forEach(c=>CHMAP[c.id]=c);
 const subName = c => (SUBMAP[c]||{}).name || "";
@@ -2614,7 +2616,7 @@ function selectQuestions(mode, inc, lo){
     return shuffle(A.concat(B));
   }
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
-  if(mode==="lo")    return shuffle(pool.filter(q=>subOf(q).slice(0,6)===lo || q[1]===lo));
+  if(mode==="lo")    return shuffle(pool.filter(q=>subOf(q)===lo || subOf(q).slice(0,6)===lo || q[1]===lo));
   if(mode==="all")   return shuffle(pool);
   if(mode==="examen"){
     const L=LEN[examLen]||LEN.full;
@@ -2946,7 +2948,7 @@ function renderSetup(){
   $("#examCount").textContent = `Test cronometrado con el reparto oficial de EASA por capítulo (081.01 a 081.08); corrección al final.`;
   $("#trialCount").textContent = `25 por test: 12 de las ${BANK.filter(isExam).length} clave de clase (con sus variantes) y 13 de las otras ${BANK.filter(q=>isTrial(q)&&!isExam(q)).length} de los trials y ejercicios. Primero las no vistas y las falladas.`;
   const selected = $("#loSel").value;
-  $("#loSel").innerHTML = ECQB.map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.id} · ${c.es}</option>`).join("");
+  $("#loSel").innerHTML = ECQB.map(c=>`<optgroup label="${c.id} · ${c.en}"><option value="${c.id}" ${c.id===selected?'selected':''}>${c.id} · ${c.en} (todo el capítulo)</option>${SUB.filter(x=>x[0].slice(0,6)===c.id).map(x=>`<option value="${x[0]}" ${x[0]===selected?'selected':''}>${x[0]} · ${esc(x[3])}</option>`).join("")}</optgroup>`).join("");
 }
 let current = [], curMode = "adaptive";
 const NOTAG = new Set();

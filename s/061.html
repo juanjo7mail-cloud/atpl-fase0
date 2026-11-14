@@ -14,7 +14,7 @@ fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await 
 <!-- v7 · 09-10-2026: NAV-3. v6 · 04-10-2026: patrón Air Law. v5 · 03-10-2026: NAV-2. v4 · 29-09-2026: visuales. v2-v3: trial y temario. -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>061 · 062 Navigation</title>
+<title>061 · 062 · Navigation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
@@ -523,11 +523,12 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
 </head>
 <body>
+<style>h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-top:10px}</style>
 <div class="wrap">
 <header>
   <div class="code">061 · 062</div>
-  <h1>General Navigation · Radio Navigation</h1>
-  <p>061 · 55 preguntas · 2 h 15 &nbsp;|&nbsp; 062 · 66 preguntas · 1 h 30 · aprobado 75 %</p>
+  <h1>Navigation</h1>
+  <p><b>061 · 55 preguntas · 2 h 15 min | 062 · 66 preguntas · 1 h 30 min · aprobado 75 %</b></p>
 </header>
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
@@ -546,26 +547,54 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="frs"><div class="fr"><div class="ft"><b>Escala de una carta</b></div><div class="ff">Escala = cm en la carta ÷ distancia real. 1 NM = 1.852 m. Ej.: 12 cm = 240 NM → 1:3.704.000</div><div class="fo">⚠ 1:500.000 tiene MÁS detalle que 1:5.000.000</div></div><div class="fr"><div class="ft"><b>Distancia real a partir de cm</b></div><div class="ff">cm × denominador = cm reales → ÷ 100.000 = km → ÷ 1,852 = NM. Ej.: 15 cm en 1:1.000.000 = 150 km = 81 NM</div><div class="fo">⚠ Si te dan la escala <b>en esa latitud</b>, NO se corrige con coseno</div></div><div class="fr"><div class="ft"><b>Mercator: escala en otra latitud</b></div><div class="ff">N nueva = N actual × cos(lat nueva) ÷ cos(lat antigua), con N = el número de 1:N. Ej.: 1:2.000.000 a 30° → a 60°: 2.000.000 × 0,5 ÷ 0,866 = 1:1.154.700</div><div class="fo">⚠ Hacia el polo la carta <b>amplía</b>: N baja. Hacia el Ecuador, N sube</div></div><div class="fr"><div class="ft"><b>Mercator: los mismos km en cm, a otra latitud</b></div><div class="ff">cm en B = cm en A × cos A ÷ cos B. Ej.: 10 cm en el Ecuador → a 45°: 10 ÷ 0,707 = 14,14 cm</div><div class="fo">⚠ Más cerca del polo salen <b>más</b> cm</div></div><div class="fr"><div class="ft"><b>Mercator: ¿a qué latitud pasa a ser k veces mayor?</b></div><div class="ff">Desde el Ecuador: cos φ = 1 ÷ k. Ej.: 1:3.000.000 → 1:1.500.000 (k = 2): cos φ = 0,5 → 60°</div><div class="fo">⚠ Sólo vale para <b>Mercator</b>. En Lambert la escala es mínima en el parallel of origin y exacta en los standard parallels</div></div><div class="fr"><div class="ft"><b>Distancia N–S (por un meridiano)</b></div><div class="ff">1′ de latitud = 1 NM. Mismo hemisferio: se restan las latitudes. Hemisferios distintos: se suman. Ej.: 64°35′N y 53°15′S = 117°50′ = 7.070 NM</div><div class="fo">⚠ En el mismo meridiano no hay coseno</div></div><div class="fr"><div class="ft"><b>Distancia E–W (por un paralelo)</b></div><div class="ff">Departure = Δlong (en minutos) × cos lat. Para hallar Δlong: NM ÷ cos lat. En el Ecuador 1′ de longitud = 1 NM</div><div class="fo">⚠ Aquí el cos <b>multiplica</b> la distancia real (el paralelo se acorta hacia el polo). La carta Mercator lo compensa estirando con 1 ÷ cos, por eso allí la escala crece</div></div><div class="fr"><div class="ft"><b>Meridiano y antimeridiano</b></div><div class="ff">Mismo hemisferio: por su polo, (90° − lat 1) + (90° − lat 2). Ej.: 64°35′N y 53°15′N → 25°25′ + 36°45′ = 62°10′ = 3.730 NM. Hemisferios distintos: por el polo del hemisferio con la latitud MAYOR, (90° − lat mayor) + (90° + lat menor). Ej.: 64°35′N y 53°15′S → 25°25′ + 143°15′ = 10.120 NM</div><div class="fo">⚠ Pasa por el polo, no por el paralelo</div></div><div class="fr"><div class="ft"><b>Hora</b></div><div class="ff">LMT = UTC + longitud ÷ 15 (E suma, W resta). 15° = 1 h, 1° = 4 min</div><div class="fo">⚠ Al cruzar el antimeridiano cambia el día</div></div><div class="fr"><div class="ft"><b>Rumbo de brújula → verdadero</b></div><div class="ff">CH → (DEV) → MH → (VAR) → TH. En esa dirección: <b>E suma, W resta</b>. Al revés: W suma, E resta</div><div class="fo">⚠ TT = TH + deriva derecha (R +, L −)</div></div><div class="fr"><div class="ft"><b>Viento en el triángulo de velocidades</b></div><div class="ff">Headwind = W · cos θ · Crosswind = W · sen θ · Deriva ≈ crosswind ÷ TAS × 60 · GS ≈ TAS ± componente de frente</div><div class="fo">⚠ θ = ángulo entre el viento y el rumbo (o la pista)</div></div><div class="fr"><div class="ft"><b>Alcance de un NDB</b></div><div class="ff">Alcance (NM) = √potencia (W). Potencia = alcance². Doble de alcance = 4× potencia</div><div class="fo">⚠ Es teórico, no el real</div></div><div class="fr"><div class="ft"><b>Alcance de un VOR/DME</b></div><div class="ff">1,23 × (√altura de la estación en ft + √altura del avión en ft)</div><div class="fo">⚠ Línea de vista: la estación también cuenta</div></div></div>
 <p class="src">Las escalas de Mercator suben con la secante de la latitud (1 ÷ cos φ): a 60° el doble, a 0° la mínima.</p></div>
 <div class="examhead" id="ex-061"><b>061 · General Navigation</b> · 55 preguntas · 2 h 15</div>
+<h2 class="subj">061 · General Navigation <span class="wtag">55 preg. · 2 h 15 min</span></h2>
 <h2 id="ch-061.01">061.01 · Basics of navigation <span class="wtag">28 preg. · 51 %</span></h2>
-<details class="lo" id="lo-061.01.05" data-lo="061.01.05">
-<summary><span class="lonum">061.01.05</span><span class="lotitle">Speed</span></summary>
+<details class="lo" id="lo-061.01.01" data-lo="061.01.01">
+<summary><span class="lonum">061.01.01</span><span class="lotitle">The Earth</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Viento de cara: <b>TAS &gt; GS</b> (se busca en despegue y aterrizaje). Viento de cola en crucero: <b>GS &gt; TAS</b>.</li><li>Cálculos del trial: tiempo, combustible y proporciones (110 kt y 60 NM; 49 l/h y 55 min; 18 gal en 120 NM).</li></ul></div>
-<div class="key"><b>Clave</b><b>Tiempo = distancia ÷ GS</b> · <b>combustible = consumo × tiempo</b> · GS = TAS ± componente de viento · TAS ≈ IAS + <b>2 % por cada 1.000 ft</b>.</div>
-<div class="flag"><b>Trampas:</b> los minutos no son decimales: 55 min = 0,917 h, no 0,55 · con viento de cara la GS es <b>menor</b> que la TAS · en altura la TAS es <b>mayor</b> que la IAS.</div>
-<div class="formula"><div class="k"><b>t = d ÷ GS</b><span>en horas; × 60 para minutos</span></div><div class="k"><b>Fuel = l/h × t</b><span>+ reserva si la piden</span></div><div class=""><b>TAS ≈ IAS × (1 + 0,02 × miles de ft)</b><span>regla del 2 % por 1.000 ft</span></div></div>
-<div class="vis" id="visSpeed">
-  <b class="vtitle">▶ De la IAS al combustible: TAS, GS, tiempo y litros</b>
-  <label class="slider">IAS: <b id="spIasV"></b><input type="range" id="spIas" min="80" max="200" step="5" value="100" aria-label="IAS"></label>
-  <label class="slider">Altitud: <b id="spAltV"></b><input type="range" id="spAlt" min="0" max="12000" step="500" value="4000" aria-label="Altitud"></label>
-  <label class="slider">Viento en el track: <b id="spWV"></b><input type="range" id="spW" min="-40" max="40" step="5" value="-10" aria-label="Componente de viento"></label>
-  <label class="slider">Distancia: <b id="spDV"></b><input type="range" id="spD" min="20" max="300" step="10" value="120" aria-label="Distancia"></label>
-  <div class="spchain" id="spSvg" role="img" aria-label="Cadena IAS, TAS, GS, tiempo y combustible"></div>
-  <div class="vismsg" id="spMsg"></div>
-  <div class="quizbox" data-refs="tas,drcalc,headtail,speedA"><button class="btn sec qbtn">🎯 Ponme a prueba (velocidades)</button><div class="qarea"></div></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Forma: oblate (flattened) spheroid</b> — «cae siempre». <b>Radio 6.371 km</b> (es el medio).</li><li><b>Plano de la eclíptica</b> y <b>semieje mayor</b> de la órbita — «hay que saberlo».</li></ul></div>
+<div class="key"><b>Clave</b>Esferoide achatado (diámetro polar ≈ 23 NM menor) · radio medio 6.371 km · el eje inclinado 23,5° causa las estaciones · perihelio a principios de enero, afelio en julio.</div>
+<div class="flag"><b>Trampas:</b> la distancia al Sol NO causa las estaciones · perihelio (≈ 4 ene) ≠ solsticio (21 dic) · equinoccio de otoño el 21 de septiembre · 23,5° respecto a la perpendicular = 66,5° respecto al plano.</div>
+<div class="scroll"><table><tr><th>Ley de Kepler</th><th>Qué dice</th></tr><tr><td>1.ª</td><td>Órbita <b>elíptica</b>, con el Sol en <b>un foco</b></td></tr><tr><td>2.ª</td><td>El radio vector barre <b>áreas iguales en tiempos iguales</b> → más rápido en el perihelio</td></tr><tr><td>3.ª</td><td>Periodo² ∝ distancia media³ (la distancia media = <b>semieje mayor</b>)</td></tr></table></div>
+<div class="scroll"><table><tr><th></th><th>Perihelion</th><th>Aphelion</th></tr><tr><td>Cuándo</td><td>Principios de <b>enero</b></td><td>Principios de <b>julio</b></td></tr><tr><td>Distancia</td><td>147,1 M km</td><td>152,1 M km</td></tr><tr><td>Velocidad</td><td><b>Máxima</b></td><td><b>Mínima</b></td></tr></table></div>
+<div class="scroll"><table><tr><th>Fecha</th><th>El Sol</th><th>Hemisferio norte</th></tr><tr><td><b>21 Mar</b></td><td>Cruza el ecuador de S a N</td><td>Spring equinox</td></tr><tr><td><b>21 Jun</b></td><td>Vertical sobre 23½°N (Tropic of Cancer)</td><td>Summer solstice · día más largo</td></tr><tr><td><b>21 Sep</b></td><td>Cruza el ecuador de N a S</td><td>Autumn equinox</td></tr><tr><td><b>21 Dec</b></td><td>Vertical sobre 23½°S (Tropic of Capricorn)</td><td>Winter solstice · día más corto</td></tr></table></div>
+<p class="src">Rotación y traslación antihorarias vistas desde el polo norte. El Sol parece moverse cada día por un paralelo, de E a W. Trópicos 23°26′, círculos polares 66°32′.</p>
+<figure class="fig" id="fig-tilt"><svg viewBox="0 0 640 220" role="img" aria-label="Inclinación del eje 23,5 grados">
+<defs><marker id="ahT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="fk"/></marker></defs>
+<line x1="30" y1="120" x2="610" y2="120" class="ln cmu"/><text x="610" y="140" text-anchor="end" class="sm mu">plano de la órbita (eclíptica)</text>
+<circle cx="320" cy="120" r="60" class="earth"/>
+<line x1="320" y1="22" x2="320" y2="210" class="ln dsh cmu"/><text x="306" y="26" text-anchor="end" class="sm mu">perpendicular al plano</text>
+<line x1="282" y1="207" x2="360" y2="28" class="ln thk" marker-end="url(#ahT)"/><text x="366" y="30" class="bd">eje de giro → true north</text>
+<line x1="265" y1="96" x2="375" y2="144" class="ln cw"/><text x="380" y="160" class="sm tw">ecuador</text>
+<path d="M320 72 A48 48 0 0 1 339 76" class="ln cm thk"/><text x="312" y="66" text-anchor="end" class="bd tm">23,5°</text>
+<path d="M346 60 A65 65 0 0 1 385 120" class="ln cb thk"/><text x="392" y="96" class="bd tb">66,5°</text>
+<text x="440" y="60" class="sm">23,5° con la perpendicular</text><text x="440" y="76" class="sm">= 66,5° con el plano (90 − 66,5)</text>
+<text x="440" y="196" class="sm bd">Causa las estaciones.</text>
+</svg><figcaption>El <b>true north</b> es el punto donde el eje corta la superficie (polo geográfico). Los 23,5° son la inclinación de ese eje, no «el norte».</figcaption></figure>
+<figure class="fig" id="fig-orbit"><svg viewBox="0 0 640 300" role="img" aria-label="Órbita de la Tierra con perihelio, afelio, solsticios y equinoccios">
+<ellipse cx="320" cy="150" rx="250" ry="110" class="ln"/>
+<circle cx="200" cy="150" r="24" class="sun"/><text x="200" y="192" text-anchor="middle" class="sm">Sol (en un foco)</text>
+<circle cx="70" cy="150" r="13" class="earth"/><circle cx="570" cy="150" r="13" class="earth"/>
+<text x="12" y="210" class="bd tb">4 ene · PERIHELION</text><text x="12" y="226" class="sm">147 M km · más cerca · más rápido</text>
+<text x="628" y="210" text-anchor="end" class="bd tm">4 jul · APHELION</text><text x="628" y="226" text-anchor="end" class="sm">152 M km · más lejos · más lento</text>
+<circle cx="78.5" cy="121.5" r="5" class="fw"/><text x="20" y="100" class="sm tw">21 dic · solsticio (≠ perihelio)</text>
+<circle cx="561.5" cy="178.5" r="5" class="fw"/><text x="628" y="262" text-anchor="end" class="sm tw">21 jun · solsticio (≠ afelio)</text>
+<circle cx="255" cy="256" r="5" class="fg"/><text x="255" y="280" text-anchor="middle" class="sm tg">21 mar · equinoccio</text>
+<circle cx="385" cy="44" r="5" class="fg"/><text x="385" y="28" text-anchor="middle" class="sm tg">21 sep · equinoccio</text>
+<text x="320" y="146" text-anchor="middle" class="sm mu">sentido antihorario</text><text x="320" y="160" text-anchor="middle" class="sm mu">(visto desde el polo N)</text>
+</svg><figcaption>Elipse exagerada. Solsticio y perihelio caen cerca (≈ 2 semanas) pero <b>no</b> son lo mismo. En el invierno del hemisferio norte la Tierra está <b>más cerca</b>: la distancia no causa las estaciones.</figcaption></figure>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Geoide</b>: superficie irregular de los océanos, solo con gravedad y fuerza centrífuga. Para las cartas se usan elipsoides; el obligatorio para coordenadas es el <b>WGS-84</b>.</li><li>Circunferencia ≈ <b>40.000 km ≈ 21.600 NM</b> (360 × 60).</li><li>La inclinación del eje cambia la insolación y la duración del día.</li></ul></div>
 </div>
-<div class="scroll"><table><tr><th>Trial resuelto</th><th>Cálculo</th><th>Resultado</th></tr><tr><td>110 kt, 60 NM</td><td>60 ÷ 110 × 60</td><td><b>33 min</b></td></tr><tr><td>49 l/h, 55 min</td><td>49 × 55 ÷ 60</td><td><b>44,9 l</b></td></tr><tr><td>18 gal en 120 NM; ¿168 NM?</td><td>18 × 168 ÷ 120</td><td><b>25,2 gal</b></td></tr><tr><td>IAS 100 kt a 4.000 ft de densidad</td><td>regla del 2 %: 100 × 1,08</td><td><b>≈ 106–108 kt</b> (el trial da 106)</td></tr></table></div>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Mach</b>: M = TAS ÷ velocidad del sonido. Subiendo a <b>CAS constante</b>, TAS y Mach <b>suben</b>. Subiendo a <b>Mach constante</b> en la troposfera, TAS y CAS <b>bajan</b>.</li><li><b>Gradientes</b> (regla del 1 en 60, 1 NM ≈ 6.000 ft): grados = (ft ÷ 100) ÷ NM · porcentaje = (ft ÷ 60) ÷ NM.</li><li><b>Régimen de descenso</b>: ROD = GP° × GS (NM/min) × 100 = GP % × GS (kt) · VS (ft/min) = GS × gradiente (ft/NM) ÷ 60 · senda de 3°: ROD ≈ GS × 5.</li><li>GS revisada para llegar a una hora: distancia ÷ minutos que quedan × 60 · GS media entre dos fixes: distancia ÷ tiempo.</li><li>Con más WCA, menos TAS «útil» por el track (TAS × cos WCA).</li><li>Antes de descender, conocer bien la posición: margen con el terreno.</li></ul></div>
+</details>
+
+<details class="lo" id="lo-061.01.02" data-lo="061.01.02">
+<summary><span class="lonum">061.01.02</span><span class="lotitle">Position</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Los <b>meridianos convergen en los polos verdaderos</b>.</li><li>Truco del 180°: cruzándolo hacia el este entras en longitudes W.</li></ul></div>
+<div class="key"><b>Clave</b><b>Latitud</b> 0–90° N/S: ángulo en el centro de la Tierra desde el ecuador · <b>longitud</b> 0–180° E/W desde Greenwich (1884).</div>
+<div class="flag"><b>Trampas:</b> los meridianos convergen en los polos geográficos, no en los magnéticos · un meridiano es un semicírculo de polo a polo.</div>
+<ul><li><b>Meridian</b>: semicírculo de polo a polo. Greenwich = 0°; su antimeridiano, 180°.</li><li><b>Parallel</b>: paralelo al ecuador; ecuador 0°, polos 90°.</li></ul>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>Latitud y longitud <b>geodésicas</b> sobre el WGS-84.</li><li>Diferencia de latitud o longitud: mismo lado, restar; lados opuestos, sumar (y en longitud, si pasa de 180°, ir por el otro lado).</li></ul></div>
 </div>
 </details>
 
@@ -636,25 +665,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-061.01.08" data-lo="061.01.08">
-<summary><span class="lonum">061.01.08</span><span class="lotitle">Navigation in climb and descent</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Ascenso: TAS y viento medios a <b>2/3</b> de la altitud de crucero · descenso: a <b>1/2</b> · <b>ROD = altura a perder ÷ minutos</b> · senda de 3°: <b>ROD ≈ GS × 5</b>.</div>
-<div class="flag"><b>Trampas:</b> a 2/3 es el ASCENSO y a 1/2 el DESCENSO · los minutos salen de la distancia ÷ GS en NM/min (180 kt = 3 NM/min).</div>
-<div class="formula"><div class="k"><b>Minutos = NM ÷ (GS ÷ 60)</b><span>180 kt = 3 NM/min</span></div><div class="k"><b>ROD = Δft ÷ minutos</b><span>9.000 ft en 10 min = 900 ft/min</span></div><div class="g"><b>3°: ROD ≈ GS × 10 ÷ 2</b><span>150 kt → 750 ft/min</span></div></div>
-<div class="vis" id="visDesc">
-  <b class="vtitle">▶ Planifica el descenso: ¿cuántos pies por minuto?</b>
-  <label class="slider">Altitud inicial: <b id="dsFromV"></b><input type="range" id="dsFrom" min="3000" max="20000" step="500" value="9000" aria-label="Altitud inicial"></label>
-  <label class="slider">Distancia al punto: <b id="dsDistV"></b><input type="range" id="dsDist" min="5" max="60" step="1" value="25" aria-label="Distancia"></label>
-  <label class="slider">GS: <b id="dsGsV"></b><input type="range" id="dsGs" min="60" max="300" step="10" value="180" aria-label="GS"></label>
-  <svg id="dsSvg" viewBox="0 0 700 200" role="img" aria-label="Perfil de descenso"></svg>
-  <div class="vismsg" id="dsMsg"></div>
-  <div class="quizbox" data-refs="climb,grad"><button class="btn sec qbtn">🎯 Ponme a prueba (ascenso y descenso)</button><div class="qarea"></div></div>
-</div>
-<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Medias: ascenso a 2/3 de la altitud de crucero; descenso a 1/2 de la altitud de descenso (TAS y viento).</li><li>Dados distancia, velocidad y altitudes → ROD o ROC. Dados ROD, velocidad y altitudes → distancia necesaria.</li><li>Los manuales dan tablas o gráficos de tiempo, combustible y distancia de ascenso y descenso.</li></ul></div>
-</div>
-</details>
-
 <details class="lo" id="lo-061.01.04" data-lo="061.01.04">
 <summary><span class="lonum">061.01.04</span><span class="lotitle">Distance</span></summary>
 <div class="body">
@@ -675,63 +685,25 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-061.01.01" data-lo="061.01.01">
-<summary><span class="lonum">061.01.01</span><span class="lotitle">The Earth</span></summary>
+<details class="lo" id="lo-061.01.05" data-lo="061.01.05">
+<summary><span class="lonum">061.01.05</span><span class="lotitle">Speed</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Forma: oblate (flattened) spheroid</b> — «cae siempre». <b>Radio 6.371 km</b> (es el medio).</li><li><b>Plano de la eclíptica</b> y <b>semieje mayor</b> de la órbita — «hay que saberlo».</li></ul></div>
-<div class="key"><b>Clave</b>Esferoide achatado (diámetro polar ≈ 23 NM menor) · radio medio 6.371 km · el eje inclinado 23,5° causa las estaciones · perihelio a principios de enero, afelio en julio.</div>
-<div class="flag"><b>Trampas:</b> la distancia al Sol NO causa las estaciones · perihelio (≈ 4 ene) ≠ solsticio (21 dic) · equinoccio de otoño el 21 de septiembre · 23,5° respecto a la perpendicular = 66,5° respecto al plano.</div>
-<div class="scroll"><table><tr><th>Ley de Kepler</th><th>Qué dice</th></tr><tr><td>1.ª</td><td>Órbita <b>elíptica</b>, con el Sol en <b>un foco</b></td></tr><tr><td>2.ª</td><td>El radio vector barre <b>áreas iguales en tiempos iguales</b> → más rápido en el perihelio</td></tr><tr><td>3.ª</td><td>Periodo² ∝ distancia media³ (la distancia media = <b>semieje mayor</b>)</td></tr></table></div>
-<div class="scroll"><table><tr><th></th><th>Perihelion</th><th>Aphelion</th></tr><tr><td>Cuándo</td><td>Principios de <b>enero</b></td><td>Principios de <b>julio</b></td></tr><tr><td>Distancia</td><td>147,1 M km</td><td>152,1 M km</td></tr><tr><td>Velocidad</td><td><b>Máxima</b></td><td><b>Mínima</b></td></tr></table></div>
-<div class="scroll"><table><tr><th>Fecha</th><th>El Sol</th><th>Hemisferio norte</th></tr><tr><td><b>21 Mar</b></td><td>Cruza el ecuador de S a N</td><td>Spring equinox</td></tr><tr><td><b>21 Jun</b></td><td>Vertical sobre 23½°N (Tropic of Cancer)</td><td>Summer solstice · día más largo</td></tr><tr><td><b>21 Sep</b></td><td>Cruza el ecuador de N a S</td><td>Autumn equinox</td></tr><tr><td><b>21 Dec</b></td><td>Vertical sobre 23½°S (Tropic of Capricorn)</td><td>Winter solstice · día más corto</td></tr></table></div>
-<p class="src">Rotación y traslación antihorarias vistas desde el polo norte. El Sol parece moverse cada día por un paralelo, de E a W. Trópicos 23°26′, círculos polares 66°32′.</p>
-<figure class="fig" id="fig-tilt"><svg viewBox="0 0 640 220" role="img" aria-label="Inclinación del eje 23,5 grados">
-<defs><marker id="ahT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="fk"/></marker></defs>
-<line x1="30" y1="120" x2="610" y2="120" class="ln cmu"/><text x="610" y="140" text-anchor="end" class="sm mu">plano de la órbita (eclíptica)</text>
-<circle cx="320" cy="120" r="60" class="earth"/>
-<line x1="320" y1="22" x2="320" y2="210" class="ln dsh cmu"/><text x="306" y="26" text-anchor="end" class="sm mu">perpendicular al plano</text>
-<line x1="282" y1="207" x2="360" y2="28" class="ln thk" marker-end="url(#ahT)"/><text x="366" y="30" class="bd">eje de giro → true north</text>
-<line x1="265" y1="96" x2="375" y2="144" class="ln cw"/><text x="380" y="160" class="sm tw">ecuador</text>
-<path d="M320 72 A48 48 0 0 1 339 76" class="ln cm thk"/><text x="312" y="66" text-anchor="end" class="bd tm">23,5°</text>
-<path d="M346 60 A65 65 0 0 1 385 120" class="ln cb thk"/><text x="392" y="96" class="bd tb">66,5°</text>
-<text x="440" y="60" class="sm">23,5° con la perpendicular</text><text x="440" y="76" class="sm">= 66,5° con el plano (90 − 66,5)</text>
-<text x="440" y="196" class="sm bd">Causa las estaciones.</text>
-</svg><figcaption>El <b>true north</b> es el punto donde el eje corta la superficie (polo geográfico). Los 23,5° son la inclinación de ese eje, no «el norte».</figcaption></figure>
-<figure class="fig" id="fig-orbit"><svg viewBox="0 0 640 300" role="img" aria-label="Órbita de la Tierra con perihelio, afelio, solsticios y equinoccios">
-<ellipse cx="320" cy="150" rx="250" ry="110" class="ln"/>
-<circle cx="200" cy="150" r="24" class="sun"/><text x="200" y="192" text-anchor="middle" class="sm">Sol (en un foco)</text>
-<circle cx="70" cy="150" r="13" class="earth"/><circle cx="570" cy="150" r="13" class="earth"/>
-<text x="12" y="210" class="bd tb">4 ene · PERIHELION</text><text x="12" y="226" class="sm">147 M km · más cerca · más rápido</text>
-<text x="628" y="210" text-anchor="end" class="bd tm">4 jul · APHELION</text><text x="628" y="226" text-anchor="end" class="sm">152 M km · más lejos · más lento</text>
-<circle cx="78.5" cy="121.5" r="5" class="fw"/><text x="20" y="100" class="sm tw">21 dic · solsticio (≠ perihelio)</text>
-<circle cx="561.5" cy="178.5" r="5" class="fw"/><text x="628" y="262" text-anchor="end" class="sm tw">21 jun · solsticio (≠ afelio)</text>
-<circle cx="255" cy="256" r="5" class="fg"/><text x="255" y="280" text-anchor="middle" class="sm tg">21 mar · equinoccio</text>
-<circle cx="385" cy="44" r="5" class="fg"/><text x="385" y="28" text-anchor="middle" class="sm tg">21 sep · equinoccio</text>
-<text x="320" y="146" text-anchor="middle" class="sm mu">sentido antihorario</text><text x="320" y="160" text-anchor="middle" class="sm mu">(visto desde el polo N)</text>
-</svg><figcaption>Elipse exagerada. Solsticio y perihelio caen cerca (≈ 2 semanas) pero <b>no</b> son lo mismo. En el invierno del hemisferio norte la Tierra está <b>más cerca</b>: la distancia no causa las estaciones.</figcaption></figure>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Geoide</b>: superficie irregular de los océanos, solo con gravedad y fuerza centrífuga. Para las cartas se usan elipsoides; el obligatorio para coordenadas es el <b>WGS-84</b>.</li><li>Circunferencia ≈ <b>40.000 km ≈ 21.600 NM</b> (360 × 60).</li><li>La inclinación del eje cambia la insolación y la duración del día.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Viento de cara: <b>TAS &gt; GS</b> (se busca en despegue y aterrizaje). Viento de cola en crucero: <b>GS &gt; TAS</b>.</li><li>Cálculos del trial: tiempo, combustible y proporciones (110 kt y 60 NM; 49 l/h y 55 min; 18 gal en 120 NM).</li></ul></div>
+<div class="key"><b>Clave</b><b>Tiempo = distancia ÷ GS</b> · <b>combustible = consumo × tiempo</b> · GS = TAS ± componente de viento · TAS ≈ IAS + <b>2 % por cada 1.000 ft</b>.</div>
+<div class="flag"><b>Trampas:</b> los minutos no son decimales: 55 min = 0,917 h, no 0,55 · con viento de cara la GS es <b>menor</b> que la TAS · en altura la TAS es <b>mayor</b> que la IAS.</div>
+<div class="formula"><div class="k"><b>t = d ÷ GS</b><span>en horas; × 60 para minutos</span></div><div class="k"><b>Fuel = l/h × t</b><span>+ reserva si la piden</span></div><div class=""><b>TAS ≈ IAS × (1 + 0,02 × miles de ft)</b><span>regla del 2 % por 1.000 ft</span></div></div>
+<div class="vis" id="visSpeed">
+  <b class="vtitle">▶ De la IAS al combustible: TAS, GS, tiempo y litros</b>
+  <label class="slider">IAS: <b id="spIasV"></b><input type="range" id="spIas" min="80" max="200" step="5" value="100" aria-label="IAS"></label>
+  <label class="slider">Altitud: <b id="spAltV"></b><input type="range" id="spAlt" min="0" max="12000" step="500" value="4000" aria-label="Altitud"></label>
+  <label class="slider">Viento en el track: <b id="spWV"></b><input type="range" id="spW" min="-40" max="40" step="5" value="-10" aria-label="Componente de viento"></label>
+  <label class="slider">Distancia: <b id="spDV"></b><input type="range" id="spD" min="20" max="300" step="10" value="120" aria-label="Distancia"></label>
+  <div class="spchain" id="spSvg" role="img" aria-label="Cadena IAS, TAS, GS, tiempo y combustible"></div>
+  <div class="vismsg" id="spMsg"></div>
+  <div class="quizbox" data-refs="tas,drcalc,headtail,speedA"><button class="btn sec qbtn">🎯 Ponme a prueba (velocidades)</button><div class="qarea"></div></div>
 </div>
-</details>
-
-<details class="lo" id="lo-061.01.02" data-lo="061.01.02">
-<summary><span class="lonum">061.01.02</span><span class="lotitle">Position</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Los <b>meridianos convergen en los polos verdaderos</b>.</li><li>Truco del 180°: cruzándolo hacia el este entras en longitudes W.</li></ul></div>
-<div class="key"><b>Clave</b><b>Latitud</b> 0–90° N/S: ángulo en el centro de la Tierra desde el ecuador · <b>longitud</b> 0–180° E/W desde Greenwich (1884).</div>
-<div class="flag"><b>Trampas:</b> los meridianos convergen en los polos geográficos, no en los magnéticos · un meridiano es un semicírculo de polo a polo.</div>
-<ul><li><b>Meridian</b>: semicírculo de polo a polo. Greenwich = 0°; su antimeridiano, 180°.</li><li><b>Parallel</b>: paralelo al ecuador; ecuador 0°, polos 90°.</li></ul>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>Latitud y longitud <b>geodésicas</b> sobre el WGS-84.</li><li>Diferencia de latitud o longitud: mismo lado, restar; lados opuestos, sumar (y en longitud, si pasa de 180°, ir por el otro lado).</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-061.01.07" data-lo="061.01.07">
-<summary><span class="lonum">061.01.07</span><span class="lotitle">Dead reckoning (DR)</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>El chequeo FREDA existe, pero no cae.</li></ul></div>
-<div class="key"><b>Clave</b>DR = partir de un <b>fix</b> + track y distancia medidos + el mejor viento → <b>heading y GS</b> (y la ETA).</div>
-<div class="flag"><b>Trampas:</b> track error ≠ drift · la <b>cruz</b> es la air position y el <b>círculo</b> la ground position.</div>
-<ul><li><b>Air position</b> (cruz): donde estarías sin viento. <b>Ground position</b> (círculo): donde estás.</li><li><b>Track error</b> = track deseado − track hecho. La GS real casi nunca es la prevista: se revisan las ETA.</li></ul>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Speed factor</b>: SF = velocidad ÷ 60 (NM/min).</li><li><b>WCA = XWC ÷ SF</b>: TAS 120 (SF 2) y 20 kt de cruzado → 10°.</li><li>Diferencia entre posición DR y fix: corrige rumbo y GS.</li></ul></div>
+<div class="scroll"><table><tr><th>Trial resuelto</th><th>Cálculo</th><th>Resultado</th></tr><tr><td>110 kt, 60 NM</td><td>60 ÷ 110 × 60</td><td><b>33 min</b></td></tr><tr><td>49 l/h, 55 min</td><td>49 × 55 ÷ 60</td><td><b>44,9 l</b></td></tr><tr><td>18 gal en 120 NM; ¿168 NM?</td><td>18 × 168 ÷ 120</td><td><b>25,2 gal</b></td></tr><tr><td>IAS 100 kt a 4.000 ft de densidad</td><td>regla del 2 %: 100 × 1,08</td><td><b>≈ 106–108 kt</b> (el trial da 106)</td></tr></table></div>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Mach</b>: M = TAS ÷ velocidad del sonido. Subiendo a <b>CAS constante</b>, TAS y Mach <b>suben</b>. Subiendo a <b>Mach constante</b> en la troposfera, TAS y CAS <b>bajan</b>.</li><li><b>Gradientes</b> (regla del 1 en 60, 1 NM ≈ 6.000 ft): grados = (ft ÷ 100) ÷ NM · porcentaje = (ft ÷ 60) ÷ NM.</li><li><b>Régimen de descenso</b>: ROD = GP° × GS (NM/min) × 100 = GP % × GS (kt) · VS (ft/min) = GS × gradiente (ft/NM) ÷ 60 · senda de 3°: ROD ≈ GS × 5.</li><li>GS revisada para llegar a una hora: distancia ÷ minutos que quedan × 60 · GS media entre dos fixes: distancia ÷ tiempo.</li><li>Con más WCA, menos TAS «útil» por el track (TAS × cos WCA).</li><li>Antes de descender, conocer bien la posición: margen con el terreno.</li></ul></div>
 </div>
 </details>
 
@@ -748,7 +720,45 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo" id="lo-061.01.07" data-lo="061.01.07">
+<summary><span class="lonum">061.01.07</span><span class="lotitle">Dead reckoning (DR)</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>El chequeo FREDA existe, pero no cae.</li></ul></div>
+<div class="key"><b>Clave</b>DR = partir de un <b>fix</b> + track y distancia medidos + el mejor viento → <b>heading y GS</b> (y la ETA).</div>
+<div class="flag"><b>Trampas:</b> track error ≠ drift · la <b>cruz</b> es la air position y el <b>círculo</b> la ground position.</div>
+<ul><li><b>Air position</b> (cruz): donde estarías sin viento. <b>Ground position</b> (círculo): donde estás.</li><li><b>Track error</b> = track deseado − track hecho. La GS real casi nunca es la prevista: se revisan las ETA.</li></ul>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Speed factor</b>: SF = velocidad ÷ 60 (NM/min).</li><li><b>WCA = XWC ÷ SF</b>: TAS 120 (SF 2) y 20 kt de cruzado → 10°.</li><li>Diferencia entre posición DR y fix: corrige rumbo y GS.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-061.01.08" data-lo="061.01.08">
+<summary><span class="lonum">061.01.08</span><span class="lotitle">Navigation in climb and descent</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Ascenso: TAS y viento medios a <b>2/3</b> de la altitud de crucero · descenso: a <b>1/2</b> · <b>ROD = altura a perder ÷ minutos</b> · senda de 3°: <b>ROD ≈ GS × 5</b>.</div>
+<div class="flag"><b>Trampas:</b> a 2/3 es el ASCENSO y a 1/2 el DESCENSO · los minutos salen de la distancia ÷ GS en NM/min (180 kt = 3 NM/min).</div>
+<div class="formula"><div class="k"><b>Minutos = NM ÷ (GS ÷ 60)</b><span>180 kt = 3 NM/min</span></div><div class="k"><b>ROD = Δft ÷ minutos</b><span>9.000 ft en 10 min = 900 ft/min</span></div><div class="g"><b>3°: ROD ≈ GS × 10 ÷ 2</b><span>150 kt → 750 ft/min</span></div></div>
+<div class="vis" id="visDesc">
+  <b class="vtitle">▶ Planifica el descenso: ¿cuántos pies por minuto?</b>
+  <label class="slider">Altitud inicial: <b id="dsFromV"></b><input type="range" id="dsFrom" min="3000" max="20000" step="500" value="9000" aria-label="Altitud inicial"></label>
+  <label class="slider">Distancia al punto: <b id="dsDistV"></b><input type="range" id="dsDist" min="5" max="60" step="1" value="25" aria-label="Distancia"></label>
+  <label class="slider">GS: <b id="dsGsV"></b><input type="range" id="dsGs" min="60" max="300" step="10" value="180" aria-label="GS"></label>
+  <svg id="dsSvg" viewBox="0 0 700 200" role="img" aria-label="Perfil de descenso"></svg>
+  <div class="vismsg" id="dsMsg"></div>
+  <div class="quizbox" data-refs="climb,grad"><button class="btn sec qbtn">🎯 Ponme a prueba (ascenso y descenso)</button><div class="qarea"></div></div>
+</div>
+<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Medias: ascenso a 2/3 de la altitud de crucero; descenso a 1/2 de la altitud de descenso (TAS y viento).</li><li>Dados distancia, velocidad y altitudes → ROD o ROC. Dados ROD, velocidad y altitudes → distancia necesaria.</li><li>Los manuales dan tablas o gráficos de tiempo, combustible y distancia de ascenso y descenso.</li></ul></div>
+</div>
+</details>
+
 <h2 id="ch-061.02">061.02 · Visual flight rules (VFR) navigation <span class="wtag">7 preg. · 13 %</span></h2>
+<details class="lo atpl" id="lo-061.02.01" data-lo="061.02.01">
+<summary><span class="lonum">061.02.01</span><span class="lotitle">Ground features</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Una buena referencia es <b>grande, única e inconfundible</b>.</div>
+<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>A baja altura las referencias aparecen <b>tarde</b> y se ven <b>poco tiempo</b>; la visibilidad baja con calima, lluvia o contraluz.</li><li>De noche solo sirve lo <b>iluminado</b>: ciudades, carreteras, faros de aeródromo.</li><li>Cambios de estación y meteo cambian el aspecto del terreno (nieve, inundaciones, cosechas).</li></ul></div>
+</div>
+</details>
+
 <details class="lo" id="lo-061.02.02" data-lo="061.02.02">
 <summary><span class="lonum">061.02.02</span><span class="lotitle">VFR navigation techniques</span></summary>
 <div class="body">
@@ -757,14 +767,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="ppt"><b>Caso práctico</b>Rumbos precisos e identificar referencias periódicamente. Airmanship: heading ±5°, altitud ±100 ft, IAS ±5 kt; vigila el tráfico y los instrumentos.</div>
 <ul><li><b>Contours</b>: líneas de igual elevación; juntas = pendiente fuerte.</li><li><b>Layer tinting</b>: colores por franjas de elevación; la leyenda va en el margen.</li></ul>
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Map reading</b>: comparar el terreno con su dibujo en la carta. <b>Checkpoint</b>: fácil de identificar, único, visible desde tu altitud.</li><li>Una <b>línea de posición</b> comprueba el avance o el track; dos o más que se cortan dan un <b>fix</b>.</li><li>Carta doblada y orientada para seguir el track. Sin checkpoint en el punto de viraje: <b>virar a la ETA</b> y seguir comprobando.</li><li>Desviación, posición dudosa o perdido: mantener el rumbo, comprobar la DR, buscar referencias grandes y pedir ayuda.</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-061.02.01" data-lo="061.02.01">
-<summary><span class="lonum">061.02.01</span><span class="lotitle">Ground features</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Una buena referencia es <b>grande, única e inconfundible</b>.</div>
-<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>A baja altura las referencias aparecen <b>tarde</b> y se ven <b>poco tiempo</b>; la visibilidad baja con calima, lluvia o contraluz.</li><li>De noche solo sirve lo <b>iluminado</b>: ciudades, carreteras, faros de aeródromo.</li><li>Cambios de estación y meteo cambian el aspecto del terreno (nieve, inundaciones, cosechas).</li></ul></div>
 </div>
 </details>
 
@@ -811,6 +813,16 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-061.04">061.04 · Charts <span class="wtag">12 preg. · 22 %</span></h2>
+<details class="lo" id="lo-061.04.01" data-lo="061.04.01">
+<summary><span class="lonum">061.04.01</span><span class="lotitle">Chart requirements</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b><b>Escala = distancia en la carta ÷ distancia real</b> · <b>conforme</b> (orthomorphic): meridianos y paralelos a 90° y misma escala en todas direcciones en cada punto → ángulos correctos.</div>
+<div class="flag"><b>Trampas:</b> 1:500.000 tiene MÁS detalle que 1:5.000.000 · la carta ideal (todo correcto a la vez) no existe.</div>
+<ul><li>1:500.000: 1 cm = 5 km. Tres familias: cilíndrica (Mercator), cónica (Lambert), azimutal (polar).</li></ul>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>Anexo 4: cartas <b>conformes</b> y con una recta que aproxime un <b>great circle</b>.</li><li><b>Constante del cono</b> n = sen del paralelo de origen; convergencia de la carta = ch.long × n.</li></ul></div>
+</div>
+</details>
+
 <details class="lo" id="lo-061.04.02" data-lo="061.04.02">
 <summary><span class="lonum">061.04.02</span><span class="lotitle">Projections</span></summary>
 <div class="body">
@@ -822,16 +834,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <figure class="fig" id="fig-lamb"><svg viewBox="0 0 640 280" role="img" aria-label="Carta Lambert: great circle recto y rhumb line curva"><line x1="88.8" y1="12.4" x2="14.6" y2="240.6" class="ln cmu"/><line x1="125.2" y1="22.1" x2="75.3" y2="256.9" class="ln cmu"/><line x1="162.4" y1="28.0" x2="137.3" y2="266.7" class="ln cmu"/><line x1="200.0" y1="30.0" x2="200.0" y2="270.0" class="ln cmu"/><line x1="237.6" y1="28.0" x2="262.7" y2="266.7" class="ln cmu"/><line x1="274.8" y1="22.1" x2="324.7" y2="256.9" class="ln cmu"/><line x1="311.2" y1="12.4" x2="385.4" y2="240.6" class="ln cmu"/><path d="M66.6 36.5 A390 390 0 0 0 333.4 36.5" class="ln cmu  "/><path d="M52.9 74.1 A430 430 0 0 0 347.1 74.1" class="ln cw thk "/><text x="351.1" y="78.1" class="sm bd tw">SP 1</text><path d="M35.8 121.1 A480 480 0 0 0 364.2 121.1" class="ln cg thk dsh"/><text x="368.2" y="125.1" class="sm bd tw">p. origin</text><path d="M18.7 168.0 A530 530 0 0 0 381.3 168.0" class="ln cw thk "/><text x="385.3" y="172.0" class="sm bd tw">SP 2</text><path d="M3.3 210.3 A575 575 0 0 0 396.7 210.3" class="ln cmu  "/><line x1="70" y1="205" x2="320" y2="125" class="ln cb thk"/><path d="M70 205 Q190 235 320 125" class="ln cm thk"/><circle cx="70" cy="205" r="4" class="fk"/><circle cx="320" cy="125" r="4" class="fk"/><text x="110" y="158" class="sm bd tb">great circle ≈ RECTA</text><text x="120" y="258" class="sm bd tm">rhumb line = curva cóncava al polo</text><text x="200" y="20" text-anchor="middle" class="sm mu">↑ polo: los meridianos convergen aquí</text><text x="440" y="40" class="bd">LAMBERT (cónica)</text><text x="440" y="64" class="sm">Cono que corta la Tierra en</text><text x="440" y="83" class="sm">2 STANDARD PARALLELS (SP),</text><text x="440" y="102" class="sm">los dos en el MISMO hemisferio</text><text x="440" y="121" class="sm">Entre ellos: parallel of origin</text><text x="440" y="140" class="sm">Meridianos: rectas convergentes</text><text x="440" y="159" class="sm">Paralelos: arcos concéntricos</text><text x="440" y="178" class="sm">Escala: exacta en los SP,</text><text x="440" y="197" class="sm">mínima en el p. of origin,</text><text x="440" y="216" class="sm">se expande fuera de los SP</text><text x="440" y="235" class="sm">Uso: ≈ 30°–70°</text></svg><figcaption>Justo al revés que en Mercator: aquí la línea <b>recta</b> es (prácticamente) el <b>great circle</b> — para EASA se toma como recta; en rigor es cóncavo al parallel of origin — y la <b>rhumb line</b> es la <b>curva cóncava al polo</b>.</figcaption></figure>
 <figure class="fig" id="fig-polar"><svg viewBox="0 0 640 260" role="img" aria-label="Carta polar estereográfica"><circle cx="150" cy="135" r="35" class="ln cmu"/><circle cx="150" cy="135" r="70" class="ln cmu"/><circle cx="150" cy="135" r="105" class="ln cmu"/><line x1="150" y1="135" x2="150.0" y2="20.0" class="ln cmu"/><line x1="150" y1="135" x2="207.5" y2="35.4" class="ln cmu"/><line x1="150" y1="135" x2="249.6" y2="77.5" class="ln cmu"/><line x1="150" y1="135" x2="265.0" y2="135.0" class="ln cmu"/><line x1="150" y1="135" x2="249.6" y2="192.5" class="ln cmu"/><line x1="150" y1="135" x2="207.5" y2="234.6" class="ln cmu"/><line x1="150" y1="135" x2="150.0" y2="250.0" class="ln cmu"/><line x1="150" y1="135" x2="92.5" y2="234.6" class="ln cmu"/><line x1="150" y1="135" x2="50.4" y2="192.5" class="ln cmu"/><line x1="150" y1="135" x2="35.0" y2="135.0" class="ln cmu"/><line x1="150" y1="135" x2="50.4" y2="77.5" class="ln cmu"/><line x1="150" y1="135" x2="92.5" y2="35.4" class="ln cmu"/><circle cx="150" cy="135" r="4" class="fk"/><text x="156" y="129" class="sm bd">90°N</text><line x1="65" y1="80" x2="235" y2="105" class="ln cb thk"/><text x="70" y="70" class="sm bd tb">great circle ≈ recta</text><path d="M70 185 A95 95 0 0 0 235 170" class="ln cm thk" transform="rotate(0)"/><text x="80" y="240" class="sm bd tm">rhumb line: curva cóncava al polo</text><text x="320" y="40" class="bd">POLAR STEREOGRAPHIC (plana)</text><text x="320" y="66" class="sm">Meridianos: rectas radiales desde el polo</text><text x="320" y="86" class="sm">Paralelos: círculos concéntricos al polo</text><text x="320" y="106" class="sm">Conforme ✔</text><text x="320" y="126" class="sm">Uso: 70°–90° (zonas polares)</text><text x="320" y="146" class="sm">Great circle: cuanto más cerca del polo,</text><text x="320" y="166" class="sm">   más recto</text><text x="320" y="186" class="sm">Rhumb line: cóncava al polo</text></svg><figcaption>Polar estereográfica: meridianos rectos que salen del polo; great circle casi recto cerca del polo; rhumb line cóncava al polo.</figcaption></figure>
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Mercator</b>: escala × sec lat (a 60°, el doble: 1:1.000.000 en el ecuador → 1:500.000).</li><li><b>Polar estereográfica</b>: n = 1 → convergencia de la carta = ch.long; una recta cambia de track tanto como el ch.long.</li><li><b>Lambert</b>: convergencia de la carta = ch.long × sen paralelo de origen; escala exacta en los SP, mínima en el paralelo de origen, error &lt; 1 % entre los SP; n = cambio de track ÷ ch.long.</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-061.04.01" data-lo="061.04.01">
-<summary><span class="lonum">061.04.01</span><span class="lotitle">Chart requirements</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b><b>Escala = distancia en la carta ÷ distancia real</b> · <b>conforme</b> (orthomorphic): meridianos y paralelos a 90° y misma escala en todas direcciones en cada punto → ángulos correctos.</div>
-<div class="flag"><b>Trampas:</b> 1:500.000 tiene MÁS detalle que 1:5.000.000 · la carta ideal (todo correcto a la vez) no existe.</div>
-<ul><li>1:500.000: 1 cm = 5 km. Tres familias: cilíndrica (Mercator), cónica (Lambert), azimutal (polar).</li></ul>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>Anexo 4: cartas <b>conformes</b> y con una recta que aproxime un <b>great circle</b>.</li><li><b>Constante del cono</b> n = sen del paralelo de origen; convergencia de la carta = ch.long × n.</li></ul></div>
 </div>
 </details>
 
@@ -847,25 +849,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-061.05">061.05 · Time <span class="wtag">3 preg. · 5 %</span></h2>
-<details class="lo" id="lo-061.05.03" data-lo="061.05.03">
-<summary><span class="lonum">061.05.03</span><span class="lotitle">Sunrise and sunset</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Twilight: «hay que saber los grados» — civil 6°, nautical 12°, astronomical 18°.</li></ul></div>
-<div class="key"><b>Clave</b>Orto y ocaso: <b>borde superior</b> del Sol en el horizonte · crepúsculo civil: <b>centro</b> del Sol 6° por debajo · EASA-FCL solo usa el civil.</div>
-<div class="flag"><b>Trampas:</b> 6, 12 y 18 son del CENTRO del Sol; el orto/ocaso es del BORDE superior.</div>
-<figure class="fig" id="fig-twi"><svg viewBox="0 0 640 200" role="img" aria-label="Crepúsculo civil, náutico y astronómico">
-<rect x="30" y="40" width="580" height="36" class="band" opacity=".18"/><rect x="30" y="76" width="580" height="36" class="band" opacity=".38"/><rect x="30" y="112" width="580" height="36" class="band" opacity=".62"/>
-<line x1="30" y1="40" x2="610" y2="40" class="ln thk"/><text x="610" y="32" text-anchor="end" class="bd">horizonte visible</text>
-<path d="M70 40 A16 16 0 0 1 102 40" class="sun"/><text x="110" y="30" class="sm">ocaso: borde superior en el horizonte</text>
-<circle cx="220" cy="76" r="11" class="sun"/><text x="238" y="72" class="bd">civil 6°</text><text x="238" y="88" class="sm">EASA-FCL: la que cuenta</text>
-<circle cx="370" cy="112" r="11" class="sun"/><text x="388" y="116" class="bd">nautical 12°</text>
-<circle cx="520" cy="148" r="11" class="sun"/><text x="502" y="152" text-anchor="end" class="bd">astronomical 18°</text><text x="520" y="178" text-anchor="middle" class="sm">noche cerrada</text>
-<text x="30" y="194" class="sm mu">Los grados son del <tspan class="bd">centro</tspan> del Sol bajo el horizonte: 6 · 12 · 18 (de 6 en 6).</text>
-</svg></figure>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>La duración del día cambia <b>más deprisa en los equinoccios</b>.</li><li>Con <b>altura</b>: orto antes y ocaso después. En verano, más latitud = días más largos.</li><li>Horas en tablas (AIP, almanaque), en UTC.</li></ul></div>
-</div>
-</details>
-
 <details class="lo" id="lo-061.05.01" data-lo="061.05.01">
 <summary><span class="lonum">061.05.01</span><span class="lotitle">Local Mean Time (LMT)</span></summary>
 <div class="body">
@@ -915,7 +898,27 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo" id="lo-061.05.03" data-lo="061.05.03">
+<summary><span class="lonum">061.05.03</span><span class="lotitle">Sunrise and sunset</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Twilight: «hay que saber los grados» — civil 6°, nautical 12°, astronomical 18°.</li></ul></div>
+<div class="key"><b>Clave</b>Orto y ocaso: <b>borde superior</b> del Sol en el horizonte · crepúsculo civil: <b>centro</b> del Sol 6° por debajo · EASA-FCL solo usa el civil.</div>
+<div class="flag"><b>Trampas:</b> 6, 12 y 18 son del CENTRO del Sol; el orto/ocaso es del BORDE superior.</div>
+<figure class="fig" id="fig-twi"><svg viewBox="0 0 640 200" role="img" aria-label="Crepúsculo civil, náutico y astronómico">
+<rect x="30" y="40" width="580" height="36" class="band" opacity=".18"/><rect x="30" y="76" width="580" height="36" class="band" opacity=".38"/><rect x="30" y="112" width="580" height="36" class="band" opacity=".62"/>
+<line x1="30" y1="40" x2="610" y2="40" class="ln thk"/><text x="610" y="32" text-anchor="end" class="bd">horizonte visible</text>
+<path d="M70 40 A16 16 0 0 1 102 40" class="sun"/><text x="110" y="30" class="sm">ocaso: borde superior en el horizonte</text>
+<circle cx="220" cy="76" r="11" class="sun"/><text x="238" y="72" class="bd">civil 6°</text><text x="238" y="88" class="sm">EASA-FCL: la que cuenta</text>
+<circle cx="370" cy="112" r="11" class="sun"/><text x="388" y="116" class="bd">nautical 12°</text>
+<circle cx="520" cy="148" r="11" class="sun"/><text x="502" y="152" text-anchor="end" class="bd">astronomical 18°</text><text x="520" y="178" text-anchor="middle" class="sm">noche cerrada</text>
+<text x="30" y="194" class="sm mu">Los grados son del <tspan class="bd">centro</tspan> del Sol bajo el horizonte: 6 · 12 · 18 (de 6 en 6).</text>
+</svg></figure>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>La duración del día cambia <b>más deprisa en los equinoccios</b>.</li><li>Con <b>altura</b>: orto antes y ocaso después. En verano, más latitud = días más largos.</li><li>Horas en tablas (AIP, almanaque), en UTC.</li></ul></div>
+</div>
+</details>
+
 <div class="examhead" id="ex-062"><b>062 · Radio Navigation</b> · 66 preguntas · 1 h 30</div>
+<h2 class="subj">062 · Radio Navigation <span class="wtag">66 preg. · 1 h 30 min</span></h2>
 <h2 id="ch-062.01">062.01 · Basic radio propagation theory <span class="wtag">5 preg. · 8 %</span></h2>
 <details class="lo" id="lo-062.01.01" data-lo="062.01.01">
 <summary><span class="lonum">062.01.01</span><span class="lotitle">Basic principles</span></summary>
@@ -949,6 +952,15 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo" id="lo-062.01.02" data-lo="062.01.02">
+<summary><span class="lonum">062.01.02</span><span class="lotitle">Antennas</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b><b>Polarización</b> = plano del campo <b>eléctrico</b>. Antena vertical → onda vertical; la receptora, igual.</div>
+<div class="flag"><b>Trampas:</b> E y H van a 90° entre sí; la polarización la marca E, no H.</div>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Dipolo</b> = media longitud de onda.</li><li>Antenas direccionales: <b>loop</b> (ADF antiguo), <b>parabólica</b> y <b>slotted planar array</b> (radar meteo).</li><li>E y H perpendiculares y <b>en fase</b>. <b>Shadowing</b>: el avión tapa la antena en algunas actitudes; importa dónde se coloca.</li></ul></div>
+</div>
+</details>
+
 <details class="lo" id="lo-062.01.03" data-lo="062.01.03">
 <summary><span class="lonum">062.01.03</span><span class="lotitle">Wave propagation</span></summary>
 <div class="body">
@@ -978,16 +990,24 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-062.01.02" data-lo="062.01.02">
-<summary><span class="lonum">062.01.02</span><span class="lotitle">Antennas</span></summary>
+<h2 id="ch-062.02">062.02 · Radio aids <span class="wtag">22 preg. · 33 %</span></h2>
+<details class="lo" id="lo-062.02.01" data-lo="062.02.01">
+<summary><span class="lonum">062.02.01</span><span class="lotitle">Ground direction finding (DF)</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b><b>Polarización</b> = plano del campo <b>eléctrico</b>. Antena vertical → onda vertical; la receptora, igual.</div>
-<div class="flag"><b>Trampas:</b> E y H van a 90° entre sí; la polarización la marca E, no H.</div>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Dipolo</b> = media longitud de onda.</li><li>Antenas direccionales: <b>loop</b> (ADF antiguo), <b>parabólica</b> y <b>slotted planar array</b> (radar meteo).</li><li>E y H perpendiculares y <b>en fase</b>. <b>Shadowing</b>: el avión tapa la antena en algunas actitudes; importa dónde se coloca.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>★ VDF: homing para volver si estás perdido.</li><li>Cuadro QDM · QDR · QUJ · QTE y las clases A–D.</li></ul></div>
+<div class="key"><b>Clave</b><b>QD·</b> = magnéticos · <b>QTE</b> y <b>QUJ</b> = <b>true</b> · las que acaban en R o E son DESDE la estación · en el avión basta la <b>radio VHF</b>.</div>
+<div class="flag"><b>Trampas:</b> QTE y QUJ son verdaderos, no magnéticos · QDM es el rumbo para ir (sin viento), QDR es desde.</div>
+<div class="qcodes" id="fig-qcodes">
+<div class="hd"></div><div class="hd">MAGNETIC</div><div class="hd">TRUE</div>
+<div class="hd">TO<br>la estación</div><div class="m"><b>QDM</b><span>rumbo magnético para ir a la estación (sin viento)</span></div><div class="t"><b>QUJ</b><span>track verdadero hacia la estación (casi no se usa)</span></div>
+<div class="hd">FROM<br>la estación</div><div class="m"><b>QDR</b><span>marcación magnética desde la estación = <b>radial</b></span></div><div class="t"><b>QTE</b><span>marcación verdadera desde la estación</span></div>
+</div>
+<div class="scroll"><table><tr><th>Clase</th><th>Precisión</th></tr><tr><td>A</td><td>±2°</td></tr><tr><td>B</td><td>±5°</td></tr><tr><td>C</td><td>±10°</td></tr><tr><td>D</td><td>peor que C</td></tr></table></div>
+<div class="quizbox" data-refs="vdf,vdfc,vdfA"><button class="btn sec qbtn">🎯 Ponme a prueba (VDF)</button><div class="qarea"></div></div>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>Con dos o más estaciones se obtiene un <b>fix</b>.</li><li>Errores: transmisiones <b>simultáneas</b> y <b>multipath</b>. Alcance VHF = 1,23 × (√h antena + √h avión).</li></ul></div>
 </div>
 </details>
 
-<h2 id="ch-062.02">062.02 · Radio aids <span class="wtag">22 preg. · 33 %</span></h2>
 <details class="lo" id="lo-062.02.02" data-lo="062.02.02">
 <summary><span class="lonum">062.02.02</span><span class="lotitle">Non-directional radio beacon (NDB)/automatic direction finding (ADF)</span></summary>
 <div class="body">
@@ -1012,30 +1032,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 <ul><li><b>Homing</b>: aguja en 0° relativo; con viento sale una curva. <b>Tracking</b>: con WCA (track 096°M con 5° izquierda → MH 091).</li><li>Loop aerial (busca el nulo) + sense aerial. Cono de silencio encima, más ancho cuanto más alto.</li></ul>
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>Identificar un NDB N0N/A1A: <b>BFO</b> activado (automático en aviones modernos). <b>No hay aviso de fallo</b> del NDB.</li><li>Errores: <b>coastal refraction</b> (sobre el agua acelera y se dobla) · <b>night effect</b> (celeste + superficie con distinta fase) · interferencia nocturna de otros NDB · <b>mountain effect</b> · <b>Cb</b> (la aguja apunta a la tormenta) · <b>dip error</b> (alabeo).</li><li>Establecido en aproximación NDB: <b>±5°</b>. Alcance limitado por la potencia (∝ √P).</li><li>True bearing desde compass heading y RB: C → M → T y sumar el RB (080C, dev 2E, var 5W, RB 040 → 117°T).</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-062.02.05" data-lo="062.02.05">
-<summary><span class="lonum">062.02.05</span><span class="lotitle">Instrument landing system (ILS)</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b><b>LOC</b> en el eje, tras el final de la pista · <b>GP</b> al lado, pasado el umbral · GP <b>3°</b> · fondo de escala LOC <b>2,5°</b>, GP <b>0,7°</b> · markers en <b>75 MHz</b>.</div>
-<div class="flag"><b>Trampas:</b> LOC: décima IMPAR entre 108 y 111,975 · el back beam es una aproximación de NO precisión · más de medio fondo de escala → motor y al aire.</div>
-<figure class="fig" id="fig-ils"><svg viewBox="0 0 640 230" role="img" aria-label="ILS visto de lado: glide path y markers">
-<line x1="20" y1="190" x2="620" y2="190" class="ln cmu"/>
-<rect x="470" y="186" width="140" height="8" class="fk"/><text x="560" y="180" text-anchor="middle" class="sm">pista</text>
-<line x1="495" y1="190" x2="40" y2="166" class="ln cm thk"/><text x="70" y="158" class="sm bd tm">glide path 3°</text>
-<rect x="488" y="168" width="6" height="22" class="fm"/><text x="491" y="160" text-anchor="middle" class="sm bd tm">GP</text><text x="491" y="226" text-anchor="middle" class="sm tm">al lado, pasado el umbral</text>
-<rect x="612" y="174" width="8" height="16" class="fb"/><text x="600" y="166" text-anchor="end" class="sm bd tb">LOC tras el final</text>
-<circle cx="130" cy="190" r="7" style="fill:#2F6FA3"/><text x="130" y="122" text-anchor="middle" class="sm bd tb">OM</text><text x="130" y="136" text-anchor="middle" class="sm">azul · 2 rayas/s</text>
-<circle cx="380" cy="190" r="7" style="fill:#C98A00"/><text x="380" y="122" text-anchor="middle" class="sm bd tw">MM</text><text x="380" y="136" text-anchor="middle" class="sm">ámbar · punto-raya</text>
-<circle cx="455" cy="190" r="7" style="fill:#ffffff;stroke:#14304A"/><text x="455" y="96" text-anchor="middle" class="sm bd">IM</text><text x="455" y="110" text-anchor="middle" class="sm">blanco · 6 puntos/s</text>
-<line x1="130" y1="140" x2="130" y2="183" class="ln dsh cb"/><line x1="380" y1="140" x2="380" y2="183" class="ln dsh cw"/><line x1="455" y1="114" x2="455" y2="183" class="ln dsh"/>
-<text x="20" y="24" class="bd">Todos los markers en 75 MHz · tono: OM grave, MM medio, IM agudo</text>
-<text x="20" y="44" class="sm mu">Fondo de escala: LOC ≈ 2,5° · GP ≈ 0,7° · LOC 108–111,975 MHz (décima impar) · GP en UHF, emparejado</text>
-</svg><figcaption>OM, MM, IM: azul, ámbar, blanco; rayas, punto-raya, puntos. Cuanto más cerca de la pista, más agudo y más rápido.</figcaption></figure>
-<div class="scroll"><table><tr><th>Marker</th><th>Luz</th><th>Morse</th><th>Tono</th></tr><tr><td>Outer (OM)</td><td><b>Azul</b></td><td>2 rayas/s</td><td>grave</td></tr><tr><td>Middle (MM)</td><td><b>Ámbar</b></td><td>punto-raya</td><td>medio</td></tr><tr><td>Inner (IM)</td><td><b>Blanca</b></td><td>6 puntos/s</td><td>agudo</td></tr></table></div>
-<div class="scroll"><table><tr><th>Cobertura</th><th>Sector</th><th>Distancia</th></tr><tr><td>LOC</td><td>±10°</td><td>25 NM</td></tr><tr><td>LOC</td><td>±35°</td><td>17 NM</td></tr><tr><td>GP</td><td>±8°</td><td>10 NM o más</td></tr></table></div>
-<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Componentes: LOC, GP e información de distancia (markers o DME emparejado con el LOC).</li><li>GP en UHF, emparejado automáticamente con el LOC · señales de <b>90 y 150 Hz</b> · lóbulos laterales → falsos GP y falsos ejes.</li><li>Banderas si la señal es débil o falta portadora o modulación. Monitor automático en tierra.</li><li>Establecido: medio fondo de escala en el LOC antes de bajar por la GP. Categorías I, II, IIIA, IIIB, IIIC; CAT III guía hasta la superficie de la pista.</li><li><b>Critical area</b>: alrededor de las antenas, sin vehículos ni aviones durante las operaciones ILS · <b>sensitive area</b>: más allá, el movimiento se controla. <b>Beam bends</b>: desviaciones medidas en vuelo de prueba.</li></ul></div>
 </div>
 </details>
 
@@ -1085,20 +1081,27 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-062.02.01" data-lo="062.02.01">
-<summary><span class="lonum">062.02.01</span><span class="lotitle">Ground direction finding (DF)</span></summary>
+<details class="lo atpl" id="lo-062.02.05" data-lo="062.02.05">
+<summary><span class="lonum">062.02.05</span><span class="lotitle">Instrument landing system (ILS)</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>★ VDF: homing para volver si estás perdido.</li><li>Cuadro QDM · QDR · QUJ · QTE y las clases A–D.</li></ul></div>
-<div class="key"><b>Clave</b><b>QD·</b> = magnéticos · <b>QTE</b> y <b>QUJ</b> = <b>true</b> · las que acaban en R o E son DESDE la estación · en el avión basta la <b>radio VHF</b>.</div>
-<div class="flag"><b>Trampas:</b> QTE y QUJ son verdaderos, no magnéticos · QDM es el rumbo para ir (sin viento), QDR es desde.</div>
-<div class="qcodes" id="fig-qcodes">
-<div class="hd"></div><div class="hd">MAGNETIC</div><div class="hd">TRUE</div>
-<div class="hd">TO<br>la estación</div><div class="m"><b>QDM</b><span>rumbo magnético para ir a la estación (sin viento)</span></div><div class="t"><b>QUJ</b><span>track verdadero hacia la estación (casi no se usa)</span></div>
-<div class="hd">FROM<br>la estación</div><div class="m"><b>QDR</b><span>marcación magnética desde la estación = <b>radial</b></span></div><div class="t"><b>QTE</b><span>marcación verdadera desde la estación</span></div>
-</div>
-<div class="scroll"><table><tr><th>Clase</th><th>Precisión</th></tr><tr><td>A</td><td>±2°</td></tr><tr><td>B</td><td>±5°</td></tr><tr><td>C</td><td>±10°</td></tr><tr><td>D</td><td>peor que C</td></tr></table></div>
-<div class="quizbox" data-refs="vdf,vdfc,vdfA"><button class="btn sec qbtn">🎯 Ponme a prueba (VDF)</button><div class="qarea"></div></div>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>Con dos o más estaciones se obtiene un <b>fix</b>.</li><li>Errores: transmisiones <b>simultáneas</b> y <b>multipath</b>. Alcance VHF = 1,23 × (√h antena + √h avión).</li></ul></div>
+<div class="key"><b>Clave</b><b>LOC</b> en el eje, tras el final de la pista · <b>GP</b> al lado, pasado el umbral · GP <b>3°</b> · fondo de escala LOC <b>2,5°</b>, GP <b>0,7°</b> · markers en <b>75 MHz</b>.</div>
+<div class="flag"><b>Trampas:</b> LOC: décima IMPAR entre 108 y 111,975 · el back beam es una aproximación de NO precisión · más de medio fondo de escala → motor y al aire.</div>
+<figure class="fig" id="fig-ils"><svg viewBox="0 0 640 230" role="img" aria-label="ILS visto de lado: glide path y markers">
+<line x1="20" y1="190" x2="620" y2="190" class="ln cmu"/>
+<rect x="470" y="186" width="140" height="8" class="fk"/><text x="560" y="180" text-anchor="middle" class="sm">pista</text>
+<line x1="495" y1="190" x2="40" y2="166" class="ln cm thk"/><text x="70" y="158" class="sm bd tm">glide path 3°</text>
+<rect x="488" y="168" width="6" height="22" class="fm"/><text x="491" y="160" text-anchor="middle" class="sm bd tm">GP</text><text x="491" y="226" text-anchor="middle" class="sm tm">al lado, pasado el umbral</text>
+<rect x="612" y="174" width="8" height="16" class="fb"/><text x="600" y="166" text-anchor="end" class="sm bd tb">LOC tras el final</text>
+<circle cx="130" cy="190" r="7" style="fill:#2F6FA3"/><text x="130" y="122" text-anchor="middle" class="sm bd tb">OM</text><text x="130" y="136" text-anchor="middle" class="sm">azul · 2 rayas/s</text>
+<circle cx="380" cy="190" r="7" style="fill:#C98A00"/><text x="380" y="122" text-anchor="middle" class="sm bd tw">MM</text><text x="380" y="136" text-anchor="middle" class="sm">ámbar · punto-raya</text>
+<circle cx="455" cy="190" r="7" style="fill:#ffffff;stroke:#14304A"/><text x="455" y="96" text-anchor="middle" class="sm bd">IM</text><text x="455" y="110" text-anchor="middle" class="sm">blanco · 6 puntos/s</text>
+<line x1="130" y1="140" x2="130" y2="183" class="ln dsh cb"/><line x1="380" y1="140" x2="380" y2="183" class="ln dsh cw"/><line x1="455" y1="114" x2="455" y2="183" class="ln dsh"/>
+<text x="20" y="24" class="bd">Todos los markers en 75 MHz · tono: OM grave, MM medio, IM agudo</text>
+<text x="20" y="44" class="sm mu">Fondo de escala: LOC ≈ 2,5° · GP ≈ 0,7° · LOC 108–111,975 MHz (décima impar) · GP en UHF, emparejado</text>
+</svg><figcaption>OM, MM, IM: azul, ámbar, blanco; rayas, punto-raya, puntos. Cuanto más cerca de la pista, más agudo y más rápido.</figcaption></figure>
+<div class="scroll"><table><tr><th>Marker</th><th>Luz</th><th>Morse</th><th>Tono</th></tr><tr><td>Outer (OM)</td><td><b>Azul</b></td><td>2 rayas/s</td><td>grave</td></tr><tr><td>Middle (MM)</td><td><b>Ámbar</b></td><td>punto-raya</td><td>medio</td></tr><tr><td>Inner (IM)</td><td><b>Blanca</b></td><td>6 puntos/s</td><td>agudo</td></tr></table></div>
+<div class="scroll"><table><tr><th>Cobertura</th><th>Sector</th><th>Distancia</th></tr><tr><td>LOC</td><td>±10°</td><td>25 NM</td></tr><tr><td>LOC</td><td>±35°</td><td>17 NM</td></tr><tr><td>GP</td><td>±8°</td><td>10 NM o más</td></tr></table></div>
+<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Componentes: LOC, GP e información de distancia (markers o DME emparejado con el LOC).</li><li>GP en UHF, emparejado automáticamente con el LOC · señales de <b>90 y 150 Hz</b> · lóbulos laterales → falsos GP y falsos ejes.</li><li>Banderas si la señal es débil o falta portadora o modulación. Monitor automático en tierra.</li><li>Establecido: medio fondo de escala en el LOC antes de bajar por la GP. Categorías I, II, IIIA, IIIB, IIIC; CAT III guía hasta la superficie de la pista.</li><li><b>Critical area</b>: alrededor de las antenas, sin vehículos ni aviones durante las operaciones ILS · <b>sensitive area</b>: más allá, el movimiento se controla. <b>Beam bends</b>: desviaciones medidas en vuelo de prueba.</li></ul></div>
 </div>
 </details>
 
@@ -1111,6 +1114,37 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-062.03">062.03 · Radar <span class="wtag">11 preg. · 17 %</span></h2>
+<details class="lo" id="lo-062.03.01" data-lo="062.03.01">
+<summary><span class="lonum">062.03.01</span><span class="lotitle">Pulse techniques</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b><b>Distancia = c × t ÷ 2</b> (ida y vuelta) · ≈ 12,35 µs por NM · 20 NM → ≈ 250 µs.</div>
+<div class="flag"><b>Trampas:</b> no dividir entre 2 es la trampa.</div>
+<div class="formula"><div class=""><b>Dist = c × t ÷ 2</b><span>c = 162.000 NM/s</span></div><div class="k"><b>Range ≈ √(1,5 h)</b><span>5.000 ft ≈ 87 NM</span></div></div>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>El alcance depende de la <b>PRF</b>, la duración y potencia del pulso, la altura de antena y avión y la frecuencia.</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-062.03.02" data-lo="062.03.02">
+<summary><span class="lonum">062.03.02</span><span class="lotitle">Ground radar</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>★ «Por qué la antena del <b>PSR es mayor</b> que la del SSR.»</li><li>PSR: solo marcación y distancia; se puede cambiar el <b>tilt</b>; el <b>MTI</b> elimina lo fijo.</li></ul></div>
+<div class="key"><b>Clave</b>El PSR ve el <b>eco reflejado</b>: el avión no necesita nada · da <b>distancia y marcación</b>, no altitud · antena grande porque emite mucho y recibe un eco débil.</div>
+<div class="flag"><b>Trampas:</b> tilt alto: pierdes aviones bajos y lejanos · el MTI quita lo que NO se mueve.</div>
+<ul><li>Pantalla PPI. Desventajas: clutter de lluvia y terreno, ecos desiguales, puntos ciegos.</li></ul>
+<div class="quizbox" data-refs="psr,psrd,ssr,codes"><button class="btn sec qbtn">🎯 Ponme a prueba (radar)</button><div class="qarea"></div></div>
+<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>El primario detecta a quien <b>no lleva transpondedor</b>. Las pantallas modernas combinan varios sensores.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-062.03.03" data-lo="062.03.03">
+<summary><span class="lonum">062.03.03</span><span class="lotitle">Airborne weather radar</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>λ ≈ <b>3 cm</b> (mejor eco en granizo mojado) · haz de lápiz de <b>3–5°</b> · <b>verde, amarillo, rojo, magenta</b> según la intensidad.</div>
+<div class="flag"><b>Trampas:</b> detrás de lluvia fuerte hay una zona de SOMBRA que el radar no ve · con el tilt demasiado alto no ves la tormenta.</div>
+<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Dos funciones: <b>meteo</b> y <b>mapa</b> (costas). Modos WX, WX+T (turbulencia por <b>Doppler</b>, no CAT) y MAP; ganancia y tilt.</li><li>Antena estabilizada con el sistema de actitud. Distancia y marcación con líneas de alcance y de azimut.</li><li>Cuidado en tierra: la radiación puede dañar a personas y encender vapores de combustible. Algunos detectan cizalladura.</li></ul></div>
+</div>
+</details>
+
 <details class="lo" id="lo-062.03.04" data-lo="062.03.04">
 <summary><span class="lonum">062.03.04</span><span class="lotitle">Secondary surveillance radar and transponder</span></summary>
 <div class="body">
@@ -1150,37 +1184,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </svg><figcaption>★ Cada modo <b>añade</b> información al anterior. En Mode S el interrogador llama a <b>un solo avión</b> por su dirección de 24 bits: se evitan las respuestas que se pisan (<b>garbling</b>).</figcaption></figure>
 <div class="sq" id="fig-codes"><div><b>7500</b><span>HIJACK (secuestro)</span></div><div><b>7600</b><span>RADIO FAILURE (fallo de radio)</span></div><div><b>7700</b><span>EMERGENCY (emergencia)</span></div></div>
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>Mode A: <b>4.096</b> códigos · Mode C: altitud de presión cada <b>100 ft</b> · Mode S: dirección ICAO de <b>24 bits</b> y altitud cada <b>25 ft</b>.</li><li>El modo lo fija el <b>intervalo entre los pares de pulsos</b> de la interrogación. Al Mode S le interrogan el SSR y el <b>TCAS</b>.</li><li>Selector: OFF, STBY, ON (Mode A), <b>ALT (A, C y S)</b>, TEST. El pulso <b>SPI</b> solo sale al pulsar IDENT.</li><li>En la pantalla ATC: nivel de vuelo, indicativo o matrícula y GS. El SSR también sirve para <b>ADS-B</b>.</li><li>Distancia = tiempo entre la interrogación y la respuesta · marcación = hacia dónde apunta el haz. La antena del SSR va <b>encima</b> de la del PSR y gira con ella.</li><li>Si dos aviones están muy juntos, sus respuestas se pueden pisar (<b>garbling</b>); el Mode S lo evita porque interroga a <b>uno</b> a la vez.</li></ul><div class="scroll"><table><tr><th></th><th>PSR · primary</th><th>SSR · secondary</th></tr><tr><td>Avión</td><td>Pasivo: solo refleja</td><td>Activo: el transponder contesta</td></tr><tr><td>Da</td><td>Distancia y marcación</td><td>Además identidad, altitud y emergencias</td></tr><tr><td>Tiempo y clutter</td><td>Se degrada (lluvia, terreno)</td><td>No se degrada</td></tr><tr><td>Antena y potencia</td><td>Grande, mucha potencia</td><td>Pequeña, poca potencia</td></tr><tr><td>Sin transponder (OFF/STBY o averiado)</td><td>Te sigue viendo</td><td>No te ve</td></tr></table></div></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-062.03.03" data-lo="062.03.03">
-<summary><span class="lonum">062.03.03</span><span class="lotitle">Airborne weather radar</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>λ ≈ <b>3 cm</b> (mejor eco en granizo mojado) · haz de lápiz de <b>3–5°</b> · <b>verde, amarillo, rojo, magenta</b> según la intensidad.</div>
-<div class="flag"><b>Trampas:</b> detrás de lluvia fuerte hay una zona de SOMBRA que el radar no ve · con el tilt demasiado alto no ves la tormenta.</div>
-<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Dos funciones: <b>meteo</b> y <b>mapa</b> (costas). Modos WX, WX+T (turbulencia por <b>Doppler</b>, no CAT) y MAP; ganancia y tilt.</li><li>Antena estabilizada con el sistema de actitud. Distancia y marcación con líneas de alcance y de azimut.</li><li>Cuidado en tierra: la radiación puede dañar a personas y encender vapores de combustible. Algunos detectan cizalladura.</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-062.03.01" data-lo="062.03.01">
-<summary><span class="lonum">062.03.01</span><span class="lotitle">Pulse techniques</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b><b>Distancia = c × t ÷ 2</b> (ida y vuelta) · ≈ 12,35 µs por NM · 20 NM → ≈ 250 µs.</div>
-<div class="flag"><b>Trampas:</b> no dividir entre 2 es la trampa.</div>
-<div class="formula"><div class=""><b>Dist = c × t ÷ 2</b><span>c = 162.000 NM/s</span></div><div class="k"><b>Range ≈ √(1,5 h)</b><span>5.000 ft ≈ 87 NM</span></div></div>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>El alcance depende de la <b>PRF</b>, la duración y potencia del pulso, la altura de antena y avión y la frecuencia.</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-062.03.02" data-lo="062.03.02">
-<summary><span class="lonum">062.03.02</span><span class="lotitle">Ground radar</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>★ «Por qué la antena del <b>PSR es mayor</b> que la del SSR.»</li><li>PSR: solo marcación y distancia; se puede cambiar el <b>tilt</b>; el <b>MTI</b> elimina lo fijo.</li></ul></div>
-<div class="key"><b>Clave</b>El PSR ve el <b>eco reflejado</b>: el avión no necesita nada · da <b>distancia y marcación</b>, no altitud · antena grande porque emite mucho y recibe un eco débil.</div>
-<div class="flag"><b>Trampas:</b> tilt alto: pierdes aviones bajos y lejanos · el MTI quita lo que NO se mueve.</div>
-<ul><li>Pantalla PPI. Desventajas: clutter de lluvia y terreno, ecos desiguales, puntos ciegos.</li></ul>
-<div class="quizbox" data-refs="psr,psrd,ssr,codes"><button class="btn sec qbtn">🎯 Ponme a prueba (radar)</button><div class="qarea"></div></div>
-<div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>El primario detecta a quien <b>no lleva transpondedor</b>. Las pantallas modernas combinan varios sensores.</li></ul></div>
 </div>
 </details>
 
@@ -1230,12 +1233,12 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-062.07">062.07 · Performance-based navigation (PBN) <span class="wtag">13 preg. · 20 %</span></h2>
-<details class="lo atpl" id="lo-062.07.05" data-lo="062.07.05">
-<summary><span class="lonum">062.07.05</span><span class="lotitle">Requirements of specific RNAV and RNP specifications</span></summary>
+<details class="lo atpl" id="lo-062.07.01" data-lo="062.07.01">
+<summary><span class="lonum">062.07.01</span><span class="lotitle">Performance-based navigation (PBN) concept (as described in ICAO Doc 9613)</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>RNAV 10: <b>dos LRNS</b> independientes · RNAV 5: se admite entrada <b>manual</b> · RNAV 1, RNP 1 y RNP APCH: solo <b>desde la base de datos</b>.</div>
-<div class="flag"><b>Trampas:</b> LNAV = 2D (no precisión) · LNAV/VNAV y LPV = 3D · LPV necesita SBAS · Baro-VNAV sin compensación solo dentro del rango de temperatura publicado.</div>
-<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>En SID/STAR RNAV 1 no se crean puntos a mano; sí se insertan o borran de la base de datos por autorización ATC.</li><li>RNP APCH a LPV: SBAS + <b>FAS data block</b>. RNP AR APCH: <b>autorización</b>. <b>A-RNP</b> incluye RNAV 5, 2, 1, RNP 2, 1 y RNP APCH.</li><li>Altímetro bien calado: crítico en Baro-VNAV.</li></ul></div>
+<div class="key"><b>Clave</b>Prestaciones: <b>accuracy, integrity, continuity</b> (y availability) · PBN <b>no depende del sensor</b>.</div>
+<div class="scroll"><table><tr><th>Término</th><th>Definición</th></tr><tr><td>Accuracy</td><td>Conformidad entre posición real y requerida</td></tr><tr><td>Integrity</td><td>Confianza en la información, con alertas a tiempo</td></tr><tr><td>Continuity</td><td>Funcionar sin interrupciones no programadas</td></tr><tr><td>Availability</td><td>% del tiempo (anual) en que se puede usar</td></tr></table></div>
+<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Componentes: infraestructura de radioayudas, especificación de navegación y aplicación.</li><li>En aproximación hay guiado lateral lineal y angular; en ruta y terminal, lineal.</li></ul></div>
 </div>
 </details>
 
@@ -1253,6 +1256,14 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo atpl" id="lo-062.07.03" data-lo="062.07.03">
+<summary><span class="lonum">062.07.03</span><span class="lotitle">Use of performance-based navigation (PBN)</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b><b>RF</b> = curva de radio constante hasta un fijo · <b>fly-by</b> anticipa el viraje · <b>fly-over</b> obliga a pasar por encima.</div>
+<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>En un RF: seguir el director de vuelo y respetar las velocidades.</li><li>ARINC 424 (path terminators) codifica SID, STAR y aproximaciones en la base de datos. FRT y offset flight path.</li></ul></div>
+</div>
+</details>
+
 <details class="lo atpl" id="lo-062.07.04" data-lo="062.07.04">
 <summary><span class="lonum">062.07.04</span><span class="lotitle">Performance-based navigation (PBN) operations</span></summary>
 <div class="body">
@@ -1262,20 +1273,12 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-062.07.01" data-lo="062.07.01">
-<summary><span class="lonum">062.07.01</span><span class="lotitle">Performance-based navigation (PBN) concept (as described in ICAO Doc 9613)</span></summary>
+<details class="lo atpl" id="lo-062.07.05" data-lo="062.07.05">
+<summary><span class="lonum">062.07.05</span><span class="lotitle">Requirements of specific RNAV and RNP specifications</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>Prestaciones: <b>accuracy, integrity, continuity</b> (y availability) · PBN <b>no depende del sensor</b>.</div>
-<div class="scroll"><table><tr><th>Término</th><th>Definición</th></tr><tr><td>Accuracy</td><td>Conformidad entre posición real y requerida</td></tr><tr><td>Integrity</td><td>Confianza en la información, con alertas a tiempo</td></tr><tr><td>Continuity</td><td>Funcionar sin interrupciones no programadas</td></tr><tr><td>Availability</td><td>% del tiempo (anual) en que se puede usar</td></tr></table></div>
-<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Componentes: infraestructura de radioayudas, especificación de navegación y aplicación.</li><li>En aproximación hay guiado lateral lineal y angular; en ruta y terminal, lineal.</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-062.07.03" data-lo="062.07.03">
-<summary><span class="lonum">062.07.03</span><span class="lotitle">Use of performance-based navigation (PBN)</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b><b>RF</b> = curva de radio constante hasta un fijo · <b>fly-by</b> anticipa el viraje · <b>fly-over</b> obliga a pasar por encima.</div>
-<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>En un RF: seguir el director de vuelo y respetar las velocidades.</li><li>ARINC 424 (path terminators) codifica SID, STAR y aproximaciones en la base de datos. FRT y offset flight path.</li></ul></div>
+<div class="key"><b>Clave</b>RNAV 10: <b>dos LRNS</b> independientes · RNAV 5: se admite entrada <b>manual</b> · RNAV 1, RNP 1 y RNP APCH: solo <b>desde la base de datos</b>.</div>
+<div class="flag"><b>Trampas:</b> LNAV = 2D (no precisión) · LNAV/VNAV y LPV = 3D · LPV necesita SBAS · Baro-VNAV sin compensación solo dentro del rango de temperatura publicado.</div>
+<div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>En SID/STAR RNAV 1 no se crean puntos a mano; sí se insertan o borran de la base de datos por autorización ATC.</li><li>RNP APCH a LPV: SBAS + <b>FAS data block</b>. RNP AR APCH: <b>autorización</b>. <b>A-RNP</b> incluye RNAV 5, 2, 1, RNP 2, 1 y RNP APCH.</li><li>Altímetro bien calado: crítico en Baro-VNAV.</li></ul></div>
 </div>
 </details>
 
@@ -2687,6 +2690,8 @@ const SUB = [
  ["X.022","X",0,"Magnetismo y brújula: dip, errores de viraje y de aceleración","NAV-1","full"],
  ["X.033","X",0,"Plan de vuelo operacional y combustible con reserva","NAV-2","full"]
 ];
+/*f15natsort*/const __nk=c=>String(c).split(/[.\-_·\s]+/).filter(Boolean).map(t=>/^\d+$/.test(t)?[0,+t,""]:[1,0,t]);const __nc=(a,b)=>{const x=__nk(a[0]),y=__nk(b[0]);for(let i=0;i<Math.max(x.length,y.length);i++){const p=x[i]||[-1,0,""],q=y[i]||[-1,0,""];for(let j=0;j<3;j++){if(p[j]<q[j])return -1;if(p[j]>q[j])return 1}}return 0};SUB.sort(__nc);
+
 const BLOCKS = [
  {k:"A1", ex:"061", code:"061.01", name:"Basics of navigation", n:28, los:60},
  {k:"A2", ex:"061", code:"061.02", name:"Visual flight rules (VFR) navigation", n:7, los:18},

@@ -11,7 +11,7 @@ window.__hub={use:async function(n){return n==="artifact"?{publish:async functio
 fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
 })();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>040 Human Performance and Limitations</title>
+<title>040 · Human Performance and Limitations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -367,7 +367,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <header>
   <div class="code">040</div>
   <h1>Human Performance and Limitations</h1>
-  <p><b>48 preguntas · 1 h 30 · aprobado 75 %</b></p>
+  <p><b>48 preguntas · 1 h 30 min · aprobado 75 %</b></p>
 </header>
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
@@ -387,6 +387,13 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <h2>040.01 · Human factors: basic concepts <span class="wtag">4 preg. · 8 %</span></h2>
 
 <!-- ===== 040.01.03 ===== -->
+<details class="lo atpl" id="lo-040.01.01" data-lo="040.01.01">
+<summary><span class="lonum">040.01.01</span><span class="lotitle">Human factors in aviation</span></summary>
+<div class="body">
+</div>
+</details>
+
+<!-- ===== 040.01.04 ===== -->
 <details class="lo" id="lo-040.01.03" data-lo="040.01.03">
 <summary><span class="lonum">040.01.03</span><span class="lotitle">Flight safety concepts</span></summary>
 <div class="body">
@@ -429,7 +436,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<!-- ===== 040.01.04 ===== -->
+<!-- ===== 040.01.01 ===== -->
 <details class="lo" id="lo-040.01.04" data-lo="040.01.04">
 <summary><span class="lonum">040.01.04</span><span class="lotitle">Safety culture</span></summary>
 <div class="body">
@@ -453,49 +460,9 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<!-- ===== 040.01.01 ===== -->
-<details class="lo atpl" id="lo-040.01.01" data-lo="040.01.01">
-<summary><span class="lonum">040.01.01</span><span class="lotitle">Human factors in aviation</span></summary>
-<div class="body">
-</div>
-</details>
-
 <h2>040.02 · Basics of aviation physiology and health maintenance <span class="wtag">24 preg. · 50 %</span></h2>
 
 <!-- ===== 040.02.03 ===== -->
-<details class="lo" id="lo-040.02.03" data-lo="040.02.03">
-<summary><span class="lonum">040.02.03</span><span class="lotitle">Health and hygiene</span></summary>
-<div class="body">
-  <div class="key"><b>Clave</b>Antes de cada vuelo, <b>IMSAFE</b>. Cualquier medicamento te deja en tierra hasta que lo autorice un médico. Gastroenteritis: <b>no vuelas</b>.</div>
-  <h4>¿Vuelas o no vuelas? · ponte a prueba</h4>
-  <div class="svgbox sim" id="visFit">
-    <p class="case" id="fitCase"></p>
-    <div class="opts" id="fitOpts"></div>
-    <p id="fitFb" aria-live="polite"></p>
-  </div>
-  <div class="scroll"><table>
-   <tr><th>Tema</th><th>Lo que hay que saber</th></tr>
-   <tr><td><b>IMSAFE</b></td><td><b>I</b>llness · <b>M</b>edication · <b>S</b>tress · <b>A</b>lcohol · <b>F</b>atigue · <b>E</b>motion. Para la CAA y CASA, la <b>E</b> es <b>Eating</b> (comer bien e hidratarse); también se escribe <b>IAMSAFE</b> (Alimentation)</td></tr>
-   <tr><td>Physical fitness</td><td>Ayuda a tolerar el <b>estrés</b>, el <b>cansancio</b>, la <b>fatiga</b> y el <b>poco oxígeno</b> en altura. Hace falta un esfuerzo continuo</td></tr>
-   <tr><td>Mental fitness</td><td>La carga principal del piloto es intelectual. La deterioran: <b>medicación, drogas (alcohol y tabaco), estrés, problemas personales, falta de sueño, mala alimentación, fatiga</b></td></tr>
-   <tr><td>Illness</td><td>Un resfriado es inocuo en tierra y serio en vuelo y a altitud. <b>Gastroenteritis: no vuelas</b></td></tr>
-   <tr><td>Smoking</td><td>El <b>CO</b> ocupa el lugar del oxígeno en la sangre. El humo de cualquiera afecta a todos en la cabina, aunque no fumen</td></tr>
-   <tr><td>Medication</td><td>Hasta que lo autorice un médico, <b>cualquier medicamento te deja en tierra</b>: antibióticos, tranquilizantes, antidepresivos y sedantes, estimulantes (cafeína, anfetaminas), antihistamínicos, antihipertensivos, analgésicos</td></tr>
-   <tr><td>Anaesthetic</td><td>Local, general o dental: unas <b>24 h</b></td></tr>
-   <tr><td>Blood donation</td><td><b>24 h</b> sin volar (riesgo leve de desmayo). <b>Bone marrow</b>: <b>48 h</b>, por la anestesia general</td></tr>
-   <tr><td>Alcohol</td><td>La OACI recomienda <b>24 h</b> desde la última ingesta. Hasta una cantidad pequeña empeora el juicio y te hace sentir que lo haces genial. Las drogas recreativas (marihuana, LSD…) nunca se mezclan con volar</td></tr>
-   <tr><td>Fatigue and sleep deprivation</td><td>Bajan mucho la capacidad física y mental. <b>Un piloto cansado no debe volar</b></td></tr>
-  </table></div>
-  <div class="comp"><b>ATPL</b><ul>
-    <li><b>Alcohol</b>: EASA no permite volar por encima de <b>0,2 ‰</b>. Se elimina a ~<b>1 unidad por hora</b> y nada lo acelera.</li>
-    <li><b>Incapacitation</b>: la causa más frecuente es <b>gastrointestinal</b>. La <b>sutil</b> es la más peligrosa porque no se nota.</li>
-    <li><b>Alerta mínima</b> de madrugada (03:00–06:00). <b>Jet lag</b>: peor hacia el <b>este</b> (el día se acorta).</li>
-    <li><b>Barotrauma</b>: oídos sobre todo al <b>bajar</b>. Se iguala tragando, bostezando o con <b>Valsalva</b>.</li>
-  </ul></div>
-</div>
-</details>
-
-<!-- ===== 040.02.01 ===== -->
 <details class="lo" id="lo-040.02.01" data-lo="040.02.01">
 <summary><span class="lonum">040.02.01</span><span class="lotitle">Basics of flight physiology</span></summary>
 <div class="body">
@@ -804,7 +771,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<!-- ===== 040.02.02 ===== -->
+<!-- ===== 040.02.01 ===== -->
 <details class="lo" id="lo-040.02.02" data-lo="040.02.02">
 <summary><span class="lonum">040.02.02</span><span class="lotitle">People and the environment: the sensory system</span></summary>
 <div class="body">
@@ -926,31 +893,42 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<h2>040.03 · Basic aviation psychology <span class="wtag">20 preg. · 42 %</span></h2>
-
-<!-- ===== 040.03.04 ===== -->
-<details class="lo" id="lo-040.03.04" data-lo="040.03.04">
-<summary><span class="lonum">040.03.04</span><span class="lotitle">Avoiding and managing errors: cockpit management</span></summary>
+<!-- ===== 040.02.02 ===== -->
+<details class="lo" id="lo-040.02.03" data-lo="040.02.03">
+<summary><span class="lonum">040.02.03</span><span class="lotitle">Health and hygiene</span></summary>
 <div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li><b>Situational awareness</b>: cuando la <b>percepción es igual a la realidad</b>.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>SA buena = <b>perception = reality</b>. Para mantenerla: reúne datos, considera todas las interpretaciones y revisa tu hipótesis. Comunicación de <b>dos sentidos</b>: si dudas, <b>pregunta</b>.</div>
+  <div class="key"><b>Clave</b>Antes de cada vuelo, <b>IMSAFE</b>. Cualquier medicamento te deja en tierra hasta que lo autorice un médico. Gastroenteritis: <b>no vuelas</b>.</div>
+  <h4>¿Vuelas o no vuelas? · ponte a prueba</h4>
+  <div class="svgbox sim" id="visFit">
+    <p class="case" id="fitCase"></p>
+    <div class="opts" id="fitOpts"></div>
+    <p id="fitFb" aria-live="polite"></p>
+  </div>
   <div class="scroll"><table>
-   <tr><th>Concepto</th><th>Qué es</th></tr>
-   <tr><td><b>Situational awareness</b></td><td>Modelo mental exacto de tu entorno, dentro y fuera del avión y de tu propio estado. Depende de vigilancia, alerta, comunicación, comprensión y briefing. La percepción es muy poderosa, correcta o no: hay pilotos que ignoraron avisos del avión</td></tr>
-   <tr><td><b>La interfieren</b></td><td>Estrés · interrupciones del pensamiento · fatiga · deseos («lo que quiero que pase») · mala comunicación · aburrimiento</td></tr>
-   <tr><td><b>Pérdida de SA</b></td><td>Confusión · fijación en un solo dato · prisa · saltarse o acortar procedimientos · cambios de humor · caída brusca del nivel de vuelo · <b>discrepancias sin explicar entre instrumentos</b> · resultados inesperados · «algo raro pasa»</td></tr>
-   <tr><td><b>Mantenerla</b></td><td>Reúne toda la información posible · tómate el tiempo: las decisiones rápidas rara vez hacen falta · considera <b>todas</b> las interpretaciones · revisa tu hipótesis según avanza el vuelo · si un dato no encaja, no lo descartes · interpreta el mundo como es, no como quieres. <b>Espera lo mejor, planifica lo peor</b></td></tr>
-   <tr><td><b>Mental model</b></td><td>Lo forman la <b>experience</b>, la <b>expectation</b> y el <b>briefing</b>. Si el modelo es incorrecto, la SA falla</td></tr>
-   <tr><td><b>CRM</b></td><td><b>Crew Resource Management</b>: mejora el trabajo en equipo. Es una <b>habilidad para la vida</b>, también si vuelas solo: hay que practicarla desde el principio. Nació tras accidentes como el de <b>United (Portland, 1978)</b>: avión en perfecto estado que se quedó sin combustible mientras se atendía un problema de tren. El «error del piloto» dejó de aceptarse sin más</td></tr>
-   <tr><td><b>Communication</b></td><td>Quien transmite cree que su mensaje es inequívoco: por eso es de <b>dos sentidos</b> (read-back, preguntar, ambiente que lo permita). <b>Oír</b> es físico; <b>escuchar</b> es activo y exige concentración. El emisor: mensajes <b>cortos</b>, por partes y cuando el receptor pueda atender. El receptor: escucha, pide aclaración y revisa. <b>Cuando dudes, pregunta</b></td></tr>
-   <tr><td><b>Team skills</b></td><td>Buena comunicación · relaciones interpersonales · reconocer estrés, fatiga y sobrecarga en uno mismo y en los demás · voluntad de exponer y de atender · SA en cada fase · formación, preparación y vigilancia · flexibilidad · usar todas las herramientas · reducir distracciones</td></tr>
+   <tr><th>Tema</th><th>Lo que hay que saber</th></tr>
+   <tr><td><b>IMSAFE</b></td><td><b>I</b>llness · <b>M</b>edication · <b>S</b>tress · <b>A</b>lcohol · <b>F</b>atigue · <b>E</b>motion. Para la CAA y CASA, la <b>E</b> es <b>Eating</b> (comer bien e hidratarse); también se escribe <b>IAMSAFE</b> (Alimentation)</td></tr>
+   <tr><td>Physical fitness</td><td>Ayuda a tolerar el <b>estrés</b>, el <b>cansancio</b>, la <b>fatiga</b> y el <b>poco oxígeno</b> en altura. Hace falta un esfuerzo continuo</td></tr>
+   <tr><td>Mental fitness</td><td>La carga principal del piloto es intelectual. La deterioran: <b>medicación, drogas (alcohol y tabaco), estrés, problemas personales, falta de sueño, mala alimentación, fatiga</b></td></tr>
+   <tr><td>Illness</td><td>Un resfriado es inocuo en tierra y serio en vuelo y a altitud. <b>Gastroenteritis: no vuelas</b></td></tr>
+   <tr><td>Smoking</td><td>El <b>CO</b> ocupa el lugar del oxígeno en la sangre. El humo de cualquiera afecta a todos en la cabina, aunque no fumen</td></tr>
+   <tr><td>Medication</td><td>Hasta que lo autorice un médico, <b>cualquier medicamento te deja en tierra</b>: antibióticos, tranquilizantes, antidepresivos y sedantes, estimulantes (cafeína, anfetaminas), antihistamínicos, antihipertensivos, analgésicos</td></tr>
+   <tr><td>Anaesthetic</td><td>Local, general o dental: unas <b>24 h</b></td></tr>
+   <tr><td>Blood donation</td><td><b>24 h</b> sin volar (riesgo leve de desmayo). <b>Bone marrow</b>: <b>48 h</b>, por la anestesia general</td></tr>
+   <tr><td>Alcohol</td><td>La OACI recomienda <b>24 h</b> desde la última ingesta. Hasta una cantidad pequeña empeora el juicio y te hace sentir que lo haces genial. Las drogas recreativas (marihuana, LSD…) nunca se mezclan con volar</td></tr>
+   <tr><td>Fatigue and sleep deprivation</td><td>Bajan mucho la capacidad física y mental. <b>Un piloto cansado no debe volar</b></td></tr>
   </table></div>
+  <div class="comp"><b>ATPL</b><ul>
+    <li><b>Alcohol</b>: EASA no permite volar por encima de <b>0,2 ‰</b>. Se elimina a ~<b>1 unidad por hora</b> y nada lo acelera.</li>
+    <li><b>Incapacitation</b>: la causa más frecuente es <b>gastrointestinal</b>. La <b>sutil</b> es la más peligrosa porque no se nota.</li>
+    <li><b>Alerta mínima</b> de madrugada (03:00–06:00). <b>Jet lag</b>: peor hacia el <b>este</b> (el día se acorta).</li>
+    <li><b>Barotrauma</b>: oídos sobre todo al <b>bajar</b>. Se iguala tragando, bostezando o con <b>Valsalva</b>.</li>
+  </ul></div>
 </div>
 </details>
 
-<!-- ===== 040.03.01 ===== -->
+<h2>040.03 · Basic aviation psychology <span class="wtag">20 preg. · 42 %</span></h2>
+
+<!-- ===== 040.03.04 ===== -->
 <details class="lo" id="lo-040.03.01" data-lo="040.03.01">
 <summary><span class="lonum">040.03.01</span><span class="lotitle">Human information processing</span></summary>
 <div class="body">
@@ -986,7 +964,87 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<!-- ===== 040.03.01 ===== -->
+<details class="lo" id="lo-040.03.02" data-lo="040.03.02">
+<summary><span class="lonum">040.03.02</span><span class="lotitle">Human error and reliability</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>Los factores humanos están detrás de entre el <b>76 y el 95 %</b> de los accidentes.</li>
+    <li>Los tipos de <b>error involuntario</b>.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Fault = intención mala · slip = ejecución mala · omission = paso olvidado · violation = a propósito.</div>
+  <ul>
+    <li>En tareas simples y repetitivas, el humano se equivoca <b>1 de cada 100</b> veces; <b>1 de cada 1.000</b> ya es «bastante bueno» (Hawkins). Empeora con estrés, fatiga y moral baja.</li>
+    <li>Con práctica la fiabilidad humana mejora mucho; la falta de práctica la deteriora (<b>deterioration effect</b>). <b>1 de cada 1.000</b> ya es «bastante bueno».</li>
+    <li>Los errores se encadenan: <b>error chain</b>. Fuentes <b>internas</b> (percepción, memoria, fatiga, falta de práctica) y <b>externas</b> (estresores, ergonomía, presión de la empresa, entorno social).</li>
+  </ul>
+  <h4 id="visErr">Tipos de error · ejemplo: hacer un cola-cao</h4>
+  <div class="scroll"><table>
+  <tr><th>Type</th><th>¿Intención?</th><th>¿Ejecución?</th><th>Ejemplo de casa</th><th>En cabina</th></tr>
+  <tr><td><b>Fault</b></td><td style="color:var(--bad)">mala</td><td style="color:var(--ok)">buena</td><td>Te piden café, decides hacer cola-cao y te sale perfecto</td><td>Haces perfecto el procedimiento equivocado</td></tr>
+  <tr><td><b>Slip / lapse</b></td><td style="color:var(--ok)">buena</td><td style="color:var(--bad)">mala</td><td>Querías leche y echas zumo sin mirar</td><td>Procedimiento correcto, ejecutado mal</td></tr>
+  <tr><td><b>Omission</b></td><td style="color:var(--ok)">buena</td><td>falta un paso</td><td>Suena el teléfono y te olvidas del cola-cao</td><td>Te saltas un punto de la checklist por una interrupción</td></tr>
+  <tr class="al"><td><b>Violation</b></td><td colspan="2">a propósito, contra la norma</td><td>Sabes que no se puede y lo haces igual</td><td>Bajar de la mínima «para ver el suelo»</td></tr>
+  </table></div>
+  <ul><li>Errores <b>latentes</b> (escondidos en el sistema: diseño, procedimientos) y <b>activos</b> (los comete quien opera, con efecto inmediato).</li></ul>
+  <div class="flag"><b>Trampa:</b> el test del temario divide el error humano en <b>dos</b>: faults y slips.</div>
+  <div class="flag"><b>Trampa:</b> la <b>violation</b> no es un error involuntario: es deliberada. Las omisiones suelen venir de una <b>interrupción</b>.</div>
+  
+</div>
+</details>
+
 <!-- ===== 040.03.06 ===== -->
+<details class="lo" id="lo-040.03.03" data-lo="040.03.03">
+<summary><span class="lonum">040.03.03</span><span class="lotitle">Decision-making</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>El <b>FORDEC</b>.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Problema <b>previsible</b> → <b>SOP</b>. Problema <b>complejo</b> → método: <b>DODAR</b> o <b>FORDEC</b>.</div>
+  <div class="scroll"><table>
+   <tr><th>Método</th><th>Pasos</th></tr>
+   <tr><td><b>SOPs</b></td><td>Fallos predecibles (fuego de motor, fallo hidráulico, tren): expertos los estudiaron y fijaron la mejor solución</td></tr>
+   <tr><td><b>DODAR</b> (British Airways)</td><td><b>D</b>iagnosis · <b>O</b>ptions · <b>D</b>ecide · <b>A</b>ssign · <b>R</b>eview</td></tr>
+   <tr><td><b>FORDEC</b></td><td><b>F</b>acts · <b>O</b>ptions · <b>R</b>isks &amp; benefits · <b>D</b>ecision · <b>E</b>xecution · <b>C</b>heck</td></tr>
+  </table></div>
+</div>
+</details>
+
+<!-- ===== 040.03.02 ===== -->
+<details class="lo" id="lo-040.03.04" data-lo="040.03.04">
+<summary><span class="lonum">040.03.04</span><span class="lotitle">Avoiding and managing errors: cockpit management</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li><b>Situational awareness</b>: cuando la <b>percepción es igual a la realidad</b>.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>SA buena = <b>perception = reality</b>. Para mantenerla: reúne datos, considera todas las interpretaciones y revisa tu hipótesis. Comunicación de <b>dos sentidos</b>: si dudas, <b>pregunta</b>.</div>
+  <div class="scroll"><table>
+   <tr><th>Concepto</th><th>Qué es</th></tr>
+   <tr><td><b>Situational awareness</b></td><td>Modelo mental exacto de tu entorno, dentro y fuera del avión y de tu propio estado. Depende de vigilancia, alerta, comunicación, comprensión y briefing. La percepción es muy poderosa, correcta o no: hay pilotos que ignoraron avisos del avión</td></tr>
+   <tr><td><b>La interfieren</b></td><td>Estrés · interrupciones del pensamiento · fatiga · deseos («lo que quiero que pase») · mala comunicación · aburrimiento</td></tr>
+   <tr><td><b>Pérdida de SA</b></td><td>Confusión · fijación en un solo dato · prisa · saltarse o acortar procedimientos · cambios de humor · caída brusca del nivel de vuelo · <b>discrepancias sin explicar entre instrumentos</b> · resultados inesperados · «algo raro pasa»</td></tr>
+   <tr><td><b>Mantenerla</b></td><td>Reúne toda la información posible · tómate el tiempo: las decisiones rápidas rara vez hacen falta · considera <b>todas</b> las interpretaciones · revisa tu hipótesis según avanza el vuelo · si un dato no encaja, no lo descartes · interpreta el mundo como es, no como quieres. <b>Espera lo mejor, planifica lo peor</b></td></tr>
+   <tr><td><b>Mental model</b></td><td>Lo forman la <b>experience</b>, la <b>expectation</b> y el <b>briefing</b>. Si el modelo es incorrecto, la SA falla</td></tr>
+   <tr><td><b>CRM</b></td><td><b>Crew Resource Management</b>: mejora el trabajo en equipo. Es una <b>habilidad para la vida</b>, también si vuelas solo: hay que practicarla desde el principio. Nació tras accidentes como el de <b>United (Portland, 1978)</b>: avión en perfecto estado que se quedó sin combustible mientras se atendía un problema de tren. El «error del piloto» dejó de aceptarse sin más</td></tr>
+   <tr><td><b>Communication</b></td><td>Quien transmite cree que su mensaje es inequívoco: por eso es de <b>dos sentidos</b> (read-back, preguntar, ambiente que lo permita). <b>Oír</b> es físico; <b>escuchar</b> es activo y exige concentración. El emisor: mensajes <b>cortos</b>, por partes y cuando el receptor pueda atender. El receptor: escucha, pide aclaración y revisa. <b>Cuando dudes, pregunta</b></td></tr>
+   <tr><td><b>Team skills</b></td><td>Buena comunicación · relaciones interpersonales · reconocer estrés, fatiga y sobrecarga en uno mismo y en los demás · voluntad de exponer y de atender · SA en cada fase · formación, preparación y vigilancia · flexibilidad · usar todas las herramientas · reducir distracciones</td></tr>
+  </table></div>
+</div>
+</details>
+
+<!-- ===== 040.03.05 ===== -->
+<details class="lo" id="lo-040.03.05" data-lo="040.03.05">
+<summary><span class="lonum">040.03.05</span><span class="lotitle">Human behaviour</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>Las preferencias de personalidad <b>no son buenas ni malas</b>: cada una tiene fortalezas y debilidades. Una mala primera impresión cuesta mucho cambiarla.</div>
+  <ul>
+    <li><b>Personality</b>: <b>extraversion / introversion</b> · <b>sensing / intuitive</b> · <b>thinking / feeling</b> · <b>judging / perceiving</b>. Combinar personalidades distintas, con tolerancia, aumenta el potencial del equipo.</li>
+    <li>Conoces a tripulantes, personal de empresa y pasajeros por primera vez: <b>piensa tu conducta antes de encontrarte con ellos</b>.</li>
+  </ul>
+</div>
+</details>
+
+<!-- ===== 040.03.07 ===== -->
 <details class="lo" id="lo-040.03.06" data-lo="040.03.06">
 <summary><span class="lonum">040.03.06</span><span class="lotitle">Human overload and underload</span></summary>
 <div class="body">
@@ -1017,68 +1075,10 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<!-- ===== 040.03.02 ===== -->
-<details class="lo" id="lo-040.03.02" data-lo="040.03.02">
-<summary><span class="lonum">040.03.02</span><span class="lotitle">Human error and reliability</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>Los factores humanos están detrás de entre el <b>76 y el 95 %</b> de los accidentes.</li>
-    <li>Los tipos de <b>error involuntario</b>.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Fault = intención mala · slip = ejecución mala · omission = paso olvidado · violation = a propósito.</div>
-  <ul>
-    <li>En tareas simples y repetitivas, el humano se equivoca <b>1 de cada 100</b> veces; <b>1 de cada 1.000</b> ya es «bastante bueno» (Hawkins). Empeora con estrés, fatiga y moral baja.</li>
-    <li>Con práctica la fiabilidad humana mejora mucho; la falta de práctica la deteriora (<b>deterioration effect</b>). <b>1 de cada 1.000</b> ya es «bastante bueno».</li>
-    <li>Los errores se encadenan: <b>error chain</b>. Fuentes <b>internas</b> (percepción, memoria, fatiga, falta de práctica) y <b>externas</b> (estresores, ergonomía, presión de la empresa, entorno social).</li>
-  </ul>
-  <h4 id="visErr">Tipos de error · ejemplo: hacer un cola-cao</h4>
-  <div class="scroll"><table>
-  <tr><th>Type</th><th>¿Intención?</th><th>¿Ejecución?</th><th>Ejemplo de casa</th><th>En cabina</th></tr>
-  <tr><td><b>Fault</b></td><td style="color:var(--bad)">mala</td><td style="color:var(--ok)">buena</td><td>Te piden café, decides hacer cola-cao y te sale perfecto</td><td>Haces perfecto el procedimiento equivocado</td></tr>
-  <tr><td><b>Slip / lapse</b></td><td style="color:var(--ok)">buena</td><td style="color:var(--bad)">mala</td><td>Querías leche y echas zumo sin mirar</td><td>Procedimiento correcto, ejecutado mal</td></tr>
-  <tr><td><b>Omission</b></td><td style="color:var(--ok)">buena</td><td>falta un paso</td><td>Suena el teléfono y te olvidas del cola-cao</td><td>Te saltas un punto de la checklist por una interrupción</td></tr>
-  <tr class="al"><td><b>Violation</b></td><td colspan="2">a propósito, contra la norma</td><td>Sabes que no se puede y lo haces igual</td><td>Bajar de la mínima «para ver el suelo»</td></tr>
-  </table></div>
-  <ul><li>Errores <b>latentes</b> (escondidos en el sistema: diseño, procedimientos) y <b>activos</b> (los comete quien opera, con efecto inmediato).</li></ul>
-  <div class="flag"><b>Trampa:</b> el test del temario divide el error humano en <b>dos</b>: faults y slips.</div>
-  <div class="flag"><b>Trampa:</b> la <b>violation</b> no es un error involuntario: es deliberada. Las omisiones suelen venir de una <b>interrupción</b>.</div>
-  
-</div>
-</details>
-
-<!-- ===== 040.03.05 ===== -->
-<details class="lo" id="lo-040.03.05" data-lo="040.03.05">
-<summary><span class="lonum">040.03.05</span><span class="lotitle">Human behaviour</span></summary>
-<div class="body">
-  <div class="key"><b>Clave</b>Las preferencias de personalidad <b>no son buenas ni malas</b>: cada una tiene fortalezas y debilidades. Una mala primera impresión cuesta mucho cambiarla.</div>
-  <ul>
-    <li><b>Personality</b>: <b>extraversion / introversion</b> · <b>sensing / intuitive</b> · <b>thinking / feeling</b> · <b>judging / perceiving</b>. Combinar personalidades distintas, con tolerancia, aumenta el potencial del equipo.</li>
-    <li>Conoces a tripulantes, personal de empresa y pasajeros por primera vez: <b>piensa tu conducta antes de encontrarte con ellos</b>.</li>
-  </ul>
-</div>
-</details>
-
-<!-- ===== 040.03.07 ===== -->
+<!-- ===== 040.03.03 ===== -->
 <details class="lo atpl" id="lo-040.03.07" data-lo="040.03.07">
 <summary><span class="lonum">040.03.07</span><span class="lotitle">Advanced cockpit automation</span></summary>
 <div class="body">
-</div>
-</details>
-
-<!-- ===== 040.03.03 ===== -->
-<details class="lo" id="lo-040.03.03" data-lo="040.03.03">
-<summary><span class="lonum">040.03.03</span><span class="lotitle">Decision-making</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>El <b>FORDEC</b>.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Problema <b>previsible</b> → <b>SOP</b>. Problema <b>complejo</b> → método: <b>DODAR</b> o <b>FORDEC</b>.</div>
-  <div class="scroll"><table>
-   <tr><th>Método</th><th>Pasos</th></tr>
-   <tr><td><b>SOPs</b></td><td>Fallos predecibles (fuego de motor, fallo hidráulico, tren): expertos los estudiaron y fijaron la mejor solución</td></tr>
-   <tr><td><b>DODAR</b> (British Airways)</td><td><b>D</b>iagnosis · <b>O</b>ptions · <b>D</b>ecide · <b>A</b>ssign · <b>R</b>eview</td></tr>
-   <tr><td><b>FORDEC</b></td><td><b>F</b>acts · <b>O</b>ptions · <b>R</b>isks &amp; benefits · <b>D</b>ecision · <b>E</b>xecution · <b>C</b>heck</td></tr>
-  </table></div>
 </div>
 </details>
 
@@ -1195,6 +1195,8 @@ const SUB = [["040.01.03", "B1", 10, "Flight safety concepts", "", "part"],
  ["040.03.07", "B3", 12, "Advanced cockpit automation", "", "atpl"],
  ["040.03.03", "B3", 10, "Decision-making", "", "part"],
  ["X.050", "X", 0, "Atmosphere, ISA and density altitude", "", "part"]];
+/*f15natsort*/const __nk=c=>String(c).split(/[.\-_·\s]+/).filter(Boolean).map(t=>/^\d+$/.test(t)?[0,+t,""]:[1,0,t]);const __nc=(a,b)=>{const x=__nk(a[0]),y=__nk(b[0]);for(let i=0;i<Math.max(x.length,y.length);i++){const p=x[i]||[-1,0,""],q=y[i]||[-1,0,""];for(let j=0;j<3;j++){if(p[j]<q[j])return -1;if(p[j]>q[j])return 1}}return 0};SUB.sort(__nc);
+
 const BLOCKS = [{"k": "B1", "code": "040.01", "name": "Human factors: basic concepts", "n": 4, "los": 19},
  {"k": "B2", "code": "040.02", "name": "Basics of aviation physiology and health maintenance", "n": 24, "los": 174},
  {"k": "B3", "code": "040.03", "name": "Basic aviation psychology", "n": 20, "los": 169}];

@@ -119,7 +119,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <style id="f0-mob">:root{color-scheme:only light}html .q,html .q *,html .expl,html .expl *,html #hist *{min-width:0;overflow-wrap:anywhere;word-wrap:break-word}html .q .choice{align-items:flex-start;flex-wrap:nowrap;max-width:100%}html .q .choice>span{flex:1 1 auto;min-width:0}html .q .choice>input{flex:0 0 auto}html .qhead{flex-wrap:wrap;gap:4px 12px}html .q img,html .q svg,html .q figure,html .expl img,html .expl svg{max-width:100%;height:auto}html .q table,html .expl table{display:block;max-width:100%;overflow-x:auto}html .q pre,html .q code,html .expl code{white-space:pre-wrap}@media (min-width:600px) and (max-width:1400px){html .wrap{max-width:880px;padding-left:24px;padding-right:24px}html .q{padding:16px 20px}html .qtext{font-size:18px;line-height:1.5}html .choice{font-size:17px;line-height:1.45;padding:12px 14px;min-height:48px}html .expl{font-size:16px;line-height:1.5}}.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}</style>
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
 </head><body>
-<title>050 Meteorology · Meteorología</title>
+<title>050 · Meteorology</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
 <style>
   :root{
@@ -616,6 +616,59 @@ td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)
 
 <section>
   <h2>050.01 · The atmosphere <span class="wtag">10 preg. · 12 %</span></h2>
+  <details class="lo out" id="lo-050.00.01" data-lo="050.00.01">
+    <summary><span class="lonum">050.00.01</span><span class="lotitle">True altitude and transition altitude</span></summary>
+    <div class="body">
+      <p>Lo que se queda fuera de las preguntas de Meteorología:</p>
+      <ul>
+        <li><b>Cálculo de altitud verdadera con corrección de temperatura</b> (altitud indicada × 4 % × desviación ISA ÷ 10, encadenada con el cambio de subescala). Es materia de <b>061 Navegación general</b> y <b>033 Planificación</b>. En 050.01.06 EASA solo pide el <i>efecto</i>: aire frío, el altímetro sobre-lee y estás más bajo.</li>
+        <li><b>Altitud de transición, nivel de transición y los reglajes asociados</b>: van en <b>010 Derecho Aéreo</b> y <b>022 Instrumentación</b>, junto con el funcionamiento del barómetro aneroide.</li>
+      </ul>
+      <div class="key"><b>Por qué conviene saberlo igual</b>
+        <p>El test interno sí pregunta estos cálculos, y es el que decide si pasas a vuelo. Están las cuatro preguntas (d27, d28, d29 y d36) en el adaptativo y en el banco completo.</p></div>
+    </div>
+  </details>
+  <details class="lo" id="lo-050.01.01" data-lo="050.01.01">
+    <summary><span class="lonum">050.01.01</span><span class="lotitle">Composition, extent, vertical division</span></summary>
+    <div class="body">
+  <p class="sec-label" id="diaComp">MET-1 · 030.1</p>
+  <h4>Composición del aire seco y limpio</h4>
+  <p><span class="en">Nitrogen</span> (nitrógeno) <strong>78 %</strong>, <span class="en">oxygen</span> (oxígeno) <strong>21 %</strong>, el <strong>1 %</strong> restante otros gases. Esa proporción se da siempre para <span class="en">dry and clean air</span> (aire seco y limpio) — es la coletilla habitual. El nitrógeno es un <span class="en">inert gas</span>: no reacciona.</p>
+
+  <h4>Qué más hay en el aire</h4>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Término</th><th>Qué es</th><th>Por qué importa</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Humidity<br><span style="font-weight:400;color:var(--muted)">humedad</span></td><td>Agua en estado de <strong>vapor</strong> contenida en el aire</td><td>Solo cuenta el vapor. El agua líquida o sólida <strong>no es humedad</strong>: es nube, lluvia o hielo.</td></tr>
+        <tr><td class="k">Condensation nuclei<br><span style="font-weight:400;color:var(--muted)">núcleos de condensación</span></td><td>Partículas <span class="en">hygroscopic</span> (higroscópicas) — arena, carbono</td><td>Sólidas o líquidas, nunca un gas, porque un gas es transparente. Sin ellas no se forman nubes.</td></tr>
+        <tr><td class="k">Aerosols<br><span style="font-weight:400;color:var(--muted)">aerosoles</span></td><td>Partículas sólidas o líquidas demasiado ligeras para caer por gravedad</td><td>Interceptan radiación solar y terrestre, reducen la visibilidad y afectan a los motores.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Las capas, de abajo arriba</h4>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Capa</th><th>Hasta</th><th>Temperatura</th><th>Meteorología</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Troposphere</td><td>Tropopausa</td><td class="k" style="color:var(--bad)">Baja con la altura</td><td>Casi todos los fenómenos</td></tr>
+        <tr><td class="k">Stratosphere</td><td>Estratopausa, ~50 km</td><td class="k" style="color:var(--ok)">Sube con la altura</td><td>Casi ninguno. El aire fluye en capas horizontales — de ahí «stratos»</td></tr>
+        <tr><td class="k">Mesosphere</td><td>Mesopausa, ~80 km</td><td class="k" style="color:var(--bad)">Baja con la altura</td><td>Ninguno</td></tr>
+        <tr><td class="k">Thermosphere</td><td>Al espacio, sin pausa</td><td class="k" style="color:var(--ok)">Sube otra vez</td><td>Ninguno. Mucho electromagnetismo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Patrón que ahorra memorizar: <strong>baja, sube, baja, sube</strong>, y cada frontera se llama «pausa» — excepto la termosfera, que no tiene pausa por arriba porque se funde con el espacio.</p>
+
+  <div class="note">
+    <span class="tag">Dato que hay que saber</span>
+    <p>La <span class="en">tropopause</span> no está a la misma altura en todo el planeta: <strong>9 km en los polos</strong>, <strong>12 km en los trópicos</strong>, <strong>18 km en el ecuador</strong>. Donde hace más calor, la troposfera es más gruesa.</p>
+    <p>Y: <strong>el aire prácticamente nunca atraviesa la tropopausa</strong>. Los fenómenos meteorológicos se quedan debajo. Por eso es la frontera operativa del vuelo comercial.</p>
+  </div>
+    </div>
+  </details>
   <details class="lo" id="lo-050.01.02" data-lo="050.01.02">
     <summary><span class="lonum">050.01.02</span><span class="lotitle">Air temperature</span></summary>
     <div class="body">
@@ -647,6 +700,267 @@ td.k,td.n{font:700 18px "Barlow Condensed",Barlow,sans-serif;color:var(--accent)
   </div>
     </div>
   </details>
+  <details class="lo" id="lo-050.01.03" data-lo="050.01.03">
+    <summary><span class="lonum">050.01.03</span><span class="lotitle">Atmospheric pressure</span></summary>
+    <div class="body">
+  <p>Para cálculos sencillos <strong>por debajo de 5.000 ft sobre el nivel del mar</strong>, el temario indica asumir <strong>30 pies por milibar</strong>. Cuando el problema trabaja entre niveles de presión en altura, usa <strong>27 pies por milibar</strong>. El enunciado normalmente te dice cuál usar; si no lo dice, mira la altitud.</p>
+
+  <div class="problem">
+    <span class="ptitle">Caso práctico 1</span>
+    <p>Aeródromo a 1.000 ft sobre MSL. El QFE observado es 980 mb. ¿Cuál es el QNH?</p>
+    <span class="sol">1000 ÷ 30 = 33 mb  →  QNH = 980 + 33 = 1013 mb</span>
+  </div>
+
+  <div class="problem">
+    <span class="ptitle">Caso práctico 2</span>
+    <p>Aeródromo a 2.100 ft sobre MSL con QNH de 1005 mb. ¿Cuál es el QFE?</p>
+    <span class="sol">2100 ÷ 30 = 70 mb  →  QFE = 1005 − 70 = 935 mb</span>
+  </div>
+
+  <div class="problem">
+    <span class="ptitle">Caso práctico 3</span>
+    <p>De A (QNH 1020, elevación 1.000 ft) a B (QNH 1010, elevación 500 ft), sin cambiar la subescala. ¿Qué indicará el altímetro al aterrizar en B?</p>
+    <span class="sol">Diferencia de presión:  1020 − 1010 = 10 mb<br>Separación vertical:  10 × 27 = 270 ft<br>Indicación en B:  500 + 270 = 770 ft</span>
+  </div>
+
+  <div class="caution note">
+    <span class="tag">Errata habitual en los textos</span>
+    <p>En el Problema 3 el texto dice «el nivel de 1020 mb está 300 ft por debajo del de 1010 mb» y acto seguido suma 270. La cifra correcta es <strong>270</strong>, que es la que usa en el cálculo y la que lleva a los 770 ft. Ese «300» es un error de redacción.</p>
+  </div>
+
+  <p>El sentido nunca se memoriza, se razona: bajando del aeródromo al mar la presión sube, luego <strong>QNH &gt; QFE</strong> siempre que el campo esté por encima del mar. Si te sale al revés, has invertido un signo.</p>
+
+  <h3>Qué tiene que ver 1013 con cada cosa — y con cuáles no</h3>
+  <p>El 1013,25 es una <strong>constante de la atmósfera estándar</strong>. El QNH es un <strong>dato del día</strong>. Mezclarlos produce tres errores muy concretos, y conviene desactivarlos de uno en uno:</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Afirmación</th><th></th><th>Por qué</th></tr></thead>
+      <tbody>
+        <tr><td class="k">«El QNH se calcula a partir de 1013»</td><td class="k" style="color:var(--bad)">Falso</td><td>El QNH es la presión del día del aeródromo reducida al nivel del mar. El 1013 no entra en ese cálculo en ningún momento.</td></tr>
+        <tr><td class="k">«Con 1013 puesto el altímetro marca cero»</td><td class="k" style="color:var(--bad)">Falso</td><td>Marca la altitud de presión, que es la distancia al nivel de 1013 hPa. Ese nivel casi nunca coincide con el suelo que pisas.</td></tr>
+        <tr><td class="k">«Si el QNH es 1013, la altitud de presión es cero»</td><td class="k" style="color:var(--bad)">Falso</td><td>Es igual a la <strong>elevación</strong> del aeródromo. El cero exige además que el campo esté al nivel del mar: son dos condiciones, no una.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="fbox">
+    <span class="ft">Los tres casos, con números</span>
+    <span class="eq">Campo a 1.200 ft, QNH 1013  →  AP = 1.200 + 0        = 1.200 ft
+Campo a 1.200 ft, QNH 1023  →  AP = 1.200 − 270      =   930 ft
+Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
+    <p>La altitud de presión se mueve <strong>alrededor de la elevación</strong>, no alrededor de cero. Con QNH alto queda por debajo; con QNH bajo, por encima. Solo coincide con la elevación el día que el QNH vale exactamente 1013.</p>
+  </div>
+
+  <div class="axiom">
+    <span class="k">Renómbralo también</span>
+    <p>«Altitud de presión» = lo que marcaría el altímetro de ese campo con 1013 puesto.</p>
+    <p class="sub">Nunca «cero», nunca «la elevación». Es una lectura de altímetro con un reglaje concreto, y como el nivel de 1013 casi nunca coincide con el suelo, casi nunca vale ni cero ni la elevación. En un día de alta presión sale negativa, y eso es correcto.</p>
+  </div>
+
+  <div class="caution note">
+    <span class="tag">Checklist antes de marcar un cálculo</span>
+    <p><strong>1.</strong> ¿Cuántas correcciones pide el enunciado? Si menciona el QNH <em>y</em> la temperatura, son <strong>dos</strong>, y aplicar solo una da una opción que está puesta ahí a propósito.<br>
+    <strong>2.</strong> ¿Cada una lleva su signo? QNH por encima de 1013 suma, por debajo resta. Aire cálido suma, frío resta.<br>
+    <strong>3.</strong> ¿Las unidades cuadran? 8 con metros, 27 y 30 con pies.<br>
+    <strong>4.</strong> ¿El resultado tiene sentido físico? QNH siempre mayor que QFE en un campo elevado.</p>
+  </div>
+
+  <div class="caution note">
+    <span class="tag">Unidades — el error que no se ve venir</span>
+    <p><strong>8 va con metros. 27 y 30 van con pies.</strong> Ponerle metros al 30 da un resultado plausible pero mal, y es el fallo más caro del LO porque no chirría. Y otra que cuesta tiempo: <strong>1 hPa = 1 mb exactamente</strong>. Son la misma unidad con dos nombres, no hay ninguna conversión que hacer.</p>
+  </div>
+    </div>
+  </details>
+  <details class="lo" id="lo-050.01.04" data-lo="050.01.04">
+    <summary><span class="lonum">050.01.04</span><span class="lotitle">Air density</span></summary>
+    <div class="body">
+  <p>Densidad es <strong>masa por unidad de volumen</strong>, <code>ρ = M/V</code>. La gravedad mantiene más aire por unidad de volumen cerca del suelo, así que <strong>la densidad es máxima en la superficie terrestre</strong> y disminuye con la altitud.</p>
+
+  <h3>Las tres formas de expresarla</h3>
+  <p>El temario las da explícitamente y las preguntas las usan como distractores <em>entre sí</em>: te define una y te ofrece las otras dos como opciones. Hay que poder recitar cuál es cuál, no solo reconocerlas.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Forma</th><th>Qué es exactamente</th><th>Unidad</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Absoluta</td><td>La masa de aire contenida en un metro cúbico</td><td><span class="n">g/m³</span></td></tr>
+        <tr><td class="k">Densidad relativa</td><td>Un <strong>porcentaje</strong> de la densidad estándar en superficie</td><td><span class="n">%</span></td></tr>
+        <tr><td class="k">Altitud de densidad</td><td>La <strong>altitud de la atmósfera estándar</strong> a la que corresponde la densidad observada</td><td><span class="n">ft</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>El atajo para no confundir las dos últimas: la densidad relativa se mide en <strong>por ciento</strong>, la altitud de densidad en <strong>pies</strong>. Si la respuesta habla de porcentaje y te preguntaban por altitud de densidad, es el distractor.</p>
+
+  <h3>Pares que van juntos y pares que van al revés</h3>
+  <p>Casi todos los fallos de este LO tienen la misma forma: dos magnitudes en la misma frase y el instinto de moverlas en el mismo sentido. Unas sí van juntas y otras no, y no hay atajo — hay que saber cuáles son cuáles.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Si sube…</th><th>…qué le pasa a</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="k">Presión</td><td class="k">Densidad</td><td class="k" style="color:var(--ok)">SUBE · van juntas</td></tr>
+        <tr><td class="k">Temperatura</td><td class="k">Densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
+        <tr><td class="k">Humedad</td><td class="k">Densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
+        <tr><td class="k">Volumen <span style="font-weight:400;color:var(--muted)">(masa fija)</span></td><td class="k">Densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
+        <tr><td class="k">Altura</td><td class="k">Densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
+        <tr><td class="k">Latitud</td><td class="k">Densidad</td><td class="k" style="color:var(--ok)">SUBE · van juntas</td></tr>
+        <tr><td class="k">Densidad</td><td class="k">Altitud de densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>De las siete, <strong>solo dos van juntas</strong>: presión y latitud. Todo lo demás va al revés. Si dudas, la apuesta estadística es «al revés» — pero mejor tener la tabla.</p>
+
+  <h3>La trampa de la altitud de densidad</h3>
+  <p>La última fila de la tabla es la que más cuesta, y el motivo es puramente lingüístico: el término lleva dentro la palabra «densidad» y el signo se contagia. La forma de romperlo es dejar de leerlo como lo que pone.</p>
+
+  <div class="axiom">
+    <span class="k">Renómbralo al leerlo</span>
+    <p>Cada vez que veas «altitud de densidad», léela como «altitud equivalente».</p>
+    <p class="sub">Quitando la palabra «densidad» del término, el contagio desaparece y la frase se vuelve obvia: aire menos denso equivale a estar más arriba, luego la <em>altitud equivalente</em> sube. Y al revés: aire más denso equivale a estar más abajo. Haz la sustitución en voz baja antes de contestar, cada vez, hasta que no haga falta.</p>
+  </div>
+
+  <div class="caution note">
+    <span class="tag">Comprobación de lectura</span>
+    <p>Cuidado con los enunciados que piden «la MÁS BAJA altitud de densidad». La altitud equivalente más baja es la densidad más ALTA, o sea frío, presión alta y aire seco. Si marcas calor, baja presión y humedad, has contestado a la pregunta contraria — y es un fallo de lectura, no de concepto.</p>
+  </div>
+
+  <p>El diagrama de abajo es el mismo hecho en imagen: <strong>van en sentidos opuestos</strong>.</p>
+
+  <div class="axiom">
+    <span class="k">Sentidos opuestos</span>
+    <p>La densidad baja. La altitud de densidad sube.</p>
+    <p class="sub">Y tiene toda la lógica: si el aire es menos denso, es que se parece al aire que en la atmósfera estándar se encuentra <em>más arriba</em>. La altitud de densidad no mide densidad; mide <em>a qué altura de la ISA equivale</em> la densidad que tienes. Menos denso = equivale a estar más alto = cifra mayor.</p>
+  </div>
+
+  <div class="diagram wide" id="diaDens">
+    <svg viewBox="0 0 400 260" role="img" aria-label="En un aeródromo al nivel del mar, un día frío da una altitud de densidad por debajo del nivel del mar y un día caluroso la sitúa por encima, de modo que el avión se comporta como si estuviera en un aeródromo de montaña.">
+      <text x="86" y="26" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--ok)">−5 °C</text>
+      <text x="200" y="26" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--muted)">+15 °C  ISA</text>
+      <text x="314" y="26" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--bad)">+35 °C</text>
+
+      <line x1="86" y1="36" x2="86" y2="222" stroke="var(--ok)" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
+      <line x1="200" y1="36" x2="200" y2="180" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
+      <line x1="314" y1="36" x2="314" y2="118" stroke="var(--bad)" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
+
+      <rect x="20" y="186" width="360" height="52" fill="var(--surface-2)"/>
+      <line x1="20" y1="186" x2="380" y2="186" stroke="var(--ink)" stroke-width="2"/>
+      <text x="24" y="204" font-family="var(--mono)" font-size="9" letter-spacing="1" fill="var(--ink)">AERÓDROMO REAL · NIVEL DEL MAR · 0 ft</text>
+
+      <rect x="48" y="219" width="76" height="6" fill="var(--ok)"/>
+      <text x="86" y="240" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--ok)">−2.400 ft</text>
+
+      <rect x="162" y="183" width="76" height="6" fill="var(--muted)"/>
+      <text x="200" y="172" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--muted)">0 ft</text>
+
+      <rect x="276" y="115" width="76" height="6" fill="var(--bad)"/>
+      <text x="314" y="108" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--bad)">+2.400 ft</text>
+      <text x="314" y="94" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--muted)">el avión vuela</text>
+      <text x="314" y="83" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--muted)">como si estuviera aquí</text>
+    </svg>
+    <p class="dia-cap">El mismo aeródromo al nivel del mar, tres días distintos. Barra verde y roja: la altitud de densidad. El avión no se mueve del sitio, pero en el día caluroso despega como si lo hiciera desde 2.400 ft de montaña. Cifras con la regla derivada de 120 ft por grado de desviación ISA.</p>
+  </div>
+
+  <h4>Práctica interactiva: de dónde sale la altitud de densidad</h4>
+  <p class="vistip">Presión alta, temperatura baja y aire seco dan densidad alta, y densidad alta es buen rendimiento. Mueve los controles y mira cuánto se separa la altitud de densidad de la de presión.</p>
+  <div class="vis" id="visDens"></div>
+
+  <h3>Los tres efectos</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Factor</th><th>Relación</th><th>Razón que da el temario</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Presión</td><td class="k" style="color:var(--ok)">Directamente proporcional</td><td>Al aumentar la presión el aire se comprime, se reduce el volumen y aumenta la densidad.</td></tr>
+        <tr><td class="k">Temperatura</td><td class="k" style="color:var(--bad)">Inversamente proporcional</td><td>Al calentar un volumen de aire se expande y la masa contenida en la unidad de volumen es menor.</td></tr>
+        <tr><td class="k">Humedad</td><td class="k" style="color:var(--bad)">Inversamente proporcional</td><td>Una molécula de agua (H₂O) pesa menos que las de nitrógeno (N₂) y oxígeno (O₂). Efecto pequeño, pero hay que tenerlo en cuenta.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>La fórmula que lo unifica todo, en la notación del propio temario: <code>P · V = R · T</code>.</p>
+
+  <h3>Con la altura y con la latitud</h3>
+  <p><strong>Con la altura</strong> compiten dos efectos: baja la presión (hace bajar la densidad) y baja la temperatura (la haría subir). Gana la presión, así que <strong>la densidad disminuye al aumentar la altura</strong>.</p>
+  <p><strong>Con la latitud</strong>, la densidad <strong>aumenta al aumentar la latitud</strong>: en los polos la presión en superficie es relativamente más alta que en el ecuador y la temperatura es mucho más fría. Los dos factores empujan en el mismo sentido. El aire es más denso en los polos.</p>
+
+  <div class="caution note">
+    <span class="tag">Trampa</span>
+    <p>La humedad es la que más se falla. El instinto dice «aire húmedo, aire pesado», y es exactamente al revés: el vapor de agua desplaza moléculas más pesadas por otras más ligeras.</p>
+  </div>
+    </div>
+  </details>
+  <details class="lo" id="lo-050.01.05" data-lo="050.01.05">
+    <summary><span class="lonum">050.01.05</span><span class="lotitle">International Standard Atmosphere (ISA)</span></summary>
+    <div class="body">
+  <p>La ISA es una vara de medir. Presión, temperatura y densidad varían mucho de un día a otro y de un lugar a otro, y se necesita una atmósfera media de referencia para comparar. Sirve para la <strong>calibración de los instrumentos del avión</strong> y para el <strong>diseño y ensayo de aeronaves</strong>. La ISA es además <strong>completamente seca</strong>, y en ella presión, temperatura y densidad disminuyen con la altura.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Parámetro</th><th>Valor ISA</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Temperatura MSL</td><td><span class="n">+15 °C</span></td></tr>
+        <tr><td class="k">Presión MSL</td><td><span class="n">1013,25 hPa</span></td></tr>
+        <tr><td class="k">Densidad MSL</td><td><span class="n">1225 g/m³</span></td></tr>
+        <tr><td class="k">Gradiente térmico</td><td><span class="n">0,65 °C/100 m</span> (<span class="n">1,98 °C/1000 ft</span>) hasta <span class="n">11 km</span> / <span class="n">36.090 ft</span></td></tr>
+        <tr><td class="k">Capa isoterma</td><td><span class="n">−56,5 °C</span> constante de <span class="n">11 km</span> (<span class="n">36.090 ft</span>) a <span class="n">20 km</span> (<span class="n">65.617 ft</span>)</td></tr>
+        <tr><td class="k">Inversión superior</td><td>aumento de <span class="n">0,1 °C/100 m</span> (<span class="n">0,3 °C/1000 ft</span>) de <span class="n">20 km</span> (<span class="n">65.617 ft</span>) a <span class="n">32 km</span> (<span class="n">104.987 ft</span>)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>La <strong>tropopausa</strong> está en 36.090 ft / 11 km y la <strong>estratopausa</strong> en 104.987 ft / 32 km. Esas dos parejas de cifras se preguntan tal cual, y la forma de retenerlas es verlas apiladas, no como una lista:</p>
+
+  <div class="diagram wide" id="diaCapas">
+    <svg viewBox="0 0 400 320" role="img" aria-label="Las tres capas de la Atmósfera Estándar ICAO: de MSL a 11 km la temperatura baja 0,65 grados por 100 metros hasta −56,5 grados en la tropopausa; de 11 a 20 km se mantiene constante; de 20 a 32 km sube 0,1 grados por 100 metros hasta −44,7 grados en la estratopausa.">
+      <rect x="118" y="40" width="182" height="90" fill="var(--accent-soft)"/>
+      <rect x="118" y="130" width="182" height="68" fill="var(--surface-2)"/>
+      <rect x="118" y="198" width="182" height="82" fill="var(--accent-soft)" opacity="0.5"/>
+
+      <line x1="118" y1="40" x2="300" y2="40" stroke="var(--accent)" stroke-width="2"/>
+      <text x="112" y="38" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--ink)">32 km / 104.987 ft</text>
+      <text x="112" y="50" text-anchor="end" font-family="var(--mono)" font-size="8" letter-spacing="1" fill="var(--accent)">ESTRATOPAUSA</text>
+      <text x="306" y="43" font-family="var(--mono)" font-size="9" font-weight="700" fill="var(--accent)">−44,7 °C</text>
+
+      <line x1="118" y1="130" x2="300" y2="130" stroke="var(--muted)" stroke-width="1.5"/>
+      <text x="112" y="128" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--ink)">20 km / 65.617 ft</text>
+      <text x="306" y="133" font-family="var(--mono)" font-size="9" fill="var(--muted)">−56,5 °C</text>
+
+      <line x1="118" y1="198" x2="300" y2="198" stroke="var(--accent)" stroke-width="2"/>
+      <text x="112" y="196" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--ink)">11 km / 36.090 ft</text>
+      <text x="112" y="208" text-anchor="end" font-family="var(--mono)" font-size="8" letter-spacing="1" fill="var(--accent)">TROPOPAUSA</text>
+      <text x="306" y="201" font-family="var(--mono)" font-size="9" font-weight="700" fill="var(--accent)">−56,5 °C</text>
+
+      <line x1="118" y1="280" x2="300" y2="280" stroke="var(--ink)" stroke-width="2"/>
+      <text x="112" y="278" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--ink)">MSL</text>
+      <text x="306" y="283" font-family="var(--mono)" font-size="9" font-weight="700" fill="var(--ink)">+15 °C</text>
+      <text x="118" y="298" font-family="var(--mono)" font-size="8.5" fill="var(--muted)">1013,25 hPa  ·  1225 g/m³  ·  aire seco</text>
+
+      <text x="209" y="89" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--ink)">SUBE 0,1 °C/100 m</text>
+      <text x="209" y="101" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">(0,3 °C/1000 ft)</text>
+      <text x="209" y="168" text-anchor="middle" font-family="var(--mono)" font-size="9" letter-spacing="1" fill="var(--muted)">ISOTERMA</text>
+      <text x="209" y="235" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--ink)">BAJA 0,65 °C/100 m</text>
+      <text x="209" y="247" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">(1,98 °C/1000 ft)</text>
+    </svg>
+    <p class="dia-cap">Alturas a escala. Tres capas, tres comportamientos: baja, se para, sube. La temperatura mínima de toda la atmósfera estándar, −56,5 °C, no es un punto sino toda la capa central.</p>
+  </div>
+
+
+  <h3>Desviación ISA</h3>
+  <p>Las observaciones meteorológicas se dan en cifras absolutas, pero para cálculos de performance o correcciones de instrumento se usan siempre <strong>relativas a la ISA</strong>. En los cálculos el temario autoriza el atajo de <strong>2 °C por cada 1000 ft</strong> en lugar de 1,98.</p>
+
+  <div class="problem">
+    <span class="ptitle">Ejemplo de examen · 8000 ft, OAT +6 °C</span>
+    <span class="sol">Temperatura ISA a 8000 ft:  8 × (−2) = −16  →  −16 + 15 = −1 °C<br>Desviación:  +6 − (−1) = +7  →  ISA + 7</span>
+  </div>
+
+  <p>Las <strong>temperaturas superiores a la ISA afectan negativamente a las prestaciones</strong> en despegue, crucero y ascenso. Hay que consultar las gráficas de performance sobre todo con temperatura alta, altitud alta y mucha carga: los tres a la vez es el escenario crítico.</p>
+    </div>
+  </details>
+</section>
+<section>
+  <h2>050.02 · Wind <span class="wtag">10 preg. · 12 %</span></h2>
   <details class="lo" id="lo-050.01.06" data-lo="050.01.06">
     <summary><span class="lonum">050.01.06</span><span class="lotitle">Altimetry</span></summary>
     <div class="body">
@@ -936,308 +1250,64 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   </div>
     </div>
   </details>
-  <details class="lo" id="lo-050.01.03" data-lo="050.01.03">
-    <summary><span class="lonum">050.01.03</span><span class="lotitle">Atmospheric pressure</span></summary>
+  <details class="lo" id="lo-050.02.01" data-lo="050.02.01">
+    <summary><span class="lonum">050.02.01</span><span class="lotitle">Definition and measurement of wind</span></summary>
     <div class="body">
-  <p>Para cálculos sencillos <strong>por debajo de 5.000 ft sobre el nivel del mar</strong>, el temario indica asumir <strong>30 pies por milibar</strong>. Cuando el problema trabaja entre niveles de presión en altura, usa <strong>27 pies por milibar</strong>. El enunciado normalmente te dice cuál usar; si no lo dice, mira la altitud.</p>
 
-  <div class="problem">
-    <span class="ptitle">Caso práctico 1</span>
-    <p>Aeródromo a 1.000 ft sobre MSL. El QFE observado es 980 mb. ¿Cuál es el QNH?</p>
-    <span class="sol">1000 ÷ 30 = 33 mb  →  QNH = 980 + 33 = 1013 mb</span>
-  </div>
-
-  <div class="problem">
-    <span class="ptitle">Caso práctico 2</span>
-    <p>Aeródromo a 2.100 ft sobre MSL con QNH de 1005 mb. ¿Cuál es el QFE?</p>
-    <span class="sol">2100 ÷ 30 = 70 mb  →  QFE = 1005 − 70 = 935 mb</span>
-  </div>
-
-  <div class="problem">
-    <span class="ptitle">Caso práctico 3</span>
-    <p>De A (QNH 1020, elevación 1.000 ft) a B (QNH 1010, elevación 500 ft), sin cambiar la subescala. ¿Qué indicará el altímetro al aterrizar en B?</p>
-    <span class="sol">Diferencia de presión:  1020 − 1010 = 10 mb<br>Separación vertical:  10 × 27 = 270 ft<br>Indicación en B:  500 + 270 = 770 ft</span>
-  </div>
-
-  <div class="caution note">
-    <span class="tag">Errata habitual en los textos</span>
-    <p>En el Problema 3 el texto dice «el nivel de 1020 mb está 300 ft por debajo del de 1010 mb» y acto seguido suma 270. La cifra correcta es <strong>270</strong>, que es la que usa en el cálculo y la que lleva a los 770 ft. Ese «300» es un error de redacción.</p>
-  </div>
-
-  <p>El sentido nunca se memoriza, se razona: bajando del aeródromo al mar la presión sube, luego <strong>QNH &gt; QFE</strong> siempre que el campo esté por encima del mar. Si te sale al revés, has invertido un signo.</p>
-
-  <h3>Qué tiene que ver 1013 con cada cosa — y con cuáles no</h3>
-  <p>El 1013,25 es una <strong>constante de la atmósfera estándar</strong>. El QNH es un <strong>dato del día</strong>. Mezclarlos produce tres errores muy concretos, y conviene desactivarlos de uno en uno:</p>
-
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Afirmación</th><th></th><th>Por qué</th></tr></thead>
-      <tbody>
-        <tr><td class="k">«El QNH se calcula a partir de 1013»</td><td class="k" style="color:var(--bad)">Falso</td><td>El QNH es la presión del día del aeródromo reducida al nivel del mar. El 1013 no entra en ese cálculo en ningún momento.</td></tr>
-        <tr><td class="k">«Con 1013 puesto el altímetro marca cero»</td><td class="k" style="color:var(--bad)">Falso</td><td>Marca la altitud de presión, que es la distancia al nivel de 1013 hPa. Ese nivel casi nunca coincide con el suelo que pisas.</td></tr>
-        <tr><td class="k">«Si el QNH es 1013, la altitud de presión es cero»</td><td class="k" style="color:var(--bad)">Falso</td><td>Es igual a la <strong>elevación</strong> del aeródromo. El cero exige además que el campo esté al nivel del mar: son dos condiciones, no una.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="fbox">
-    <span class="ft">Los tres casos, con números</span>
-    <span class="eq">Campo a 1.200 ft, QNH 1013  →  AP = 1.200 + 0        = 1.200 ft
-Campo a 1.200 ft, QNH 1023  →  AP = 1.200 − 270      =   930 ft
-Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
-    <p>La altitud de presión se mueve <strong>alrededor de la elevación</strong>, no alrededor de cero. Con QNH alto queda por debajo; con QNH bajo, por encima. Solo coincide con la elevación el día que el QNH vale exactamente 1013.</p>
-  </div>
+  <h3>Cómo se mide</h3>
+  <p>El viento es un <span class="en">vector</span>: tiene <strong>dirección</strong> e <strong>intensidad</strong>.</p>
 
   <div class="axiom">
-    <span class="k">Renómbralo también</span>
-    <p>«Altitud de presión» = lo que marcaría el altímetro de ese campo con 1013 puesto.</p>
-    <p class="sub">Nunca «cero», nunca «la elevación». Es una lectura de altímetro con un reglaje concreto, y como el nivel de 1013 casi nunca coincide con el suelo, casi nunca vale ni cero ni la elevación. En un día de alta presión sale negativa, y eso es correcto.</p>
+    <span class="k">Muy importante</span>
+    <p>La dirección del viento es siempre desde dónde VIENE.</p>
+    <p class="sub">Se da en grados como un rumbo: viento del norte 360 (o 000), del este 090, del sur 180, del oeste 270. Un «viento 270» sopla desde el oeste hacia el este. La flecha de la veleta apunta hacia donde viene el viento.</p>
   </div>
-
-  <div class="caution note">
-    <span class="tag">Checklist antes de marcar un cálculo</span>
-    <p><strong>1.</strong> ¿Cuántas correcciones pide el enunciado? Si menciona el QNH <em>y</em> la temperatura, son <strong>dos</strong>, y aplicar solo una da una opción que está puesta ahí a propósito.<br>
-    <strong>2.</strong> ¿Cada una lleva su signo? QNH por encima de 1013 suma, por debajo resta. Aire cálido suma, frío resta.<br>
-    <strong>3.</strong> ¿Las unidades cuadran? 8 con metros, 27 y 30 con pies.<br>
-    <strong>4.</strong> ¿El resultado tiene sentido físico? QNH siempre mayor que QFE en un campo elevado.</p>
-  </div>
-
-  <div class="caution note">
-    <span class="tag">Unidades — el error que no se ve venir</span>
-    <p><strong>8 va con metros. 27 y 30 van con pies.</strong> Ponerle metros al 30 da un resultado plausible pero mal, y es el fallo más caro del LO porque no chirría. Y otra que cuesta tiempo: <strong>1 hPa = 1 mb exactamente</strong>. Son la misma unidad con dos nombres, no hay ninguna conversión que hacer.</p>
-  </div>
-    </div>
-  </details>
-  <details class="lo" id="lo-050.01.01" data-lo="050.01.01">
-    <summary><span class="lonum">050.01.01</span><span class="lotitle">Composition, extent, vertical division</span></summary>
-    <div class="body">
-  <p class="sec-label" id="diaComp">MET-1 · 030.1</p>
-  <h4>Composición del aire seco y limpio</h4>
-  <p><span class="en">Nitrogen</span> (nitrógeno) <strong>78 %</strong>, <span class="en">oxygen</span> (oxígeno) <strong>21 %</strong>, el <strong>1 %</strong> restante otros gases. Esa proporción se da siempre para <span class="en">dry and clean air</span> (aire seco y limpio) — es la coletilla habitual. El nitrógeno es un <span class="en">inert gas</span>: no reacciona.</p>
-
-  <h4>Qué más hay en el aire</h4>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Término</th><th>Qué es</th><th>Por qué importa</th></tr></thead>
-      <tbody>
-        <tr><td class="k">Humidity<br><span style="font-weight:400;color:var(--muted)">humedad</span></td><td>Agua en estado de <strong>vapor</strong> contenida en el aire</td><td>Solo cuenta el vapor. El agua líquida o sólida <strong>no es humedad</strong>: es nube, lluvia o hielo.</td></tr>
-        <tr><td class="k">Condensation nuclei<br><span style="font-weight:400;color:var(--muted)">núcleos de condensación</span></td><td>Partículas <span class="en">hygroscopic</span> (higroscópicas) — arena, carbono</td><td>Sólidas o líquidas, nunca un gas, porque un gas es transparente. Sin ellas no se forman nubes.</td></tr>
-        <tr><td class="k">Aerosols<br><span style="font-weight:400;color:var(--muted)">aerosoles</span></td><td>Partículas sólidas o líquidas demasiado ligeras para caer por gravedad</td><td>Interceptan radiación solar y terrestre, reducen la visibilidad y afectan a los motores.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h4>Las capas, de abajo arriba</h4>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Capa</th><th>Hasta</th><th>Temperatura</th><th>Meteorología</th></tr></thead>
-      <tbody>
-        <tr><td class="k">Troposphere</td><td>Tropopausa</td><td class="k" style="color:var(--bad)">Baja con la altura</td><td>Casi todos los fenómenos</td></tr>
-        <tr><td class="k">Stratosphere</td><td>Estratopausa, ~50 km</td><td class="k" style="color:var(--ok)">Sube con la altura</td><td>Casi ninguno. El aire fluye en capas horizontales — de ahí «stratos»</td></tr>
-        <tr><td class="k">Mesosphere</td><td>Mesopausa, ~80 km</td><td class="k" style="color:var(--bad)">Baja con la altura</td><td>Ninguno</td></tr>
-        <tr><td class="k">Thermosphere</td><td>Al espacio, sin pausa</td><td class="k" style="color:var(--ok)">Sube otra vez</td><td>Ninguno. Mucho electromagnetismo</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>Patrón que ahorra memorizar: <strong>baja, sube, baja, sube</strong>, y cada frontera se llama «pausa» — excepto la termosfera, que no tiene pausa por arriba porque se funde con el espacio.</p>
-
-  <div class="note">
-    <span class="tag">Dato que hay que saber</span>
-    <p>La <span class="en">tropopause</span> no está a la misma altura en todo el planeta: <strong>9 km en los polos</strong>, <strong>12 km en los trópicos</strong>, <strong>18 km en el ecuador</strong>. Donde hace más calor, la troposfera es más gruesa.</p>
-    <p>Y: <strong>el aire prácticamente nunca atraviesa la tropopausa</strong>. Los fenómenos meteorológicos se quedan debajo. Por eso es la frontera operativa del vuelo comercial.</p>
-  </div>
-    </div>
-  </details>
-  <details class="lo" id="lo-050.01.04" data-lo="050.01.04">
-    <summary><span class="lonum">050.01.04</span><span class="lotitle">Air density</span></summary>
-    <div class="body">
-  <p>Densidad es <strong>masa por unidad de volumen</strong>, <code>ρ = M/V</code>. La gravedad mantiene más aire por unidad de volumen cerca del suelo, así que <strong>la densidad es máxima en la superficie terrestre</strong> y disminuye con la altitud.</p>
-
-  <h3>Las tres formas de expresarla</h3>
-  <p>El temario las da explícitamente y las preguntas las usan como distractores <em>entre sí</em>: te define una y te ofrece las otras dos como opciones. Hay que poder recitar cuál es cuál, no solo reconocerlas.</p>
 
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Forma</th><th>Qué es exactamente</th><th>Unidad</th></tr></thead>
+      <thead><tr><th>Dato</th><th>Cómo se da</th></tr></thead>
       <tbody>
-        <tr><td class="k">Absoluta</td><td>La masa de aire contenida en un metro cúbico</td><td><span class="n">g/m³</span></td></tr>
-        <tr><td class="k">Densidad relativa</td><td>Un <strong>porcentaje</strong> de la densidad estándar en superficie</td><td><span class="n">%</span></td></tr>
-        <tr><td class="k">Altitud de densidad</td><td>La <strong>altitud de la atmósfera estándar</strong> a la que corresponde la densidad observada</td><td><span class="n">ft</span></td></tr>
+        <tr><td class="k">Dirección magnética</td><td>La usa la <strong>aviación</strong> (<span class="en">magnetic north</span>, norte magnético)</td></tr>
+        <tr><td class="k">Dirección verdadera</td><td>La usan los <strong>meteorólogos</strong> (<span class="en">true north</span>, norte geográfico)</td></tr>
+        <tr><td class="k">Intensidad</td><td>En <span class="en">knots</span> (nudos, kt) = millas náuticas por hora. <span class="n">1 NM = 1,852 km</span></td></tr>
       </tbody>
     </table>
   </div>
+  <h4>Las plumas del viento (wind barbs)</h4>
+  <div class="diagram wide" id="diaMedida">
+    <svg viewBox="0 0 440 170" role="img" aria-label="Plumas de viento: media pluma 5 nudos, pluma entera 10 nudos, banderín 50 nudos. Las plumas van en el extremo del que viene el viento. Ejemplo: viento del oeste, 270 grados, de 65 nudos.">
+      <g stroke="var(--ink)" stroke-width="2" fill="none">
+        <line x1="40" y1="100" x2="40" y2="30"/><line x1="40" y1="30" x2="54" y2="24"/>
+        <line x1="120" y1="100" x2="120" y2="30"/><line x1="120" y1="30" x2="146" y2="20"/>
+        <line x1="200" y1="100" x2="200" y2="30"/>
+      </g>
+      <path d="M200 30 L226 22 L200 46 Z" fill="var(--ink)"/>
+      <circle cx="40" cy="104" r="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+      <circle cx="120" cy="104" r="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+      <circle cx="200" cy="104" r="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+      <text x="40" y="128" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--ink)">5 kt</text>
+      <text x="40" y="142" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">media</text>
+      <text x="120" y="128" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--ink)">10 kt</text>
+      <text x="120" y="142" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">entera</text>
+      <text x="200" y="128" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--ink)">50 kt</text>
+      <text x="200" y="142" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">banderín</text>
 
-  <p>El atajo para no confundir las dos últimas: la densidad relativa se mide en <strong>por ciento</strong>, la altitud de densidad en <strong>pies</strong>. Si la respuesta habla de porcentaje y te preguntaban por altitud de densidad, es el distractor.</p>
-
-  <h3>Pares que van juntos y pares que van al revés</h3>
-  <p>Casi todos los fallos de este LO tienen la misma forma: dos magnitudes en la misma frase y el instinto de moverlas en el mismo sentido. Unas sí van juntas y otras no, y no hay atajo — hay que saber cuáles son cuáles.</p>
-
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Si sube…</th><th>…qué le pasa a</th><th></th></tr></thead>
-      <tbody>
-        <tr><td class="k">Presión</td><td class="k">Densidad</td><td class="k" style="color:var(--ok)">SUBE · van juntas</td></tr>
-        <tr><td class="k">Temperatura</td><td class="k">Densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
-        <tr><td class="k">Humedad</td><td class="k">Densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
-        <tr><td class="k">Volumen <span style="font-weight:400;color:var(--muted)">(masa fija)</span></td><td class="k">Densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
-        <tr><td class="k">Altura</td><td class="k">Densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
-        <tr><td class="k">Latitud</td><td class="k">Densidad</td><td class="k" style="color:var(--ok)">SUBE · van juntas</td></tr>
-        <tr><td class="k">Densidad</td><td class="k">Altitud de densidad</td><td class="k" style="color:var(--bad)">BAJA · al revés</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>De las siete, <strong>solo dos van juntas</strong>: presión y latitud. Todo lo demás va al revés. Si dudas, la apuesta estadística es «al revés» — pero mejor tener la tabla.</p>
-
-  <h3>La trampa de la altitud de densidad</h3>
-  <p>La última fila de la tabla es la que más cuesta, y el motivo es puramente lingüístico: el término lleva dentro la palabra «densidad» y el signo se contagia. La forma de romperlo es dejar de leerlo como lo que pone.</p>
-
-  <div class="axiom">
-    <span class="k">Renómbralo al leerlo</span>
-    <p>Cada vez que veas «altitud de densidad», léela como «altitud equivalente».</p>
-    <p class="sub">Quitando la palabra «densidad» del término, el contagio desaparece y la frase se vuelve obvia: aire menos denso equivale a estar más arriba, luego la <em>altitud equivalente</em> sube. Y al revés: aire más denso equivale a estar más abajo. Haz la sustitución en voz baja antes de contestar, cada vez, hasta que no haga falta.</p>
-  </div>
-
-  <div class="caution note">
-    <span class="tag">Comprobación de lectura</span>
-    <p>Cuidado con los enunciados que piden «la MÁS BAJA altitud de densidad». La altitud equivalente más baja es la densidad más ALTA, o sea frío, presión alta y aire seco. Si marcas calor, baja presión y humedad, has contestado a la pregunta contraria — y es un fallo de lectura, no de concepto.</p>
-  </div>
-
-  <p>El diagrama de abajo es el mismo hecho en imagen: <strong>van en sentidos opuestos</strong>.</p>
-
-  <div class="axiom">
-    <span class="k">Sentidos opuestos</span>
-    <p>La densidad baja. La altitud de densidad sube.</p>
-    <p class="sub">Y tiene toda la lógica: si el aire es menos denso, es que se parece al aire que en la atmósfera estándar se encuentra <em>más arriba</em>. La altitud de densidad no mide densidad; mide <em>a qué altura de la ISA equivale</em> la densidad que tienes. Menos denso = equivale a estar más alto = cifra mayor.</p>
-  </div>
-
-  <div class="diagram wide" id="diaDens">
-    <svg viewBox="0 0 400 260" role="img" aria-label="En un aeródromo al nivel del mar, un día frío da una altitud de densidad por debajo del nivel del mar y un día caluroso la sitúa por encima, de modo que el avión se comporta como si estuviera en un aeródromo de montaña.">
-      <text x="86" y="26" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--ok)">−5 °C</text>
-      <text x="200" y="26" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--muted)">+15 °C  ISA</text>
-      <text x="314" y="26" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--bad)">+35 °C</text>
-
-      <line x1="86" y1="36" x2="86" y2="222" stroke="var(--ok)" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
-      <line x1="200" y1="36" x2="200" y2="180" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
-      <line x1="314" y1="36" x2="314" y2="118" stroke="var(--bad)" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
-
-      <rect x="20" y="186" width="360" height="52" fill="var(--surface-2)"/>
-      <line x1="20" y1="186" x2="380" y2="186" stroke="var(--ink)" stroke-width="2"/>
-      <text x="24" y="204" font-family="var(--mono)" font-size="9" letter-spacing="1" fill="var(--ink)">AERÓDROMO REAL · NIVEL DEL MAR · 0 ft</text>
-
-      <rect x="48" y="219" width="76" height="6" fill="var(--ok)"/>
-      <text x="86" y="240" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--ok)">−2.400 ft</text>
-
-      <rect x="162" y="183" width="76" height="6" fill="var(--muted)"/>
-      <text x="200" y="172" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--muted)">0 ft</text>
-
-      <rect x="276" y="115" width="76" height="6" fill="var(--bad)"/>
-      <text x="314" y="108" text-anchor="middle" font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--bad)">+2.400 ft</text>
-      <text x="314" y="94" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--muted)">el avión vuela</text>
-      <text x="314" y="83" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--muted)">como si estuviera aquí</text>
+      <g stroke="var(--accent)" stroke-width="2" fill="none">
+        <line x1="300" y1="80" x2="420" y2="80"/>
+        <line x1="316" y1="80" x2="306" y2="58"/>
+        <line x1="328" y1="80" x2="322" y2="68"/>
+      </g>
+      <path d="M300 80 L290 56 L312 80 Z" fill="var(--accent)"/>
+      <circle cx="420" cy="80" r="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="360" y="112" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--accent)">270° / 65 kt</text>
+      <text x="360" y="128" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">50 + 10 + 5 · viene del oeste</text>
+      <text x="300" y="40" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">W</text>
+      <text x="420" y="64" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">estación</text>
     </svg>
-    <p class="dia-cap">El mismo aeródromo al nivel del mar, tres días distintos. Barra verde y roja: la altitud de densidad. El avión no se mueve del sitio, pero en el día caluroso despega como si lo hiciera desde 2.400 ft de montaña. Cifras con la regla derivada de 120 ft por grado de desviación ISA.</p>
-  </div>
-
-  <h4>Práctica interactiva: de dónde sale la altitud de densidad</h4>
-  <p class="vistip">Presión alta, temperatura baja y aire seco dan densidad alta, y densidad alta es buen rendimiento. Mueve los controles y mira cuánto se separa la altitud de densidad de la de presión.</p>
-  <div class="vis" id="visDens"></div>
-
-  <h3>Los tres efectos</h3>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Factor</th><th>Relación</th><th>Razón que da el temario</th></tr></thead>
-      <tbody>
-        <tr><td class="k">Presión</td><td class="k" style="color:var(--ok)">Directamente proporcional</td><td>Al aumentar la presión el aire se comprime, se reduce el volumen y aumenta la densidad.</td></tr>
-        <tr><td class="k">Temperatura</td><td class="k" style="color:var(--bad)">Inversamente proporcional</td><td>Al calentar un volumen de aire se expande y la masa contenida en la unidad de volumen es menor.</td></tr>
-        <tr><td class="k">Humedad</td><td class="k" style="color:var(--bad)">Inversamente proporcional</td><td>Una molécula de agua (H₂O) pesa menos que las de nitrógeno (N₂) y oxígeno (O₂). Efecto pequeño, pero hay que tenerlo en cuenta.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>La fórmula que lo unifica todo, en la notación del propio temario: <code>P · V = R · T</code>.</p>
-
-  <h3>Con la altura y con la latitud</h3>
-  <p><strong>Con la altura</strong> compiten dos efectos: baja la presión (hace bajar la densidad) y baja la temperatura (la haría subir). Gana la presión, así que <strong>la densidad disminuye al aumentar la altura</strong>.</p>
-  <p><strong>Con la latitud</strong>, la densidad <strong>aumenta al aumentar la latitud</strong>: en los polos la presión en superficie es relativamente más alta que en el ecuador y la temperatura es mucho más fría. Los dos factores empujan en el mismo sentido. El aire es más denso en los polos.</p>
-
-  <div class="caution note">
-    <span class="tag">Trampa</span>
-    <p>La humedad es la que más se falla. El instinto dice «aire húmedo, aire pesado», y es exactamente al revés: el vapor de agua desplaza moléculas más pesadas por otras más ligeras.</p>
+    <p class="dia-cap">Se suman: banderín 50, pluma entera 10, media 5. Las plumas van en el extremo <strong>del que viene</strong> el viento; el círculo es la estación.</p>
   </div>
     </div>
   </details>
-  <details class="lo" id="lo-050.01.05" data-lo="050.01.05">
-    <summary><span class="lonum">050.01.05</span><span class="lotitle">International Standard Atmosphere (ISA)</span></summary>
-    <div class="body">
-  <p>La ISA es una vara de medir. Presión, temperatura y densidad varían mucho de un día a otro y de un lugar a otro, y se necesita una atmósfera media de referencia para comparar. Sirve para la <strong>calibración de los instrumentos del avión</strong> y para el <strong>diseño y ensayo de aeronaves</strong>. La ISA es además <strong>completamente seca</strong>, y en ella presión, temperatura y densidad disminuyen con la altura.</p>
-
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Parámetro</th><th>Valor ISA</th></tr></thead>
-      <tbody>
-        <tr><td class="k">Temperatura MSL</td><td><span class="n">+15 °C</span></td></tr>
-        <tr><td class="k">Presión MSL</td><td><span class="n">1013,25 hPa</span></td></tr>
-        <tr><td class="k">Densidad MSL</td><td><span class="n">1225 g/m³</span></td></tr>
-        <tr><td class="k">Gradiente térmico</td><td><span class="n">0,65 °C/100 m</span> (<span class="n">1,98 °C/1000 ft</span>) hasta <span class="n">11 km</span> / <span class="n">36.090 ft</span></td></tr>
-        <tr><td class="k">Capa isoterma</td><td><span class="n">−56,5 °C</span> constante de <span class="n">11 km</span> (<span class="n">36.090 ft</span>) a <span class="n">20 km</span> (<span class="n">65.617 ft</span>)</td></tr>
-        <tr><td class="k">Inversión superior</td><td>aumento de <span class="n">0,1 °C/100 m</span> (<span class="n">0,3 °C/1000 ft</span>) de <span class="n">20 km</span> (<span class="n">65.617 ft</span>) a <span class="n">32 km</span> (<span class="n">104.987 ft</span>)</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>La <strong>tropopausa</strong> está en 36.090 ft / 11 km y la <strong>estratopausa</strong> en 104.987 ft / 32 km. Esas dos parejas de cifras se preguntan tal cual, y la forma de retenerlas es verlas apiladas, no como una lista:</p>
-
-  <div class="diagram wide" id="diaCapas">
-    <svg viewBox="0 0 400 320" role="img" aria-label="Las tres capas de la Atmósfera Estándar ICAO: de MSL a 11 km la temperatura baja 0,65 grados por 100 metros hasta −56,5 grados en la tropopausa; de 11 a 20 km se mantiene constante; de 20 a 32 km sube 0,1 grados por 100 metros hasta −44,7 grados en la estratopausa.">
-      <rect x="118" y="40" width="182" height="90" fill="var(--accent-soft)"/>
-      <rect x="118" y="130" width="182" height="68" fill="var(--surface-2)"/>
-      <rect x="118" y="198" width="182" height="82" fill="var(--accent-soft)" opacity="0.5"/>
-
-      <line x1="118" y1="40" x2="300" y2="40" stroke="var(--accent)" stroke-width="2"/>
-      <text x="112" y="38" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--ink)">32 km / 104.987 ft</text>
-      <text x="112" y="50" text-anchor="end" font-family="var(--mono)" font-size="8" letter-spacing="1" fill="var(--accent)">ESTRATOPAUSA</text>
-      <text x="306" y="43" font-family="var(--mono)" font-size="9" font-weight="700" fill="var(--accent)">−44,7 °C</text>
-
-      <line x1="118" y1="130" x2="300" y2="130" stroke="var(--muted)" stroke-width="1.5"/>
-      <text x="112" y="128" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--ink)">20 km / 65.617 ft</text>
-      <text x="306" y="133" font-family="var(--mono)" font-size="9" fill="var(--muted)">−56,5 °C</text>
-
-      <line x1="118" y1="198" x2="300" y2="198" stroke="var(--accent)" stroke-width="2"/>
-      <text x="112" y="196" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--ink)">11 km / 36.090 ft</text>
-      <text x="112" y="208" text-anchor="end" font-family="var(--mono)" font-size="8" letter-spacing="1" fill="var(--accent)">TROPOPAUSA</text>
-      <text x="306" y="201" font-family="var(--mono)" font-size="9" font-weight="700" fill="var(--accent)">−56,5 °C</text>
-
-      <line x1="118" y1="280" x2="300" y2="280" stroke="var(--ink)" stroke-width="2"/>
-      <text x="112" y="278" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--ink)">MSL</text>
-      <text x="306" y="283" font-family="var(--mono)" font-size="9" font-weight="700" fill="var(--ink)">+15 °C</text>
-      <text x="118" y="298" font-family="var(--mono)" font-size="8.5" fill="var(--muted)">1013,25 hPa  ·  1225 g/m³  ·  aire seco</text>
-
-      <text x="209" y="89" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--ink)">SUBE 0,1 °C/100 m</text>
-      <text x="209" y="101" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">(0,3 °C/1000 ft)</text>
-      <text x="209" y="168" text-anchor="middle" font-family="var(--mono)" font-size="9" letter-spacing="1" fill="var(--muted)">ISOTERMA</text>
-      <text x="209" y="235" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--ink)">BAJA 0,65 °C/100 m</text>
-      <text x="209" y="247" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">(1,98 °C/1000 ft)</text>
-    </svg>
-    <p class="dia-cap">Alturas a escala. Tres capas, tres comportamientos: baja, se para, sube. La temperatura mínima de toda la atmósfera estándar, −56,5 °C, no es un punto sino toda la capa central.</p>
-  </div>
-
-
-  <h3>Desviación ISA</h3>
-  <p>Las observaciones meteorológicas se dan en cifras absolutas, pero para cálculos de performance o correcciones de instrumento se usan siempre <strong>relativas a la ISA</strong>. En los cálculos el temario autoriza el atajo de <strong>2 °C por cada 1000 ft</strong> en lugar de 1,98.</p>
-
-  <div class="problem">
-    <span class="ptitle">Ejemplo de examen · 8000 ft, OAT +6 °C</span>
-    <span class="sol">Temperatura ISA a 8000 ft:  8 × (−2) = −16  →  −16 + 15 = −1 °C<br>Desviación:  +6 − (−1) = +7  →  ISA + 7</span>
-  </div>
-
-  <p>Las <strong>temperaturas superiores a la ISA afectan negativamente a las prestaciones</strong> en despegue, crucero y ascenso. Hay que consultar las gráficas de performance sobre todo con temperatura alta, altitud alta y mucha carga: los tres a la vez es el escenario crítico.</p>
-    </div>
-  </details>
-</section>
-<section>
-  <h2>050.02 · Wind <span class="wtag">10 preg. · 12 %</span></h2>
   <details class="lo" id="lo-050.02.02" data-lo="050.02.02">
     <summary><span class="lonum">050.02.02</span><span class="lotitle">Primary cause of wind</span></summary>
     <div class="body">
@@ -1372,51 +1442,48 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </div>
     </div>
   </details>
-  <details class="lo" id="lo-050.02.06" data-lo="050.02.06">
-    <summary><span class="lonum">050.02.06</span><span class="lotitle">Turbulence</span></summary>
+  <details class="lo" id="lo-050.02.03" data-lo="050.02.03">
+    <summary><span class="lonum">050.02.03</span><span class="lotitle">General global circulation</span></summary>
     <div class="body">
-  <h4>Tipos por origen</h4>
+  <h3>Circulación general del aire</h3>
+  <p>Cada hemisferio tiene tres <span class="en">cells</span> (células) de circulación que llegan hasta la tropopausa, cada una en una masa de aire.</p>
+
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Tipo</th><th>Origen</th><th>Dónde e intensidad</th></tr></thead>
+      <thead><tr><th>Célula</th><th>Masa de aire</th><th>Detalle</th></tr></thead>
       <tbody>
-        <tr><td class="k">Mecánica</td><td>Obstáculos físicos: edificios, montañas</td><td><strong>A sotavento</strong> del obstáculo y a baja cota. Normalmente ligera</td></tr>
-        <tr><td class="k">Térmica<br><span style="font-weight:400;color:var(--muted)">o convectiva</span></td><td>Remolinos por las corrientes verticales que genera el calor del suelo</td><td>Ligera pero <strong>muy incómoda</strong>. Más fuerte en verano al mediodía solar</td></tr>
-        <tr><td class="k">De estela<br><span class="en" style="font-weight:400">wake turbulence</span></td><td>Torbellinos de punta de ala (<span class="en">wingtip vortices</span>)</td><td>La intensidad depende de la <strong>categoría del avión</strong> que va delante</td></tr>
-        <tr><td class="k">Ondas de montaña</td><td>Viento fuerte y estable cruzando una cordillera</td><td>Ver abajo</td></tr>
+        <tr><td class="k">Hadley cell</td><td>Equatorial air mass (ecuatorial)</td><td>El aire sube en el ecuador y baja en los anticiclones subtropicales</td></tr>
+        <tr><td class="k">Ferrel cell</td><td>Subtropical air mass (subtropical, donde está España)</td><td>Entre los anticiclones subtropicales y la zona donde choca con el aire polar</td></tr>
+        <tr><td class="k">Polar cell</td><td>Polar air mass (polar)</td><td>Anticiclón polar. Donde el aire polar choca con el subtropical se forma una zona de convergencia</td></tr>
       </tbody>
     </table>
   </div>
-    </div>
-  </details>
-  <details class="lo" id="lo-050.02.05" data-lo="050.02.05">
-    <summary><span class="lonum">050.02.05</span><span class="lotitle">Mountain waves (standing waves, lee waves)</span></summary>
-    <div class="body">
-  <h4>Ondas de montaña · las cifras que caen</h4>
-  <ul>
-    <li>Viento de <strong>más de 15 kt</strong> soplando a <strong>menos de 30° de la perpendicular</strong> a la cordillera.</li>
-    <li><strong>Aire estable</strong>: si fuera inestable el aire subiría y no ondularía.</li>
-    <li>La intensidad <strong>aumenta con la altura</strong>, y lo más fuerte está <strong>sobre la cima y en la primera ondulación</strong> a sotavento.</li>
-    <li>La firma visible son el <strong><span class="en">cap cloud</span></strong> sobre la cima —la «nube de boina»— y los <strong>altocúmulos lenticulares</strong> en las crestas de la onda.</li>
-    <li>Dentro de la onda en sí el aire va <strong>liso</strong>: el avión sube y baja sin zarandeo. La turbulencia de verdad está <strong>debajo</strong>, en el rotor, y es la que puede ser severa.</li>
-  </ul><!--ph:fuji--><figure class="mfig"><img src="img/ph-fuji.jpg" alt="Lenticulares apiladas sobre una cima" loading="lazy"><figcaption>Lenticulares <strong>apiladas sobre una cima</strong>: lentes lisas e inmóviles. Aire estable y viento fuerte cruzando la montaña: onda de montaña.</figcaption></figure>
-    </div>
-  </details>
-  <details class="lo atpl" id="lo-050.02.07" data-lo="050.02.07">
-    <summary><span class="lonum">050.02.07</span><span class="lotitle">Jet streams</span></summary>
-    <div class="body">
-  <div class="atplbox"><b>ATPL · ampliación</b>
-    <p>Esto no entró en MET-1 a MET-4. Está montado desde los objetivos de aprendizaje de EASA, que es lo que se mide.</p></div>
-  <p>Un <span class="en">jet stream</span> es una banda estrecha de viento muy fuerte justo bajo la tropopausa. Para que se llame jet, el núcleo tiene que alcanzar <b>60 kt</b> o más (en la carta SIGWX solo se dibujan los de 80 kt o más).</p>
-  <ul>
-    <li><b>Por qué existe:</b> un gradiente HORIZONTAL de temperatura fuerte entre dos masas hace que el gradiente de presión crezca con la altura. Ese «viento térmico» es el jet. Sin contraste de masas, no hay jet.</li>
-    <li><b>Jet del frente polar:</b> en torno a <b>FL300</b>, latitudes 40–60°, serpenteante, discontinuo. En invierno es <b>más fuerte</b> y baja de latitud.</li>
-    <li><b>Jet subtropical:</b> más alto, sobre <b>FL400</b>, en 25–30°, más estable y continuo.</li>
-    <li><b>Sentido:</b> de <b>oeste a este</b> en los dos hemisferios. Por eso el vuelo al este lo busca y el vuelo al oeste lo evita.</li>
-    <li><b>Dimensiones típicas:</b> unos 2.000 NM de largo, 200 NM de ancho y 1 a 2 km de espesor.</li>
-  </ul>
-  <div class="key"><b>Importante</b>
-    <p>La <span class="en">clear air turbulence</span> (CAT) es máxima en el <b>lado frío</b> del núcleo y algo <b>por debajo</b> de la tropopausa, donde la cizalladura es mayor. El núcleo en sí suele dar vuelo liso. Salida recomendada de una CAT: cambiar de nivel y alejarse hacia el lado cálido.</p></div>
+
+  <div class="diagram wide" id="diaCircul">
+    <svg viewBox="0 0 440 230" role="img" aria-label="Corte del hemisferio norte del ecuador al polo con tres células que llegan a la tropopausa: Hadley entre el ecuador y los anticiclones subtropicales, Ferrel en latitudes medias y la célula polar. Anticiclones en la zona subtropical y en el polo, convergencia entre el aire subtropical y el polar.">
+      <line x1="30" y1="40" x2="420" y2="70" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text x="34" y="32" font-family="var(--mono)" font-size="9" letter-spacing="1" fill="var(--accent)">TROPOPAUSA</text>
+      <line x1="30" y1="190" x2="420" y2="190" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="30" y="190" width="150" height="8" fill="var(--bad-soft)"/>
+      <rect x="180" y="190" width="130" height="8" fill="var(--caution-soft)"/>
+      <rect x="310" y="190" width="110" height="8" fill="var(--accent-soft)"/>
+      <ellipse cx="105" cy="118" rx="62" ry="58" fill="none" stroke="var(--bad)" stroke-width="2"/>
+      <ellipse cx="245" cy="126" rx="52" ry="50" fill="none" stroke="var(--caution)" stroke-width="2"/>
+      <ellipse cx="365" cy="134" rx="46" ry="44" fill="none" stroke="var(--ok)" stroke-width="2"/>
+      <text x="105" y="122" text-anchor="middle" font-family="var(--sans)" font-size="15" font-weight="700" fill="var(--bad)">Hadley</text>
+      <text x="245" y="130" text-anchor="middle" font-family="var(--sans)" font-size="15" font-weight="700" fill="var(--caution)">Ferrel</text>
+      <text x="365" y="138" text-anchor="middle" font-family="var(--sans)" font-size="15" font-weight="700" fill="var(--ok)">Polar</text>
+      <text x="30" y="214" font-family="var(--mono)" font-size="9" fill="var(--muted)">0° ecuador</text>
+      <text x="180" y="214" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">~30°</text>
+      <text x="310" y="214" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">~60°</text>
+      <text x="420" y="214" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--muted)">90° polo</text>
+      <text x="180" y="184" text-anchor="middle" font-family="var(--sans)" font-size="14" font-weight="700" fill="var(--ok)">H</text>
+      <text x="410" y="184" text-anchor="middle" font-family="var(--sans)" font-size="14" font-weight="700" fill="var(--ok)">H</text>
+      <text x="310" y="184" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">convergencia</text>
+      <text x="60" y="184" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">asciende</text>
+    </svg>
+    <p class="dia-cap">Las latitudes aproximadas (0°, 30°, 60°, 90°) son un <strong>complemento</strong>: en clase se dio por masas de aire. Anticiclones en la zona subtropical y en el polo; convergencia donde choca el aire polar con el subtropical.</p>
+  </div>
     </div>
   </details>
   <details class="lo" id="lo-050.02.04" data-lo="050.02.04">
@@ -1525,134 +1592,54 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </div>
     </div>
   </details>
-  <details class="lo" id="lo-050.02.01" data-lo="050.02.01">
-    <summary><span class="lonum">050.02.01</span><span class="lotitle">Definition and measurement of wind</span></summary>
+  <details class="lo" id="lo-050.02.05" data-lo="050.02.05">
+    <summary><span class="lonum">050.02.05</span><span class="lotitle">Mountain waves (standing waves, lee waves)</span></summary>
     <div class="body">
-
-  <h3>Cómo se mide</h3>
-  <p>El viento es un <span class="en">vector</span>: tiene <strong>dirección</strong> e <strong>intensidad</strong>.</p>
-
-  <div class="axiom">
-    <span class="k">Muy importante</span>
-    <p>La dirección del viento es siempre desde dónde VIENE.</p>
-    <p class="sub">Se da en grados como un rumbo: viento del norte 360 (o 000), del este 090, del sur 180, del oeste 270. Un «viento 270» sopla desde el oeste hacia el este. La flecha de la veleta apunta hacia donde viene el viento.</p>
-  </div>
-
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Dato</th><th>Cómo se da</th></tr></thead>
-      <tbody>
-        <tr><td class="k">Dirección magnética</td><td>La usa la <strong>aviación</strong> (<span class="en">magnetic north</span>, norte magnético)</td></tr>
-        <tr><td class="k">Dirección verdadera</td><td>La usan los <strong>meteorólogos</strong> (<span class="en">true north</span>, norte geográfico)</td></tr>
-        <tr><td class="k">Intensidad</td><td>En <span class="en">knots</span> (nudos, kt) = millas náuticas por hora. <span class="n">1 NM = 1,852 km</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-  <h4>Las plumas del viento (wind barbs)</h4>
-  <div class="diagram wide" id="diaMedida">
-    <svg viewBox="0 0 440 170" role="img" aria-label="Plumas de viento: media pluma 5 nudos, pluma entera 10 nudos, banderín 50 nudos. Las plumas van en el extremo del que viene el viento. Ejemplo: viento del oeste, 270 grados, de 65 nudos.">
-      <g stroke="var(--ink)" stroke-width="2" fill="none">
-        <line x1="40" y1="100" x2="40" y2="30"/><line x1="40" y1="30" x2="54" y2="24"/>
-        <line x1="120" y1="100" x2="120" y2="30"/><line x1="120" y1="30" x2="146" y2="20"/>
-        <line x1="200" y1="100" x2="200" y2="30"/>
-      </g>
-      <path d="M200 30 L226 22 L200 46 Z" fill="var(--ink)"/>
-      <circle cx="40" cy="104" r="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
-      <circle cx="120" cy="104" r="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
-      <circle cx="200" cy="104" r="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
-      <text x="40" y="128" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--ink)">5 kt</text>
-      <text x="40" y="142" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">media</text>
-      <text x="120" y="128" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--ink)">10 kt</text>
-      <text x="120" y="142" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">entera</text>
-      <text x="200" y="128" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--ink)">50 kt</text>
-      <text x="200" y="142" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">banderín</text>
-
-      <g stroke="var(--accent)" stroke-width="2" fill="none">
-        <line x1="300" y1="80" x2="420" y2="80"/>
-        <line x1="316" y1="80" x2="306" y2="58"/>
-        <line x1="328" y1="80" x2="322" y2="68"/>
-      </g>
-      <path d="M300 80 L290 56 L312 80 Z" fill="var(--accent)"/>
-      <circle cx="420" cy="80" r="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
-      <text x="360" y="112" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--accent)">270° / 65 kt</text>
-      <text x="360" y="128" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">50 + 10 + 5 · viene del oeste</text>
-      <text x="300" y="40" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">W</text>
-      <text x="420" y="64" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">estación</text>
-    </svg>
-    <p class="dia-cap">Se suman: banderín 50, pluma entera 10, media 5. Las plumas van en el extremo <strong>del que viene</strong> el viento; el círculo es la estación.</p>
-  </div>
+  <h4>Ondas de montaña · las cifras que caen</h4>
+  <ul>
+    <li>Viento de <strong>más de 15 kt</strong> soplando a <strong>menos de 30° de la perpendicular</strong> a la cordillera.</li>
+    <li><strong>Aire estable</strong>: si fuera inestable el aire subiría y no ondularía.</li>
+    <li>La intensidad <strong>aumenta con la altura</strong>, y lo más fuerte está <strong>sobre la cima y en la primera ondulación</strong> a sotavento.</li>
+    <li>La firma visible son el <strong><span class="en">cap cloud</span></strong> sobre la cima —la «nube de boina»— y los <strong>altocúmulos lenticulares</strong> en las crestas de la onda.</li>
+    <li>Dentro de la onda en sí el aire va <strong>liso</strong>: el avión sube y baja sin zarandeo. La turbulencia de verdad está <strong>debajo</strong>, en el rotor, y es la que puede ser severa.</li>
+  </ul><!--ph:fuji--><figure class="mfig"><img src="img/ph-fuji.jpg" alt="Lenticulares apiladas sobre una cima" loading="lazy"><figcaption>Lenticulares <strong>apiladas sobre una cima</strong>: lentes lisas e inmóviles. Aire estable y viento fuerte cruzando la montaña: onda de montaña.</figcaption></figure>
     </div>
   </details>
-  <details class="lo" id="lo-050.02.03" data-lo="050.02.03">
-    <summary><span class="lonum">050.02.03</span><span class="lotitle">General global circulation</span></summary>
+  <details class="lo" id="lo-050.02.06" data-lo="050.02.06">
+    <summary><span class="lonum">050.02.06</span><span class="lotitle">Turbulence</span></summary>
     <div class="body">
-  <h3>Circulación general del aire</h3>
-  <p>Cada hemisferio tiene tres <span class="en">cells</span> (células) de circulación que llegan hasta la tropopausa, cada una en una masa de aire.</p>
-
+  <h4>Tipos por origen</h4>
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Célula</th><th>Masa de aire</th><th>Detalle</th></tr></thead>
+      <thead><tr><th>Tipo</th><th>Origen</th><th>Dónde e intensidad</th></tr></thead>
       <tbody>
-        <tr><td class="k">Hadley cell</td><td>Equatorial air mass (ecuatorial)</td><td>El aire sube en el ecuador y baja en los anticiclones subtropicales</td></tr>
-        <tr><td class="k">Ferrel cell</td><td>Subtropical air mass (subtropical, donde está España)</td><td>Entre los anticiclones subtropicales y la zona donde choca con el aire polar</td></tr>
-        <tr><td class="k">Polar cell</td><td>Polar air mass (polar)</td><td>Anticiclón polar. Donde el aire polar choca con el subtropical se forma una zona de convergencia</td></tr>
+        <tr><td class="k">Mecánica</td><td>Obstáculos físicos: edificios, montañas</td><td><strong>A sotavento</strong> del obstáculo y a baja cota. Normalmente ligera</td></tr>
+        <tr><td class="k">Térmica<br><span style="font-weight:400;color:var(--muted)">o convectiva</span></td><td>Remolinos por las corrientes verticales que genera el calor del suelo</td><td>Ligera pero <strong>muy incómoda</strong>. Más fuerte en verano al mediodía solar</td></tr>
+        <tr><td class="k">De estela<br><span class="en" style="font-weight:400">wake turbulence</span></td><td>Torbellinos de punta de ala (<span class="en">wingtip vortices</span>)</td><td>La intensidad depende de la <strong>categoría del avión</strong> que va delante</td></tr>
+        <tr><td class="k">Ondas de montaña</td><td>Viento fuerte y estable cruzando una cordillera</td><td>Ver abajo</td></tr>
       </tbody>
     </table>
-  </div>
-
-  <div class="diagram wide" id="diaCircul">
-    <svg viewBox="0 0 440 230" role="img" aria-label="Corte del hemisferio norte del ecuador al polo con tres células que llegan a la tropopausa: Hadley entre el ecuador y los anticiclones subtropicales, Ferrel en latitudes medias y la célula polar. Anticiclones en la zona subtropical y en el polo, convergencia entre el aire subtropical y el polar.">
-      <line x1="30" y1="40" x2="420" y2="70" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 4"/>
-      <text x="34" y="32" font-family="var(--mono)" font-size="9" letter-spacing="1" fill="var(--accent)">TROPOPAUSA</text>
-      <line x1="30" y1="190" x2="420" y2="190" stroke="var(--ink)" stroke-width="2"/>
-      <rect x="30" y="190" width="150" height="8" fill="var(--bad-soft)"/>
-      <rect x="180" y="190" width="130" height="8" fill="var(--caution-soft)"/>
-      <rect x="310" y="190" width="110" height="8" fill="var(--accent-soft)"/>
-      <ellipse cx="105" cy="118" rx="62" ry="58" fill="none" stroke="var(--bad)" stroke-width="2"/>
-      <ellipse cx="245" cy="126" rx="52" ry="50" fill="none" stroke="var(--caution)" stroke-width="2"/>
-      <ellipse cx="365" cy="134" rx="46" ry="44" fill="none" stroke="var(--ok)" stroke-width="2"/>
-      <text x="105" y="122" text-anchor="middle" font-family="var(--sans)" font-size="15" font-weight="700" fill="var(--bad)">Hadley</text>
-      <text x="245" y="130" text-anchor="middle" font-family="var(--sans)" font-size="15" font-weight="700" fill="var(--caution)">Ferrel</text>
-      <text x="365" y="138" text-anchor="middle" font-family="var(--sans)" font-size="15" font-weight="700" fill="var(--ok)">Polar</text>
-      <text x="30" y="214" font-family="var(--mono)" font-size="9" fill="var(--muted)">0° ecuador</text>
-      <text x="180" y="214" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">~30°</text>
-      <text x="310" y="214" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--muted)">~60°</text>
-      <text x="420" y="214" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--muted)">90° polo</text>
-      <text x="180" y="184" text-anchor="middle" font-family="var(--sans)" font-size="14" font-weight="700" fill="var(--ok)">H</text>
-      <text x="410" y="184" text-anchor="middle" font-family="var(--sans)" font-size="14" font-weight="700" fill="var(--ok)">H</text>
-      <text x="310" y="184" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">convergencia</text>
-      <text x="60" y="184" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="var(--muted)">asciende</text>
-    </svg>
-    <p class="dia-cap">Las latitudes aproximadas (0°, 30°, 60°, 90°) son un <strong>complemento</strong>: en clase se dio por masas de aire. Anticiclones en la zona subtropical y en el polo; convergencia donde choca el aire polar con el subtropical.</p>
   </div>
     </div>
   </details>
 </section>
 <section>
   <h2>050.03 · Thermodynamics <span class="wtag">3 preg. · 4 %</span></h2>
-  <details class="lo" id="lo-050.03.02" data-lo="050.03.02">
-    <summary><span class="lonum">050.03.02</span><span class="lotitle">Change of state of water</span></summary>
+  <details class="lo atpl" id="lo-050.02.07" data-lo="050.02.07">
+    <summary><span class="lonum">050.02.07</span><span class="lotitle">Jet streams</span></summary>
     <div class="body">
-  <p>El agua está en la atmósfera en los tres estados y cambia de uno a otro sin parar. Cada cambio <b>absorbe o libera calor latente</b>, y eso es lo que mueve la energía de la atmósfera.</p>
-  <div class="tablewrap"><table>
-    <thead><tr><th>Cambio</th><th>Nombre</th><th>Calor</th></tr></thead>
-    <tbody>
-      <tr><td class="k">Líquido → vapor</td><td><span class="en">Evaporation</span></td><td>Absorbe (enfría el entorno)</td></tr>
-      <tr><td class="k">Vapor → líquido</td><td><span class="en">Condensation</span></td><td>Libera (calienta el entorno)</td></tr>
-      <tr><td class="k">Sólido → vapor</td><td><span class="en">Sublimation</span></td><td>Absorbe</td></tr>
-      <tr><td class="k">Vapor → sólido</td><td><span class="en">Deposition</span></td><td>Libera</td></tr>
-      <tr><td class="k">Sólido → líquido</td><td><span class="en">Melting</span></td><td>Absorbe</td></tr>
-      <tr><td class="k">Líquido → sólido</td><td><span class="en">Freezing</span></td><td>Libera</td></tr>
-    </tbody>
-  </table></div>
+  <div class="atplbox"><b>ATPL · ampliación</b>
+    <p>Esto no entró en MET-1 a MET-4. Está montado desde los objetivos de aprendizaje de EASA, que es lo que se mide.</p></div>
+  <p>Un <span class="en">jet stream</span> es una banda estrecha de viento muy fuerte justo bajo la tropopausa. Para que se llame jet, el núcleo tiene que alcanzar <b>60 kt</b> o más (en la carta SIGWX solo se dibujan los de 80 kt o más).</p>
   <ul>
-    <li>Al condensar, el vapor <b>libera</b> calor latente: eso es lo que alimenta la tormenta y lo que hace que una masa saturada se enfríe más despacio al ascender (0,6 °C/100 m en vez de 1 °C/100 m).</li>
-    <li>Al evaporarse, el agua <b>absorbe</b> calor: por eso la lluvia que se evapora bajo la nube enfría el aire y refuerza la descendente.</li>
-    <li><b>Agua subenfriada</b> (<span class="en">supercooled</span>): agua todavía líquida por debajo de 0 °C. Necesita un núcleo de congelación para solidificar, y mientras no lo encuentra se queda líquida hasta unos −40 °C. Es el origen del engelamiento.</li>
-    <li>En una nube mixta, los <b>cristales de hielo crecen a costa de las gotas</b> (proceso de Bergeron): el hielo satura antes que el agua, así que el vapor se deposita en el cristal y la gota se evapora.</li>
+    <li><b>Por qué existe:</b> un gradiente HORIZONTAL de temperatura fuerte entre dos masas hace que el gradiente de presión crezca con la altura. Ese «viento térmico» es el jet. Sin contraste de masas, no hay jet.</li>
+    <li><b>Jet del frente polar:</b> en torno a <b>FL300</b>, latitudes 40–60°, serpenteante, discontinuo. En invierno es <b>más fuerte</b> y baja de latitud.</li>
+    <li><b>Jet subtropical:</b> más alto, sobre <b>FL400</b>, en 25–30°, más estable y continuo.</li>
+    <li><b>Sentido:</b> de <b>oeste a este</b> en los dos hemisferios. Por eso el vuelo al este lo busca y el vuelo al oeste lo evita.</li>
+    <li><b>Dimensiones típicas:</b> unos 2.000 NM de largo, 200 NM de ancho y 1 a 2 km de espesor.</li>
   </ul>
-  <div class="flag"><b>Trampa</b>
-    <p>Humedad es agua en estado de <b>VAPOR</b>. El agua líquida de una nube o el hielo de un cirro no cuentan como humedad: ya han cambiado de estado.</p></div>
+  <div class="key"><b>Importante</b>
+    <p>La <span class="en">clear air turbulence</span> (CAT) es máxima en el <b>lado frío</b> del núcleo y algo <b>por debajo</b> de la tropopausa, donde la cizalladura es mayor. El núcleo en sí suele dar vuelo liso. Salida recomendada de una CAT: cambiar de nivel y alejarse hacia el lado cálido.</p></div>
     </div>
   </details>
   <details class="lo" id="lo-050.03.01" data-lo="050.03.01">
@@ -1699,6 +1686,34 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </ul>
     </div>
   </details>
+  <details class="lo" id="lo-050.03.02" data-lo="050.03.02">
+    <summary><span class="lonum">050.03.02</span><span class="lotitle">Change of state of water</span></summary>
+    <div class="body">
+  <p>El agua está en la atmósfera en los tres estados y cambia de uno a otro sin parar. Cada cambio <b>absorbe o libera calor latente</b>, y eso es lo que mueve la energía de la atmósfera.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Cambio</th><th>Nombre</th><th>Calor</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Líquido → vapor</td><td><span class="en">Evaporation</span></td><td>Absorbe (enfría el entorno)</td></tr>
+      <tr><td class="k">Vapor → líquido</td><td><span class="en">Condensation</span></td><td>Libera (calienta el entorno)</td></tr>
+      <tr><td class="k">Sólido → vapor</td><td><span class="en">Sublimation</span></td><td>Absorbe</td></tr>
+      <tr><td class="k">Vapor → sólido</td><td><span class="en">Deposition</span></td><td>Libera</td></tr>
+      <tr><td class="k">Sólido → líquido</td><td><span class="en">Melting</span></td><td>Absorbe</td></tr>
+      <tr><td class="k">Líquido → sólido</td><td><span class="en">Freezing</span></td><td>Libera</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>Al condensar, el vapor <b>libera</b> calor latente: eso es lo que alimenta la tormenta y lo que hace que una masa saturada se enfríe más despacio al ascender (0,6 °C/100 m en vez de 1 °C/100 m).</li>
+    <li>Al evaporarse, el agua <b>absorbe</b> calor: por eso la lluvia que se evapora bajo la nube enfría el aire y refuerza la descendente.</li>
+    <li><b>Agua subenfriada</b> (<span class="en">supercooled</span>): agua todavía líquida por debajo de 0 °C. Necesita un núcleo de congelación para solidificar, y mientras no lo encuentra se queda líquida hasta unos −40 °C. Es el origen del engelamiento.</li>
+    <li>En una nube mixta, los <b>cristales de hielo crecen a costa de las gotas</b> (proceso de Bergeron): el hielo satura antes que el agua, así que el vapor se deposita en el cristal y la gota se evapora.</li>
+  </ul>
+  <div class="flag"><b>Trampa</b>
+    <p>Humedad es agua en estado de <b>VAPOR</b>. El agua líquida de una nube o el hielo de un cirro no cuentan como humedad: ya han cambiado de estado.</p></div>
+    </div>
+  </details>
+</section>
+<section>
+  <h2>050.04 · Clouds and fog <span class="wtag">8 preg. · 10 %</span></h2>
   <details class="lo" id="lo-050.03.03" data-lo="050.03.03">
     <summary><span class="lonum">050.03.03</span><span class="lotitle">Adiabatic processes</span></summary>
     <div class="body">
@@ -1713,54 +1728,6 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
     </table>
   </div>
   <p>Las nubes también se disipan por <strong>mezcla con aire más seco</strong> de los alrededores o por <strong>corrientes verticales descendentes</strong>. Y una misma nube puede tener a la vez parte de agua líquida y parte de hielo.</p>
-    </div>
-  </details>
-</section>
-<section>
-  <h2>050.04 · Clouds and fog <span class="wtag">8 preg. · 10 %</span></h2>
-  <details class="lo" id="lo-050.04.02" data-lo="050.04.02">
-    <summary><span class="lonum">050.04.02</span><span class="lotitle">Fog, mist, haze</span></summary>
-    <div class="body">
-  <h4>Dos mecanismos, cinco tipos</h4>
-  <p>La forma de ordenarlos: una niebla se forma <strong>enfriando el aire</strong> hasta su punto de rocío, o bien <strong>añadiéndole agua</strong> hasta saturarlo.</p>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Mecanismo</th><th>Tipos</th></tr></thead>
-      <tbody>
-        <tr><td class="k">Por <strong>enfriamiento</strong><br><span class="en" style="font-weight:400">cooling</span></td><td>Radiación · Advección · Orográfica</td></tr>
-        <tr><td class="k">Por <strong>aporte de agua</strong><br><span class="en" style="font-weight:400">adding water</span></td><td>Frontal · <span class="en">Sea smoke</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>La <b>escalera del viento</b> de la pizarra: sin viento rocío, de 1 a 5 kt niebla, de 5 a 10 kt neblina y por encima de 10 kt estrato.</li>
-    <li>Las cifras que separan <b>niebla (menos de 1.000 m)</b> de <b>neblina (1.000 a 5.000 m)</b>.</li>
-  </ul></div>
-
-  <div class="axiom">
-    <span class="k">La escalera del viento, tal como la explicó en clase</span>
-    <p><strong>Sin viento</strong> la humedad se queda pegada al suelo y sale rocío &nbsp;→&nbsp; <strong>1 a 5 kt: NIEBLA</strong> &nbsp;→&nbsp; <strong>5 a 10 kt: NEBLINA</strong> &nbsp;→&nbsp; <strong>más de 10 kt: la capa se levanta y es un ESTRATO</strong>.</p>
-    <p class="sub">Es una regla de aula para entender que todo depende de cuánto se mezcle el aire, y no cuadra al dedillo con las cifras del temario (radiación con 2 a 8 kt, advección con hasta 15 kt). <strong>Manda la cifra oficial</strong>; esta escalera sirve para razonar el porqué.</p>
-  </div>
-  <h4>Los cinco tipos de niebla</h4>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Tipo</th><th>Cómo se forma</th><th>Condiciones</th><th>Cómo se deshace</th></tr></thead>
-      <tbody>
-        <tr><td class="k"><span class="en">Radiation fog</span><br><span style="font-weight:400;color:var(--muted)">de radiación</span></td><td>El suelo irradia su calor de noche y enfría por contacto el aire que tiene encima <strong>por debajo del punto de rocío</strong></td><td><strong>Cielo despejado</strong>, <strong>humedad alta</strong> y <strong>viento flojo de 2 a 8 kt</strong>. En calma total sale rocío, no niebla. Otoño e invierno, de noche y primera hora. <strong>Solo sobre tierra</strong>, primero en los valles, y en anticiclones, dorsales y collados</td><td>Con el <strong>sol</strong> (la convección la levanta) o con <strong>viento fuerte</strong>, que la sube y la convierte en estrato</td></tr>
-        <tr><td class="k"><span class="en">Advection fog</span><br><span style="font-weight:400;color:var(--muted)">de advección</span></td><td>Aire <strong>cálido y húmedo</strong> que se desplaza <strong>sobre una superficie fría</strong>, de tierra o de mar</td><td>Viento <strong>de hasta 15 kt</strong> para mover la masa, RH alta, y la superficie más fría que el punto de rocío del aire. Sobre tierra en invierno; sobre el mar a final de primavera</td><td>Con un <strong>cambio de masa de aire</strong> o si el viento <strong>pasa de 15 kt</strong>, que la levanta a estrato</td></tr>
-        <tr><td class="k"><span class="en">Orographic fog</span><br><span style="font-weight:400;color:var(--muted)">o hill fog</span></td><td>Aire húmedo que <strong>sube por la ladera</strong> y satura: es una nube pegada al monte</td><td>Visibilidad de <strong>200 m o menos</strong></td><td>Es local y pequeña: no afecta a las operaciones</td></tr>
-        <tr><td class="k"><span class="en">Steaming fog</span><br><span style="font-weight:400;color:var(--muted)">humo ártico · sea smoke</span></td><td>Aire <strong>frío</strong> de tierra que pasa <strong>sobre agua más cálida</strong>: la evaporación satura el aire frío</td><td>El aire debe ser <strong>muy estable</strong>. Hasta <strong>500 ft</strong> de espesor. Típica de fiordos y latitudes altas</td><td>Aumento de la intensidad o <strong>cambio de dirección</strong> del viento</td></tr>
-        <tr><td class="k"><span class="en">Frontal fog</span></td><td>En un <strong>frente cálido u ocluido</strong>: la precipitación satura el aire y baja la base de la nube hasta el suelo</td><td>Banda de hasta <strong>200 NM</strong> de ancho que <strong>viaja con el frente</strong>. El relieve la agrava</td><td>Cuando <strong>pasa el frente</strong></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="caution note">
-    <span class="tag">Nota de precisión</span>
-    <p>En muchos apuntes pone que la niebla de advección <em>«puede aguantar con viento de 15 a 25 kt»</em>. El criterio oficial dice lo contrario: se forma con viento <strong>de hasta 15 kt</strong>, y <strong>por encima de 15 kt se levanta y se convierte en estrato</strong>. Quédate con la versión oficial.</p>
-  </div>
     </div>
   </details>
   <details class="lo" id="lo-050.04.01" data-lo="050.04.01">
@@ -1879,6 +1846,67 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
 </section>
 <section>
   <h2>050.05 · Precipitation <span class="wtag">2 preg. · 2 %</span></h2>
+  <details class="lo" id="lo-050.04.02" data-lo="050.04.02">
+    <summary><span class="lonum">050.04.02</span><span class="lotitle">Fog, mist, haze</span></summary>
+    <div class="body">
+  <h4>Dos mecanismos, cinco tipos</h4>
+  <p>La forma de ordenarlos: una niebla se forma <strong>enfriando el aire</strong> hasta su punto de rocío, o bien <strong>añadiéndole agua</strong> hasta saturarlo.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Mecanismo</th><th>Tipos</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Por <strong>enfriamiento</strong><br><span class="en" style="font-weight:400">cooling</span></td><td>Radiación · Advección · Orográfica</td></tr>
+        <tr><td class="k">Por <strong>aporte de agua</strong><br><span class="en" style="font-weight:400">adding water</span></td><td>Frontal · <span class="en">Sea smoke</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>La <b>escalera del viento</b> de la pizarra: sin viento rocío, de 1 a 5 kt niebla, de 5 a 10 kt neblina y por encima de 10 kt estrato.</li>
+    <li>Las cifras que separan <b>niebla (menos de 1.000 m)</b> de <b>neblina (1.000 a 5.000 m)</b>.</li>
+  </ul></div>
+
+  <div class="axiom">
+    <span class="k">La escalera del viento, tal como la explicó en clase</span>
+    <p><strong>Sin viento</strong> la humedad se queda pegada al suelo y sale rocío &nbsp;→&nbsp; <strong>1 a 5 kt: NIEBLA</strong> &nbsp;→&nbsp; <strong>5 a 10 kt: NEBLINA</strong> &nbsp;→&nbsp; <strong>más de 10 kt: la capa se levanta y es un ESTRATO</strong>.</p>
+    <p class="sub">Es una regla de aula para entender que todo depende de cuánto se mezcle el aire, y no cuadra al dedillo con las cifras del temario (radiación con 2 a 8 kt, advección con hasta 15 kt). <strong>Manda la cifra oficial</strong>; esta escalera sirve para razonar el porqué.</p>
+  </div>
+  <h4>Los cinco tipos de niebla</h4>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Cómo se forma</th><th>Condiciones</th><th>Cómo se deshace</th></tr></thead>
+      <tbody>
+        <tr><td class="k"><span class="en">Radiation fog</span><br><span style="font-weight:400;color:var(--muted)">de radiación</span></td><td>El suelo irradia su calor de noche y enfría por contacto el aire que tiene encima <strong>por debajo del punto de rocío</strong></td><td><strong>Cielo despejado</strong>, <strong>humedad alta</strong> y <strong>viento flojo de 2 a 8 kt</strong>. En calma total sale rocío, no niebla. Otoño e invierno, de noche y primera hora. <strong>Solo sobre tierra</strong>, primero en los valles, y en anticiclones, dorsales y collados</td><td>Con el <strong>sol</strong> (la convección la levanta) o con <strong>viento fuerte</strong>, que la sube y la convierte en estrato</td></tr>
+        <tr><td class="k"><span class="en">Advection fog</span><br><span style="font-weight:400;color:var(--muted)">de advección</span></td><td>Aire <strong>cálido y húmedo</strong> que se desplaza <strong>sobre una superficie fría</strong>, de tierra o de mar</td><td>Viento <strong>de hasta 15 kt</strong> para mover la masa, RH alta, y la superficie más fría que el punto de rocío del aire. Sobre tierra en invierno; sobre el mar a final de primavera</td><td>Con un <strong>cambio de masa de aire</strong> o si el viento <strong>pasa de 15 kt</strong>, que la levanta a estrato</td></tr>
+        <tr><td class="k"><span class="en">Orographic fog</span><br><span style="font-weight:400;color:var(--muted)">o hill fog</span></td><td>Aire húmedo que <strong>sube por la ladera</strong> y satura: es una nube pegada al monte</td><td>Visibilidad de <strong>200 m o menos</strong></td><td>Es local y pequeña: no afecta a las operaciones</td></tr>
+        <tr><td class="k"><span class="en">Steaming fog</span><br><span style="font-weight:400;color:var(--muted)">humo ártico · sea smoke</span></td><td>Aire <strong>frío</strong> de tierra que pasa <strong>sobre agua más cálida</strong>: la evaporación satura el aire frío</td><td>El aire debe ser <strong>muy estable</strong>. Hasta <strong>500 ft</strong> de espesor. Típica de fiordos y latitudes altas</td><td>Aumento de la intensidad o <strong>cambio de dirección</strong> del viento</td></tr>
+        <tr><td class="k"><span class="en">Frontal fog</span></td><td>En un <strong>frente cálido u ocluido</strong>: la precipitación satura el aire y baja la base de la nube hasta el suelo</td><td>Banda de hasta <strong>200 NM</strong> de ancho que <strong>viaja con el frente</strong>. El relieve la agrava</td><td>Cuando <strong>pasa el frente</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="caution note">
+    <span class="tag">Nota de precisión</span>
+    <p>En muchos apuntes pone que la niebla de advección <em>«puede aguantar con viento de 15 a 25 kt»</em>. El criterio oficial dice lo contrario: se forma con viento <strong>de hasta 15 kt</strong>, y <strong>por encima de 15 kt se levanta y se convierte en estrato</strong>. Quédate con la versión oficial.</p>
+  </div>
+    </div>
+  </details>
+  <details class="lo" id="lo-050.05.01" data-lo="050.05.01">
+    <summary><span class="lonum">050.05.01</span><span class="lotitle">Development of precipitation</span></summary>
+    <div class="body">
+  <p class="sec-label" id="diaIce">MET-3 · 030.11</p>
+  <div class="axiom">
+    <span class="k">Definición exacta</span>
+    <p>Hay precipitación cuando el agua llega al suelo.</p>
+    <p class="sub">Si se evapora por el camino, no es precipitación: es <span class="en">virga</span>. Es el típico enunciado de «lluvia que sale de la base de la nube pero no llega al suelo».</p>
+  </div>
+  <h4>Cómo crecen las gotas</h4>
+  <p><span class="en">Coalescence theory</span> (coalescencia): la gota más grande atrapa a las más pequeñas al caer y así crece hasta poder precipitar.</p>
+    </div>
+  </details>
+</section>
+<section>
+  <h2>050.06 · Air masses and fronts <span class="wtag">7 preg. · 8 %</span></h2>
   <details class="lo" id="lo-050.05.02" data-lo="050.05.02">
     <summary><span class="lonum">050.05.02</span><span class="lotitle">Types of precipitation</span></summary>
     <div class="body">
@@ -1908,22 +1936,27 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </div>
     </div>
   </details>
-  <details class="lo" id="lo-050.05.01" data-lo="050.05.01">
-    <summary><span class="lonum">050.05.01</span><span class="lotitle">Development of precipitation</span></summary>
+  <details class="lo" id="lo-050.06.01" data-lo="050.06.01">
+    <summary><span class="lonum">050.06.01</span><span class="lotitle">Air masses</span></summary>
     <div class="body">
-  <p class="sec-label" id="diaIce">MET-3 · 030.11</p>
-  <div class="axiom">
-    <span class="k">Definición exacta</span>
-    <p>Hay precipitación cuando el agua llega al suelo.</p>
-    <p class="sub">Si se evapora por el camino, no es precipitación: es <span class="en">virga</span>. Es el típico enunciado de «lluvia que sale de la base de la nube pero no llega al suelo».</p>
+
+  <h4>Masas de aire</h4>
+  <p>Una masa de aire es un <strong>gran volumen de aire</strong> con temperatura y humedad más o menos constantes en la horizontal. Adquiere esas propiedades al quedarse parada sobre una superficie uniforme, que siempre es una <strong>zona de altas presiones</strong>. Por eso <strong>en origen toda masa de aire es estable</strong>.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Se nombra por</th><th>Opciones</th><th>Qué implica</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Latitud · temperatura</td><td><strong>Polar</strong>, <strong>Tropical</strong> (y Ártica)</td><td>Polar hacia latitudes bajas: se calienta por abajo y se vuelve <strong>inestable</strong>. Tropical hacia latitudes altas: se enfría por abajo y se vuelve <strong>estable</strong></td></tr>
+        <tr><td class="k">Origen · humedad</td><td><strong>Marítima</strong> o <strong>Continental</strong></td><td>Marítima: absorbe humedad y satura en capas bajas. Continental: se mantiene seca</td></tr>
+      </tbody>
+    </table>
   </div>
-  <h4>Cómo crecen las gotas</h4>
-  <p><span class="en">Coalescence theory</span> (coalescencia): la gota más grande atrapa a las más pequeñas al caer y así crece hasta poder precipitar.</p>
+  <p>De ahí salen las cuatro: <strong>PM</strong> (<span class="en">Polar Maritime</span>), <strong>PC</strong> (<span class="en">Polar Continental</span>), <strong>TM</strong> (<span class="en">Tropical Maritime</span>) y <strong>TC</strong> (<span class="en">Tropical Continental</span>).</p>
     </div>
   </details>
 </section>
 <section>
-  <h2>050.06 · Air masses and fronts <span class="wtag">7 preg. · 8 %</span></h2>
+  <h2>050.07 · Pressure systems <span class="wtag">6 preg. · 7 %</span></h2>
   <details class="lo" id="lo-050.06.02" data-lo="050.06.02">
     <summary><span class="lonum">050.06.02</span><span class="lotitle">Fronts</span></summary>
     <div class="body">
@@ -1976,67 +2009,6 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </div>
     </div>
   </details>
-  <details class="lo" id="lo-050.06.01" data-lo="050.06.01">
-    <summary><span class="lonum">050.06.01</span><span class="lotitle">Air masses</span></summary>
-    <div class="body">
-
-  <h4>Masas de aire</h4>
-  <p>Una masa de aire es un <strong>gran volumen de aire</strong> con temperatura y humedad más o menos constantes en la horizontal. Adquiere esas propiedades al quedarse parada sobre una superficie uniforme, que siempre es una <strong>zona de altas presiones</strong>. Por eso <strong>en origen toda masa de aire es estable</strong>.</p>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Se nombra por</th><th>Opciones</th><th>Qué implica</th></tr></thead>
-      <tbody>
-        <tr><td class="k">Latitud · temperatura</td><td><strong>Polar</strong>, <strong>Tropical</strong> (y Ártica)</td><td>Polar hacia latitudes bajas: se calienta por abajo y se vuelve <strong>inestable</strong>. Tropical hacia latitudes altas: se enfría por abajo y se vuelve <strong>estable</strong></td></tr>
-        <tr><td class="k">Origen · humedad</td><td><strong>Marítima</strong> o <strong>Continental</strong></td><td>Marítima: absorbe humedad y satura en capas bajas. Continental: se mantiene seca</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p>De ahí salen las cuatro: <strong>PM</strong> (<span class="en">Polar Maritime</span>), <strong>PC</strong> (<span class="en">Polar Continental</span>), <strong>TM</strong> (<span class="en">Tropical Maritime</span>) y <strong>TC</strong> (<span class="en">Tropical Continental</span>).</p>
-    </div>
-  </details>
-</section>
-<section>
-  <h2>050.07 · Pressure systems <span class="wtag">6 preg. · 7 %</span></h2>
-  <details class="lo" id="lo-050.07.02" data-lo="050.07.02">
-    <summary><span class="lonum">050.07.02</span><span class="lotitle">Anticyclone</span></summary>
-    <div class="body">
-  <p>Anticiclón (<span class="en">high</span>, H): el aire <b>divierge</b> en superficie y <b>desciende</b> (<span class="en">subsidence</span>). Al bajar se comprime, se calienta, baja la humedad relativa y las nubes se deshacen: buen tiempo.</p>
-  <ul>
-    <li>En el HN el aire gira en sentido <b>horario</b> alrededor de la alta; en el HS, antihorario.</li>
-    <li>Isobaras separadas = gradiente flojo = <b>poco viento</b>.</li>
-    <li>Prolongación alargada de una alta = <span class="en">ridge</span> (dorsal).</li>
-    <li>La subsidencia crea una <b>inversión en altura</b> que tapa el desarrollo vertical: en invierno da estratos bajos, niebla persistente y mala visibilidad; en verano, calima y bochorno.</li>
-  </ul>
-  <div class="flag"><b>Trampa</b>
-    <p>«Anticiclón = buen tiempo» vale para la nube de desarrollo, no para la <b>visibilidad</b>. El anticiclón frío de invierno es justo la situación de niebla que cierra aeropuertos.</p></div>
-  <div class="atplbox"><b>ATPL · ampliación ATPL</b>
-    <p>Tipos que se distinguen: <b>anticiclón cálido</b> (subtropical, se extiende hasta altos niveles, permanente, como el de las Azores) y <b>anticiclón frío</b> (térmico, somero, invernal, como el siberiano). El <b>anticiclón de bloqueo</b> se queda clavado y desvía las borrascas: misma situación durante días.</p></div>
-    </div>
-  </details>
-  <details class="lo atpl" id="lo-050.07.04" data-lo="050.07.04">
-    <summary><span class="lonum">050.07.04</span><span class="lotitle">Tropical revolving storms</span></summary>
-    <div class="body">
-  <div class="atplbox"><b>ATPL · ampliación</b>
-    <p>Capítulo entero sin dar en temario base y con peso real. Recreado desde los LO de EASA.</p></div>
-  <p><b>Ciclón tropical</b> (<span class="en">tropical revolving storm</span>): la borrasca más profunda que existe. Según la zona se llama huracán (Atlántico y Pacífico este), tifón (Pacífico oeste) o ciclón (Índico).</p>
-  <h4>Las condiciones para que nazca</h4>
-  <ul>
-    <li>Agua a <b>26–27 °C o más</b> y con profundidad suficiente: es el combustible.</li>
-    <li><b>Latitud entre 5° y 20°</b>: dentro de 5° del ecuador Coriolis es casi nulo y el sistema no puede girar.</li>
-    <li>Atmósfera inestable, mucha humedad y <b>poca cizalladura vertical</b>, que si no desarma la estructura.</li>
-    <li>Época: <b>final de verano y principio de otoño</b> (Atlántico norte, de junio a noviembre, pico en septiembre).</li>
-  </ul>
-  <h4>Estructura</h4>
-  <ul>
-    <li><b>Ojo</b> (<span class="en">eye</span>): 20–50 km, aire que DESCIENDE, viento flojo y cielo casi despejado.</li>
-    <li><b>Pared del ojo</b> (<span class="en">wall cloud</span>): CB de la superficie a la tropopausa y los <b>vientos máximos</b>. Es lo que destruye.</li>
-    <li><b>Bandas espirales</b> de chubascos hacia fuera, con rachas y engelamiento.</li>
-    <li>Presión central de 950 hPa o menos; vientos de 64 kt o más para que se llame huracán.</li>
-  </ul>
-  <div class="key"><b>Trayectoria</b>
-    <p>Nacen en el <b>este</b> del océano y van hacia el <b>OESTE</b> con los alisios a 10–15 kt; hacia los 20–25° de latitud <b>recurvan</b> hacia el polo y luego al este, perdiendo fuerza al pasar sobre tierra o agua fría.</p></div>
-    </div>
-  </details>
   <details class="lo" id="lo-050.07.01" data-lo="050.07.01">
     <summary><span class="lonum">050.07.01</span><span class="lotitle">The principal pressure areas</span></summary>
     <div class="body">
@@ -2065,6 +2037,22 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </div>
     </div>
   </details>
+  <details class="lo" id="lo-050.07.02" data-lo="050.07.02">
+    <summary><span class="lonum">050.07.02</span><span class="lotitle">Anticyclone</span></summary>
+    <div class="body">
+  <p>Anticiclón (<span class="en">high</span>, H): el aire <b>divierge</b> en superficie y <b>desciende</b> (<span class="en">subsidence</span>). Al bajar se comprime, se calienta, baja la humedad relativa y las nubes se deshacen: buen tiempo.</p>
+  <ul>
+    <li>En el HN el aire gira en sentido <b>horario</b> alrededor de la alta; en el HS, antihorario.</li>
+    <li>Isobaras separadas = gradiente flojo = <b>poco viento</b>.</li>
+    <li>Prolongación alargada de una alta = <span class="en">ridge</span> (dorsal).</li>
+    <li>La subsidencia crea una <b>inversión en altura</b> que tapa el desarrollo vertical: en invierno da estratos bajos, niebla persistente y mala visibilidad; en verano, calima y bochorno.</li>
+  </ul>
+  <div class="flag"><b>Trampa</b>
+    <p>«Anticiclón = buen tiempo» vale para la nube de desarrollo, no para la <b>visibilidad</b>. El anticiclón frío de invierno es justo la situación de niebla que cierra aeropuertos.</p></div>
+  <div class="atplbox"><b>ATPL · ampliación ATPL</b>
+    <p>Tipos que se distinguen: <b>anticiclón cálido</b> (subtropical, se extiende hasta altos niveles, permanente, como el de las Azores) y <b>anticiclón frío</b> (térmico, somero, invernal, como el siberiano). El <b>anticiclón de bloqueo</b> se queda clavado y desvía las borrascas: misma situación durante días.</p></div>
+    </div>
+  </details>
   <details class="lo" id="lo-050.07.03" data-lo="050.07.03">
     <summary><span class="lonum">050.07.03</span><span class="lotitle">Non-frontal depressions</span></summary>
     <div class="body">
@@ -2081,6 +2069,54 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
 </section>
 <section>
   <h2>050.08 · Climatology <span class="wtag">8 preg. · 10 %</span></h2>
+  <details class="lo atpl" id="lo-050.07.04" data-lo="050.07.04">
+    <summary><span class="lonum">050.07.04</span><span class="lotitle">Tropical revolving storms</span></summary>
+    <div class="body">
+  <div class="atplbox"><b>ATPL · ampliación</b>
+    <p>Capítulo entero sin dar en temario base y con peso real. Recreado desde los LO de EASA.</p></div>
+  <p><b>Ciclón tropical</b> (<span class="en">tropical revolving storm</span>): la borrasca más profunda que existe. Según la zona se llama huracán (Atlántico y Pacífico este), tifón (Pacífico oeste) o ciclón (Índico).</p>
+  <h4>Las condiciones para que nazca</h4>
+  <ul>
+    <li>Agua a <b>26–27 °C o más</b> y con profundidad suficiente: es el combustible.</li>
+    <li><b>Latitud entre 5° y 20°</b>: dentro de 5° del ecuador Coriolis es casi nulo y el sistema no puede girar.</li>
+    <li>Atmósfera inestable, mucha humedad y <b>poca cizalladura vertical</b>, que si no desarma la estructura.</li>
+    <li>Época: <b>final de verano y principio de otoño</b> (Atlántico norte, de junio a noviembre, pico en septiembre).</li>
+  </ul>
+  <h4>Estructura</h4>
+  <ul>
+    <li><b>Ojo</b> (<span class="en">eye</span>): 20–50 km, aire que DESCIENDE, viento flojo y cielo casi despejado.</li>
+    <li><b>Pared del ojo</b> (<span class="en">wall cloud</span>): CB de la superficie a la tropopausa y los <b>vientos máximos</b>. Es lo que destruye.</li>
+    <li><b>Bandas espirales</b> de chubascos hacia fuera, con rachas y engelamiento.</li>
+    <li>Presión central de 950 hPa o menos; vientos de 64 kt o más para que se llame huracán.</li>
+  </ul>
+  <div class="key"><b>Trayectoria</b>
+    <p>Nacen en el <b>este</b> del océano y van hacia el <b>OESTE</b> con los alisios a 10–15 kt; hacia los 20–25° de latitud <b>recurvan</b> hacia el polo y luego al este, perdiendo fuerza al pasar sobre tierra o agua fría.</p></div>
+    </div>
+  </details>
+  <details class="lo atpl" id="lo-050.08.01" data-lo="050.08.01">
+    <summary><span class="lonum">050.08.01</span><span class="lotitle">Climatic zones</span></summary>
+    <div class="body">
+  <div class="atplbox"><b>ATPL · ampliación</b>
+    <p>Todo el capítulo 050.08 (8 preguntas, casi un 10 %) se quedó fuera de temario base. Esto es lo que piden los LO.</p></div>
+  <p>Clasificación por latitud y por continentalidad:</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Zona</th><th>Temperatura</th><th>Precipitación</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Ecuatorial</td><td>Alta y casi constante</td><td>Abundante todo el año, convectiva de tarde</td></tr>
+      <tr><td class="k">Tropical</td><td>Alta, poca amplitud anual</td><td>Estación húmeda y estación seca</td></tr>
+      <tr><td class="k">Subtropical</td><td>Veranos calurosos, inviernos suaves</td><td>Verano seco (anticiclón), invierno lluvioso</td></tr>
+      <tr><td class="k">Templada</td><td>Cuatro estaciones marcadas</td><td>Repartida, de origen frontal</td></tr>
+      <tr><td class="k">Polar</td><td>Muy baja todo el año</td><td>Escasa: aire frío = poco vapor</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>Marítimo</b>: amplitud térmica pequeña, humedad alta, nubosidad y niebla frecuentes.</li>
+    <li><b>Continental</b>: amplitud térmica anual y diaria <b>grande</b>, aire más seco, más extremos.</li>
+    <li><b>Monzónico</b>: lo define la <b>inversión estacional del viento</b>, no la cantidad de lluvia.</li>
+  </ul>
+  <div class="key"><b>España</b><p>Subtropical mediterráneo: en verano manda el anticiclón de las Azores (seco) y en invierno bajan las borrascas del frente polar. El interior es continentalizado; las costas, marítimas.</p></div>
+    </div>
+  </details>
   <details class="lo atpl" id="lo-050.08.02" data-lo="050.08.02">
     <summary><span class="lonum">050.08.02</span><span class="lotitle">Tropical climatology</span></summary>
     <div class="body">
@@ -2121,30 +2157,9 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   </ul>
     </div>
   </details>
-  <details class="lo atpl" id="lo-050.08.01" data-lo="050.08.01">
-    <summary><span class="lonum">050.08.01</span><span class="lotitle">Climatic zones</span></summary>
-    <div class="body">
-  <div class="atplbox"><b>ATPL · ampliación</b>
-    <p>Todo el capítulo 050.08 (8 preguntas, casi un 10 %) se quedó fuera de temario base. Esto es lo que piden los LO.</p></div>
-  <p>Clasificación por latitud y por continentalidad:</p>
-  <div class="tablewrap"><table>
-    <thead><tr><th>Zona</th><th>Temperatura</th><th>Precipitación</th></tr></thead>
-    <tbody>
-      <tr><td class="k">Ecuatorial</td><td>Alta y casi constante</td><td>Abundante todo el año, convectiva de tarde</td></tr>
-      <tr><td class="k">Tropical</td><td>Alta, poca amplitud anual</td><td>Estación húmeda y estación seca</td></tr>
-      <tr><td class="k">Subtropical</td><td>Veranos calurosos, inviernos suaves</td><td>Verano seco (anticiclón), invierno lluvioso</td></tr>
-      <tr><td class="k">Templada</td><td>Cuatro estaciones marcadas</td><td>Repartida, de origen frontal</td></tr>
-      <tr><td class="k">Polar</td><td>Muy baja todo el año</td><td>Escasa: aire frío = poco vapor</td></tr>
-    </tbody>
-  </table></div>
-  <ul>
-    <li><b>Marítimo</b>: amplitud térmica pequeña, humedad alta, nubosidad y niebla frecuentes.</li>
-    <li><b>Continental</b>: amplitud térmica anual y diaria <b>grande</b>, aire más seco, más extremos.</li>
-    <li><b>Monzónico</b>: lo define la <b>inversión estacional del viento</b>, no la cantidad de lluvia.</li>
-  </ul>
-  <div class="key"><b>España</b><p>Subtropical mediterráneo: en verano manda el anticiclón de las Azores (seco) y en invierno bajan las borrascas del frente polar. El interior es continentalizado; las costas, marítimas.</p></div>
-    </div>
-  </details>
+</section>
+<section>
+  <h2>050.09 · Flight hazards <span class="wtag">14 preg. · 17 %</span></h2>
   <details class="lo atpl" id="lo-050.08.04" data-lo="050.08.04">
     <summary><span class="lonum">050.08.04</span><span class="lotitle">Local winds and associated weather</span></summary>
     <div class="body">
@@ -2166,9 +2181,6 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <div class="key"><b>El patrón</b><p>Casi todos son lo mismo con otro nombre: aire frío que se derrama por gravedad (catabático: Mistral, Bora, Cierzo) o aire que baja por sotavento calentándose a 3 °C/1000 ft (Foehn: Chinook, Siroco al sur de los Alpes).</p></div>
     </div>
   </details>
-</section>
-<section>
-  <h2>050.09 · Flight hazards <span class="wtag">14 preg. · 17 %</span></h2>
   <details class="lo" id="lo-050.09.01" data-lo="050.09.01">
     <summary><span class="lonum">050.09.01</span><span class="lotitle">Icing</span></summary>
     <div class="body">
@@ -2189,6 +2201,37 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
     <span class="tag">Cómo separarlos en el enunciado</span>
     <p>La palabra clave es el <strong>tamaño de la gota</strong>: pequeñas → <span class="en">rime</span>, rugoso y opaco; grandes → <span class="en">clear ice</span>, liso y transparente. Y el rango: el <span class="en">clear ice</span> vive en la franja estrecha de 0 a −10 °C dentro de nubes de tormenta.</p>
   </div>
+    </div>
+  </details>
+  <details class="lo" id="lo-050.09.02" data-lo="050.09.02">
+    <summary><span class="lonum">050.09.02</span><span class="lotitle">Turbulence</span></summary>
+    <div class="body">
+  <p>Turbulencia es el flujo de aire normal al que se le añaden <strong>remolinos</strong> (<span class="en">eddies</span>) en movimiento: corrientes circulares de aire. Una <span class="en">wind gust</span> (racha) es un aumento breve y repentino de la intensidad del viento.</p>
+  <h4>Categorías</h4>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Categoría</th><th>Definición</th></tr></thead>
+      <tbody>
+        <tr><td class="k"><span class="en">Light</span></td><td>Se nota, pero no altera el vuelo</td></tr>
+        <tr><td class="k"><span class="en">Moderate</span></td><td><strong>Desviaciones de rumbo y de altitud</strong></td></tr>
+        <tr><td class="k"><span class="en">Severe</span></td><td>Lo de la moderada <strong>más pérdida momentánea del control</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dia-cap">Ojo: la categoría es <strong>subjetiva para cada avión</strong>. La misma turbulencia es severa en una avioneta y moderada en un reactor.</p>
+    </div>
+  </details>
+  <details class="lo" id="lo-050.09.03" data-lo="050.09.03">
+    <summary><span class="lonum">050.09.03</span><span class="lotitle">Wind shear</span></summary>
+    <div class="body">
+  <p><b>Cizalladura</b> (<span class="en">wind shear</span>): cambio de velocidad y/o dirección del viento en una distancia corta, vertical u horizontal. No es turbulencia: es un cambio de viento, y lo que mata es el salto brusco de IAS.</p>
+  <ul>
+    <li><b>Microburst</b> (dado en MET-4): descendente violenta que al llegar al suelo se abre en todas direcciones. Primero viento en cara (la IAS sube y el avión tiende a subir), luego descendente, luego viento en cola: la IAS se desploma y el avión se hunde.</li>
+    <li><b>Headwind decreciente</b> en aproximación: pérdida de IAS y hundimiento por debajo de la senda. Es el perfil clásico.</li>
+    <li><b>Frente de racha</b> (<span class="en">gust front</span>): puede adelantarse <b>15–20 NM</b> a la tormenta. Por eso no se despega con una tormenta cerca.</li>
+  </ul>
+  <div class="atplbox"><b>ATPL · las otras tres fuentes</b>
+    <p>En clase solo se vio el microburst. Se cuentan cuatro fuentes de cizalladura a baja cota: <b>tormentas</b>, <b>frentes</b> (en el cálido es moderada pero en banda ancha, con inversión; en el frío es brusca y estrecha), <b>inversiones</b> (viento mucho más fuerte encima) y <b>ondas de montaña</b> a sotavento.</p></div>
     </div>
   </details>
   <details class="lo" id="lo-050.09.04" data-lo="050.09.04">
@@ -2230,41 +2273,43 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <div class="vis" id="visTormenta"></div>
     </div>
   </details>
-  <details class="lo" id="lo-050.09.09" data-lo="050.09.09">
-    <summary><span class="lonum">050.09.09</span><span class="lotitle">Visibility-reducing phenomena</span></summary>
+  <details class="lo atpl" id="lo-050.09.05" data-lo="050.09.05">
+    <summary><span class="lonum">050.09.05</span><span class="lotitle">Tornadoes</span></summary>
     <div class="body">
-
-  <h4>Las tres palabras y sus cifras</h4>
-  <div class="tablewrap" id="diaNiebla">
-    <table>
-      <thead><tr><th>Término</th><th>Visibilidad</th><th>Qué la reduce</th></tr></thead>
-      <tbody>
-        <tr><td class="k"><span class="en">Fog</span> · niebla<br><span style="font-weight:400;color:var(--muted)">METAR: FG</span></td><td><strong>Menos de 1.000 m</strong></td><td>Gotas de agua. RH cerca del <strong>100 %</strong></td></tr>
-        <tr><td class="k"><span class="en">Mist</span> · neblina<br><span style="font-weight:400;color:var(--muted)">METAR: BR</span></td><td><strong>1.000 m o más</strong> (hasta 5.000 m)</td><td>Gotas de agua muy pequeñas. RH <strong>por encima del 95 %</strong></td></tr>
-        <tr><td class="k"><span class="en">Haze</span> · calima<br><span style="font-weight:400;color:var(--muted)">METAR: HZ</span></td><td>Reducida, y <strong>no se cifra por encima de 5.000 m</strong></td><td><strong>Partículas sólidas</strong> secas: arena, polvo o humo</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p>La diferencia entre niebla y neblina es el <strong>agente</strong> y la <strong>cifra</strong>: agua en las dos, pero por debajo de 1.000 m es niebla. La calima no es agua, son partículas sólidas, y suele quedar <strong>atrapada bajo una inversión</strong>.</p>
-  <p class="dia-cap">La mala visibilidad va casi siempre con <strong>condiciones estables</strong>: inversión y viento flojo. Y la niebla, en el fondo, es un <strong>estrato que toca el suelo</strong>.</p>
+  <div class="atplbox"><b>ATPL · ampliación</b></div>
+  <p><b>Tornado</b>: columna de aire en rotación violenta que une la base del cumulonimbo con el suelo.</p>
+  <ul>
+    <li>Si la columna <b>no llega al suelo</b> es <span class="en">funnel cloud</span>; sobre agua, <span class="en">waterspout</span> (tromba marina, normalmente más débil).</li>
+    <li>Nacen de <b>tormentas severas</b>, sobre todo supercélulas con mesociclón. Sin tormenta severa no hay tornado.</li>
+    <li>Diámetro de decenas o cientos de metros, vida de minutos a una hora, vientos que pueden pasar de 200 kt.</li>
+    <li>En el METAR se cifra <b>FC</b>; si está en superficie, <b>+FC</b>.</li>
+  </ul>
     </div>
   </details>
-  <details class="lo" id="lo-050.09.02" data-lo="050.09.02">
-    <summary><span class="lonum">050.09.02</span><span class="lotitle">Turbulence</span></summary>
+  <details class="lo" id="lo-050.09.06" data-lo="050.09.06">
+    <summary><span class="lonum">050.09.06</span><span class="lotitle">Inversions</span></summary>
     <div class="body">
-  <p>Turbulencia es el flujo de aire normal al que se le añaden <strong>remolinos</strong> (<span class="en">eddies</span>) en movimiento: corrientes circulares de aire. Una <span class="en">wind gust</span> (racha) es un aumento breve y repentino de la intensidad del viento.</p>
-  <h4>Categorías</h4>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Categoría</th><th>Definición</th></tr></thead>
-      <tbody>
-        <tr><td class="k"><span class="en">Light</span></td><td>Se nota, pero no altera el vuelo</td></tr>
-        <tr><td class="k"><span class="en">Moderate</span></td><td><strong>Desviaciones de rumbo y de altitud</strong></td></tr>
-        <tr><td class="k"><span class="en">Severe</span></td><td>Lo de la moderada <strong>más pérdida momentánea del control</strong></td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="dia-cap">Ojo: la categoría es <strong>subjetiva para cada avión</strong>. La misma turbulencia es severa en una avioneta y moderada en un reactor.</p>
+  <p>Una <b>inversión</b> es una capa donde la temperatura <b>SUBE</b> con la altura, al contrario de lo normal. Es la situación más estable que existe.</p>
+  <ul>
+    <li><b>Causas:</b> radiación nocturna (inversión de superficie), subsidencia anticiclónica (inversión en altura), advección de aire cálido sobre superficie fría, y los frentes.</li>
+    <li><b>Efecto:</b> tapa el ascenso. Debajo se acumulan humedad, calima y contaminación: estratos, niebla y mala visibilidad. Encima, aire liso y visibilidad excelente.</li>
+    <li><b>Para el vuelo:</b> al atravesarla se nota la OAT subiendo y casi siempre <b>cizalladura</b>, porque encima de la inversión el viento es bastante más fuerte.</li>
+  </ul>
+  <div class="atplbox"><b>ATPL · matiz que no se dio</b>
+    <p>En clase apareció como «capa donde la temperatura sube». Se pide además la <b>cizalladura asociada</b> y la <b>isotermia</b>, que es el caso intermedio: la temperatura no cambia con la altura.</p></div>
+    </div>
+  </details>
+  <details class="lo atpl" id="lo-050.09.07" data-lo="050.09.07">
+    <summary><span class="lonum">050.09.07</span><span class="lotitle">Stratospheric conditions</span></summary>
+    <div class="body">
+  <div class="atplbox"><b>ATPL · ampliación</b></div>
+  <ul>
+    <li>En la estratosfera la temperatura <b>sube</b> con la altura (ozono absorbiendo UV): capa muy <b>estable</b> y prácticamente <b>sin vapor de agua</b>. Vuelo liso, sin nubes ni engelamiento.</li>
+    <li>La excepción es la <b>CAT</b> cerca del jet, justo bajo la tropopausa.</li>
+    <li><b>Ceniza volcánica</b>: puede quedarse meses porque ahí no hay lluvia que la lave. El radar meteorológico <b>no la ve</b>, erosiona parabrisas y funde dentro del motor. Se avisa por SIGMET y por los VAAC.</li>
+    <li><b>Nubes estratosféricas polares</b> (nacaradas): 20–30 km sobre las regiones polares en invierno, con menos de −80 °C. Indicador, no peligro.</li>
+    <li><b>Radiación cósmica</b> y <b>ozono</b>: aumentan con la altura y con la latitud. Son el límite operativo real a gran altura.</li>
+  </ul>
     </div>
   </details>
   <details class="lo" id="lo-050.09.08" data-lo="050.09.08">
@@ -2284,61 +2329,28 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
     <p>La parte de <b>altimetría de montaña</b> y la de <b>prestaciones por altitud de densidad</b> no se trataron como peligro de montaña. Aquí sí se preguntan.</p></div>
     </div>
   </details>
-  <details class="lo" id="lo-050.09.03" data-lo="050.09.03">
-    <summary><span class="lonum">050.09.03</span><span class="lotitle">Wind shear</span></summary>
-    <div class="body">
-  <p><b>Cizalladura</b> (<span class="en">wind shear</span>): cambio de velocidad y/o dirección del viento en una distancia corta, vertical u horizontal. No es turbulencia: es un cambio de viento, y lo que mata es el salto brusco de IAS.</p>
-  <ul>
-    <li><b>Microburst</b> (dado en MET-4): descendente violenta que al llegar al suelo se abre en todas direcciones. Primero viento en cara (la IAS sube y el avión tiende a subir), luego descendente, luego viento en cola: la IAS se desploma y el avión se hunde.</li>
-    <li><b>Headwind decreciente</b> en aproximación: pérdida de IAS y hundimiento por debajo de la senda. Es el perfil clásico.</li>
-    <li><b>Frente de racha</b> (<span class="en">gust front</span>): puede adelantarse <b>15–20 NM</b> a la tormenta. Por eso no se despega con una tormenta cerca.</li>
-  </ul>
-  <div class="atplbox"><b>ATPL · las otras tres fuentes</b>
-    <p>En clase solo se vio el microburst. Se cuentan cuatro fuentes de cizalladura a baja cota: <b>tormentas</b>, <b>frentes</b> (en el cálido es moderada pero en banda ancha, con inversión; en el frío es brusca y estrecha), <b>inversiones</b> (viento mucho más fuerte encima) y <b>ondas de montaña</b> a sotavento.</p></div>
-    </div>
-  </details>
-  <details class="lo atpl" id="lo-050.09.05" data-lo="050.09.05">
-    <summary><span class="lonum">050.09.05</span><span class="lotitle">Tornadoes</span></summary>
-    <div class="body">
-  <div class="atplbox"><b>ATPL · ampliación</b></div>
-  <p><b>Tornado</b>: columna de aire en rotación violenta que une la base del cumulonimbo con el suelo.</p>
-  <ul>
-    <li>Si la columna <b>no llega al suelo</b> es <span class="en">funnel cloud</span>; sobre agua, <span class="en">waterspout</span> (tromba marina, normalmente más débil).</li>
-    <li>Nacen de <b>tormentas severas</b>, sobre todo supercélulas con mesociclón. Sin tormenta severa no hay tornado.</li>
-    <li>Diámetro de decenas o cientos de metros, vida de minutos a una hora, vientos que pueden pasar de 200 kt.</li>
-    <li>En el METAR se cifra <b>FC</b>; si está en superficie, <b>+FC</b>.</li>
-  </ul>
-    </div>
-  </details>
-  <details class="lo atpl" id="lo-050.09.07" data-lo="050.09.07">
-    <summary><span class="lonum">050.09.07</span><span class="lotitle">Stratospheric conditions</span></summary>
-    <div class="body">
-  <div class="atplbox"><b>ATPL · ampliación</b></div>
-  <ul>
-    <li>En la estratosfera la temperatura <b>sube</b> con la altura (ozono absorbiendo UV): capa muy <b>estable</b> y prácticamente <b>sin vapor de agua</b>. Vuelo liso, sin nubes ni engelamiento.</li>
-    <li>La excepción es la <b>CAT</b> cerca del jet, justo bajo la tropopausa.</li>
-    <li><b>Ceniza volcánica</b>: puede quedarse meses porque ahí no hay lluvia que la lave. El radar meteorológico <b>no la ve</b>, erosiona parabrisas y funde dentro del motor. Se avisa por SIGMET y por los VAAC.</li>
-    <li><b>Nubes estratosféricas polares</b> (nacaradas): 20–30 km sobre las regiones polares en invierno, con menos de −80 °C. Indicador, no peligro.</li>
-    <li><b>Radiación cósmica</b> y <b>ozono</b>: aumentan con la altura y con la latitud. Son el límite operativo real a gran altura.</li>
-  </ul>
-    </div>
-  </details>
-  <details class="lo" id="lo-050.09.06" data-lo="050.09.06">
-    <summary><span class="lonum">050.09.06</span><span class="lotitle">Inversions</span></summary>
-    <div class="body">
-  <p>Una <b>inversión</b> es una capa donde la temperatura <b>SUBE</b> con la altura, al contrario de lo normal. Es la situación más estable que existe.</p>
-  <ul>
-    <li><b>Causas:</b> radiación nocturna (inversión de superficie), subsidencia anticiclónica (inversión en altura), advección de aire cálido sobre superficie fría, y los frentes.</li>
-    <li><b>Efecto:</b> tapa el ascenso. Debajo se acumulan humedad, calima y contaminación: estratos, niebla y mala visibilidad. Encima, aire liso y visibilidad excelente.</li>
-    <li><b>Para el vuelo:</b> al atravesarla se nota la OAT subiendo y casi siempre <b>cizalladura</b>, porque encima de la inversión el viento es bastante más fuerte.</li>
-  </ul>
-  <div class="atplbox"><b>ATPL · matiz que no se dio</b>
-    <p>En clase apareció como «capa donde la temperatura sube». Se pide además la <b>cizalladura asociada</b> y la <b>isotermia</b>, que es el caso intermedio: la temperatura no cambia con la altura.</p></div>
-    </div>
-  </details>
 </section>
 <section>
   <h2>050.10 · Meteorological information <span class="wtag">16 preg. · 19 %</span></h2>
+  <details class="lo" id="lo-050.09.09" data-lo="050.09.09">
+    <summary><span class="lonum">050.09.09</span><span class="lotitle">Visibility-reducing phenomena</span></summary>
+    <div class="body">
+
+  <h4>Las tres palabras y sus cifras</h4>
+  <div class="tablewrap" id="diaNiebla">
+    <table>
+      <thead><tr><th>Término</th><th>Visibilidad</th><th>Qué la reduce</th></tr></thead>
+      <tbody>
+        <tr><td class="k"><span class="en">Fog</span> · niebla<br><span style="font-weight:400;color:var(--muted)">METAR: FG</span></td><td><strong>Menos de 1.000 m</strong></td><td>Gotas de agua. RH cerca del <strong>100 %</strong></td></tr>
+        <tr><td class="k"><span class="en">Mist</span> · neblina<br><span style="font-weight:400;color:var(--muted)">METAR: BR</span></td><td><strong>1.000 m o más</strong> (hasta 5.000 m)</td><td>Gotas de agua muy pequeñas. RH <strong>por encima del 95 %</strong></td></tr>
+        <tr><td class="k"><span class="en">Haze</span> · calima<br><span style="font-weight:400;color:var(--muted)">METAR: HZ</span></td><td>Reducida, y <strong>no se cifra por encima de 5.000 m</strong></td><td><strong>Partículas sólidas</strong> secas: arena, polvo o humo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>La diferencia entre niebla y neblina es el <strong>agente</strong> y la <strong>cifra</strong>: agua en las dos, pero por debajo de 1.000 m es niebla. La calima no es agua, son partículas sólidas, y suele quedar <strong>atrapada bajo una inversión</strong>.</p>
+  <p class="dia-cap">La mala visibilidad va casi siempre con <strong>condiciones estables</strong>: inversión y viento flojo. Y la niebla, en el fondo, es un <strong>estrato que toca el suelo</strong>.</p>
+    </div>
+  </details>
   <details class="lo" id="lo-050.10.01" data-lo="050.10.01">
     <summary><span class="lonum">050.10.01</span><span class="lotitle">Observation</span></summary>
     <div class="body">
@@ -2573,6 +2585,9 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
   <p class="dia-cap">Regla práctica: si la probabilidad fuese mayor del 40 % no se pondría PROB, se cifraría directamente.</p>
     </div>
   </details>
+</section>
+<section>
+  <h2>De otras asignaturas <span class="wtag">fuera del simulacro</span></h2>
   <details class="lo" id="lo-050.10.04" data-lo="050.10.04">
     <summary><span class="lonum">050.10.04</span><span class="lotitle">Meteorological services</span></summary>
     <div class="body">
@@ -2590,21 +2605,6 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
     </table>
   </div>
   <p class="dia-cap">Los vientos que da la torre también van en <strong>magnético</strong>. Los del METAR y el TAF, en <strong>verdadero</strong>.</p>
-    </div>
-  </details>
-</section>
-<section>
-  <h2>De otras asignaturas <span class="wtag">fuera del simulacro</span></h2>
-  <details class="lo out" id="lo-050.00.01" data-lo="050.00.01">
-    <summary><span class="lonum">050.00.01</span><span class="lotitle">True altitude and transition altitude</span></summary>
-    <div class="body">
-      <p>Lo que se queda fuera de las preguntas de Meteorología:</p>
-      <ul>
-        <li><b>Cálculo de altitud verdadera con corrección de temperatura</b> (altitud indicada × 4 % × desviación ISA ÷ 10, encadenada con el cambio de subescala). Es materia de <b>061 Navegación general</b> y <b>033 Planificación</b>. En 050.01.06 EASA solo pide el <i>efecto</i>: aire frío, el altímetro sobre-lee y estás más bajo.</li>
-        <li><b>Altitud de transición, nivel de transición y los reglajes asociados</b>: van en <b>010 Derecho Aéreo</b> y <b>022 Instrumentación</b>, junto con el funcionamiento del barómetro aneroide.</li>
-      </ul>
-      <div class="key"><b>Por qué conviene saberlo igual</b>
-        <p>El test interno sí pregunta estos cálculos, y es el que decide si pasas a vuelo. Están las cuatro preguntas (d27, d28, d29 y d36) en el adaptativo y en el banco completo.</p></div>
     </div>
   </details>
 </section>
@@ -4664,7 +4664,7 @@ const isOut  = c => c==="050.00.01";
 const chOf = c => c.slice(0,6);
 const loLabel = lo => lo + (SUBEN[lo] ? " · " + SUBEN[lo] : "");
 const loLabelEs = lo => lo + (SUBES[lo] ? " · " + SUBES[lo] : "");
-const SUBORDER = SUBS.map(s=>s[0]).concat(["050.00.01"]);
+const SUBORDER = ["050.00.01"].concat(SUBS.map(s=>s[0]));
 const EXAM_N = 84, EXAM_MIN = 120;
 
 let state = JSON.parse(JSON.stringify(SEED));

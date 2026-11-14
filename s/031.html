@@ -106,7 +106,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
 </head><body>
 <meta charset="utf-8">
-<title>031 · 032 · 033 Flight Performance and Planning — Phase 0</title>
+<title>031 · 032 · 033 · Flight Performance and Planning</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -360,7 +360,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <header>
   <div class="code">031 · 032 · 033</div>
   <h1>Flight Performance and Planning</h1>
-  <p><b>031 Mass and Balance · 032 Performance · 033 Flight Planning — temario base: 30 preguntas · 1 h · aprobado 75 %</b></p>
+  <p><b>031 · 25 preguntas · 1 h 15 min | 032 · 45 preguntas · 2 h 00 min | 033 · 42 preguntas · 2 h 00 min · aprobado 75 %</b></p>
 </header>
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
@@ -382,6 +382,17 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <h2>031.01 · Purpose of mass-and-balance considerations <span class="wtag">1 preg. · 4 %</span></h2>
 
 <!-- ===== 031.01.02 ===== -->
+<details class="lo" id="lo-031.01.01" data-lo="031.01.01">
+<summary><span class="lonum">031.01.01</span><span class="lotitle">Mass limitations</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>Exceso de peso: más carrera y más distancia de aterrizaje, Vs mayor, peor ascenso, menos alcance y autonomía, más consumo y más esfuerzo estructural.</div>
+  <div class="flag"><b>Trampas:</b> con sobrepeso la Vs <b>sube</b> · la carrera se <b>alarga</b> · «Minor Vx and Vy» = sube peor (menos ángulo y régimen).</div>
+  <h4>Carga de más · muévelo</h4>
+  <div id="visOver"></div>
+</div>
+</details>
+
+<!-- ===== 031.01.01 ===== -->
 <details class="lo" id="lo-031.01.02" data-lo="031.01.02">
 <summary><span class="lonum">031.01.02</span><span class="lotitle">Centre-of-gravity (CG) limitations</span></summary>
 <div class="body">
@@ -396,52 +407,9 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 </div>
 </details>
 
-<!-- ===== 031.01.01 ===== -->
-<details class="lo" id="lo-031.01.01" data-lo="031.01.01">
-<summary><span class="lonum">031.01.01</span><span class="lotitle">Mass limitations</span></summary>
-<div class="body">
-  <div class="key"><b>Clave</b>Exceso de peso: más carrera y más distancia de aterrizaje, Vs mayor, peor ascenso, menos alcance y autonomía, más consumo y más esfuerzo estructural.</div>
-  <div class="flag"><b>Trampas:</b> con sobrepeso la Vs <b>sube</b> · la carrera se <b>alarga</b> · «Minor Vx and Vy» = sube peor (menos ángulo y régimen).</div>
-  <h4>Carga de más · muévelo</h4>
-  <div id="visOver"></div>
-</div>
-</details>
-
 <h2>031.02 · Loading <span class="wtag">8 preg. · 32 %</span></h2>
 
 <!-- ===== 031.02.02 ===== -->
-<details class="lo" id="lo-031.02.02" data-lo="031.02.02">
-<summary><span class="lonum">031.02.02</span><span class="lotitle">Mass limits</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li><b>ZFM</b>: colocar bien el CG y las <b>cargas en el encastre del ala</b>.</li>
-    <li>Monomotor de tren fijo: MTOM y MLM pueden ser <b>iguales</b>; normalmente MTOM &gt; MLM.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>MRM &gt; MTOM ≥ MLM. La MRM la limita el tren en tierra; la MLM, el tren al absorber la toma.</div>
-  <div class="scroll"><table class="deftable">
-    <tr><td>MZFM</td><td>Máximo <b>sin combustible utilizable</b>: protege el encastre del ala</td></tr>
-    <tr><td>MRM</td><td>Máximo para <b>maniobrar en tierra</b> (resistencia del tren)</td></tr>
-    <tr><td>MTOM</td><td>Máximo al despegue, <b>sin</b> el combustible de arranque y rodaje</td></tr>
-    <tr><td>MLM</td><td>Máximo al aterrizar (el tren absorbe la energía de la toma)</td></tr>
-    <tr><td>Por performance</td><td>Despegue y aterrizaje: pista, altitud, temperatura, viento. Puede ser menor que la estructural</td></tr>
-  </table></div>
-  <div class="comp"><b>ATPL</b>Las bodegas tienen sus propios límites: <b>carga por superficie</b> (kg/m²), <b>carga lineal</b> (kg/m) y masa máxima por compartimento.</div>
-</div>
-</details>
-
-<!-- ===== 031.02.03 ===== -->
-<details class="lo" id="lo-031.02.03" data-lo="031.02.03">
-<summary><span class="lonum">031.02.03</span><span class="lotitle">Mass calculations</span></summary>
-<div class="body">
-  <div class="key"><b>Clave</b>Suma por escalones: BEM + items = DOM; + payload = ZFM; + TOF = TOM; − trip = LM. Comprueba cada una contra su máximo.</div>
-  <div class="comp"><b>ATPL</b><ul>
-    <li><b>Masas estándar</b> (Part-CAT): tripulante de vuelo <b>85 kg</b> · TCP <b>75 kg</b> · niño (2–12 años) <b>35 kg</b>.</li>
-    <li><b>Carga de pago máxima</b> = la menor de: MZFM − DOM · MTOM − (DOM + TOF) · MLM + trip − (DOM + TOF).</li>
-  </ul></div>
-</div>
-</details>
-
-<!-- ===== 031.02.01 ===== -->
 <details class="lo" id="lo-031.02.01" data-lo="031.02.01">
 <summary><span class="lonum">031.02.01</span><span class="lotitle">Terminology</span></summary>
 <div class="body">
@@ -461,6 +429,38 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <tr><td>TOF</td><td>Trip + reserva final (30 min) + contingencia (<b>5 % del trip</b>) + alternativo</td></tr>
     <tr><td>Variable load</td><td>Tripulación, su equipaje y equipo desmontable</td></tr>
   </table></div>
+</div>
+</details>
+
+<!-- ===== 031.02.03 ===== -->
+<details class="lo" id="lo-031.02.02" data-lo="031.02.02">
+<summary><span class="lonum">031.02.02</span><span class="lotitle">Mass limits</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li><b>ZFM</b>: colocar bien el CG y las <b>cargas en el encastre del ala</b>.</li>
+    <li>Monomotor de tren fijo: MTOM y MLM pueden ser <b>iguales</b>; normalmente MTOM &gt; MLM.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>MRM &gt; MTOM ≥ MLM. La MRM la limita el tren en tierra; la MLM, el tren al absorber la toma.</div>
+  <div class="scroll"><table class="deftable">
+    <tr><td>MZFM</td><td>Máximo <b>sin combustible utilizable</b>: protege el encastre del ala</td></tr>
+    <tr><td>MRM</td><td>Máximo para <b>maniobrar en tierra</b> (resistencia del tren)</td></tr>
+    <tr><td>MTOM</td><td>Máximo al despegue, <b>sin</b> el combustible de arranque y rodaje</td></tr>
+    <tr><td>MLM</td><td>Máximo al aterrizar (el tren absorbe la energía de la toma)</td></tr>
+    <tr><td>Por performance</td><td>Despegue y aterrizaje: pista, altitud, temperatura, viento. Puede ser menor que la estructural</td></tr>
+  </table></div>
+  <div class="comp"><b>ATPL</b>Las bodegas tienen sus propios límites: <b>carga por superficie</b> (kg/m²), <b>carga lineal</b> (kg/m) y masa máxima por compartimento.</div>
+</div>
+</details>
+
+<!-- ===== 031.02.01 ===== -->
+<details class="lo" id="lo-031.02.03" data-lo="031.02.03">
+<summary><span class="lonum">031.02.03</span><span class="lotitle">Mass calculations</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>Suma por escalones: BEM + items = DOM; + payload = ZFM; + TOF = TOM; − trip = LM. Comprueba cada una contra su máximo.</div>
+  <div class="comp"><b>ATPL</b><ul>
+    <li><b>Masas estándar</b> (Part-CAT): tripulante de vuelo <b>85 kg</b> · TCP <b>75 kg</b> · niño (2–12 años) <b>35 kg</b>.</li>
+    <li><b>Carga de pago máxima</b> = la menor de: MZFM − DOM · MTOM − (DOM + TOF) · MLM + trip − (DOM + TOF).</li>
+  </ul></div>
 </div>
 </details>
 
@@ -491,15 +491,6 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 </details>
 
 <!-- ===== 031.04.03 ===== -->
-<details class="lo" id="lo-031.04.03" data-lo="031.04.03">
-<summary><span class="lonum">031.04.03</span><span class="lotitle">Extraction of basic empty mass (BEM) and CG data from aircraft documentation</span></summary>
-<div class="body">
-  <div class="key"><b>Clave</b>El BEM y su brazo vienen en la documentación de masa y centrado del avión. Warrior: <b>1531,09 lb · 88,51 in · 135.516,21 lb·in</b>.</div>
-  <div class="comp"><b>ATPL</b>Si el avión no está en su configuración estándar (equipo añadido o quitado), se corrige el DOM y su momento antes de cargar.</div>
-</div>
-</details>
-
-<!-- ===== 031.04.02 ===== -->
 <details class="lo atpl" id="lo-031.04.02" data-lo="031.04.02">
 <summary><span class="lonum">031.04.02</span><span class="lotitle">Determination of aircraft empty mass and CG position by weighing</span></summary>
 <div class="body">
@@ -510,9 +501,30 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 </div>
 </details>
 
+<!-- ===== 031.04.02 ===== -->
+<details class="lo" id="lo-031.04.03" data-lo="031.04.03">
+<summary><span class="lonum">031.04.03</span><span class="lotitle">Extraction of basic empty mass (BEM) and CG data from aircraft documentation</span></summary>
+<div class="body">
+  <div class="key"><b>Clave</b>El BEM y su brazo vienen en la documentación de masa y centrado del avión. Warrior: <b>1531,09 lb · 88,51 in · 135.516,21 lb·in</b>.</div>
+  <div class="comp"><b>ATPL</b>Si el avión no está en su configuración estándar (equipo añadido o quitado), se corrige el DOM y su momento antes de cargar.</div>
+</div>
+</details>
+
 <h2>031.05 · Determination of CG position <span class="wtag">9 preg. · 36 %</span></h2>
 
 <!-- ===== 031.05.02 ===== -->
+<details class="lo" id="lo-031.05.01" data-lo="031.05.01">
+<summary><span class="lonum">031.05.01</span><span class="lotitle">Methods</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li><b>CG respecto al datum = momentos totales ÷ masa total</b>: el resultado es una <b>distancia</b> al datum.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Método <b>aritmético</b>: tabla masa × brazo = momento, totales, y CG = Σ momentos ÷ Σ masas. Método <b>gráfico</b>: el punto en la envolvente.</div>
+  <div class="comp"><b>ATPL · índice</b><b>Index method</b>: índice = (brazo − brazo de referencia) × masa ÷ constante. Convierte momentos enormes en números pequeños, fáciles de sumar en la trim sheet.</div>
+</div>
+</details>
+
+<!-- ===== 031.05.03 ===== -->
 <details class="lo" id="lo-031.05.02" data-lo="031.05.02">
 <summary><span class="lonum">031.05.02</span><span class="lotitle">Load and trim sheet</span></summary>
 <div class="body">
@@ -538,7 +550,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 </div>
 </details>
 
-<!-- ===== 031.05.03 ===== -->
+<!-- ===== 031.05.01 ===== -->
 <details class="lo" id="lo-031.05.03" data-lo="031.05.03">
 <summary><span class="lonum">031.05.03</span><span class="lotitle">Repositioning of CG</span></summary>
 <div class="body">
@@ -563,19 +575,12 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 </div>
 </details>
 
-<!-- ===== 031.05.01 ===== -->
-<details class="lo" id="lo-031.05.01" data-lo="031.05.01">
-<summary><span class="lonum">031.05.01</span><span class="lotitle">Methods</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li><b>CG respecto al datum = momentos totales ÷ masa total</b>: el resultado es una <b>distancia</b> al datum.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Método <b>aritmético</b>: tabla masa × brazo = momento, totales, y CG = Σ momentos ÷ Σ masas. Método <b>gráfico</b>: el punto en la envolvente.</div>
-  <div class="comp"><b>ATPL · índice</b><b>Index method</b>: índice = (brazo − brazo de referencia) × masa ÷ constante. Convierte momentos enormes en números pequeños, fáciles de sumar en la trim sheet.</div>
-</div>
-</details>
-
 <h2>031.06 · Cargo handling <span class="wtag">2 preg. · 8 %</span></h2>
+
+<details class="lo atpl" id="lo-031.06.01" data-lo="031.06.01">
+<summary><span class="lonum">031.06.01</span><span class="lotitle">Types of cargo</span></summary>
+<div class="body"><div class="comp"><b>ATPL</b>Carga general, a granel, en contenedores (ULD) y especial: animales vivos, perecederos, valores, mercancías peligrosas.</div></div>
+</details>
 
 <details class="lo atpl" id="lo-031.06.02" data-lo="031.06.02">
 <summary><span class="lonum">031.06.02</span><span class="lotitle">Floor-area load and running-load limitations</span></summary>
@@ -586,22 +591,16 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <summary><span class="lonum">031.06.03</span><span class="lotitle">Securement of load</span></summary>
 <div class="body"><div class="comp"><b>ATPL</b>La carga se amarra para que no se mueva: si se desplaza, <b>cambia el CG</b> y puede dañar la estructura o bloquear salidas.</div></div>
 </details>
-
-<details class="lo atpl" id="lo-031.06.01" data-lo="031.06.01">
-<summary><span class="lonum">031.06.01</span><span class="lotitle">Types of cargo</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Carga general, a granel, en contenedores (ULD) y especial: animales vivos, perecederos, valores, mercancías peligrosas.</div></div>
-</details>
 <h2 class="subj">032 · Performance <span class="wtag">45 preg. · 2 h</span></h2>
 
 <h2>032.01 · General <span class="wtag">12 preg. · 27 %</span></h2>
 
-<details class="lo" id="lo-032.01.03" data-lo="032.01.03">
-<summary><span class="lonum">032.01.03</span><span class="lotitle">Level flight, range and endurance</span></summary>
-<div class="body"><!--p2:032.01.03--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Total drag</b> = parasite drag + induced drag.</li><li>La curva de potencia tiene un <b>lado de atrás</b> (back side): a velocidad baja la resistencia inducida <b>se dispara</b> y hace falta más potencia.</li><li><b>Endurance</b> (autonomía): combustible y consumo, también altitud y configuración. <b>Range</b> (alcance): lo mismo más el <b>viento</b>.</li></ul></div><!--/p2:032.01.03--><div class="comp"><b>ATPL</b><div class="scroll"><table>
-  <tr><th></th><th>Máximo alcance</th><th>Máxima autonomía</th></tr>
-  <tr><td>Reactor</td><td><b>1,32 VMD</b></td><td><b>VMD</b> (mínima resistencia)</td></tr>
-  <tr><td>Hélice</td><td><b>VMD</b> (mejor L/D)</td><td><b>VMP</b> (mínima potencia)</td></tr>
-</table></div>Viento de cara: vuela un poco <b>más rápido</b> para el máximo alcance. Más peso: velocidades óptimas más altas.</div></div>
+<details class="lo atpl" id="lo-032.01.01" data-lo="032.01.01">
+<summary><span class="lonum">032.01.01</span><span class="lotitle">Performance legislation</span></summary>
+<div class="body"><div class="comp"><b>ATPL</b><ul>
+  <li><b>Clase A</b>: multimotores turbohélice de más de 9 asientos o más de 5700 kg, y <b>todos los reactores multimotor</b>. <b>Clase B</b>: hélice, <b>9 asientos o menos y 5700 kg o menos</b>. <b>Clase C</b>: pistón grandes.</li>
+  <li><b>Gross</b>: la media de la flota en condiciones ideales. <b>Net</b> = gross menos un margen de seguridad (es la que se usa para obstáculos).</li>
+</ul></div></div>
 </details>
 
 <!-- ===== 032.01.02 ===== -->
@@ -626,12 +625,13 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 </div>
 </details>
 
-<details class="lo atpl" id="lo-032.01.01" data-lo="032.01.01">
-<summary><span class="lonum">032.01.01</span><span class="lotitle">Performance legislation</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b><ul>
-  <li><b>Clase A</b>: multimotores turbohélice de más de 9 asientos o más de 5700 kg, y <b>todos los reactores multimotor</b>. <b>Clase B</b>: hélice, <b>9 asientos o menos y 5700 kg o menos</b>. <b>Clase C</b>: pistón grandes.</li>
-  <li><b>Gross</b>: la media de la flota en condiciones ideales. <b>Net</b> = gross menos un margen de seguridad (es la que se usa para obstáculos).</li>
-</ul></div></div>
+<details class="lo" id="lo-032.01.03" data-lo="032.01.03">
+<summary><span class="lonum">032.01.03</span><span class="lotitle">Level flight, range and endurance</span></summary>
+<div class="body"><!--p2:032.01.03--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Total drag</b> = parasite drag + induced drag.</li><li>La curva de potencia tiene un <b>lado de atrás</b> (back side): a velocidad baja la resistencia inducida <b>se dispara</b> y hace falta más potencia.</li><li><b>Endurance</b> (autonomía): combustible y consumo, también altitud y configuración. <b>Range</b> (alcance): lo mismo más el <b>viento</b>.</li></ul></div><!--/p2:032.01.03--><div class="comp"><b>ATPL</b><div class="scroll"><table>
+  <tr><th></th><th>Máximo alcance</th><th>Máxima autonomía</th></tr>
+  <tr><td>Reactor</td><td><b>1,32 VMD</b></td><td><b>VMD</b> (mínima resistencia)</td></tr>
+  <tr><td>Hélice</td><td><b>VMD</b> (mejor L/D)</td><td><b>VMP</b> (mínima potencia)</td></tr>
+</table></div>Viento de cara: vuela un poco <b>más rápido</b> para el máximo alcance. Más peso: velocidades óptimas más altas.</div></div>
 </details>
 
 <details class="lo" id="lo-032.01.04" data-lo="032.01.04">
@@ -646,6 +646,11 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 
 <h2>032.02 · Performance Class B: theory <span class="wtag">6 preg. · 13 %</span></h2>
 
+<details class="lo" id="lo-032.02.01" data-lo="032.02.01">
+<summary><span class="lonum">032.02.01</span><span class="lotitle">Airworthiness requirements</span></summary>
+<div class="body"><!--p2:032.02.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Factor de carga</b> n = L ÷ W. En un ascenso o descenso estabilizado es <b>menor que 1</b> (la sustentación es menor que el peso: L = W·cos γ).</li><li><b>Va</b> es donde se unen la velocidad de pérdida y la g máxima: <span class="formula">Va = Vs(1 g) × √n<sub>máx</sub></span>. Por encima de Va, cuidado con el <b>daño estructural</b>; por debajo, cuidado con la <b>pérdida</b>.</li><li>Típico: te dan la categoría (p. ej. transport) y una velocidad de pérdida; sabes las g, calculas Va.</li><li><b>Ultimate load factor</b> = 1,5 × limit load factor (150 %).</li></ul></div><div class="scroll"><table class="deftable"><tr><th>Categoría (FAR / CS)</th><th>Limit load factor</th></tr><tr><td>Normal</td><td>+3,8 g · −1,52 g</td></tr><tr><td>Utility</td><td>+4,4 g · −1,76 g</td></tr><tr><td>Acrobatic</td><td>+6 g · −3 g</td></tr><tr><td>Transport</td><td>+2,5 g · −1 g</td></tr></table></div><div class="flag"><b>Trampa:</b> el límite negativo es el 40 % del positivo (0,4 × 4,4 = 1,76). Si en algún sitio ves −1,78 para utility, es una errata: el valor correcto es −1,76.</div><h4>Velocímetro: arcos de colores</h4><div class="scroll"><table class="deftable"><tr><th>Marca</th><th>Qué es</th></tr><tr><td>Arco <b>blanco</b></td><td>Rango de flaps: de Vs0 a Vfe</td></tr><tr><td>Arco <b>verde</b></td><td>Rango normal de operación: de Vs1 a Vno</td></tr><tr><td>Arco <b>amarillo</b></td><td>Precaución, solo en aire en calma: de Vno a Vne</td></tr><tr><td>Línea <b>roja</b></td><td>Vne: nunca excederla</td></tr></table></div><!--/p2:032.02.01--><div class="comp"><b>ATPL</b>Clase B se certifica por <b>CS-23</b>; Clase A por <b>CS-25</b>.</div></div>
+</details>
+
 <details class="lo" id="lo-032.02.03" data-lo="032.02.03">
 <summary><span class="lonum">032.02.03</span><span class="lotitle">Take-off and landing</span></summary>
 <div class="body"><!--p2:032.02.03--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Take-off distance</b> (TOD) = take-off run (TOR) + distancia horizontal hasta la <b>screen height</b> (altura pantalla). El landing distance cuenta desde la altura de pantalla hasta parar.</li><li><b>Pendiente de pista</b>: <span class="formula">slope % = (desnivel entre umbrales ÷ longitud) × 100</span>. Despegue: mejor pendiente negativa. Aterrizaje: mejor positiva.</li><li><b>10° de flaps</b> en el despegue: más sustentación (carrera más corta) y más resistencia (menos gradiente de ascenso).</li></ul></div><div class="scroll"><table class="deftable"><tr><th>Factor</th><th>Despegue</th><th>Aterrizaje</th></tr><tr><td>PA y DA</td><td>Menos potencia, carrera más larga</td><td>Mayor TAS, más distancia</td></tr><tr><td>Masa</td><td>Más masa, más carrera</td><td>Más masa, más velocidad y más distancia de frenado</td></tr><tr><td>Flaps</td><td>Algo de flaps: carrera más corta</td><td>Full flaps: vuela más lento, menos pista</td></tr><tr><td>Viento</td><td>De cara: menos groundspeed, más corto</td><td>De cara: más corto</td></tr><tr><td>Pendiente</td><td>Negativa mejor</td><td>Positiva mejor</td></tr><tr><td>Pista</td><td>Estado y superficie</td><td>Estado y superficie</td></tr></table></div><!--/p2:032.02.03--><div class="comp"><b>ATPL · Clase B</b><div class="scroll"><table>
@@ -657,11 +662,6 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <tr><td>Pendiente</td><td>+<b>5 %</b> por cada 1 % hacia arriba (despegue) o hacia abajo (aterrizaje)</td></tr>
   <tr><td>Hierba seca (despegue)</td><td>× <b>1,2</b></td></tr>
 </table></div>Pendiente (%) = diferencia de elevación ÷ longitud × 100 (las dos en la misma unidad).</div></div>
-</details>
-
-<details class="lo" id="lo-032.02.01" data-lo="032.02.01">
-<summary><span class="lonum">032.02.01</span><span class="lotitle">Airworthiness requirements</span></summary>
-<div class="body"><!--p2:032.02.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Factor de carga</b> n = L ÷ W. En un ascenso o descenso estabilizado es <b>menor que 1</b> (la sustentación es menor que el peso: L = W·cos γ).</li><li><b>Va</b> es donde se unen la velocidad de pérdida y la g máxima: <span class="formula">Va = Vs(1 g) × √n<sub>máx</sub></span>. Por encima de Va, cuidado con el <b>daño estructural</b>; por debajo, cuidado con la <b>pérdida</b>.</li><li>Típico: te dan la categoría (p. ej. transport) y una velocidad de pérdida; sabes las g, calculas Va.</li><li><b>Ultimate load factor</b> = 1,5 × limit load factor (150 %).</li></ul></div><div class="scroll"><table class="deftable"><tr><th>Categoría (FAR / CS)</th><th>Limit load factor</th></tr><tr><td>Normal</td><td>+3,8 g · −1,52 g</td></tr><tr><td>Utility</td><td>+4,4 g · −1,76 g</td></tr><tr><td>Acrobatic</td><td>+6 g · −3 g</td></tr><tr><td>Transport</td><td>+2,5 g · −1 g</td></tr></table></div><div class="flag"><b>Trampa:</b> el límite negativo es el 40 % del positivo (0,4 × 4,4 = 1,76). Si en algún sitio ves −1,78 para utility, es una errata: el valor correcto es −1,76.</div><h4>Velocímetro: arcos de colores</h4><div class="scroll"><table class="deftable"><tr><th>Marca</th><th>Qué es</th></tr><tr><td>Arco <b>blanco</b></td><td>Rango de flaps: de Vs0 a Vfe</td></tr><tr><td>Arco <b>verde</b></td><td>Rango normal de operación: de Vs1 a Vno</td></tr><tr><td>Arco <b>amarillo</b></td><td>Precaución, solo en aire en calma: de Vno a Vne</td></tr><tr><td>Línea <b>roja</b></td><td>Vne: nunca excederla</td></tr></table></div><!--/p2:032.02.01--><div class="comp"><b>ATPL</b>Clase B se certifica por <b>CS-23</b>; Clase A por <b>CS-25</b>.</div></div>
 </details>
 
 <details class="lo atpl" id="lo-032.02.04" data-lo="032.02.04">
@@ -690,14 +690,19 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 </ul></div></div>
 </details>
 
+<details class="lo atpl" id="lo-032.04.02" data-lo="032.04.02">
+<summary><span class="lonum">032.04.02</span><span class="lotitle">Climb</span></summary>
+<div class="body"><div class="comp"><b>ATPL</b>Más temperatura o altitud de presión → menos empuje y menos gradiente. Ascenso a IAS constante y luego a Mach constante.</div></div>
+</details>
+
 <details class="lo atpl" id="lo-032.04.03" data-lo="032.04.03">
 <summary><span class="lonum">032.04.03</span><span class="lotitle">Cruise</span></summary>
 <div class="body"><div class="comp"><b>ATPL</b>Más masa → altitud óptima <b>más baja</b>. <b>LRC</b> ≈ 99 % del alcance específico máximo, algo más rápido. <b>Cost index</b> = coste del tiempo ÷ coste del combustible: CI 0 = máximo alcance.</div></div>
 </details>
 
-<details class="lo atpl" id="lo-032.04.06" data-lo="032.04.06">
-<summary><span class="lonum">032.04.06</span><span class="lotitle">Approach and landing</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Distancia de aterrizaje dentro del <b>60 %</b> de la LDA (reactores) o del <b>70 %</b> (turbohélices); mojado, <b>+15 %</b>. VREF ≥ <b>1,23 VSR0</b>. Gradientes: approach climb (un motor) <b>2,1 %</b> bimotor · landing climb (todos) <b>3,2 %</b>. Quick turnaround: enfriar frenos antes del siguiente despegue.</div></div>
+<details class="lo atpl" id="lo-032.04.04" data-lo="032.04.04">
+<summary><span class="lonum">032.04.04</span><span class="lotitle">En-route one-engine-inoperative</span></summary>
+<div class="body"><div class="comp"><b>ATPL</b><b>Drift-down</b>: tras fallar un motor, bajar a la velocidad de drift-down (cerca de la mejor L/D) hasta la <b>altitud de estabilización</b>, con la trayectoria neta <b>2000 ft</b> por encima del terreno.</div></div>
 </details>
 
 <details class="lo atpl" id="lo-032.04.05" data-lo="032.04.05">
@@ -705,14 +710,9 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <div class="body"><div class="comp"><b>ATPL</b>Descenso de máximo alcance a ralentí cerca de la velocidad de <b>mejor L/D</b>. Gestión de energía: empezar a tiempo (regla de 3 NM por cada 1000 ft).</div></div>
 </details>
 
-<details class="lo atpl" id="lo-032.04.02" data-lo="032.04.02">
-<summary><span class="lonum">032.04.02</span><span class="lotitle">Climb</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Más temperatura o altitud de presión → menos empuje y menos gradiente. Ascenso a IAS constante y luego a Mach constante.</div></div>
-</details>
-
-<details class="lo atpl" id="lo-032.04.04" data-lo="032.04.04">
-<summary><span class="lonum">032.04.04</span><span class="lotitle">En-route one-engine-inoperative</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b><b>Drift-down</b>: tras fallar un motor, bajar a la velocidad de drift-down (cerca de la mejor L/D) hasta la <b>altitud de estabilización</b>, con la trayectoria neta <b>2000 ft</b> por encima del terreno.</div></div>
+<details class="lo atpl" id="lo-032.04.06" data-lo="032.04.06">
+<summary><span class="lonum">032.04.06</span><span class="lotitle">Approach and landing</span></summary>
+<div class="body"><div class="comp"><b>ATPL</b>Distancia de aterrizaje dentro del <b>60 %</b> de la LDA (reactores) o del <b>70 %</b> (turbohélices); mojado, <b>+15 %</b>. VREF ≥ <b>1,23 VSR0</b>. Gradientes: approach climb (un motor) <b>2,1 %</b> bimotor · landing climb (todos) <b>3,2 %</b>. Quick turnaround: enfriar frenos antes del siguiente despegue.</div></div>
 </details>
 
 <h2>032.05 · Performance Class A: use of data <span class="wtag">6 preg. · 13 %</span></h2>
@@ -722,14 +722,14 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <div class="body"><div class="comp"><b>ATPL</b><b>RTOM</b> = la menor de todas las masas limitantes (pista, ascenso, obstáculos, frenos, neumáticos, estructural). El viento de cara y la pista larga la suben; el calor, la altitud y el viento de cola la bajan. El límite por ascenso no depende de la pista.</div></div>
 </details>
 
-<details class="lo atpl" id="lo-032.05.03" data-lo="032.05.03">
-<summary><span class="lonum">032.05.03</span><span class="lotitle">Landing</span></summary>
-<div class="body"><div class="comp"><b>ATPL</b>Más altitud de presión o temperatura → más distancia de aterrizaje.</div></div>
-</details>
-
 <details class="lo atpl" id="lo-032.05.02" data-lo="032.05.02">
 <summary><span class="lonum">032.05.02</span><span class="lotitle">Drift-down and stabilising altitude</span></summary>
 <div class="body"><div class="comp"><b>ATPL</b>La altitud de estabilización baja con <b>más masa</b> y <b>más temperatura</b>.</div></div>
+</details>
+
+<details class="lo atpl" id="lo-032.05.03" data-lo="032.05.03">
+<summary><span class="lonum">032.05.03</span><span class="lotitle">Landing</span></summary>
+<div class="body"><div class="comp"><b>ATPL</b>Más altitud de presión o temperatura → más distancia de aterrizaje.</div></div>
 </details>
 <h2 class="subj">033 · Flight Planning and Monitoring <span class="wtag">42 preg. · 2 h</span></h2>
 
@@ -754,6 +754,11 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 
 <h2>033.03 · Fuel planning <span class="wtag">11 preg. · 26 %</span></h2>
 
+<details class="lo" id="lo-033.03.01" data-lo="033.03.01">
+<summary><span class="lonum">033.03.01</span><span class="lotitle">General</span></summary>
+<div class="body"><!--p2:033.03.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li>La <b>fuel policy</b> es una norma: hay que seguirla.</li><li>Combustible a bordo: start-up, taxi, trip, contingencia, alternativo y final reserve. Todo esto hay que tenerlo en rampa.</li></ul></div><!--/p2:033.03.01--><div class="comp"><b>ATPL</b>El combustible se planifica con la meteo, retrasos de ATC, NOTAM, la masa y la ruta prevista. Reserva final: <b>30 min</b> turbina (a 1500 ft) · <b>45 min</b> pistón.</div></div>
+</details>
+
 <details class="lo" id="lo-033.03.02" data-lo="033.03.02">
 <summary><span class="lonum">033.03.02</span><span class="lotitle">Pre-flight fuel planning for commercial flights</span></summary>
 <div class="body"><!--p2:033.03.02--><div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Final reserve</b> de pistón: <b>45 min</b> al consumo de <b>máxima autonomía</b>. Importante también el combustible alternativo.</li><li>Orden: start-up + taxi + trip + contingencia (5 % del trip) + alternativo + final reserve. De la rampa se quita el taxi para llegar a la masa de despegue (TOM) y, después, el trip para la de aterrizaje (LM).</li></ul></div><div class="key"><b>Clave</b>Ejemplo: pistón, taxi 2 kg, crucero y espera 20 kg/h, vuelo 2,5 h, alternativo 40 kg → 2 + 50 + 2,5 (5 %) + 40 + 15 (45 min) = <b>109,5 kg</b>.</div><!--/p2:033.03.02-->
@@ -761,11 +766,6 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <div class="flag"><b>Trampa:</b> el temario pone reserva final de 30 min; en CAT con <b>pistón son 45 min</b> y con turbina 30 min a 1500 ft. VFR de día en aviación general: 30 min.</div>
   <div class="comp"><b>ATPL</b>Taxi + trip + contingencia (lo mayor de <b>5 % del trip</b> y <b>5 min</b> de espera a 1500 ft) + alternativo + reserva final + adicional + <b>extra</b> (a criterio del comandante). Trip = despegue, ascenso, crucero, descenso, aproximación y aterrizaje.</div>
 </div>
-</details>
-
-<details class="lo" id="lo-033.03.01" data-lo="033.03.01">
-<summary><span class="lonum">033.03.01</span><span class="lotitle">General</span></summary>
-<div class="body"><!--p2:033.03.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li>La <b>fuel policy</b> es una norma: hay que seguirla.</li><li>Combustible a bordo: start-up, taxi, trip, contingencia, alternativo y final reserve. Todo esto hay que tenerlo en rampa.</li></ul></div><!--/p2:033.03.01--><div class="comp"><b>ATPL</b>El combustible se planifica con la meteo, retrasos de ATC, NOTAM, la masa y la ruta prevista. Reserva final: <b>30 min</b> turbina (a 1500 ft) · <b>45 min</b> pistón.</div></div>
 </details>
 
 <details class="lo atpl" id="lo-033.03.03" data-lo="033.03.03">
@@ -824,6 +824,18 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <h2>De otras asignaturas</h2>
 
 <!-- ===== 050.01.06 ===== -->
+<details class="lo" id="lo-050.01.05" data-lo="050.01.05">
+<summary><span class="lonum">050.01.05</span><span class="lotitle">International Standard Atmosphere (ISA)</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li><span class="formula">OAT ISA = 15 °C − 2 °C × (altitud ÷ 1000 ft)</span>. Alguna pregunta de ISA habrá.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Nivel del mar: <b>15 °C · 1013,25 hPa · 29,92 inHg</b>. Baja <b>2 °C cada 1000 ft</b> (1,98).</div>
+  <div class="dmini"><div><b>5000 ft</b><span>ISA 5 °C</span></div><div><b>10 000 ft</b><span>ISA −5 °C</span></div><div><b>36 090 ft</b><span>−56,5 °C</span></div></div>
+</div>
+</details>
+
+<!-- ===== 050.01.05 ===== -->
 <details class="lo" id="lo-050.01.06" data-lo="050.01.06">
 <summary><span class="lonum">050.01.06</span><span class="lotitle">Altimetry</span></summary>
 <div class="body">
@@ -858,18 +870,6 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <li>La presión es el <b>peso de la columna de aire</b> de encima y actúa <b>en todas direcciones</b>. Baja con la altura: <b>1 hPa cada 27 ft</b> cerca del mar, <b>36 ft</b> a 10 000 ft.</li>
     <li>Aire <b>frío</b>: la presión cae <b>más deprisa</b> con la altura. Aire <b>cálido</b>: más despacio.</li>
   </ul>
-</div>
-</details>
-
-<!-- ===== 050.01.05 ===== -->
-<details class="lo" id="lo-050.01.05" data-lo="050.01.05">
-<summary><span class="lonum">050.01.05</span><span class="lotitle">International Standard Atmosphere (ISA)</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li><span class="formula">OAT ISA = 15 °C − 2 °C × (altitud ÷ 1000 ft)</span>. Alguna pregunta de ISA habrá.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Nivel del mar: <b>15 °C · 1013,25 hPa · 29,92 inHg</b>. Baja <b>2 °C cada 1000 ft</b> (1,98).</div>
-  <div class="dmini"><div><b>5000 ft</b><span>ISA 5 °C</span></div><div><b>10 000 ft</b><span>ISA −5 °C</span></div><div><b>36 090 ft</b><span>−56,5 °C</span></div></div>
 </div>
 </details>
 </section>
@@ -1654,6 +1654,8 @@ const SUB = [
  ["050.01.06","X",13,"Altimetry","full"],
  ["050.01.05","X",2,"International Standard Atmosphere (ISA)","full"]
 ];
+/*f15natsort*/const __nk=c=>String(c).split(/[.\-_·\s]+/).filter(Boolean).map(t=>/^\d+$/.test(t)?[0,+t,""]:[1,0,t]);const __nc=(a,b)=>{const x=__nk(a[0]),y=__nk(b[0]);for(let i=0;i<Math.max(x.length,y.length);i++){const p=x[i]||[-1,0,""],q=y[i]||[-1,0,""];for(let j=0;j<3;j++){if(p[j]<q[j])return -1;if(p[j]>q[j])return 1}}return 0};SUB.sort(__nc);
+
 const BLOCKS = [
  {k:"A1", s:"031", code:"031.01", name:"Purpose of mass-and-balance considerations", n:1, los:9},
  {k:"A2", s:"031", code:"031.02", name:"Loading", n:8, los:19},

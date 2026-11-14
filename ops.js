@@ -338,17 +338,20 @@ function fill(){
   const f1=evF.ac.cz.f, f2=evS.ac.cz.f, all=(ev,k)=>Object.keys(AC).map(a=>ev.ac[a].f[k]), open=st.open;
   const cell=(ok,txt,nn)=>`<td class="lim ${nn&&!open?"n":(ok===true?"g":ok===false?"r":"a")}">${txt}</td>`;
   const tri=arr=>arr.every(Boolean)?true:arr.some(Boolean)?null:false;
+  // «Ahora» en ROJO en cuanto el valor incumple el límite de Instructor o de Solo (con el aeródromo cerrado los límites no aplican)
+  const nw=(txt,a,b)=>{ const bad=open&&(a!==true||b!==true); return `<td class="now${bad?" r":""}"${bad?' title="Fuera de los mínimos de la escuela"':""}><b>${txt}</b></td>`; };
   const chips=ev=>Object.keys(AC).map(k=>{ const s=open?ev.ac[k].s:"no", why=open?(ev.ac[k].why.join(" · ")||"Dentro de todos los mínimos"):(AD.other&&st.adOpen?"De noche":"Aeródromo cerrado"); return `<span class="ac ${s}" title="${esc(why)}">${AC[k].c}</span>`; }).join("");
+  const cT=tri(all(evF,"cross")), cS=tri(all(evS,"cross")), tT=tri(all(evF,"temp")), tS=tri(all(evS,"temp"));
   $("#opMin",R).innerHTML=`<table class="mn"><thead><tr><th></th><th>Ahora</th><th>Instructor</th><th>Solo</th></tr></thead><tbody>
-   <tr><th>Horario</th><td><b class="${open?"":"r"}">${open?"Día":(AD.other&&st.adOpen===false?"Cerrado":"Noche")}</b></td>${cell(open,"de día")}${cell(open,"de día")}</tr>
-   <tr><th>Visibilidad</th><td><b>${visTxt(e.vis)}</b></td>${cell(f1.vis,"≥ 5 km",1)}${cell(f2.vis,"≥ 8 km",1)}</tr>
-   <tr><th>Techo</th><td><b>${e.ceil==null?"Sin techo":e.ceil.toLocaleString("es-ES")+" ft"}</b></td>${cell(f1.cig,"≥ 1.500 ft",1)}${cell(f2.cig,"≥ 2.500 ft",1)}</tr>
-   <tr><th>Cruzado</th><td><b>${Math.round(w.cross)} kt</b></td>${cell(tri(all(evF,"cross")),"≤ 12 · 15 · 15",1)}${cell(tri(all(evS,"cross")),"≤ 10 · 12 · 12",1)}</tr>
-   <tr><th>De cara</th><td><b>${Math.max(0,Math.round(w.head))} kt</b></td>${cell(f1.head,"≤ 20 kt",1)}${cell(f2.head,"≤ 20 kt",1)}</tr>
-   <tr><th>De cola</th><td><b>${Math.max(0,Math.round(-w.head))} kt</b></td>${cell(f1.tail,"≤ 5 kt",1)}${cell(f2.tail,"0 kt",1)}</tr>
-   <tr><th>Temp.</th><td><b>${e.temp!=null?e.temp+" ºC":"—"}</b></td>${cell(tri(all(evF,"temp")),"≤ 32 · 35 · 35",1)}${cell(tri(all(evS,"temp")),"≤ 32 ºC",1)}</tr>
+   <tr><th>Horario</th><td class="now${open?"":" r"}"><b>${open?"Día":(AD.other&&st.adOpen===false?"Cerrado":"Noche")}</b></td>${cell(open,"de día")}${cell(open,"de día")}</tr>
+   <tr><th>Visibilidad</th>${nw(visTxt(e.vis),f1.vis,f2.vis)}${cell(f1.vis,"≥ 5 km",1)}${cell(f2.vis,"≥ 8 km",1)}</tr>
+   <tr><th>Techo</th>${nw(e.ceil==null?"Sin techo":e.ceil.toLocaleString("es-ES")+" ft",f1.cig,f2.cig)}${cell(f1.cig,"≥ 1.500 ft",1)}${cell(f2.cig,"≥ 2.500 ft",1)}</tr>
+   <tr><th>Cruzado</th>${nw(Math.round(w.cross)+" kt",cT,cS)}${cell(cT,"≤ 12 · 15 · 15",1)}${cell(cS,"≤ 10 · 12 · 12",1)}</tr>
+   <tr><th>De cara</th>${nw(Math.max(0,Math.round(w.head))+" kt",f1.head,f2.head)}${cell(f1.head,"≤ 20 kt",1)}${cell(f2.head,"≤ 20 kt",1)}</tr>
+   <tr><th>De cola</th>${nw(Math.max(0,Math.round(-w.head))+" kt",f1.tail,f2.tail)}${cell(f1.tail,"≤ 5 kt",1)}${cell(f2.tail,"0 kt",1)}</tr>
+   <tr><th>Temp.</th>${nw(e.temp!=null?e.temp+" ºC":"—",tT,tS)}${cell(tT,"≤ 32 · 35 · 35",1)}${cell(tS,"≤ 32 ºC",1)}</tr>
    <tr class="res"><th>¿Se puede?</th><td></td><td>${chips(evF)}</td><td>${chips(evS)}</td></tr></tbody></table>
-   <p class="nt">${open?"":(AD.other&&st.adOpen?"De noche: ":"Fuera de horario: ")+"el resto de límites no aplican. "}Orientativo: decide el HT o el CFI.</p>`;
+   <p class="nt">${open?"":(AD.other&&st.adOpen?"De noche: ":"Fuera de horario: ")+"el resto de límites no aplican. "}<b class="legr">Rojo</b> = valor fuera de mínimos. Orientativo: decide el HT o el CFI.</p>`;
   const pe=$("#opPist",R); if(pe) pe.innerHTML=pistHTML(e);
   const ts=$("#opTrSt",R); if(ts) ts.textContent=S.tr?("✈ "+S.tr.length+" aviones"+(S.tr.some(isFS)?" · "+S.tr.filter(isFS).length+" Flyschool":"")+" · ADS-B"+(S.trSrc?" ("+S.trSrc+")":"")+" · "+fz(S.trAt)+" Z"):"ADS-B no disponible"+(S.trWhy?" ("+S.trWhy+")":"");
 }
@@ -746,14 +749,24 @@ const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD
 .op .tbl.pst th{vertical-align:middle}
 .op .tbl.pst td{vertical-align:middle;font-weight:600}
 .op table.mn{table-layout:fixed}
-.op .mn th:nth-child(1),.op .mn tbody th{width:21%}
-.op .mn th:nth-child(2){width:19%}
+.op .mn th:nth-child(1),.op .mn tbody th{width:22%;padding-right:10px}
+.op .mn th:nth-child(2){width:20%}
+.op .mn td.lim{font-size:13px;white-space:nowrap;overflow-wrap:normal}
+.op .mn tr.res td{white-space:normal}
+.op .mn tbody th{font-size:14px;line-height:1.15}
 .op .mn td.lim{overflow-wrap:anywhere}
 .op .mn tr.res td{display:table-cell}
 .op .mn tr.res td .ac{margin:2px 3px 2px 0;padding:2px 6px;font-size:12px}
 .op .lim.g{color:var(--ok);font-weight:600}
 .op .lim.r{color:var(--no);font-weight:600}
 .op .lim.a{color:var(--mid);font-weight:600}
+.op .mn td.lim.r{color:var(--no);font-weight:700}
+.op .mn td.lim.a{color:var(--mid);font-weight:600}
+.op .mn td.lim.g{color:var(--mu)}
+.op .mn td.now b{font-weight:700;transition:color .2s}
+.op .mn td.now.r b{color:var(--no)}
+.op .mn td.now.r{background:var(--nob)}
+.op .mn .legr{color:var(--no)}
 .op .lim.n{color:var(--mu)}
 .op .mn b.r{color:var(--no)}
 .op .pn>h2 small a{color:var(--k1);text-decoration:none}
@@ -863,7 +876,7 @@ function radHTML(cls){
   const mt=S.opt&&S.opt.multi?' data-t="res map"':"", FQ=fqList();
   if(!FQ) return `<section class="pn rad-na ${cls}"${mt}><h2>Frecuencias <small><a target="_blank" rel="noopener" href="${aipLink()}">Ver en la AIP ↗</a></small></h2></section>`;
   const a=FQ[Math.min(S.rad.a,FQ.length-1)], b=FQ[Math.min(S.rad.s,FQ.length-1)];
-  return `<section class="rad ${cls}"${mt} aria-label="Frecuencias de ${esc(AD.short||AD.name)}"><div class="rh"><span>COM · ${AD.icao}</span><a target="_blank" rel="noopener" href="${aipLink()}">AIP ↗</a></div>
+  return `<section class="rad ${cls}"${mt} aria-label="Frecuencias de ${esc(AD.short||AD.name)}"><div class="rh"><span>Frecuencias AIP · ${AD.icao}</span><a target="_blank" rel="noopener" href="${aipLink()}">AIP ↗</a></div>
    <div class="lcd"><div class="scr"><small>ACTIVA</small><b>${a[1]}</b><i>${a[0]} · ${a[2]}</i></div><button type="button" class="flip" aria-label="Intercambiar activa y en espera" title="Intercambiar">⇄</button><div class="scr st"><small>EN ESPERA</small><b>${b[1]}</b><i>${b[0]} · ${b[2]}</i></div></div>
    <div class="keys" style="grid-template-columns:repeat(${FQ.length},minmax(0,1fr))">${FQ.map((f,i)=>`<button type="button" class="key${i===S.rad.a?" on":i===S.rad.s?" sb":""}" data-fq="${i}" aria-label="${f[0]} ${f[1]}"><small>${f[0].replace("TWR (reserva)","TWR 2").replace(/ \(.*/,"").replace("Emergencia","EMER")}</small><b>${f[1]}</b></button>`).join("")}</div>
    ${S.opt&&S.opt.multi?"":'<p class="rf">Toca una frecuencia para ponerla en espera y ⇄ para activarla. Frecuencias de la AIP (AD 2-LECU).</p>'}</section>`;

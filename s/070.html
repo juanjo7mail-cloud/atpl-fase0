@@ -11,7 +11,7 @@ window.__hub={use:async function(n){return n==="artifact"?{publish:async functio
 fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
 })();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>070 Operational Procedures</title>
+<title>070 · Operational Procedures</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -342,93 +342,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <h2>071.01 · General requirements <span class="wtag">17 preg. · 40 %</span></h2>
 
 <!-- ===== 071.01.02 ===== -->
-<details class="lo" id="lo-071.01.02" data-lo="071.01.02">
-<summary><span class="lonum">071.01.02</span><span class="lotitle">Operational requirements</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>General requirements: por ejemplo el <b>cálculo de combustible y aceite</b> o el <b>briefing</b>.</li>
-  </ul></div>
-
-  <h4>¿Qué tengo que llevar y cuánto combustible? · tócalo</h4>
-  <div id="visKit"></div>
-
-  <h4>Combustible mínimo (Anexo 6, aviación general)</h4>
-  <div class="scroll"><table>
-   <tr><th>Vuelo</th><th>Combustible mínimo</th></tr>
-   <tr><td>VFR de <b>día</b></td><td>hasta el destino + <b>30 min</b> a altitud normal de crucero</td></tr>
-   <tr><td>VFR de <b>noche</b></td><td>hasta el destino + <b>45 min</b></td></tr>
-   <tr><td>IFR <b>sin</b> alternativo</td><td>hasta el destino + <b>45 min</b></td></tr>
-   <tr><td>IFR <b>con</b> alternativo</td><td>hasta el destino, de ahí al <b>alternativo</b> + <b>45 min</b></td></tr>
-  </table></div>
-  <p class="src">Siempre con la meteo y los retrasos previstos. Truco: solo el VFR de día se queda en 30; todo lo demás, 45.</p>
-
-  <h4>El PIC</h4>
-  <ul>
-    <li>Cumple las leyes de <b>los Estados donde opera</b>. Responde de la operación, del avión y de <b>todas las personas a bordo</b>.</li>
-    <li>Si una emergencia le obliga a <b>violar una norma local</b>: lo notifica a la autoridad cuanto antes; algunos Estados piden un informe, normalmente en <b>10 días</b>.</li>
-    <li>Accidente con heridos graves, muertos o daños importantes: lo notifica <b>el PIC</b>, lo antes posible.</li>
-    <li>No empieza el vuelo sin comprobar que aeródromo, comunicaciones y radioayudas son <b>adecuados</b>. No baja de los <b>mínimos de operación</b> salvo con aprobación del Estado (en aproximación, solo en emergencia).</li>
-  </ul>
-
-  <h4>Planificación y meteo</h4>
-  <ul>
-    <li>Todo vuelo fuera de las inmediaciones y todo IFR: revisar informes y pronósticos y planificar una alternativa.</li>
-    <li>VFR: no se inicia si los últimos informes no permiten VFR en la ruta. IFR: no se inicia (ni se continúa) si el destino, o al menos un alternativo, no está en mínimos a la hora prevista.</li>
-    <li>No se vuela en <b>engelamiento</b> conocido o previsto sin equipo para ello. Meteo peligrosa, ceniza o tormenta de polvo: se <b>informa</b> lo antes posible.</li>
-    <li><b>Alternativo de destino IFR</b> obligatorio salvo: (a) certeza razonable de VMC a la hora prevista, o (b) destino <b>aislado</b> con aproximación instrumental y previsión de techo <b>1000 ft</b> sobre el mínimo y visibilidad de <b>5,5 km</b> (o 4 km más que el mínimo).</li>
-  </ul>
-
-  <h4>Briefing, pasajeros y tripulación</h4>
-  <ul>
-    <li><b>Briefing</b>: <b>cinturones · salidas de emergencia · chalecos · oxígeno · resto del equipo de emergencia</b> (y tarjetas de seguridad).</li>
-    <li>Pasajeros con cinturón en <b>despegue, aterrizaje</b>, turbulencia y emergencia. Tripulación en su puesto en despegue y aterrizaje, con cinturón; el piloto, con arnés.</li>
-    <li><b>Repostar con pasajeros</b> embarcando, a bordo o desembarcando: solo con el PIC u otra persona cualificada capaz de organizar una evacuación.</li>
-    <li>Rodar solo si quien lleva los mandos está <b>autorizado</b> por el propietario, es competente, sabe usar la radio y conoce el aeródromo.</li>
-    <li>Antes de volar, el PIC comprueba: aeronavegable y con certificados · instrumentos y equipo · mantenimiento hecho · peso y centrado · carga estibada · no se superan las limitaciones del manual.</li>
-  </ul>
-
-  <h4>Equipo</h4>
-  <ul>
-    <li><b>En todo vuelo</b>: <b>botiquín</b> accesible · <b>extintor portátil</b> (al menos uno en cabina de pilotos) · asiento y cinturón para cada persona · manual de vuelo · cartas de la ruta <b>y de las posibles desviaciones</b> · procedimientos de <b>interceptación</b> · <b>logbook</b> · <b>fusibles de repuesto</b> si los hay accesibles en vuelo.</li>
-    <li><b>VFR</b>: brújula · reloj con segundos · altímetro · anemómetro. <b>IFR</b>: además horizonte, giróscopo direccional, viraje y resbale, VSI, temperatura exterior y anemómetro con calefacción.</li>
-    <li><b>Noche</b>: luces de navegación, <b>luz de aterrizaje</b>, iluminación de instrumentos y de cabina, <b>linterna por puesto</b>. Si falla una luz de navegación: aterrizar en cuanto sea razonablemente posible.</li>
-    <li><b>Radio</b>: en IFR y de noche, y en VFR en espacio controlado (clase D por debajo de FL100: basta VHF-COM). Tiene que poder usar <b>121,5 MHz</b>.</li>
-    <li><b>Sobre el agua</b>: monomotor más allá de la distancia de planeo → <b>chaleco</b> por persona; a más de <b>50 NM</b> de tierra → chalecos; a más de <b>100 NM (monomotor)</b> o <b>200 NM (multimotor)</b> → <b>balsas</b> y pirotecnia.</li>
-  </ul>
-
-  <div class="comp"><b>ATPL</b><ul>
-    <li><b>Tipos de operación</b>: CAT = transporte comercial, con <b>AOC</b> · NCC = no comercial con aeronave <b>compleja</b> · NCO = no comercial <b>no compleja</b> (aeroclub) · SPO = especializadas. <b>Compleja</b>: más de 5700 kg, o más de 19 asientos, o 2 pilotos mínimos, o reactor, o <b>más de un</b> turbohélice. El tren retráctil no cuenta.</li>
-    <li><b>Combustible CAT</b>: taxi + viaje + contingencia (normalmente <b>5 %</b> del viaje) + alternativo + <b>reserva final</b> (<b>30 min</b> a 1500 ft en turbina, <b>45 min</b> en pistón) + adicional + extra. <b>MINIMUM FUEL</b>: cualquier cambio te haría aterrizar por debajo de la reserva final. <b>MAYDAY FUEL</b>: vas a aterrizar por debajo.</li>
-    <li><b>Tiempo de vuelo (ORO.FTL)</b>: <i>block time</i> acaba en el aparcamiento con <b>motores parados</b> · FDP básica <b>13 h</b> (se reduce con más de 2 sectores) · ante imprevistos, <b>discreción del comandante</b>.</li>
-    <li><b>Tripulación</b>: 1 TCP por cada <b>50 asientos</b> · con más de un TCP, un <b>TCP sénior</b>.</li>
-    <li><b>Equipo</b>: ACAS II en turbina de más de <b>5700 kg</b> o más de <b>19 pasajeros</b> · fusibles: <b>10 %</b> de cada valor o 3 · botiquines: 1 por cada 100 asientos · oxígeno NCO por encima de <b>10 000 ft más de 30 min</b> y siempre por encima de <b>13 000 ft</b>.</li>
-    <li><b>Aprobaciones específicas (Part-SPA)</b>: RVSM, LVO (CAT II/III), mercancías peligrosas. <b>DH</b>: CAT I 200 ft · CAT II 100 ft.</li>
-    <li><b>Comandante</b>: responsable de todos a bordo desde que embarca hasta que desembarca · puede negar el embarque a quien esté ebrio o drogado · decide sobre los PED · <b>un RA del TCAS manda</b> sobre el ATC (sigue el RA e informa).</li>
-    <li><b>A bordo en CAT</b>: copia certificada del AOC, CofA y matrícula originales, AFM, journey log, OFP, seguro. En NCO, también el certificado de ruido.</li>
-  </ul></div>
-</div>
-</details>
-
-<!-- ===== 071.01.03 ===== -->
-<details class="lo atpl" id="lo-071.01.03" data-lo="071.01.03">
-<summary><span class="lonum">071.01.03</span><span class="lotitle">Long-range flights</span></summary>
-<div class="body">
-  <div class="svgbox" id="svgSlop"></div>
-  <div class="comp"><b>ATPL</b><ul>
-    <li><b>NAT HLA</b> (espacio de alto nivel del Atlántico Norte): <b>aprobación específica</b>, equipos de navegación de largo alcance y RVSM. Antes de cada vuelo: <b>comprobar la hora UTC</b> y cruzar los altímetros. Desviación de nivel de <b>300 ft o más</b> → se notifica.</li>
-    <li><b>Autorización oceánica</b> = <b>ruta, Mach y nivel</b> (separación lateral, longitudinal y vertical). <b>Mach number technique</b>: misma ruta y nivel con el mismo Mach → se conserva la separación. Al salir del oceánico, el Mach asignado se mantiene <b>hasta que el ATC autorice</b>.</li>
-    <li><b>OTS</b>: derrotas publicadas <b>cada día</b> según vientos y tráfico. Rutas libres este-oeste: puntos cada <b>10° de longitud</b>.</li>
-    <li><b>SLOP</b>: sobre el eje o <b>1 o 2 NM a la derecha</b>. Nunca a la izquierda.</li>
-    <li><b>Contingencia</b> (no puedes seguir la autorización ni obtener otra): apartarte <b>5 NM</b> de la ruta y subir o bajar a un nivel <b>500 ft</b> distinto de los normales. Desvío por meteo de <b>más de 5 NM</b>: cambia el nivel <b>300 ft</b>.</li>
-    <li><b>RNP 10</b> → separación lateral de <b>50 NM</b>. Aire-aire: <b>123,450 MHz</b>. HF: bandas <b>bajas de noche</b>, altas de día. Polar: HF y SATCOM.</li>
-    <li><b>ETOPS</b>: bimotor a más de <b>60 min</b> (con un motor parado) de un aeródromo adecuado → aprobación; alternativo en ruta dentro del tiempo de desvío aprobado.</li>
-    <li><b>Alternativo de despegue</b>: bimotor a <b>1 h</b>, tri o cuatrimotor a <b>2 h</b>, a velocidad de crucero con un motor parado.</li>
-    <li><b>Polar</b>: la brújula no sirve → rumbo <b>verdadero o grid</b> · Jet A-1 congela a <b>−47 °C</b> → bajar a aire más cálido o acelerar.</li>
-  </ul></div>
-</div>
-</details>
-
-<!-- ===== 071.01.01 ===== -->
 <details class="lo" id="lo-071.01.01" data-lo="071.01.01">
 <summary><span class="lonum">071.01.01</span><span class="lotitle">ICAO Annex 6</span></summary>
 <div class="body">
@@ -514,22 +427,111 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<!-- ===== 071.01.03 ===== -->
+<details class="lo" id="lo-071.01.02" data-lo="071.01.02">
+<summary><span class="lonum">071.01.02</span><span class="lotitle">Operational requirements</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>General requirements: por ejemplo el <b>cálculo de combustible y aceite</b> o el <b>briefing</b>.</li>
+  </ul></div>
+
+  <h4>¿Qué tengo que llevar y cuánto combustible? · tócalo</h4>
+  <div id="visKit"></div>
+
+  <h4>Combustible mínimo (Anexo 6, aviación general)</h4>
+  <div class="scroll"><table>
+   <tr><th>Vuelo</th><th>Combustible mínimo</th></tr>
+   <tr><td>VFR de <b>día</b></td><td>hasta el destino + <b>30 min</b> a altitud normal de crucero</td></tr>
+   <tr><td>VFR de <b>noche</b></td><td>hasta el destino + <b>45 min</b></td></tr>
+   <tr><td>IFR <b>sin</b> alternativo</td><td>hasta el destino + <b>45 min</b></td></tr>
+   <tr><td>IFR <b>con</b> alternativo</td><td>hasta el destino, de ahí al <b>alternativo</b> + <b>45 min</b></td></tr>
+  </table></div>
+  <p class="src">Siempre con la meteo y los retrasos previstos. Truco: solo el VFR de día se queda en 30; todo lo demás, 45.</p>
+
+  <h4>El PIC</h4>
+  <ul>
+    <li>Cumple las leyes de <b>los Estados donde opera</b>. Responde de la operación, del avión y de <b>todas las personas a bordo</b>.</li>
+    <li>Si una emergencia le obliga a <b>violar una norma local</b>: lo notifica a la autoridad cuanto antes; algunos Estados piden un informe, normalmente en <b>10 días</b>.</li>
+    <li>Accidente con heridos graves, muertos o daños importantes: lo notifica <b>el PIC</b>, lo antes posible.</li>
+    <li>No empieza el vuelo sin comprobar que aeródromo, comunicaciones y radioayudas son <b>adecuados</b>. No baja de los <b>mínimos de operación</b> salvo con aprobación del Estado (en aproximación, solo en emergencia).</li>
+  </ul>
+
+  <h4>Planificación y meteo</h4>
+  <ul>
+    <li>Todo vuelo fuera de las inmediaciones y todo IFR: revisar informes y pronósticos y planificar una alternativa.</li>
+    <li>VFR: no se inicia si los últimos informes no permiten VFR en la ruta. IFR: no se inicia (ni se continúa) si el destino, o al menos un alternativo, no está en mínimos a la hora prevista.</li>
+    <li>No se vuela en <b>engelamiento</b> conocido o previsto sin equipo para ello. Meteo peligrosa, ceniza o tormenta de polvo: se <b>informa</b> lo antes posible.</li>
+    <li><b>Alternativo de destino IFR</b> obligatorio salvo: (a) certeza razonable de VMC a la hora prevista, o (b) destino <b>aislado</b> con aproximación instrumental y previsión de techo <b>1000 ft</b> sobre el mínimo y visibilidad de <b>5,5 km</b> (o 4 km más que el mínimo).</li>
+  </ul>
+
+  <h4>Briefing, pasajeros y tripulación</h4>
+  <ul>
+    <li><b>Briefing</b>: <b>cinturones · salidas de emergencia · chalecos · oxígeno · resto del equipo de emergencia</b> (y tarjetas de seguridad).</li>
+    <li>Pasajeros con cinturón en <b>despegue, aterrizaje</b>, turbulencia y emergencia. Tripulación en su puesto en despegue y aterrizaje, con cinturón; el piloto, con arnés.</li>
+    <li><b>Repostar con pasajeros</b> embarcando, a bordo o desembarcando: solo con el PIC u otra persona cualificada capaz de organizar una evacuación.</li>
+    <li>Rodar solo si quien lleva los mandos está <b>autorizado</b> por el propietario, es competente, sabe usar la radio y conoce el aeródromo.</li>
+    <li>Antes de volar, el PIC comprueba: aeronavegable y con certificados · instrumentos y equipo · mantenimiento hecho · peso y centrado · carga estibada · no se superan las limitaciones del manual.</li>
+  </ul>
+
+  <h4>Equipo</h4>
+  <ul>
+    <li><b>En todo vuelo</b>: <b>botiquín</b> accesible · <b>extintor portátil</b> (al menos uno en cabina de pilotos) · asiento y cinturón para cada persona · manual de vuelo · cartas de la ruta <b>y de las posibles desviaciones</b> · procedimientos de <b>interceptación</b> · <b>logbook</b> · <b>fusibles de repuesto</b> si los hay accesibles en vuelo.</li>
+    <li><b>VFR</b>: brújula · reloj con segundos · altímetro · anemómetro. <b>IFR</b>: además horizonte, giróscopo direccional, viraje y resbale, VSI, temperatura exterior y anemómetro con calefacción.</li>
+    <li><b>Noche</b>: luces de navegación, <b>luz de aterrizaje</b>, iluminación de instrumentos y de cabina, <b>linterna por puesto</b>. Si falla una luz de navegación: aterrizar en cuanto sea razonablemente posible.</li>
+    <li><b>Radio</b>: en IFR y de noche, y en VFR en espacio controlado (clase D por debajo de FL100: basta VHF-COM). Tiene que poder usar <b>121,5 MHz</b>.</li>
+    <li><b>Sobre el agua</b>: monomotor más allá de la distancia de planeo → <b>chaleco</b> por persona; a más de <b>50 NM</b> de tierra → chalecos; a más de <b>100 NM (monomotor)</b> o <b>200 NM (multimotor)</b> → <b>balsas</b> y pirotecnia.</li>
+  </ul>
+
+  <div class="comp"><b>ATPL</b><ul>
+    <li><b>Tipos de operación</b>: CAT = transporte comercial, con <b>AOC</b> · NCC = no comercial con aeronave <b>compleja</b> · NCO = no comercial <b>no compleja</b> (aeroclub) · SPO = especializadas. <b>Compleja</b>: más de 5700 kg, o más de 19 asientos, o 2 pilotos mínimos, o reactor, o <b>más de un</b> turbohélice. El tren retráctil no cuenta.</li>
+    <li><b>Combustible CAT</b>: taxi + viaje + contingencia (normalmente <b>5 %</b> del viaje) + alternativo + <b>reserva final</b> (<b>30 min</b> a 1500 ft en turbina, <b>45 min</b> en pistón) + adicional + extra. <b>MINIMUM FUEL</b>: cualquier cambio te haría aterrizar por debajo de la reserva final. <b>MAYDAY FUEL</b>: vas a aterrizar por debajo.</li>
+    <li><b>Tiempo de vuelo (ORO.FTL)</b>: <i>block time</i> acaba en el aparcamiento con <b>motores parados</b> · FDP básica <b>13 h</b> (se reduce con más de 2 sectores) · ante imprevistos, <b>discreción del comandante</b>.</li>
+    <li><b>Tripulación</b>: 1 TCP por cada <b>50 asientos</b> · con más de un TCP, un <b>TCP sénior</b>.</li>
+    <li><b>Equipo</b>: ACAS II en turbina de más de <b>5700 kg</b> o más de <b>19 pasajeros</b> · fusibles: <b>10 %</b> de cada valor o 3 · botiquines: 1 por cada 100 asientos · oxígeno NCO por encima de <b>10 000 ft más de 30 min</b> y siempre por encima de <b>13 000 ft</b>.</li>
+    <li><b>Aprobaciones específicas (Part-SPA)</b>: RVSM, LVO (CAT II/III), mercancías peligrosas. <b>DH</b>: CAT I 200 ft · CAT II 100 ft.</li>
+    <li><b>Comandante</b>: responsable de todos a bordo desde que embarca hasta que desembarca · puede negar el embarque a quien esté ebrio o drogado · decide sobre los PED · <b>un RA del TCAS manda</b> sobre el ATC (sigue el RA e informa).</li>
+    <li><b>A bordo en CAT</b>: copia certificada del AOC, CofA y matrícula originales, AFM, journey log, OFP, seguro. En NCO, también el certificado de ruido.</li>
+  </ul></div>
+</div>
+</details>
+
+<!-- ===== 071.01.01 ===== -->
+<details class="lo atpl" id="lo-071.01.03" data-lo="071.01.03">
+<summary><span class="lonum">071.01.03</span><span class="lotitle">Long-range flights</span></summary>
+<div class="body">
+  <div class="svgbox" id="svgSlop"></div>
+  <div class="comp"><b>ATPL</b><ul>
+    <li><b>NAT HLA</b> (espacio de alto nivel del Atlántico Norte): <b>aprobación específica</b>, equipos de navegación de largo alcance y RVSM. Antes de cada vuelo: <b>comprobar la hora UTC</b> y cruzar los altímetros. Desviación de nivel de <b>300 ft o más</b> → se notifica.</li>
+    <li><b>Autorización oceánica</b> = <b>ruta, Mach y nivel</b> (separación lateral, longitudinal y vertical). <b>Mach number technique</b>: misma ruta y nivel con el mismo Mach → se conserva la separación. Al salir del oceánico, el Mach asignado se mantiene <b>hasta que el ATC autorice</b>.</li>
+    <li><b>OTS</b>: derrotas publicadas <b>cada día</b> según vientos y tráfico. Rutas libres este-oeste: puntos cada <b>10° de longitud</b>.</li>
+    <li><b>SLOP</b>: sobre el eje o <b>1 o 2 NM a la derecha</b>. Nunca a la izquierda.</li>
+    <li><b>Contingencia</b> (no puedes seguir la autorización ni obtener otra): apartarte <b>5 NM</b> de la ruta y subir o bajar a un nivel <b>500 ft</b> distinto de los normales. Desvío por meteo de <b>más de 5 NM</b>: cambia el nivel <b>300 ft</b>.</li>
+    <li><b>RNP 10</b> → separación lateral de <b>50 NM</b>. Aire-aire: <b>123,450 MHz</b>. HF: bandas <b>bajas de noche</b>, altas de día. Polar: HF y SATCOM.</li>
+    <li><b>ETOPS</b>: bimotor a más de <b>60 min</b> (con un motor parado) de un aeródromo adecuado → aprobación; alternativo en ruta dentro del tiempo de desvío aprobado.</li>
+    <li><b>Alternativo de despegue</b>: bimotor a <b>1 h</b>, tri o cuatrimotor a <b>2 h</b>, a velocidad de crucero con un motor parado.</li>
+    <li><b>Polar</b>: la brújula no sirve → rumbo <b>verdadero o grid</b> · Jet A-1 congela a <b>−47 °C</b> → bajar a aire más cálido o acelerar.</li>
+  </ul></div>
+</div>
+</details>
+
 <h2>071.02 · Special operational procedures and hazards <span class="wtag">24 preg. · 57 %</span></h2>
 
 <!-- ===== 071.02.12 ===== -->
-<details class="lo atpl" id="lo-071.02.12" data-lo="071.02.12">
-<summary><span class="lonum">071.02.12</span><span class="lotitle">Transport of dangerous goods by air</span></summary>
+<details class="lo atpl" id="lo-071.02.01" data-lo="071.02.01">
+<summary><span class="lonum">071.02.01</span><span class="lotitle">Operations manual</span></summary>
 <div class="body">
-  <div class="key"><b>Definición</b>Artículos o sustancias que pueden suponer un riesgo para la <b>salud, la seguridad, la propiedad o el medio ambiente</b>.</div>
-  <h4>Las 9 clases · ponte a prueba</h4>
-  <div id="visDG"></div>
-  <div class="comp"><b>ATPL</b><ul>
-    <li>Normas: <b>Anexo 18</b> de la OACI y las Instrucciones Técnicas, <b>Doc 9284</b> (las aerolíneas usan el manual DGR de la IATA).</li>
-    <li>El operador necesita <b>aprobación específica (SPA.DG)</b>. El comandante recibe por escrito la <b>NOTOC</b> antes de salir.</li>
-    <li>Se <b>inspeccionan antes de cargar</b>: bulto con fugas o dañado → <b>no se carga</b>. Etiqueta <b>«Cargo Aircraft Only»</b> → nunca en avión de pasajeros. Algunas están <b>prohibidas siempre</b>.</li>
-    <li>Etiquetas en <b>rombo</b>. Baterías de litio de repuesto del pasajero: <b>solo en cabina</b>, con terminales protegidos.</li>
-    <li>Exento: lo que es <b>equipo del avión</b> (extintores, oxígeno…) o para vuelos aeromédicos.</li>
-    <li>Formación recurrente cada <b>24 meses</b>. Accidentes e incidentes con mercancías peligrosas → se <b>notifican</b> a la autoridad.</li>
+  <div class="scroll"><table>
+   <tr><th>Parte del OM</th><th>Qué lleva</th></tr>
+   <tr><td class="n">A</td><td><b>General</b>: políticas, deshielo en tierra, meteo peligrosa, <b>estela</b>, incapacitación, uso de la MEL, GPWS y TCAS</td></tr>
+   <tr><td class="n">B</td><td><b>Por tipo de avión</b>: anormales y emergencias, <b>MEL</b>, <b>CDL</b>, evacuación</td></tr>
+   <tr><td class="n">C</td><td><b>Ruta y aeródromos</b>: mínimos de operación</td></tr>
+   <tr><td class="n">D</td><td><b>Formación</b> de las tripulaciones</td></tr>
+  </table></div>
+  <div class="comp"><b>ATPL · MEL</b><ul>
+    <li><b>MMEL</b>: la hace el <b>titular del certificado de tipo</b> (aprueba EASA). <b>MEL</b>: la hace el <b>operador</b> a partir de la MMEL, y <b>nunca es menos restrictiva</b>.</li>
+    <li>Lista lo que puede estar <b>inoperativo al salir</b>, con condiciones. Plazos: categoría <b>B 3 días</b>, <b>C 10 días</b>, <b>D 120 días</b>.</li>
+    <li><b>Commencement of flight</b>: cuando el avión empieza a moverse <b>por sus propios medios</b> para despegar.</li>
+    <li>El plan de vuelo operacional (OFP) se guarda <b>3 meses</b>.</li>
   </ul></div>
 </div>
 </details>
@@ -582,80 +584,27 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <!-- ===== 071.02.01 ===== -->
-<details class="lo atpl" id="lo-071.02.01" data-lo="071.02.01">
-<summary><span class="lonum">071.02.01</span><span class="lotitle">Operations manual</span></summary>
+<details class="lo" id="lo-071.02.03" data-lo="071.02.03">
+<summary><span class="lonum">071.02.03</span><span class="lotitle">Bird-strike risk</span></summary>
 <div class="body">
-  <div class="scroll"><table>
-   <tr><th>Parte del OM</th><th>Qué lleva</th></tr>
-   <tr><td class="n">A</td><td><b>General</b>: políticas, deshielo en tierra, meteo peligrosa, <b>estela</b>, incapacitación, uso de la MEL, GPWS y TCAS</td></tr>
-   <tr><td class="n">B</td><td><b>Por tipo de avión</b>: anormales y emergencias, <b>MEL</b>, <b>CDL</b>, evacuación</td></tr>
-   <tr><td class="n">C</td><td><b>Ruta y aeródromos</b>: mínimos de operación</td></tr>
-   <tr><td class="n">D</td><td><b>Formación</b> de las tripulaciones</td></tr>
-  </table></div>
-  <div class="comp"><b>ATPL · MEL</b><ul>
-    <li><b>MMEL</b>: la hace el <b>titular del certificado de tipo</b> (aprueba EASA). <b>MEL</b>: la hace el <b>operador</b> a partir de la MMEL, y <b>nunca es menos restrictiva</b>.</li>
-    <li>Lista lo que puede estar <b>inoperativo al salir</b>, con condiciones. Plazos: categoría <b>B 3 días</b>, <b>C 10 días</b>, <b>D 120 días</b>.</li>
-    <li><b>Commencement of flight</b>: cuando el avión empieza a moverse <b>por sus propios medios</b> para despegar.</li>
-    <li>El plan de vuelo operacional (OFP) se guarda <b>3 meses</b>.</li>
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>En España hay mucha incidencia: hay que saber mirar en el <b>AIP</b> qué aves hay alrededor de cada aeródromo.</li>
   </ul></div>
+  <h4>Buitres: cómo cruzarte con ellos</h4>
+  <div class="svgbox" id="svgBird"></div>
+  <ul>
+    <li><b>AIP</b>: nacional en <b>ENR 5.6</b> (migraciones, zonas a evitar, buitres y cigüeñas, <b>zonas de fauna</b> donde está prohibido volar) · local en <b>AD 2, apartado 23</b>.</li>
+    <li>Migran entre <b>150 y 800 m</b>: volar por encima de <b>1000 m AGL</b>, sobre todo de mayo a octubre. Solo el <b>1 %</b> de los impactos es por encima de 2500 ft.</li>
+    <li>Otoño (sep–nov) por los Pirineos hacia Gibraltar; primavera (feb–mar) al revés. De día, las planeadoras con térmicas: <b>primera hora</b> es lo más seguro.</li>
+    <li>Aeropuerto: vertederos a más de <b>13 km</b>, árboles fuera de <b>150 m</b> del eje, hierba de <b>20 cm o más</b>, cetrería.</li>
+    <li><b>Despegue</b>: <b>abortar si queda pista</b> e inspeccionar. <b>En vuelo</b> con daños: probar la maniobrabilidad a altitud segura. Parabrisas roto: <b>reducir velocidad</b>. A 70 kt el impacto tiene la <b>mitad</b> de energía que a 100 kt.</li>
+  </ul>
+  <div class="ppt"><b>Dato · España</b>Desde 2000, <b>12</b> impactos derribaron el avión (<b>15 muertos</b>): todos <b>avionetas</b>, de marzo a septiembre, a mediodía, y solo <b>buitre leonado, buitre negro y cigüeña blanca</b>, que vuelan entre 300 y 1000 m.</div>
+  <div class="comp"><b>ATPL</b>La presencia de aves es parte de la <b>información prevuelo</b>; lo que ven las tripulaciones se pasa al <b>AIS</b> para difundirlo. En reactores: ingestión en el motor, sondas, parabrisas y radomo.</div>
 </div>
 </details>
 
 <!-- ===== 071.02.09 ===== -->
-<details class="lo" id="lo-071.02.09" data-lo="071.02.09">
-<summary><span class="lonum">071.02.09</span><span class="lotitle">Security (unlawful events)</span></summary>
-<div class="body">
-  <ul>
-    <li><b>Unlawful interference</b> (POP-1): apoderamiento ilícito, rehenes, intrusión, armas o artefactos, <b>información falsa</b>. Es <i>security</i>, no <i>safety</i>.</li>
-    <li>Transpondedor <b>7500</b> = interferencia ilícita (cualquier acto, no solo «intrusión en cabina»).</li>
-  </ul>
-  <div class="comp"><b>ATPL</b><ul>
-    <li><b>Screening</b>: medios técnicos o de otro tipo para <b>detectar artículos prohibidos</b>. <b>Zona restringida de seguridad</b>: lado aire con acceso controlado.</li>
-    <li><b>Equipaje no identificado</b>: nadie lo recoge ni lo identifica.</li>
-    <li><b>Puerta de cabina reforzada</b>: aviones de más de <b>45 500 kg</b> o más de <b>60 asientos</b>.</li>
-    <li><b>Amenaza de bomba en tierra</b> → al <b>puesto de estacionamiento aislado</b>. A bordo, lista de <b>búsqueda de bomba</b> y la <b>least-risk bomb location</b> que fija el fabricante.</li>
-  </ul></div>
-</div>
-</details>
-
-<!-- ===== 071.02.10 ===== -->
-<details class="lo" id="lo-071.02.10" data-lo="071.02.10">
-<summary><span class="lonum">071.02.10</span><span class="lotitle">Emergency and precautionary landing, and ditching</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>Cómo aterrizar y dónde, también en el agua. Fuera de pista, a la <b>menor velocidad posible</b>.</li>
-  </ul></div>
-
-  <h4>Engine failure: primeras acciones</h4>
-  <ul>
-    <li>Se evita con <b>buena planificación de combustible</b> y vigilando el <b>hielo en el carburador</b>.</li>
-    <li><b>Velocidad de mejor planeo</b> → <b>planear el campo</b> → <b>MAYDAY y 7700</b> → checks: tanque con combustible · bomba eléctrica ON · mezcla RICA · calefacción carburador ON · instrumentos · cebador bloqueado. Si hay tiempo, magnetos L, R y BOTH.</li>
-    <li>Situación controlada → <b>NITS</b> a ATC: <b>N</b>ature · <b>I</b>ntentions · <b>T</b>ime · <b>S</b>pecial instructions.</li>
-  </ul>
-
-  <h4>Pasajeros, toma y evacuación</h4>
-  <ul>
-    <li><b>Planned</b>: hay tiempo para preparar. <b>Unplanned</b>: sin aviso, en despegue o aterrizaje.</li>
-    <li>Emergencia planificada: fuera objetos afilados, dentaduras y tacones · salidas · cinturones · brace · ELT o PLB. Unos <b>15 s antes</b>: «BRACE BRACE».</li>
-    <li>Decidido a aterrizar: gases cerrados, <b>master e ignition OFF</b>, <b>combustible OFF</b>, <b>mezcla idle cut-off</b>, cinturones apretados.</li>
-    <li>En tierra: pasajeros <b>a barlovento</b> (upwind), recuento, primeros auxilios. <b>No volver al avión</b> salvo que sea imprescindible y no haya fuego.</li>
-  </ul>
-
-  <h4>Ditching (amerizaje) · simulador</h4>
-  <div id="visDitch"></div>
-  <ul>
-    <li>Hacia un <b>barco o una ruta marítima</b>. <b>MAYDAY antes de perder altura</b>.</li>
-    <li>Agua lisa o mar de fondo muy largo: <b>contra el viento</b>. Mar de fondo grande o mar gruesa: <b>a lo largo del mar de fondo</b> aunque haya cruzado.</li>
-    <li>Desde arriba el agua parece <b>más tranquila</b> de lo que es. Con motor, <b>aproximación con potencia</b>.</li>
-    <li>Técnica: <b>primer punto de flap</b>, <b>morro alto</b>, lo más lento posible sin entrar en pérdida. <b>Doble impacto</b>: cola y luego morro (el <b>mayor</b>).</li>
-    <li>Chalecos <b>puestos, sin inflar</b>; se inflan <b>fuera</b> del avión. La balsa también.</li>
-  </ul>
-  <div class="flag"><b>Trampa:</b> el trial da por buena «land into a strong wind»: con viento fuerte, contra el viento; con mar de fondo grande, a lo largo del mar de fondo. El chaleco <b>nunca se infla dentro</b> de la cabina.</div>
-  <div class="comp"><b>ATPL</b>Amerizaje con el <b>tren arriba</b> (abajo, vuelca). Antes de evacuar: avión <b>parado y motores cortados</b>. CS-25: evacuación completa en <b>90 s</b> con la mitad de las salidas.</div>
-</div>
-</details>
-
-<!-- ===== 071.02.04 ===== -->
 <details class="lo" id="lo-071.02.04" data-lo="071.02.04">
 <summary><span class="lonum">071.02.04</span><span class="lotitle">Noise abatement</span></summary>
 <div class="body">
@@ -683,7 +632,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<!-- ===== 071.02.05 ===== -->
+<!-- ===== 071.02.10 ===== -->
 <details class="lo" id="lo-071.02.05" data-lo="071.02.05">
 <summary><span class="lonum">071.02.05</span><span class="lotitle">Fire and smoke</span></summary>
 <div class="body">
@@ -747,6 +696,51 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<!-- ===== 071.02.04 ===== -->
+<details class="lo atpl" id="lo-071.02.06" data-lo="071.02.06">
+<summary><span class="lonum">071.02.06</span><span class="lotitle">Decompression of pressurised cabin</span></summary>
+<div class="body">
+  <div class="scroll"><table>
+   <tr><th></th><th>Cómo se detecta</th></tr>
+   <tr><td><b>Lenta</b></td><td>Aviso de <b>altitud de cabina</b>, la altitud de cabina sube, oídos</td></tr>
+   <tr><td><b>Rápida</b></td><td><b>Golpe</b>, <b>niebla</b>, frío, polvo; el <b>TUC se reduce a la mitad</b></td></tr>
+   <tr><td><b>Explosiva</b></td><td>Más rápida que los pulmones: <b>menos de 0,5 s</b></td></tr>
+  </table></div>
+  <div class="comp"><b>ATPL · qué hacer</b><ul>
+    <li><b>1.º máscaras de oxígeno</b> de la tripulación; luego <b>descenso de emergencia</b> a <b>10 000 ft</b> o a la altitud mínima de seguridad si es mayor, y <b>7700</b>.</li>
+    <li>TUC a <b>FL350: 30–60 s</b>. Máscaras de pasajeros automáticas antes de <b>15 000 ft</b> de altitud de cabina.</li>
+  </ul></div>
+</div>
+</details>
+
+<!-- ===== 071.02.05 ===== -->
+<details class="lo" id="lo-071.02.07" data-lo="071.02.07">
+<summary><span class="lonum">071.02.07</span><span class="lotitle">Wind shear and microburst</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>Cizalladura <b>vertical y horizontal</b> en un <b>espacio corto</b>: el avión mantiene su velocidad por inercia.</li>
+    <li><b>Microburst</b>.</li>
+  </ul></div>
+  <h4>Calcula el efecto y cruza un microburst</h4>
+  <div id="visShear"></div>
+  <ul>
+    <li><b>Windshear</b>: cambio de <b>dirección y/o velocidad</b> del viento, incluidas ascendentes y descendentes. Cuanto más corta la distancia, más fuerte. Lo crítico: por debajo de unos <b>3000 ft</b>.</li>
+  </ul>
+  <div class="scroll"><table>
+   <tr><th>Encuentras…</th><th>Velocidad</th><th>Efecto</th></tr>
+   <tr><td>Más viento de cara · menos de cola · ascendente</td><td><b class="pass">sube</b></td><td><b>Overshoot</b>: por encima de la senda</td></tr>
+   <tr><td>Menos viento de cara · más de cola · descendente</td><td><b class="fail">baja</b></td><td><b>Undershoot</b>: por debajo</td></tr>
+  </table></div>
+  <ul>
+    <li>Ej. del temario: TAS 80 kt con 30 kt de cara (GS 50). Pasas a 5 kt de cara: la GS sigue en 50 → TAS <b>55 kt</b>.</li>
+    <li><b>Microburst</b>: descendente fuerte de un Cb que se abre al llegar al suelo. En la aproximación: <b>overshoot</b> (más viento de cara) → <b>descendente</b> → <b>undershoot</b> con viento de cola, <b>el tramo peligroso</b>.</li>
+    <li>Causas: terreno, tormentas y Cb, <b>chorros de bajo nivel</b>, frentes, térmicas y <b>brisas marinas</b>.</li>
+    <li>Lo mejor: <b>retrasar o desviarse</b> (lleva combustible extra). Secuencia: <b>Recognise · Avoid · Prepare · Recover · Report</b>. Report: <b>inmediatamente</b> al ATC.</li>
+  </ul>
+  <div class="comp"><b>ATPL · reactor</b>Recuperación: <b>empuje máximo</b>, actitud hasta el aviso de pérdida o el límite del FD, y <b>sin cambiar flaps ni tren</b> hasta salir.</div>
+</div>
+</details>
+
 <!-- ===== 071.02.08 ===== -->
 <details class="lo" id="lo-071.02.08" data-lo="071.02.08">
 <summary><span class="lonum">071.02.08</span><span class="lotitle">Wake turbulence</span></summary>
@@ -790,27 +784,90 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <!-- ===== 071.02.03 ===== -->
-<details class="lo" id="lo-071.02.03" data-lo="071.02.03">
-<summary><span class="lonum">071.02.03</span><span class="lotitle">Bird-strike risk</span></summary>
+<details class="lo" id="lo-071.02.09" data-lo="071.02.09">
+<summary><span class="lonum">071.02.09</span><span class="lotitle">Security (unlawful events)</span></summary>
 <div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>En España hay mucha incidencia: hay que saber mirar en el <b>AIP</b> qué aves hay alrededor de cada aeródromo.</li>
-  </ul></div>
-  <h4>Buitres: cómo cruzarte con ellos</h4>
-  <div class="svgbox" id="svgBird"></div>
   <ul>
-    <li><b>AIP</b>: nacional en <b>ENR 5.6</b> (migraciones, zonas a evitar, buitres y cigüeñas, <b>zonas de fauna</b> donde está prohibido volar) · local en <b>AD 2, apartado 23</b>.</li>
-    <li>Migran entre <b>150 y 800 m</b>: volar por encima de <b>1000 m AGL</b>, sobre todo de mayo a octubre. Solo el <b>1 %</b> de los impactos es por encima de 2500 ft.</li>
-    <li>Otoño (sep–nov) por los Pirineos hacia Gibraltar; primavera (feb–mar) al revés. De día, las planeadoras con térmicas: <b>primera hora</b> es lo más seguro.</li>
-    <li>Aeropuerto: vertederos a más de <b>13 km</b>, árboles fuera de <b>150 m</b> del eje, hierba de <b>20 cm o más</b>, cetrería.</li>
-    <li><b>Despegue</b>: <b>abortar si queda pista</b> e inspeccionar. <b>En vuelo</b> con daños: probar la maniobrabilidad a altitud segura. Parabrisas roto: <b>reducir velocidad</b>. A 70 kt el impacto tiene la <b>mitad</b> de energía que a 100 kt.</li>
+    <li><b>Unlawful interference</b> (POP-1): apoderamiento ilícito, rehenes, intrusión, armas o artefactos, <b>información falsa</b>. Es <i>security</i>, no <i>safety</i>.</li>
+    <li>Transpondedor <b>7500</b> = interferencia ilícita (cualquier acto, no solo «intrusión en cabina»).</li>
   </ul>
-  <div class="ppt"><b>Dato · España</b>Desde 2000, <b>12</b> impactos derribaron el avión (<b>15 muertos</b>): todos <b>avionetas</b>, de marzo a septiembre, a mediodía, y solo <b>buitre leonado, buitre negro y cigüeña blanca</b>, que vuelan entre 300 y 1000 m.</div>
-  <div class="comp"><b>ATPL</b>La presencia de aves es parte de la <b>información prevuelo</b>; lo que ven las tripulaciones se pasa al <b>AIS</b> para difundirlo. En reactores: ingestión en el motor, sondas, parabrisas y radomo.</div>
+  <div class="comp"><b>ATPL</b><ul>
+    <li><b>Screening</b>: medios técnicos o de otro tipo para <b>detectar artículos prohibidos</b>. <b>Zona restringida de seguridad</b>: lado aire con acceso controlado.</li>
+    <li><b>Equipaje no identificado</b>: nadie lo recoge ni lo identifica.</li>
+    <li><b>Puerta de cabina reforzada</b>: aviones de más de <b>45 500 kg</b> o más de <b>60 asientos</b>.</li>
+    <li><b>Amenaza de bomba en tierra</b> → al <b>puesto de estacionamiento aislado</b>. A bordo, lista de <b>búsqueda de bomba</b> y la <b>least-risk bomb location</b> que fija el fabricante.</li>
+  </ul></div>
 </div>
 </details>
 
 <!-- ===== 071.02.13 ===== -->
+<details class="lo" id="lo-071.02.10" data-lo="071.02.10">
+<summary><span class="lonum">071.02.10</span><span class="lotitle">Emergency and precautionary landing, and ditching</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>Cómo aterrizar y dónde, también en el agua. Fuera de pista, a la <b>menor velocidad posible</b>.</li>
+  </ul></div>
+
+  <h4>Engine failure: primeras acciones</h4>
+  <ul>
+    <li>Se evita con <b>buena planificación de combustible</b> y vigilando el <b>hielo en el carburador</b>.</li>
+    <li><b>Velocidad de mejor planeo</b> → <b>planear el campo</b> → <b>MAYDAY y 7700</b> → checks: tanque con combustible · bomba eléctrica ON · mezcla RICA · calefacción carburador ON · instrumentos · cebador bloqueado. Si hay tiempo, magnetos L, R y BOTH.</li>
+    <li>Situación controlada → <b>NITS</b> a ATC: <b>N</b>ature · <b>I</b>ntentions · <b>T</b>ime · <b>S</b>pecial instructions.</li>
+  </ul>
+
+  <h4>Pasajeros, toma y evacuación</h4>
+  <ul>
+    <li><b>Planned</b>: hay tiempo para preparar. <b>Unplanned</b>: sin aviso, en despegue o aterrizaje.</li>
+    <li>Emergencia planificada: fuera objetos afilados, dentaduras y tacones · salidas · cinturones · brace · ELT o PLB. Unos <b>15 s antes</b>: «BRACE BRACE».</li>
+    <li>Decidido a aterrizar: gases cerrados, <b>master e ignition OFF</b>, <b>combustible OFF</b>, <b>mezcla idle cut-off</b>, cinturones apretados.</li>
+    <li>En tierra: pasajeros <b>a barlovento</b> (upwind), recuento, primeros auxilios. <b>No volver al avión</b> salvo que sea imprescindible y no haya fuego.</li>
+  </ul>
+
+  <h4>Ditching (amerizaje) · simulador</h4>
+  <div id="visDitch"></div>
+  <ul>
+    <li>Hacia un <b>barco o una ruta marítima</b>. <b>MAYDAY antes de perder altura</b>.</li>
+    <li>Agua lisa o mar de fondo muy largo: <b>contra el viento</b>. Mar de fondo grande o mar gruesa: <b>a lo largo del mar de fondo</b> aunque haya cruzado.</li>
+    <li>Desde arriba el agua parece <b>más tranquila</b> de lo que es. Con motor, <b>aproximación con potencia</b>.</li>
+    <li>Técnica: <b>primer punto de flap</b>, <b>morro alto</b>, lo más lento posible sin entrar en pérdida. <b>Doble impacto</b>: cola y luego morro (el <b>mayor</b>).</li>
+    <li>Chalecos <b>puestos, sin inflar</b>; se inflan <b>fuera</b> del avión. La balsa también.</li>
+  </ul>
+  <div class="flag"><b>Trampa:</b> el trial da por buena «land into a strong wind»: con viento fuerte, contra el viento; con mar de fondo grande, a lo largo del mar de fondo. El chaleco <b>nunca se infla dentro</b> de la cabina.</div>
+  <div class="comp"><b>ATPL</b>Amerizaje con el <b>tren arriba</b> (abajo, vuelca). Antes de evacuar: avión <b>parado y motores cortados</b>. CS-25: evacuación completa en <b>90 s</b> con la mitad de las salidas.</div>
+</div>
+</details>
+
+<!-- ===== 071.02.06 ===== -->
+<details class="lo atpl" id="lo-071.02.11" data-lo="071.02.11">
+<summary><span class="lonum">071.02.11</span><span class="lotitle">Fuel jettisoning</span></summary>
+<div class="body">
+  <div class="comp"><b>ATPL</b><ul>
+    <li>Para bajar a la <b>masa máxima de aterrizaje</b>. El sistema lo vacía en <b>15 min</b>.</li>
+    <li>Con ATC: <b>ruta</b> (lejos de ciudades y tormentas, mejor sobre el agua), <b>nivel</b> (no menos de <b>6000 ft</b>) y <b>duración</b>.</li>
+    <li>Con <b>flaps o slats</b> fuera, el combustible puede tocar el avión: riesgo de fuego.</li>
+  </ul></div>
+</div>
+</details>
+
+<!-- ===== 071.02.07 ===== -->
+<details class="lo atpl" id="lo-071.02.12" data-lo="071.02.12">
+<summary><span class="lonum">071.02.12</span><span class="lotitle">Transport of dangerous goods by air</span></summary>
+<div class="body">
+  <div class="key"><b>Definición</b>Artículos o sustancias que pueden suponer un riesgo para la <b>salud, la seguridad, la propiedad o el medio ambiente</b>.</div>
+  <h4>Las 9 clases · ponte a prueba</h4>
+  <div id="visDG"></div>
+  <div class="comp"><b>ATPL</b><ul>
+    <li>Normas: <b>Anexo 18</b> de la OACI y las Instrucciones Técnicas, <b>Doc 9284</b> (las aerolíneas usan el manual DGR de la IATA).</li>
+    <li>El operador necesita <b>aprobación específica (SPA.DG)</b>. El comandante recibe por escrito la <b>NOTOC</b> antes de salir.</li>
+    <li>Se <b>inspeccionan antes de cargar</b>: bulto con fugas o dañado → <b>no se carga</b>. Etiqueta <b>«Cargo Aircraft Only»</b> → nunca en avión de pasajeros. Algunas están <b>prohibidas siempre</b>.</li>
+    <li>Etiquetas en <b>rombo</b>. Baterías de litio de repuesto del pasajero: <b>solo en cabina</b>, con terminales protegidos.</li>
+    <li>Exento: lo que es <b>equipo del avión</b> (extintores, oxígeno…) o para vuelos aeromédicos.</li>
+    <li>Formación recurrente cada <b>24 meses</b>. Accidentes e incidentes con mercancías peligrosas → se <b>notifican</b> a la autoridad.</li>
+  </ul></div>
+</div>
+</details>
+
+<!-- ===== 071.02.11 ===== -->
 <details class="lo" id="lo-071.02.13" data-lo="071.02.13">
 <summary><span class="lonum">071.02.13</span><span class="lotitle">Contaminated runways</span></summary>
 <div class="body">
@@ -838,63 +895,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li>Difusión: <b>SNOWTAM</b> (máx. <b>8 h</b>) por AIS, y por voz y ATIS.</li>
   </ul>
   <div class="comp"><b>ATPL · hidroplaneo</b>Rueda girando: <b>9 √P</b> (psi). Rueda sin girar, la de la toma: <b>7,7 √P</b> (más baja, la que cuenta al aterrizar). Ej.: 144 psi → 108 kt y 92 kt. Tipos: <b>dinámico</b>, <b>viscoso</b> y de <b>goma revertida</b> (rueda bloqueada → vapor).</div>
-</div>
-</details>
-
-<!-- ===== 071.02.06 ===== -->
-<details class="lo atpl" id="lo-071.02.06" data-lo="071.02.06">
-<summary><span class="lonum">071.02.06</span><span class="lotitle">Decompression of pressurised cabin</span></summary>
-<div class="body">
-  <div class="scroll"><table>
-   <tr><th></th><th>Cómo se detecta</th></tr>
-   <tr><td><b>Lenta</b></td><td>Aviso de <b>altitud de cabina</b>, la altitud de cabina sube, oídos</td></tr>
-   <tr><td><b>Rápida</b></td><td><b>Golpe</b>, <b>niebla</b>, frío, polvo; el <b>TUC se reduce a la mitad</b></td></tr>
-   <tr><td><b>Explosiva</b></td><td>Más rápida que los pulmones: <b>menos de 0,5 s</b></td></tr>
-  </table></div>
-  <div class="comp"><b>ATPL · qué hacer</b><ul>
-    <li><b>1.º máscaras de oxígeno</b> de la tripulación; luego <b>descenso de emergencia</b> a <b>10 000 ft</b> o a la altitud mínima de seguridad si es mayor, y <b>7700</b>.</li>
-    <li>TUC a <b>FL350: 30–60 s</b>. Máscaras de pasajeros automáticas antes de <b>15 000 ft</b> de altitud de cabina.</li>
-  </ul></div>
-</div>
-</details>
-
-<!-- ===== 071.02.07 ===== -->
-<details class="lo" id="lo-071.02.07" data-lo="071.02.07">
-<summary><span class="lonum">071.02.07</span><span class="lotitle">Wind shear and microburst</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>Cizalladura <b>vertical y horizontal</b> en un <b>espacio corto</b>: el avión mantiene su velocidad por inercia.</li>
-    <li><b>Microburst</b>.</li>
-  </ul></div>
-  <h4>Calcula el efecto y cruza un microburst</h4>
-  <div id="visShear"></div>
-  <ul>
-    <li><b>Windshear</b>: cambio de <b>dirección y/o velocidad</b> del viento, incluidas ascendentes y descendentes. Cuanto más corta la distancia, más fuerte. Lo crítico: por debajo de unos <b>3000 ft</b>.</li>
-  </ul>
-  <div class="scroll"><table>
-   <tr><th>Encuentras…</th><th>Velocidad</th><th>Efecto</th></tr>
-   <tr><td>Más viento de cara · menos de cola · ascendente</td><td><b class="pass">sube</b></td><td><b>Overshoot</b>: por encima de la senda</td></tr>
-   <tr><td>Menos viento de cara · más de cola · descendente</td><td><b class="fail">baja</b></td><td><b>Undershoot</b>: por debajo</td></tr>
-  </table></div>
-  <ul>
-    <li>Ej. del temario: TAS 80 kt con 30 kt de cara (GS 50). Pasas a 5 kt de cara: la GS sigue en 50 → TAS <b>55 kt</b>.</li>
-    <li><b>Microburst</b>: descendente fuerte de un Cb que se abre al llegar al suelo. En la aproximación: <b>overshoot</b> (más viento de cara) → <b>descendente</b> → <b>undershoot</b> con viento de cola, <b>el tramo peligroso</b>.</li>
-    <li>Causas: terreno, tormentas y Cb, <b>chorros de bajo nivel</b>, frentes, térmicas y <b>brisas marinas</b>.</li>
-    <li>Lo mejor: <b>retrasar o desviarse</b> (lleva combustible extra). Secuencia: <b>Recognise · Avoid · Prepare · Recover · Report</b>. Report: <b>inmediatamente</b> al ATC.</li>
-  </ul>
-  <div class="comp"><b>ATPL · reactor</b>Recuperación: <b>empuje máximo</b>, actitud hasta el aviso de pérdida o el límite del FD, y <b>sin cambiar flaps ni tren</b> hasta salir.</div>
-</div>
-</details>
-
-<!-- ===== 071.02.11 ===== -->
-<details class="lo atpl" id="lo-071.02.11" data-lo="071.02.11">
-<summary><span class="lonum">071.02.11</span><span class="lotitle">Fuel jettisoning</span></summary>
-<div class="body">
-  <div class="comp"><b>ATPL</b><ul>
-    <li>Para bajar a la <b>masa máxima de aterrizaje</b>. El sistema lo vacía en <b>15 min</b>.</li>
-    <li>Con ATC: <b>ruta</b> (lejos de ciudades y tormentas, mejor sobre el agua), <b>nivel</b> (no menos de <b>6000 ft</b>) y <b>duración</b>.</li>
-    <li>Con <b>flaps o slats</b> fuera, el combustible puede tocar el avión: riesgo de fuego.</li>
-  </ul></div>
 </div>
 </details>
 
@@ -1785,6 +1785,8 @@ const SUB = [
  ["X.010","X",0,"Aeródromos (señales, marcas, distancias declaradas) y SAR","POP-1 y 2","full"],
  ["X.090","X",0,"MAYDAY/PAN, frecuencias y transpondedor","POP-1","full"]
 ];
+/*f15natsort*/const __nk=c=>String(c).split(/[.\-_·\s]+/).filter(Boolean).map(t=>/^\d+$/.test(t)?[0,+t,""]:[1,0,t]);const __nc=(a,b)=>{const x=__nk(a[0]),y=__nk(b[0]);for(let i=0;i<Math.max(x.length,y.length);i++){const p=x[i]||[-1,0,""],q=y[i]||[-1,0,""];for(let j=0;j<3;j++){if(p[j]<q[j])return -1;if(p[j]>q[j])return 1}}return 0};SUB.sort(__nc);
+
 const BLOCKS = [
  {k:"B1", code:"071.01", name:"General requirements", n:17, los:218},
  {k:"B2", code:"071.02", name:"Special operational procedures and hazards", n:24, los:126},

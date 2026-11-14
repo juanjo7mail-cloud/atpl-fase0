@@ -83,7 +83,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <style id="f0-mob">:root{color-scheme:only light}html .q,html .q *,html .expl,html .expl *,html #hist *{min-width:0;overflow-wrap:anywhere;word-wrap:break-word}html .q .choice{align-items:flex-start;flex-wrap:nowrap;max-width:100%}html .q .choice>span{flex:1 1 auto;min-width:0}html .q .choice>input{flex:0 0 auto}html .qhead{flex-wrap:wrap;gap:4px 12px}html .q img,html .q svg,html .q figure,html .expl img,html .expl svg{max-width:100%;height:auto}html .q table,html .expl table{display:block;max-width:100%;overflow-x:auto}html .q pre,html .q code,html .expl code{white-space:pre-wrap}@media (min-width:600px) and (max-width:1400px){html .wrap{max-width:880px;padding-left:24px;padding-right:24px}html .q{padding:16px 20px}html .qtext{font-size:18px;line-height:1.5}html .choice{font-size:17px;line-height:1.45;padding:12px 14px;min-height:48px}html .expl{font-size:16px;line-height:1.5}}.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}</style>
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
 </head><body>
-<title>SOP · PS-28, C172 y Piper</title>
+<title>SOP · Standard Operating Procedures</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -406,8 +406,8 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="wrap">
 <header>
   <div class="code">SOP</div>
-  <h1>Standard Operating Procedures · PS-28 Cruiser, Cessna 172 y Piper PA-28</h1>
-  <p><b title="Práctica interna de temario base: el reparto de preguntas es una estimación">Reparto estimado de preguntas</b></p>
+  <h1>Standard Operating Procedures</h1>
+  <p><b title="Práctica interna de temario base: el reparto de preguntas es una estimación">PS-28 Cruiser · Cessna 172 · Piper PA-28 · reparto estimado de preguntas</b></p>
 </header>
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
@@ -877,6 +877,8 @@ const SUB = [
  ["SOP.5.4", "5", 1.5, "Aterrizaje forzoso y amerizaje", "given"],
  ["SOP.5.5", "5", 0.5, "Navegación en ruta: las 6 T", "given"]
 ];
+/*f15natsort*/const __nk=c=>String(c).split(/[.\-_·\s]+/).filter(Boolean).map(t=>/^\d+$/.test(t)?[0,+t,""]:[1,0,t]);const __nc=(a,b)=>{const x=__nk(a[0]),y=__nk(b[0]);for(let i=0;i<Math.max(x.length,y.length);i++){const p=x[i]||[-1,0,""],q=y[i]||[-1,0,""];for(let j=0;j<3;j++){if(p[j]<q[j])return -1;if(p[j]>q[j])return 1}}return 0};SUB.sort(__nc);
+
 const BLK = Object.fromEntries(BLOCKS.map(b=>[b.k,b]));
 const SUBMAP = Object.fromEntries(SUB.map(s=>[s[0],{code:s[0],block:s[1],w:s[2],name:s[3],cov:s[4]}]));
 const W = Object.fromEntries(SUB.map(s=>[s[0],s[2]]));

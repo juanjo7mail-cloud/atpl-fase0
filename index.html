@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="44ae03ed1254";</script>
+<script>window.F0_BUILD="991333516db1";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -295,9 +295,8 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .vsw[aria-checked="true"] .lev{transform:rotate(0deg)}
 .vsw:focus-visible{outline:2px solid #FFD36E;outline-offset:3px;border-radius:6px}
 @media (max-width:640px){.vsw .lbs{display:none}}
-@media (max-width:430px){.brand .bt{display:none}.pnl .g .btns button:not(.go){flex:1;padding:6px 4px;font-size:12px}}
+@media (max-width:430px){.pnl .g .btns button:not(.go){flex:1;padding:6px 4px;font-size:12px}}
 @media (max-width:640px){.vsw .lb{display:none}.vsw{padding:3px 6px}}
-@media (max-width:430px){.row1:has(#onBtn:not([hidden])) .brand .bt small{display:none}}
 #panel{display:none}
 .vp #grid,.vp #kpis{display:none}.vp #panel{display:block}
 .pnl{position:relative;border-radius:18px;padding:16px 16px 20px;background:radial-gradient(120% 90% at 50% 0%,#233647 0,#14212d 55%,#0c151d 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 1px #0a1118,0 14px 40px rgba(10,23,36,.35);isolation:isolate;color:#E3ECF2}
@@ -532,6 +531,19 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 @media (max-width:480px){.brand .bt small{display:block;font-size:10.5px;font-weight:500;letter-spacing:.02em;text-transform:none;color:#B4C7D6;margin:0}.top .row1{gap:5px}.top .row1 .savepill{padding:4px 8px}#rankBtn svg{width:40px;height:18px}#acctTxt{max-width:44px;overflow:hidden;text-overflow:ellipsis}}
 @media (max-width:350px){.brand .bt small{font-size:9px;letter-spacing:0}}
 @media (max-width:380px){.brand{font-size:16px;gap:6px}.brand svg{width:30px;height:30px}.brand small{font-size:10px}#acctTxt{max-width:50px}.top .row1{gap:6px}.iconbtn{padding:7px}}
+/* firma «by Juanjo Ruano» siempre visible en iPhone: la cabecera se compacta (en vez de ocultar la firma) cuando hay más botones (en línea, buzón, vista) */
+@media (max-width:430px){
+  .top .row1{gap:4px}
+  .brand{flex:0 0 auto;gap:6px}
+  .brand svg{width:28px;height:28px;flex:none}
+  .brand .bt{overflow:visible;text-overflow:clip}
+  .brand .bt small{display:block!important;white-space:nowrap;font-size:10px;line-height:1.1;margin-top:1px}
+  .iconbtn{padding:6px}.iconbtn svg{width:16px;height:16px}
+  .vsw{padding:3px 5px}
+  .savepill#onBtn .onw{display:none}
+  .savepill#onBtn{padding:3px 7px}
+}
+@media (max-width:350px){.brand .bt small{font-size:9px}#sugBtn{display:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 /* logros */
 #msOv{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:rgba(5,12,19,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);z-index:3000;-webkit-animation:msfade .25s both;animation:msfade .25s both}
@@ -767,16 +779,16 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 /* ===================== asignaturas ===================== */
 const SUBJ = [
   {k:"010", c:["#4350B8","#9EA8F2"], code:"010", short:"Air Law", name:"Air Law", extra:[["fase0","Trial"],["senasa","Simulacro SENASA"]]},
-  {k:"021", c:["#0B747E","#5CC8C8"], code:"021·022", short:"Aircraft GK", name:"Airframe, Systems, Power Plant · Instrumentation", extra:[["senasa","Simulacro SENASA"]]},
-  {k:"031", c:["#B8500A","#F2A16A"], code:"031·032·033", short:"Performance", name:"Mass and Balance · Performance · Flight Planning", extra:[]},
+  {k:"021", c:["#0B747E","#5CC8C8"], code:"021·022", short:"Aircraft GK", name:"Aircraft General Knowledge", extra:[["senasa","Simulacro SENASA"]]},
+  {k:"031", c:["#B8500A","#F2A16A"], code:"031·032·033", short:"Performance", name:"Flight Performance and Planning", extra:[]},
   {k:"040", c:["#AB3573","#F29AC6"], code:"040", short:"Human Performance", name:"Human Performance and Limitations", extra:[]},
   {k:"050", c:["#1D6FB0","#7DB8EC"], code:"050", short:"Meteorology", name:"Meteorology", extra:[["sim","Simulacro SENASA"],["foto","Nubes por foto"]]},
-  {k:"061", c:["#2A7A40","#7ACB8D"], code:"061·062", short:"Navigation", name:"General Navigation · Radio Navigation", extra:[["senasa","Simulacro SENASA"]]},
+  {k:"061", c:["#2A7A40","#7ACB8D"], code:"061·062", short:"Navigation", name:"Navigation", extra:[["senasa","Simulacro SENASA"]]},
   {k:"070", c:["#7A41A6","#CBA6EA"], code:"070", short:"Operational Procedures", name:"Operational Procedures", extra:[["senasa","Simulacro SENASA"]]},
   {k:"081", c:["#5F720C","#B9CE4C"], code:"081", short:"Principles of Flight", name:"Principles of Flight", extra:[["examen","Simulacro SENASA"]]},
   {k:"090", c:["#9A5F00","#EAB84F"], code:"090", short:"Communications", name:"Communications", extra:[["voice","Radio por voz"]]},
-  {k:"poh", c:["#4F6577","#A9BDCC"], code:"POH", short:"POH", name:"Pilot Operating Handbook · PS-28 Cruiser, Cessna 172 y Piper PA-28", extra:[]},
-  {k:"sop", c:["#B23A48","#F0929E"], code:"SOP", short:"SOP", name:"Standard Operating Procedures · PS-28 Cruiser, Cessna 172, Piper PA-28", extra:[]},
+  {k:"poh", c:["#4F6577","#A9BDCC"], code:"POH", short:"POH", name:"Pilot Operating Handbook", extra:[]},
+  {k:"sop", c:["#B23A48","#F0929E"], code:"SOP", short:"SOP", name:"Standard Operating Procedures", extra:[]},
 ];
 const DONATE_URL = "";   // enlace de donaciones (PayPal.me, Ko-fi…); vacío = sin botón
 const $ = s => document.querySelector(s);

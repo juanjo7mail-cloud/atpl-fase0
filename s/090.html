@@ -11,7 +11,7 @@ window.__hub={use:async function(n){return n==="artifact"?{publish:async functio
 fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
 })();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>090 Communications</title>
+<title>090 · Communications</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -444,7 +444,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <header>
   <div class="code">090</div>
   <h1>Communications</h1>
-  <p><b>34 preguntas · 1 h · aprobado 75 %</b></p>
+  <p><b>34 preguntas · 1 h 00 min · aprobado 75 %</b></p>
 </header>
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
@@ -487,6 +487,24 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo atpl" id="lo-090.01.01.02" data-lo="090.01.01.02">
+<summary><span class="lonum">090.01.01.02</span><span class="lotitle">Air traffic services (ATS) abbreviations</span></summary>
+<div class="body">
+  <div class="comp"><b>ATPL</b>
+  <p style="margin:2px 0">Se dicen <b>letra a letra</b>, salvo las marcadas con <b>*</b>, que se dicen como palabra.</p>
+  <div class="scroll"><table class="deftable">
+    <tr><td>ATIS*</td><td>Automatic Terminal Information Service</td></tr>
+    <tr><td>CAVOK*</td><td>Visibilidad, nubes y tiempo presente mejores que los valores prescritos</td></tr>
+    <tr><td>AFIS*</td><td>Aerodrome Flight Information Service</td></tr>
+    <tr><td>NIL*</td><td>Nada / no tengo nada que enviarte</td></tr>
+    <tr><td>H24</td><td>Servicio continuo, día y noche</td></tr>
+    <tr><td>CTR · FIR · ATZ</td><td>Control zone · flight information region · aerodrome traffic zone</td></tr>
+    <tr><td>EET · ETA · ETD</td><td>Estimated elapsed time · arrival · departure</td></tr>
+    <tr><td>AGL · AMSL</td><td>Sobre el suelo · sobre el nivel medio del mar</td></tr>
+  </table></div></div>
+</div>
+</details>
+
 <details class="lo" id="lo-090.01.01.03" data-lo="090.01.01.03">
 <summary><span class="lonum">090.01.01.03</span><span class="lotitle">Q-code groups commonly used in RT air-ground communications</span></summary>
 <div class="body">
@@ -504,24 +522,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li>Clases de marcación VDF (ATPL, no entran en el examen): A ±2° · B ±5° · C ±10° · D peor que C.</li>
     <li>QNH y QFE (ATPL): reglaje para leer la elevación (altitud) · presión en el aeródromo (altura).</li>
   </ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-090.01.01.02" data-lo="090.01.01.02">
-<summary><span class="lonum">090.01.01.02</span><span class="lotitle">Air traffic services (ATS) abbreviations</span></summary>
-<div class="body">
-  <div class="comp"><b>ATPL</b>
-  <p style="margin:2px 0">Se dicen <b>letra a letra</b>, salvo las marcadas con <b>*</b>, que se dicen como palabra.</p>
-  <div class="scroll"><table class="deftable">
-    <tr><td>ATIS*</td><td>Automatic Terminal Information Service</td></tr>
-    <tr><td>CAVOK*</td><td>Visibilidad, nubes y tiempo presente mejores que los valores prescritos</td></tr>
-    <tr><td>AFIS*</td><td>Aerodrome Flight Information Service</td></tr>
-    <tr><td>NIL*</td><td>Nada / no tengo nada que enviarte</td></tr>
-    <tr><td>H24</td><td>Servicio continuo, día y noche</td></tr>
-    <tr><td>CTR · FIR · ATZ</td><td>Control zone · flight information region · aerodrome traffic zone</td></tr>
-    <tr><td>EET · ETA · ETD</td><td>Estimated elapsed time · arrival · departure</td></tr>
-    <tr><td>AGL · AMSL</td><td>Sobre el suelo · sobre el nivel medio del mar</td></tr>
-  </table></div></div>
 </div>
 </details>
 
@@ -552,43 +552,90 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <!-- =================== 090.02 =================== -->
 <h2>090.02 · General operating procedures <span class="wtag">17 preg. · 50 %</span></h2>
 
-<details class="lo" id="lo-090.02.01.07" data-lo="090.02.01.07">
-<summary><span class="lonum">090.02.01.07</span><span class="lotitle">RT call signs for aircraft including use of abbreviated call signs</span></summary>
+<details class="lo" id="lo-090.02.01.01" data-lo="090.02.01.01">
+<summary><span class="lonum">090.02.01.01</span><span class="lotitle">Transmission of letters</span></summary>
 <div class="body">
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>El indicativo se abrevia <b>a partir de la segunda llamada y solo si antes lo ha abreviado el controlador</b>, nunca a iniciativa del piloto. Saber las <b>tres variantes</b>.</li>
-    <li>Si hay confusión, <b>cambio de indicativo</b> (lo ordena ATC).</li>
-    <li>«Suelen preguntar cuándo se indica el peso»: <b>HEAVY / SUPER</b> en la <b>primera llamada</b>.</li>
+    <li>El <b>alfabeto</b> hay que saberlo. Excepciones al deletreo: <b>telephony designator</b> y <b>type of aircraft</b>.</li>
   </ul></div>
-  <div class="key"><b>Clave</b>Al establecer contacto, <b>siempre completo</b>. El avión abrevia <b>solo después de que lo haga la estación de tierra</b>. El tipo (c) <b>nunca</b> se abrevia.</div>
-  <div class="trap"><b>Trampa:</b> «cuando la comunicación es satisfactoria» es la regla de la <b>estación de tierra</b> (puede omitir su nombre o sufijo), no la del avión.</div>
-  <div class="vis" id="visCallsign"><b>Animación · quién abrevia primero</b>
-  <p style="margin:2px 0 6px;font-size:15px">Paso a paso. Cambia el tipo de indicativo para ver cómo se abrevia cada uno.</p>
-  <div class="row" id="csType" style="margin-bottom:6px"></div>
-  <div class="steps" id="csSteps"></div>
-  <div class="row"><button class="btn sec" id="csPrev">◀ Anterior</button><button class="btn" id="csNext">Siguiente ▶</button><span class="muted" id="csPos" style="font-size:14px"></span></div>
-  <div class="mq" id="mqCallsign"></div>
+  <div class="key"><b>Clave</b>Cada letra del indicativo se deletrea con el alfabeto, salvo el designador telefónico («Fastair») y el tipo de avión («Cessna»).</div>
+  <div class="ph">
+  <div><b>A</b>Alpha<span>AL fah</span></div><div><b>B</b>Bravo<span>BRAH voh</span></div><div><b>C</b>Charlie<span>CHAR lee / SHAR lee</span></div><div><b>D</b>Delta<span>DELL tah</span></div><div><b>E</b>Echo<span>ECK oh</span></div><div><b>F</b>Foxtrot<span>FOKS trot</span></div><div><b>G</b>Golf<span>GOLF</span></div><div><b>H</b>Hotel<span>ho TELL</span></div><div><b>I</b>India<span>IN dee ah</span></div><div><b>J</b>Juliett<span>JEW lee ETT</span></div><div><b>K</b>Kilo<span>KEY loh</span></div><div><b>L</b>Lima<span>LEE mah</span></div><div><b>M</b>Mike<span>MIKE</span></div><div><b>N</b>November<span>no VEM ber</span></div><div><b>O</b>Oscar<span>OSS cah</span></div><div><b>P</b>Papa<span>pah PAH</span></div><div><b>Q</b>Quebec<span>keh BECK</span></div><div><b>R</b>Romeo<span>ROW me oh</span></div><div><b>S</b>Sierra<span>see AIR rah</span></div><div><b>T</b>Tango<span>TANG go</span></div><div><b>U</b>Uniform<span>YOU nee form</span></div><div><b>V</b>Victor<span>VIK tah</span></div><div><b>W</b>Whiskey<span>WISS key</span></div><div><b>X</b>X-ray<span>ECKS ray</span></div><div><b>Y</b>Yankee<span>YANG key</span></div><div><b>Z</b>Zulu<span>ZOO loo</span></div>
+  </div>
+  <p class="src">Ortografía: <b>Alfa/Alpha</b>, <b>Juliett</b> con dos t, <b>Whiskey</b>. Si no hay riesgo para la inteligibilidad, el deletreo se puede omitir.</p>
 </div>
+</details>
+
+<details class="lo" id="lo-090.02.01.02" data-lo="090.02.01.02">
+<summary><span class="lonum">090.02.01.02</span><span class="lotitle">Transmission of numbers</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>Números enteros: <b>thousand / hundred</b>; los <b>rumbos</b>, siempre dígito a dígito.</li>
+    <li>Frecuencias: <b>6 dígitos</b>, o <b>4</b> si los dos últimos son cero. Colación obligatoria.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Dígito a dígito, salvo centenas y millares redondos en altitud, nubes, visibilidad y RVR. Rumbos, viento, pista, squawk y QNH: siempre dígito a dígito (QNH 1000 = «one thousand»).</div>
+  <div class="trap"><b>Trampa:</b> heading 100 = «heading <b>one zero zero</b>», nunca «one hundred». 12 000 ft = «<b>one two</b> thousand», no «twelve». FL200 = «flight level two hundred»; FL110 = «flight level one one zero».</div>
+  <div class="ph">
+  <div><b>0</b>ZE-RO</div><div><b>1</b>WUN</div><div><b>2</b>TOO</div><div><b>3</b>TREE</div><div><b>4</b>FOW-er</div><div><b>5</b>FIFE</div><div><b>6</b>SIX</div><div><b>7</b>SEV-en</div><div><b>8</b>AIT</div><div><b>9</b>NIN-er</div><div><b>.</b>DAY-SEE-MAL</div><div><b>100</b>HUN-dred</div><div><b>1000</b>TOU-SAND</div>
+  </div>
   <div class="scroll"><table>
-  <tr><th>Tipo</th><th>Composición</th><th>Ejemplo</th><th>Abreviado</th></tr>
-  <tr><td><b>(a)</b></td><td>Matrícula</td><td>N57826 · CESSNA FABCD</td><td>1.º carácter + al menos los 2 últimos: N26 o N826 · CESSNA CD</td></tr>
-  <tr><td><b>(b)</b></td><td>Designador telefónico + últimos 4 de la matrícula</td><td>FASTAIR GBNKD</td><td>Designador + al menos los 2 últimos: FASTAIR KD</td></tr>
-  <tr><td><b>(c)</b></td><td>Designador + identificación de vuelo</td><td>SCANDINAVIAN 937</td><td><b>No se abrevia</b></td></tr>
+    <tr><th>Dato</th><th>Se dice</th></tr>
+    <tr><td>Heading 080</td><td>heading zero eight zero</td></tr>
+    <tr><td>Wind 160° 18 kt gusting 30</td><td>wind one six zero degrees one eight knots gusting three zero knots</td></tr>
+    <tr><td>Squawk 2400</td><td>squawk two four zero zero</td></tr>
+    <tr><td>Altitude 3 400</td><td>three thousand four hundred</td></tr>
+    <tr><td>Visibility 1000 · RVR 1700</td><td>visibility one thousand · RVR one thousand seven hundred</td></tr>
   </table></div>
-  <ul>
-    <li><b>Change your call sign to</b> (nuevo) <b>until further advised</b>: ATC lo cambia temporalmente por confusión. Para volver: <b>revert to flight plan call sign</b> (at punto).</li>
-    <li><b>HEAVY</b>: estela pesada (MTOM &gt; 136 000 kg). <b>SUPER</b>: A380. Se dice justo detrás del indicativo en la <b>llamada inicial</b> a cada unidad.</li>
-    <li>Designadores telefónicos: <b>ICAO Doc 8585</b>. En la colación, <b>el indicativo va al final</b>.</li>
-  </ul>
-  <h4>Call sign confusion</h4>
+  <h4 id="secFreq">Frecuencias</h4>
   <div class="scroll"><table>
-    <tr><td>Números consecutivos</td><td>RUSHAIR 9058 · 9059</td></tr>
-    <tr><td>Designadores parecidos</td><td>TOPSWISS · SWIFT · SWISSAIR</td></tr>
-    <tr><td>Mismos caracteres en otro orden</td><td>CCA1234 · ACA2314</td></tr>
-    <tr><td>Dígitos repetidos</td><td>ALITALIA 333</td></tr>
-    <tr><td>Final = destino</td><td>AEGEAN 2DH a EDDH</td></tr>
+    <tr><th>Canal</th><th>Se dice</th></tr>
+    <tr><td>118.000</td><td>one one eight decimal zero</td></tr>
+    <tr><td>118.005</td><td>one one eight decimal zero zero five</td></tr>
+    <tr><td>118.025</td><td>one one eight decimal zero two five</td></tr>
+    <tr><td>118.100</td><td>one one eight decimal one</td></tr>
+    <tr><td>128.125</td><td>wun too ait day-see-mal wun too fife</td></tr>
   </table></div>
-  <p class="src">Efecto más obvio: tomar como propia una autorización de otro. Mejor identificaciones cortas y sin acabar en 0 o 5.</p>
+  <p class="src">La palabra <b>DECIMAL</b> siempre (en español, «coma»).</p>
+</div>
+</details>
+
+<details class="lo" id="lo-090.02.01.03" data-lo="090.02.01.03">
+<summary><span class="lonum">090.02.01.03</span><span class="lotitle">Transmission of time</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>Hora: <b>dos dígitos</b> si se puede, <b>todos</b> si puede haber confusión (las en punto). Siempre <b>UTC</b>, nunca hora local.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Solo los minutos, dígito a dígito; la hora completa si puede haber confusión. El <b>time check</b>, al <b>medio minuto más próximo</b>.</div>
+  <div class="trap"><b>Trampa:</b> ETA «zero seven» = <b>a los 7 minutos de la hora</b>, no «dentro de 7 minutos». El time check no se redondea siempre hacia arriba.</div>
+  <div class="scroll"><table>
+    <tr><th>Hora</th><th>Se dice</th></tr>
+    <tr><td>0803</td><td>zero three · o · zero eight zero three</td></tr>
+    <tr><td>1300</td><td>one three zero zero (en punto: completa)</td></tr>
+    <tr><td>2057</td><td>five seven · o · two zero five seven</td></tr>
+  </table></div>
+  <div class="vis" id="visTime"><b>Visual · time check al medio minuto más próximo</b>
+  <p style="margin:2px 0 6px;font-size:15px">Mueve los segundos: ATC da la hora redondeando al <b>:00 o :30 más cercano</b>, no siempre hacia arriba.</p>
+  <div id="timeSvg"></div>
+  <div class="ctl"><span>Hora real 10:14:</span><input type="range" id="tmS" min="0" max="59" value="40" aria-label="Segundos"><b id="tmSv"></b></div>
+  <div class="out" id="tmOut"></div>
+  <div class="mq" id="mqTime"></div>
+</div>
+</div>
+</details>
+
+<details class="lo" id="lo-090.02.01.04" data-lo="090.02.01.04">
+<summary><span class="lonum">090.02.01.04</span><span class="lotitle">Transmission techniques</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>Escuchar antes de transmitir · <b>no bloquear una colación</b> · conocer tu micro · tono normal y claro · <b>100 words per minute</b> · volumen constante · <b>pausa antes y después de los números</b> · nada de «er» · si te quedas callado te interrumpen · pulsar antes de hablar · nada de mensajes largos.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Escucha antes · ≤ 100 palabras/min (más despacio si lo apuntan) · pausa en los números · PTT pulsado antes de hablar y hasta acabar · 10 s antes de volver a llamar.</div>
+  <div class="scroll" id="secTech"><table>
+    <tr><td>Dos estaciones a la vez</td><td>Solo se oye la primera (la segunda cree que ha transmitido) o se bloquean las dos. Otros avisan con «<b>blocked</b>» o «<b>two stations</b>».</td></tr>
+    <tr><td>Mensajes largos</td><td>Cortarlos de vez en cuando para comprobar la frecuencia y dejar pedir repeticiones.</td></tr>
+    <tr><td>Stuck mic</td><td>Micro atascado: la frecuencia queda <b>inutilizable</b> para todos.</td></tr>
+    <tr><td>Sin respuesta</td><td>Esperar <b>al menos 10 s</b> antes de la segunda llamada.</td></tr>
+  </table></div>
 </div>
 </details>
 
@@ -681,36 +728,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-090.02.01.10" data-lo="090.02.01.10">
-<summary><span class="lonum">090.02.01.10</span><span class="lotitle">Read-back and acknowledgement requirements</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li><b>Colaciones obligatorias</b>: importante. Level, heading y speed instructions, ATC route clearances, runway in use y autorizaciones de pista.</li>
-    <li>Correcciones de rumbo de x grados: <b>sin cero delante</b> («turn left one zero degrees»).</li>
-    <li>Si te cambian la velocidad respecto al plan de vuelo, al <b>cambiar de frecuencia</b> lo informas.</li>
-    <li><b>Squawk</b>: colación obligatoria.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Se colaciona todo lo que, si se entiende mal, te pone en otro sitio: <b>nivel, rumbo, velocidad, ruta, pista, squawk, frecuencia, altímetro</b>. En la colación, <b>tu indicativo al final</b>.</div>
-  <div class="trap"><b>Trampa:</b> la temperatura, el punto de rocío y el viento <b>no</b> se colacionan. ROGER o WILCO <b>nunca</b> sustituyen la colación.</div>
-  <div class="scroll"><table>
-    <tr><th>Se colaciona siempre</th></tr>
-    <tr><td>Level, heading and speed instructions</td></tr>
-    <tr><td>ATC route clearances</td></tr>
-    <tr><td>Runway in use</td></tr>
-    <tr><td>Clearance to <b>enter, land on, take off, backtrack, cross, hold short of</b> an active runway</td></tr>
-    <tr><td>SSR operating instructions (squawk) · VDF information · frequency changes · type of radar service · altimeter settings · transition level</td></tr>
-  </table></div>
-  <h4>Autorización condicional</h4>
-  <div class="vis" id="visCond"><b>Orden</b><ol><li>Call sign</li><li>Condición</li><li>Autorización</li><li>Condición repetida</li></ol></div>
-  <ul>
-    <li>Orden: <b>call sign · condición · autorización · condición repetida</b>. «FTR 95, behind the landing Airbus, line up and wait behind».</li>
-    <li>Colación en el <b>mismo orden</b>, con el indicativo al final: «Behind the landing Airbus, line up and wait behind, FTR 95».</li>
-    <li>Si afecta a una pista activa, <b>piloto y controlador</b> tienen que ver al avión o vehículo de la condición.</li>
-    <li>Si el controlador no recibe la colación, <b>te la pedirá</b>. No cambies de frecuencia justo al colacionar: deja unos segundos para que te corrijan.</li>
-  </ul>
-</div>
-</details>
-
 <details class="lo" id="lo-090.02.01.06" data-lo="090.02.01.06">
 <summary><span class="lonum">090.02.01.06</span><span class="lotitle">RT call signs for aeronautical stations including use of abbreviated call signs</span></summary>
 <div class="body">
@@ -739,52 +756,58 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-090.02.01.13" data-lo="090.02.01.13">
-<summary><span class="lonum">090.02.01.13</span><span class="lotitle">Data link messages</span></summary>
-<div class="body">
-  <div class="comp"><b>ATPL</b><ul>
-    <li><b>CPDLC</b> = Controller–Pilot Data Link Communications: mensajes de texto entre controlador y piloto que sustituyen a la voz en ruta.</li>
-    <li>Antes hay que hacer el <b>LOG ON</b> (notificación): el avión se da a conocer al centro para que pueda abrirse la conexión.</li>
-    <li>Si un mensaje CPDLC está mal, se corrige <b>por voz</b>: «<b>disregard CPDLC</b> (tipo) <b>message, break</b>» y la instrucción correcta. Si falla el sistema: «<b>CPDLC failure</b>» y se sigue por voz.</li>
-  </ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-090.02.01.01" data-lo="090.02.01.01">
-<summary><span class="lonum">090.02.01.01</span><span class="lotitle">Transmission of letters</span></summary>
+<details class="lo" id="lo-090.02.01.07" data-lo="090.02.01.07">
+<summary><span class="lonum">090.02.01.07</span><span class="lotitle">RT call signs for aircraft including use of abbreviated call signs</span></summary>
 <div class="body">
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>El <b>alfabeto</b> hay que saberlo. Excepciones al deletreo: <b>telephony designator</b> y <b>type of aircraft</b>.</li>
+    <li>El indicativo se abrevia <b>a partir de la segunda llamada y solo si antes lo ha abreviado el controlador</b>, nunca a iniciativa del piloto. Saber las <b>tres variantes</b>.</li>
+    <li>Si hay confusión, <b>cambio de indicativo</b> (lo ordena ATC).</li>
+    <li>«Suelen preguntar cuándo se indica el peso»: <b>HEAVY / SUPER</b> en la <b>primera llamada</b>.</li>
   </ul></div>
-  <div class="key"><b>Clave</b>Cada letra del indicativo se deletrea con el alfabeto, salvo el designador telefónico («Fastair») y el tipo de avión («Cessna»).</div>
-  <div class="ph">
-  <div><b>A</b>Alpha<span>AL fah</span></div><div><b>B</b>Bravo<span>BRAH voh</span></div><div><b>C</b>Charlie<span>CHAR lee / SHAR lee</span></div><div><b>D</b>Delta<span>DELL tah</span></div><div><b>E</b>Echo<span>ECK oh</span></div><div><b>F</b>Foxtrot<span>FOKS trot</span></div><div><b>G</b>Golf<span>GOLF</span></div><div><b>H</b>Hotel<span>ho TELL</span></div><div><b>I</b>India<span>IN dee ah</span></div><div><b>J</b>Juliett<span>JEW lee ETT</span></div><div><b>K</b>Kilo<span>KEY loh</span></div><div><b>L</b>Lima<span>LEE mah</span></div><div><b>M</b>Mike<span>MIKE</span></div><div><b>N</b>November<span>no VEM ber</span></div><div><b>O</b>Oscar<span>OSS cah</span></div><div><b>P</b>Papa<span>pah PAH</span></div><div><b>Q</b>Quebec<span>keh BECK</span></div><div><b>R</b>Romeo<span>ROW me oh</span></div><div><b>S</b>Sierra<span>see AIR rah</span></div><div><b>T</b>Tango<span>TANG go</span></div><div><b>U</b>Uniform<span>YOU nee form</span></div><div><b>V</b>Victor<span>VIK tah</span></div><div><b>W</b>Whiskey<span>WISS key</span></div><div><b>X</b>X-ray<span>ECKS ray</span></div><div><b>Y</b>Yankee<span>YANG key</span></div><div><b>Z</b>Zulu<span>ZOO loo</span></div>
-  </div>
-  <p class="src">Ortografía: <b>Alfa/Alpha</b>, <b>Juliett</b> con dos t, <b>Whiskey</b>. Si no hay riesgo para la inteligibilidad, el deletreo se puede omitir.</p>
+  <div class="key"><b>Clave</b>Al establecer contacto, <b>siempre completo</b>. El avión abrevia <b>solo después de que lo haga la estación de tierra</b>. El tipo (c) <b>nunca</b> se abrevia.</div>
+  <div class="trap"><b>Trampa:</b> «cuando la comunicación es satisfactoria» es la regla de la <b>estación de tierra</b> (puede omitir su nombre o sufijo), no la del avión.</div>
+  <div class="vis" id="visCallsign"><b>Animación · quién abrevia primero</b>
+  <p style="margin:2px 0 6px;font-size:15px">Paso a paso. Cambia el tipo de indicativo para ver cómo se abrevia cada uno.</p>
+  <div class="row" id="csType" style="margin-bottom:6px"></div>
+  <div class="steps" id="csSteps"></div>
+  <div class="row"><button class="btn sec" id="csPrev">◀ Anterior</button><button class="btn" id="csNext">Siguiente ▶</button><span class="muted" id="csPos" style="font-size:14px"></span></div>
+  <div class="mq" id="mqCallsign"></div>
 </div>
-</details>
-
-<details class="lo" id="lo-090.02.01.03" data-lo="090.02.01.03">
-<summary><span class="lonum">090.02.01.03</span><span class="lotitle">Transmission of time</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>Hora: <b>dos dígitos</b> si se puede, <b>todos</b> si puede haber confusión (las en punto). Siempre <b>UTC</b>, nunca hora local.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Solo los minutos, dígito a dígito; la hora completa si puede haber confusión. El <b>time check</b>, al <b>medio minuto más próximo</b>.</div>
-  <div class="trap"><b>Trampa:</b> ETA «zero seven» = <b>a los 7 minutos de la hora</b>, no «dentro de 7 minutos». El time check no se redondea siempre hacia arriba.</div>
   <div class="scroll"><table>
-    <tr><th>Hora</th><th>Se dice</th></tr>
-    <tr><td>0803</td><td>zero three · o · zero eight zero three</td></tr>
-    <tr><td>1300</td><td>one three zero zero (en punto: completa)</td></tr>
-    <tr><td>2057</td><td>five seven · o · two zero five seven</td></tr>
+  <tr><th>Tipo</th><th>Composición</th><th>Ejemplo</th><th>Abreviado</th></tr>
+  <tr><td><b>(a)</b></td><td>Matrícula</td><td>N57826 · CESSNA FABCD</td><td>1.º carácter + al menos los 2 últimos: N26 o N826 · CESSNA CD</td></tr>
+  <tr><td><b>(b)</b></td><td>Designador telefónico + últimos 4 de la matrícula</td><td>FASTAIR GBNKD</td><td>Designador + al menos los 2 últimos: FASTAIR KD</td></tr>
+  <tr><td><b>(c)</b></td><td>Designador + identificación de vuelo</td><td>SCANDINAVIAN 937</td><td><b>No se abrevia</b></td></tr>
   </table></div>
-  <div class="vis" id="visTime"><b>Visual · time check al medio minuto más próximo</b>
-  <p style="margin:2px 0 6px;font-size:15px">Mueve los segundos: ATC da la hora redondeando al <b>:00 o :30 más cercano</b>, no siempre hacia arriba.</p>
-  <div id="timeSvg"></div>
-  <div class="ctl"><span>Hora real 10:14:</span><input type="range" id="tmS" min="0" max="59" value="40" aria-label="Segundos"><b id="tmSv"></b></div>
-  <div class="out" id="tmOut"></div>
-  <div class="mq" id="mqTime"></div>
+  <ul>
+    <li><b>Change your call sign to</b> (nuevo) <b>until further advised</b>: ATC lo cambia temporalmente por confusión. Para volver: <b>revert to flight plan call sign</b> (at punto).</li>
+    <li><b>HEAVY</b>: estela pesada (MTOM &gt; 136 000 kg). <b>SUPER</b>: A380. Se dice justo detrás del indicativo en la <b>llamada inicial</b> a cada unidad.</li>
+    <li>Designadores telefónicos: <b>ICAO Doc 8585</b>. En la colación, <b>el indicativo va al final</b>.</li>
+  </ul>
+  <h4>Call sign confusion</h4>
+  <div class="scroll"><table>
+    <tr><td>Números consecutivos</td><td>RUSHAIR 9058 · 9059</td></tr>
+    <tr><td>Designadores parecidos</td><td>TOPSWISS · SWIFT · SWISSAIR</td></tr>
+    <tr><td>Mismos caracteres en otro orden</td><td>CCA1234 · ACA2314</td></tr>
+    <tr><td>Dígitos repetidos</td><td>ALITALIA 333</td></tr>
+    <tr><td>Final = destino</td><td>AEGEAN 2DH a EDDH</td></tr>
+  </table></div>
+  <p class="src">Efecto más obvio: tomar como propia una autorización de otro. Mejor identificaciones cortas y sin acabar en 0 o 5.</p>
 </div>
+</details>
+
+<details class="lo" id="lo-090.02.01.08" data-lo="090.02.01.08">
+<summary><span class="lonum">090.02.01.08</span><span class="lotitle">Transfer of communication</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>En el <b>contact</b> no se puede omitir nunca la <b>frecuencia</b>.</li>
+    <li>Si te equivocas de frecuencia y en la nueva no te contesta nadie, <b>vuelve a la anterior</b> para ver si fue un error o un fallo de comunicaciones.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>«RYR 237, contact Barcelona Approach 120.1» → «<b>120.1, Barcelona Approach, RYR 237</b>». Frecuencia y estación colacionadas, indicativo al final.</div>
+  <ul>
+    <li>Normalmente es la estación la que te pasa de frecuencia. Si quieres cambiar tú, lo <b>pides</b>: «Madrid Approach, FSM121, request change to Palma Radar 134.3» → «FSM121, approved».</li>
+    <li><b>MONITOR</b> = escuchar sin llamar; <b>CONTACT</b> = llamar.</li>
+  </ul>
 </div>
 </details>
 
@@ -807,66 +830,32 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-090.02.01.02" data-lo="090.02.01.02">
-<summary><span class="lonum">090.02.01.02</span><span class="lotitle">Transmission of numbers</span></summary>
+<details class="lo" id="lo-090.02.01.10" data-lo="090.02.01.10">
+<summary><span class="lonum">090.02.01.10</span><span class="lotitle">Read-back and acknowledgement requirements</span></summary>
 <div class="body">
   <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>Números enteros: <b>thousand / hundred</b>; los <b>rumbos</b>, siempre dígito a dígito.</li>
-    <li>Frecuencias: <b>6 dígitos</b>, o <b>4</b> si los dos últimos son cero. Colación obligatoria.</li>
+    <li><b>Colaciones obligatorias</b>: importante. Level, heading y speed instructions, ATC route clearances, runway in use y autorizaciones de pista.</li>
+    <li>Correcciones de rumbo de x grados: <b>sin cero delante</b> («turn left one zero degrees»).</li>
+    <li>Si te cambian la velocidad respecto al plan de vuelo, al <b>cambiar de frecuencia</b> lo informas.</li>
+    <li><b>Squawk</b>: colación obligatoria.</li>
   </ul></div>
-  <div class="key"><b>Clave</b>Dígito a dígito, salvo centenas y millares redondos en altitud, nubes, visibilidad y RVR. Rumbos, viento, pista, squawk y QNH: siempre dígito a dígito (QNH 1000 = «one thousand»).</div>
-  <div class="trap"><b>Trampa:</b> heading 100 = «heading <b>one zero zero</b>», nunca «one hundred». 12 000 ft = «<b>one two</b> thousand», no «twelve». FL200 = «flight level two hundred»; FL110 = «flight level one one zero».</div>
-  <div class="ph">
-  <div><b>0</b>ZE-RO</div><div><b>1</b>WUN</div><div><b>2</b>TOO</div><div><b>3</b>TREE</div><div><b>4</b>FOW-er</div><div><b>5</b>FIFE</div><div><b>6</b>SIX</div><div><b>7</b>SEV-en</div><div><b>8</b>AIT</div><div><b>9</b>NIN-er</div><div><b>.</b>DAY-SEE-MAL</div><div><b>100</b>HUN-dred</div><div><b>1000</b>TOU-SAND</div>
-  </div>
+  <div class="key"><b>Clave</b>Se colaciona todo lo que, si se entiende mal, te pone en otro sitio: <b>nivel, rumbo, velocidad, ruta, pista, squawk, frecuencia, altímetro</b>. En la colación, <b>tu indicativo al final</b>.</div>
+  <div class="trap"><b>Trampa:</b> la temperatura, el punto de rocío y el viento <b>no</b> se colacionan. ROGER o WILCO <b>nunca</b> sustituyen la colación.</div>
   <div class="scroll"><table>
-    <tr><th>Dato</th><th>Se dice</th></tr>
-    <tr><td>Heading 080</td><td>heading zero eight zero</td></tr>
-    <tr><td>Wind 160° 18 kt gusting 30</td><td>wind one six zero degrees one eight knots gusting three zero knots</td></tr>
-    <tr><td>Squawk 2400</td><td>squawk two four zero zero</td></tr>
-    <tr><td>Altitude 3 400</td><td>three thousand four hundred</td></tr>
-    <tr><td>Visibility 1000 · RVR 1700</td><td>visibility one thousand · RVR one thousand seven hundred</td></tr>
+    <tr><th>Se colaciona siempre</th></tr>
+    <tr><td>Level, heading and speed instructions</td></tr>
+    <tr><td>ATC route clearances</td></tr>
+    <tr><td>Runway in use</td></tr>
+    <tr><td>Clearance to <b>enter, land on, take off, backtrack, cross, hold short of</b> an active runway</td></tr>
+    <tr><td>SSR operating instructions (squawk) · VDF information · frequency changes · type of radar service · altimeter settings · transition level</td></tr>
   </table></div>
-  <h4 id="secFreq">Frecuencias</h4>
-  <div class="scroll"><table>
-    <tr><th>Canal</th><th>Se dice</th></tr>
-    <tr><td>118.000</td><td>one one eight decimal zero</td></tr>
-    <tr><td>118.005</td><td>one one eight decimal zero zero five</td></tr>
-    <tr><td>118.025</td><td>one one eight decimal zero two five</td></tr>
-    <tr><td>118.100</td><td>one one eight decimal one</td></tr>
-    <tr><td>128.125</td><td>wun too ait day-see-mal wun too fife</td></tr>
-  </table></div>
-  <p class="src">La palabra <b>DECIMAL</b> siempre (en español, «coma»).</p>
-</div>
-</details>
-
-<details class="lo" id="lo-090.02.01.04" data-lo="090.02.01.04">
-<summary><span class="lonum">090.02.01.04</span><span class="lotitle">Transmission techniques</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>Escuchar antes de transmitir · <b>no bloquear una colación</b> · conocer tu micro · tono normal y claro · <b>100 words per minute</b> · volumen constante · <b>pausa antes y después de los números</b> · nada de «er» · si te quedas callado te interrumpen · pulsar antes de hablar · nada de mensajes largos.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Escucha antes · ≤ 100 palabras/min (más despacio si lo apuntan) · pausa en los números · PTT pulsado antes de hablar y hasta acabar · 10 s antes de volver a llamar.</div>
-  <div class="scroll" id="secTech"><table>
-    <tr><td>Dos estaciones a la vez</td><td>Solo se oye la primera (la segunda cree que ha transmitido) o se bloquean las dos. Otros avisan con «<b>blocked</b>» o «<b>two stations</b>».</td></tr>
-    <tr><td>Mensajes largos</td><td>Cortarlos de vez en cuando para comprobar la frecuencia y dejar pedir repeticiones.</td></tr>
-    <tr><td>Stuck mic</td><td>Micro atascado: la frecuencia queda <b>inutilizable</b> para todos.</td></tr>
-    <tr><td>Sin respuesta</td><td>Esperar <b>al menos 10 s</b> antes de la segunda llamada.</td></tr>
-  </table></div>
-</div>
-</details>
-
-<details class="lo" id="lo-090.02.01.08" data-lo="090.02.01.08">
-<summary><span class="lonum">090.02.01.08</span><span class="lotitle">Transfer of communication</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>En el <b>contact</b> no se puede omitir nunca la <b>frecuencia</b>.</li>
-    <li>Si te equivocas de frecuencia y en la nueva no te contesta nadie, <b>vuelve a la anterior</b> para ver si fue un error o un fallo de comunicaciones.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>«RYR 237, contact Barcelona Approach 120.1» → «<b>120.1, Barcelona Approach, RYR 237</b>». Frecuencia y estación colacionadas, indicativo al final.</div>
+  <h4>Autorización condicional</h4>
+  <div class="vis" id="visCond"><b>Orden</b><ol><li>Call sign</li><li>Condición</li><li>Autorización</li><li>Condición repetida</li></ol></div>
   <ul>
-    <li>Normalmente es la estación la que te pasa de frecuencia. Si quieres cambiar tú, lo <b>pides</b>: «Madrid Approach, FSM121, request change to Palma Radar 134.3» → «FSM121, approved».</li>
-    <li><b>MONITOR</b> = escuchar sin llamar; <b>CONTACT</b> = llamar.</li>
+    <li>Orden: <b>call sign · condición · autorización · condición repetida</b>. «FTR 95, behind the landing Airbus, line up and wait behind».</li>
+    <li>Colación en el <b>mismo orden</b>, con el indicativo al final: «Behind the landing Airbus, line up and wait behind, FTR 95».</li>
+    <li>Si afecta a una pista activa, <b>piloto y controlador</b> tienen que ver al avión o vehículo de la condición.</li>
+    <li>Si el controlador no recibe la colación, <b>te la pedirá</b>. No cambies de frecuencia justo al colacionar: deja unos segundos para que te corrijan.</li>
   </ul>
 </div>
 </details>
@@ -904,8 +893,31 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo atpl" id="lo-090.02.01.13" data-lo="090.02.01.13">
+<summary><span class="lonum">090.02.01.13</span><span class="lotitle">Data link messages</span></summary>
+<div class="body">
+  <div class="comp"><b>ATPL</b><ul>
+    <li><b>CPDLC</b> = Controller–Pilot Data Link Communications: mensajes de texto entre controlador y piloto que sustituyen a la voz en ruta.</li>
+    <li>Antes hay que hacer el <b>LOG ON</b> (notificación): el avión se da a conocer al centro para que pueda abrirse la conexión.</li>
+    <li>Si un mensaje CPDLC está mal, se corrige <b>por voz</b>: «<b>disregard CPDLC</b> (tipo) <b>message, break</b>» y la instrucción correcta. Si falla el sistema: «<b>CPDLC failure</b>» y se sigue por voz.</li>
+  </ul></div>
+</div>
+</details>
+
 <!-- =================== 090.03 =================== -->
 <h2>090.03 · Relevant weather information <span class="wtag">2 preg. · 6 %</span></h2>
+
+<details class="lo" id="lo-090.03.01.01" data-lo="090.03.01.01">
+<summary><span class="lonum">090.03.01.01</span><span class="lotitle">Aerodrome weather terms</span></summary>
+<div class="body">
+  <div class="comp"><b>Temario base · CAVOK</b> («cav-o-kay») · importante<ul>
+    <li>Visibilidad de <b>10 km o más</b>.</li>
+    <li>Sin nubes por debajo de <b>5000 ft</b> o de la <b>MSA</b> (la mayor), y sin CB.</li>
+    <li>Sin <b>tiempo significativo</b>. El viento y la temperatura no entran.</li>
+    <li>Las tres a la vez: si falla una, no hay CAVOK (9 km, o una nube a 3000 ft, ya no lo es).</li>
+  </ul></div>
+</div>
+</details>
 
 <details class="lo" id="lo-090.03.01.02" data-lo="090.03.01.02">
 <summary><span class="lonum">090.03.01.02</span><span class="lotitle">Weather broadcast</span></summary>
@@ -920,18 +932,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li><b>SPECI</b>: METAR especial, emitido cuando hay un cambio significativo.</li>
     <li><b>VOLMET</b>: como el ATIS, pero con el tiempo de <b>distintos aeródromos</b>, para aviones en ruta. <b>D-ATIS</b>: el ATIS por enlace de datos.</li>
     <li>Entrena el oído en la pestaña Test: <b>«Escucha ATIS»</b>.</li>
-  </ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-090.03.01.01" data-lo="090.03.01.01">
-<summary><span class="lonum">090.03.01.01</span><span class="lotitle">Aerodrome weather terms</span></summary>
-<div class="body">
-  <div class="comp"><b>Temario base · CAVOK</b> («cav-o-kay») · importante<ul>
-    <li>Visibilidad de <b>10 km o más</b>.</li>
-    <li>Sin nubes por debajo de <b>5000 ft</b> o de la <b>MSA</b> (la mayor), y sin CB.</li>
-    <li>Sin <b>tiempo significativo</b>. El viento y la temperatura no entran.</li>
-    <li>Las tres a la vez: si falla una, no hay CAVOK (9 km, o una nube a 3000 ft, ya no lo es).</li>
   </ul></div>
 </div>
 </details>
@@ -1140,16 +1140,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <!-- =================== 090.07 =================== -->
 <h2>090.07 · Other communications <span class="wtag">2 preg. · 6 %</span></h2>
 
-<details class="lo" id="lo-090.07.01.02" data-lo="090.07.01.02">
-<summary><span class="lonum">090.07.01.02</span><span class="lotitle">Use of Morse code</span></summary>
-<div class="body">
-  <div class="profe"><b>★ IMPORTANTE</b><ul>
-    <li>El <b>Morse</b> no hay que saberlo, pero te pueden dar la tabla y pedir a qué palabra equivale.</li>
-  </ul></div>
-  <div class="key"><b>Clave</b>Descifra letra a letra, separando por los espacios. Así se identifica un VOR, DME o NDB por su código de 2 o 3 letras.</div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-090.07.01.01" data-lo="090.07.01.01">
 <summary><span class="lonum">090.07.01.01</span><span class="lotitle">Meteorological observations</span></summary>
 <div class="body">
@@ -1157,6 +1147,16 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li><b>Routine air-reports</b>: las observaciones rutinarias en vuelo (hoy casi siempre automáticas por enlace de datos).</li>
     <li><b>Special air-report</b>: en cuanto encuentres <b>turbulencia fuerte, engelamiento fuerte, onda de montaña fuerte</b>, tormentas con granizo, tormentas de arena o polvo, o <b>ceniza volcánica</b>.</li>
   </ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-090.07.01.02" data-lo="090.07.01.02">
+<summary><span class="lonum">090.07.01.02</span><span class="lotitle">Use of Morse code</span></summary>
+<div class="body">
+  <div class="profe"><b>★ IMPORTANTE</b><ul>
+    <li>El <b>Morse</b> no hay que saberlo, pero te pueden dar la tabla y pedir a qué palabra equivale.</li>
+  </ul></div>
+  <div class="key"><b>Clave</b>Descifra letra a letra, separando por los espacios. Así se identifica un VOR, DME o NDB por su código de 2 o 3 letras.</div>
 </div>
 </details>
 
@@ -1290,6 +1290,8 @@ const SUB = [
  ["090.07.01.01","B7",2,"Meteorological observations","","atpl"],
  ["X.062","X",0,"Frequency, wavelength and units","COM-1","full"]
 ];
+/*f15natsort*/const __nk=c=>String(c).split(/[.\-_·\s]+/).filter(Boolean).map(t=>/^\d+$/.test(t)?[0,+t,""]:[1,0,t]);const __nc=(a,b)=>{const x=__nk(a[0]),y=__nk(b[0]);for(let i=0;i<Math.max(x.length,y.length);i++){const p=x[i]||[-1,0,""],q=y[i]||[-1,0,""];for(let j=0;j<3;j++){if(p[j]<q[j])return -1;if(p[j]>q[j])return 1}}return 0};SUB.sort(__nc);
+
 const BLOCKS = [
  {k:"B1", code:"090.01", name:"Concepts", n:4, los:7},
  {k:"B2", code:"090.02", name:"General operating procedures", n:17, los:32},
@@ -3609,9 +3611,9 @@ try{
     need(()=>true, F0N);
     return shuffle(out).map(q=>({k:"mc", q}));
   };
-  MODE_LABEL.adaptive = "Test adaptativo · 25 preguntas · 45 min";
+  MODE_LABEL.adaptive = "Adaptativo · 25 preguntas · 45 min";
   const ad = document.querySelector('input[name=mode][value=adaptive]'), lab = ad && ad.closest("label");
-  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Test adaptativo · 25 preguntas · 45 min <small>El formato estándar de Comunicaciones: solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
+  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Adaptativo · 25 preguntas · 45 min <small>El formato estándar de Comunicaciones: solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
     const sn = document.querySelector('input[name=mode][value=senasa]'); if(sn) sn.checked = false; }
 }catch(e){ console.error("com_patch examen", e); }
 

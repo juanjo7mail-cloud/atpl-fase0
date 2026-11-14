@@ -221,7 +221,6 @@ async function solo(){
 const CSS=`
 .rd{max-width:760px;display:flex;flex-direction:column;--pn:#0A1016;--pn2:#131D27;--ac:#FFB000;--ac2:#35E0C2;--tx:#E8F0F6;--mu:#8CA0B2;--rd:#FF3B3B;--ln:#2A3A49}
 .rd.skin-pil{--pn:#17191D;--pn2:#23272D;--ac:#3CFF7A;--ac2:#6FD3FF;--ln:#3A4048}
-.rd .dhead{order:-5}.rd #rdRoles{order:-4}.rd #rdCon{order:-2}.rd:not(.on) #rdCfg{order:-3}.rd.on #rdCfg{order:-1}
 .rd summary{cursor:pointer;font:700 18px var(--display);list-style:none}.rd summary::-webkit-details-marker{display:none}.rd summary small{font:500 14px var(--body);color:var(--muted);margin-left:8px}
 .rd .card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 12px}
 .rd h2{font:700 20px/1.1 var(--display);margin:0 0 10px}
@@ -237,14 +236,31 @@ const CSS=`
 .rd .hint{font-size:13px;color:var(--mu);margin:8px 0 0;text-align:center}
 .rd .okl{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--tx);justify-content:center}
 .rd .okl input{margin-top:3px;width:16px;height:16px;flex:none;accent-color:var(--ac)}
-/* elegir papel */
-#rdRoles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 12px}
-.rcard{display:flex;flex-direction:column;align-items:center;gap:6px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;padding:12px 6px 10px;cursor:pointer;min-height:96px;font:700 15px/1.1 var(--display);letter-spacing:.4px;text-align:center;transition:transform .15s,border-color .15s,box-shadow .15s}
-.rcard svg{width:38px;height:38px;color:var(--accent)}
-.rcard small{font:500 11.5px var(--body);color:var(--muted);letter-spacing:0}
-.rcard:hover{transform:translateY(-2px)}
-.rcard[aria-pressed="true"]{border-color:var(--accent);background:var(--accentbg);box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 28%,transparent)}
-.rcard:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+/* elegir papel + conectar (dentro de la consola: una sola pantalla) */
+.rset{margin:0 0 12px;display:flex;flex-direction:column;gap:10px}
+#rdRoles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.rcard{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #33424F;background:linear-gradient(180deg,#27323D,#18212A);color:var(--tx);border-radius:10px;padding:8px 6px;cursor:pointer;min-height:54px;font:700 14px/1.1 var(--display);letter-spacing:.3px;text-align:left}
+.rcard>span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rcard svg{width:24px;height:24px;flex:none;color:var(--ac2)}
+.rcard small{font:500 10.5px var(--body);color:var(--mu);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rcard[aria-pressed="true"]{border-color:var(--ac);background:linear-gradient(180deg,#2F3F4D,#1C2832);box-shadow:0 0 14px color-mix(in srgb,var(--ac) 35%,transparent)}
+.rcard[aria-pressed="true"] svg{color:var(--ac)}
+.rcard:focus-visible,.rbtn:focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
+@media (max-width:430px){.rcard{flex-direction:column;gap:3px;text-align:center;padding:8px 4px}.rcard>span{align-items:center}.rcard small{max-width:100%}}
+.rln{display:flex;gap:8px;align-items:stretch}.rln .fld{flex:1 1 auto}
+#rdCon input[type=text]{width:100%;box-sizing:border-box;background:#05090C;color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:11px 12px;min-height:46px}
+#rdCon input[type=text]::placeholder{color:var(--mu)}
+.rbtn{border:1px solid var(--ac);background:var(--ac);color:#06100A;border-radius:8px;font:800 14px var(--body);letter-spacing:.06em;text-transform:uppercase;padding:0 16px;min-height:46px;cursor:pointer;white-space:nowrap}
+.rbtn:disabled{opacity:.55;cursor:wait}
+.rbtn.ghost{background:transparent;color:var(--tx);border-color:var(--ln);min-height:40px;font-weight:700}
+.rd.on #rdConn{background:transparent;color:var(--tx);border-color:var(--rd)}
+#rdCon .status{color:var(--mu);font-size:13px;padding:0 2px}
+#rdCon .msg{margin:0;min-height:0;color:#FF8A80}#rdCon .msg:empty{display:none}
+.rmore{margin-top:14px;border-top:1px solid var(--ln);padding-top:10px}
+.rmore summary{font:700 13px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+.rmore summary small{font:500 12px var(--body);letter-spacing:0;color:var(--ac2);text-transform:none}
+.rmore[open] summary{margin-bottom:10px}
+.rmore .row{margin-bottom:10px}.rmore .okl{justify-content:flex-start;margin-top:8px}
 /* consola */
 #rdCon{position:relative;border-radius:20px;padding:16px 14px 14px;margin:0 0 12px;color:var(--tx);overflow:hidden;isolation:isolate;
   background:linear-gradient(180deg,var(--pn2),var(--pn));border:1px solid var(--ln);box-shadow:0 18px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 5px rgba(0,0,0,.25)}
@@ -268,12 +284,13 @@ const CSS=`
 .led.on{color:var(--tx)}
 .lcd{position:relative;border-radius:12px;background:#05090C;border:1px solid #000;box-shadow:inset 0 3px 14px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.07);padding:10px 14px 10px;margin:0 0 12px}
 .lcd .nm{grid-column:1/-1;font:700 12px var(--body);letter-spacing:.22em;color:color-mix(in srgb,var(--ac) 70%,#000);text-transform:uppercase;display:flex;justify-content:space-between;gap:8px}
-.lcd .fr{font:700 clamp(46px,14vw,72px)/1 var(--display);letter-spacing:.04em;color:var(--ac);text-shadow:0 0 14px color-mix(in srgb,var(--ac) 65%,transparent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lcd .fr{font:700 clamp(34px,calc((100vw - 92px)/7.7),72px)/1 var(--display);letter-spacing:.04em;color:var(--ac);text-shadow:0 0 14px color-mix(in srgb,var(--ac) 65%,transparent);font-variant-numeric:tabular-nums;white-space:nowrap}
 .lcd .fr small{font-size:.42em;letter-spacing:.1em;margin-left:6px;color:color-mix(in srgb,var(--ac) 70%,#000)}
 .lcd .sb{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px;font:700 13px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:var(--ac2);text-shadow:0 0 8px color-mix(in srgb,var(--ac2) 60%,transparent)}
 .lcd .sb button{border:1px solid var(--ac2);color:var(--ac2);background:transparent;border-radius:6px;font:700 12px var(--body);letter-spacing:.08em;padding:5px 10px;cursor:pointer;min-height:30px}
 .lcd .sb button:hover{background:color-mix(in srgb,var(--ac2) 18%,transparent)}
 .rd.off .lcd .fr{opacity:.35;text-shadow:none}
+@media (max-width:430px){.lcd .fr small{display:none}.lcd .fr{overflow:hidden}}
 /* teclas de frecuencia */
 .keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:8px;margin:0 0 12px}
 .keys label{position:relative;display:flex;flex-direction:column;gap:2px;border-radius:9px;padding:10px 8px 8px;cursor:pointer;min-height:54px;justify-content:center;text-align:center;background:linear-gradient(180deg,#27323D,#18212A);border:1px solid #33424F;box-shadow:0 3px 0 #0A0F14,inset 0 1px 0 rgba(255,255,255,.08);color:var(--tx);transition:transform .08s,box-shadow .08s}
@@ -340,35 +357,33 @@ function render(el,deps){
   const SR=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
   const mtr=Array.from({length:22},(_,i)=>`<i class="${i>16?"hot":""}"></i>`).join("");
   el.innerHTML=`<div class="rd skin-pil off" id="rdRoot">
-  <div class="dhead"><div><h1>Radio</h1><p>Elige tu papel, sintoniza una frecuencia y habla. Solo uno a la vez, como en la radio de verdad.</p></div></div>
-  <div id="rdRoles" role="group" aria-label="Tu papel">${Object.keys(ROLES).map(k=>`<button type="button" class="rcard" data-r="${k}" aria-pressed="false">${ICON[k]}${k==="atc"?"Controlador":k==="pil"?"Piloto":"Escucha"}<small>${ROLE_SUB[k]}</small></button>`).join("")}</div>
-  <details class="card" id="rdCfg" open><summary>Conexión y ajustes <small id="rdSum"></small></summary>
-    <div class="row" style="margin-top:12px">
-      <select id="rdRole" class="sr" aria-label="Tu papel">${Object.keys(ROLES).map(k=>`<option value="${k}">${ROLES[k]}</option>`).join("")}</select>
-      <label class="fld">Indicativo (como te oirán)<input type="text" id="rdCall" maxlength="24" placeholder="EC-ABC, Madrid Torre…" autocomplete="off"></label>
-    </div>
-    <div class="row" style="margin-top:12px"><button class="btn" id="rdConn" type="button">Conectar</button><button class="btn ghost" id="rdTest" type="button">Probar sonido</button><button class="btn ghost" id="rdSolo" type="button">Prueba en solitario</button>
-      <label class="fld" style="flex:0 1 auto;flex-direction:row;align-items:center;gap:8px">Volumen <input type="range" id="rdVol" min="0.1" max="1.5" step="0.05"></label></div>
-    <div class="status" id="rdSt" style="margin-top:10px"></div><p class="msg" id="rdMsg" aria-live="polite"></p>
-  </details>
+  <div class="dhead"><div><h1>Radio</h1><p>Una sola pantalla: elige papel, conecta, sintoniza y habla. Solo uno a la vez, como en la radio de verdad.</p></div></div>
   <section id="rdCon" aria-label="Consola de radio"><i class="screw a"></i><i class="screw b"></i><i class="screw c"></i><i class="screw d"></i>
     <div class="con-top"><span id="rdKind"></span><b id="rdId"></b><span class="clk" id="rdClock"></span></div>
     <div class="leds"><span class="led r" id="rdLedTx"><i></i>TX</span><span class="led g" id="rdLedRx"><i></i>RX</span><span class="led y" id="rdLedBz"><i></i>OCUPADA</span><span class="led g" id="rdLedLk"><i></i>ENLACE</span></div>
+    <div class="rset">
+      <div id="rdRoles" role="group" aria-label="Tu papel">${Object.keys(ROLES).map(k=>`<button type="button" class="rcard" data-r="${k}" aria-pressed="false">${ICON[k]}<span>${k==="atc"?"Controlador":k==="pil"?"Piloto":"Escucha"}<small>${ROLE_SUB[k]}</small></span></button>`).join("")}</div>
+      <div class="rln"><label class="fld"><span class="sr">Indicativo</span><input type="text" id="rdCall" maxlength="24" placeholder="Indicativo (EC-ABC…)" autocomplete="off" aria-label="Indicativo (como te oirán)"></label><button class="rbtn" id="rdConn" type="button">Conectar</button></div>
+      <div class="status" id="rdSt"></div><p class="msg" id="rdMsg" aria-live="polite"></p>
+    </div>
     <div class="lcd"><div class="nm"><span id="rdLcdName"></span><span id="rdLcdRole"></span></div><div class="fr" id="rdLcd"></div><div class="sb" id="rdLcdSb"></div></div>
     <div class="keys" role="radiogroup" aria-label="Frecuencia">${FREQS.map(f=>`<label><input type="radio" name="rdF" value="${f.id}"><b>${f.f}</b><small>${f.k} · ${f.n.split(" · ")[0]}</small></label>`).join("")}</div>
     <div class="mtr" id="rdMeter" aria-hidden="true">${mtr}</div>
     <div class="pttwrap"><button id="rdPtt" type="button" aria-label="Pulsar para hablar"></button>
     <div class="bar" id="rdBar" aria-live="polite"></div></div>
-    <label class="okl" style="margin-top:8px"><input type="checkbox" id="rdLatch"><span>Modo manos libres: un toque empieza y otro termina</span></label>
-    ${SR?`<label class="okl" style="margin-top:8px"><input type="checkbox" id="rdCaps"><span>Subtítulos en inglés de lo que digo (beta)</span></label>`:""}
-    <p class="hint">Mantén pulsado el botón (o la barra espaciadora). Usa auriculares para evitar el eco.</p></section>
+    <p class="hint">Mantén pulsado el botón (o la barra espaciadora). Usa auriculares para evitar el eco.</p>
+    <details class="rmore" id="rdCfg"><summary>Ajustes y pruebas <small id="rdSum"></small></summary>
+      <div class="row"><button class="rbtn ghost" id="rdTest" type="button">Probar sonido</button><button class="rbtn ghost" id="rdSolo" type="button">Prueba en solitario</button>
+        <label class="fld" style="flex:0 1 auto;flex-direction:row;align-items:center;gap:8px">Volumen <input type="range" id="rdVol" min="0.1" max="1.5" step="0.05"></label></div>
+      <label class="okl"><input type="checkbox" id="rdLatch"><span>Modo manos libres: un toque empieza y otro termina</span></label>
+      ${SR?`<label class="okl"><input type="checkbox" id="rdCaps"><span>Subtítulos en inglés de lo que digo (beta)</span></label>`:""}
+    </details></section>
   <div class="card"><h2>En frecuencia <span id="rdN" class="muted" style="font:600 14px var(--body);color:var(--muted)"></span></h2><div class="strips" id="rdWho"></div></div>
   <div class="card"><h2>Registro de transmisiones</h2><ul class="lg" id="rdLog"></ul></div></div>`;
   const q=s=>$(s,el);
   el.querySelectorAll('input[name=rdF]').forEach(i=>i.addEventListener("change",()=>{ if(i.value!==R.freq){ R.sby=R.freq; set("sby",R.sby); } R.freq=i.value; set("freq",R.freq); if(R.status!=="off"){ join(R.priv); } update(); }));
   el.querySelectorAll(".rcard").forEach(b=>b.addEventListener("click",()=>{ R.role=b.dataset.r; set("role",R.role); try{ blip(R.role==="atc"?700:1000,0.04,0.05); }catch(_){} if(R.ch&&R.status==="on"){ try{ R.ch.track(me()); }catch(_){} } update(); }));
   el.addEventListener("click",e=>{ if(e.target.closest("#rdFlip")){ const o=R.freq; R.freq=R.sby; R.sby=o; set("freq",R.freq); set("sby",R.sby); if(R.status!=="off") join(R.priv); update(); } });
-  q("#rdRole").addEventListener("change",e=>{ R.role=e.target.value; set("role",R.role); if(R.ch&&R.status==="on"){ try{ R.ch.track(me()); }catch(_){} } update(); });
   q("#rdCall").addEventListener("input",e=>{ R.call=e.target.value; set("call",R.call); });
   q("#rdCall").addEventListener("change",()=>{ if(R.ch&&R.status==="on"){ try{ R.ch.track(me()); }catch(_){} } });
   q("#rdVol").addEventListener("input",e=>{ R.vol=+e.target.value; set("vol",String(R.vol)); if(R.vg) R.vg.gain.value=R.vol; });
@@ -403,11 +418,11 @@ function update(){
   const el=R.el; if(!el||el.dataset.rd!=="1") return; const q=s=>$(s,el);
   const on=R.status==="on", fr=FREQS.find(f=>f.id===R.freq)||FREQS[0], sb=FREQS.find(f=>f.id===R.sby)||FREQS[4], pil=R.role==="pil", ear=R.role==="ear";
   const root=q("#rdRoot"); root.classList.toggle("on",on); root.classList.toggle("off",!on); root.classList.toggle("skin-pil",pil); root.classList.toggle("skin-atc",!pil);
-  if(on&&R.prev!=="on"){ q("#rdCfg").open=false; } if(!on&&R.prev=="on"){ q("#rdCfg").open=true; } R.prev=R.status;
+  R.prev=R.status;
   q("#rdSum").textContent=fr.f+" · "+(ROLES[R.role]||"");
   el.querySelectorAll(".rcard").forEach(b=>b.setAttribute("aria-pressed",b.dataset.r===R.role?"true":"false"));
   el.querySelectorAll('input[name=rdF]').forEach(i=>{ i.checked=i.value===R.freq; });
-  q("#rdRole").value=R.role; if(document.activeElement!==q("#rdCall")) q("#rdCall").value=R.call; q("#rdVol").value=R.vol;
+  if(document.activeElement!==q("#rdCall")) q("#rdCall").value=R.call; q("#rdVol").value=R.vol;
   q("#rdLatch").checked=R.latch; const cc=q("#rdCaps"); if(cc) cc.checked=R.caps;
   q("#rdConn").textContent=R.status==="off"||R.status==="err"?"Conectar":R.status==="conn"?"Conectando…":"Salir de la radio"; q("#rdConn").disabled=R.status==="conn";
   q("#rdSt").innerHTML=`<span class="st-dot ${R.status}"></span>`+(R.status==="on"?`Conectado a <b>${fr.f}</b> ${fr.n}`:R.status==="conn"?"Conectando…":R.status==="err"?"Sin conexión":"Desconectado");

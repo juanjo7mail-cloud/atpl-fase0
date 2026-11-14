@@ -11,7 +11,7 @@ window.__hub={use:async function(n){return n==="artifact"?{publish:async functio
 fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await load();return v?new Response(JSON.stringify(v),{status:200,headers:{"content-type":"application/json"}}):new Response("null",{status:404})}return fetch(u,o)}};
 })();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>021 · 022 Aircraft General Knowledge</title>
+<title>021 · 022 · Aircraft General Knowledge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -428,11 +428,12 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <path id="afFlap" d="M121,7 L160,19 L121,25 Z"/>
 </defs>
 </svg>
+<style>h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-top:10px}</style>
 <div class="wrap">
 <header>
   <div class="code">021 · 022</div>
   <h1>Aircraft General Knowledge</h1>
-  <p><b>021 · 80 preguntas · 2 h 00 &nbsp;·&nbsp; 022 · 60 preguntas · 1 h 30 &nbsp;·&nbsp; aprobado 75 %</b></p>
+  <p><b>021 · 80 preguntas · 2 h 00 min | 022 · 60 preguntas · 1 h 30 min · aprobado 75 %</b></p>
 </header>
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
@@ -449,6 +450,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="card" id="hotCard" hidden><b>Lo que más fallas</b><div id="hotFails"></div></div>
 <!--QREF--><details class="card qref" id="qref"><summary>Repaso rápido <small>cifras clave y conceptos que se confunden</small></summary><div class="qbody"><h4>Cifras clave</h4><div class="scroll"><table><tr><th>Tema</th><th>Dato</th></tr><tr><td>Factores de carga</td><td>Normal <b>+3,8 / −1,52</b> · Utility <b>+4,4 / −1,76</b> · Aerobatic <b>+6 / −3</b> <span class="es">· usa la tabla, no el «3,4–3,8» del texto</span></td></tr><tr><td>Hidráulica</td><td><b>F = P × A</b> · pistón más grande, más fuerza (y recorre menos) <span class="es">· fluido casi incompresible</span></td></tr><tr><td>Oleo del tren</td><td><b>Nitrógeno</b> = muelle · <b>aceite</b> = amortiguación <span class="es">· triciclo: principal justo detrás del CG, ≈ <b>90 %</b> del peso</span></td></tr><tr><td>Flaps</td><td>↑ <b>CL</b> · ↓ velocidad de pérdida · ↑ resistencia · ↓ α crítico <span class="es">· el <b>slat</b> sube el α crítico</span></td></tr><tr><td>Presurización</td><td>ΔP = cabina − exterior · la <b>outflow valve</b> controla la cabin altitude <span class="es">· aviso por encima de <b>10 000 ft</b> de cabina</span></td></tr><tr><td>Combustibles</td><td>AVGAS 80 <b>roja</b> · AVGAS 100 <b>verde</b> · AVGAS 100LL <b>azul</b> · JET A queroseno <span class="es">· JET A-1 congela a <b>−47 °C</b></span></td></tr><tr><td>Carb heat</td><td>Sin hielo: las rpm bajan y <b>se quedan</b>. Con hielo: bajan y luego <b>suben</b> <span class="es">· COLD para despegar y en final</span></td></tr><tr><td>Mezcla</td><td><b>≈ 15 : 1</b> estequiométrica · <b>18 : 1</b> pobre · rica enfría la culata <span class="es">· enriquecer <b>baja</b> la temperatura del cilindro</span></td></tr><tr><td>Magnetos</td><td>Independientes del sistema eléctrico · si falla uno, ≈ <b>100 rpm</b> menos</td></tr><tr><td>Pérdida de aceite</td><td>Presión <b>↓</b> y temperatura <b>↑</b> <span class="es">· lenta: primero sube la temperatura y al final la presión cae de golpe</span></td></tr><tr><td>Cuatro tiempos</td><td><b>2 vueltas</b> de cigüeñal por ciclo · el camshaft gira a la <b>mitad</b> <span class="es">· solo la combustión da trabajo</span></td></tr><tr><td>Hélice</td><td>Paso fijo: con más TAS el AoA <b>baja</b>. Paso variable: con más TAS el blade angle <b>sube</b>, con más rpm <b>baja</b></td></tr><tr><td>Eléctrica</td><td><b>V = I × R</b> · <b>P = V × I</b> · serie suma <b>voltios</b> · paralelo suma <b>Ah</b> <span class="es">· EASA: corriente convencional <b>+ → −</b></span></td></tr><tr><td>Arcos del anemómetro</td><td>Blanco <b>VS0–VFE</b> · verde <b>VS1–VNO</b> · amarillo <b>VNO–VNE</b> · línea roja <b>VNE</b></td></tr><tr><td>Presiones</td><td><b>Dinámica = total − estática</b> · <b>TAT = SAT + ram rise</b> <span class="es">· Mach = TAS / LSS</span></td></tr><tr><td>Viraje</td><td>Rate 1 = <b>3 °/s</b> (2 min) · alabeo ≈ TAS/10 + <b>7</b> <span class="es">· la turn coordinator da el <b>régimen</b>, no el alabeo</span></td></tr><tr><td>Giróscopo</td><td>Rigidez: masa y velocidad · precesión <b>90°</b> más allá en el sentido de giro <span class="es">· DI: ajustar con la brújula cada <b>10–15 min</b></span></td></tr><tr><td>Piloto automático</td><td><b>Fail-passive</b>: tras un fallo se desconecta · <b>fail-operational</b>: sigue aterrizando</td></tr><tr><td>FMS</td><td>AIRAC cada <b>28</b> días · dos bases (vigente y siguiente) · el piloto no la puede cambiar</td></tr><tr><td>ACAS</td><td>RA <b>solo vertical</b> · el RA manda sobre el ATC (síguelo e informa) <span class="es">· warning <b>rojo</b> y continuo · caution <b>ámbar</b></span></td></tr></table></div><h4>No confundir</h4><div class="scroll"><table><tr><th>Concepto</th><th>Diferencia</th></tr><tr><td>Safe life<span class="vs">vs</span>Fail safe</td><td>Safe life: vida garantizada y se <b>cambia</b>. Fail safe: si falla una pieza, <b>otra toma la carga</b> hasta la siguiente inspección.</td></tr><tr><td>Hard time<span class="vs">vs</span>On-condition</td><td>Hard time: se cambia a <b>tiempo fijo</b>. On-condition: según el <b>estado</b>. Condition monitoring: se vigila con <b>datos</b>.</td></tr><tr><td>Tension<span class="vs">vs</span>Shear</td><td>Tension estira (ties) · compression acorta (struts) · <b>shear desliza</b>: los remaches trabajan a shear, no a tension.</td></tr><tr><td>Spar<span class="vs">vs</span>Rib y stringer</td><td>Spar = espina dorsal (<b>flexión</b>). Rib = da la <b>forma</b> del perfil, perpendicular al spar. Stringer = <b>paralelo</b> al spar.</td></tr><tr><td>Monocoque<span class="vs">vs</span>Semi-monocoque</td><td>Monocoque: skin + frames, la <b>piel</b> lo carga todo. Semi-monocoque: además stringers y longerons; es el <b>más usado</b>.</td></tr><tr><td>Frame (cuaderna)<span class="vs">vs</span>Rib (costilla)</td><td>Las <b>cuadernas</b> son del fuselaje; las <b>costillas</b>, del ala.</td></tr><tr><td>Anti-icing<span class="vs">vs</span>De-icing</td><td>Anti-icing <b>impide</b> que se forme. De-icing <b>quita</b> el que hay. Las boots se inflan para romper el hielo.</td></tr><tr><td>Slat<span class="vs">vs</span>Krueger</td><td>El <b>Krueger</b> es el flap de borde de ataque. El <b>slat</b> no es un flap: sale por delante y deja una <b>ranura</b>.</td></tr><tr><td>Trim tab<span class="vs">vs</span>Superficie de mando</td><td>La trim tab se mueve al <b>contrario</b> que su superficie. Pull → elevator <b>arriba</b> → morro arriba.</td></tr><tr><td>Blade angle<span class="vs">vs</span>Angle of attack</td><td>Blade angle = ángulo de <b>paso</b>. AoA = ángulo con el aire relativo. El blade angle es mayor en la <b>raíz</b> y menor en la punta.</td></tr><tr><td>Detonación<span class="vs">vs</span>Afterfire / backfire</td><td>La <b>detonación</b> ocurre dentro del cilindro. Las explosiones en el escape son afterfire o backfire.</td></tr><tr><td>Hot start<span class="vs">vs</span>Hung start</td><td>Hot start: la <b>EGT pasa el límite</b>. Hung start: <b>no llega a ralentí</b>.</td></tr><tr><td>Reservoir<span class="vs">vs</span>Accumulator</td><td>Reservoir: guarda el fluido, presurizado para que la bomba <b>no cavite</b>. Accumulator: <b>reserva de presión</b>, amortigua picos y da presión de emergencia (frenos).</td></tr><tr><td>QNH<span class="vs">vs</span>QFE</td><td>El altímetro mide desde la presión <b>seleccionada</b> (ventana Kollsman). QNH: en tierra marca la <b>elevación</b>. QFE: marca <b>cero</b>.</td></tr><tr><td>Estática bloqueada: altímetro<span class="vs">vs</span>Estática bloqueada: VSI</td><td>Altímetro: se <b>congela</b>. VSI: marca <b>cero</b>.</td></tr><tr><td>Brújula<span class="vs">vs</span>Instrumentos con giróscopo</td><td>La brújula es el instrumento <b>sin giróscopo</b>. En un ligero, los giróscopos los mueve una <b>bomba de vacío</b>, no el pitot.</td></tr><tr><td>Variation<span class="vs">vs</span>Deviation</td><td>Variation = norte verdadero − magnético (la <b>Tierra</b>). Deviation = la produce el <b>propio avión</b>; se corrige con compass swing y deviation card.</td></tr><tr><td>Float<span class="vs">vs</span>Capacitance</td><td>Indicador de combustible: <b>float</b> mide volumen y falla en maniobras; <b>capacitance</b> mide masa. Comprobar siempre antes de volar.</td></tr></table></div></div></details><!--/QREF-->
 <p class="exsep">021 · Airframe, Systems, Electrics, Power Plant <span class="wtag">80 preguntas</span></p>
+<h2 class="subj">021 · Airframe, Systems and Power Plant <span class="wtag">80 preg. · 2 h 00 min</span></h2>
 <h2 id="ch-021.01">021.01 · System design, loads, stresses, maintenance <span class="wtag">2 preg. · 2 %</span></h2>
 <details class="lo" id="lo-021.01.01" data-lo="021.01.01">
 <summary><span class="lonum">021.01.01</span><span class="lotitle">System design</span></summary>
@@ -496,29 +498,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-021.01.03" data-lo="021.01.03">
-<summary><span class="lonum">021.01.03</span><span class="lotitle">Fatigue and corrosion</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Fatiga</b>: cómo evoluciona la estructura con cargas discretas y continuas; cuánta fuerza aguanta o cuántos ciclos.</li><li><b>Elasticidad</b>, límite elástico y plástico (la gráfica es de ATPL).</li></ul></div><div class="key"><b>Clave</b>Fatiga = rotura bajo cargas cíclicas a una carga MENOR que la de rotura estática. Menos carga por ciclo → más ciclos.</div>
-<p>Las cargas del fuselaje (presurización, aterrizajes) son de lo que más envejece un avión. <b>Elasticity</b>: recuperar la forma al cesar la fuerza; por encima del <b>elastic limit</b> queda deformación permanente (plástica).</p><figure class="fig" id="figFatigue">
-<svg viewBox="0 0 660 225" role="img" aria-label="Curva de fatiga: esfuerzo frente a número de ciclos">
-<line x1="70" y1="180" x2="630" y2="180" class="ln" marker-end="url(#arK)"/><line x1="70" y1="180" x2="70" y2="22" class="ln" marker-end="url(#arK)"/>
-<g class="sm mu"><text x="70" y="197" text-anchor="middle">1</text><text x="207" y="197" text-anchor="middle">100</text><text x="345" y="197" text-anchor="middle">10 000</text><text x="482" y="197" text-anchor="middle">10⁶</text><text x="620" y="197" text-anchor="middle">10⁸</text>
-<text x="62" y="64" text-anchor="end">80 %</text><text x="62" y="154" text-anchor="end">20 %</text></g>
-<text x="625" y="216" text-anchor="end" class="sm">ciclos hasta la rotura (escala log) →</text>
-<text x="76" y="20" class="sm">esfuerzo aplicado (% del de rotura)</text>
-<path d="M70,40 C150,48 180,55 207,60 S450,140 551,150 L620,156" class="ln cm" style="stroke-width:3"/>
-<line x1="70" y1="60" x2="207" y2="60" class="ln cmu dsh" style="stroke-width:1"/><line x1="207" y1="60" x2="207" y2="180" class="ln cmu dsh" style="stroke-width:1"/>
-<line x1="70" y1="150" x2="551" y2="150" class="ln cmu dsh" style="stroke-width:1"/><line x1="551" y1="150" x2="551" y2="180" class="ln cmu dsh" style="stroke-width:1"/>
-<circle cx="207" cy="60" r="5" class="fm"/><circle cx="551" cy="150" r="5" class="fm"/>
-<text x="216" y="52" class="sm bd">80 % → rompe a ~100 ciclos</text>
-<text x="545" y="138" text-anchor="end" class="sm bd">20 % → ~10 millones de ciclos</text>
-</svg>
-<figcaption>Ejemplo: <b>menos carga por ciclo → muchísimos más ciclos</b> antes de romper. Esta es la idea; la gráfica de límites elástico/plástico es de ATPL.</figcaption>
-</figure><div class="comp"><b>ATPL</b><ul><li><b>Corrosión</b>: polvo blanco o gris, pintura con ampollas o manchas. Peor con <b>sal y humedad</b>; ojo con los fluidos corrosivos a bordo (ácido de batería, líquido hidráulico, lavabos). La corrosión acelera la fatiga.</li><li>La vida de la estructura la limita la fatiga: tensiones alternas × número de ciclos.</li></ul></div>
-</div>
-</details>
-
 <details class="lo" id="lo-021.01.02" data-lo="021.01.02">
 <summary><span class="lonum">021.01.02</span><span class="lotitle">Loads and stresses</span></summary>
 <div class="body">
@@ -556,6 +535,29 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo" id="lo-021.01.03" data-lo="021.01.03">
+<summary><span class="lonum">021.01.03</span><span class="lotitle">Fatigue and corrosion</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Fatiga</b>: cómo evoluciona la estructura con cargas discretas y continuas; cuánta fuerza aguanta o cuántos ciclos.</li><li><b>Elasticidad</b>, límite elástico y plástico (la gráfica es de ATPL).</li></ul></div><div class="key"><b>Clave</b>Fatiga = rotura bajo cargas cíclicas a una carga MENOR que la de rotura estática. Menos carga por ciclo → más ciclos.</div>
+<p>Las cargas del fuselaje (presurización, aterrizajes) son de lo que más envejece un avión. <b>Elasticity</b>: recuperar la forma al cesar la fuerza; por encima del <b>elastic limit</b> queda deformación permanente (plástica).</p><figure class="fig" id="figFatigue">
+<svg viewBox="0 0 660 225" role="img" aria-label="Curva de fatiga: esfuerzo frente a número de ciclos">
+<line x1="70" y1="180" x2="630" y2="180" class="ln" marker-end="url(#arK)"/><line x1="70" y1="180" x2="70" y2="22" class="ln" marker-end="url(#arK)"/>
+<g class="sm mu"><text x="70" y="197" text-anchor="middle">1</text><text x="207" y="197" text-anchor="middle">100</text><text x="345" y="197" text-anchor="middle">10 000</text><text x="482" y="197" text-anchor="middle">10⁶</text><text x="620" y="197" text-anchor="middle">10⁸</text>
+<text x="62" y="64" text-anchor="end">80 %</text><text x="62" y="154" text-anchor="end">20 %</text></g>
+<text x="625" y="216" text-anchor="end" class="sm">ciclos hasta la rotura (escala log) →</text>
+<text x="76" y="20" class="sm">esfuerzo aplicado (% del de rotura)</text>
+<path d="M70,40 C150,48 180,55 207,60 S450,140 551,150 L620,156" class="ln cm" style="stroke-width:3"/>
+<line x1="70" y1="60" x2="207" y2="60" class="ln cmu dsh" style="stroke-width:1"/><line x1="207" y1="60" x2="207" y2="180" class="ln cmu dsh" style="stroke-width:1"/>
+<line x1="70" y1="150" x2="551" y2="150" class="ln cmu dsh" style="stroke-width:1"/><line x1="551" y1="150" x2="551" y2="180" class="ln cmu dsh" style="stroke-width:1"/>
+<circle cx="207" cy="60" r="5" class="fm"/><circle cx="551" cy="150" r="5" class="fm"/>
+<text x="216" y="52" class="sm bd">80 % → rompe a ~100 ciclos</text>
+<text x="545" y="138" text-anchor="end" class="sm bd">20 % → ~10 millones de ciclos</text>
+</svg>
+<figcaption>Ejemplo: <b>menos carga por ciclo → muchísimos más ciclos</b> antes de romper. Esta es la idea; la gráfica de límites elástico/plástico es de ATPL.</figcaption>
+</figure><div class="comp"><b>ATPL</b><ul><li><b>Corrosión</b>: polvo blanco o gris, pintura con ampollas o manchas. Peor con <b>sal y humedad</b>; ojo con los fluidos corrosivos a bordo (ácido de batería, líquido hidráulico, lavabos). La corrosión acelera la fatiga.</li><li>La vida de la estructura la limita la fatiga: tensiones alternas × número de ciclos.</li></ul></div>
+</div>
+</details>
+
 <details class="lo atpl" id="lo-021.01.05" data-lo="021.01.05">
 <summary><span class="lonum">021.01.05</span><span class="lotitle">Maintenance</span></summary>
 <div class="body">
@@ -564,44 +566,17 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-021.02">021.02 · Airframe <span class="wtag">2 preg. · 2 %</span></h2>
-<details class="lo" id="lo-021.02.04" data-lo="021.02.04">
-<summary><span class="lonum">021.02.04</span><span class="lotitle">Fuselage, landing gear, doors, floor, windscreen and windows</span></summary>
+<details class="lo atpl" id="lo-021.02.01" data-lo="021.02.01">
+<summary><span class="lonum">021.02.01</span><span class="lotitle">Attachment methods</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Tres fuselajes: <b>tubular (reticular)</b>, <b>monocasco</b> y <b>semimonocasco</b>.</li><li>Vocabulario en inglés: frame (cuaderna), stringer (larguerillo), longeron, skin.</li></ul></div><div class="key"><b>Clave</b>Monocoque: skin + frames, la piel lo carga todo. Semi-monocoque: + stringers y longerons, el más usado.</div>
-<p>El <b>fuselage</b> es el cuerpo al que se unen alas, cola, motor y tren; lleva la carga de pago y <b>transmite las cargas</b> de alas, cola, deriva y tren. Si está presurizado, aguanta además los esfuerzos axiales y circunferenciales de la presurización.</p><figure class="fig" id="figFus">
-<svg viewBox="0 0 660 215" role="img" aria-label="Tres tipos de fuselaje: tubular, monocasco y semimonocasco">
-<text x="110" y="20" text-anchor="middle" class="lg">Tubular (truss)</text>
-<text x="330" y="20" text-anchor="middle" class="lg">Monocoque</text>
-<text x="550" y="20" text-anchor="middle" class="lg">Semi-monocoque</text>
-<text x="110" y="38" text-anchor="middle" class="mu sm">reticular · tubos de acero soldados</text>
-<text x="330" y="38" text-anchor="middle" class="mu sm">monocasco · la skin lo carga todo</text>
-<text x="550" y="38" text-anchor="middle" class="mu sm">semimonocasco · el más usado hoy</text>
-<!-- truss -->
-<path class="ln cmu dsh" d="M14,74 L206,90 L206,130 L14,156 Z"/>
-<g class="ln thk">
-<line x1="20" y1="80" x2="200" y2="95"/><line x1="20" y1="150" x2="200" y2="125"/>
-<line x1="20" y1="80" x2="20" y2="150"/><line x1="65" y1="83.8" x2="65" y2="143.8"/><line x1="110" y1="87.5" x2="110" y2="137.5"/><line x1="155" y1="91.3" x2="155" y2="131.3"/><line x1="200" y1="95" x2="200" y2="125"/>
-<line x1="20" y1="80" x2="65" y2="143.8"/><line x1="65" y1="83.8" x2="110" y2="137.5"/><line x1="110" y1="87.5" x2="155" y2="131.3"/><line x1="155" y1="91.3" x2="200" y2="125"/>
-</g>
-<text x="110" y="178" text-anchor="middle" class="sm">triángulos = forma más rígida</text>
-<text x="110" y="194" text-anchor="middle" class="sm mu">la tela solo da forma</text>
-<!-- monocoque -->
-<g class="ln cmu"><ellipse cx="290" cy="115" rx="9" ry="30"/><ellipse cx="330" cy="115" rx="9" ry="30"/><ellipse cx="370" cy="115" rx="9" ry="30"/></g>
-<g class="ln cm thk"><line x1="250" y1="85" x2="410" y2="85"/><line x1="250" y1="145" x2="410" y2="145"/><ellipse cx="250" cy="115" rx="10" ry="30"/><ellipse cx="410" cy="115" rx="10" ry="30"/></g>
-<text x="330" y="168" text-anchor="middle" class="sm tm bd">skin: TODAS las cargas</text>
-<text x="330" y="184" text-anchor="middle" class="sm">frames: solo dan forma</text>
-<text x="330" y="200" text-anchor="middle" class="sm mu">daño en la piel = muy débil</text>
-<!-- semi -->
-<g class="ln"><line x1="470" y1="85" x2="630" y2="85"/><line x1="470" y1="145" x2="630" y2="145"/><ellipse cx="470" cy="115" rx="10" ry="30"/><ellipse cx="630" cy="115" rx="10" ry="30"/><ellipse cx="510" cy="115" rx="9" ry="30"/><ellipse cx="550" cy="115" rx="9" ry="30"/><ellipse cx="590" cy="115" rx="9" ry="30"/></g>
-<g class="ln cb"><line x1="470" y1="97" x2="630" y2="97"/><line x1="470" y1="109" x2="630" y2="109"/><line x1="470" y1="121" x2="630" y2="121"/></g>
-<line x1="470" y1="134" x2="630" y2="134" class="ln cb thk"/>
-<text x="550" y="168" text-anchor="middle" class="sm tb bd">+ stringers y longerons</text>
-<text x="550" y="184" text-anchor="middle" class="sm">(longitudinales)</text>
-<text x="550" y="200" text-anchor="middle" class="sm mu">la carga se reparte</text>
-</svg>
-<figcaption>Del tubular al semimonocasco: lo que cambia es <b>quién lleva la carga</b>. Monocoque = solo la piel. Semi-monocoque = piel + estructura longitudinal (stringers y longerons, p. ej. los raíles de los asientos). La flecha de la historia: los aviones crecieron y el monocasco puro dejó de aguantar.</figcaption>
-</figure>
-<div class="rule"><div class="n"><b class="h">Monocoque</b>skin + frames. La piel lo carga todo. Sin stringers.</div><div class="s"><b class="h">Semi-monocoque</b>skin + frames + <b>stringers + longerons</b>. Lo más usado hoy.</div></div><div class="comp"><b>ATPL</b><ul><li><b>Bulkhead</b> (mamparo); el <b>pressure bulkhead</b> trasero cierra la cabina presurizada. <b>Doublers</b> refuerzan alrededor de puertas y ventanas.</li><li>Puertas <b>plug type</b>: más grandes que el marco; la presión las aprieta contra él.</li><li>Ventanas de cabina <b>en capas</b> (fail safe) y <b>calentadas</b>: más resistentes a impactos (aves).</li><li><b>Tail strike</b>: puede dañar el mamparo de presión trasero. Aterrizar de rueda de morro: sobrecarga la pata de morro.</li><li>Sección <b>circular</b>: la mejor para presurizar. <b>Blow-out panels</b> en el suelo: igualan presión si hay una descompresión en la bodega.</li></ul></div>
+<div class="key"><b>Clave</b>Uniones: remaches, soldadura, tornillos, pasadores, adhesivos (bonding).</div><div class="comp"><b>ATPL</b><ul><li>Prevuelo: remaches que dejan rastro negro («smoking rivets»), tornillos sueltos, grietas alrededor de uniones.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-021.02.02" data-lo="021.02.02">
+<summary><span class="lonum">021.02.02</span><span class="lotitle">Materials</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Composites: muy buena relación resistencia/peso, resistencia orientable; los daños internos no se ven.</div><div class="comp"><b>ATPL</b><ul><li>Fibras de <b>carbono, vidrio, Kevlar</b> en una matriz de resina.</li><li>Metales: aluminio (lo más usado), titanio (calor), acero (piezas muy cargadas, tren).</li></ul></div>
 </div>
 </details>
 
@@ -692,17 +667,44 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-021.02.02" data-lo="021.02.02">
-<summary><span class="lonum">021.02.02</span><span class="lotitle">Materials</span></summary>
+<details class="lo" id="lo-021.02.04" data-lo="021.02.04">
+<summary><span class="lonum">021.02.04</span><span class="lotitle">Fuselage, landing gear, doors, floor, windscreen and windows</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>Composites: muy buena relación resistencia/peso, resistencia orientable; los daños internos no se ven.</div><div class="comp"><b>ATPL</b><ul><li>Fibras de <b>carbono, vidrio, Kevlar</b> en una matriz de resina.</li><li>Metales: aluminio (lo más usado), titanio (calor), acero (piezas muy cargadas, tren).</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-021.02.01" data-lo="021.02.01">
-<summary><span class="lonum">021.02.01</span><span class="lotitle">Attachment methods</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Uniones: remaches, soldadura, tornillos, pasadores, adhesivos (bonding).</div><div class="comp"><b>ATPL</b><ul><li>Prevuelo: remaches que dejan rastro negro («smoking rivets»), tornillos sueltos, grietas alrededor de uniones.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Tres fuselajes: <b>tubular (reticular)</b>, <b>monocasco</b> y <b>semimonocasco</b>.</li><li>Vocabulario en inglés: frame (cuaderna), stringer (larguerillo), longeron, skin.</li></ul></div><div class="key"><b>Clave</b>Monocoque: skin + frames, la piel lo carga todo. Semi-monocoque: + stringers y longerons, el más usado.</div>
+<p>El <b>fuselage</b> es el cuerpo al que se unen alas, cola, motor y tren; lleva la carga de pago y <b>transmite las cargas</b> de alas, cola, deriva y tren. Si está presurizado, aguanta además los esfuerzos axiales y circunferenciales de la presurización.</p><figure class="fig" id="figFus">
+<svg viewBox="0 0 660 215" role="img" aria-label="Tres tipos de fuselaje: tubular, monocasco y semimonocasco">
+<text x="110" y="20" text-anchor="middle" class="lg">Tubular (truss)</text>
+<text x="330" y="20" text-anchor="middle" class="lg">Monocoque</text>
+<text x="550" y="20" text-anchor="middle" class="lg">Semi-monocoque</text>
+<text x="110" y="38" text-anchor="middle" class="mu sm">reticular · tubos de acero soldados</text>
+<text x="330" y="38" text-anchor="middle" class="mu sm">monocasco · la skin lo carga todo</text>
+<text x="550" y="38" text-anchor="middle" class="mu sm">semimonocasco · el más usado hoy</text>
+<!-- truss -->
+<path class="ln cmu dsh" d="M14,74 L206,90 L206,130 L14,156 Z"/>
+<g class="ln thk">
+<line x1="20" y1="80" x2="200" y2="95"/><line x1="20" y1="150" x2="200" y2="125"/>
+<line x1="20" y1="80" x2="20" y2="150"/><line x1="65" y1="83.8" x2="65" y2="143.8"/><line x1="110" y1="87.5" x2="110" y2="137.5"/><line x1="155" y1="91.3" x2="155" y2="131.3"/><line x1="200" y1="95" x2="200" y2="125"/>
+<line x1="20" y1="80" x2="65" y2="143.8"/><line x1="65" y1="83.8" x2="110" y2="137.5"/><line x1="110" y1="87.5" x2="155" y2="131.3"/><line x1="155" y1="91.3" x2="200" y2="125"/>
+</g>
+<text x="110" y="178" text-anchor="middle" class="sm">triángulos = forma más rígida</text>
+<text x="110" y="194" text-anchor="middle" class="sm mu">la tela solo da forma</text>
+<!-- monocoque -->
+<g class="ln cmu"><ellipse cx="290" cy="115" rx="9" ry="30"/><ellipse cx="330" cy="115" rx="9" ry="30"/><ellipse cx="370" cy="115" rx="9" ry="30"/></g>
+<g class="ln cm thk"><line x1="250" y1="85" x2="410" y2="85"/><line x1="250" y1="145" x2="410" y2="145"/><ellipse cx="250" cy="115" rx="10" ry="30"/><ellipse cx="410" cy="115" rx="10" ry="30"/></g>
+<text x="330" y="168" text-anchor="middle" class="sm tm bd">skin: TODAS las cargas</text>
+<text x="330" y="184" text-anchor="middle" class="sm">frames: solo dan forma</text>
+<text x="330" y="200" text-anchor="middle" class="sm mu">daño en la piel = muy débil</text>
+<!-- semi -->
+<g class="ln"><line x1="470" y1="85" x2="630" y2="85"/><line x1="470" y1="145" x2="630" y2="145"/><ellipse cx="470" cy="115" rx="10" ry="30"/><ellipse cx="630" cy="115" rx="10" ry="30"/><ellipse cx="510" cy="115" rx="9" ry="30"/><ellipse cx="550" cy="115" rx="9" ry="30"/><ellipse cx="590" cy="115" rx="9" ry="30"/></g>
+<g class="ln cb"><line x1="470" y1="97" x2="630" y2="97"/><line x1="470" y1="109" x2="630" y2="109"/><line x1="470" y1="121" x2="630" y2="121"/></g>
+<line x1="470" y1="134" x2="630" y2="134" class="ln cb thk"/>
+<text x="550" y="168" text-anchor="middle" class="sm tb bd">+ stringers y longerons</text>
+<text x="550" y="184" text-anchor="middle" class="sm">(longitudinales)</text>
+<text x="550" y="200" text-anchor="middle" class="sm mu">la carga se reparte</text>
+</svg>
+<figcaption>Del tubular al semimonocasco: lo que cambia es <b>quién lleva la carga</b>. Monocoque = solo la piel. Semi-monocoque = piel + estructura longitudinal (stringers y longerons, p. ej. los raíles de los asientos). La flecha de la historia: los aviones crecieron y el monocasco puro dejó de aguantar.</figcaption>
+</figure>
+<div class="rule"><div class="n"><b class="h">Monocoque</b>skin + frames. La piel lo carga todo. Sin stringers.</div><div class="s"><b class="h">Semi-monocoque</b>skin + frames + <b>stringers + longerons</b>. Lo más usado hoy.</div></div><div class="comp"><b>ATPL</b><ul><li><b>Bulkhead</b> (mamparo); el <b>pressure bulkhead</b> trasero cierra la cabina presurizada. <b>Doublers</b> refuerzan alrededor de puertas y ventanas.</li><li>Puertas <b>plug type</b>: más grandes que el marco; la presión las aprieta contra él.</li><li>Ventanas de cabina <b>en capas</b> (fail safe) y <b>calentadas</b>: más resistentes a impactos (aves).</li><li><b>Tail strike</b>: puede dañar el mamparo de presión trasero. Aterrizar de rueda de morro: sobrecarga la pata de morro.</li><li>Sección <b>circular</b>: la mejor para presurizar. <b>Blow-out panels</b> en el suelo: igualan presión si hay una descompresión en la bodega.</li></ul></div>
 </div>
 </details>
 
@@ -714,13 +716,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-021.03">021.03 · Hydraulics <span class="wtag">5 preg. · 6 %</span></h2>
-<details class="lo atpl" id="lo-021.03.02" data-lo="021.03.02">
-<summary><span class="lonum">021.03.02</span><span class="lotitle">Hydraulic systems</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Fluido prácticamente incompresible; bypass si el filtro se obstruye; low-pressure switch en la salida de la bomba.</div><div class="flag"><b>Trampa:</b> lo que el fluido NO debe ser es «compressible».</div><div class="scroll"><table><tr><th>Componente</th><th>Función</th></tr><tr><td>Reservoir</td><td>Guarda el fluido; presurizado para que la bomba no cavite</td></tr><tr><td>Pump</td><td>Da caudal y presión (EDP del motor, eléctrica, neumática, RAT)</td></tr><tr><td>Accumulator</td><td>Reserva de presión, amortigua picos, presión de emergencia (frenos)</td></tr><tr><td>Filter + bypass</td><td>Limpia el fluido; si se obstruye, el bypass deja pasar</td></tr><tr><td>Relief valve</td><td>Limita la presión máxima</td></tr><tr><td>Low-pressure switch</td><td>En la salida de la bomba: avisa si no da presión</td></tr></table></div><div class="comp"><b>ATPL</b><ul><li>Fluido: estable con la temperatura, poco corrosivo, <b>flash point alto</b>, poco volátil, viscosidad estable. <b>Sintético</b> (fosfato-éster) o <b>mineral</b>: nunca se mezclan. Irrita piel y ojos.</li><li>Alta presión típica <b>3000 psi</b> (algunos 4000–5000); baja presión hasta 2000 psi.</li><li>Sistema de presión constante o a demanda; <b>demand pump</b> que ayuda cuando la demanda es alta.</li><li>Redundancia: varios sistemas independientes (p. ej. verde, amarillo y azul) y <b>PTU</b> entre ellos.</li><li>Avisos: nivel bajo (fuga), presión baja, temperatura alta.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-021.03.01" data-lo="021.03.01">
 <summary><span class="lonum">021.03.01</span><span class="lotitle">Hydromechanics: basic principles</span></summary>
 <div class="body">
@@ -728,14 +723,14 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<h2 id="ch-021.04">021.04 · Landing gear, wheels, tyres, brakes <span class="wtag">5 preg. · 6 %</span></h2>
-<details class="lo" id="lo-021.04.03" data-lo="021.04.03">
-<summary><span class="lonum">021.04.03</span><span class="lotitle">Brakes</span></summary>
+<details class="lo atpl" id="lo-021.03.02" data-lo="021.03.02">
+<summary><span class="lonum">021.03.02</span><span class="lotitle">Hydraulic systems</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Frenos: <b>sistema hidráulico</b>, con un fluido cuyas propiedades no cambian con la temperatura.</li><li><b>Parking brake</b>: como un freno de mano, deja el avión frenado.</li></ul></div><div class="key"><b>Clave</b>Avión ligero: frenos hidráulicos con un master cylinder por freno, con la punta del pedal (toe brakes).</div><ul><li>Frenos de <b>disco múltiple</b>; cada freno con su <b>master cylinder</b> → frenado diferencial para girar.</li><li>Fuego de freno: <b>dry powder</b> (no agua sobre un freno muy caliente).</li></ul><div class="flag"><b>Trampa:</b> en un motor de un solo cilindro hay un único pistón: no confundas «un solo cilindro» con «ningún tiempo de compresión».</div><div class="comp"><b>ATPL</b><ul><li>Discos de <b>acero</b> o <b>carbono</b> (más ligero, aguanta más temperatura).</li><li><b>Brake energy</b> limitada: tras un despegue abortado los frenos pueden pasar del límite.</li><li><b>Anti-skid</b>: compara la velocidad de cada rueda con la del avión y suelta presión antes del bloqueo.</li><li><b>Autobrake</b>: necesita anti-skid; OFF / ARMED / activo; RTO o deceleración fija.</li><li>Indicadores de desgaste y de temperatura de frenos; parking brake con acumulador.</li></ul></div>
+<div class="key"><b>Clave</b>Fluido prácticamente incompresible; bypass si el filtro se obstruye; low-pressure switch en la salida de la bomba.</div><div class="flag"><b>Trampa:</b> lo que el fluido NO debe ser es «compressible».</div><div class="scroll"><table><tr><th>Componente</th><th>Función</th></tr><tr><td>Reservoir</td><td>Guarda el fluido; presurizado para que la bomba no cavite</td></tr><tr><td>Pump</td><td>Da caudal y presión (EDP del motor, eléctrica, neumática, RAT)</td></tr><tr><td>Accumulator</td><td>Reserva de presión, amortigua picos, presión de emergencia (frenos)</td></tr><tr><td>Filter + bypass</td><td>Limpia el fluido; si se obstruye, el bypass deja pasar</td></tr><tr><td>Relief valve</td><td>Limita la presión máxima</td></tr><tr><td>Low-pressure switch</td><td>En la salida de la bomba: avisa si no da presión</td></tr></table></div><div class="comp"><b>ATPL</b><ul><li>Fluido: estable con la temperatura, poco corrosivo, <b>flash point alto</b>, poco volátil, viscosidad estable. <b>Sintético</b> (fosfato-éster) o <b>mineral</b>: nunca se mezclan. Irrita piel y ojos.</li><li>Alta presión típica <b>3000 psi</b> (algunos 4000–5000); baja presión hasta 2000 psi.</li><li>Sistema de presión constante o a demanda; <b>demand pump</b> que ayuda cuando la demanda es alta.</li><li>Redundancia: varios sistemas independientes (p. ej. verde, amarillo y azul) y <b>PTU</b> entre ellos.</li><li>Avisos: nivel bajo (fuga), presión baja, temperatura alta.</li></ul></div>
 </div>
 </details>
 
+<h2 id="ch-021.04">021.04 · Landing gear, wheels, tyres, brakes <span class="wtag">5 preg. · 6 %</span></h2>
 <details class="lo" id="lo-021.04.01" data-lo="021.04.01">
 <summary><span class="lonum">021.04.01</span><span class="lotitle">Landing gear</span></summary>
 <div class="body">
@@ -743,17 +738,24 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-021.04.04" data-lo="021.04.04">
-<summary><span class="lonum">021.04.04</span><span class="lotitle">Wheels, rims and tyres</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Creep marks</b>: marca en la llanta y en el neumático; si se desalinean, el neumático se ha desplazado y puede dañar la <b>válvula</b> y perder presión.</li><li>No hay que saberse las partes del neumático (ni en temario base ni en ATPL): solo que la <b>banda de rodadura</b> se cambia en los aviones grandes y que hay <b>capas</b>.</li></ul></div><div class="key"><b>Clave</b>Creep: el neumático gira sobre la llanta; se ve porque las marcas se desalinean.</div><div class="comp"><b>ATPL</b><ul><li>Tubeless, cross-ply o radial. <b>Ply rating</b> = resistencia.</li><li><b>Fusible plugs</b>: se funden con el calor de los frenos y desinflan la rueda antes de que reviente.</li><li>Prevuelo: cortes, <b>flat spots</b>, separación de la banda.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-021.04.02" data-lo="021.04.02">
 <summary><span class="lonum">021.04.02</span><span class="lotitle">Nose-wheel steering</span></summary>
 <div class="body">
 <div class="key"><b>Clave</b>Tiller para virajes cerrados; pedales para pequeñas correcciones. Shimmy → shimmy damper.</div><div class="comp"><b>ATPL</b><ul><li>Ligeros: frenado diferencial con rueda de morro <b>libre</b> (castoring) o dirección por pedales.</li><li><b>Shimmy</b>: oscilación rápida de lado a lado de la rueda; la reduce el <b>shimmy damper</b>.</li><li>Leva de centrado: la rueda se centra antes de entrar en el pozo. <b>Body gear steering</b> en aviones muy grandes.</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-021.04.03" data-lo="021.04.03">
+<summary><span class="lonum">021.04.03</span><span class="lotitle">Brakes</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Frenos: <b>sistema hidráulico</b>, con un fluido cuyas propiedades no cambian con la temperatura.</li><li><b>Parking brake</b>: como un freno de mano, deja el avión frenado.</li></ul></div><div class="key"><b>Clave</b>Avión ligero: frenos hidráulicos con un master cylinder por freno, con la punta del pedal (toe brakes).</div><ul><li>Frenos de <b>disco múltiple</b>; cada freno con su <b>master cylinder</b> → frenado diferencial para girar.</li><li>Fuego de freno: <b>dry powder</b> (no agua sobre un freno muy caliente).</li></ul><div class="flag"><b>Trampa:</b> en un motor de un solo cilindro hay un único pistón: no confundas «un solo cilindro» con «ningún tiempo de compresión».</div><div class="comp"><b>ATPL</b><ul><li>Discos de <b>acero</b> o <b>carbono</b> (más ligero, aguanta más temperatura).</li><li><b>Brake energy</b> limitada: tras un despegue abortado los frenos pueden pasar del límite.</li><li><b>Anti-skid</b>: compara la velocidad de cada rueda con la del avión y suelta presión antes del bloqueo.</li><li><b>Autobrake</b>: necesita anti-skid; OFF / ARMED / activo; RTO o deceleración fija.</li><li>Indicadores de desgaste y de temperatura de frenos; parking brake con acumulador.</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-021.04.04" data-lo="021.04.04">
+<summary><span class="lonum">021.04.04</span><span class="lotitle">Wheels, rims and tyres</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Creep marks</b>: marca en la llanta y en el neumático; si se desalinean, el neumático se ha desplazado y puede dañar la <b>válvula</b> y perder presión.</li><li>No hay que saberse las partes del neumático (ni en temario base ni en ATPL): solo que la <b>banda de rodadura</b> se cambia en los aviones grandes y que hay <b>capas</b>.</li></ul></div><div class="key"><b>Clave</b>Creep: el neumático gira sobre la llanta; se ve porque las marcas se desalinean.</div><div class="comp"><b>ATPL</b><ul><li>Tubeless, cross-ply o radial. <b>Ply rating</b> = resistencia.</li><li><b>Fusible plugs</b>: se funden con el calor de los frenos y desinflan la rueda antes de que reviente.</li><li>Prevuelo: cortes, <b>flat spots</b>, separación de la banda.</li></ul></div>
 </div>
 </details>
 
@@ -941,17 +943,17 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-021.06">021.06 · Pneumatics: pressurisation and air-conditioning systems <span class="wtag">5 preg. · 6 %</span></h2>
-<details class="lo atpl" id="lo-021.06.03" data-lo="021.06.03">
-<summary><span class="lonum">021.06.03</span><span class="lotitle">Aeroplane: pressurisation and air-conditioning system</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>La outflow valve controla la cabin altitude. ΔP = cabina − exterior. Aviso por encima de 10 000 ft de cabina.</div><div class="comp"><b>ATPL</b><ul><li>Controla <b>ventilación, temperatura y presión</b>. Fuente: el sistema neumático (bleed) o compresores eléctricos.</li><li><b>Packs</b> (air-cycle machine, bootstrap): enfrían el bleed; <b>trim air</b> caliente ajusta cada zona.</li><li><b>Cabin altitude</b> máx. normal ≈ 8000 ft; <b>differential pressure</b> máx. ≈ 8–9 psi en reactores grandes (limita el techo operativo).</li><li>Válvulas: <b>outflow</b> (regula), <b>safety</b> (sobrepresión), <b>negative-pressure relief</b> (exterior > cabina). Modo manual de la outflow valve.</li><li><b>Aviso de cabina &gt; 10 000 ft</b>: máscaras y descenso.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-021.06.01" data-lo="021.06.01">
 <summary><span class="lonum">021.06.01</span><span class="lotitle">Pneumatic/bleed-air supply</span></summary>
 <div class="body">
 <div class="key"><b>Clave</b>Bleed air: motores, APU o tierra. Presurización, antihielo, arranque, depósito hidráulico.</div><div class="comp"><b>ATPL</b><ul><li>Pistón: <b>vacuum pump</b> o compresor para instrumentos, calefacción y deshielo.</li><li>Turbina: bleed de las etapas de <b>IP/HP</b> del compresor → <b>pre-cooler</b> (aire del fan) → válvulas reguladoras → conductos.</li><li>Fallos: overheat / <b>duct leak</b> (fuga caliente), sobrepresión, baja presión; aislar con la isolation valve.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-021.06.03" data-lo="021.06.03">
+<summary><span class="lonum">021.06.03</span><span class="lotitle">Aeroplane: pressurisation and air-conditioning system</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>La outflow valve controla la cabin altitude. ΔP = cabina − exterior. Aviso por encima de 10 000 ft de cabina.</div><div class="comp"><b>ATPL</b><ul><li>Controla <b>ventilación, temperatura y presión</b>. Fuente: el sistema neumático (bleed) o compresores eléctricos.</li><li><b>Packs</b> (air-cycle machine, bootstrap): enfrían el bleed; <b>trim air</b> caliente ajusta cada zona.</li><li><b>Cabin altitude</b> máx. normal ≈ 8000 ft; <b>differential pressure</b> máx. ≈ 8–9 psi en reactores grandes (limita el techo operativo).</li><li>Válvulas: <b>outflow</b> (regula), <b>safety</b> (sobrepresión), <b>negative-pressure relief</b> (exterior > cabina). Modo manual de la outflow valve.</li><li><b>Aviso de cabina &gt; 10 000 ft</b>: máscaras y descenso.</li></ul></div>
 </div>
 </details>
 
@@ -998,10 +1000,10 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-021.09.04" data-lo="021.09.04">
-<summary><span class="lonum">021.09.04</span><span class="lotitle">Distribution</span></summary>
+<details class="lo" id="lo-021.09.02" data-lo="021.09.02">
+<summary><span class="lonum">021.09.02</span><span class="lotitle">Batteries</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>Amperímetro de cero central: + carga, − descarga. Bus bar reparte. Load shedding: fuera lo no esencial.</div><ul><li><b>Bus bar</b>: barra que reparte la energía a los consumidores, cada uno con su breaker.</li><li><b>Master switch</b> partido: <b>BAT</b> (batería) y <b>ALT</b> (campo del alternador). Los magnetos son aparte.</li><li><b>Left-zero ammeter (loadmeter)</b>: lo que da el alternador. <b>Centre-zero ammeter</b>: + la batería se carga, − se descarga.</li><li><b>GPU</b> (external power) en tierra.</li></ul><div class="comp"><b>ATPL</b><ul><li>Buses: AC, DC, <b>essential</b>, <b>emergency</b>, battery bus, <b>hot bus</b> (siempre conectado a la batería).</li><li><b>Load sharing</b> (reparto entre generadores) y <b>load shedding</b> (desconectar galleys, entretenimiento…).</li><li>Fallo de un generador ≠ fallo de una barra: con el bus caído se pierden sus consumidores aunque haya energía.</li><li>Sistema <b>split</b> (cada generador su barra) o <b>parallel</b> (generadores en paralelo: misma tensión, frecuencia y fase). Potencia AC en VA.</li><li>Masa común: la estructura es el retorno.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>La <b>batería</b> es una fuente de corriente continua: transforma energía química en eléctrica.</li></ul></div><div class="key"><b>Clave</b>Capacidad en Ah. Serie suma voltios; paralelo suma Ah.</div><ul><li>Batería de <b>plomo-ácido</b> con venteo; capacidad en <b>ampere-hours</b>.</li><li>Dos baterías en <b>serie</b>: doble tensión; en <b>paralelo</b>: doble capacidad.</li></ul><div class="flag"><b>Trampa:</b> Trial 11: la capacidad es en Ah, no en voltios.</div><div class="comp"><b>ATPL</b><ul><li>Lead-acid, <b>Ni-Cd</b>, litio: riesgo de <b>thermal runaway</b> (vigilar temperatura).</li><li>El frío reduce la capacidad. Sin generadores, tiempo limitado.</li><li>Tensión de carga > tensión de la batería.</li></ul></div>
 </div>
 </details>
 
@@ -1012,10 +1014,10 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-021.09.02" data-lo="021.09.02">
-<summary><span class="lonum">021.09.02</span><span class="lotitle">Batteries</span></summary>
+<details class="lo atpl" id="lo-021.09.04" data-lo="021.09.04">
+<summary><span class="lonum">021.09.04</span><span class="lotitle">Distribution</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>La <b>batería</b> es una fuente de corriente continua: transforma energía química en eléctrica.</li></ul></div><div class="key"><b>Clave</b>Capacidad en Ah. Serie suma voltios; paralelo suma Ah.</div><ul><li>Batería de <b>plomo-ácido</b> con venteo; capacidad en <b>ampere-hours</b>.</li><li>Dos baterías en <b>serie</b>: doble tensión; en <b>paralelo</b>: doble capacidad.</li></ul><div class="flag"><b>Trampa:</b> Trial 11: la capacidad es en Ah, no en voltios.</div><div class="comp"><b>ATPL</b><ul><li>Lead-acid, <b>Ni-Cd</b>, litio: riesgo de <b>thermal runaway</b> (vigilar temperatura).</li><li>El frío reduce la capacidad. Sin generadores, tiempo limitado.</li><li>Tensión de carga > tensión de la batería.</li></ul></div>
+<div class="key"><b>Clave</b>Amperímetro de cero central: + carga, − descarga. Bus bar reparte. Load shedding: fuera lo no esencial.</div><ul><li><b>Bus bar</b>: barra que reparte la energía a los consumidores, cada uno con su breaker.</li><li><b>Master switch</b> partido: <b>BAT</b> (batería) y <b>ALT</b> (campo del alternador). Los magnetos son aparte.</li><li><b>Left-zero ammeter (loadmeter)</b>: lo que da el alternador. <b>Centre-zero ammeter</b>: + la batería se carga, − se descarga.</li><li><b>GPU</b> (external power) en tierra.</li></ul><div class="comp"><b>ATPL</b><ul><li>Buses: AC, DC, <b>essential</b>, <b>emergency</b>, battery bus, <b>hot bus</b> (siempre conectado a la batería).</li><li><b>Load sharing</b> (reparto entre generadores) y <b>load shedding</b> (desconectar galleys, entretenimiento…).</li><li>Fallo de un generador ≠ fallo de una barra: con el bus caído se pierden sus consumidores aunque haya energía.</li><li>Sistema <b>split</b> (cada generador su barra) o <b>parallel</b> (generadores en paralelo: misma tensión, frecuencia y fase). Potencia AC en VA.</li><li>Masa común: la estructura es el retorno.</li></ul></div>
 </div>
 </details>
 
@@ -1028,6 +1030,27 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 
 <h2 id="ch-021.10">021.10 · Piston engines <span class="wtag">6 preg. · 8 %</span></h2>
 <div class="f0lab" data-lab="engine"></div>
+<details class="lo" id="lo-021.10.01" data-lo="021.10.01">
+<summary><span class="lonum">021.10.01</span><span class="lotitle">General</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Motor de pistón (alternativo) de <b>cuatro tiempos</b>: admisión, compresión, combustión y escape; en un ciclo el pistón baja y sube dos veces.</li><li><b>Cigüeñal</b>: donde van unidos los pistones (por las bielas).</li></ul></div><div class="key"><b>Clave</b>Cuatro tiempos = dos vueltas de cigüeñal. Solo la explosión da trabajo. Camshaft a la mitad de vueltas.</div><ul><li>Piezas: pistón y segmentos, biela, cigüeñal, <b>árbol de levas</b> (válvulas), bujías.</li><li>El escape calienta el aire del carb heat y de la cabina (una fuga = <b>CO</b>).</li></ul><div class="flag"><b>Trampa:</b> Trial 5: «ninguna es correcta» — el PMS no toca la culata y un motor en V no es un bóxer.</div><div class="comp"><b>ATPL</b><ul><li>Definiciones: rpm, par, <b>MAP</b>, potencia, consumo específico, <b>compression ratio</b>.</li><li>Bóxer, en línea, radial, en V. Diésel: encendido por compresión.</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-021.10.02" data-lo="021.10.02">
+<summary><span class="lonum">021.10.02</span><span class="lotitle">Fuel</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Tipos de gasolina (solo esto para temario base): <b>AVGAS 80 roja</b> · <b>AVGAS 100 verde</b> · <b>AVGAS 100LL azul</b> (low lead) · <b>JET A</b> (queroseno).</li><li><b>Pre-ignition</b>: la ignición se produce antes de que el pistón llegue arriba.</li><li>El <b>monóxido de carbono</b> no se detecta y te deja inconsciente.</li></ul></div><div class="key"><b>Clave</b>Más octanos → más compresión sin detonar. Octanaje bajo → detonación. Purgar agua antes del primer vuelo.</div><div class="scroll"><table><tr><th>Combustible</th><th>Color</th></tr><tr><td>AVGAS 80</td><td>Rojo</td></tr><tr><td>AVGAS 100</td><td>Verde</td></tr><tr><td>AVGAS 100LL</td><td>Azul</td></tr><tr><td>JET A / A-1</td><td>Incoloro o pajizo</td></tr></table></div><ul><li><b>Octane rating</b>: resistencia a la detonación.</li><li><b>Detonation</b>: combustión explosiva DENTRO del cilindro, tras la chispa: alta MAP con pocas rpm, compresión alta, CHT alta, octanaje equivocado.</li><li><b>Pre-ignition</b>: la mezcla se enciende antes de la chispa por un punto caliente.</li><li>Agua: purgar <b>antes del primer vuelo del día</b> y tras repostar. MOGAS: más hielo de carburador y vapour lock.</li></ul><div class="flag"><b>Trampa:</b> Las explosiones en el escape son afterfire/backfire, no detonación: la detonación ocurre en el cilindro.</div><div class="comp"><b>ATPL</b><ul><li>Diésel de aviación con <b>JET A-1</b>. Densidad AVGAS ≈ 0,72 kg/L.</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-021.10.03" data-lo="021.10.03">
+<summary><span class="lonum">021.10.03</span><span class="lotitle">Engine fuel pumps</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Bomba eléctrica auxiliar: arranque y fases críticas (despegue, aterrizaje, maniobras), a la vez que la mecánica.</li></ul></div><div class="key"><b>Clave</b>Bomba mecánica movida por el motor + bomba eléctrica de respaldo.</div><div class="comp"><b>ATPL</b><ul><li>Con depósitos por debajo del motor (ala baja) hace falta bomba.</li></ul></div>
+</div>
+</details>
+
 <details class="lo" id="lo-021.10.04" data-lo="021.10.04">
 <summary><span class="lonum">021.10.04</span><span class="lotitle">Carburettor/injection system</span></summary>
 <div class="body">
@@ -1052,10 +1075,54 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-021.10.10" data-lo="021.10.10">
-<summary><span class="lonum">021.10.10</span><span class="lotitle">Performance: turbo, supercharger, FADEC</span></summary>
+<details class="lo" id="lo-021.10.05" data-lo="021.10.05">
+<summary><span class="lonum">021.10.05</span><span class="lotitle">Cooling systems</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>Turbo movido por el escape; waste gate; critical altitude = máxima con potencia máxima. FADEC.</div><div class="comp"><b>ATPL</b><ul><li>La potencia baja con la <b>altitud de densidad</b> (motor atmosférico, normally aspirated).</li><li><b>Turbocharger</b>: turbina (escape) + compresor (admisión); <b>waste gate</b> regula; <b>intercooler</b> enfría. <b>Turbo lag</b>.</li><li><b>Critical altitude</b>: la más alta a la que aún da la potencia máxima. Supercharger: movido por el cigüeñal.</li><li>Al aumentar potencia: mezcla, rpm y luego gas; al reducir: gas, rpm y mezcla.</li><li><b>FADEC</b>: control digital de plena autoridad; una sola palanca; redundante, con alimentación propia.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Refrigeración <b>por aire</b>: entra por las <b>aberturas frontales</b> del capó y pasa entre los cilindros; los <b>baffles</b> lo reparten.</li><li><b>Cowl flaps</b>: una trampilla para <b>aumentar el flujo de aire</b>.</li><li>La temperatura se mide en la <b>cabeza del cilindro (CHT)</b>, en el cilindro <b>trasero, el peor refrigerado</b>: indica si la refrigeración funciona.</li></ul></div><div class="key"><b>Clave</b>Peor refrigeración: <b>mucha potencia y poca velocidad</b> (despegue, ascenso, go-around). Para bajar la CHT: abrir cowl flaps, enriquecer, reducir potencia o subir la velocidad.</div><ul><li>Las <b>aletas</b> (fins) aumentan la superficie que pierde calor.</li><li>El aire viene de la zona de alta presión tras la hélice y sale por la parte baja trasera del capó.</li><li>Cowl flaps abiertos: más refrigeración pero <b>más resistencia</b> (cooling drag). Abiertos en tierra y en ascenso; cerrados en crucero y descenso.</li><li>En un descenso con poca potencia y mucha velocidad el motor puede <b>enfriarse demasiado</b>.</li><li>Exceso de temperatura: peor lubricación, <b>detonación</b> y piezas debilitadas.</li><li>Influyen también el estado del enfriador de aceite y la OAT. En algunos aviones el <b>spinner</b> dirige el aire de refrigeración.</li></ul><div class="comp"><b>ATPL</b><ul><li>Refrigeración por líquido (radiador) frente a aire.</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-021.10.06" data-lo="021.10.06">
+<summary><span class="lonum">021.10.06</span><span class="lotitle">Lubrication systems</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>La <b>viscosidad</b> (resistencia a fluir) marca las características del lubricante: se <b>interpone entre dos piezas</b> para que no se toquen y haya la menor <b>fricción</b>. Funciones secundarias: <b>refrigerar, limpiar y proteger</b>.</li><li><b>Wet sump</b> (húmedo): el aceite está en el <b>cárter</b>, una bandeja bajo el motor, y el movimiento lo salpica a las piezas. <b>Dry sump</b> (seco): <b>depósito aparte</b> y una <b>bomba movida por el motor</b> lo lleva donde haga falta; más complejo y más mantenimiento.</li><li>La viscosidad <b>baja mucho al subir la temperatura</b>: el reto es que no pase.</li><li>Indicadores: <b>presión</b>, <b>temperatura</b> y <b>cantidad</b> (varilla, en la prevuelo). Se rellena porque se quema en los cilindros o por pequeñas fugas.</li><li>★ <b>Pérdida de aceite: baja la presión y sube la temperatura</b>. Presión y temperatura van unidas pero a la inversa. «Va a caer alguna pregunta de esto».</li><li><b>Fluctuaciones de presión</b> → problema en el sistema de lubricación (por ejemplo, poco aceite).</li></ul></div><div class="key"><b>Clave</b>Poco aceite: <b>presión ↓ y temperatura ↑</b>. Pérdida lenta: primero sube la temperatura y, al final, la presión cae de golpe. Presión baja con temperatura normal y estable: probablemente el <b>indicador</b>.</div><figure class="fig" id="visOil">
+<svg viewBox="0 0 660 200" role="img" aria-label="Indicadores de presión y temperatura del aceite">
+ <g transform="translate(170,120)"><path d="M-90,0 A90,90 0 0 1 90,0" class="ln" style="stroke-width:2"/><path d="M-52,-73 A90,90 0 0 1 52,-73" fill="none" stroke="var(--ok)" stroke-width="8"/>
+  <text x="-92" y="20" class="sm mu">baja</text><text x="92" y="20" text-anchor="end" class="sm mu">alta</text><text x="0" y="45" text-anchor="middle" class="bd">PRESIÓN</text>
+  <line id="oiP" x1="0" y1="0" x2="0" y2="-80" class="ln thk" style="transform-origin:0 0;transition:transform .9s"/><circle r="5" class="fl ln"/></g>
+ <g transform="translate(490,120)"><path d="M-90,0 A90,90 0 0 1 90,0" class="ln" style="stroke-width:2"/><path d="M-52,-73 A90,90 0 0 1 52,-73" fill="none" stroke="var(--ok)" stroke-width="8"/>
+  <text x="-92" y="20" class="sm mu">baja</text><text x="92" y="20" text-anchor="end" class="sm mu">alta</text><text x="0" y="45" text-anchor="middle" class="bd">TEMPERATURA</text>
+  <line id="oiT" x1="0" y1="0" x2="0" y2="-80" class="ln thk" style="transform-origin:0 0;transition:transform .9s"/><circle r="5" class="fl ln"/></g>
+ <text id="oiTag" x="330" y="190" text-anchor="middle" class="sm bd"></text>
+</svg>
+<div class="ctl"><button data-oi="ok" aria-pressed="true">Normal</button><button data-oi="slow">Pierde aceite poco a poco</button><button data-oi="low">Muy poco aceite</button><button data-oi="gauge">Indicador averiado</button><button data-oi="climb">Ascenso con calor</button><button data-oi="start">Arranque: no sube</button></div>
+<div class="simtxt" id="oiTxt"></div>
+<div class="mini"><button class="btn sec" data-mini="k17">Ponme a prueba</button><div class="minibox"></div></div></figure><ul><li>Debe estar en <b>cantidad, estado y temperatura</b> correctos y ser del <b>grado</b> del POH; no mezclar grados. En clima muy frío, aceite menos viscoso; en muy caliente, más.</li><li>Recorrido: cárter → <b>bomba</b> (con <b>relief valve</b>) → <b>filtro</b> (con <b>bypass</b>: si se obstruye, circula aceite sucio) → <b>enfriador</b> (válvula termostática: con aceite frío no pasa por él) → cojinetes, cigüeñal y árbol de levas → vuelve al cárter.</li><li>El <b>sensor de presión</b> va tras la bomba; la <b>sonda de temperatura</b>, tras el enfriador.</li><li>Al arrancar, la presión debe subir en unos <b>30 s</b>; si no, <b>parar el motor</b>.</li><li>Demasiado aceite: sale por las juntas (sello del eje delantero). Poco: se calienta y la presión baja o fluctúa.</li><li>Temperatura alta: poco aceite, o <b>mucha potencia y poca velocidad</b> (ascenso) con calor. Presión baja o fluctuante con temperatura subiendo: <b>aterrizar lo antes posible</b>.</li><li>Los <b>pistones</b> absorben mucho calor y el aceite los enfría desde abajo. También sella entre segmentos y cilindro.</li></ul><div class="flag"><b>Trampa:</b> «Viscoso» no es «cuanto más espeso, mejor»: tiene que ser bastante viscoso para mantener la película, pero fluir bien en frío. Y en el dry sump el aceite lo mueven <b>bombas</b> (de presión y de barrido), no inyectores.</div><div class="comp"><b>ATPL</b><ul><li>Grados SAE y aceites multigrado. Partículas metálicas en el filtro = fallo mecánico próximo.</li><li>Motores de turbina: aceite sintético, bombas de presión y de barrido (scavenge).</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-021.10.07" data-lo="021.10.07">
+<summary><span class="lonum">021.10.07</span><span class="lotitle">Ignition circuits</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Magnetos</b>: sistema de electroimanes que hace el motor <b>independiente del sistema eléctrico</b>: con un fallo eléctrico el motor no se para.</li><li>Las <b>bujías</b> dan la chispa.</li></ul></div><div class="key"><b>Clave</b>Magnetos: independientes del sistema eléctrico. Si falla uno, el motor sigue con ~100 rpm menos.</div><ul><li><b>Magneto</b>: imán giratorio, bobinas primaria y secundaria, platinos y condensador; dos por motor, dos bujías por cilindro.</li><li>Contacto en OFF = magnetos <b>a masa</b>. Si el motor sigue con OFF: P-lead roto → peligro al mover la hélice.</li></ul><div class="flag"><b>Trampa:</b> Trial 11: los magnetos no dependen del sistema eléctrico.</div><div class="comp"><b>ATPL</b><ul><li>Arranque: <b>impulse coupling</b>.</li><li>Magneto check: caída de rpm en cada uno, dentro del límite y parecida entre ambos.</li></ul></div>
+</div>
+</details>
+
+<details class="lo" id="lo-021.10.08" data-lo="021.10.08">
+<summary><span class="lonum">021.10.08</span><span class="lotitle">Mixture</span></summary>
+<div class="body">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Mezcla ≈ <b>1 : 15</b> (combustible : aire) = <b>estequiométrica</b>: no sobra nada. <b>Rica</b>: más combustible; <b>pobre</b>: más aire.</li><li>Se vuela con mezcla <b>rica</b>: refrigera la culata.</li><li>Al <b>ascender</b> el aire es menos denso → la mezcla se enriquece → hay que <b>empobrecer</b>.</li><li>Mezcla mal ajustada: afecta a la <b>temperatura de culata</b>, la <b>potencia</b>, el <b>consumo</b> y el <b>engrase de bujías</b>.</li></ul></div><div class="key"><b>Clave</b>Mezcla = masa de aire : combustible. ≈ 15:1 estequiométrica; 18:1 pobre; rica enfría. EGT para ajustar la mezcla.</div><figure class="fig" id="visMix">
+<svg viewBox="0 0 660 220" role="img" aria-label="Mezcla, EGT y potencia">
+ <line x1="60" y1="180" x2="620" y2="180" class="ln"/><line x1="60" y1="20" x2="60" y2="180" class="ln"/>
+ <g class="sm mu" id="mxAx"></g>
+ <polyline id="mxEGT" class="ln cr thk" points=""/><polyline id="mxPow" class="ln cb thk" points=""/>
+ <line id="mxCur" x1="0" y1="20" x2="0" y2="180" class="ln cm" style="stroke-width:2.5"/>
+ <text x="70" y="34" class="sm tr">EGT</text><text x="70" y="50" class="sm tb">potencia</text>
+ <text x="70" y="205" class="sm">← rica (exceso de combustible)</text><text x="610" y="205" text-anchor="end" class="sm">pobre (exceso de aire) →</text>
+</svg>
+<div class="sliders"><label>Aire : combustible <input type="range" id="mxR" min="8" max="20" step="0.5" value="12.5"> <b id="mxRv">12.5 : 1</b></label></div>
+<div class="simtxt" id="mxTxt"></div>
+<div class="mini"><button class="btn sec" data-mini="k14">Ponme a prueba</button><div class="minibox"></div></div></figure><ul><li>Combustión posible de ~<b>8:1</b> (rica) a ~<b>20:1</b> (pobre): más rica que 8:1 ya no arde.</li><li>Por encima del <b>75 %</b> de potencia, <b>full rich</b>.</li><li><b>EGT</b>: máxima con la mezcla químicamente correcta; sirve para ajustar la mezcla.</li></ul><div class="flag"><b>Trampa:</b> Trial 5 (0/5): «18:1» es pobre; enriquecer BAJA la temperatura del cilindro.</div><div class="comp"><b>ATPL</b><ul><li>Best power ≈ 12,5:1; best economy algo pobre. Diésel: sin palanca de mezcla.</li></ul></div>
 </div>
 </details>
 
@@ -1101,79 +1168,21 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-021.10.02" data-lo="021.10.02">
-<summary><span class="lonum">021.10.02</span><span class="lotitle">Fuel</span></summary>
+<details class="lo atpl" id="lo-021.10.10" data-lo="021.10.10">
+<summary><span class="lonum">021.10.10</span><span class="lotitle">Performance: turbo, supercharger, FADEC</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Tipos de gasolina (solo esto para temario base): <b>AVGAS 80 roja</b> · <b>AVGAS 100 verde</b> · <b>AVGAS 100LL azul</b> (low lead) · <b>JET A</b> (queroseno).</li><li><b>Pre-ignition</b>: la ignición se produce antes de que el pistón llegue arriba.</li><li>El <b>monóxido de carbono</b> no se detecta y te deja inconsciente.</li></ul></div><div class="key"><b>Clave</b>Más octanos → más compresión sin detonar. Octanaje bajo → detonación. Purgar agua antes del primer vuelo.</div><div class="scroll"><table><tr><th>Combustible</th><th>Color</th></tr><tr><td>AVGAS 80</td><td>Rojo</td></tr><tr><td>AVGAS 100</td><td>Verde</td></tr><tr><td>AVGAS 100LL</td><td>Azul</td></tr><tr><td>JET A / A-1</td><td>Incoloro o pajizo</td></tr></table></div><ul><li><b>Octane rating</b>: resistencia a la detonación.</li><li><b>Detonation</b>: combustión explosiva DENTRO del cilindro, tras la chispa: alta MAP con pocas rpm, compresión alta, CHT alta, octanaje equivocado.</li><li><b>Pre-ignition</b>: la mezcla se enciende antes de la chispa por un punto caliente.</li><li>Agua: purgar <b>antes del primer vuelo del día</b> y tras repostar. MOGAS: más hielo de carburador y vapour lock.</li></ul><div class="flag"><b>Trampa:</b> Las explosiones en el escape son afterfire/backfire, no detonación: la detonación ocurre en el cilindro.</div><div class="comp"><b>ATPL</b><ul><li>Diésel de aviación con <b>JET A-1</b>. Densidad AVGAS ≈ 0,72 kg/L.</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-021.10.06" data-lo="021.10.06">
-<summary><span class="lonum">021.10.06</span><span class="lotitle">Lubrication systems</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>La <b>viscosidad</b> (resistencia a fluir) marca las características del lubricante: se <b>interpone entre dos piezas</b> para que no se toquen y haya la menor <b>fricción</b>. Funciones secundarias: <b>refrigerar, limpiar y proteger</b>.</li><li><b>Wet sump</b> (húmedo): el aceite está en el <b>cárter</b>, una bandeja bajo el motor, y el movimiento lo salpica a las piezas. <b>Dry sump</b> (seco): <b>depósito aparte</b> y una <b>bomba movida por el motor</b> lo lleva donde haga falta; más complejo y más mantenimiento.</li><li>La viscosidad <b>baja mucho al subir la temperatura</b>: el reto es que no pase.</li><li>Indicadores: <b>presión</b>, <b>temperatura</b> y <b>cantidad</b> (varilla, en la prevuelo). Se rellena porque se quema en los cilindros o por pequeñas fugas.</li><li>★ <b>Pérdida de aceite: baja la presión y sube la temperatura</b>. Presión y temperatura van unidas pero a la inversa. «Va a caer alguna pregunta de esto».</li><li><b>Fluctuaciones de presión</b> → problema en el sistema de lubricación (por ejemplo, poco aceite).</li></ul></div><div class="key"><b>Clave</b>Poco aceite: <b>presión ↓ y temperatura ↑</b>. Pérdida lenta: primero sube la temperatura y, al final, la presión cae de golpe. Presión baja con temperatura normal y estable: probablemente el <b>indicador</b>.</div><figure class="fig" id="visOil">
-<svg viewBox="0 0 660 200" role="img" aria-label="Indicadores de presión y temperatura del aceite">
- <g transform="translate(170,120)"><path d="M-90,0 A90,90 0 0 1 90,0" class="ln" style="stroke-width:2"/><path d="M-52,-73 A90,90 0 0 1 52,-73" fill="none" stroke="var(--ok)" stroke-width="8"/>
-  <text x="-92" y="20" class="sm mu">baja</text><text x="92" y="20" text-anchor="end" class="sm mu">alta</text><text x="0" y="45" text-anchor="middle" class="bd">PRESIÓN</text>
-  <line id="oiP" x1="0" y1="0" x2="0" y2="-80" class="ln thk" style="transform-origin:0 0;transition:transform .9s"/><circle r="5" class="fl ln"/></g>
- <g transform="translate(490,120)"><path d="M-90,0 A90,90 0 0 1 90,0" class="ln" style="stroke-width:2"/><path d="M-52,-73 A90,90 0 0 1 52,-73" fill="none" stroke="var(--ok)" stroke-width="8"/>
-  <text x="-92" y="20" class="sm mu">baja</text><text x="92" y="20" text-anchor="end" class="sm mu">alta</text><text x="0" y="45" text-anchor="middle" class="bd">TEMPERATURA</text>
-  <line id="oiT" x1="0" y1="0" x2="0" y2="-80" class="ln thk" style="transform-origin:0 0;transition:transform .9s"/><circle r="5" class="fl ln"/></g>
- <text id="oiTag" x="330" y="190" text-anchor="middle" class="sm bd"></text>
-</svg>
-<div class="ctl"><button data-oi="ok" aria-pressed="true">Normal</button><button data-oi="slow">Pierde aceite poco a poco</button><button data-oi="low">Muy poco aceite</button><button data-oi="gauge">Indicador averiado</button><button data-oi="climb">Ascenso con calor</button><button data-oi="start">Arranque: no sube</button></div>
-<div class="simtxt" id="oiTxt"></div>
-<div class="mini"><button class="btn sec" data-mini="k17">Ponme a prueba</button><div class="minibox"></div></div></figure><ul><li>Debe estar en <b>cantidad, estado y temperatura</b> correctos y ser del <b>grado</b> del POH; no mezclar grados. En clima muy frío, aceite menos viscoso; en muy caliente, más.</li><li>Recorrido: cárter → <b>bomba</b> (con <b>relief valve</b>) → <b>filtro</b> (con <b>bypass</b>: si se obstruye, circula aceite sucio) → <b>enfriador</b> (válvula termostática: con aceite frío no pasa por él) → cojinetes, cigüeñal y árbol de levas → vuelve al cárter.</li><li>El <b>sensor de presión</b> va tras la bomba; la <b>sonda de temperatura</b>, tras el enfriador.</li><li>Al arrancar, la presión debe subir en unos <b>30 s</b>; si no, <b>parar el motor</b>.</li><li>Demasiado aceite: sale por las juntas (sello del eje delantero). Poco: se calienta y la presión baja o fluctúa.</li><li>Temperatura alta: poco aceite, o <b>mucha potencia y poca velocidad</b> (ascenso) con calor. Presión baja o fluctuante con temperatura subiendo: <b>aterrizar lo antes posible</b>.</li><li>Los <b>pistones</b> absorben mucho calor y el aceite los enfría desde abajo. También sella entre segmentos y cilindro.</li></ul><div class="flag"><b>Trampa:</b> «Viscoso» no es «cuanto más espeso, mejor»: tiene que ser bastante viscoso para mantener la película, pero fluir bien en frío. Y en el dry sump el aceite lo mueven <b>bombas</b> (de presión y de barrido), no inyectores.</div><div class="comp"><b>ATPL</b><ul><li>Grados SAE y aceites multigrado. Partículas metálicas en el filtro = fallo mecánico próximo.</li><li>Motores de turbina: aceite sintético, bombas de presión y de barrido (scavenge).</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-021.10.08" data-lo="021.10.08">
-<summary><span class="lonum">021.10.08</span><span class="lotitle">Mixture</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Mezcla ≈ <b>1 : 15</b> (combustible : aire) = <b>estequiométrica</b>: no sobra nada. <b>Rica</b>: más combustible; <b>pobre</b>: más aire.</li><li>Se vuela con mezcla <b>rica</b>: refrigera la culata.</li><li>Al <b>ascender</b> el aire es menos denso → la mezcla se enriquece → hay que <b>empobrecer</b>.</li><li>Mezcla mal ajustada: afecta a la <b>temperatura de culata</b>, la <b>potencia</b>, el <b>consumo</b> y el <b>engrase de bujías</b>.</li></ul></div><div class="key"><b>Clave</b>Mezcla = masa de aire : combustible. ≈ 15:1 estequiométrica; 18:1 pobre; rica enfría. EGT para ajustar la mezcla.</div><figure class="fig" id="visMix">
-<svg viewBox="0 0 660 220" role="img" aria-label="Mezcla, EGT y potencia">
- <line x1="60" y1="180" x2="620" y2="180" class="ln"/><line x1="60" y1="20" x2="60" y2="180" class="ln"/>
- <g class="sm mu" id="mxAx"></g>
- <polyline id="mxEGT" class="ln cr thk" points=""/><polyline id="mxPow" class="ln cb thk" points=""/>
- <line id="mxCur" x1="0" y1="20" x2="0" y2="180" class="ln cm" style="stroke-width:2.5"/>
- <text x="70" y="34" class="sm tr">EGT</text><text x="70" y="50" class="sm tb">potencia</text>
- <text x="70" y="205" class="sm">← rica (exceso de combustible)</text><text x="610" y="205" text-anchor="end" class="sm">pobre (exceso de aire) →</text>
-</svg>
-<div class="sliders"><label>Aire : combustible <input type="range" id="mxR" min="8" max="20" step="0.5" value="12.5"> <b id="mxRv">12.5 : 1</b></label></div>
-<div class="simtxt" id="mxTxt"></div>
-<div class="mini"><button class="btn sec" data-mini="k14">Ponme a prueba</button><div class="minibox"></div></div></figure><ul><li>Combustión posible de ~<b>8:1</b> (rica) a ~<b>20:1</b> (pobre): más rica que 8:1 ya no arde.</li><li>Por encima del <b>75 %</b> de potencia, <b>full rich</b>.</li><li><b>EGT</b>: máxima con la mezcla químicamente correcta; sirve para ajustar la mezcla.</li></ul><div class="flag"><b>Trampa:</b> Trial 5 (0/5): «18:1» es pobre; enriquecer BAJA la temperatura del cilindro.</div><div class="comp"><b>ATPL</b><ul><li>Best power ≈ 12,5:1; best economy algo pobre. Diésel: sin palanca de mezcla.</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-021.10.05" data-lo="021.10.05">
-<summary><span class="lonum">021.10.05</span><span class="lotitle">Cooling systems</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Refrigeración <b>por aire</b>: entra por las <b>aberturas frontales</b> del capó y pasa entre los cilindros; los <b>baffles</b> lo reparten.</li><li><b>Cowl flaps</b>: una trampilla para <b>aumentar el flujo de aire</b>.</li><li>La temperatura se mide en la <b>cabeza del cilindro (CHT)</b>, en el cilindro <b>trasero, el peor refrigerado</b>: indica si la refrigeración funciona.</li></ul></div><div class="key"><b>Clave</b>Peor refrigeración: <b>mucha potencia y poca velocidad</b> (despegue, ascenso, go-around). Para bajar la CHT: abrir cowl flaps, enriquecer, reducir potencia o subir la velocidad.</div><ul><li>Las <b>aletas</b> (fins) aumentan la superficie que pierde calor.</li><li>El aire viene de la zona de alta presión tras la hélice y sale por la parte baja trasera del capó.</li><li>Cowl flaps abiertos: más refrigeración pero <b>más resistencia</b> (cooling drag). Abiertos en tierra y en ascenso; cerrados en crucero y descenso.</li><li>En un descenso con poca potencia y mucha velocidad el motor puede <b>enfriarse demasiado</b>.</li><li>Exceso de temperatura: peor lubricación, <b>detonación</b> y piezas debilitadas.</li><li>Influyen también el estado del enfriador de aceite y la OAT. En algunos aviones el <b>spinner</b> dirige el aire de refrigeración.</li></ul><div class="comp"><b>ATPL</b><ul><li>Refrigeración por líquido (radiador) frente a aire.</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-021.10.07" data-lo="021.10.07">
-<summary><span class="lonum">021.10.07</span><span class="lotitle">Ignition circuits</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Magnetos</b>: sistema de electroimanes que hace el motor <b>independiente del sistema eléctrico</b>: con un fallo eléctrico el motor no se para.</li><li>Las <b>bujías</b> dan la chispa.</li></ul></div><div class="key"><b>Clave</b>Magnetos: independientes del sistema eléctrico. Si falla uno, el motor sigue con ~100 rpm menos.</div><ul><li><b>Magneto</b>: imán giratorio, bobinas primaria y secundaria, platinos y condensador; dos por motor, dos bujías por cilindro.</li><li>Contacto en OFF = magnetos <b>a masa</b>. Si el motor sigue con OFF: P-lead roto → peligro al mover la hélice.</li></ul><div class="flag"><b>Trampa:</b> Trial 11: los magnetos no dependen del sistema eléctrico.</div><div class="comp"><b>ATPL</b><ul><li>Arranque: <b>impulse coupling</b>.</li><li>Magneto check: caída de rpm en cada uno, dentro del límite y parecida entre ambos.</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-021.10.01" data-lo="021.10.01">
-<summary><span class="lonum">021.10.01</span><span class="lotitle">General</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Motor de pistón (alternativo) de <b>cuatro tiempos</b>: admisión, compresión, combustión y escape; en un ciclo el pistón baja y sube dos veces.</li><li><b>Cigüeñal</b>: donde van unidos los pistones (por las bielas).</li></ul></div><div class="key"><b>Clave</b>Cuatro tiempos = dos vueltas de cigüeñal. Solo la explosión da trabajo. Camshaft a la mitad de vueltas.</div><ul><li>Piezas: pistón y segmentos, biela, cigüeñal, <b>árbol de levas</b> (válvulas), bujías.</li><li>El escape calienta el aire del carb heat y de la cabina (una fuga = <b>CO</b>).</li></ul><div class="flag"><b>Trampa:</b> Trial 5: «ninguna es correcta» — el PMS no toca la culata y un motor en V no es un bóxer.</div><div class="comp"><b>ATPL</b><ul><li>Definiciones: rpm, par, <b>MAP</b>, potencia, consumo específico, <b>compression ratio</b>.</li><li>Bóxer, en línea, radial, en V. Diésel: encendido por compresión.</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-021.10.03" data-lo="021.10.03">
-<summary><span class="lonum">021.10.03</span><span class="lotitle">Engine fuel pumps</span></summary>
-<div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Bomba eléctrica auxiliar: arranque y fases críticas (despegue, aterrizaje, maniobras), a la vez que la mecánica.</li></ul></div><div class="key"><b>Clave</b>Bomba mecánica movida por el motor + bomba eléctrica de respaldo.</div><div class="comp"><b>ATPL</b><ul><li>Con depósitos por debajo del motor (ala baja) hace falta bomba.</li></ul></div>
+<div class="key"><b>Clave</b>Turbo movido por el escape; waste gate; critical altitude = máxima con potencia máxima. FADEC.</div><div class="comp"><b>ATPL</b><ul><li>La potencia baja con la <b>altitud de densidad</b> (motor atmosférico, normally aspirated).</li><li><b>Turbocharger</b>: turbina (escape) + compresor (admisión); <b>waste gate</b> regula; <b>intercooler</b> enfría. <b>Turbo lag</b>.</li><li><b>Critical altitude</b>: la más alta a la que aún da la potencia máxima. Supercharger: movido por el cigüeñal.</li><li>Al aumentar potencia: mezcla, rpm y luego gas; al reducir: gas, rpm y mezcla.</li><li><b>FADEC</b>: control digital de plena autoridad; una sola palanca; redundante, con alimentación propia.</li></ul></div>
 </div>
 </details>
 
 <h2 id="ch-021.11">021.11 · Turbine engines <span class="wtag">19 preg. · 24 %</span></h2>
+<details class="lo atpl" id="lo-021.11.01" data-lo="021.11.01">
+<summary><span class="lonum">021.11.01</span><span class="lotitle">Basic principles</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Empuje = acelerar aire hacia atrás. Bypass ratio = frío / caliente.</div><div class="comp"><b>ATPL</b><ul><li>Turbojet, <b>turbofan</b>, <b>turboprop</b>; uno o varios ejes (spools). <b>Free turbine</b> en turbohélices.</li><li>Empuje ≈ constante en el rango subsónico. ESHP = THP + SHP.</li><li>Más bypass → más <b>eficiencia propulsiva</b> y menos ruido a velocidad subsónica. Más relación de compresión → más <b>eficiencia térmica</b>.</li><li>Bypass ratio: 400 kg/s frío ÷ 50 kg/s caliente = <b>8:1</b>.</li></ul></div>
+</div>
+</details>
+
 <details class="lo atpl" id="lo-021.11.02" data-lo="021.11.02">
 <summary><span class="lonum">021.11.02</span><span class="lotitle">Main-engine components</span></summary>
 <div class="body">
@@ -1215,13 +1224,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-021.11.01" data-lo="021.11.01">
-<summary><span class="lonum">021.11.01</span><span class="lotitle">Basic principles</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Empuje = acelerar aire hacia atrás. Bypass ratio = frío / caliente.</div><div class="comp"><b>ATPL</b><ul><li>Turbojet, <b>turbofan</b>, <b>turboprop</b>; uno o varios ejes (spools). <b>Free turbine</b> en turbohélices.</li><li>Empuje ≈ constante en el rango subsónico. ESHP = THP + SHP.</li><li>Más bypass → más <b>eficiencia propulsiva</b> y menos ruido a velocidad subsónica. Más relación de compresión → más <b>eficiencia térmica</b>.</li><li>Bypass ratio: 400 kg/s frío ÷ 50 kg/s caliente = <b>8:1</b>.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-021.11.05" data-lo="021.11.05">
 <summary><span class="lonum">021.11.05</span><span class="lotitle">Performance aspects</span></summary>
 <div class="body">
@@ -1237,17 +1239,17 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-021.12">021.12 · Protection and detection systems <span class="wtag">3 preg. · 4 %</span></h2>
-<details class="lo atpl" id="lo-021.12.02" data-lo="021.12.02">
-<summary><span class="lonum">021.12.02</span><span class="lotitle">Fire-protection systems</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Doble lazo de detección; dos descargas por motor; botellas con squib.</div><div class="comp"><b>ATPL</b><ul><li>Detección por <b>resistencia/capacidad</b> o por <b>gas a presión</b>; bimetálicos, lazo continuo.</li><li><b>Double loop</b>: evita falsas alarmas y sigue con un lazo averiado.</li><li>Aviso con luz roja, campana y test del sistema.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-021.12.01" data-lo="021.12.01">
 <summary><span class="lonum">021.12.01</span><span class="lotitle">Smoke detection</span></summary>
 <div class="body">
 <div class="key"><b>Clave</b>Detectores de humo ópticos o de ionización.</div><div class="comp"><b>ATPL</b><ul><li>En bodegas y lavabos; con test.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-021.12.02" data-lo="021.12.02">
+<summary><span class="lonum">021.12.02</span><span class="lotitle">Fire-protection systems</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Doble lazo de detección; dos descargas por motor; botellas con squib.</div><div class="comp"><b>ATPL</b><ul><li>Detección por <b>resistencia/capacidad</b> o por <b>gas a presión</b>; bimetálicos, lazo continuo.</li><li><b>Double loop</b>: evita falsas alarmas y sigue con un lazo averiado.</li><li>Aviso con luz roja, campana y test del sistema.</li></ul></div>
 </div>
 </details>
 
@@ -1267,25 +1269,12 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <p class="exsep">022 · Instrumentation <span class="wtag">60 preguntas</span></p>
+<h2 class="subj">022 · Instrumentation <span class="wtag">60 preg. · 1 h 30 min</span></h2>
 <h2 id="ch-022.01">022.01 · Sensors and instruments <span class="wtag">3 preg. · 5 %</span></h2>
 <details class="lo atpl" id="lo-022.01.01" data-lo="022.01.01">
 <summary><span class="lonum">022.01.01</span><span class="lotitle">Pressure gauge</span></summary>
 <div class="body">
 <div class="key"><b>Clave</b>Aneroid capsule (presión absoluta), bellows, diaphragm; bourdon tube para presiones altas (aceite, hidráulica).</div><div class="comp"><b>ATPL</b><ul><li>Presión absoluta y diferencial; unidades Pa, bar, inHg, psi (1013 hPa ≈ 29,92 inHg ≈ 14,7 psi).</li><li>Presiones de líquidos (combustible, aceite, hidráulica) y de aire (bleed, cabina, MAP).</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-022.01.07" data-lo="022.01.07">
-<summary><span class="lonum">022.01.07</span><span class="lotitle">Engine torquemeter</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Potencia ∝ par × rpm. Torquímetro en turbohélices y helicópteros, a menudo en %.</div><div class="comp"><b>ATPL</b><ul><li>Mecánico (hidráulico) o electrónico; unidades N·m, ft·lb, %.</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-022.01.03" data-lo="022.01.03">
-<summary><span class="lonum">022.01.03</span><span class="lotitle">Fuel gauge</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Float: volumen y falla en maniobras. Capacitance: masa. Nunca te fíes solo del indicador.</div><ul><li>Indicador de <b>flotador</b> y comprobación <b>visual</b> (o dipstick).</li><li>Los indicadores no son fiables: comprobar siempre la cantidad real.</li></ul><div class="comp"><b>ATPL</b><ul><li>Medida en volumen (L, gal) o masa (kg, lb); la temperatura cambia el volumen.</li><li><b>Capacitance</b> mide masa (compensa la densidad); también ultrasonidos.</li><li>Tras repostar: convertir el volumen cargado a la unidad del indicador y comprobar.</li></ul></div>
 </div>
 </details>
 
@@ -1296,17 +1285,17 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo atpl" id="lo-022.01.03" data-lo="022.01.03">
+<summary><span class="lonum">022.01.03</span><span class="lotitle">Fuel gauge</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Float: volumen y falla en maniobras. Capacitance: masa. Nunca te fíes solo del indicador.</div><ul><li>Indicador de <b>flotador</b> y comprobación <b>visual</b> (o dipstick).</li><li>Los indicadores no son fiables: comprobar siempre la cantidad real.</li></ul><div class="comp"><b>ATPL</b><ul><li>Medida en volumen (L, gal) o masa (kg, lb); la temperatura cambia el volumen.</li><li><b>Capacitance</b> mide masa (compensa la densidad); también ultrasonidos.</li><li>Tras repostar: convertir el volumen cargado a la unidad del indicador y comprobar.</li></ul></div>
+</div>
+</details>
+
 <details class="lo atpl" id="lo-022.01.04" data-lo="022.01.04">
 <summary><span class="lonum">022.01.04</span><span class="lotitle">Fuel flowmeters</span></summary>
 <div class="body">
 <div class="key"><b>Clave</b>Fuel flow en masa (kg/h, lb/h) o volumen (L/h, gal/h); el total consumido se integra.</div><div class="comp"><b>ATPL</b><ul><li>Se mide en la línea de alimentación al motor.</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-022.01.09" data-lo="022.01.09">
-<summary><span class="lonum">022.01.09</span><span class="lotitle">Engine-vibration monitoring</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Vibración del motor: sensores piezoeléctricos o magnéticos; sin unidad, con umbrales numéricos.</div><div class="comp"><b>ATPL</b><ul><li>Avisa de daños (álabes, rodamientos).</li></ul></div>
 </div>
 </details>
 
@@ -1324,10 +1313,24 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo atpl" id="lo-022.01.07" data-lo="022.01.07">
+<summary><span class="lonum">022.01.07</span><span class="lotitle">Engine torquemeter</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Potencia ∝ par × rpm. Torquímetro en turbohélices y helicópteros, a menudo en %.</div><div class="comp"><b>ATPL</b><ul><li>Mecánico (hidráulico) o electrónico; unidades N·m, ft·lb, %.</li></ul></div>
+</div>
+</details>
+
 <details class="lo atpl" id="lo-022.01.08" data-lo="022.01.08">
 <summary><span class="lonum">022.01.08</span><span class="lotitle">Synchroscope</span></summary>
 <div class="body">
 <div class="key"><b>Clave</b>Synchroscope: indica si los motores giran a las mismas rpm.</div><div class="comp"><b>ATPL</b><ul><li>Gira hacia el lado del motor más rápido; quieto = sincronizados.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-022.01.09" data-lo="022.01.09">
+<summary><span class="lonum">022.01.09</span><span class="lotitle">Engine-vibration monitoring</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Vibración del motor: sensores piezoeléctricos o magnéticos; sin unidad, con umbrales numéricos.</div><div class="comp"><b>ATPL</b><ul><li>Avisa de daños (álabes, rodamientos).</li></ul></div>
 </div>
 </details>
 
@@ -1341,6 +1344,27 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <h2 id="ch-022.02">022.02 · Measurement of air-data parameters <span class="wtag">8 preg. · 13 %</span></h2>
 <div class="f0lab" data-lab="altimeter"></div>
 <div class="f0lab" data-lab="pitot"></div>
+<details class="lo" id="lo-022.02.01" data-lo="022.02.01">
+<summary><span class="lonum">022.02.01</span><span class="lotitle">Pressure measurement</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Pitot: presión <b>total</b> · Static: presión <b>estática</b> · Dinámica = total − estática (depende de la velocidad y de la densidad).</div><ul><li><b>Static pressure</b> (presión estática): la del aire ambiente a esa altura. <b>Dynamic pressure</b> (dinámica): la extra por moverse en el aire, ½ρV². <b>Pitot (total) pressure</b> = estática + dinámica.</li><li>Solo con estática: <b>altimeter</b> y <b>VSI</b>. Con estática y pitot: <b>airspeed indicator</b>.</li><li><b>Pitot tube</b>: tubo abierto, paralelo al eje longitudinal y de cara a la corriente. <b>Static head</b>: punta cerrada con ranuras laterales que no miran a la corriente. Pueden ir juntos en una <b>pressure head</b>, con <b>pitot heat</b> (resistencia eléctrica antihielo).</li><li><b>Position error</b> (pressure error): la turbulencia cerca de las sondas falsea las presiones; es mayor a <b>baja velocidad</b> (ángulo de ataque alto). Cerca del <b>95 %</b> lo causa la static head; con un <b>static vent</b> en el costado del fuselaje y un pitot simple se elimina cerca del 90 %.</li><li><b>Manoeuvre-induced error</b>: fluctuaciones breves de presión en los vents y retardo en las tuberías (cambios de ángulo de ataque, flaps y tren). Se nota como un <b>lag</b>, sobre todo en cambios de cabeceo (inicio y fin de un ascenso o descenso) y en aire turbulento; afecta más al VSI. Por eso se maniobra con los instrumentos <b>giroscópicos</b>.</li><li><b>Emergency (alternate) static source</b>: para cuando se bloquea la estática. Si está fuera del avión es <b>menos precisa</b> que la principal; si está dentro de la cabina (no presurizada) la presión es <b>menor</b> que la ambiente por la succión aerodinámica. Las correcciones están en el <b>POH</b>.</li><li>Prevuelo: fundas y tapones fuera y guardados · tubos, orificios y ranuras sin obstrucciones (polvo, insectos) · pitot heat funcionando.</li></ul><div class="flag"><b>Trampa:</b> El pitot mide la presión <b>total</b>, no la dinámica: la dinámica sale de restar la estática. La static port solo percibe estática.</div><div class="comp"><b>ATPL</b><ul><li>Sondas combinadas pitot-estáticas; varios sistemas con interconexión en grandes.</li><li>Sensores electrónicos (ADM) junto a la sonda que envían datos digitales.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-022.02.02" data-lo="022.02.02">
+<summary><span class="lonum">022.02.02</span><span class="lotitle">Temperature measurement</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>TAT = SAT + ram rise. La TAT es la entrada del ADC.</div><div class="comp"><b>ATPL</b><ul><li>OAT = SAT. Sonda calentada: si no se compensa, marca de más.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-022.02.03" data-lo="022.02.03">
+<summary><span class="lonum">022.02.03</span><span class="lotitle">Angle-of-attack (AoA) measurement</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>AoA: veleta o sonda con ranuras, calentadas. Una congelada da avisos o protecciones falsos.</div><div class="comp"><b>ATPL</b><ul><li>Usan el AoA: ADC, stall warning, protecciones de la envolvente.</li><li>Indicadores con luces verde/ámbar/roja o escala.</li></ul></div>
+</div>
+</details>
+
 <details class="lo" id="lo-022.02.04" data-lo="022.02.04">
 <summary><span class="lonum">022.02.04</span><span class="lotitle">Altimeter</span></summary>
 <div class="body">
@@ -1361,10 +1385,10 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-022.02.07" data-lo="022.02.07">
-<summary><span class="lonum">022.02.07</span><span class="lotitle">Machmeter</span></summary>
+<details class="lo" id="lo-022.02.05" data-lo="022.02.05">
+<summary><span class="lonum">022.02.05</span><span class="lotitle">Vertical speed indicator (VSI)</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>Mach = TAS / LSS (√T). Subir a IAS constante → sube el Mach; a Mach constante en descenso → sube la IAS.</div><div class="comp"><b>ATPL</b><ul><li>Machmeter: (Pt − Ps) / Ps; no tiene error de compresibilidad.</li><li><b>VMO</b> manda a baja altitud y <b>MMO</b> arriba; el cruce, en el changeover.</li><li>Subir a IAS constante: el margen a MMO se reduce; bajar a Mach constante: el margen a VMO se reduce.</li></ul></div>
+<div class="key"><b>Clave</b>VSI: compara la estática actual con la de hace un instante. Estática bloqueada → cero.</div><ul><li>También llamado <b>rate of climb indicator</b>. Convierte la variación de presión estática en <b>pies por minuto</b>.</li><li>La cápsula recibe la estática directa; la caja, a través de una <b>restricción</b> (choke / calibrated leak). En ascenso, la presión de la cápsula es menor que la de la caja y la diferencia mueve la aguja.</li><li><b>Time lag</b>: la aguja tarda unos segundos en estabilizarse y también al nivelar; se nota tras un ascenso o descenso largo y fuerte.</li><li><b>Position error</b>: si la estática falla al cambiar de velocidad, marca un ascenso o descenso falso (sobre todo en la aceleración del despegue). <b>Manoeuvre-induced</b>: fluctuaciones breves en el vent. Un contrapeso del mecanismo retrasa la indicación.</li><li>Una obstrucción de la estática lleva la aguja a <b>cero</b>, y lo más probable es que ASI y altímetro también fallen.</li></ul><div class="flag"><b>Trampa:</b> El VSI no es giroscópico: mide cómo cambia la presión estática, y siempre con retardo.</div><div class="comp"><b>ATPL</b><ul><li>Unidades ft/min y m/s. En turbulencia el IVSI se mueve más.</li></ul></div>
 </div>
 </details>
 
@@ -1375,10 +1399,10 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-022.02.01" data-lo="022.02.01">
-<summary><span class="lonum">022.02.01</span><span class="lotitle">Pressure measurement</span></summary>
+<details class="lo atpl" id="lo-022.02.07" data-lo="022.02.07">
+<summary><span class="lonum">022.02.07</span><span class="lotitle">Machmeter</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>Pitot: presión <b>total</b> · Static: presión <b>estática</b> · Dinámica = total − estática (depende de la velocidad y de la densidad).</div><ul><li><b>Static pressure</b> (presión estática): la del aire ambiente a esa altura. <b>Dynamic pressure</b> (dinámica): la extra por moverse en el aire, ½ρV². <b>Pitot (total) pressure</b> = estática + dinámica.</li><li>Solo con estática: <b>altimeter</b> y <b>VSI</b>. Con estática y pitot: <b>airspeed indicator</b>.</li><li><b>Pitot tube</b>: tubo abierto, paralelo al eje longitudinal y de cara a la corriente. <b>Static head</b>: punta cerrada con ranuras laterales que no miran a la corriente. Pueden ir juntos en una <b>pressure head</b>, con <b>pitot heat</b> (resistencia eléctrica antihielo).</li><li><b>Position error</b> (pressure error): la turbulencia cerca de las sondas falsea las presiones; es mayor a <b>baja velocidad</b> (ángulo de ataque alto). Cerca del <b>95 %</b> lo causa la static head; con un <b>static vent</b> en el costado del fuselaje y un pitot simple se elimina cerca del 90 %.</li><li><b>Manoeuvre-induced error</b>: fluctuaciones breves de presión en los vents y retardo en las tuberías (cambios de ángulo de ataque, flaps y tren). Se nota como un <b>lag</b>, sobre todo en cambios de cabeceo (inicio y fin de un ascenso o descenso) y en aire turbulento; afecta más al VSI. Por eso se maniobra con los instrumentos <b>giroscópicos</b>.</li><li><b>Emergency (alternate) static source</b>: para cuando se bloquea la estática. Si está fuera del avión es <b>menos precisa</b> que la principal; si está dentro de la cabina (no presurizada) la presión es <b>menor</b> que la ambiente por la succión aerodinámica. Las correcciones están en el <b>POH</b>.</li><li>Prevuelo: fundas y tapones fuera y guardados · tubos, orificios y ranuras sin obstrucciones (polvo, insectos) · pitot heat funcionando.</li></ul><div class="flag"><b>Trampa:</b> El pitot mide la presión <b>total</b>, no la dinámica: la dinámica sale de restar la estática. La static port solo percibe estática.</div><div class="comp"><b>ATPL</b><ul><li>Sondas combinadas pitot-estáticas; varios sistemas con interconexión en grandes.</li><li>Sensores electrónicos (ADM) junto a la sonda que envían datos digitales.</li></ul></div>
+<div class="key"><b>Clave</b>Mach = TAS / LSS (√T). Subir a IAS constante → sube el Mach; a Mach constante en descenso → sube la IAS.</div><div class="comp"><b>ATPL</b><ul><li>Machmeter: (Pt − Ps) / Ps; no tiene error de compresibilidad.</li><li><b>VMO</b> manda a baja altitud y <b>MMO</b> arriba; el cruce, en el changeover.</li><li>Subir a IAS constante: el margen a MMO se reduce; bajar a Mach constante: el margen a VMO se reduce.</li></ul></div>
 </div>
 </details>
 
@@ -1389,35 +1413,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-022.02.03" data-lo="022.02.03">
-<summary><span class="lonum">022.02.03</span><span class="lotitle">Angle-of-attack (AoA) measurement</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>AoA: veleta o sonda con ranuras, calentadas. Una congelada da avisos o protecciones falsos.</div><div class="comp"><b>ATPL</b><ul><li>Usan el AoA: ADC, stall warning, protecciones de la envolvente.</li><li>Indicadores con luces verde/ámbar/roja o escala.</li></ul></div>
-</div>
-</details>
-
-<details class="lo" id="lo-022.02.05" data-lo="022.02.05">
-<summary><span class="lonum">022.02.05</span><span class="lotitle">Vertical speed indicator (VSI)</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>VSI: compara la estática actual con la de hace un instante. Estática bloqueada → cero.</div><ul><li>También llamado <b>rate of climb indicator</b>. Convierte la variación de presión estática en <b>pies por minuto</b>.</li><li>La cápsula recibe la estática directa; la caja, a través de una <b>restricción</b> (choke / calibrated leak). En ascenso, la presión de la cápsula es menor que la de la caja y la diferencia mueve la aguja.</li><li><b>Time lag</b>: la aguja tarda unos segundos en estabilizarse y también al nivelar; se nota tras un ascenso o descenso largo y fuerte.</li><li><b>Position error</b>: si la estática falla al cambiar de velocidad, marca un ascenso o descenso falso (sobre todo en la aceleración del despegue). <b>Manoeuvre-induced</b>: fluctuaciones breves en el vent. Un contrapeso del mecanismo retrasa la indicación.</li><li>Una obstrucción de la estática lleva la aguja a <b>cero</b>, y lo más probable es que ASI y altímetro también fallen.</li></ul><div class="flag"><b>Trampa:</b> El VSI no es giroscópico: mide cómo cambia la presión estática, y siempre con retardo.</div><div class="comp"><b>ATPL</b><ul><li>Unidades ft/min y m/s. En turbulencia el IVSI se mueve más.</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-022.02.02" data-lo="022.02.02">
-<summary><span class="lonum">022.02.02</span><span class="lotitle">Temperature measurement</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>TAT = SAT + ram rise. La TAT es la entrada del ADC.</div><div class="comp"><b>ATPL</b><ul><li>OAT = SAT. Sonda calentada: si no se compensa, marca de más.</li></ul></div>
-</div>
-</details>
-
 <h2 id="ch-022.03">022.03 · Magnetism: direct-reading compass and flux valve <span class="wtag">2 preg. · 3 %</span></h2>
-<details class="lo atpl" id="lo-022.03.04" data-lo="022.03.04">
-<summary><span class="lonum">022.03.04</span><span class="lotitle">Flux valve</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Flux valve en la punta del ala o la cola; con compensación, sin tarjeta de desvíos.</div><div class="comp"><b>ATPL</b><ul><li>Detecta la componente horizontal del campo terrestre; alimenta la remote-reading compass.</li><li>Errores de viraje y aceleración mucho menores que la brújula directa.</li></ul></div>
-</div>
-</details>
-
 <details class="lo" id="lo-022.03.01" data-lo="022.03.01">
 <summary><span class="lonum">022.03.01</span><span class="lotitle">Earth’s magnetic field</span></summary>
 <div class="body">
@@ -1439,8 +1435,22 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo atpl" id="lo-022.03.04" data-lo="022.03.04">
+<summary><span class="lonum">022.03.04</span><span class="lotitle">Flux valve</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Flux valve en la punta del ala o la cola; con compensación, sin tarjeta de desvíos.</div><div class="comp"><b>ATPL</b><ul><li>Detecta la componente horizontal del campo terrestre; alimenta la remote-reading compass.</li><li>Errores de viraje y aceleración mucho menores que la brújula directa.</li></ul></div>
+</div>
+</details>
+
 <h2 id="ch-022.04">022.04 · Gyroscopic instruments <span class="wtag">4 preg. · 7 %</span></h2>
 <div class="f0lab" data-lab="gyro"></div>
+<details class="lo" id="lo-022.04.01" data-lo="022.04.01">
+<summary><span class="lonum">022.04.01</span><span class="lotitle">Gyroscope: basic principles</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Gyro = masa que gira muy deprisa. Rigidez en el espacio: más masa, más velocidad y masa lejos del eje. Precesión: la fuerza actúa 90° más allá, en el sentido de giro.</div><ul><li><b>Giroscópicos</b>: attitude indicator, directional gyro (heading) y turn coordinator. <b>De presión</b> (pitot-estática): anemómetro, altímetro y variómetro. Preguntan cuál es cuál.</li><li><b>Displacement gyro</b> (dos cardanes, 2 grados de libertad): horizonte y giro direccional. <b>Rate gyro</b> (un cardán, 1 grado): turn indicator.</li><li>Accionamiento: <b>vacuum pump</b> movida por el motor (o Venturi) o eléctrico. Los de succión <b>no dependen de la electricidad</b>; sufren humedad, polvo y aceite en el aire y poca succión en altura. El Venturi no da succión parado y puede helarse.</li><li>Si los principales son eléctricos, el <b>standby</b> suele ser neumático: otra fuente de energía de reserva.</li><li>Si el rotor gira más despacio de lo debido: menos rigidez y el instrumento marca de menos (under-rpm → under-read).</li></ul><div class="flag"><b>Trampa:</b> Trial 9: en un ligero, los giróscopos los mueve una bomba de vacío (aire), no el pitot. Horizonte, DI y turn coordinator = giróscopo; anemómetro, altímetro y VSI = presión.</div><div class="comp"><b>ATPL</b><ul><li>Wander: real, aparente (rotación de la Tierra) y de transporte.</li></ul></div>
+</div>
+</details>
+
 <details class="lo" id="lo-022.04.02" data-lo="022.04.02">
 <summary><span class="lonum">022.04.02</span><span class="lotitle">Rate-of-turn indicator</span></summary>
 <div class="body">
@@ -1487,13 +1497,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo" id="lo-022.04.01" data-lo="022.04.01">
-<summary><span class="lonum">022.04.01</span><span class="lotitle">Gyroscope: basic principles</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Gyro = masa que gira muy deprisa. Rigidez en el espacio: más masa, más velocidad y masa lejos del eje. Precesión: la fuerza actúa 90° más allá, en el sentido de giro.</div><ul><li><b>Giroscópicos</b>: attitude indicator, directional gyro (heading) y turn coordinator. <b>De presión</b> (pitot-estática): anemómetro, altímetro y variómetro. Preguntan cuál es cuál.</li><li><b>Displacement gyro</b> (dos cardanes, 2 grados de libertad): horizonte y giro direccional. <b>Rate gyro</b> (un cardán, 1 grado): turn indicator.</li><li>Accionamiento: <b>vacuum pump</b> movida por el motor (o Venturi) o eléctrico. Los de succión <b>no dependen de la electricidad</b>; sufren humedad, polvo y aceite en el aire y poca succión en altura. El Venturi no da succión parado y puede helarse.</li><li>Si los principales son eléctricos, el <b>standby</b> suele ser neumático: otra fuente de energía de reserva.</li><li>Si el rotor gira más despacio de lo debido: menos rigidez y el instrumento marca de menos (under-rpm → under-read).</li></ul><div class="flag"><b>Trampa:</b> Trial 9: en un ligero, los giróscopos los mueve una bomba de vacío (aire), no el pitot. Horizonte, DI y turn coordinator = giróscopo; anemómetro, altímetro y VSI = presión.</div><div class="comp"><b>ATPL</b><ul><li>Wander: real, aparente (rotación de la Tierra) y de transporte.</li></ul></div>
-</div>
-</details>
-
 <details class="lo" id="lo-022.04.03" data-lo="022.04.03">
 <summary><span class="lonum">022.04.03</span><span class="lotitle">Attitude indicator (artificial horizon)</span></summary>
 <div class="body">
@@ -1523,13 +1526,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-022.05">022.05 · Inertial navigation <span class="wtag">3 preg. · 5 %</span></h2>
-<details class="lo atpl" id="lo-022.05.02" data-lo="022.05.02">
-<summary><span class="lonum">022.05.02</span><span class="lotitle">Alignment and operation</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Alinear en tierra y quieto (~10 min); la latitud es la más crítica; no se realinea en vuelo.</div><div class="comp"><b>ATPL</b><ul><li>Modos NAV y ATT (solo actitud). Error típico <b>1–2 NM/h</b>.</li><li>Tras el vuelo: velocidad residual en tierra = calidad de la IRU.</li><li><b>ADIRU</b> = IRU + ADC; datos en el CDU/MCDU.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-022.05.01" data-lo="022.05.01">
 <summary><span class="lonum">022.05.01</span><span class="lotitle">Basic principles</span></summary>
 <div class="body">
@@ -1537,18 +1533,25 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo atpl" id="lo-022.05.02" data-lo="022.05.02">
+<summary><span class="lonum">022.05.02</span><span class="lotitle">Alignment and operation</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Alinear en tierra y quieto (~10 min); la latitud es la más crítica; no se realinea en vuelo.</div><div class="comp"><b>ATPL</b><ul><li>Modos NAV y ATT (solo actitud). Error típico <b>1–2 NM/h</b>.</li><li>Tras el vuelo: velocidad residual en tierra = calidad de la IRU.</li><li><b>ADIRU</b> = IRU + ADC; datos en el CDU/MCDU.</li></ul></div>
+</div>
+</details>
+
 <h2 id="ch-022.06">022.06 · Aeroplane: automatic flight control systems <span class="wtag">11 preg. · 18 %</span></h2>
+<details class="lo atpl" id="lo-022.06.01" data-lo="022.06.01">
+<summary><span class="lonum">022.06.01</span><span class="lotitle">General</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Lazo cerrado: compara lo deseado con lo medido y corrige; si corrige de más, oscila.</div><div class="comp"><b>ATPL</b><ul><li>Control (estabilizar en torno al CG) y guía (trayectoria).</li><li>Elementos: señal de entrada, detector de error, procesador, actuador, realimentación.</li></ul></div>
+</div>
+</details>
+
 <details class="lo atpl" id="lo-022.06.02" data-lo="022.06.02">
 <summary><span class="lonum">022.06.02</span><span class="lotitle">Autopilot system</span></summary>
 <div class="body">
 <div class="key"><b>Clave</b>Conectar con el avión compensado. V/S no protege la velocidad. Armado ≠ engaged.</div><div class="comp"><b>ATPL</b><ul><li>Canales pitch, roll, yaw; AP de 1 eje (roll), 2 (pitch y roll) o 3.</li><li>Laterales: HDG/TRK, VOR/LOC, LNAV/NAV. Verticales: V/S, FPA, LVL CHG/OP CLB/DES, ALT, VNAV, G/S. Mixtos: TO, GA, APP.</li><li><b>CWS</b>: pilotar a través de los servos del AP. <b>TCS</b>: desconecta los servos mientras se aprieta.</li><li>Solo un AP conectado salvo con <b>APP armado</b> (autoland).</li><li><b>Mode reversion</b> automática si faltan datos o se sale del rango. Desconexión con aviso visual y sonoro.</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-022.06.05" data-lo="022.06.05">
-<summary><span class="lonum">022.06.05</span><span class="lotitle">Autoland</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Fail-passive: tras un fallo se desconecta y aterrizas tú. Fail-operational: sigue aterrizando.</div><div class="comp"><b>ATPL</b><ul><li>Necesita AP, autothrust, <b>radioaltímetros</b> e ILS.</li><li><b>Alert height</b> (~100 ft): por debajo, en fail-operational, un fallo no obliga al go-around.</li><li>Límites operacionales además de los técnicos. Hybrid: fail-passive + HUD.</li></ul></div>
 </div>
 </details>
 
@@ -1559,17 +1562,17 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-022.06.01" data-lo="022.06.01">
-<summary><span class="lonum">022.06.01</span><span class="lotitle">General</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Lazo cerrado: compara lo deseado con lo medido y corrige; si corrige de más, oscila.</div><div class="comp"><b>ATPL</b><ul><li>Control (estabilizar en torno al CG) y guía (trayectoria).</li><li>Elementos: señal de entrada, detector de error, procesador, actuador, realimentación.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-022.06.04" data-lo="022.06.04">
 <summary><span class="lonum">022.06.04</span><span class="lotitle">Aeroplane: flight mode annunciator (FMA)</span></summary>
 <div class="body">
 <div class="key"><b>Clave</b>FMA: la única indicación fiable del modo activo.</div><div class="comp"><b>ATPL</b><ul><li>Columnas: autothrust · vertical · lateral · capacidad · estado AP/FD.</li><li>Armado y engaged con distinto color o tamaño; anunciar cada cambio.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-022.06.05" data-lo="022.06.05">
+<summary><span class="lonum">022.06.05</span><span class="lotitle">Autoland</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Fail-passive: tras un fallo se desconecta y aterrizas tú. Fail-operational: sigue aterrizando.</div><div class="comp"><b>ATPL</b><ul><li>Necesita AP, autothrust, <b>radioaltímetros</b> e ILS.</li><li><b>Alert height</b> (~100 ft): por debajo, en fail-operational, un fallo no obliga al go-around.</li><li>Límites operacionales además de los técnicos. Hybrid: fail-passive + HUD.</li></ul></div>
 </div>
 </details>
 
@@ -1581,17 +1584,17 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-022.08.03" data-lo="022.08.03">
-<summary><span class="lonum">022.08.03</span><span class="lotitle">Flight-envelope protection (FEP)</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>FEP: con AoA, configuración y velocidad evita la pérdida y la sobrevelocidad.</div><div class="comp"><b>ATPL</b><ul><li>Stall y overspeed protection también en mandos convencionales; otras (pitch, bank) solo en FBW.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-022.08.02" data-lo="022.08.02">
 <summary><span class="lonum">022.08.02</span><span class="lotitle">Yaw damper</span></summary>
 <div class="body">
 <div class="key"><b>Clave</b>Yaw damper: amortigua el Dutch roll con el rudder.</div><div class="comp"><b>ATPL</b><ul><li>Filtro de Dutch roll: deja pasar solo esas oscilaciones.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-022.08.03" data-lo="022.08.03">
+<summary><span class="lonum">022.08.03</span><span class="lotitle">Flight-envelope protection (FEP)</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>FEP: con AoA, configuración y velocidad evita la pérdida y la sobrevelocidad.</div><div class="comp"><b>ATPL</b><ul><li>Stall y overspeed protection también en mandos convencionales; otras (pitch, bank) solo en FBW.</li></ul></div>
 </div>
 </details>
 
@@ -1619,6 +1622,13 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-022.11">022.11 · Flight management system (FMS) <span class="wtag">6 preg. · 10 %</span></h2>
+<details class="lo atpl" id="lo-022.11.01" data-lo="022.11.01">
+<summary><span class="lonum">022.11.01</span><span class="lotitle">Design</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Doble FMS: FMC + CDU con cross-talk; si falla el cross-talk, trabajan por separado.</div><div class="comp"><b>ATPL</b><ul><li>Funciones: navegación, plan lateral y vertical, performance.</li></ul></div>
+</div>
+</details>
+
 <details class="lo atpl" id="lo-022.11.02" data-lo="022.11.02">
 <summary><span class="lonum">022.11.02</span><span class="lotitle">FMC databases</span></summary>
 <div class="body">
@@ -1633,13 +1643,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-022.11.01" data-lo="022.11.01">
-<summary><span class="lonum">022.11.01</span><span class="lotitle">Design</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Doble FMS: FMC + CDU con cross-talk; si falla el cross-talk, trabajan por separado.</div><div class="comp"><b>ATPL</b><ul><li>Funciones: navegación, plan lateral y vertical, performance.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-022.11.04" data-lo="022.11.04">
 <summary><span class="lonum">022.11.04</span><span class="lotitle">Human–machine interface (control and display unit (CDU)/ multifunction control and display unit (MCDU))</span></summary>
 <div class="body">
@@ -1648,24 +1651,10 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </details>
 
 <h2 id="ch-022.12">022.12 · Alerting systems, proximity systems <span class="wtag">8 preg. · 13 %</span></h2>
-<details class="lo atpl" id="lo-022.12.10" data-lo="022.12.10">
-<summary><span class="lonum">022.12.10</span><span class="lotitle">ACAS/TCAS</span></summary>
+<details class="lo atpl" id="lo-022.12.01" data-lo="022.12.01">
+<summary><span class="lonum">022.12.01</span><span class="lotitle">General</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>RA solo en vertical; el RA manda sobre el ATC (síguelo e informa). Sin altitud del intruso: solo TA.</div><div class="comp"><b>ATPL</b><ul><li>ACAS II/TCAS II: anticolisión, no garantiza separación.</li><li>Intruso: other, proximate, TA, RA; se coordinan entre dos TCAS; varias amenazas a la vez.</li><li>Criterio: <b>TAU</b> (tiempo al punto de máxima aproximación) y diferencia de altitud.</li><li>Rango ~35–40 NM y ±2000 ft (ampliable). Interroga a los transpondedores (Mode C/S).</li><li>No maniobrar en horizontal por la pantalla.</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-022.12.09" data-lo="022.12.09">
-<summary><span class="lonum">022.12.09</span><span class="lotitle">Ground-proximity warning systems (GPWSs)</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>GPWS no ve el terreno empinado delante; TAWS/EGPWS sí (base de datos + GPS).</div><div class="comp"><b>ATPL</b><ul><li>Modos: 1 descenso excesivo · 2 acercamiento al terreno · 3 pérdida de altura tras despegar · 4 poca altura sin configuración · 5 bajo la senda · 6 avisos de altura/alabeo.</li><li>Avisos falsos si se vuela cerca de obstáculos con mucho descenso o velocidad.</li></ul></div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-022.12.08" data-lo="022.12.08">
-<summary><span class="lonum">022.12.08</span><span class="lotitle">Radio altimeter</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Radioaltímetro: altura real sobre el terreno (hasta ~2500 ft); lo usan GPWS, autoland, TCAS.</div><div class="comp"><b>ATPL</b><ul><li>Uno mal puede dar un retard prematuro o avisos falsos.</li></ul></div>
+<div class="key"><b>Clave</b>Alertas (CS-25): warning, caution, advisory.</div>
 </div>
 </details>
 
@@ -1697,20 +1686,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-022.12.07" data-lo="022.12.07">
-<summary><span class="lonum">022.12.07</span><span class="lotitle">Altitude alert system</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Altitude alert: aviso al acercarse o desviarse del nivel seleccionado.</div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-022.12.01" data-lo="022.12.01">
-<summary><span class="lonum">022.12.01</span><span class="lotitle">General</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Alertas (CS-25): warning, caution, advisory.</div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-022.12.06" data-lo="022.12.06">
 <summary><span class="lonum">022.12.06</span><span class="lotitle">Take-off warning</span></summary>
 <div class="body">
@@ -1718,7 +1693,49 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<details class="lo atpl" id="lo-022.12.07" data-lo="022.12.07">
+<summary><span class="lonum">022.12.07</span><span class="lotitle">Altitude alert system</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Altitude alert: aviso al acercarse o desviarse del nivel seleccionado.</div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-022.12.08" data-lo="022.12.08">
+<summary><span class="lonum">022.12.08</span><span class="lotitle">Radio altimeter</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Radioaltímetro: altura real sobre el terreno (hasta ~2500 ft); lo usan GPWS, autoland, TCAS.</div><div class="comp"><b>ATPL</b><ul><li>Uno mal puede dar un retard prematuro o avisos falsos.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-022.12.09" data-lo="022.12.09">
+<summary><span class="lonum">022.12.09</span><span class="lotitle">Ground-proximity warning systems (GPWSs)</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>GPWS no ve el terreno empinado delante; TAWS/EGPWS sí (base de datos + GPS).</div><div class="comp"><b>ATPL</b><ul><li>Modos: 1 descenso excesivo · 2 acercamiento al terreno · 3 pérdida de altura tras despegar · 4 poca altura sin configuración · 5 bajo la senda · 6 avisos de altura/alabeo.</li><li>Avisos falsos si se vuela cerca de obstáculos con mucho descenso o velocidad.</li></ul></div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-022.12.10" data-lo="022.12.10">
+<summary><span class="lonum">022.12.10</span><span class="lotitle">ACAS/TCAS</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>RA solo en vertical; el RA manda sobre el ATC (síguelo e informa). Sin altitud del intruso: solo TA.</div><div class="comp"><b>ATPL</b><ul><li>ACAS II/TCAS II: anticolisión, no garantiza separación.</li><li>Intruso: other, proximate, TA, RA; se coordinan entre dos TCAS; varias amenazas a la vez.</li><li>Criterio: <b>TAU</b> (tiempo al punto de máxima aproximación) y diferencia de altitud.</li><li>Rango ~35–40 NM y ±2000 ft (ampliable). Interroga a los transpondedores (Mode C/S).</li><li>No maniobrar en horizontal por la pantalla.</li></ul></div>
+</div>
+</details>
+
 <h2 id="ch-022.13">022.13 · Integrated instruments: electronic displays <span class="wtag">4 preg. · 7 %</span></h2>
+<details class="lo atpl" id="lo-022.13.01" data-lo="022.13.01">
+<summary><span class="lonum">022.13.01</span><span class="lotitle">Electronic display units</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>Pantallas CRT o LCD; límites de temperatura, reflejos y resolución.</div>
+</div>
+</details>
+
+<details class="lo atpl" id="lo-022.13.02" data-lo="022.13.02">
+<summary><span class="lonum">022.13.02</span><span class="lotitle">Mechanical integrated instruments</span></summary>
+<div class="body">
+<div class="key"><b>Clave</b>ADI y HSI mecánicos integrados.</div>
+</div>
+</details>
+
 <details class="lo atpl" id="lo-022.13.03" data-lo="022.13.03">
 <summary><span class="lonum">022.13.03</span><span class="lotitle">Electronic flight instrument systems (EFISs)</span></summary>
 <div class="body">
@@ -1733,13 +1750,6 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-022.13.07" data-lo="022.13.07">
-<summary><span class="lonum">022.13.07</span><span class="lotitle">Head-up display (HUD), synthetic vision system (SVS) and enhanced visual system (EVS)</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>HUD: datos del PFD sobre el exterior. SVS sintético; EVS cámara infrarroja.</div><div class="comp"><b>ATPL</b><ul><li>HUD: proyector, combiner, declutter; permite mínimos más bajos.</li></ul></div>
-</div>
-</details>
-
 <details class="lo atpl" id="lo-022.13.06" data-lo="022.13.06">
 <summary><span class="lonum">022.13.06</span><span class="lotitle">Electronic flight bag (EFB)</span></summary>
 <div class="body">
@@ -1747,25 +1757,18 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-022.13.02" data-lo="022.13.02">
-<summary><span class="lonum">022.13.02</span><span class="lotitle">Mechanical integrated instruments</span></summary>
+<details class="lo atpl" id="lo-022.13.07" data-lo="022.13.07">
+<summary><span class="lonum">022.13.07</span><span class="lotitle">Head-up display (HUD), synthetic vision system (SVS) and enhanced visual system (EVS)</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>ADI y HSI mecánicos integrados.</div>
-</div>
-</details>
-
-<details class="lo atpl" id="lo-022.13.01" data-lo="022.13.01">
-<summary><span class="lonum">022.13.01</span><span class="lotitle">Electronic display units</span></summary>
-<div class="body">
-<div class="key"><b>Clave</b>Pantallas CRT o LCD; límites de temperatura, reflejos y resolución.</div>
+<div class="key"><b>Clave</b>HUD: datos del PFD sobre el exterior. SVS sintético; EVS cámara infrarroja.</div><div class="comp"><b>ATPL</b><ul><li>HUD: proyector, combiner, declutter; permite mínimos más bajos.</li></ul></div>
 </div>
 </details>
 
 <h2 id="ch-022.14">022.14 · Maintenance, monitoring and recording systems <span class="wtag">1 preg. · 2 %</span></h2>
-<details class="lo atpl" id="lo-022.14.03" data-lo="022.14.03">
-<summary><span class="lonum">022.14.03</span><span class="lotitle">Maintenance and monitoring systems</span></summary>
+<details class="lo atpl" id="lo-022.14.01" data-lo="022.14.01">
+<summary><span class="lonum">022.14.01</span><span class="lotitle">Cockpit voice recorder (CVR)</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>ACMS/FDM: datos anónimos para tendencias de seguridad.</div>
+<div class="key"><b>Clave</b>CVR: voces y sonidos de cabina (micrófono de área) con ULB.</div><div class="comp"><b>ATPL</b><ul><li>Borrarlo o manipularlo a propósito está prohibido.</li></ul></div>
 </div>
 </details>
 
@@ -1776,10 +1779,10 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
-<details class="lo atpl" id="lo-022.14.01" data-lo="022.14.01">
-<summary><span class="lonum">022.14.01</span><span class="lotitle">Cockpit voice recorder (CVR)</span></summary>
+<details class="lo atpl" id="lo-022.14.03" data-lo="022.14.03">
+<summary><span class="lonum">022.14.03</span><span class="lotitle">Maintenance and monitoring systems</span></summary>
 <div class="body">
-<div class="key"><b>Clave</b>CVR: voces y sonidos de cabina (micrófono de área) con ULB.</div><div class="comp"><b>ATPL</b><ul><li>Borrarlo o manipularlo a propósito está prohibido.</li></ul></div>
+<div class="key"><b>Clave</b>ACMS/FDM: datos anónimos para tendencias de seguridad.</div>
 </div>
 </details>
 
@@ -1927,6 +1930,8 @@ const SEED = {"updatedAt": "2026-10-01T00:00:00Z", "attempts": [], "generated": 
 // ---------- syllabus oficial EASA 021 y 022 (TK Syllabus v6; reparto oficial de preguntas por capítulo) ----------
 // SUB: [código, capítulo, nº de LOs ATPL(A), nombre, clase de Fase 0, cobertura: full | part | atpl (aún no dado)]
 const SUB = [["021.01.01", "B01", 5, "System design", "CGA-1", "part"], ["021.01.03", "B01", 4, "Fatigue and corrosion", "CGA-1", "part"], ["021.01.02", "B01", 3, "Loads and stresses", "CGA-1", "full"], ["021.01.05", "B01", 1, "Maintenance", "", "atpl"], ["021.02.04", "B02", 13, "Fuselage, landing gear, doors, floor, windscreen and windows", "CGA-1", "part"], ["021.02.03", "B02", 6, "Aeroplane: wings, tail surfaces and control surfaces", "CGA-1", "part"], ["021.02.02", "B02", 3, "Materials", "", "atpl"], ["021.02.01", "B02", 2, "Attachment methods", "", "atpl"], ["021.02.06", "B02", 2, "Structural limitations", "", "atpl"], ["021.03.02", "B03", 23, "Hydraulic systems", "", "atpl"], ["021.03.01", "B03", 1, "Hydromechanics: basic principles", "", "atpl"], ["021.04.03", "B04", 17, "Brakes", "CGA-2", "part"], ["021.04.01", "B04", 9, "Landing gear", "CGA-2", "part"], ["021.04.04", "B04", 6, "Wheels, rims and tyres", "CGA-2", "part"], ["021.04.02", "B04", 5, "Nose-wheel steering", "", "atpl"], ["021.05.01", "B05", 16, "Aeroplane: primary flight controls", "CGA-1", "part"], ["021.05.02", "B05", 9, "Aeroplane: secondary flight controls", "CGA-1", "part"], ["021.05.04", "B05", 9, "Aeroplane: fly-by-wire (FBW) control systems", "", "atpl"], ["021.06.03", "B06", 14, "Aeroplane: pressurisation and air-conditioning system", "", "atpl"], ["021.06.01", "B06", 9, "Pneumatic/bleed-air supply", "", "atpl"], ["021.07.01", "B07", 5, "Types, operation, indications", "", "atpl"], ["021.07.02", "B07", 2, "Ice warning systems", "", "atpl"], ["021.08.01", "B08", 9, "Piston engine", "CGA-2", "part"], ["021.08.02", "B08", 9, "Turbine engine", "", "atpl"], ["021.09.01", "B09", 33, "General, definitions, basic applications: circuit breakers, logic circuits", "CGA-6", "part"], ["021.09.04", "B09", 24, "Distribution", "", "atpl"], ["021.09.03", "B09", 17, "Generation", "CGA-6", "part"], ["021.09.02", "B09", 10, "Batteries", "CGA-6", "part"], ["021.09.05", "B09", 7, "Electrical motors", "", "atpl"], ["021.10.04", "B10", 18, "Carburettor/injection system", "CGA-2", "part"], ["021.10.10", "B10", 17, "Performance: turbo, supercharger, FADEC", "", "atpl"], ["021.10.09", "B10", 13, "Aeroplane: propellers", "CGA-3", "part"], ["021.10.02", "B10", 10, "Fuel", "CGA-2", "part"], ["021.10.06", "B10", 8, "Lubrication systems", "CGA-3", "part"], ["021.10.08", "B10", 7, "Mixture", "CGA-2", "part"], ["021.10.05", "B10", 5, "Cooling systems", "CGA-3", "part"], ["021.10.07", "B10", 5, "Ignition circuits", "CGA-2", "part"], ["021.10.01", "B10", 4, "General", "CGA-2", "part"], ["021.10.03", "B10", 1, "Engine fuel pumps", "CGA-2", "part"], ["021.11.02", "B11", 51, "Main-engine components", "", "atpl"], ["021.11.03", "B11", 34, "Additional components and systems", "", "atpl"], ["021.11.04", "B11", 20, "Engine operation and monitoring", "", "atpl"], ["021.11.01", "B11", 17, "Basic principles", "", "atpl"], ["021.11.05", "B11", 6, "Performance aspects", "", "atpl"], ["021.11.06", "B11", 5, "Auxiliary power unit (APU)", "", "atpl"], ["021.12.02", "B12", 6, "Fire-protection systems", "", "atpl"], ["021.12.01", "B12", 2, "Smoke detection", "", "atpl"], ["021.12.03", "B12", 1, "Rain-protection system", "", "atpl"], ["021.13.01", "B13", 6, "Cockpit, portable and chemical oxygen systems", "", "atpl"], ["022.01.01", "C01", 7, "Pressure gauge", "", "atpl"], ["022.01.07", "C01", 7, "Engine torquemeter", "", "atpl"], ["022.01.03", "C01", 6, "Fuel gauge", "", "atpl"], ["022.01.02", "C01", 5, "Temperature sensing", "", "atpl"], ["022.01.04", "C01", 5, "Fuel flowmeters", "", "atpl"], ["022.01.09", "C01", 4, "Engine-vibration monitoring", "", "atpl"], ["022.01.05", "C01", 3, "Tachometer", "", "atpl"], ["022.01.06", "C01", 3, "Thrust measurement", "", "atpl"], ["022.01.08", "C01", 3, "Synchroscope", "", "atpl"], ["022.01.10", "C01", 1, "Time measurement", "", "atpl"], ["022.02.04", "C02", 10, "Altimeter", "CGA-5", "part"], ["022.02.07", "C02", 10, "Machmeter", "", "atpl"], ["022.02.06", "C02", 9, "Airspeed indicator (ASI)", "CGA-5", "part"], ["022.02.01", "C02", 8, "Pressure measurement", "CGA-5", "part"], ["022.02.08", "C02", 8, "Air-data computer (ADC)", "", "atpl"], ["022.02.03", "C02", 7, "Angle-of-attack (AoA) measurement", "", "atpl"], ["022.02.05", "C02", 7, "Vertical speed indicator (VSI)", "CGA-5", "part"], ["022.02.02", "C02", 5, "Temperature measurement", "", "atpl"], ["022.03.04", "C03", 6, "Flux valve", "", "atpl"], ["022.03.01", "C03", 5, "Earth’s magnetic field", "NAV-1 · CGA-5", "part"], ["022.03.02", "C03", 5, "Aircraft magnetic field", "CGA-5", "part"], ["022.03.03", "C03", 4, "Direct-reading magnetic compass", "NAV-1 · CGA-5", "part"], ["022.04.02", "C04", 8, "Rate-of-turn indicator", "CGA-1 · CGA-4", "part"], ["022.04.01", "C04", 6, "Gyroscope: basic principles", "CGA-4", "part"], ["022.04.03", "C04", 5, "Attitude indicator (artificial horizon)", "CGA-4", "part"], ["022.04.04", "C04", 4, "Directional gyroscope", "CGA-4", "part"], ["022.04.05", "C04", 3, "Remote-reading compass systems", "", "atpl"], ["022.04.06", "C04", 2, "Solid-state systems", "", "atpl"], ["022.05.02", "C05", 11, "Alignment and operation", "", "atpl"], ["022.05.01", "C05", 9, "Basic principles", "", "atpl"], ["022.06.02", "C06", 22, "Autopilot system", "", "atpl"], ["022.06.05", "C06", 9, "Autoland", "", "atpl"], ["022.06.03", "C06", 8, "Flight director: design and operation", "", "atpl"], ["022.06.01", "C06", 6, "General", "", "atpl"], ["022.06.04", "C06", 6, "Aeroplane: flight mode annunciator (FMA)", "", "atpl"], ["022.08.01", "C08", 8, "Trim systems", "", "atpl"], ["022.08.03", "C08", 4, "Flight-envelope protection (FEP)", "", "atpl"], ["022.08.02", "C08", 3, "Yaw damper", "", "atpl"], ["022.09.01", "C09", 9, "Autothrust system", "", "atpl"], ["022.10.01", "C10", 10, "Voice communication, data-link transmission", "", "atpl"], ["022.10.02", "C10", 9, "Future air navigation systems (FANSs)", "", "atpl"], ["022.11.02", "C11", 10, "FMC databases", "", "atpl"], ["022.11.03", "C11", 10, "Operations, limitations", "", "atpl"], ["022.11.01", "C11", 5, "Design", "", "atpl"], ["022.11.04", "C11", 5, "Human–machine interface (control and display unit (CDU)/ multifunction control and display unit (MCDU))", "", "atpl"], ["022.12.10", "C12", 19, "ACAS/TCAS", "", "atpl"], ["022.12.09", "C12", 9, "Ground-proximity warning systems (GPWSs)", "", "atpl"], ["022.12.08", "C12", 6, "Radio altimeter", "", "atpl"], ["022.12.02", "C12", 5, "Flight warning systems (FWSs)", "", "atpl"], ["022.12.03", "C12", 4, "Stall warning systems (SWSs)", "", "atpl"], ["022.12.04", "C12", 3, "Stall protection", "", "atpl"], ["022.12.05", "C12", 3, "Overspeed warning", "", "atpl"], ["022.12.07", "C12", 2, "Altitude alert system", "", "atpl"], ["022.12.01", "C12", 1, "General", "", "atpl"], ["022.12.06", "C12", 1, "Take-off warning", "", "atpl"], ["022.13.03", "C13", 20, "Electronic flight instrument systems (EFISs)", "", "atpl"], ["022.13.04", "C13", 6, "Engine parameters, crew warnings, aircraft systems, procedure and mission display systems", "", "atpl"], ["022.13.07", "C13", 6, "Head-up display (HUD), synthetic vision system (SVS) and enhanced visual system (EVS)", "", "atpl"], ["022.13.06", "C13", 4, "Electronic flight bag (EFB)", "", "atpl"], ["022.13.02", "C13", 2, "Mechanical integrated instruments", "", "atpl"], ["022.13.01", "C13", 1, "Electronic display units", "", "atpl"], ["022.14.03", "C14", 6, "Maintenance and monitoring systems", "", "atpl"], ["022.14.02", "C14", 4, "Flight data recorder (FDR)", "", "atpl"], ["022.14.01", "C14", 3, "Cockpit voice recorder (CVR)", "", "atpl"], ["022.15.01", "C15", 4, "Digital circuits and computers", "", "atpl"], ["X.081", "X", 0, "Aerofoil, MGC, dihedral, adverse yaw, CL max", "CGA-1", "full"]];
+/*f15natsort*/const __nk=c=>String(c).split(/[.\-_·\s]+/).filter(Boolean).map(t=>/^\d+$/.test(t)?[0,+t,""]:[1,0,t]);const __nc=(a,b)=>{const x=__nk(a[0]),y=__nk(b[0]);for(let i=0;i<Math.max(x.length,y.length);i++){const p=x[i]||[-1,0,""],q=y[i]||[-1,0,""];for(let j=0;j<3;j++){if(p[j]<q[j])return -1;if(p[j]>q[j])return 1}}return 0};SUB.sort(__nc);
+
 const BLOCKS = [{"k": "B01", "ex": "021", "code": "021.01", "name": "System design, loads, stresses, maintenance", "n": 2, "los": 13}, {"k": "B02", "ex": "021", "code": "021.02", "name": "Airframe", "n": 2, "los": 26}, {"k": "B03", "ex": "021", "code": "021.03", "name": "Hydraulics", "n": 5, "los": 24}, {"k": "B04", "ex": "021", "code": "021.04", "name": "Landing gear, wheels, tyres, brakes", "n": 5, "los": 37}, {"k": "B05", "ex": "021", "code": "021.05", "name": "Flight controls", "n": 8, "los": 34}, {"k": "B06", "ex": "021", "code": "021.06", "name": "Pneumatics: pressurisation and air-conditioning systems", "n": 5, "los": 23}, {"k": "B07", "ex": "021", "code": "021.07", "name": "Anti-icing and de-icing systems", "n": 2, "los": 7}, {"k": "B08", "ex": "021", "code": "021.08", "name": "Fuel system", "n": 5, "los": 18}, {"k": "B09", "ex": "021", "code": "021.09", "name": "Electrics", "n": 15, "los": 91}, {"k": "B10", "ex": "021", "code": "021.10", "name": "Piston engines", "n": 6, "los": 88}, {"k": "B11", "ex": "021", "code": "021.11", "name": "Turbine engines", "n": 19, "los": 133}, {"k": "B12", "ex": "021", "code": "021.12", "name": "Protection and detection systems", "n": 3, "los": 9}, {"k": "B13", "ex": "021", "code": "021.13", "name": "Oxygen systems", "n": 3, "los": 6}, {"k": "C01", "ex": "022", "code": "022.01", "name": "Sensors and instruments", "n": 3, "los": 44}, {"k": "C02", "ex": "022", "code": "022.02", "name": "Measurement of air-data parameters", "n": 8, "los": 64}, {"k": "C03", "ex": "022", "code": "022.03", "name": "Magnetism: direct-reading compass and flux valve", "n": 2, "los": 20}, {"k": "C04", "ex": "022", "code": "022.04", "name": "Gyroscopic instruments", "n": 4, "los": 28}, {"k": "C05", "ex": "022", "code": "022.05", "name": "Inertial navigation", "n": 3, "los": 20}, {"k": "C06", "ex": "022", "code": "022.06", "name": "Aeroplane: automatic flight control systems", "n": 11, "los": 51}, {"k": "C08", "ex": "022", "code": "022.08", "name": "Trims, yaw damper, flight-envelope protection", "n": 3, "los": 15}, {"k": "C09", "ex": "022", "code": "022.09", "name": "Autothrust", "n": 4, "los": 9}, {"k": "C10", "ex": "022", "code": "022.10", "name": "Communication systems", "n": 2, "los": 19}, {"k": "C11", "ex": "022", "code": "022.11", "name": "Flight management system (FMS)", "n": 6, "los": 30}, {"k": "C12", "ex": "022", "code": "022.12", "name": "Alerting systems, proximity systems", "n": 8, "los": 53}, {"k": "C13", "ex": "022", "code": "022.13", "name": "Integrated instruments: electronic displays", "n": 4, "los": 39}, {"k": "C14", "ex": "022", "code": "022.14", "name": "Maintenance, monitoring and recording systems", "n": 1, "los": 13}, {"k": "C15", "ex": "022", "code": "022.15", "name": "Digital circuits and computers", "n": 1, "los": 4}];
 const EXAMS = {"021":{code:"021", name:"Airframe, Systems, Electrics, Power Plant", n:80, min:120}, "022":{code:"022", name:"Instrumentation", n:60, min:90}};
 const OUT = {"X.081":{d:"081 PoF", n:"081 Principles of Flight"}};
