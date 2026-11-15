@@ -3539,7 +3539,7 @@ function sgxSvg(spec){
   c += `<path d="M${lx+12} ${yy-6} h40" stroke="#1d4ed8" stroke-width="4"/><polygon points="${lx+22},${yy-6} ${lx+34},${yy-6} ${lx+28},${yy-20}" fill="#1d4ed8"/><text x="${lx+62}" y="${yy}" font-size="19" ${ff} fill="#222">Cold front</text>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">${c}</svg>`;
 }
-const sgxUri = spec => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(sgxSvg(spec));
+const sgxUri = spec => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(spec.slice(0,2)==="W|" && window.sgwSvg ? window.sgwSvg(spec) : sgxSvg(spec));
 function gSIGWX(){
   const kinds = nvShuf(["r","t","s","n"]), fr = nvR(0,SGX.FRONTS.length-1), spec = kinds.join("")+fr;
   const city = k => SGX.ORDER[kinds.indexOf(k)];
@@ -4809,8 +4809,11 @@ function selectQuestions(mode, lo, incAtpl, incComp, simLen){
   const st = stats();
   if(mode==="sim")   return selectSim(simLen==="half"?42:EXAM_N, incAtpl, incComp);
   if(mode==="trial") return __t25(BANK.filter(q=>(q[2]==="t"||q[2]==="m"||q[2]==="s") && (incAtpl || !q[7])), st);
-  if(mode==="foto")  return shuffle(BANK.filter(q=>q[2]==="p" && (incAtpl || !q[7])));
-  if(mode==="simb")  return shuffle(BANK.filter(q=>q[2]==="y" && (incAtpl || !q[7])));
+  if(mode==="foto")  return shuffle(BANK.filter(q=>q[2]==="p" && (incAtpl || !q[7]))).slice(0,15);   // 15 por test (nunca 28)
+  if(mode==="simb"){   // los 12 símbolos + lectura de la carta SIGWX de bajo nivel hasta 15 (nunca menos de 10)
+    const y = shuffle(BANK.filter(q=>q[2]==="y" && (incAtpl || !q[7]))), bb = new Set();
+    const ex = shuffle(BANK.filter(q=>q[1]==="050.10.02" && q[2]!=="y" && q[2]!=="p" && (incAtpl || !q[7]))).filter(q=>{ const ks=(window.__famKeys?window.__famKeys(q).filter(x=>x[0]!=="t"):[q[0]]); if(ks.some(x=>bb.has(x))) return false; ks.forEach(x=>bb.add(x)); return true; });
+    return shuffle(y.concat(ex.slice(0,Math.max(0,15-y.length)))).slice(0,15); }
   let pool = poolFor(incAtpl, incComp);
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(BANK.filter(q=>q[1]===lo && q[2]!=="p" && (incAtpl || !q[7])));
@@ -5146,8 +5149,8 @@ function renderSetup(){
   $("#allCount").textContent = `${BANK.filter(q=>q[2]!=="p" && !q[7]).length} preguntas de lo dado + ${BANK.filter(q=>q[2]!=="p" && q[7]).length} de ampliación ATPL.`;
   const nf = BANK.filter(q=>q[2]==="p").length;
   const nfw = BANK.filter(q=>q[2]==="p" && (st.q[q[0]]||{}).last===false).length;
-  $("#fotoCount").textContent = `Identificar la nube en la foto. La imagen cambia cada vez.`;
-  $("#simbCount").textContent = `Los doce del SIGWX que entran.`;
+  $("#fotoCount").textContent = `15 nubes por test: identificar la nube en la foto. La imagen cambia cada vez.`;
+  $("#simbCount").textContent = `15 por test: los doce símbolos del SIGWX de bajo nivel y preguntas de lectura de la carta.`;
   const nt = BANK.filter(q=>q[2]==="t"||q[2]==="m"||q[2]==="s").length;
   const ntw = BANK.filter(q=>(q[2]==="t"||q[2]==="m"||q[2]==="s") && (st.q[q[0]]||{}).last===false).length;
   $("#trialCount").textContent = `25 por test, de las ${nt} del trial y de los ejercicios de aplicación, en variante${ntw?`. ${ntw} aún falladas`:""}.`;
@@ -5198,7 +5201,7 @@ $("#startBtn").addEventListener("click",()=>{
     return head+`
     <div class="q ${q.tag==='fallada antes'||q.tag==='refuerzo'?'focus':''}" id="q${i}">
       <div class="qhead"><span>${i+1} / ${current.length} · ${esc(loLabel(q.lo))}</span><span>${!NOTAG.has(q.id)&&q.src==="t"?'<span class="tag tr">TRIAL</span> ':''}${!NOTAG.has(q.id)&&PROFE.has(q.id)?'<span class="tag pf">★ OJO</span> ':''}${q.src==="s"?'<span class="tag s">temario</span> ':''}${q.src==="p"?'<span class="tag p">foto</span> ':''}${q.src==="m"?'<span class="tag m">oficial</span> ':''}${q.src==="y"?'<span class="tag y">símbolo</span> ':''}${q.src==="g"?'<span class="tag g">generada</span> ':''}${!NOTAG.has(q.id)&&q.variant?'<span class="tag v">variante</span> ':''}${!NOTAG.has(q.id)&&q.nuevo?'<span class="tag at">ATPL · no dado</span>':''}${isOut(q.lo)?'<span class="tag dp">otra asignatura</span>':''}</span></div>
-      ${q.img?`<div class="qimg${isSym(q.img)?" symq":isChart(q.img)?" chartq":""}"><img src="${imgSrc(q.img)}" alt="${isSym(q.img)?"Símbolo de tiempo significativo para identificar":isChart(q.img)?"Carta SIGWX de baja cota con cuatro ciudades":"Fotografía de una nube para identificar"}" loading="lazy"></div>`:""}
+      ${q.img?`<div class="qimg${isSym(q.img)?" symq":isChart(q.img)?" chartq":""}"><img src="${imgSrc(q.img)}" alt="${isSym(q.img)?"Símbolo de tiempo significativo para identificar":isChart(q.img)?(q.img.slice(0,6)==="sgx:W|"?"Fragmento de carta SIGWX de nivel alto":"Carta SIGWX de baja cota con cuatro ciudades"):"Fotografía de una nube para identificar"}" loading="lazy"></div>`:""}
       <div class="qtext">${esc(q.text)}</div>
       ${q.opts.map((o,j)=>`<label class="choice"><input type="radio" name="r${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${esc(o.t)}</span></label>`).join("")}
     </div>`;}).join("");
@@ -5438,7 +5441,124 @@ function ui(){
   });
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",ui); else ui();
-})();</script><!--/f0dedup--><!--f0met14--><script>(function(){try{const Q=[["vm1401","050.02.01","t",null,"A wind said to have a direction of 360° (north) will flow towards:",["The south","The north","The east","The west"],"La dirección del viento es de DONDE viene: 360° = viento del norte, que sopla hacia el sur."],["vm1401a","050.02.01","t",null,"A wind reported as 180° is blowing:",["From the south towards the north","From the north towards the south","From the west towards the east","Towards the south"],"180° = viene del sur, sopla hacia el norte."],["vm1401b","050.02.01","t",null,"A wind from 090° flows towards:",["The west","The east","The north","The south"],"090° = del este, hacia el oeste."],["vm1402","050.02.02","t",null,"In Western Europe (northern hemisphere), an aircraft is flying directly towards the centre of a depression. Which of the following statements is most likely correct?",["The aircraft will experience drift to the right (starboard)","The aircraft will experience a direct tailwind","The aircraft will experience a direct headwind","The aircraft will experience drift to the left (port)"],"Hemisferio norte: el viento circula en sentido antihorario alrededor de la baja (ley de Buys-Ballot). Volando hacia el centro, el viento llega por la izquierda y desplaza el avión a la derecha."],["vm1402a","050.02.02","t",null,"In the northern hemisphere an aircraft is flying directly AWAY from the centre of a low-pressure area. The aircraft will most likely experience:",["Drift to the left (port)","Drift to the right (starboard)","A direct headwind","A direct tailwind"],"Alejándose de la baja el viento llega por la derecha y empuja el avión a la izquierda."],["vm1402b","050.02.02","t",null,"Flying directly towards the centre of a high-pressure area in the northern hemisphere, the aircraft will most likely experience:",["Drift to the left (port)","Drift to the right (starboard)","A direct headwind","A direct tailwind"],"En el anticiclón la circulación es horaria: hacia el centro, el viento llega por la derecha y empuja a la izquierda."],["vm1403","050.10.02","t",null,"How is the sky described in aerodrome forecasts and observations when the cloud cover is nil?",["SKC","NSC","CAVOK","NIL CLOUD"],"SKC = sky clear (cero nubes). NSC = sin nubes significativas (no SKC/CAVOK). CAVOK exige además visibilidad ≥10 km y sin tiempo significativo."],["vm1403a","050.10.02","t",null,"Which abbreviation is used in a METAR when there is no cloud at all?",["SKC","FEW","OVC","NCD"],"SKC = cielo despejado; NCD = ninguna nube detectada (observación automática)."],["vm1403b","050.10.02","t",null,"What does the abbreviation NSC mean in a TAF?",["No significant cloud","No sky clear","No stratus cloud","Nil cloud cover"],"NSC = no significant cloud: no hay nubes por debajo de 5000 ft ni CB/TCU, y tampoco SKC ni CAVOK."],["vm1404","050.06.02","t",null,"On a UK Metform 215 surface chart, the predicted progression speed of a front identified as \"slow\" is:",["Under 5 kt","Under 15 kt","More than 25 kt","Exactly 10 kt"],"Leyenda de la carta de superficie: «slow» = movimiento previsto inferior a 5 kt. (Leído del vídeo: verifícalo en la leyenda de la carta.)"]];const IDS=["vm1401", "vm1401a", "vm1401b", "vm1402", "vm1402a", "vm1402b", "vm1403", "vm1403a", "vm1403b", "vm1404"];const have=new Set(BASE.map(q=>q[0]));Q.forEach(q=>{if(!have.has(q[0]))BASE.push(q);});try{if(typeof ALLQ!=="undefined"&&ALLQ!==BASE){const h2=new Set(ALLQ.map(q=>q[0]));Q.forEach(q=>{if(!h2.has(q[0]))ALLQ.push(q);});}}catch(e){}try{if(typeof PROFE!=="undefined")IDS.forEach(i=>PROFE.add(i));}catch(e){}try{if(typeof HOT3!=="undefined")IDS.forEach(i=>HOT3.add(i));}catch(e){}try{if(typeof NOTAG!=="undefined")IDS.forEach(i=>NOTAG.add(i));}catch(e){}buildBank();try{renderSetup();}catch(e){}try{renderNotesMeta();}catch(e){}}catch(e){console.error("f0met14",e);}})();</script><!--/f0met14--><!--f0go--><script>/* «Ver en los apuntes»: en cualquier test, al fallar una pregunta sale un enlace al tema de los apuntes (y al párrafo más parecido) y un botón para volver al test. */
+})();</script><!--/f0dedup--><!--f0met14--><script>(function(){try{const Q=[["vm1401","050.02.01","t",null,"A wind said to have a direction of 360° (north) will flow towards:",["The south","The north","The east","The west"],"La dirección del viento es de DONDE viene: 360° = viento del norte, que sopla hacia el sur."],["vm1401a","050.02.01","t",null,"A wind reported as 180° is blowing:",["From the south towards the north","From the north towards the south","From the west towards the east","Towards the south"],"180° = viene del sur, sopla hacia el norte."],["vm1401b","050.02.01","t",null,"A wind from 090° flows towards:",["The west","The east","The north","The south"],"090° = del este, hacia el oeste."],["vm1402","050.02.02","t",null,"In Western Europe (northern hemisphere), an aircraft is flying directly towards the centre of a depression. Which of the following statements is most likely correct?",["The aircraft will experience drift to the right (starboard)","The aircraft will experience a direct tailwind","The aircraft will experience a direct headwind","The aircraft will experience drift to the left (port)"],"Hemisferio norte: el viento circula en sentido antihorario alrededor de la baja (ley de Buys-Ballot). Volando hacia el centro, el viento llega por la izquierda y desplaza el avión a la derecha."],["vm1402a","050.02.02","t",null,"In the northern hemisphere an aircraft is flying directly AWAY from the centre of a low-pressure area. The aircraft will most likely experience:",["Drift to the left (port)","Drift to the right (starboard)","A direct headwind","A direct tailwind"],"Alejándose de la baja el viento llega por la derecha y empuja el avión a la izquierda."],["vm1402b","050.02.02","t",null,"Flying directly towards the centre of a high-pressure area in the northern hemisphere, the aircraft will most likely experience:",["Drift to the left (port)","Drift to the right (starboard)","A direct headwind","A direct tailwind"],"En el anticiclón la circulación es horaria: hacia el centro, el viento llega por la derecha y empuja a la izquierda."],["vm1403","050.10.02","t",null,"How is the sky described in aerodrome forecasts and observations when the cloud cover is nil?",["SKC","NSC","CAVOK","NIL CLOUD"],"SKC = sky clear (cero nubes). NSC = sin nubes significativas (no SKC/CAVOK). CAVOK exige además visibilidad ≥10 km y sin tiempo significativo."],["vm1403a","050.10.02","t",null,"Which abbreviation is used in a METAR when there is no cloud at all?",["SKC","FEW","OVC","NCD"],"SKC = cielo despejado; NCD = ninguna nube detectada (observación automática)."],["vm1403b","050.10.02","t",null,"What does the abbreviation NSC mean in a TAF?",["No significant cloud","No sky clear","No stratus cloud","Nil cloud cover"],"NSC = no significant cloud: no hay nubes por debajo de 5000 ft ni CB/TCU, y tampoco SKC ni CAVOK."],["vm1404","050.06.02","t",null,"On a UK Metform 215 surface chart, the predicted progression speed of a front identified as \"slow\" is:",["Under 5 kt","Under 15 kt","More than 25 kt","Exactly 10 kt"],"Leyenda de la carta de superficie: «slow» = movimiento previsto inferior a 5 kt. (Leído del vídeo: verifícalo en la leyenda de la carta.)"]];const IDS=["vm1401", "vm1401a", "vm1401b", "vm1402", "vm1402a", "vm1402b", "vm1403", "vm1403a", "vm1403b", "vm1404"];const have=new Set(BASE.map(q=>q[0]));Q.forEach(q=>{if(!have.has(q[0]))BASE.push(q);});try{if(typeof ALLQ!=="undefined"&&ALLQ!==BASE){const h2=new Set(ALLQ.map(q=>q[0]));Q.forEach(q=>{if(!h2.has(q[0]))ALLQ.push(q);});}}catch(e){}try{if(typeof PROFE!=="undefined")IDS.forEach(i=>PROFE.add(i));}catch(e){}try{if(typeof HOT3!=="undefined")IDS.forEach(i=>HOT3.add(i));}catch(e){}try{if(typeof NOTAG!=="undefined")IDS.forEach(i=>NOTAG.add(i));}catch(e){}buildBank();try{renderSetup();}catch(e){}try{renderNotesMeta();}catch(e){}}catch(e){console.error("f0met14",e);}})();</script><!--/f0met14--><!--f0sgx16--><script>
+(function(){ try{
+ if(typeof GEN_050==="undefined"||typeof nvP!=="function") return;
+ const ff='font-family="Arial,sans-serif"', R=Math.round;
+ let grid=""; for(let x=0;x<=760;x+=95) grid+=`<line x1="${x}" y1="0" x2="${x}" y2="460" stroke="#d3dfeb" stroke-width="1.5"/>`; for(let y=0;y<=460;y+=92) grid+=`<line x1="0" y1="${y}" x2="760" y2="${y}" stroke="#d3dfeb" stroke-width="1.5"/>`;
+ const wrap=(inner,title)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" width="760" height="460"><rect width="760" height="460" fill="#eef4fa"/>${grid}${inner}<text x="14" y="30" font-size="21" font-weight="700" fill="#222" ${ff}>${title}</text></svg>`;
+ const FLs=n=>"FL"+String(n).padStart(3,"0");
+ const box=(x,y,w,h,t,fs)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff" stroke="#111" stroke-width="2.5"/><text x="${x+w/2}" y="${y+h/2+fs*.36}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="#111" ${ff}>${t}</text>`;
+ const stack=(x,y,top,base)=>`<rect x="${x}" y="${y}" width="92" height="60" fill="#fff" stroke="#111" stroke-width="2.5"/><line x1="${x}" y1="${y+30}" x2="${x+92}" y2="${y+30}" stroke="#111" stroke-width="2"/><text x="${x+46}" y="${y+23}" text-anchor="middle" font-size="20" font-weight="700" fill="#111" ${ff}>${top}</text><text x="${x+46}" y="${y+53}" text-anchor="middle" font-size="20" font-weight="700" fill="#111" ${ff}>${base}</text>`;
+ const T_HI="SIGWX · HIGH LEVEL · FL250 – FL630 · VALID 12 UTC";
+ // ---- figuras ----
+ function jetSvg(sp,fl){
+   const p=Math.floor(sp/50), r=sp-p*50, b=Math.floor(r/10), h=(r%10)>=5?1:0; let yy=140, s="";
+   s+=`<path d="M70 360 C 220 290 400 330 640 215" fill="none" stroke="#111" stroke-width="8" stroke-linecap="round"/><polygon points="655,208 628.6,236.1 616.6,210.9" fill="#111"/>`;
+   s+=`<line x1="439" y1="284" x2="439" y2="130" stroke="#111" stroke-width="3.5"/>`;
+   for(let i=0;i<p;i++){ s+=`<polygon points="439,${yy} 475,${yy+9} 439,${yy+18}" fill="#111"/>`; yy+=22; }
+   for(let i=0;i<b;i++){ s+=`<line x1="439" y1="${yy+8}" x2="475" y2="${yy-4}" stroke="#111" stroke-width="3.5"/>`; yy+=13; }
+   if(h) s+=`<line x1="439" y1="${yy+8}" x2="457" y2="${yy+2}" stroke="#111" stroke-width="3.5"/>`;
+   s+=box(452,300,104,36,FLs(fl),20);
+   return wrap(s,T_HI);
+ }
+ const zig=(x,y,n)=>n===1?`<path d="M${x-30} ${y} L${x-14} ${y} L${x-2} ${y-22} L${x+10} ${y} L${x+30} ${y}" fill="none" stroke="#7c2d12" stroke-width="5" stroke-linejoin="round"/>`
+     :`<path d="M${x-34} ${y} L${x-20} ${y} L${x-10} ${y-22} L${x} ${y} L${x+10} ${y-22} L${x+20} ${y} L${x+34} ${y}" fill="none" stroke="#7c2d12" stroke-width="5" stroke-linejoin="round"/>`;
+ function catSvg(n,top,base){
+   let s=`<polygon points="150,150 340,112 520,150 610,250 470,336 250,312 150,236" fill="#f59e0b" fill-opacity=".08" stroke="#7c2d12" stroke-width="4" stroke-dasharray="15 9"/>`;
+   s+=zig(300,230,n)+stack(400,190,top,base); return wrap(s,T_HI);
+ }
+ function cbSvg(cov,emb,top,base){
+   let s=`<path d="${sgxScallop(380,240,200,120)}" fill="#dc2626" fill-opacity=".08" stroke="#b91c1c" stroke-width="4"/>`;
+   s+=`<text x="380" y="215" text-anchor="middle" font-size="26" font-weight="700" fill="#7f1d1d" ${ff}>${cov}${emb?" EMBD":""} CB</text>`+stack(334,238,top,base); return wrap(s,T_HI);
+ }
+ function tropSvg(v){
+   const P=[["A",150,290],["B",380,170],["C",610,300]]; let s="";
+   P.forEach((p,i)=>{ s+=`<circle cx="${p[1]}" cy="${p[2]}" r="9" fill="#111" stroke="#fff" stroke-width="3"/><text x="${p[1]-34}" y="${p[2]+8}" font-size="28" font-weight="700" fill="#111" ${ff}>${p[0]}</text>`+box(p[1]+14,p[2]-20,80,40,v[i],24); });
+   return wrap(s,T_HI);
+ }
+ function frontsSvg(types){
+   const ys=[[110,150],[225,200],[340,330]], L=["X","Y","Z"]; let s="";
+   const sym=(t,px,py,d,n,k)=>{
+     const tri=side=>{ const ax=px+n[0]*side*17, ay=py+n[1]*side*17; return `<polygon points="${F(px-11*d[0])},${F(py-11*d[1])} ${F(px+11*d[0])},${F(py+11*d[1])} ${F(ax)},${F(ay)}" fill="#1d4ed8"/>`; };
+     const semi=(side,col)=>`<path d="M${F(px-11*d[0])} ${F(py-11*d[1])} A11 11 0 0 ${side>0?0:1} ${F(px+11*d[0])} ${F(py+11*d[1])}" fill="${col}" stroke="${col}" stroke-width="2"/>`;
+     if(t==="cold") return tri(1); if(t==="warm") return semi(1,"#dc2626");
+     if(t==="occ") return k%2? semi(1,"#7e22ce") : `<polygon points="${F(px-11*d[0])},${F(py-11*d[1])} ${F(px+11*d[0])},${F(py+11*d[1])} ${F(px+n[0]*17)},${F(py+n[1]*17)}" fill="#7e22ce"/>`;
+     return k%2? semi(-1,"#dc2626") : tri(1); };
+   const F=v=>(Math.round(v*10)/10);
+   types.forEach((t,i)=>{ const [y0,y1]=ys[i], x0=90, x1=640, dx=x1-x0, dy=y1-y0, len=Math.hypot(dx,dy), d=[dx/len,dy/len], n=[-d[1],d[0]], col=t==="cold"?"#1d4ed8":t==="warm"?"#dc2626":t==="occ"?"#7e22ce":"#1d4ed8";
+     s+=`<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${col}" stroke-width="4.5"/>`;
+     let k=0; for(let u=40;u<len-20;u+=46){ s+=sym(t,x0+d[0]*u,y0+d[1]*u,d,n,k++); }
+     s+=`<text x="${x1+26}" y="${y1+9}" font-size="30" font-weight="700" fill="#111" ${ff}>${L[i]}</text>`; });
+   return wrap(s,"SIGWX · FRONTS");
+ }
+ window.sgwSvg=function(spec){ const a=String(spec).split("|");
+   if(a[1]==="jet") return jetSvg(+a[2],+a[3]);
+   if(a[1]==="cat") return catSvg(+a[2],a[3],a[4]);
+   if(a[1]==="cb") return cbSvg(a[2],a[3]==="1",a[4],a[5]);
+   if(a[1]==="trop") return tropSvg(a.slice(2));
+   if(a[1]==="fr") return frontsSvg(a.slice(2));
+   return ""; };
+ const img=s=>"sgx:W|"+s;
+ // ---- generadores ----
+ function gJet(){
+   const sp=nvP([80,90,100,110,120,130,140,150,160,170,180,200]), fl=nvP([300,320,340,360,380,400]);
+   const kind=nvP(["speed","speed","fl"]);
+   if(kind==="speed") return {text:nvP(["On the SIGWX chart fragment below, what is the maximum wind speed of the jet stream?","Read the jet stream symbol on the SIGWX chart below. What is its maximum wind speed?"]),
+     opts:nvOpts(sp,[sp-50,sp+50,sp-10,sp+10,sp+20,sp-20],x=>x+" kt",5), expl:`Banderín = 50 kt, barra larga = 10 kt, media barra = 5 kt: ${Math.floor(sp/50)} × 50 + ${Math.floor((sp%50)/10)} × 10${sp%10>=5?" + 5":""} = ${sp} kt. El recuadro (${FLs(fl)}) no es la velocidad: es el nivel del viento máximo.`, v:true, img:img(`jet|${sp}|${fl}`)};
+   return {text:"On the SIGWX chart fragment below, at which flight level is the maximum wind of the jet stream?",
+     opts:nvOpts(fl,[fl+40,fl-40,fl+20,fl-20,sp],x=>x>=200?FLs(x):x+" kt",20).map(o=>/^\d+ kt$/.test(o)?o:o), expl:`El recuadro junto a la flecha da el nivel de vuelo del viento máximo: ${FLs(fl)}. Los banderines y barras dan la velocidad (${sp} kt).`, v:true, img:img(`jet|${sp}|${fl}`)};
+ }
+ function gCat(){
+   const n=nvP([1,2]), base=nvP([240,260,280,300,320,340]), top=base+nvP([60,80,100,120]), I=n===1?"Moderate":"Severe", J=n===1?"Severe":"Moderate";
+   if(nvP(["int","fl","fl"])==="int"){
+     return {text:"On the SIGWX chart fragment below, which turbulence is forecast and at which levels?", opts:[`${I} turbulence between ${FLs(base)} and ${FLs(top)}`,`${J} turbulence between ${FLs(base)} and ${FLs(top)}`,`${I} turbulence only below ${FLs(base)} and above ${FLs(top)}`,`${J} turbulence only below ${FLs(base)} and above ${FLs(top)}`],
+       expl:`${n===1?"Un pico":"Dos picos"} = turbulencia ${n===1?"moderada":"fuerte"}. La cifra de arriba (${top}) es el techo de la capa y la de abajo (${base}) la base. Línea discontinua = CAT.`, v:true, img:img(`cat|${n}|${top}|${base}`)};
+   }
+   const pos=nvP(["in","above","below"]); let fl, ok;
+   if(pos==="in"){ fl=base+10*nvR(1,Math.max(1,(top-base)/10-1)); ok=`Inside the layer: expect ${I.toLowerCase()} turbulence`; }
+   else if(pos==="above"){ fl=top+nvP([20,30,40]); ok="Above the layer: no turbulence is forecast here"; }
+   else { fl=base-nvP([30,40,50]); ok="Below the layer: no turbulence is forecast here"; }
+   const all=[`Inside the layer: expect ${I.toLowerCase()} turbulence`,"Above the layer: no turbulence is forecast here","Below the layer: no turbulence is forecast here",`Inside the layer: expect ${J.toLowerCase()} turbulence`];
+   return {text:`On the SIGWX chart fragment below, you plan to cruise at ${FLs(fl)}. What do you expect in the dashed area?`, opts:[ok,...all.filter(o=>o!==ok)],
+     expl:`La capa turbulenta va de ${FLs(base)} (cifra de abajo) a ${FLs(top)} (cifra de arriba). ${FLs(fl)} está ${pos==="in"?"dentro":pos==="above"?"por encima":"por debajo"}. ${n===1?"Un pico":"Dos picos"} = ${I.toLowerCase()==="moderate"?"moderada":"fuerte"}.`, v:true, img:img(`cat|${n}|${top}|${base}`)};
+ }
+ function gCb(){
+   const COV={ISOL:"individual cumulonimbus (less than 50 % coverage)",OCNL:"well-separated cumulonimbus (50 to 75 % coverage)",FRQ:"cumulonimbus with little or no separation (more than 75 % coverage)"};
+   const cov=nvP(["ISOL","OCNL","FRQ"]), emb=Math.random()<.6?1:0, top=nvP([380,400,420,440,460]), base=nvP(["XXX","XXX","XXX",280,300,320]);
+   const d=(c,e)=>cap(COV[c])+(e?", embedded in other cloud":"");
+   function cap(t){ return t.charAt(0).toUpperCase()+t.slice(1); }
+   if(nvP(["cov","lev"])==="cov"){ const others=["ISOL","OCNL","FRQ"].filter(c=>c!==cov);
+     return {text:"On the SIGWX chart fragment below, what does the label of the scalloped area mean?", opts:[d(cov,emb),d(others[0],emb),d(others[1],emb),d(cov,!emb)],
+       expl:`ISOL < 50 %, OCNL 50–75 % (bien separadas), FRQ > 75 % (poca o ninguna separación). EMBD = embebidas en otras nubes: no se ven. Aquí: ${cov}${emb?" EMBD":""}.`, v:true, img:img(`cb|${cov}|${emb}|${top}|${base}`)};
+   }
+   const lo=base==="XXX"?0:base; let fl, pos;
+   if(base==="XXX"){ pos=nvP(["in","in","above"]); fl= pos==="in"? top-nvP([30,40,50,60,80]) : top+nvP([20,30,40]); }
+   else { pos=nvP(["below","in","above"]); fl= pos==="below"? base-nvP([20,30,40]) : pos==="in"? base+10*nvR(1,Math.max(1,(top-base)/10-1)) : top+nvP([20,30,40]); }
+   const A={in:"Inside the CB layer",above:"Above the tops of the CB",below:"Below the base of the CB"}, ok=A[pos];
+   const opts=[ok,...Object.values(A).filter(x=>x!==ok),"Cannot be determined from the chart"];
+   return {text:`On the SIGWX chart fragment below, you cruise at ${FLs(fl)}. Where are you relative to the cumulonimbus?`, opts:opts.slice(0,4),
+     expl:`Cima: ${FLs(top)}. Base: ${base==="XXX"?"XXX = por debajo del límite inferior de la carta (la nube llega más abajo)":FLs(base)}. ${FLs(fl)} → ${pos==="in"?"dentro de la capa":pos==="above"?"por encima de las cimas":"por debajo de la base"}.${emb?" Al ser EMBD no la verás: hace falta radar.":""}`, v:true, img:img(`cb|${cov}|${emb}|${top}|${base}`)};
+ }
+ function gTrop(){
+   const vals=nvShuf([300,320,340,360,380,400,420]).slice(0,3), L=["A","B","C"];
+   if(nvP(["hi","lo","strat"])!=="strat"){
+     const hi=nvP([true,false]), t=hi?Math.max(...vals):Math.min(...vals), i=vals.indexOf(t);
+     return {text:`On the SIGWX chart fragment below, where is the tropopause ${hi?"highest":"lowest"}?`, opts:[`Point ${L[i]}`,...L.filter((x,j)=>j!==i).map(x=>`Point ${x}`),"It is at the same level at all three points"],
+       expl:`La tropopausa va en FL dentro de un recuadro: A = ${vals[0]}, B = ${vals[1]}, C = ${vals[2]}. La más ${hi?"alta":"baja"} es la del punto ${L[i]}.`, v:true, img:img(`trop|${vals.join("|")}`)};
+   }
+   const i=nvR(0,2), above=Math.random()<.5, fl=vals[i]+(above?1:-1)*nvP([20,40,60]), ok=above?"Stratosphere":"Troposphere";
+   return {text:`On the SIGWX chart fragment below, you cruise over point ${L[i]} at ${FLs(fl)}. In which layer are you?`, opts:[ok,above?"Troposphere":"Stratosphere","Mesosphere","In the jet-stream core"],
+     expl:`La tropopausa en ${L[i]} está en FL${vals[i]}. ${FLs(fl)} queda ${above?"por encima: estratosfera":"por debajo: troposfera"}.`, v:true, img:img(`trop|${vals.join("|")}`)};
+ }
+ function gFront(){
+   const NAME={cold:"Cold front",warm:"Warm front",occ:"Occluded front",stnr:"Quasi-stationary front"}, T=nvShuf(["cold","warm","occ","stnr"]).slice(0,3), i=nvR(0,2), L=["X","Y","Z"], t=T[i];
+   const EX={cold:"Triángulos = frente frío (azul).",warm:"Semicírculos = frente cálido (rojo).",occ:"Triángulos y semicírculos del mismo lado = ocluido (morado).",stnr:"Triángulos de un lado y semicírculos del otro = casi estacionario."};
+   return {text:`On the SIGWX chart fragment below, the front marked ${L[i]} is a:`, opts:[NAME[t],...Object.keys(NAME).filter(k=>k!==t).map(k=>NAME[k])], expl:EX[t]+" Triángulos y semicírculos siempre apuntan en el sentido de avance del frente.", v:true, img:img(`fr|${T.join("|")}`)};
+ }
+ Object.assign(GEN_050,{sxg1:gJet,sxg2:gCat,sxg3:gCb,sxg4:gTrop,sxg5:gFront});
+}catch(e){ console.error("f0sgx16",e); }})();
+</script><script>(function(){try{const Q=[["sx01","050.10.02","n",null,"On a significant weather chart, a line with filled triangles along it represents a:",["Cold front","Warm front","Occluded front","Quasi-stationary front"],"Triángulos = frente frío (azul). Semicírculos = cálido (rojo). Triángulos y semicírculos del mismo lado = ocluido. En lados opuestos = casi estacionario."],["sx01a","050.10.02","n",null,"On a significant weather chart, a line with semicircles along it represents a:",["Warm front","Cold front","Occluded front","Squall line"],"Semicírculos = frente cálido (rojo). Triángulos = frío. Ambos del mismo lado = ocluido."],["sx01b","050.10.02","n",null,"A frontal line carrying triangles and semicircles alternately on the same side represents:",["An occluded front","A quasi-stationary front","A cold front aloft","A warm front with a squall line"],"Triángulos y semicírculos juntos y del MISMO lado: frente ocluido (morado). Si fueran de lados opuestos sería casi estacionario."],["sx01c","050.10.02","n",null,"A frontal line with triangles on one side and semicircles on the opposite side represents a:",["Quasi-stationary front","Occluded front","Cold front","Warm front"],"Triángulos de un lado y semicírculos del otro: frente casi estacionario (no avanza)."],["sx02","050.10.02","n",null,"The number next to the arrow of a front on a SIGWX chart, for example 15, indicates the front's:",["Speed of movement, in knots","Pressure gradient, in hPa","Cloud top, in flight levels","Age, in hours"],"La flecha da la dirección de desplazamiento y el número su velocidad en kt. STNR = estacionario."],["sx02a","050.10.02","n",null,"The abbreviation STNR written next to a front on a SIGWX chart means that the front is:",["Stationary","Strengthening","Weakening","Moving at the speed of the jet stream"],"STNR = stationary: el frente no se desplaza (sin velocidad que indicar)."],["sx03","050.10.02","n",null,"On a high-level SIGWX chart, jet streams are shown only where the maximum wind speed is at least:",["80 kt","50 kt","100 kt","120 kt"],"Solo se dibuja el jet cuando el viento máximo es de 80 kt o más."],["sx03a","050.10.02","n",null,"On a SIGWX chart, a jet stream is depicted as:",["A bold line with an arrowhead, wind barbs and pennants, and the flight level of maximum wind","A dashed line enclosing an area with a turbulence symbol","A scalloped line enclosing an area of cloud","A thin line with triangles and semicircles"],"Flecha gruesa con astas y banderines de viento, y el FL del viento máximo en un recuadro. La línea discontinua es turbulencia; la festoneada, nube."],["sx04","050.10.02","n",null,"In the wind symbol of a jet stream, a pennant (triangle) represents a wind speed of:",["50 kt","10 kt","5 kt","100 kt"],"Banderín = 50 kt; barra larga = 10 kt; media barra = 5 kt."],["sx04a","050.10.02","n",null,"In the wind symbol of a jet stream, a long (full) barb represents a wind speed of:",["10 kt","50 kt","5 kt","20 kt"],"Barra larga = 10 kt; media barra = 5 kt; banderín = 50 kt."],["sx05","050.10.02","n",null,"A jet stream symbol shows two pennants and one full barb. The maximum wind speed is:",["110 kt","70 kt","120 kt","210 kt"],"2 × 50 + 10 = 110 kt."],["sx06","050.10.02","n",null,"The flight level written in a box next to the arrow of a jet stream, for example FL 340, is the level of:",["The maximum wind","The tropopause","The base of the 80 kt wind","The top of the associated cloud"],"El recuadro da el nivel de vuelo donde está el viento máximo del jet."],["sx07","050.10.02","n",null,"A high-level SIGWX chart covers flight levels:",["FL 250 to FL 630","FL 100 to FL 450","FL 150 to FL 600","The surface to FL 240"],"SIGWX alta: FL250–FL630. SIGWX media: FL100–FL450."],["sx07a","050.10.02","n",null,"A medium-level SIGWX chart covers flight levels:",["FL 100 to FL 450","FL 250 to FL 630","The surface to FL 100","FL 450 to FL 630"],"SIGWX media: FL100–FL450. La alta: FL250–FL630."],["sx08","050.10.02","n",null,"Levels and heights on high-level and medium-level SIGWX charts are given as:",["Flight levels","Altitudes above mean sea level, in feet","Heights above ground level, in metres","True altitudes, in hundreds of feet"],"En las SIGWX de nivel medio y alto todo va en niveles de vuelo (altitud de presión)."],["sx09","050.10.02","n",null,"A SIGWX forecast chart is valid:",["For a specific fixed time, for example 12 UTC","For the 24 hours following its issue","For 6 hours after the time of issue","Until the next chart is issued"],"Cada carta SIGWX es una «foto» válida a una hora fija: se usa la de validez más cercana al vuelo."],["sx10","050.10.02","n",null,"Which of these appear on a high-level SIGWX chart?",["Jet streams, clear-air turbulence, cumulonimbus, tropopause heights, tropical cyclones and volcanic eruptions","Isobars, 850 hPa temperatures, surface visibility and ceilings","Surface wind, freezing level and stratiform icing","METAR and TAF reports of the destination"],"La SIGWX alta recoge jets, CAT, CB, alturas de la tropopausa, ciclones tropicales y erupciones volcánicas; no isobaras ni METAR."],["sx11","050.10.02","n",null,"Tropopause heights on a SIGWX chart are shown as:",["Flight levels inside boxes","Pressure in hPa at the tropopause","Temperature at the tropopause, in °C","Heights above ground level, in feet"],"La altura de la tropopausa va en nivel de vuelo dentro de un recuadro."],["sx12","050.10.02","n",null,"The SIGWX chart shows the tropopause at FL 380 over a point. An aeroplane cruising at FL 400 over that point is in the:",["Stratosphere","Troposphere","Mesosphere","Troposphere, in the core of a jet stream"],"FL400 está por encima de la tropopausa (FL380): estratosfera."],["sx13","050.10.02","n",null,"Which intensities do the turbulence symbols with one peak and with two peaks represent on a SIGWX chart?",["One peak: moderate; two peaks: severe","One peak: severe; two peaks: moderate","One peak: light; two peaks: moderate","One peak: moderate in cloud; two peaks: clear-air turbulence"],"Un pico = moderada; dos picos = fuerte."],["sx14","050.10.02","n",null,"On a high-level SIGWX chart, an area bounded by a dashed line with a turbulence symbol and two flight levels indicates:",["Clear-air turbulence between the stated flight levels","The core of a jet stream","An area of cumulonimbus","A volcanic ash cloud"],"Línea discontinua + símbolo de turbulencia + dos FL = CAT entre esos niveles."],["sx15","050.10.02","n",null,"On a SIGWX chart, a scalloped (cloud-shaped) line encloses:",["An area of significant cloud such as cumulonimbus","An area of clear-air turbulence","The core of a jet stream","An area of volcanic ash"],"Festoneada = nube significativa (CB). La discontinua = turbulencia."],["sx16","050.10.02","n",null,"On a SIGWX chart, the label ISOL EMBD CB means:",["Isolated cumulonimbus embedded in other cloud layers","Individual cumulonimbus, clearly visible and easy to avoid","Isolated cumulonimbus with an embedded jet stream","Isolated cumulonimbus with severe icing"],"ISOL = aisladas; EMBD = embebidas en otras capas de nube (no se ven)."],["sx17","050.10.02","n",null,"On a SIGWX chart, FRQ CB indicates cumulonimbus clouds that are:",["Frequent: little or no separation (more than 75 % coverage)","Occasional: well separated (50 to 75 % coverage)","Isolated: individual clouds (less than 50 % coverage)","Forecast only above FL 250"],"ISOL < 50 %; OCNL 50–75 % (bien separadas); FRQ > 75 % (poca o ninguna separación)."],["sx17a","050.10.02","n",null,"On a SIGWX chart, OCNL CB indicates cumulonimbus clouds that are:",["Occasional: well separated (50 to 75 % coverage)","Frequent: little or no separation (more than 75 % coverage)","Isolated: individual clouds (less than 50 % coverage)","Embedded in layers of other cloud"],"OCNL: bien separadas, 50–75 % de cobertura. FRQ > 75 %; ISOL < 50 %."],["sx18","050.10.02","n",null,"On a SIGWX chart, the base of a cloud layer is given as XXX. This means that the base is:",["Below the lower limit of the chart","Unknown and cannot be forecast","At ground level","Above the upper limit of the chart"],"XXX en la base: por debajo del límite inferior de la carta (p. ej. bajo FL250 en la de nivel alto)."],["sx19","050.10.02","n",null,"A SIGWX chart shows a CB with tops at FL 400 and base marked XXX. An aeroplane cruising at FL 350 will be:",["Inside the cloud layer","Below the base of the cloud","Above the tops of the cloud","Clear of cloud, because the CB is only above FL 400"],"La base está por debajo del límite de la carta y la cima en FL400: a FL350 vas dentro del CB."],["sx20","050.10.02","n",null,"Embedded cumulonimbus (EMBD CB) are especially hazardous because they:",["Are hidden in other cloud and cannot be seen or avoided visually","Contain only light turbulence","Are always above FL 450","Produce no precipitation"],"Embebidas = ocultas dentro de otras nubes: no se ven ni se evitan a ojo; hace falta radar."],["sxg1","050.10.02","n",null,"On the SIGWX chart fragment below, what is the maximum wind speed of the jet stream?",["110 kt","60 kt","160 kt","210 kt"],"Banderín = 50 kt, barra larga = 10 kt, media barra = 5 kt. Se suman. El recuadro da el FL del viento máximo."],["sxg2","050.10.02","n",null,"On the SIGWX chart fragment below, which turbulence is forecast and at which levels?",["Moderate turbulence between FL 300 and FL 380","Severe turbulence between FL 300 and FL 380","Moderate turbulence only below FL 300 and above FL 380","Severe turbulence only below FL 300 and above FL 380"],"Un pico = moderada, dos = fuerte. La cifra de arriba es el techo y la de abajo la base de la capa."],["sxg3","050.10.02","n",null,"On the SIGWX chart fragment below, what does the label of the scalloped area mean?",["Isolated cumulonimbus embedded in other cloud (less than 50 % coverage)","Occasional, well-separated cumulonimbus (50 to 75 % coverage)","Frequent cumulonimbus with little or no separation (more than 75 % coverage)","Isolated cumulonimbus, not embedded"],"ISOL < 50 %, OCNL 50–75 %, FRQ > 75 %. EMBD = embebidas en otras nubes."],["sxg4","050.10.02","n",null,"On the SIGWX chart fragment below, where is the tropopause highest?",["Point B","Point A","Point C","It is at the same level at all three points"],"La tropopausa va en FL dentro de un recuadro: el número mayor es la tropopausa más alta."],["sxg5","050.10.02","n",null,"On the SIGWX chart fragment below, the front marked Y is a:",["Warm front","Cold front","Occluded front","Quasi-stationary front"],"Triángulos = frío; semicírculos = cálido; mezclados del mismo lado = ocluido; en lados opuestos = casi estacionario."]];const IDS=["sx01", "sx01a", "sx01b", "sx01c", "sx02", "sx02a", "sx03", "sx03a", "sx04", "sx04a", "sx05", "sx06", "sx07", "sx07a", "sx08", "sx09", "sx10", "sx11", "sx12", "sx13", "sx14", "sx15", "sx16", "sx17", "sx17a", "sx18", "sx19", "sx20", "sxg1", "sxg2", "sxg3", "sxg4", "sxg5"];const have=new Set(BASE.map(q=>q[0]));Q.forEach(q=>{if(!have.has(q[0]))BASE.push(q);});try{if(typeof ALLQ!=="undefined"&&ALLQ!==BASE){const h2=new Set(ALLQ.map(q=>q[0]));Q.forEach(q=>{if(!h2.has(q[0]))ALLQ.push(q);});}}catch(e){}try{if(typeof PROFE!=="undefined")IDS.forEach(i=>PROFE.add(i));}catch(e){}try{if(typeof HOT3!=="undefined")IDS.forEach(i=>HOT3.add(i));}catch(e){}try{if(typeof NOTAG!=="undefined")IDS.forEach(i=>NOTAG.add(i));}catch(e){}buildBank();try{renderSetup();}catch(e){}try{renderNotesMeta();}catch(e){}}catch(e){console.error("f0sgx16",e);}})();</script><!--/f0sgx16--><!--f0go--><script>/* «Ver en los apuntes»: en cualquier test, al fallar una pregunta sale un enlace al tema de los apuntes (y al párrafo más parecido) y un botón para volver al test. */
 (function(){ try{
   const css=document.createElement("style");
   css.textContent=".f0go{display:flex;width:fit-content;max-width:100%;align-items:center;gap:6px;margin:10px 0 2px;padding:7px 12px;border-radius:8px;border:1px solid var(--accent,#0E7C86);background:var(--accentbg,#DFF1F1);color:var(--ink,#14304A);font:600 14px/1.2 var(--body,system-ui,sans-serif);cursor:pointer;min-height:36px}.f0go:hover{filter:brightness(.97)}.f0go:focus-visible{outline:2px solid var(--blue,#2F6FA3);outline-offset:2px}"
@@ -5564,7 +5684,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
       cache.set(id,k); return k;
     };
     window.__famKeys=famKeys;
-    const NOGUARD=/^(calc|voice|atis|plane|signals)$/;
+    const NOGUARD=/^(calc|voice|atis|plane|signals|simb|foto)$/;   // simb y foto: todas comparten enunciado y las distingue la imagen (la guardia las colapsaba en 1)
     /* Parecido de contenido: dos madres distintas que preguntan lo mismo (p. ej. varias de «washout») no pueden convivir en un test */
     const STOP=new Set("the of a an is in to and for on at by with as are be that this which from it its or what when than if not how does do can will each has have into more most only both same other all one two following given following correct statement true false because".split(" "));
     const sigCache=new Map();
@@ -5737,8 +5857,8 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
 })();
 </script>
 <script>/* Test Multitema / Repaso combinado (todas las asignaturas).
-   Marcas varios temas, eliges 15, 25 o 40 preguntas y se reparten a partes iguales entre los temas marcados
-   (si un tema tiene menos preguntas de las que le tocan, el resto pasa a los demás). Nunca entran dos preguntas
+   Marcas varios temas y eliges 1, 2 o 3 preguntas POR TEMA (siempre al menos 1 de cada tema marcado). Si el total sale por
+   debajo de 10, se reparte hasta 10 entre los temas marcados (un test nunca tiene menos de 10 preguntas). Nunca entran dos preguntas
    de la misma familia («pregunta madre»): se usa la misma guardia que Adaptativo y Trial (window.__famKeys / __famGuard).
    Dentro de cada tema van primero las falladas y las que aún no has visto. Se engancha a #setup, #loSel, #startBtn y
    selectQuestions / selectItems de cada página, sin tocar el resto de modos. */
@@ -5750,9 +5870,9 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     const fnName = typeof selectQuestions==="function" ? "selectQuestions" : (typeof selectItems==="function" ? "selectItems" : null);
     if(!setup||!loSel||!startBtn||!loRadio||!fnName) return;
     const orig=window[fnName];
-    const NS=[15,25,40];
-    const key="f0-multi:"+location.pathname.replace(/^.*\//,"");
-    let sel=new Set(), N=25, cache=null;
+    const NS=[1,2,3], MINT=10;
+    const key="f0-multi2:"+location.pathname.replace(/^.*\//,"");
+    let sel=new Set(), N=2, cache=null;
     try{ const j=JSON.parse(localStorage.getItem(key)||"null"); if(j){ if(Array.isArray(j.t)) sel=new Set(j.t); if(NS.includes(j.n)) N=j.n; } }catch(e){}
     const save=()=>{ try{ localStorage.setItem(key,JSON.stringify({t:[...sel],n:N})); }catch(e){} };
 
@@ -5778,13 +5898,13 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     document.head.appendChild(css);
 
     const label=document.createElement("label"); label.className="mode"; label.id="mtMode";
-    label.innerHTML='<input type="radio" name="mode" value="multi"> Multitema · repaso combinado <small>Marca varios temas (p. ej. Temperatura ISA + Altimetría + Vientos) y elige 15, 25 o 40 preguntas: se reparten entre ellos, sin repetir variantes de la misma pregunta.</small>';
+    label.innerHTML='<input type="radio" name="mode" value="multi"> Multitema · repaso combinado <small>Marca varios temas (p. ej. Temperatura ISA + Altimetría + Vientos) y elige 1, 2 o 3 preguntas por tema (mínimo 10 en total), sin repetir variantes de la misma pregunta.</small>';
     const loLabel=loRadio.closest("label")||loRadio.parentElement;
     loLabel.insertAdjacentElement("afterend",label);
     const box=document.createElement("div"); box.id="mtBox"; box.hidden=true;
     box.innerHTML='<div class="mth"><b id="mtCnt">Temas</b><button type="button" class="mtl" id="mtAll">Todos</button><button type="button" class="mtl" id="mtNone">Ninguno</button></div>'+
       '<div id="mtChips" role="group" aria-label="Temas del test"></div>'+
-      '<div class="mtn" role="group" aria-label="Número de preguntas"><span>Preguntas</span>'+NS.map(n=>'<button type="button" data-n="'+n+'" aria-pressed="false">'+n+'</button>').join("")+'</div>'+
+      '<div class="mtn" role="group" aria-label="Preguntas por tema"><span>Preguntas por tema</span>'+NS.map(n=>'<button type="button" data-n="'+n+'" aria-pressed="false">'+n+'</button>').join("")+'</div>'+
       '<p id="mtInfo" aria-live="polite"></p>';
     label.insertAdjacentElement("afterend",box);
 
@@ -5825,8 +5945,8 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
       info.className="";
       if(!chosen.length){ info.textContent="Marca al menos un tema."; return; }
       let sim=[]; try{ sim=pickMulti(); cache={sig:sigOf(),list:sim}; }catch(e){}
-      const real=sim.length||Math.min(N,tot), a=(sim.per||alloc(real,chosen.map(t=>t.n))).slice().sort((x,y)=>y-x);
-      info.textContent=(real<N?"Solo hay "+real+" preguntas distintas en esos temas. ":"")+real+" preguntas"+(chosen.length>1?" · "+a.join(" + ")+" por tema":"")+". Reparto equitativo; sin variantes repetidas de la misma pregunta.";
+      const want=Math.max(N*chosen.length,MINT), real=sim.length||Math.min(want,tot), a=(sim.per||alloc(real,chosen.map(t=>t.n))).slice().sort((x,y)=>y-x);
+      info.textContent=(real<want?"Solo hay "+real+" preguntas distintas en esos temas. ":"")+real+" preguntas"+(chosen.length>1?" · "+a.join(" + ")+" por tema":"")+(N*chosen.length<MINT?" (se sube a "+MINT+" para que el test no sea demasiado corto)":"")+". Siempre al menos 1 de cada tema; sin variantes repetidas de la misma pregunta."; 
     };
     const show=()=>{ const on=!!(document.querySelector("input[name=mode][value=multi]")||{}).checked; box.hidden=!on; if(on) refresh(); };
     document.addEventListener("change",e=>{ if(e.target&&e.target.name==="mode") show(); });
@@ -5852,7 +5972,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     const pickMulti=()=>{
       const chosen=topics.filter(t=>sel.has(t.v)); if(!chosen.length) return [];
       const pools=chosen.map(t=>prio(callLo(t.v)));
-      const quota=alloc(Math.min(N,pools.reduce((a,p)=>a+p.length,0)),pools.map(p=>p.length));
+      const quota=alloc(Math.min(Math.max(N*chosen.length,MINT),pools.reduce((a,p)=>a+p.length,0)),pools.map(p=>p.length));
       const picked=[], used=new Set(), idx=pools.map(()=>0), per=pools.map(()=>0); let deficit=0;
       const fill=(i,k)=>{ let got=0; const p=pools[i];
         while(got<k && idx[i]<p.length){ const c=p[idx[i]++]; const id=idOf(c); if(id==null||used.has(id)) continue; if(!accept(picked,c)) continue; used.add(id); picked.push(c); got++; per[i]++; }
@@ -5933,6 +6053,88 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
       .observe(document.body,{childList:true,subtree:true,characterData:true});
     window.__f0CleanModes=clean;
   }catch(e){ console.error("modes",e); }
+})();
+</script>
+<script>/* Longitud y mínimos de los tests (todas las asignaturas).
+   Reglas:
+   · Adaptativo y Trial: siempre 25.
+   · Un tema: entre 10 y 15 según la densidad del tema (≤10 distintas → 10; 11-15 → todas; 16-24 → 12; 25-39 → 14; ≥40 → 15).
+     Si el tema tiene menos de las necesarias se completa con variantes del propio tema y, después, con preguntas
+     del mismo bloque (mismo subcapítulo → mismo capítulo → misma asignatura). Nunca un test de 1 pregunta.
+   · Nubes por foto, Símbolos, Señales: 15. Cálculo (y Solo mis fallos): mínimo 10 (el cálculo lo elige el usuario: 10, 15 o 20).
+   · Simulacro, Multitema, Banco completo, Radio y ATIS no se tocan.
+   Se aplica en el último paso de arranque: envuelve window.F0DEDUP, que todas las páginas llaman con la lista ya elegida. */
+(function(){
+  try{
+    if(window.__f0Lens) return; window.__f0Lens=true;
+    const MIN=10, SP=15, TR=25;
+    const NOLEN=/^(senasa|sim|examen|ofi|plane|all|multi|voice|atis|profe|prof|campus|slides|fase0)$/;
+    const OBJ = typeof selectItems==="function" && typeof selectQuestions!=="function";   // 090: los elementos son {k:"mc",q}
+    const qOf=it=>Array.isArray(it)?it:(it&&it.k==="mc"&&it.q?it.q:null);
+    const wrap=q=>OBJ?{k:"mc",q}:q;
+    const shuf=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+    const keys=q=>{ try{ return typeof window.__famKeys==="function"?window.__famKeys(q):[q[0]]; }catch(e){ return [q[0]]; } };
+    const bank=()=>{ try{ return typeof BANK!=="undefined"&&Array.isArray(BANK)?BANK:[]; }catch(e){ return []; } };
+    const given=q=>{ try{ return typeof isGiven==="function"?!!isGiven(q):true; }catch(e){ return true; } };
+    const loOf=q=>{ try{ return typeof subOf==="function"?String(subOf(q)||q[1]):String(q[1]); }catch(e){ return String(q[1]); } };   // 081 y otras: el tema real sale de subOf()
+    const los=q=>{ const a=String(q[1]),b=loOf(q); return a===b?[a]:[a,b]; };   // clave de tema: la del banco y la de subOf()
+    const okQ=q=>Array.isArray(q)&&q[4]&&q[4]!=="—"&&q[2]!=="o";
+
+    /* completa `items` hasta `target` sin repetir ids. Primero lo que no repite familia (y es temario base), luego lo demás */
+    function padTo(items,target,o){
+      o=o||{}; const out=items.slice(); if(out.length>=target) return out;
+      const have=new Set(out.map(it=>{ const q=qOf(it); return q&&q[0]; }).filter(Boolean));
+      const seen=new Set(); out.forEach(it=>{ const q=qOf(it); if(q) keys(q).forEach(k=>seen.add(k)); });
+      const lo=String(o.lo||(qOf(out[0])?loOf(qOf(out[0])):"")||""), P=lo.split(".");
+      const typeOK=q=> o.mode==="foto" ? q[2]==="p" : q[2]!=="p";
+      const tiers=[];
+      if(lo) tiers.push(q=>los(q).some(x=>x===lo||x.slice(0,lo.length)===lo));
+      if(P.length>2) tiers.push(q=>los(q).some(x=>x.split(".").slice(0,P.length-1).join(".")===P.slice(0,-1).join(".")));
+      if(P.length>1) tiers.push(q=>los(q).some(x=>x.split(".").slice(0,2).join(".")===P.slice(0,2).join(".")));
+      tiers.push(q=>P[0]?los(q).some(x=>x.split(".")[0]===P[0]):true);
+      const B=bank();
+      for(const strict of [true,false]){
+        for(const t of tiers){
+          if(out.length>=target) break;
+          const c=shuf(B.filter(q=>okQ(q)&&!have.has(q[0])&&typeOK(q)&&t(q)&&(!strict||(given(q)&&!keys(q).some(k=>seen.has(k))))));
+          for(const q of c){ if(out.length>=target) break; if(have.has(q[0])) continue;
+            if(strict&&keys(q).some(k=>seen.has(k))) continue;
+            have.add(q[0]); keys(q).forEach(k=>seen.add(k)); out.push(wrap(q)); }
+        }
+      }
+      return out;
+    }
+    /* lo fallado y lo no visto, primero */
+    function byNeed(items){
+      let st=null; try{ st=stats(); }catch(e){}
+      const rank=it=>{ const q=qOf(it), r=st&&st.q&&q?st.q[q[0]]:null; return r?(r.last===false?0:1):0.5; };
+      return items.map(it=>({it,r:rank(it)+Math.random()*0.6})).sort((a,b)=>a.r-b.r).map(x=>x.it);
+    }
+    const loTarget=d=> d>=40?15 : d>=25?14 : d>=16?12 : d>=11?d : MIN;
+
+    function fit(r,mode){
+      if(!Array.isArray(r)||!mode||NOLEN.test(mode)) return r;
+      if(mode==="lo"){
+        const lo=(document.querySelector("#loSel")||{}).value;
+        const T=loTarget(r.length);
+        if(r.length>T) return shuf(byNeed(r).slice(0,T));
+        return r.length<T ? shuf(padTo(r,T,{lo})) : r;
+      }
+      if(mode==="trial"||mode==="adaptive") return r.length>TR ? shuf(r).slice(0,TR) : (r.length<TR ? shuf(padTo(r,TR,{mode})) : r);
+      if(/^(foto|simb|signals)$/.test(mode)) return r.length>SP ? shuf(r).slice(0,SP) : (r.length<SP ? shuf(padTo(r,SP,{mode})) : r);
+      if(r.length>0 && r.length<MIN) return shuf(padTo(r,MIN,{mode}));   // calc, wrong y demás: nunca menos de 10
+      return r;
+    }
+    window.__f0LenFit=fit;
+
+    let inner=window.F0DEDUP;
+    const run=function(list,mode){
+      const r=typeof inner==="function"?inner.apply(this,arguments):list;
+      try{ return fit(r,mode); }catch(e){ try{ console.error("lens",e); }catch(_){} return r; }
+    };
+    try{ Object.defineProperty(window,"F0DEDUP",{configurable:true,get:()=>run,set:f=>{ inner=f; }}); }
+    catch(e){ window.F0DEDUP=run; }
+  }catch(e){ try{ console.error("lens",e); }catch(_){} }
 })();
 </script>
 <script src="../viz16.js?v=02185779" defer></script>

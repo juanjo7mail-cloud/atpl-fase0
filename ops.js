@@ -498,7 +498,8 @@ function loadTr(){
    .catch(e=>{ if(g===S.gen){ S.tr=null; S.trWhy=String(e&&e.message||"sin respuesta").slice(0,200); } })
    .then(()=>{ if(!S.root||g!==S.gen) return; drawTraffic(); if(S.data) fill(); });
 }
-const CSS=`.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD;--hd:#1C2128;--am:#FFC400;--vfr:#1E9E44;--mvfr:#2F6FD0;--ifr:#D23A2F;--lifr:#B02FA5;--ok:#1E8A42;--no:#C9372C;--mid:#B7791F;--okb:#E3F3E8;--nob:#FBE5E3;--midb:#FFF1D6;--k1:#0B5CAD;--k2:#8A4B00;--k3:#5A3E9B;--k4:#9A2A2A;--k5:#0B7A6B;
+const CSS=`.op .wkp{background:transparent;border:0;box-shadow:none}.op .wk{border:1px solid var(--ln);border-left:4px solid var(--k1);background:var(--pn);border-radius:6px;padding:8px 12px;font-size:13px;line-height:1.35;color:var(--ink)}.op .wk.soon{border-left-color:var(--mid);background:var(--midb)}.op .wk.hot{border-left-color:var(--no);background:var(--nob)}.op .wk p{margin:3px 0}.op .wk-t{display:flex;justify-content:space-between;align-items:center;gap:8px}.op .wk-k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);font-weight:700}.op .wk-x{border:1px solid var(--ln);background:transparent;color:var(--mu);border-radius:5px;font:inherit;font-size:11px;padding:3px 8px;min-height:28px;cursor:pointer}.op .wk-b{display:flex;flex-direction:column;gap:2px;color:var(--mu)}.op .wk-w{color:var(--k2);font-weight:600}.op .wk-l{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;font-size:12px}.op .wk-l a{color:var(--k1);font-weight:600}.op .wk-l small{color:var(--mu)}
+.op{--bg:#E6E9EC;--pn:#FFFFFF;--ink:#171C21;--mu:#5E6873;--ln:#D2D7DD;--hd:#1C2128;--am:#FFC400;--vfr:#1E9E44;--mvfr:#2F6FD0;--ifr:#D23A2F;--lifr:#B02FA5;--ok:#1E8A42;--no:#C9372C;--mid:#B7791F;--okb:#E3F3E8;--nob:#FBE5E3;--midb:#FFF1D6;--k1:#0B5CAD;--k2:#8A4B00;--k3:#5A3E9B;--k4:#9A2A2A;--k5:#0B7A6B;
  min-height:65vh;background:var(--bg);color:var(--ink);font:15px/1.45 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
 @media (max-width:0px){:root:not([data-theme="light"]) .op{--bg:#0D1013;--pn:#161A1F;--ink:#E6E9EC;--mu:#8E98A3;--ln:#2A3037;--hd:#090B0E;--okb:#12301E;--nob:#3A1917;--midb:#33290F;--ok:#4CC97A;--no:#F0746B;--mid:#E3B341;--k1:#6CB4FF;--k2:#E9A95B;--k3:#B7A2F2;--k4:#F08E8E;--k5:#5CD1BE}
 }
@@ -909,13 +910,46 @@ function ntHTML(){
    <div class="nt-f">${chips}</div>${V.length?`<div class="nt-l">${V.map(card).join("")}</div>`:`<p class="nt-s">No hay NOTAM vigentes${F==="all"?" para este aeródromo":" en esta categoría"}.</p>`}
    <p class="src nt-src">Fuente: FAA NOTAM Search (copia de los NOTAM de ENAIRE) · actualizado ${ntD(R.r.at||Date.now())} · Horas en UTC. Orientativo: la fuente oficial es <a target="_blank" rel="noopener" href="https://insignia.enaire.es/">ENAIRE Insignia ↗</a>.</p>`;
 }
-function ntDraw(){ const e=$("#opNt",S.root); if(e) e.innerHTML=ntHTML(); }
+function ntDraw(){ const e=$("#opNt",S.root); if(e) e.innerHTML=ntHTML(); wkDraw(); }
 function loadNt(force){
   const f0=S.opt&&S.opt.fetchNt, g=S.gen, ic=AD.icao; if(!f0) return;
   if(!force&&S.nt&&S.nt.ic===ic&&!S.nt.err&&Date.now()-S.nt.t<5*60000) { ntDraw(); return; }
   S.nt=null; ntDraw();
   f0(ic).then(r=>{ if(!r||!r.ok) throw 0; return r; }).then(r=>{ if(g===S.gen&&AD.icao===ic) S.nt={ic,t:Date.now(),r}; }).catch(()=>{ if(g===S.gen&&AD.icao===ic) S.nt={ic,t:0,err:1}; }).then(()=>{ if(S.root&&g===S.gen) ntDraw(); });
 }
+/* ---------- Aviso semanal AIRAC / NOTAM del aeródromo elegido ----------
+   Estructura: ciclos AIRAC cada 28 días (fecha de referencia: AIRAC 2601 = 22-ENE-26; la de 06-AGO-26 cuadra con la AIP citada arriba).
+   Por aeródromo: avisos AIP (SUP) de AD.chart.sup con su fin estimado + NOTAM en vivo si el servidor los da.
+   El aviso se reinicia cada semana ISO: «Entendido» lo oculta solo hasta el lunes (localStorage, opcional). */
+const AIRAC0=Date.UTC(2026,0,22), D28=28*864e5, D1=864e5;
+function airac(now){
+  const n=Math.floor((now-AIRAC0)/D28), cur=AIRAC0+n*D28, nxt=cur+D28, id=t=>{ const y=new Date(t).getUTCFullYear(), j=Date.UTC(y,0,1), f=AIRAC0+Math.ceil((j-AIRAC0)/D28)*D28; return String(y).slice(2)+pad(Math.floor((t-f)/D28)+1); };
+  return {cur,nxt,idC:id(cur),idN:id(nxt),dN:Math.ceil((nxt-now)/D1)};
+}
+const dmy=t=>{ const d=new Date(t); return pad(d.getUTCDate())+"/"+pad(d.getUTCMonth()+1)+"/"+String(d.getUTCFullYear()).slice(2); };
+function isoWeek(now){ const d=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate())); const dn=d.getUTCDay()||7; d.setUTCDate(d.getUTCDate()+4-dn); const y=d.getUTCFullYear(); return y+"-W"+pad(Math.ceil(((d-Date.UTC(y,0,1))/D1+1)/7)); }
+const wkKey=()=>"f0:wk:"+AD.icao+":"+isoWeek(new Date());
+const wkSeen=()=>{ try{ return localStorage.getItem(wkKey())==="1"; }catch(e){ return false; } };
+function wkData(){
+  const now=Date.now(), a=airac(now), out={a,sup:[],late:[],nt:null};
+  (AD.chart&&AD.chart.sup||[]).forEach(x=>{ const e=supEnd(x[2]); if(!e) return; const t=e.getTime(); if(t<now) out.late.push(x[0]); else if(t-now<=7*D1) out.sup.push(x[0]+" ("+x[2]+")"); });
+  if(S.nt&&S.nt.ic===AD.icao&&!S.nt.err&&S.nt.r){ const L=ntList(S.nt.r); out.nt={act:L.filter(x=>x.act).length, nuevo:L.filter(x=>x.act&&x.F>=now-7*D1).length, prox:L.filter(x=>x.fut&&x.F<=now+7*D1).length, cad:L.filter(x=>x.act&&isFinite(x.T)&&!x.perm&&x.T<=now+7*D1).length}; }
+  return out;
+}
+function wkHTML(){
+  const w=wkData(), a=w.a, hot=a.dN<=7, soon=a.dN<=14, ic=AD.icao, wef=AD.chart&&AD.chart.wef;
+  const l1=hot?`<b>AIRAC ${a.idN} entra en vigor el ${dmy(a.nxt)}</b> (${a.dN<=1?"mañana":"en "+a.dN+" días"}): repasa cartas, frecuencias y SUP de ${ic}.`
+    :`AIRAC <b>${a.idC}</b> vigente · próximo <b>${a.idN}</b> el ${dmy(a.nxt)} (en ${a.dN} días)${soon?": ya puedes ver la enmienda en la AIP.":"."}`;
+  const bits=[];
+  if(w.sup.length) bits.push(`<span class="wk-w">Caducan esta semana: ${esc(w.sup.join(", "))}</span>`);
+  if(w.late.length) bits.push(`<span class="wk-w">Fin estimado superado (sigue vigente hasta que lo cancele un NOTAM): ${esc(w.late.join(", "))}</span>`);
+  if(w.nt) bits.push(`<span>NOTAM ${ic}: <b>${w.nt.act}</b> activos${w.nt.nuevo?` · ${w.nt.nuevo} nuevos (7 d)`:""}${w.nt.prox?` · ${w.nt.prox} próximos (7 d)`:""}${w.nt.cad?` · ${w.nt.cad} caducan (7 d)`:""}</span>`);
+  else if(!bits.length) bits.push(`<span>Sin avisos AIP que caduquen esta semana. Los NOTAM cambian a diario: mira los vigentes antes de volar.</span>`);
+  return `<div class="wk${hot?" hot":soon?" soon":""}" id="opWk" role="note" aria-label="Aviso semanal AIRAC y NOTAM de ${esc(ic)}"><div class="wk-t"><span class="wk-k">Aviso semanal · ${esc(ic)}</span><button type="button" class="wk-x" data-wk="ok" aria-label="Entendido, ocultar hasta la semana que viene">Entendido</button></div><p>${l1}</p><p class="wk-b">${bits.join("")}</p>
+   <p class="wk-l"><a target="_blank" rel="noopener" href="${aipLink()}">AIP ${esc(ic)} ↗</a><a target="_blank" rel="noopener" href="https://insignia.enaire.es/">NOTAM · Insignia ↗</a><a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/">Enmiendas AIRAC ↗</a>${wef?`<small>Carta ADC WEF ${esc(wef)}</small>`:""}</p></div>`;
+}
+const wkSec=()=>`<section class="pn wkp" data-t="res" id="opWkS">${wkSeen()?"":wkHTML()}</section>`;
+function wkDraw(){ const e=S.root&&$("#opWkS",S.root); if(e) e.innerHTML=wkSeen()?"":wkHTML(); }
 const TABS=[["res","Resumen"],["pist","Pistas"],["wx","METAR · TAF"],["ntm","NOTAM"],["map","Mapa"]];
 function ddHTML(){
   const here=[AD0.lat,AD0.lon], L=[{icao:"LECU",name:"Cuatro Vientos",lat:AD0.lat,lon:AD0.lon,tm:""}].concat(AEROS).sort((x,y)=>x.name.localeCompare(y.name,"es"));
@@ -942,6 +976,7 @@ function render(el,opt,keep){
    ${mu?`<nav class="op-tabs" id="opTabs" aria-label="Secciones">${TABS.filter(t=>t[0]!=="ntm"||S.opt.fetchNt).map(t=>`<button type="button" data-tab="${t[0]}" class="${t[0]===tb?"on":""}" aria-selected="${t[0]===tb}">${t[1]}</button>`).join("")}<a target="_blank" rel="noopener" href="https://insignia.enaire.es/">Insignia ↗</a><a target="_blank" rel="noopener" href="https://www.windy.com/${ww}?webcams,${AD.lat.toFixed(3)},${AD.lon.toFixed(3)},11">Webcams ↗</a></nav>`:""}
    <div class="op-in">
     ${supHTML()}
+    ${wkSec()}
     <section class="pn" data-t="res wx"><div class="bd"><div class="tiles strip" id="opTiles"></div>
      <div class="wh"><b>METAR</b><label class="sw"><input type="checkbox" id="opRawT" checked><i></i>raw mode</label></div><div class="wl" id="opMet"></div>
      <div class="wh"><b>TAF</b><span class="hz">hora Z</span></div><div class="wl" id="opTaf"></div></div></section>
@@ -972,6 +1007,7 @@ function render(el,opt,keep){
     const k=ev.target.closest(".rad .key"), f=ev.target.closest(".rad .flip");
     if(k){ const i=+k.dataset.fq; if(i===S.rad.a) return; S.rad.s=i; radDraw(); return; }
     if(f){ const t=S.rad.a; S.rad.a=S.rad.s; S.rad.s=t; radDraw(); return; }
+    if(ev.target.closest("[data-wk]")){ try{ localStorage.setItem(wkKey(),"1"); }catch(e){} wkDraw(); return; }
     const nf=ev.target.closest(".ntf"); if(nf){ S.ntF=nf.dataset.g; ntDraw(); return; }
     if(!S.opt.multi) return;
     const sel=ev.target.closest("#opSel"), ar=ev.target.closest("#opDD .ar"), tab=ev.target.closest("#opTabs [data-tab]"), dd=$("#opDD",el);
@@ -981,7 +1017,7 @@ function render(el,opt,keep){
   };
   el.onchange=ev=>{ if(ev.target.id==="opRawT"){ S.rawMode=ev.target.checked; fill(); } };
   if(mu) showTab(tb);
-  initMap(); load(); loadTr(); clock();
+  initMap(); load(); loadTr(); clock(); if(S.opt.fetchNt) loadNt();
   clearInterval(S.clk); S.clk=setInterval(clock,10000); clearInterval(S.t); S.t=setInterval(()=>{ if(S.opt.fetchWx) load(); else if(S.data) fill(); },5*60000);
   clearInterval(S.tt); S.tt=setInterval(()=>{ if(!document.hidden) loadTr(); },20000);
 }
