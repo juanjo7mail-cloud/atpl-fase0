@@ -3,14 +3,19 @@
 "use strict";
 const cl=(x,a,b)=>Math.min(b,Math.max(a,x)), lerp=(a,b,t)=>a+(b-a)*t, R=Math.PI/180, f1=x=>(Math.round(x*10)/10).toString().replace(".",","), f0=x=>Math.round(x).toLocaleString("es-ES");
 const CSS=`
-.f0viz{margin:14px 0 18px;max-width:880px}
+.f0viz{margin:14px 0 18px;width:100%;max-width:none;box-sizing:border-box}
+.f0viz figure svg{max-height:min(78vh,620px);margin:0 auto}
 .f0viz .lt{font:700 12px/1 "Barlow Condensed","Arial Narrow",system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#5d6977;margin:0 0 6px}
 .f0viz figure{margin:0;background:#12202f;border-radius:8px 8px 0 0;overflow:hidden}
 .f0viz svg,.f0viz canvas{display:block;width:100%;height:auto;touch-action:pan-y}
 .f0viz svg text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;fill:#dfe8f1}
-.f0viz .ctl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:#0f1b29;color:#e9f0f7;padding:12px 14px;font:600 13.5px/1.25 system-ui,-apple-system,"Segoe UI",sans-serif}
-.f0viz .ctl label{display:flex;align-items:center;gap:8px;min-width:0;color:#e9f0f7;flex-wrap:wrap}
-.f0viz .ctl input[type=range]{width:min(200px,46vw);accent-color:#ffc94d}
+.f0viz .ctl .sl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px 22px}
+.f0viz .ctl .bt{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.f0viz .ctl{display:grid;gap:12px;background:#0f1b29;color:#e9f0f7;padding:12px 14px;font:600 13.5px/1.25 system-ui,-apple-system,"Segoe UI",sans-serif}
+.f0viz .ctl label{flex:1 1 240px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px 10px;min-width:0;color:#e9f0f7}
+.f0viz .ctl label:has(input[type=checkbox]){flex:0 1 auto;display:flex}
+.f0viz .ctl input[type=range]{grid-column:1/-1;order:2;width:100%;margin:0;accent-color:#ffc94d}
+.f0viz .ctl .rv{order:1;text-align:right}
 .f0viz .ctl .rv{white-space:nowrap}
 .f0viz .ctl output{font:600 13.5px ui-monospace,"SF Mono",Menlo,Consolas,monospace;min-width:5.5ch;color:#ffc94d}
 .f0viz .ctl button{font:700 13px system-ui,sans-serif;padding:8px 12px;min-height:38px;border-radius:6px;border:1px solid #3a516b;background:#1a2b3f;color:#e9f0f7;cursor:pointer}
@@ -18,10 +23,12 @@ const CSS=`
 .f0viz .ctl input[type=checkbox]{width:18px;height:18px;accent-color:#ffc94d}
 .f0viz .out{margin:0;background:#16283b;color:#e9f0f7;border-radius:0 0 8px 8px;padding:11px 14px;font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:3.2em}
 .f0viz .out b{color:#ffc94d}.f0viz .out .ok{color:#6ee7a0}.f0viz .out .bad{color:#ff8a80}
+.f0viz .lt,.f0viz .out,.f0viz .cap,.f0viz figure,.f0viz .ctl{max-width:none!important;width:auto!important;box-sizing:border-box}
 .f0viz .cap{font:13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:#5d6977;margin:7px 2px 0}
 `;
 const V={};
-const shell=(el,t,fig,ctl,cap)=>{ el.innerHTML=`<p class="lt">${t}</p><figure>${fig}</figure>${ctl?`<div class="ctl">${ctl}</div>`:""}<p class="out" aria-live="polite"></p><p class="cap">${cap}</p>`; return {out:el.querySelector(".out"),q:s=>el.querySelector(s),qa:s=>el.querySelectorAll(s)}; };
+const shell=(el,t,fig,ctl,cap)=>{ el.innerHTML=`<p class="lt">${t}</p><figure>${fig}</figure>${ctl?`<div class="ctl">${ctl}</div>`:""}<p class="out" aria-live="polite"></p><p class="cap">${cap}</p>`; const c=el.querySelector(".ctl"); if(c){ const sl=document.createElement("div"), bt=document.createElement("div"); sl.className="sl"; bt.className="bt"; Array.from(c.children).forEach(ch=>(ch.tagName==="LABEL"&&ch.querySelector("input[type=range]")?sl:bt).appendChild(ch)); if(sl.children.length) c.appendChild(sl); if(bt.children.length) c.appendChild(bt); }
+  return {out:el.querySelector(".out"),q:s=>el.querySelector(s),qa:s=>el.querySelectorAll(s)}; };
 const rng=(id,lab,min,max,val,step,unit)=>`<label>${lab}<input type="range" data-k="${id}" min="${min}" max="${max}" value="${val}" step="${step||1}" aria-label="${lab}"><span class="rv"><output data-o="${id}"></output>${unit||""}</span></label>`;
 const bind=(el,fn)=>{ const get=()=>{ const o={}; el.querySelectorAll("[data-k]").forEach(i=>{ o[i.dataset.k]=i.type==="checkbox"?i.checked:+i.value; }); return o; }; const run=()=>{ try{ fn(get()); }catch(e){ try{ console.error("F0Viz",e); }catch(_){} } }; el.addEventListener("input",run); el.addEventListener("change",run); run(); return run; };
 const setO=(el,k,v)=>{ const o=el.querySelector(`[data-o="${k}"]`); if(o) o.textContent=v; };
@@ -49,23 +56,42 @@ init(el){
 }};
 
 /* ---------- 2 · Entradas en espera ---------- */
-V.hold={t:"Entradas en la espera: directa, paralela o desplazada",cap:"Espera con tramo de acercamiento 270°. El sector se decide con el rumbo con el que llegas al punto, con ±5° de flexibilidad en los límites.",
+V.hold={t:"Entradas en la espera: directa, paralela o desplazada (gota)",cap:"Espera de ejemplo con tramo de acercamiento 270°. El sector lo decide el rumbo con el que llegas al punto, con ±5° de flexibilidad en los límites. Virajes a la derecha = espera estándar; a la izquierda = no estándar. La trayectoria es esquemática (sin viento).",
 init(el){
-  const u=shell(el,this.t,`<svg viewBox="0 0 400 300" role="img" aria-label="Sectores de entrada en una espera"></svg>`,rng("h","Rumbo con el que llegas al punto",0,359,120,1,"°")+`<button type="button" data-side="R" aria-pressed="true">Virajes a la derecha</button><button type="button" data-side="L" aria-pressed="false">A la izquierda</button>`,this.cap), svg=u.q("svg"); let side="R", H=120;
-  const draw=()=>{ const cx=200, cy=150, s=side==="R"?1:-1, IB=270, d=((H-IB)*s%360+360)%360; let k, name;
-    if(d<=110||d>=290){ k=3; name="DIRECTA (sector 3)"; } else if(d<180){ k=2; name="DESPLAZADA o en gota (sector 2)"; } else { k=1; name="PARALELA (sector 1)"; }
-    // posiciones desde las que se llega = rumbo + 180
-    const pos=(a,b)=>s>0?wedge(cx,cy,118,(IB+a+180)%360,(IB+b+180)%360):wedge(cx,cy,118,(IB-b+180+360)%360,(IB-a+180+360)%360);
-    const col=["","#f6b73c","#58c4f0","#6ee7a0"], op=i=>k===i?.42:.13, y=cy-s*34, pl=pol(cx,cy,104,H+180);
-    svg.innerHTML=`<rect width="400" height="300" fill="#12202f"/>
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 300" role="img" aria-label="Sectores de entrada en una espera y trayectoria animada"><g data-bg></g><path data-tr fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path data-tc fill="none" stroke="#ffc94d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><g data-pl><path d="M0 -11L7 9L0 5L-7 9Z" stroke="#12202f" stroke-width="1"/></g></svg>`,rng("h","Rumbo con el que llegas al punto",0,359,120,1,"°")+`<button type="button" data-side="R" aria-pressed="true">Estándar (derecha)</button><button type="button" data-side="L" aria-pressed="false">No estándar (izquierda)</button><button type="button" data-go>▶ Repetir</button>`,this.cap), svg=u.q("svg"), bg=u.q("[data-bg]"), tr=u.q("[data-tr]"), tc=u.q("[data-tc]"), pl=u.q("[data-pl]");
+  const RM=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches), cx=200, cy=150, IB=270, RT=17, LG=112, DS=1.5, col=["","#f6b73c","#58c4f0","#6ee7a0"], n3=a=>((a%360)+360)%360, p3=a=>String(Math.round(n3(a))).padStart(3,"0");
+  let side="R", H=120, P=[], nE=0, k=3, i=0, raf=0, last=0, wait=0, vis=true;
+  function build(){ const s=side==="R"?1:-1, d=n3((H-IB)*s); k=(d<=110||d>=290)?3:d<180?2:1;
+    let x=-105*Math.sin(H*R), y=-105*Math.cos(H*R), h=H; const pts=[[x,y,h]], dth=DS/RT/R;
+    const mv=()=>{ x+=DS*Math.sin(h*R); y+=DS*Math.cos(h*R); pts.push([x,y,h]); };
+    const fwd=dist=>{ for(let q=0;q<dist;q+=DS) mv(); }, toX=X=>{ let g=0; while(x<X&&g++<400) mv(); };
+    const turn=(tg,dir)=>{ tg=n3(tg); if(!dir){ dir=n3(tg-h)<=180?1:-1; } let g=0; while(g++<600){ const df=dir>0?n3(tg-h):n3(h-tg); if(df<=dth){ h=tg; break; } h=n3(h+dir*dth); mv(); } };
+    const track=()=>{ let g=0; while(x>DS&&g++<900){ const want=n3(IB-cl(y*2.6,-50,50)), df=((want-h+540)%360)-180; h=n3(h+cl(df,-dth,dth)); mv(); } x=0; y=0; h=IB; pts.push([0,0,IB]); };
+    fwd(105); x=0; y=0;
+    if(k===3){ turn(90,s); toX(LG); turn(IB,s); track(); }
+    else if(k===2){ turn(90-30*s,0); fwd(LG*.95); turn(IB,s); track(); }
+    else { turn(90,0); fwd(LG*.85); turn(IB-45*s,-s); track(); }
+    nE=pts.length; turn(90,s); toX(LG); turn(IB,s); track(); P=pts; }
+  function scene(){ const s=side==="R"?1:-1, y=cy-s*34, name=["","PARALELA (sector 1)","DESPLAZADA o en gota (sector 2)","DIRECTA (sector 3)"][k];
+    const pos=(a,b)=>s>0?wedge(cx,cy,118,(IB+a+180)%360,(IB+b+180)%360):wedge(cx,cy,118,(IB-b+180+360)%360,(IB-a+180+360)%360), op=j=>k===j?.36:.11;
+    bg.innerHTML=`<rect width="400" height="300" fill="#12202f"/>
      <path d="${pos(290,470)}" fill="${col[3]}" opacity="${op(3)}"/><path d="${pos(110,180)}" fill="${col[2]}" opacity="${op(2)}"/><path d="${pos(180,290)}" fill="${col[1]}" opacity="${op(1)}"/>
-     <path d="M${cx} ${cy}H${cx+112}" stroke="#dfe8f1" stroke-width="2.4"/><path d="M${cx+112} ${cy}A17 17 0 0 ${s>0?0:1} ${cx+112} ${y}H${cx}A17 17 0 0 ${s>0?0:1} ${cx} ${cy}" fill="none" stroke="#dfe8f1" stroke-width="2.4"/>
-     <path d="M${cx+70} ${cy-4}l-9 4 9 4z" fill="#dfe8f1"/><path d="M${cx+40} ${y-4}l9 4-9 4z" fill="#dfe8f1"/>
-     <circle cx="${cx}" cy="${cy}" r="5" fill="#ffc94d"/><text x="${cx-8}" y="${cy+20}" font-size="11" text-anchor="end">punto de espera</text><text x="${cx+60}" y="${cy+16}" font-size="10" fill="#9fb3c8">acercamiento 270°</text>
-     <g transform="translate(${pl[0].toFixed(1)} ${pl[1].toFixed(1)}) rotate(${H})"><path d="M0 -11L7 9L0 5L-7 9Z" fill="${col[k]}" stroke="#12202f" stroke-width="1"/></g>
-     <text x="12" y="20" font-size="11" fill="${col[3]}">■ directa · 180°</text><text x="12" y="36" font-size="11" fill="${col[1]}">■ paralela · 110°</text><text x="12" y="52" font-size="11" fill="${col[2]}">■ desplazada · 70°</text>`;
-    u.out.innerHTML=`Llegas con rumbo <b>${String(H).padStart(3,"0")}°</b> → entrada <b>${name}</b>. `+(k===3?"Sobrevuelas el punto y viras directamente al tramo de alejamiento.":k===2?`Sobrevuelas el punto, tomas un rumbo <b>30° abierto</b> respecto al alejamiento (${String((IB+180-30*s+360)%360).padStart(3,"0")}°) hacia dentro de la espera durante 1 min y viras para interceptar el acercamiento.`:"Sobrevuelas el punto, vuelas <b>paralelo</b> al acercamiento en sentido contrario durante 1 min, viras hacia el lado de la espera y vuelves al punto."); };
-  btns(el,"data-side",v=>{ side=v; draw(); }); bind(el,o=>{ H=o.h; setO(el,"h",String(H).padStart(3,"0")); draw(); });
+     <path d="M${cx} ${cy}H${cx+LG}A17 17 0 0 ${s>0?0:1} ${cx+LG} ${y}H${cx}A17 17 0 0 ${s>0?0:1} ${cx} ${cy}" fill="none" stroke="#dfe8f1" stroke-opacity=".5" stroke-width="1.6" stroke-dasharray="5 4"/>
+     <path d="M${cx+70} ${cy-4}l-9 4 9 4z" fill="#dfe8f1" opacity=".7"/><path d="M${cx+40} ${y-4}l9 4-9 4z" fill="#dfe8f1" opacity=".7"/>
+     <circle cx="${cx}" cy="${cy}" r="5" fill="#ffc94d"/><text x="${cx-9}" y="${cy+s*20+4}" font-size="11" text-anchor="end">punto de espera</text><text x="${cx+56}" y="${cy+s*15+4}" font-size="10" fill="#9fb3c8">acercamiento 270°</text>
+     <text x="12" y="20" font-size="11" fill="${col[3]}">■ directa · 180°</text><text x="12" y="36" font-size="11" fill="${col[1]}">■ paralela · 110°</text><text x="12" y="52" font-size="11" fill="${col[2]}">■ desplazada · 70°</text>
+     <text x="388" y="290" font-size="10.5" text-anchor="end" fill="#9fb3c8">${s>0?"virajes a la derecha":"virajes a la izquierda"}</text>`;
+    tr.setAttribute("stroke",col[k]); pl.firstChild.setAttribute("fill",col[k]);
+    u.out.innerHTML=`Llegas con rumbo <b>${p3(H)}°</b> → entrada <b>${name}</b>. `+(k===3?"Sobrevuelas el punto y viras directamente al tramo de alejamiento.":k===2?`Sobrevuelas el punto, tomas un rumbo <b>30° abierto</b> respecto al alejamiento (<b>${p3(IB+180-30*s)}°</b>) hacia dentro de la espera durante 1 min y viras hacia el lado de la espera para interceptar el acercamiento.`:`Sobrevuelas el punto, vuelas <b>paralelo</b> al acercamiento en sentido contrario (090°) durante 1 min, viras a la <b>${s>0?"izquierda":"derecha"}</b> (hacia el lado de la espera) y vuelves al punto.`)+` Después, el circuito normal (en amarillo).`; }
+  const seg=(a,b)=>{ let d=""; for(let j=a;j<b;j++) d+=(j===a?"M":"L")+(cx+P[j][0]).toFixed(1)+" "+(cy-P[j][1]).toFixed(1); return d; };
+  function paint(){ const n=Math.max(1,Math.min(P.length,Math.round(i))), p=P[n-1]; tr.setAttribute("d",seg(0,Math.min(n,nE))); tc.setAttribute("d",n>nE?seg(nE-1,n):""); pl.setAttribute("transform",`translate(${(cx+p[0]).toFixed(1)} ${(cy-p[1]).toFixed(1)}) rotate(${p[2].toFixed(1)})`); }
+  function frame(now){ raf=0; if(!el.isConnected) return; if(!vis||document.hidden){ last=0; return; } const dt=Math.min(.05,last?(now-last)/1000:.016); last=now;
+    if(i>=P.length){ wait+=dt; if(wait>1.6){ i=0; wait=0; } } else i+=dt*52; paint(); raf=requestAnimationFrame(frame); }
+  const start=()=>{ build(); scene(); i=RM?P.length:0; wait=0; last=0; paint(); if(!RM&&!raf) raf=requestAnimationFrame(frame); };
+  if("IntersectionObserver" in window) new IntersectionObserver(es=>{ vis=es.some(e=>e.isIntersecting); if(vis&&!raf&&!RM){ last=0; raf=requestAnimationFrame(frame); } }).observe(svg);
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&vis&&!raf&&!RM&&el.isConnected){ last=0; raf=requestAnimationFrame(frame); } });
+  u.q("[data-go]").addEventListener("click",start);
+  btns(el,"data-side",v=>{ side=v; start(); }); bind(el,o=>{ H=o.h; setO(el,"h",p3(H)); start(); });
 }};
 
 /* ---------- 3 · PAPI ---------- */
@@ -294,6 +320,71 @@ init(el){
      <text x="300" y="206" font-size="10.5" text-anchor="middle" fill="#9fb3c8">LOC ${loc>=0?"+":""}${loc.toFixed(2).replace(".",",")}° · GS ${gs>=0?"+":""}${gs.toFixed(2).replace(".",",")}°</text>`;
     const side=Math.abs(kL)<.15?"centrado":(kL<0?"a la <b>izquierda</b>":"a la <b>derecha</b>"), upd=Math.abs(kG)<.15?"centrada":(kG>0?"<b>abajo</b>":"<b>arriba</b>"), c1=kL<-.15?"izquierda":kL>.15?"derecha":"";
     u.out.innerHTML=`Estás ${Math.abs(Math.round(o.x))} m ${o.x>0?"a la derecha":o.x<0?"a la izquierda":"sobre el eje"} y ${Math.abs(Math.round(o.h))} ft ${o.h>0?"sobre":o.h<0?"bajo":"en"} la senda. Aguja del LOC ${side} (${Math.abs(kL)>=2?"<b class='bad'>tope</b>":(Math.abs(loc/1.25)).toFixed(1).replace(".",",")+" puntos"}), aguja de la senda ${upd} (${Math.abs(kG)>=2?"<b class='bad'>tope</b>":Math.abs(gs/.35).toFixed(1).replace(".",",")+" puntos"}).<br>`+(c1?`<b>Vuela hacia la aguja</b>: corrige a la <b>${o.x>0?"izquierda":"derecha"}</b>.`:`Rumbo correcto.`)+` ${kG>.15?"Estás alto: aumenta el régimen de descenso.":kG<-.15?"Estás bajo: no desciendas más hasta recuperar la senda.":""}<br><span style="color:#9fb3c8">Con los mismos ${Math.abs(o.x)} m, a 2 NM la aguja se va a tope y a 10 NM apenas se mueve: la sensibilidad crece al acercarte al umbral.</span>`; });
+}};
+
+/* ---------- 17 · VOR / NDB: dónde estás y qué marcan CDI y RMI ---------- */
+V.radnav={t:"VOR y NDB: arrastra el avión y mira el CDI, el RMI y la marcación relativa",cap:"Arrastra el avión (o toca el mapa) para cambiar de radial. El CDI solo depende de dónde estás y del curso seleccionado, nunca de tu rumbo: escala completa ±10° (5 puntos, 2° por punto). La aguja del RMI siempre apunta a la estación: la punta marca el QDM y la cola el QDR. RB = QDM − rumbo.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 270" role="img" aria-label="Mapa alrededor de la estación con CDI y RMI"><g data-bg></g><g data-dy></g><g data-ac style="touch-action:none;cursor:grab"><circle r="24" fill="#fff" fill-opacity="0"/><path d="M0 -15L10 12L0 7L-10 12Z" fill="#ffc94d" stroke="#12202f" stroke-width="1.2"/></g></svg>`,rng("c","Curso seleccionado (OBS)",0,359,90,1,"°")+rng("h","Tu rumbo",0,359,60,1,"°")+`<button type="button" data-m="V" aria-pressed="true">VOR</button><button type="button" data-m="N" aria-pressed="false">NDB (ADF)</button>`,this.cap), svg=u.q("svg"), bg=u.q("[data-bg]"), dy=u.q("[data-dy]"), ac=u.q("[data-ac]");
+  const SX=125, SY=135, n3=a=>((a%360)+360)%360, p3=a=>String(Math.round(n3(a))||360).padStart(3,"0"), n180=a=>((a+540)%360)-180;
+  let px=70, py=-52, mode="V", C=90, HD=60;
+  bg.innerHTML=`<rect width="400" height="270" fill="#12202f"/><circle cx="${SX}" cy="${SY}" r="112" fill="#16283b" stroke="#2f4560"/>`+[0,30,60,90,120,150,180,210,240,270,300,330].map(a=>{ const p=pol(SX,SY,112,a), q=pol(SX,SY,101,a), t=pol(SX,SY,91,a); return `<path d="M${p[0].toFixed(1)} ${p[1].toFixed(1)}L${q[0].toFixed(1)} ${q[1].toFixed(1)}" stroke="#58708c"/><text x="${t[0].toFixed(1)}" y="${(t[1]+3.5).toFixed(1)}" font-size="9" text-anchor="middle" fill="#7f95ad">${a?String(a).padStart(3,"0"):"N"}</text>`; }).join("");
+  const dial=(cx,cy,lab)=>`<circle cx="${cx}" cy="${cy}" r="48" fill="#0b1622" stroke="#3a516b" stroke-width="1.5"/><text x="${cx}" y="${cy+62}" font-size="10" text-anchor="middle" fill="#9fb3c8">${lab}</text>`;
+  function draw(){ const dist=Math.hypot(px,py), qdr=n3(Math.atan2(px,-py)/R), qdm=n3(qdr+180), rb=n3(qdm-HD), d=n180(qdr-C), from=Math.abs(d)<=90, e=from?d:n180(qdr-C-180), amb=Math.abs(Math.abs(d)-90)<4, right=from?d>0:e<0, dots=cl((from?-d:e)/2,-5,5), V_=mode==="V";
+    const a=pol(SX,SY,112,C), b=pol(SX,SY,112,C+180), ax=SX+px, ay=SY+py;
+    ac.setAttribute("transform",`translate(${ax.toFixed(1)} ${ay.toFixed(1)}) rotate(${HD})`);
+    // CDI
+    const cx=325, c1=60, c2=196, nx=cx+dots*7.6;
+    let s=`<path d="M${SX} ${SY}L${ax.toFixed(1)} ${ay.toFixed(1)}" stroke="#ffc94d" stroke-width="1.4" stroke-dasharray="4 3"/>`;
+    if(V_) s+=`<path d="M${b[0].toFixed(1)} ${b[1].toFixed(1)}L${a[0].toFixed(1)} ${a[1].toFixed(1)}" stroke="#6ee7a0" stroke-width="2"/><g transform="translate(${a[0].toFixed(1)} ${a[1].toFixed(1)}) rotate(${C})"><path d="M0 -3L6 9H-6Z" fill="#6ee7a0"/></g>`;
+    s+=V_?`<circle cx="${SX}" cy="${SY}" r="7" fill="#12202f" stroke="#dfe8f1" stroke-width="1.6"/><path d="M${SX-4} ${SY-3.5}h8l4 3.5-4 3.5h-8l-4-3.5z" fill="#dfe8f1"/>`:`<circle cx="${SX}" cy="${SY}" r="8" fill="none" stroke="#dfe8f1" stroke-dasharray="2 2.5" stroke-width="1.6"/><circle cx="${SX}" cy="${SY}" r="3" fill="#dfe8f1"/>`;
+    s+=dial(cx,c1,V_?`CDI · OBS ${p3(C)}`:"CDI: el ADF no tiene");
+    if(V_){ s+=[-5,-4,-3,-2,-1,1,2,3,4,5].map(j=>`<circle cx="${cx+j*7.6}" cy="${c1}" r="1.9" fill="#9fb3c8"/>`).join("")+`<circle cx="${cx}" cy="${c1}" r="4" fill="none" stroke="#9fb3c8"/>
+      <path d="M${nx.toFixed(1)} ${c1-36}V${c1+36}" stroke="${Math.abs(dots)>=5?"#ff8a80":"#ffc94d"}" stroke-width="3.4" stroke-linecap="round"/>
+      <rect x="${cx-15}" y="${c1+16}" width="30" height="14" rx="2" fill="#12202f" stroke="#3a516b"/><text x="${cx}" y="${c1+26.5}" font-size="9.5" text-anchor="middle" font-weight="700" fill="${amb?"#ff8a80":"#fff"}">${amb?"OFF":from?"FROM":"TO"}</text>
+      <path d="${from?`M${cx} ${c1-16}l-6 -9h12z`:`M${cx} ${c1-25}l-6 9h12z`}" fill="${amb?"none":"#fff"}"/>`; }
+    else s+=`<text x="${cx}" y="${c1+4}" font-size="10" text-anchor="middle" fill="#58708c">solo aguja (RMI/RBI)</text>`;
+    // RMI
+    s+=dial(cx,c2,`RMI · rumbo ${p3(HD)}`)+`<g transform="rotate(${-HD} ${cx} ${c2})">`+[0,30,60,90,120,150,180,210,240,270,300,330].map(t=>{ const p=pol(cx,c2,46,t), q=pol(cx,c2,40,t), w=pol(cx,c2,32,t); return `<path d="M${p[0].toFixed(1)} ${p[1].toFixed(1)}L${q[0].toFixed(1)} ${q[1].toFixed(1)}" stroke="#dfe8f1"/><text x="${w[0].toFixed(1)}" y="${(w[1]+3).toFixed(1)}" font-size="8.5" text-anchor="middle" transform="rotate(${t} ${w[0].toFixed(1)} ${w[1].toFixed(1)})" fill="${t%90?"#9fb3c8":"#fff"}">${t===0?"N":t===90?"E":t===180?"S":t===270?"W":t/10}</text>`; }).join("")+`</g>
+      <path d="M${cx} ${c2-50}l-5 -8h10z" fill="#ff8a80"/>
+      <g transform="rotate(${rb} ${cx} ${c2})"><path d="M${cx} ${c2+26}V${c2-24}" stroke="#ffc94d" stroke-width="3" stroke-linecap="round"/><path d="M${cx} ${c2-31}l-6 11h12z" fill="#ffc94d"/><circle cx="${cx}" cy="${c2}" r="3" fill="#0b1622" stroke="#ffc94d"/></g>`;
+    dy.innerHTML=s;
+    const where=rb<=20||rb>=340?"delante":rb<160?"a tu <b>derecha</b>":rb<=200?"detrás":"a tu <b>izquierda</b>";
+    let t=`Estás en el <b>radial ${p3(qdr)}</b> (QDR ${p3(qdr)} · <b>QDM ${p3(qdm)}</b>). Con rumbo ${p3(HD)}°: <b>RB ${p3(rb)}°</b> → la estación queda ${where}.<br>`;
+    if(V_){ t+=amb?`CDI con OBS ${p3(C)}: <b class="bad">zona de ambigüedad</b> (estás a 90° del curso): bandera OFF y aguja sin información útil.`:`CDI con OBS ${p3(C)}: bandera <b>${from?"FROM":"TO"}</b> y aguja ${Math.abs(dots)<.25?"<b class='ok'>centrada</b>":`<b>${f1(Math.abs(dots))} puntos a la ${dots<0?"izquierda":"derecha"}</b>${Math.abs(dots)>=5?" (a tope)":""}`}. `+(Math.abs(dots)<.25?`Estás sobre el curso.`:`El curso ${p3(C)} te queda a la <b>${right?"izquierda":"derecha"}</b>: para interceptarlo con 30°, rumbo <b>${p3(C+(right?-30:30))}°</b>.`);
+      if(!amb&&Math.abs(n180(HD-C))>90) t+=` <span style="color:#9fb3c8">Ojo: vuelas en sentido contrario al curso seleccionado, así que la aguja parece ir «al revés».</span>`; }
+    else t+=`ADF: no hay curso que seleccionar. Para ir a la estación sin viento, pon la aguja arriba (RB 000): rumbo <b>${p3(qdm)}°</b>. En el RMI lees el QDM en la punta sin hacer cuentas; con un RBI fijo, QDM = rumbo + RB.`;
+    u.out.innerHTML=t; }
+  const toV=e=>{ const r=svg.getBoundingClientRect(); return [(e.clientX-r.left)/r.width*400-SX,(e.clientY-r.top)/r.height*270-SY]; };
+  const place=(x,y)=>{ const dd=Math.hypot(x,y)||1, k=cl(dd,22,104)/dd; px=x*k; py=y*k; draw(); };
+  let drag=false; ac.addEventListener("pointerdown",e=>{ drag=true; try{ ac.setPointerCapture(e.pointerId); }catch(_){} e.preventDefault(); });
+  ac.addEventListener("pointermove",e=>{ if(drag){ const p=toV(e); place(p[0],p[1]); } }); const end=()=>{ drag=false; }; ac.addEventListener("pointerup",end); ac.addEventListener("pointercancel",end);
+  svg.addEventListener("click",e=>{ const p=toV(e); if(Math.hypot(p[0],p[1])<=114) place(p[0],p[1]); });
+  btns(el,"data-m",v=>{ mode=v; draw(); }); bind(el,o=>{ C=o.c; HD=o.h; setO(el,"c",p3(C)); setO(el,"h",p3(HD)); draw(); });
+}};
+
+/* ---------- 18 · Altimetría: QNH, QFE, 1013, transición y temperatura ---------- */
+V.altim={t:"Altimetría: QNH, QFE, nivel de transición y temperatura",cap:"Cifras de examen: 27 ft por hPa y 4 % de la altura sobre el aeródromo por cada 10 °C de desviación ISA (4 ft por cada 1 000 ft y °C). Altitud de transición del ejemplo: 6 000 ft; el nivel de transición es el primer nivel de vuelo utilizable por encima de ella (aquí, niveles cada 500 ft). «De alta a baja, peligro abajo»: al volar hacia menos presión o más frío sin corregir, el avión está más bajo de lo que indica.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 270" role="img" aria-label="Corte vertical con niveles de presión, terreno y avión"></svg>`,rng("q","QNH real",960,1050,1013,1," hPa")+rng("e","Elevación del aeródromo",0,5000,2000,100," ft")+rng("t","Temperatura respecto a ISA",-30,30,0,5," °C")+rng("i","El altímetro indica",1000,12000,8000,100," ft")+`<button type="button" data-sub="Q" aria-pressed="true">Reglado en QNH</button><button type="button" data-sub="S" aria-pressed="false">Reglado en 1013</button>`,this.cap), svg=u.q("svg"); let sub="Q", O=null;
+  const Y=ft=>236-ft*216/13000, TA=6000, sg=n=>(n>0?"+":n<0?"−":"")+f0(Math.abs(n));
+  const draw=()=>{ const o=O; if(!o) return; const k=1+.004*o.t, tr=h=>h<=o.e?h:o.e+(h-o.e)*k, d13=(1013-o.q)*27, altQ=o.i+(sub==="S"?-d13:0), tru=tr(altQ), qfe=o.q-o.e/27, pa=altQ+d13, tlfl=(Math.floor((TA+d13)/500+1e-9)+1)*5, tlalt=tlfl*100-d13, layer=tlalt-TA, s13=-d13, agl=tru-o.e, err=tru-o.i;
+    const ye=Y(o.e), yI=Y(cl(o.i,-900,13000)), yT=Y(cl(tru,-900,13000));
+    let s=`<rect width="400" height="270" fill="#12202f"/><rect x="0" y="${Y(0)}" width="400" height="${270-Y(0)}" fill="#14324a"/><path d="M0 ${Y(0)}H400" stroke="#58c4f0" stroke-width="1.4"/><text x="394" y="${Y(0)+12}" font-size="9.5" text-anchor="end" fill="#58c4f0">nivel del mar</text>`;
+    for(let h=2000;h<=12000;h+=2000){ if(h<=o.e) continue; const y=Y(tr(h)); if(y<8) continue; s+=`<path d="M40 ${y.toFixed(1)}H400" stroke="#3a516b" stroke-width="1" stroke-dasharray="3 5"/><text x="36" y="${(y+3.5).toFixed(1)}" font-size="9" text-anchor="end" fill="#7f95ad">${h/1000}k</text>`; }
+    s+=`<path d="M0 270V${ye+4}Q20 ${ye} 46 ${ye}H178Q204 ${ye} 222 ${ye+14}T268 ${Math.min(Y(0)+1,ye+60)}T330 ${Y(0)+1}H400V270Z" fill="#2b3b2f" stroke="#55705a"/><rect x="70" y="${ye-2.5}" width="90" height="3.6" fill="#9fb3c8"/><text x="115" y="${ye+14}" font-size="9.5" text-anchor="middle" fill="#cfe0d2">aeródromo ${f0(o.e)} ft · QFE ${Math.round(qfe)}</text>`;
+    const y13=Y(cl(tr(s13),-1100,13500)); s+=`<path d="M0 ${y13.toFixed(1)}H400" stroke="#f6b73c" stroke-width="1.6" stroke-dasharray="9 4"/><text x="6" y="${(y13-4).toFixed(1)}" font-size="9.5" fill="#f6b73c">1013 hPa${Math.abs(d13)<1?" = nivel del mar":s13>0?" (sobre el mar)":" (bajo el mar)"}</text>`;
+    const yTA=Y(tr(TA)), yTL=Y(tr(tlalt)); if(TA>o.e){ s+=`<path d="M210 ${yTA.toFixed(1)}H400" stroke="#6ee7a0" stroke-width="1.5"/><text x="396" y="${(yTA+11).toFixed(1)}" font-size="9.5" text-anchor="end" fill="#6ee7a0">TA 6 000 ft</text><path d="M210 ${yTL.toFixed(1)}H400" stroke="#e58bd8" stroke-width="1.5"/><text x="396" y="${(yTL-4).toFixed(1)}" font-size="9.5" text-anchor="end" fill="#e58bd8">TL FL${String(tlfl).padStart(3,"0")}</text>`; }
+    const pln=(x,y,f,st)=>`<g transform="translate(${x} ${y.toFixed(1)})"><path d="M-13 0h20l7 2.4-7 2.4h-20zM-12 0l-5-7h5l6 7zM-3 2l-6 7h5l7-7z" fill="${f}" ${st}/></g>`;
+    if(Math.abs(yT-yI)>3) s+=pln(250,yI-2,"none",`stroke="#9fb3c8" stroke-width="1.2" stroke-dasharray="3 2"`)+`<text x="232" y="${(yI+1).toFixed(1)}" font-size="9.5" text-anchor="end" fill="#9fb3c8">indica ${f0(o.i)}</text>`;
+    if(Math.abs(yT-yI)>3) s+=`<path d="M250 ${(yI+(yT>yI?6:-6)).toFixed(1)}V${(yT+(yT>yI?-8:10)).toFixed(1)}" stroke="${err<0?"#ff8a80":"#6ee7a0"}" stroke-width="1.6"/>`;
+    s+=pln(250,yT-2,agl<=0?"#ff8a80":"#ffc94d","")+`<text x="270" y="${(yT+2).toFixed(1)}" font-size="10" font-weight="700" fill="${err<-20?"#ff8a80":"#ffc94d"}">real ${f0(tru)} ft</text>`;
+    svg.innerHTML=s;
+    const why=[]; if(sub==="S"&&Math.abs(d13)>=1) why.push(`1013 puesto con QNH ${o.q}: ${sg(-d13)} ft`); if(o.t&&altQ>o.e) why.push(`ISA ${o.t>0?"+":"−"}${Math.abs(o.t)} °C: ${sg((altQ-o.e)*(k-1))} ft`);
+    u.out.innerHTML=`Altitud <b>indicada ${f0(o.i)} ft</b> → <b class="${err<-20?"bad":err>20?"ok":""}">verdadera ${f0(tru)} ft</b>`+(why.length?` (${why.join(" · ")})`:` (sin error: atmósfera ISA y reglaje correcto)`)+`. ${agl<=0?`<b class="bad">Por debajo del terreno del aeródromo.</b>`:`Sobre el aeródromo: <b>${f0(agl)} ft</b>.`}`+(err<-20?` <b class="bad">Estás más bajo de lo que crees: peligro abajo.</b>`:err>20?` Estás más alto de lo que indica: margen a favor.`:"")+
+      `<br><b>QFE ${Math.round(qfe)} hPa</b> (= QNH − elevación ÷ 27): con él leerías la altura sobre la pista. Altitud de presión <b>${f0(pa)} ft</b> (FL${String(Math.max(0,Math.round(pa/100))).padStart(3,"0")}).`+
+      `<br>Transición: TA 6 000 ft → <b>TL FL${String(tlfl).padStart(3,"0")}</b>; capa de transición de <b>${f0(layer)} ft</b>. ${o.q<1013?"Con QNH bajo, el nivel de transición sube.":o.q>1013?"Con QNH alto, el nivel de transición baja.":""}`; };
+  btns(el,"data-sub",v=>{ sub=v; draw(); }); bind(el,o=>{ O=o; setO(el,"q",o.q); setO(el,"e",f0(o.e)); setO(el,"t",(o.t>0?"+":o.t<0?"−":"")+Math.abs(o.t)); setO(el,"i",f0(o.i)); draw(); });
 }};
 
 function mount(el){ const k=el.dataset.viz, v=V[k]; if(!v||el._v) return; el._v=1;
