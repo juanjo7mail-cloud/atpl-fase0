@@ -950,6 +950,17 @@ function wkHTML(){
 }
 const wkSec=()=>`<section class="pn wkp" data-t="res" id="opWkS">${wkSeen()?"":wkHTML()}</section>`;
 function wkDraw(){ const e=S.root&&$("#opWkS",S.root); if(e) e.innerHTML=wkSeen()?"":wkHTML(); }
+/* ---------- Panel privado (Stats): estado AIRAC / SUP / WEF de todos los aeródromos cargados ---------- */
+function maint(){
+  const now=Date.now(), a=airac(now), rows=[];
+  Object.keys(CHARTS).sort().forEach(ic=>{
+    const c=CHARTS[ic], o=AEROS.find(x=>x.icao===ic), sup=(c.sup||[]).map(x=>{ const e=supEnd(x[2]), t=e?e.getTime():null; return {id:x[0],end:x[2],st:t==null?"ok":t<now?"late":t-now<=30*D1?"soon":"ok"}; });
+    const m=/^(\d\d)-([A-Z]{3})-(\d\d)$/.exec(c.wef||""), MM={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11}, w=m?Date.UTC(2000+ +m[3],MM[m[2]],+m[1]):null;
+    rows.push({icao:ic,name:o?o.name:ic,wef:c.wef||"—",old:w!=null&&now-w>365*D1,sup});
+  });
+  const late=rows.filter(r=>r.sup.some(x=>x.st==="late")), act=a.dN<=3||late.length>0;
+  return {a:{idC:a.idC,idN:a.idN,nxt:dmy(a.nxt),dN:a.dN},rows,late:late.map(r=>r.icao),act,link:"https://aip.enaire.es/AIP/"};
+}
 const TABS=[["res","Resumen"],["pist","Pistas"],["wx","METAR · TAF"],["ntm","NOTAM"],["map","Mapa"]];
 function ddHTML(){
   const here=[AD0.lat,AD0.lon], L=[{icao:"LECU",name:"Cuatro Vientos",lat:AD0.lat,lon:AD0.lon,tm:""}].concat(AEROS).sort((x,y)=>x.name.localeCompare(y.name,"es"));
@@ -1022,5 +1033,5 @@ function render(el,opt,keep){
   clearInterval(S.tt); S.tt=setInterval(()=>{ if(!document.hidden) loadTr(); },20000);
 }
 function leave(){ clearInterval(S.clk); clearInterval(S.t); clearInterval(S.tt); try{ if(S.map) S.map.remove(); }catch(e){} S.map=null; S.lay=null; S.trl=null; S.tile=null; S.img=null; S.imgO=null; if(S.root) S.root.innerHTML=""; S.root=null; }
-window.F0Ops={brief,render,leave,skyCard,_t:{skyAt,wxOf,parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
+window.F0Ops={brief,render,leave,skyCard,maint,_t:{skyAt,wxOf,parseMetar,parseTaf,evalOne,sun,windOn,wxText,flightCat,infer,adState}};
 })();

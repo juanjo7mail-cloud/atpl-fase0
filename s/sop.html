@@ -810,7 +810,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro cronometrado <small><span class="row" style="margin-top:6px"><select id="senLen"><option value="full">Completo · 30 preguntas en 36 min</option><option value="half">Exprés · 15 preguntas en 18 min</option><option value="real">Tiempo real · 30 preguntas en 45 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small><select id="loSel"></select></small></label>
@@ -1805,7 +1805,7 @@ $("#startBtn").addEventListener("click",()=>{
     </div>`).join("");
   $("#qlist").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{ current[+e.target.name.slice(1)].ans = +e.target.value; askedUnanswered=false; $("#finishAsk").hidden=true; $("#finishBtn").textContent="Corregir"; updProg(); }));
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBox").hidden=false; $("#finishBtn").disabled=false; $("#finishBtn").textContent="Corregir"; $("#finishAsk").hidden=true; askedUnanswered=false;
-  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : (curMode==="adaptive" ? 45*60 : 0);
+  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : 0;
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });

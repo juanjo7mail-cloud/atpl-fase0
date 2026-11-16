@@ -1239,7 +1239,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senLen"><option value="full">Completo · 34 preguntas en 48 min (el real da 60)</option><option value="half">Exprés · 17 preguntas en 24 min</option><option value="real">Tiempo real · 34 preguntas en 60 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Solo test. Tus fallos, lo que más pesa, TRIAL y ★ OJO.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas <small>Solo test. Tus fallos, lo que más pesa, TRIAL y ★ OJO.</small></label>
       <label class="mode"><input type="radio" name="mode" value="voice"> Radio por voz · solo hablando <small>ATC te habla en inglés y contestas por el micrófono, sin escribir. Te dice si está bien, mal o qué te falta según la fraseología OACI/SENASA.
         <span class="row" id="voiceOpts"><select id="vLevel" aria-label="Dificultad de la audición"><option value="easy">Fácil · despacio y sin ruido</option><option value="normal" selected>Normal · algo de ruido</option><option value="hard">Difícil · rápido y con ruido</option><option value="real">Real · frecuencia saturada</option></select>
         <select id="vAccent" aria-label="Acento"><option value="gb">Británico</option><option value="us">Americano</option><option value="random">Al azar</option></select>
@@ -2795,7 +2795,7 @@ $("#startBtn").addEventListener("click",()=>{
   $("#qlist").querySelectorAll("input,select").forEach(el=>el.addEventListener("change",updProg));
   $("#qlist").querySelectorAll("input.fillin").forEach(el=>el.addEventListener("input",updProg));
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBtn").hidden=false; $("#finishBtn").disabled=false;
-  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : (curMode==="adaptive" ? 45*60 : 0);
+  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : 0;
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
@@ -2838,7 +2838,7 @@ async function finishTest(timeout){
   if(curMode==="senasa"){ Object.assign(rec,{len:curLen, limitS:tLimit, timeout:!!timeout, byBlock, score0:s0, total0:n0}); }
   state.attempts.push(rec);
   const realS = 60*60/34, perQ = usedS/current.length;
-  const blockHTML = curMode==="adaptive" ? `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(usedS/current.length)} s por pregunta</div>` : curMode!=="senasa" ? "" : `
+  const blockHTML = false ? `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(usedS/current.length)} s por pregunta</div>` : curMode!=="senasa" ? "" : `
       <div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el real da ${Math.round(realS)} s). ${perQ<=realS?`En el real te sobrarían <b>${Math.max(0,Math.round((60*60-perQ*34)/60))} min</b> para repasar.`:`<span class="fail">A este ritmo no te daría tiempo a repasar en el real.</span>`}<br><b>Temario base:</b> ${s0}/${n0}${n0?` (${Math.round(s0/n0*100)} %)`:""}${current.length-n0?` · <b>ATPL:</b> ${score-s0}/${current.length-n0}`:""}</div>
       <div class="scroll"><table style="margin-top:8px"><tr><th>Capítulo</th><th>Aciertos</th></tr>${BLOCKS.filter(b=>byBlock[b.k]).map(b=>{const x=byBlock[b.k], p=Math.round(x.ok/x.total*100); return `<tr><td><b>${b.code}</b> ${esc(b.name)}</td><td class="${p>=75?'pass':'fail'}">${x.ok}/${x.total} · ${p} %</td></tr>`;}).join("")}</table></div>`;
   const byK = {}; current.forEach((it,i)=>{ (byK[it.k]=byK[it.k]||{ok:0,total:0}).total++; if(items[i].ok) byK[it.k].ok++; });
@@ -3625,9 +3625,9 @@ try{
     need(()=>true, F0N);
     return shuffle(out).map(q=>({k:"mc", q}));
   };
-  MODE_LABEL.adaptive = "Adaptativo · 25 preguntas · 45 min";
+  MODE_LABEL.adaptive = "Adaptativo · 25 preguntas";
   const ad = document.querySelector('input[name=mode][value=adaptive]'), lab = ad && ad.closest("label");
-  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Adaptativo · 25 preguntas · 45 min <small>El formato estándar de Comunicaciones: solo test, con cronómetro. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
+  if(lab){ lab.innerHTML = '<input type="radio" name="mode" value="adaptive" checked> Adaptativo · 25 preguntas <small>El formato estándar de Comunicaciones: solo test. Mezcla preguntas de estilo trial, tus fallos y más peso en propagación; incluye algún código Q.</small>';
     const sn = document.querySelector('input[name=mode][value=senasa]'); if(sn) sn.checked = false; }
 }catch(e){ console.error("com_patch examen", e); }
 

@@ -1475,7 +1475,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senLen"><option value="full">Completo · 44 preguntas en 48 min (el real da 60)</option><option value="half">Exprés · 22 preguntas en 24 min</option><option value="real">Tiempo real · 44 preguntas en 60 min</option></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="signals"> Señales y balizamiento · 15 preguntas <small>Marcas de pista, luces, señales visuales, ayudas luminosas, señales SAR e interceptación. Cada vez distinto.</small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
@@ -3781,7 +3781,7 @@ $("#startBtn").addEventListener("click",()=>{
   $("#qlist").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{ current[+e.target.name.slice(1)].ans = +e.target.value; updProg(); }));
   if(curMode==="senasa") examOn();
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBtn").hidden=false; $("#finishBtn").disabled=false;
-  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : (curMode==="adaptive" ? 45*60 : 0);
+  clearInterval(tTimer); finishing=false; tStart=Date.now(); tLimit = curLen ? SEN_LEN[curLen].min*60 : 0;
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });

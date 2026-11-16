@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="159ce50b5aea";</script>
+<script>window.F0_BUILD="1693974cf793";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -471,6 +471,7 @@ html{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
 :is(button,a,[role=tab],summary,select,label[for],[data-go],input[type=checkbox],input[type=radio],input[type=file]){cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg transform='translate%2816 16%29 rotate%28-45%29 scale%281.45%29 translate%28-10 -10%29'%3E%3Cpath d='M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z' fill='%23C8102E' stroke='white' stroke-width='1.3' stroke-linejoin='round' paint-order='stroke'/%3E%3C/g%3E%3C/svg%3E") 7 7,pointer!important}
 input:not([type]),input[type=text],input[type=email],input[type=password],input[type=search],textarea{cursor:text!important}
 /* ---- estadísticas (solo admin) ---- */
+.st-air{border-left:5px solid #1E8A42}.st-air.act{border-left-color:#C9372C;background:#FBE5E3}.st-air .ac{margin:0 0 10px;font-weight:600}.st-air.act .ac{color:#8c1f17}.st-air table{width:100%;border-collapse:collapse;font-size:13px}.st-air th,.st-air td{text-align:left;padding:4px 8px 4px 0;border-bottom:1px solid var(--line);vertical-align:top}.st-air .late{color:#C9372C;font-weight:700}.st-air .soon{color:#B7791F;font-weight:700}.st-air .old{color:#B7791F}.st-air .sc{overflow-x:auto}
 .st-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:6px 0 18px}
 .st-k{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .st-k b{display:block;font:700 30px/1 var(--display);font-variant-numeric:tabular-nums}
@@ -1719,6 +1720,16 @@ async function selAll(table, cols, ord){
   }
   return {data:out,error:null};
 }
+function airacBox(){
+  let M=null; try{ M=window.F0Ops&&window.F0Ops.maint&&window.F0Ops.maint(); }catch(e){}
+  if(!M) return "";
+  const E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const who=M.late.length?M.late:M.rows.map(r=>r.icao);
+  const msg=M.act?`Acción requerida: descarga la nueva enmienda AIP / SUP de ${E(who.join(", "))} y súbela al chat para actualizar los datos internos. <a target="_blank" rel="noopener" href="${M.link}">ENAIRE · AIP ↗</a>${M.a.dN<=3?` (AIRAC ${M.a.idN} entra en vigor el ${M.a.nxt}, en ${M.a.dN} día${M.a.dN===1?"":"s"})`:` (${M.late.length} aeródromo${M.late.length===1?"":"s"} con SUP superado)`}`
+    :`Datos AIP/AIRAC de aeródromos al día hasta ${M.a.nxt} (AIRAC ${M.a.idN}). Vigente: ${M.a.idC}.`;
+  const rows=M.rows.map(r=>`<tr><th>${r.icao}</th><td>${E(r.name)}</td><td class="${r.old?"old":""}">${E(r.wef)}${r.old?" · >1 año":""}</td><td>${r.sup.length?r.sup.map(x=>`<span class="${x.st}">${E(x.id)} → ${E(x.end)}${x.st==="late"?" (superado)":x.st==="soon"?" (≤30 d)":""}</span>`).join("<br>"):"—"}</td></tr>`).join("");
+  return `<div class="st-box st-air${M.act?" act":""}" style="margin-bottom:14px"><h2>Control AIRAC / SUP · mantenimiento</h2><p class="ac">${msg}</p><details><summary>Ver ${M.rows.length} aeródromos</summary><div class="sc"><table><thead><tr><th>OACI</th><th>Aeródromo</th><th>Carta ADC (WEF)</th><th>Suplementos (fin estimado)</th></tr></thead><tbody>${rows}</tbody></table></div></details><p class="muted" style="margin:8px 0 0;font-size:12px">Solo lo ves tú. Ciclo AIRAC cada 28 días; avisa a 3 días o menos, o si un SUP supera su fecha.</p></div>`;
+}
 async function renderStats(){
   const box=$("#stats"); if(!isAdmin||!sb){ box.innerHTML=""; return; }
   SG=null;
@@ -1818,6 +1829,7 @@ function drawStats(){
   const opts = `<option value="">Todos los usuarios (${ST.length})</option>` + ST.map(u=>`<option value="${esc(u.user_id)}" ${u.user_id===stUser?"selected":""}>${esc(uname(u))} · ${esc(u.email)} · ${u.at.length} tests</option>`).join("");
   box.innerHTML = `<div class="dhead"><div><h1>Estadísticas</h1><p>Solo las ves tú. Visitas sin cuenta y países, en Cloudflare Web Analytics.</p></div>
     <label class="fld" style="margin-left:auto;min-width:min(100%,320px)">Ver<select id="stSel" style="font:15px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:9px 10px">${opts}</select></label></div>
+  ${airacBox()}
   <div class="st-grid">${kp.map(([v,l])=>`<div class="st-k"><b>${v}</b><span>${l}</span></div>`).join("")}</div>
   <div class="st-two">
     <div class="st-box"><h2>Tests por día · últimos 30 días</h2>${dayChart(all)}</div>

@@ -2794,7 +2794,7 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="sim" checked> Simulacro SENASA <small id="simCount"></small>
         <span class="opts"><select id="simLen" aria-label="Duración"><option value="full">Completo · 84 preguntas en 96 min (el real da 120)</option><option value="half">Exprés · 42 preguntas en 48 min</option><option value="real">Tiempo real · 84 preguntas en 120 min</option></select></span></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Prioriza tus fallos, los subcapítulos flojos, lo que no has visto y su peso oficial. Al menos 6 del trial.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas <small>Prioriza tus fallos, los subcapítulos flojos, lo que no has visto y su peso oficial. Al menos 6 del trial.</small></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="wrong"> Solo mis fallos <small id="wrongCount"></small></label>
       <label class="mode"><input type="radio" name="mode" value="foto"> Nubes por foto <small id="fotoCount"></small></label>
@@ -5211,7 +5211,7 @@ $("#startBtn").addEventListener("click",()=>{
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false;
   $("#finishBtn").hidden = false; $("#finishBtn").disabled = false;
   stopTimer();
-  if(curMode==="sim") startTimer(current.length, simLenKind); else if(curMode==="adaptive") startTimer(current.length, "real", 45*60); else $("#timerBox").hidden = true;
+  if(curMode==="sim") startTimer(current.length, simLenKind); else $("#timerBox").hidden = true;
   updProg(); window.scrollTo({top:0});
 });
 function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length}`; }

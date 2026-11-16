@@ -949,7 +949,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <b>Elige el test</b>
     <div style="margin-top:8px">
       <label class="mode"><input type="radio" name="mode" value="senasa" checked> Simulacro SENASA <small>Test cronometrado con el reparto oficial; corrección al final.<span class="row"><select id="senSubj" aria-label="Asignatura"><option value="031">031 Mass and Balance · 25 preguntas</option><option value="032">032 Performance · 45 preguntas</option><option value="033">033 Flight Planning · 42 preguntas</option></select><select id="senLen" aria-label="Duración"></select></span></small></label>
-      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas · 45 min <small>Tus fallos y lo que más pesa.</small></label>
+      <label class="mode"><input type="radio" name="mode" value="adaptive"> Adaptativo · 25 preguntas <small>Tus fallos y lo que más pesa.</small></label>
       <label class="mode"><input type="radio" name="mode" value="calc"> Solo cálculos <small id="calcInfo">Números nuevos cada vez.</small>
         <span class="opts"><select id="calcCountSel" aria-label="Número de preguntas"></select></span></label>
       <label class="mode"><input type="radio" name="mode" value="trial"> Trial <small id="trialCount"></small></label>
@@ -2778,7 +2778,7 @@ function renderSetup(){
   const nw = BANK.filter(q=>servable(q) && ((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas con la última respuesta incorrecta.` : "Sin fallos pendientes.";
   $("#allCount").textContent = `${BANK.filter(q=>servable(q) && isGiven(q)).length} preguntas de lo dado + ${BANK.filter(q=>q[2]==="a").length} de ampliación ATPL.`;
-  $("#trialCount").textContent = `25 preguntas en 1 h: trial y ejercicios de aplicación, en variante`;
+  $("#trialCount").textContent = `25 preguntas: trial y ejercicios de aplicación, en variante`;
   const selected = $("#loSel").value;
   $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}${s[4]==="atpl"?" · ATPL":""}</option>`).join("");
 }
@@ -2818,7 +2818,7 @@ $("#startBtn").addEventListener("click",()=>{
   $("#qlist").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{ current[+e.target.name.slice(1)].ans = +e.target.value; finishArmed=false; $("#finishMsg").textContent=""; updProg(); }));
   $("#setup").hidden = true; $("#result").hidden = true; $("#quiz").hidden = false; $("#finishBtn").hidden=false; $("#finishBtn").disabled=false;
   clearInterval(tTimer); finishing=false; tStart=Date.now();
-  tLimit = curMode==="senasa" ? SEN_LEN(curSubj)[curLen].min*60 : curMode==="trial" ? 3600 : curMode==="adaptive" ? 45*60 : 0;
+  tLimit = curMode==="senasa" ? SEN_LEN(curSubj)[curLen].min*60 : 0;
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
@@ -2856,7 +2856,7 @@ async function finishTest(timeout){
     const S=SUBJ[curSubj], realS = S.min*60/S.n, perQ = usedS/current.length;
     blockHTML = `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de ${fmtMS(tLimit)}${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(perQ)} s por pregunta (el real da ${Math.round(realS)} s). ${perQ<=realS?`En el real te sobrarían <b>${Math.max(0,Math.round((S.min*60-perQ*S.n)/60))} min</b> para repasar.`:`<span class="fail">A este ritmo no te daría tiempo a repasar en el real.</span>`}<br><b>Temario base:</b> ${s0}/${n0}${n0?` (${Math.round(s0/n0*100)} %)`:""}${current.length-n0?` · <b>ATPL:</b> ${score-s0}/${current.length-n0}`:""}</div>
       <div class="scroll"><table style="margin-top:8px"><tr><th>Capítulo</th><th>Aciertos</th></tr>${BLOCKS.filter(b=>byBlock[b.k]).map(b=>{const x=byBlock[b.k], p=Math.round(x.ok/x.total*100); return `<tr><td><b>${b.code}</b> ${esc(b.name)}</td><td class="${p>=75?'pass':'fail'}">${x.ok}/${x.total} · ${p} %</td></tr>`;}).join("")}</table></div>`;
-  } else if(curMode==="trial"){
+  } else if(false){
     blockHTML = `<div class="ref" style="margin-top:10px"><b>Tiempo:</b> ${fmtMS(usedS)} de 60:00${timeout?" · <span class='fail'>se acabó el tiempo</span>":""} · ${Math.round(usedS/current.length)} s por pregunta (tienes 120 s).</div>`;
   }
   const st = stats(), next = atStake(st).filter(x=>SUBMAP[x.lo].cov!=="atpl").slice(0,2), los = Object.keys(byLO).sort();
