@@ -24,7 +24,7 @@ const CSS=`
 .f0viz .out{margin:0;background:#16283b;color:#e9f0f7;border-radius:0 0 8px 8px;padding:11px 14px;font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:3.2em}
 .f0viz .out b{color:#ffc94d}.f0viz .out .ok{color:#6ee7a0}.f0viz .out .bad{color:#ff8a80}
 .f0viz .lt,.f0viz .out,.f0viz .cap,.f0viz figure,.f0viz .ctl{max-width:none!important;width:auto!important;box-sizing:border-box}
-.f0viz .cap{font:13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:#5d6977;margin:7px 2px 0}
+.f0viz .cap{font:13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:#5d6977;margin:7px 0 0}
 `;
 const V={};
 const shell=(el,t,fig,ctl,cap)=>{ el.innerHTML=`<p class="lt">${t}</p><figure>${fig}</figure>${ctl?`<div class="ctl">${ctl}</div>`:""}<p class="out" aria-live="polite"></p><p class="cap">${cap}</p>`; const c=el.querySelector(".ctl"); if(c){ const sl=document.createElement("div"), bt=document.createElement("div"); sl.className="sl"; bt.className="bt"; Array.from(c.children).forEach(ch=>(ch.tagName==="LABEL"&&ch.querySelector("input[type=range]")?sl:bt).appendChild(ch)); if(sl.children.length) c.appendChild(sl); if(bt.children.length) c.appendChild(bt); }

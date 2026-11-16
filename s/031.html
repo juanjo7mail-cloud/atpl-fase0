@@ -47,7 +47,7 @@ fetch:async function(u,o){if(String(u).indexOf("progreso.json")>=0){var v=await 
 @media (max-width:0px){:root:not([data-theme="light"]){--mdesk:#0b1118;--msheet:#16212d;--msheet2:#131d28;--mrule:#c9d4de;--mbox:rgba(255,255,255,.04);--mmute:#94a9ba}}
 :root[data-theme="dark"]{--mdesk:#0b1118;--msheet:#16212d;--msheet2:#131d28;--mrule:#c9d4de;--mbox:rgba(255,255,255,.04);--mmute:#94a9ba}
 html body{background:var(--mdesk)}
-body .wrap{position:relative;max-width:880px;margin:16px auto 40px;padding:22px clamp(16px,4.6vw,54px) 44px;border-radius:3px;
+body .wrap{position:relative;max-width:1000px;margin:16px auto 40px;padding:22px clamp(16px,4.6vw,54px) 44px;border-radius:3px;
   background:linear-gradient(180deg,var(--msheet),var(--msheet2));box-shadow:0 18px 34px rgba(10,20,34,.24),0 3px 8px rgba(10,20,34,.18)}
 body .wrap::before{content:"";position:absolute;inset:0;border-radius:3px;pointer-events:none;opacity:.16;mix-blend-mode:multiply;z-index:0;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -68,11 +68,11 @@ body .wrap .card{background:var(--mbox);border:1px solid var(--mln);border-radiu
 body .wrap details.lo{background:var(--mbox);border:1px solid var(--mln);border-left-width:4px;border-radius:3px}
 body .wrap .lonum{font:600 13px/1.3 var(--mmono);letter-spacing:.02em}
 body .wrap details.lo .body{font:17px/1.62 var(--mserif)}
-body .wrap details.lo .body p,body .wrap details.lo .body li{max-width:68ch}
+body .wrap details.lo .body p,body .wrap details.lo .body li{max-width:76ch}
 body .wrap details.lo .body h3,body .wrap details.lo .body h4{font:700 15px/1.2 var(--mdisp);letter-spacing:.1em;text-transform:uppercase;margin:18px 0 5px}
 body .wrap details.lo .body table{font:15px/1.4 var(--body,Barlow,system-ui,sans-serif)}
 body .wrap th{font:600 11.5px/1.3 var(--mmono);letter-spacing:.06em;text-transform:uppercase}
-body .wrap .flag,body .wrap .comp,body .wrap .prof{border-radius:0;border-left-width:4px;border-left-style:solid;padding:10px 14px;margin:14px 0;max-width:68ch;font-size:16px}
+body .wrap .flag,body .wrap .comp,body .wrap .prof{border-radius:0;border-left-width:4px;border-left-style:solid;padding:10px 14px;margin:14px 0;font-size:16px}
 body .wrap .prof{border-left-color:var(--ok,#1c7a45);background:color-mix(in srgb,var(--ok,#1c7a45) 10%,transparent)}
 body .wrap .prof>b:first-child,body .wrap .flag>b:first-child,body .wrap .comp>b:first-child{display:block;font:700 13px/1.2 var(--mdisp);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2px}
 body .wrap .prof>b:first-child{color:var(--ok,#1c7a45)}
@@ -129,7 +129,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
-.wrap{max-width:760px;margin:0 auto;padding:0 16px 64px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px 64px}
 header{padding:28px 0 8px}
 header .code{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;font-size:64px;line-height:.9;color:var(--magenta);letter-spacing:-1px}
 header h1{font-family:"Barlow Condensed",Barlow,sans-serif;font-size:28px;margin:4px 0 2px;font-weight:600}
@@ -3610,5 +3610,5 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ try{ console.error("lens",e); }catch(_){} }
 })();
 </script>
-<script src="../viz16.js?v=467233c1" defer></script>
+<script src="../viz16.js?v=a3ee739c" defer></script>
 </body></html>
