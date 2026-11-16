@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="1693974cf793";</script>
+<script>window.F0_BUILD="12d18ef67ad2";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -430,7 +430,7 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 /* ---- pista de aeropuerto en la cabecera ---- */
 .top .art{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block}
 .top .veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(8,18,32,.8) 0,rgba(8,18,32,.4) min(280px,30%),rgba(8,18,32,.06) 46%,rgba(8,18,32,.06) 60%,rgba(8,18,32,.5) 100%),linear-gradient(180deg,transparent 0 var(--r1,48px),color-mix(in srgb,var(--head) 92%,transparent) calc(var(--r1,48px) + 2px))}
-@media (max-width:640px){.top .veil{background:linear-gradient(90deg,rgba(8,18,32,.78) 0,rgba(8,18,32,.58) 50%,rgba(8,18,32,.7) 100%),linear-gradient(180deg,transparent 0 var(--r1,48px),color-mix(in srgb,var(--head) 92%,transparent) calc(var(--r1,48px) + 2px))}}
+@media (max-width:640px){.top .veil{background:linear-gradient(90deg,rgba(8,18,32,.78) 0,rgba(8,18,32,.6) 112px,rgba(8,18,32,.03) 152px,rgba(8,18,32,.03) calc(100% - 142px),rgba(8,18,32,.6) calc(100% - 112px),rgba(8,18,32,.72) 100%),linear-gradient(180deg,transparent 0 var(--r1,48px),color-mix(in srgb,var(--head) 92%,transparent) calc(var(--r1,48px) + 2px))}}
 .art .rw{position:absolute;left:0;right:0;top:5px;height:36px;background:linear-gradient(#3A556B,#27415A);border-top:1.6px solid rgba(255,255,255,.5);border-bottom:1.6px solid rgba(255,255,255,.5)}
 .art .edge{position:absolute;left:0;right:0;height:8px;background:radial-gradient(circle,#FFE08A 1.9px,transparent 2.5px) 10px 50%/38px 8px repeat-x;animation:twk 3.4s ease-in-out infinite}
 .art .e1{top:-11px}.art .e2{bottom:-11px;animation-delay:-1.7s}
@@ -1064,7 +1064,7 @@ function dueCount(k){
 
 /* Tarjeta compacta «BRIEFING» en INICIO (solo en modo prueba): resumen de LECU en una línea → abre la pestaña */
 let BR={t:0,d:null,busy:false};
-try{ if(window.F0Real) window.F0Real.header($("#hdrCv"),h=>{ const r=$(".top .row1"), y=r?r.offsetTop:0, v=$(".top .veil"); if(v&&v._y!==y){ v._y=y; v.style.setProperty("--r1",(y+48)+"px"); } return {hz:(y+19)/h,y1:(y+30)/h,y2:(y+46)/h,pm:7.2/h,x0:.28,x1:.44}; }); }catch(e){}
+try{ if(window.F0Real) window.F0Real.header($("#hdrCv"),h=>{ const r=$(".top .row1"), y=r?r.offsetTop:0, v=$(".top .veil"); if(v&&v._y!==y){ v._y=y; v.style.setProperty("--r1",(y+48)+"px"); } const mob=window.innerWidth<=640; return {hz:(y+19)/h,y1:(y+30)/h,y2:(y+46)/h,pm:7.2/h,x0:mob?.36:.28,x1:mob?.5:.44,lift:mob?1:.5}; }); }catch(e){}
 $("#brief").addEventListener("click",e=>{ if(e.target.closest("button[data-v]")) show("ops"); });
 function zulu(){ return new Date().toISOString().slice(11,16)+" Z"; }
 function skyApply(){

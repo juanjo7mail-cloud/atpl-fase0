@@ -142,12 +142,13 @@ const MESH=(function(){
 const LTS=[{p:[.25,2.40,5.52],k:"g"},{p:[.25,2.40,-5.52],k:"r"},{p:[-6.0,1.92,0],k:"w"},{p:[-5.62,2.78,0],k:"b"},{p:[.2,2.42,5.5],k:"s"},{p:[.2,2.42,-5.5],k:"s"},{p:[2.32,.98,0],k:"l"}];
 const sect=(az,a,b,res)=>{ const d=az<a?a-az:az>b?az-b:0; return d<=0?1:lerp(1,res,clamp(d/26,0,1)); };   // sector reglamentario: fuera de él queda solo el reflejo del farol
 const SORT=[];
-function plane3D(ctx,sx,sy,pm,st,env,t){
+function plane3D(ctx,sx,sy,pm,st,env,t,lf){
+  lf=lf||0;
   const cp=Math.cos(st.psi), sp=Math.sin(st.psi), ca=Math.cos(st.pitch), sa=Math.sin(st.pitch), cr=Math.cos(st.roll), sr=Math.sin(st.roll);
   // cuerpo → mundo (alabeo, cabeceo sobre las ruedas, rumbo)
   const TR=(b,o)=>{ const y1=b[1]*cr-b[2]*sr, z1=b[2]*cr+b[1]*sr, x2=b[0]*ca-y1*sa, y2=y1*ca+b[0]*sa; o[0]=cp*x2-sp*z1; o[1]=y2; o[2]=sp*x2+cp*z1; return o; };
   const PR=(wv,o)=>{ const dep=wv[0]*PD[0]+wv[1]*PD[1]+wv[2]*PD[2], k=PDIST/(PDIST+dep)*pm; o[0]=sx+k*(wv[0]+PS*wv[2]); o[1]=sy+k*(-wv[1]+PZ*wv[2]); return dep; };
-  const Lc=mix([255,255,255],env.sun,.4), amb=.34+.30*env.amb, dif=.16+.56*env.amb, sxn=lerp(-.75,.75,clamp((env.az-60)/240,0,1)), sl=Math.hypot(sxn,.62,.55), L=[sxn/sl,.62/sl,.55/sl];
+  const Lc=mix([255,255,255],env.sun,.4), amb=.38+.30*env.amb+.20*lf+.08*env.night, dif=.16+.56*env.amb+.10*lf, sxn=lerp(-.75,.75,clamp((env.az-60)/240,0,1)), sl=Math.hypot(sxn,.62,.55), L=[sxn/sl,.62/sl,.55/sl];
   const tv=[0,0,0], nv=[0,0,0], items=SORT; items.length=0;
   for(const f of MESH.F){ TR(f.n,nv); const vis=-(nv[0]*PD[0]+nv[1]*PD[1]+nv[2]*PD[2]); if(vis<=.015) continue;
     let dep=0; for(let i=0;i<f.p.length;i++){ TR(f.p[i],tv); dep+=PR(tv,f.q[i]); } f.dep=dep/f.p.length;
@@ -226,9 +227,45 @@ function buildApron(buf,u,env){
   return buf;
 }
 
+
+/* ---------- ciclo largo: despegue → ascenso → barrena → recuperación → viraje de vuelta → final → aterrizaje ---------- */
+const TOA=2.4, TOT0=1.2, TOTR=11.3, TOTL=12.5, VD=28, AD=2.6, APP=5, RO=VD/AD, TU=5.2;
+const TOP=q=>{ const tg=Math.max(0,q-TOT0), tq=Math.min(tg,TOTL-TOT0), vl=TOA*(TOTL-TOT0), ta=Math.max(0,q-TOTL);
+  return {x:.5*TOA*tq*tq+(tg>tq?vl*(tg-tq)*1.04:0), z:5*sstep(1.6,5,ta), alt:3.4*ta*ta/(ta+1.3), pitch:(sstep(TOTR,TOTL,q)*7.5+sstep(TOTL,TOTL+2,q)*2.5)*D2R, psi:9*D2R*sstep(1.4,4.6,ta),
+    roll:(17*sstep(1.1,3.8,ta)*(1-sstep(5.5,9,ta))+(ta>0?2.6*Math.sin(ta*3.4)*Math.exp(-ta*.9):0))*D2R, v:tg>tq?vl*1.04:TOA*tg}; };
+let CYC=null;
+function cycleModel(){
+  if(CYC) return CYC;
+  const dt=1/30, U0=TOTL, TS=22, E=1.8, S=4.2, R=2.4, CC=10, tE=TS+E, tS=tE+S, tR=tS+R, UE=tR+CC, X1=VD*VD/(2*AD)+29*APP;
+  const run=(om,keep)=>{ const P=TOP(TS), rows=[]; let x=P.x, z=P.z, alt=P.alt, psi=P.psi, v=P.v, xf=TOP(U0).x, ps=0, roll=0, pitch=0;
+    for(let u=U0;u<tR+1e-6;u+=dt){
+      if(u<TS){ const p=TOP(u); x=p.x; z=p.z; alt=p.alt; psi=p.psi; v=p.v; pitch=p.pitch; roll=p.roll; }
+      else{ const τ=u-TS; let vz, w=0;
+        if(τ<E){ const q=τ/E; v=lerp(28,10,sstep(0,1,q)); pitch=lerp(10,26,sstep(0,1,q))*D2R; roll=lerp(0,22,sstep(.4,1,q))*D2R; w=om*.25*Math.pow(sstep(.35,1,q),2); vz=lerp(3.3,-.5,q); }
+        else if(τ<E+S){ const r=τ-E; v=lerp(10,4,sstep(0,1.2,r)); pitch=(lerp(26,-55,sstep(0,.55,r))+2.5*Math.sin(r*7))*D2R; roll=(28+7*Math.sin(r*5.4))*D2R; w=om*lerp(.25,1,sstep(0,.4,r)); vz=lerp(-.5,-3.3,sstep(0,.6,r)); }
+        else{ const r=τ-E-S; w=om*Math.exp(-r/.3); pitch=lerp(-55,5,sstep(0,1.9,r))*D2R; roll=28*(1-sstep(0,1.1,r))*D2R; v=lerp(4,24,sstep(.3,2.4,r)); vz=-6*sstep(0,.7,r)*(1-sstep(.9,2.4,r))+(-3.3)*(1-sstep(0,.7,r)); }
+        x+=v*dt; alt+=vz*dt; psi+=w*dt; }
+      xf+=(x-xf)*(1-Math.exp(-dt/.3)); if(keep) rows.push({u,x,z,alt,pitch,psi,roll,v,xf}); }
+    return keep?rows:psi; };
+  const tgt=TOP(TS).psi+6*Math.PI; let lo=1.5, hi=7; for(let i=0;i<40;i++){ const m=(lo+hi)/2; if(run(m)<tgt) lo=m; else hi=m; }
+  const rows=run((lo+hi)/2,true), L=rows[rows.length-1], φ=((L.psi%(2*Math.PI))+2*Math.PI)%(2*Math.PI), v0=L.v, m0=[v0*Math.cos(φ)*CC, v0*Math.sin(φ)*CC], m1=[-29*CC, 2.5*CC];
+  const x0=L.x, z0=L.z, a0=L.alt, xf0=L.xf, un=[]; let prev=0, xf=xf0;
+  for(let f=dt/CC;f<1+1e-9;f+=dt/CC){ const f2=f*f, f3=f2*f, h00=2*f3-3*f2+1, h10=f3-2*f2+f, h01=-2*f3+3*f2, h11=f3-f2, d00=6*f2-6*f, d10=3*f2-4*f+1, d01=-6*f2+6*f, d11=3*f2-2*f;
+    const x=h00*x0+h10*m0[0]+h01*X1+h11*m1[0], vx=(d00*x0+d10*m0[0]+d01*X1+d11*m1[0])/CC, sn=Math.sin(Math.PI*f), z=h00*z0+h10*m0[1]+h01*-1.2+h11*m1[1]-20*sn*sn, vz=(d00*z0+d10*m0[1]+d01*-1.2+d11*m1[1])/CC-20*Math.PI*Math.sin(2*Math.PI*f)/CC;
+    let a=Math.atan2(vz,vx); if(un.length){ while(a-prev>Math.PI) a-=2*Math.PI; while(a-prev<-Math.PI) a+=2*Math.PI; } else if(Math.abs(a)>Math.PI) a=0; prev=a;
+    const alt=lerp(a0,9,sstep(.15,1,f)); xf+=(x-xf)*(1-Math.exp(-dt/.3)); un.push({u:tR+f*CC,x,z,alt,psi:a,v:Math.hypot(vx,vz),f,xf}); }
+  const off=L.psi-un[0].psi; un.forEach(r=>r.psi+=off);
+  un.forEach((r,i)=>{ const a=un[Math.max(0,i-1)], b=un[Math.min(un.length-1,i+1)], pr=(b.psi-a.psi)/((b.u-a.u)||1), da=(b.alt-a.alt)/((b.u-a.u)||1), g=sstep(0,.2,r.f)*(1-sstep(.8,1,r.f));
+    r.roll=clamp(Math.atan(r.v*pr/9.81)*.55,-.66,.66)*g; r.pitch=(Math.atan2(da,r.v)+4*D2R)*(1-sstep(.8,1,r.f))+1.5*D2R*sstep(.8,1,r.f); });
+  CYC={rows:rows.concat(un), U0, TS, tR, UE, dt, CC};
+  return CYC;
+}
+function cycleAt(u){ const C=cycleModel(), i=clamp((u-C.U0)/C.dt,0,C.rows.length-1), a=C.rows[i|0], b=C.rows[Math.min(C.rows.length-1,(i|0)+1)], k=i-(i|0), o={};
+  for(const key of ["x","z","alt","pitch","psi","roll","v","xf"]) o[key]=lerp(a[key],b[key],k); return o; }
+
 /* ---------- escena 1: aeródromo, despegue, aterrizaje y media vuelta ---------- */
 function drawTakeoff(cv,env,t,tt,o){
-  o=o||{}; const ctx=cv.getContext("2d"), w=cv.width, H=cv.height, pm=H*(o.pm||.105), h=pm/.105, hz=H*(o.hz||.62), T=18, a=2.4, t0=1.2, tr=11.3, tl=12.5;
+  o=o||{}; const ctx=cv.getContext("2d"), w=cv.width, H=cv.height, pm=H*(o.pm||.105), h=pm/.105, hz0=H*(o.hz||.62), T=18, a=2.4, t0=1.2, tr=11.3, tl=12.5;
   ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
   const viewM=w/pm, fx0=o.x0||.2, fx1=o.x1||.5, RW=30, THR=-17;
   const TO=q=>{ const tg=Math.max(0,q-t0), tq=Math.min(tg,tl-t0), vl=a*(tl-t0), xw=.5*a*tq*tq+(tg>tq?vl*(tg-tq)*1.04:0), ta=Math.max(0,q-tl), tc=tl+1.6;
@@ -237,24 +274,27 @@ function drawTakeoff(cv,env,t,tt,o){
       cam:xc-viewM*lerp(fx0,fx1,sstep(0,12,q)), v:tg>tq?vl*1.04:a*tg, ll:1}; };
   let K;
   if(!o.cycle) K=TO(tt);
-  else{   // despegue → 2 s → aterrizaje por la pista contraria → rodaje hasta el final → media vuelta de 180° → despegue
-    const TA=14.5, P=2, AP_=5, vd=28, ad=2.6, RO=vd/ad, TU=5.2, CY=TA+P+AP_+RO+TU, u=tt%CY;
-    if(u<TA+P) K=TO(u);
-    else{ const s=u-TA-P, camEnd=TO(TA+P).cam, xtd=vd*vd/(2*ad);
-      if(s<AP_+RO){ let xp, z=0, alt=0, pitch, v, psi=Math.PI, roll=0;
+  else{   // despegue → ascenso → barrena y recuperación → viraje de vuelta → final y aterrizaje por la pista contraria → rodaje → media vuelta
+    const C=cycleModel(), TAK=C.UE, vd=VD, ad=AD, AP_=APP, RO_=RO, TU_=TU, CY=TAK+AP_+RO_+TU_, u=tt%CY, fr=q=>lerp(fx1,.52,sstep(TOTL,TOTL+3,q));
+    if(u<TOTL) K=TO(u);
+    else if(u<TAK){ const c=cycleAt(u); K={xw:c.x, z:c.z, alt:c.alt, pitch:c.pitch, psi:c.psi, roll:c.roll, v:c.v, ll:1, cam:c.xf-viewM*fr(u)}; }
+    else{ const s=u-TAK, camEnd=cycleAt(TAK).xf-viewM*fr(TAK), xtd=vd*vd/(2*ad);
+      if(s<AP_+RO_){ let xp, z=0, alt=0, pitch, v, psi=Math.PI, roll=0;
         if(s<AP_){ const q=1-s/AP_; xp=xtd+29*(AP_-s); alt=9*Math.pow(q,1.7); pitch=(1.5+4.5*sstep(AP_-2.2,AP_,s))*D2R; v=29; roll=4.5*D2R*Math.sin(s*2.3)*q; psi=Math.PI-5*D2R*(1-sstep(AP_-1.3,AP_-.1,s)); z=-1.2*q; }
-        else{ const r=s-AP_, zf=x=>-10*sstep(RO-6.6,RO-.7,x); xp=xtd-(vd*r-.5*ad*r*r); pitch=6*(1-sstep(0,1.6,r))*D2R; v=vd-ad*r; z=zf(r); psi=Math.atan2((zf(r+.05)-z)/.05,-Math.max(.4,v)); roll=1.2*D2R*Math.sin(r*5)*Math.exp(-r*1.4); }
-        K={xw:xp, z, alt, pitch, v, psi, roll, ll:1, cam:lerp(camEnd, xp-viewM*lerp(.62,fx0,sstep(3,AP_+RO,s)), sstep(0,4.5,s)), td:(s>=AP_&&s<AP_+1.6)?(s-AP_)/1.6:-1}; }
-      else{ const r=sstep(0,1,(s-AP_-RO)/TU), an=Math.PI*r; K={xw:-5*Math.sin(an), z:-5-5*Math.cos(an), alt:0, pitch:0, v:3.4*Math.sin(an), psi:Math.PI-an, roll:2.6*D2R*Math.sin(an), ll:1, cam:-viewM*fx0}; } } }
+        else{ const r=s-AP_, zf=x=>-10*sstep(RO_-6.6,RO_-.7,x); xp=xtd-(vd*r-.5*ad*r*r); pitch=6*(1-sstep(0,1.6,r))*D2R; v=vd-ad*r; z=zf(r); psi=Math.atan2((zf(r+.05)-z)/.05,-Math.max(.4,v)); roll=1.2*D2R*Math.sin(r*5)*Math.exp(-r*1.4); }
+        K={xw:xp, z, alt, pitch, v, psi, roll, ll:1, cam:lerp(camEnd, xp-viewM*lerp(.62,fx0,sstep(3,AP_+RO_,s)), sstep(0,4.5,s)), td:(s>=AP_&&s<AP_+1.6)?(s-AP_)/1.6:-1}; }
+      else{ const r=sstep(0,1,(s-AP_-RO_)/TU_), an=Math.PI*r; K={xw:-5*Math.sin(an), z:-5-5*Math.cos(an), alt:0, pitch:0, v:3.4*Math.sin(an), psi:Math.PI-an, roll:2.6*D2R*Math.sin(an), ll:1, cam:-viewM*fx0}; } } }
   if(K.td==null) K.td=-1;
   const xw=K.xw, alt=K.alt, v=K.v, cam=K.cam, X=m=>(m-cam)*pm;
-  const y1=H*(o.y1||.72), y2=H*(o.y2||.9), yc=(y1+y2)/2, kz=(y2-y1)/(RW*pm), GP=(x,z)=>[X(x)+z*pm*PS,yc+z*pm*kz];
+  // cámara que se inclina hacia arriba siguiendo al avión: todo (cielo, sol, nubes, suelo) baja en el cuadro
+  const yb1=H*(o.y1||.72), yb2=H*(o.y2||.9), dy=o.cycle?Math.max(0,alt*pm-((yb1+yb2)/2+K.z*(yb2-yb1)/RW-H*.27)):0, hz=hz0+dy;
+  const y1=yb1+dy, y2=yb2+dy, yc=(y1+y2)/2, kz=(y2-y1)/(RW*pm), GP=(x,z)=>[X(x)+z*pm*PS,yc+z*pm*kz];
   const N=sstep(.12,.7,env.night), day=1-N;
   // cielo
   skyBase(ctx,w,hz,env,t);
   const sxp=w*lerp(.1,.9,clamp((env.az-60)/240,0,1)); sunDisc(ctx,sxp,hz-(env.el/38)*hz,Math.max(3,h*.035),env,hz);
   if(env.night>.05) moon(ctx,w*(.58+.3*((env.date.getHours()+6)%12)/12),hz*.34,Math.max(3,h*.045),env);
-  clouds(ctx,-w*.05,0,w*1.1,hz,env,t*.004+cam*.00012,h>150?3:2,150);
+  clouds(ctx,-w*.05,dy*.5,w*1.1,hz0,env,t*.004+cam*.00012,h>150?3:2,150);
   const haze=env.hor;
   ridge(ctx,w,hz,h*.13,cam*pm*.03,.0011*640/h*.25+.0009,css(mix(haze,mul(env.top,.5),.34)),.21);
   ridge(ctx,w,hz+1,h*.05,cam*pm*.10+500,.006*72/h+.0012,css(mix(haze,mul([52,70,56],env.amb),.66)),.63);
@@ -328,7 +368,7 @@ function drawTakeoff(cv,env,t,tt,o){
   if(K.td>=0){ const q=K.td, sp0=GP(28*28/(2*2.6),K.z), sx=sp0[0]+q*pm*9; ctx.fillStyle=`rgba(225,228,232,${.42*(1-q)})`; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.arc(sx+i*pm*1.3*q,sp0[1]-h*.012-q*h*.05*(1+i*.3),h*(.014+.03*q)*(1+i*.2),0,7); ctx.fill(); } }
   // avión
   const fade=o.cycle?1:sstep(0,.8,tt)*(1-sstep(T-1,T-.2,tt))*(tt<T?1:0); ctx.globalAlpha=fade;
-  if(fade>0&&px>-14*pm&&px<w+14*pm&&py>-6*pm) plane3D(ctx,px,py,pm,K,env,t); ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
+  if(fade>0&&px>-14*pm&&px<w+14*pm&&py>-6*pm) plane3D(ctx,px,py,pm,K,env,t,o.lift); ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
   // calima sobre el horizonte
   const hg=ctx.createLinearGradient(0,hz-h*.1,0,hz+h*.05); hg.addColorStop(0,css(haze,0)); hg.addColorStop(.7,css(haze,.32)); hg.addColorStop(1,css(haze,0)); ctx.fillStyle=hg; ctx.fillRect(0,hz-h*.1,w,h*.15);
   return {kt:v*1.944, alt:alt*3.281};

@@ -222,6 +222,80 @@ init(el){
     u.out.innerHTML=[`<b>1 · Viento en cara que aumenta</b>: la IAS sube y el avión se va <b>por encima</b> de la senda. La tentación es reducir potencia: no lo hagas.`,`<b>2 · Descendencia</b>: bajo el núcleo, el aire cae y el régimen de descenso se dispara.`,`<b class="bad">3 · Viento en cola</b>: la IAS se desploma y el avión queda <b>por debajo</b> de la senda, con poca energía y cerca del suelo.`,`<b class="ok">Recuperación</b>: <b>empuje máximo</b>, actitud de cabeceo de escape y <b>sin tocar tren ni flaps</b> hasta estar fuera. Lo mejor: no entrar; frustra o espera.`][ph]; });
 }};
 
+/* ---------- 14 · SIGWX de alto nivel: lee la etiqueta y mira qué cruzas ---------- */
+V.sigwx={t:"SIGWX de alto nivel: qué dice cada elemento y qué cruzas a tu nivel",cap:"Mapa de ejemplo (FL250–FL630). Toca un elemento para ver cómo se lee su etiqueta y mueve tu nivel de vuelo para ver cuáles te afectan. Los niveles se dan siempre como base/cima en centenas de pies.",
+init(el){
+  const FL={cat:[280,380],cb:[200,420],jet:[300,390],tp:350}, EX={
+   jet:["Corriente en chorro","Flecha gruesa con púas: cada púa larga = <b>10 kt</b>, la corta <b>5 kt</b>, el triángulo <b>50 kt</b>. Se dibuja si el viento máximo es de <b>80 kt o más</b>. La caja <b>FL340</b> es el nivel del núcleo y los números a los lados (+/−) dan hasta dónde sigue el viento por encima y por debajo. Aquí: 120 kt en el núcleo, cizalladura fuerte en los bordes."],
+   cat:["Turbulencia en aire claro (CAT)","Zona <b>discontinua</b> con la etiqueta de intensidad (MOD o SEV) y la capa <b>base/cima</b>. Aquí MOD entre FL280 y FL380. No la ves en el radar ni en el cielo: se evita cambiando de nivel o de ruta. Suele ir pegada al jet y a la tropopausa."],
+   cb:["Cumulonimbos (CB)","Contorno <b>festoneado</b> (como una nube). <b>ISOL</b> = aislados, <b>OCNL</b> = ocasionales, <b>FRQ</b> = frecuentes; <b>EMBD</b> = ocultos dentro de otras nubes. La cifra es <b>base/cima</b>: aquí FL200/FL420. Se bordean por barlovento a ≥10 NM (20 NM si es severa) y nunca por debajo del yunque."],
+   tp:["Altura de la tropopausa","Número dentro de un recuadro, en centenas de pies: <b>350</b> = FL350. Un <b>H</b> marca el máximo y una <b>L</b> el mínimo local. Más alta sobre el ecuador y las altas presiones, más baja hacia los polos y en las bajas. El jet está justo bajo la tropopausa."],
+   fr:["Frente frío en superficie","Línea con <b>triángulos</b> hacia donde avanza; el número y la flecha son la <b>velocidad de desplazamiento</b> en kt. Los frentes se dibujan solo si llevan fenómenos significativos asociados (CB, turbulencia)."]};
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 250" role="img" aria-label="Mapa SIGWX de alto nivel de ejemplo"></svg>`,rng("l","Tu nivel de vuelo FL",250,450,340,10,"")+`<button type="button" data-s="jet" aria-pressed="false">Jet</button><button type="button" data-s="cat" aria-pressed="false">CAT</button><button type="button" data-s="cb" aria-pressed="false">CB</button><button type="button" data-s="tp" aria-pressed="false">Tropopausa</button><button type="button" data-s="fr" aria-pressed="false">Frente</button>`,this.cap), svg=u.q("svg"); let sel="";
+  const hit=(r,l)=>l>=r[0]&&l<=r[1];
+  const draw=l=>{ const ac=(k,r)=>hit(r,l)?"#ff6a5c":"#9fb3c8", op=k=>sel===k?1:.88, ring=k=>sel===k?` stroke-width="3.4"`:``;
+    const barb=(x,y,n)=>`<path d="M${x} ${y}l-4 -9m4 9l0 0" stroke="#dfe8f1" stroke-width="1.6"/>`;
+    svg.innerHTML=`<rect width="400" height="250" fill="#12202f"/>
+     <g stroke="#2a3f57" stroke-width=".8" fill="none">${[40,90,140,190].map(y=>`<path d="M10 ${y}H390"/>`).join("")}${[60,130,200,270,340].map(x=>`<path d="M${x} 10V210"/>`).join("")}</g>
+     <path d="M10 160C40 150 60 120 95 126C130 132 150 100 190 108C210 112 230 90 260 98C300 110 330 84 390 90V210H10Z" fill="#1b3047" opacity=".7"/>
+     <g opacity="${op("cat")}"><path d="M120 80L215 66L252 98L226 146L150 150L112 118Z" fill="${hit(FL.cat,l)?"#ff6a5c":"#58c4f0"}" fill-opacity=".1" stroke="${ac("cat",FL.cat)}" stroke-dasharray="7 5" stroke-width="2"${ring("cat")}/><text x="182" y="125" font-size="10.5" text-anchor="middle" font-weight="700" fill="${ac("cat",FL.cat)}">MOD CAT</text><text x="182" y="138" font-size="10" text-anchor="middle" fill="${ac("cat",FL.cat)}">FL280/380</text></g>
+     <g opacity="${op("jet")}"><path d="M20 170C90 120 170 112 250 96S350 60 382 40" fill="none" stroke="${hit(FL.jet,l)?"#ff6a5c":"#6ee7a0"}" stroke-width="${sel==="jet"?6:4.4}" stroke-linecap="round"/><path d="M382 40l-14 3 8 11z" fill="${hit(FL.jet,l)?"#ff6a5c":"#6ee7a0"}"/>
+       <path d="M350 55l-7 -15l11 4zM336 62l-5 -13M326 67l-5 -13M316 71l-5 -9" stroke="#dfe8f1" stroke-width="1.8" fill="#dfe8f1"/>
+       <rect x="205" y="86" width="64" height="18" rx="2" fill="#12202f" stroke="#dfe8f1"/><text x="237" y="99" font-size="11" text-anchor="middle" font-weight="700">120/FL340</text><text x="296" y="34" font-size="9.5" fill="#9fb3c8">+20</text><text x="296" y="46" font-size="9.5" fill="#9fb3c8">−30</text></g>
+     <g opacity="${op("cb")}"><path d="M268 150q-8-12 6-16q-2-13 14-12q4-12 18-6q14-8 20 6q16 0 12 14q12 8 0 16q2 12-14 10q-8 12-22 4q-14 8-22-4q-18 2-12-12q-10-4-0-0z" fill="${hit(FL.cb,l)?"#ff6a5c":"#f6b73c"}" fill-opacity=".14" stroke="${ac("cb",FL.cb)}" stroke-width="2.2"${ring("cb")}/><text x="308" y="147" font-size="9" text-anchor="middle" font-weight="700" fill="${ac("cb",FL.cb)}">ISOL EMBD CB</text><text x="308" y="160" font-size="10" text-anchor="middle" fill="${ac("cb",FL.cb)}">200/420</text></g>
+     <g opacity="${op("tp")}">${[[56,60,"390"],[318,196,"300"]].map(a=>`<rect x="${a[0]-17}" y="${a[1]-10}" width="34" height="19" rx="2" fill="#12202f" stroke="${sel==="tp"?"#ffc94d":"#9fb3c8"}" stroke-width="${sel==="tp"?2.6:1.2}"/><text x="${a[0]}" y="${a[1]+4}" font-size="11.5" text-anchor="middle" font-weight="700">${a[2]}</text>`).join("")}<text x="34" y="40" font-size="13" font-weight="700" fill="#ffc94d">H</text><text x="344" y="196" font-size="13" font-weight="700" fill="#ffc94d">L</text></g>
+     <g opacity="${op("fr")}"><path d="M54 198C84 176 104 150 112 118" fill="none" stroke="#58c4f0" stroke-width="${sel==="fr"?3.6:2.4}"/>${[[64,190],[84,172],[98,152]].map(p=>`<path d="M${p[0]} ${p[1]}l10 -2l-3 -9z" fill="#58c4f0"/>`).join("")}<text x="48" y="214" font-size="10" fill="#9fb3c8">30 kt →</text></g>
+     <rect x="10" y="222" width="380" height="20" rx="3" fill="#0f1b29"/><text x="18" y="236" font-size="11" font-weight="700" fill="#ffc94d">FL${l}</text>
+     ${[["CAT",FL.cat],["CB",FL.cb],["JET",FL.jet]].map((a,i)=>`<text x="${70+i*100}" y="236" font-size="11" fill="${hit(a[1],l)?"#ff8a80":"#6ee7a0"}">${a[0]} ${hit(a[1],l)?"dentro":"libre"}</text>`).join("")}`;
+    const sf=l>FL.tp?"estratosfera (sobre la tropopausa de FL350)":"troposfera (bajo la tropopausa de FL350)";
+    const L=[]; L.push(hit(FL.cb,l)?`<b class="bad">CB</b>: tu nivel está <b>dentro</b> de la capa FL200/FL420. Desvío lateral por barlovento ≥10 NM; no se sube por encima del yunque ni se pasa por debajo.`:`<b class="ok">CB</b>: la capa FL200/FL420 no incluye tu nivel; con la cima por encima te toca rodear igualmente. `);
+    L.push(hit(FL.cat,l)?`<b class="bad">CAT moderada</b> (FL280/380): abróchate, y pide otro nivel o ruta.`:`<b class="ok">CAT</b>: fuera de FL280/380.`); L.push(hit(FL.jet,l)?`<b>Jet</b>: estás en su capa (FL300/390); cizalladura vertical fuerte en los bordes.`:`<b>Jet</b>: fuera de su capa.`);
+    u.out.innerHTML=(sel?`<b style="color:#ffc94d">${EX[sel][0]}.</b> ${EX[sel][1]}<br><br>`:"")+`A <b>FL${l}</b> vas en ${sf}.<br>`+L.join("<br>"); };
+  let lv=340; bind(el,o=>{ lv=o.l; setO(el,"l",o.l); draw(lv); });
+  btns(el,"data-s",v=>{ sel=sel===v?"":v; el.querySelectorAll("[data-s]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===sel?"true":"false")); draw(lv); });
+}};
+
+/* ---------- 15 · Triángulo de velocidades ---------- */
+V.wtri={t:"Triángulo de velocidades: del rumbo deseado al heading y la GS",cap:"Aire + viento = suelo. El viento se da «de dónde viene»; el vector viento apunta hacia donde sopla. WCA = asen(V·sen β ÷ TAS) y GS = TAS·cos WCA − V·cos β, con β = dirección del viento − track.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 270" role="img" aria-label="Triángulo de velocidades"></svg>`,rng("t","Track deseado",0,359,90,1,"°")+rng("a","TAS",100,480,220,5," kt")+rng("d","Viento de",0,359,30,1,"°")+rng("v","Viento",0,90,40,1," kt"),this.cap), svg=u.q("svg");
+  const p3=n=>String(Math.round((n%360+360)%360)||360).padStart(3,"0");
+  bind(el,o=>{ ["t","d"].forEach(k=>setO(el,k,p3(o[k]))); setO(el,"a",o.a); setO(el,"v",o.v);
+    const TAS=o.a, W=o.v, b=(o.d-o.t)*R, s=W*Math.sin(b)/TAS;
+    if(Math.abs(s)>=1){ svg.innerHTML=`<rect width="400" height="270" fill="#12202f"/><text x="200" y="135" font-size="13" text-anchor="middle" fill="#ff8a80">El viento transversal supera a la TAS</text>`; u.out.innerHTML=`<b class="bad">No hay solución</b>: con ese viento de costado no puedes mantener el track ni apuntando el morro contra él.`; return; }
+    const wca=Math.asin(s)/R, hdg=o.t+wca, gs=TAS*Math.cos(wca*R)-W*Math.cos(b), xw=W*Math.sin(b), hw=W*Math.cos(b);
+    const sc=Math.min(1.05,190/Math.max(TAS,gs,1)), O=[70,190], pt=(a,l)=>[O[0]+l*Math.sin(a*R)*sc, O[1]-l*Math.cos(a*R)*sc], A=pt(hdg,TAS), G=pt(o.t,gs), wd=(o.d+180);
+    const ar=(P,Q,c,w)=>{ const a=Math.atan2(Q[1]-P[1],Q[0]-P[0]), h=9; return `<path d="M${P[0].toFixed(1)} ${P[1].toFixed(1)}L${Q[0].toFixed(1)} ${Q[1].toFixed(1)}" stroke="${c}" stroke-width="${w}" fill="none"/><path d="M${Q[0].toFixed(1)} ${Q[1].toFixed(1)}l${(-h*Math.cos(a-.4)).toFixed(1)} ${(-h*Math.sin(a-.4)).toFixed(1)}l${(h*.9*Math.sin(a)).toFixed(1)} ${(-h*.9*Math.cos(a)).toFixed(1)}z" fill="${c}"/>`; };
+    const sw=pt(o.d,70), ex=[60,230];
+    svg.innerHTML=`<rect width="400" height="270" fill="#12202f"/><circle cx="${O[0]}" cy="${O[1]}" r="3" fill="#dfe8f1"/><path d="M${O[0]} ${O[1]}V30" stroke="#2f4560" stroke-dasharray="4 4"/><text x="${O[0]+5}" y="34" font-size="10" fill="#9fb3c8">N</text>
+     ${ar(O,A,"#ffc94d",3)}${ar(A,G,"#ff8a80",3)}${ar(O,G,"#6ee7a0",3)}
+     <text x="${(O[0]+A[0])/2-8}" y="${(O[1]+A[1])/2-6}" font-size="11" text-anchor="end" fill="#ffc94d">HDG ${p3(hdg)} · TAS ${TAS}</text>
+     <text x="${(A[0]+G[0])/2+8}" y="${(A[1]+G[1])/2}" font-size="11" fill="#ff8a80">viento ${W} kt</text>
+     <text x="${(O[0]+G[0])/2+8}" y="${(O[1]+G[1])/2+16}" font-size="11" fill="#6ee7a0">TRK ${p3(o.t)} · GS ${Math.round(gs)}</text>
+     <g transform="translate(330 60)"><circle r="34" fill="none" stroke="#2f4560"/><text y="-40" font-size="9.5" text-anchor="middle" fill="#9fb3c8">viene de ${p3(o.d)}</text><g transform="rotate(${wd})"><path d="M0 -24V24M0 24l-6 -9m6 9l6 -9" stroke="#ff8a80" stroke-width="2.4" fill="none"/></g></g>`;
+    u.out.innerHTML=`β = ${p3(o.d)} − ${p3(o.t)} = <b>${Math.round(o.d-o.t)}°</b> → componente de costado <b>${Math.abs(Math.round(xw))} kt</b> ${xw>0?"por la <b>derecha</b>":xw<0?"por la <b>izquierda</b>":""}; ${hw>=0?"de cara":"de cola"} <b>${Math.abs(Math.round(hw))} kt</b>.<br>WCA <b>${wca>=0?"+":"−"}${Math.abs(wca).toFixed(1).replace(".",",")}°</b> → <b>HDG ${p3(hdg)}°</b> (corriges <b>hacia el viento</b>) · <b class="ok">GS ${Math.round(gs)} kt</b>.`; });
+}};
+
+/* ---------- 16 · ILS: aguja del localizador y de la senda ---------- */
+V.ils={t:"ILS: qué marcan las agujas según dónde estés",cap:"Localizador: escala completa a ±2,5° (2 puntos = ±2,5°). Senda de planeo: escala completa a ±0,7° (2 puntos = ±0,7°). «Vuela hacia la aguja»: si la aguja está a la izquierda, la pista está a la izquierda.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 270" role="img" aria-label="Vista superior, lateral e indicador ILS"></svg>`,rng("d","Distancia al umbral",1,12,6,.5," NM")+rng("x","Desviación lateral (+ derecha de la pista)",-900,900,350,25," m")+rng("h","Desviación vertical (+ por encima)",-500,500,-150,25," ft"),this.cap), svg=u.q("svg");
+  bind(el,o=>{ const D=o.d, NM=1852, loc=Math.atan(o.x/(D*NM))/R, nom=Math.tan(3*R)*D*6076, gs=Math.atan2(o.h,D*6076)/R, kL=cl(-loc/1.25,-2,2), kG=cl(gs/.35,-2,2);
+    setO(el,"d",f1(D)); setO(el,"x",(o.x>0?"+":"")+o.x); setO(el,"h",(o.h>0?"+":"")+o.h);
+    const px=x=>10+(12-x)/12*190, lx=px(D), ly=60+(o.x/900)*34, ys=h=>235-h/4000*100, cx=300, cy=135, dx=kL*26;
+    svg.innerHTML=`<rect width="400" height="270" fill="#12202f"/>
+     <text x="10" y="16" font-size="10.5" fill="#9fb3c8">Vista superior</text><path d="M10 60H200" stroke="#2f4560" stroke-dasharray="4 4"/><path d="M200 60L${px(12)} ${60-38}M200 60L${px(12)} ${60+38}" stroke="#58c4f0" stroke-opacity=".5"/><path d="M200 60L${px(6)} ${60-19}M200 60L${px(6)} ${60+19}" stroke="#58c4f0" stroke-opacity=".25"/><rect x="198" y="55" width="10" height="10" fill="#3a516b"/><text x="196" y="82" font-size="9.5" text-anchor="end" fill="#9fb3c8">pista</text>
+     <g transform="translate(${lx.toFixed(1)} ${ly.toFixed(1)}) rotate(90)"><path d="M0 -8L5.5 7L0 3.5L-5.5 7Z" fill="#ffc94d"/></g>
+     <text x="10" y="120" font-size="10.5" fill="#9fb3c8">Vista lateral</text><path d="M10 235H200" stroke="#3a516b" stroke-width="2"/><path d="M200 235L10 ${ys(Math.tan(3*R)*12*6076)}" stroke="#6ee7a0" stroke-width="2"/><text x="16" y="${ys(Math.tan(3*R)*12*6076)+16}" font-size="9.5" fill="#6ee7a0">senda de 3°</text>
+     <g transform="translate(${lx.toFixed(1)} ${ys(nom+o.h).toFixed(1)})"><path d="M-9 0h16l5 2-5 2h-16zM-8 0l-4-6h4l5 6z" fill="#ffc94d"/></g>
+     <rect x="252" y="87" width="96" height="96" rx="8" fill="#0b1622" stroke="#3a516b"/>${[-2,-1,1,2].map(i=>`<circle cx="${cx+i*26}" cy="${cy}" r="3.4" fill="none" stroke="#9fb3c8"/><circle cx="${cx}" cy="${cy+i*20}" r="3.4" fill="none" stroke="#9fb3c8"/>`).join("")}
+     <path d="M${cx-20} ${cy}H${cx+20}M${cx} ${cy-20}V${cy+20}" stroke="#2f4560"/>
+     <path d="M${(cx+dx).toFixed(1)} 96V174" stroke="${Math.abs(kL)>=2?"#ff8a80":"#ffc94d"}" stroke-width="4" stroke-linecap="round"/><path d="M262 ${(cy+kG*20).toFixed(1)}H338" stroke="${Math.abs(kG)>=2?"#ff8a80":"#ffc94d"}" stroke-width="4" stroke-linecap="round"/>
+     <text x="300" y="206" font-size="10.5" text-anchor="middle" fill="#9fb3c8">LOC ${loc>=0?"+":""}${loc.toFixed(2).replace(".",",")}° · GS ${gs>=0?"+":""}${gs.toFixed(2).replace(".",",")}°</text>`;
+    const side=Math.abs(kL)<.15?"centrado":(kL<0?"a la <b>izquierda</b>":"a la <b>derecha</b>"), upd=Math.abs(kG)<.15?"centrada":(kG>0?"<b>abajo</b>":"<b>arriba</b>"), c1=kL<-.15?"izquierda":kL>.15?"derecha":"";
+    u.out.innerHTML=`Estás ${Math.abs(Math.round(o.x))} m ${o.x>0?"a la derecha":o.x<0?"a la izquierda":"sobre el eje"} y ${Math.abs(Math.round(o.h))} ft ${o.h>0?"sobre":o.h<0?"bajo":"en"} la senda. Aguja del LOC ${side} (${Math.abs(kL)>=2?"<b class='bad'>tope</b>":(Math.abs(loc/1.25)).toFixed(1).replace(".",",")+" puntos"}), aguja de la senda ${upd} (${Math.abs(kG)>=2?"<b class='bad'>tope</b>":Math.abs(gs/.35).toFixed(1).replace(".",",")+" puntos"}).<br>`+(c1?`<b>Vuela hacia la aguja</b>: corrige a la <b>${o.x>0?"izquierda":"derecha"}</b>.`:`Rumbo correcto.`)+` ${kG>.15?"Estás alto: aumenta el régimen de descenso.":kG<-.15?"Estás bajo: no desciendas más hasta recuperar la senda.":""}<br><span style="color:#9fb3c8">Con los mismos ${Math.abs(o.x)} m, a 2 NM la aguja se va a tope y a 10 NM apenas se mueve: la sensibilidad crece al acercarte al umbral.</span>`; });
+}};
+
 function mount(el){ const k=el.dataset.viz, v=V[k]; if(!v||el._v) return; el._v=1;
   const go=()=>{ try{ v.init(el); }catch(e){ try{ console.error("F0Viz",k,e); }catch(_){} el.innerHTML=`<p class="lt">${v.t}</p><p class="out">No se ha podido cargar esta lámina.</p>`; } };
   if(!("IntersectionObserver" in window)){ go(); return; }
