@@ -451,11 +451,14 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="body">
 <div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Muy importantes todas las velocidades</b>: VA y VFE sobre todo. Aprender las velocidades máximas de los flaps.</li><li>Velocidad de planeo: <b>Cruiser 60 kt</b> · <b>Cessna 65 kt</b>.</li></ul></div>
 <div class="key"><b>Clave</b>VNE: <b>138 · 160 · 160</b> (Cruiser · C172 · Piper). VNO <b>108 · 128 · 126</b>. VA <b>88 · 80–97 · 88–111</b>. VFE <b>75 · 85 · 103</b>.</div>
+<h4>Cinta de velocidades · todas las V de cada avión</h4>
+<div class="f0viz" data-viz="tape"></div>
 <h4>Velocidades · tócalas y ponte a prueba</h4>
 <div id="visSpeeds" class="vis"></div>
 <div class="scroll"><table class="t3"><tr><th>KIAS · qué protege</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th><th>Nota</th></tr><tr><td><b>VNE</b> Never Exceed</td><td class="cz"><span class="va">138</span></td><td class="c1"><span class="va">160</span></td><td class="pi"><span class="va">160</span></td><td>estructura</td></tr><tr><td><b>VNO</b> Normal Operating</td><td class="cz"><span class="va">108</span></td><td class="c1"><span class="va">128</span></td><td class="pi"><span class="va">126</span></td><td>turbulencia</td></tr><tr><td><b>VA</b> Maneuvering</td><td class="cz"><span class="va">88 (a 600 kg)</span></td><td class="c1"><span class="va">80–97</span></td><td class="pi"><span class="va">88–111</span></td><td>mandos a fondo</td></tr><tr><td><b>VFE</b> Flaps Extended</td><td class="cz"><span class="va">75</span></td><td class="c1"><span class="va">85</span></td><td class="pi"><span class="va">103</span></td><td>flaps abajo</td></tr></table></div>
 <h4>Arcos del anemómetro</h4>
 <div class="scroll"><table class="t3"><tr><th>Arco</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Arco blanco</b></td><td class="cz"><span class="va">31 – 75</span></td><td class="c1"><span class="va">41 – 85</span></td><td class="pi"><span class="va">44 – 103</span></td></tr><tr><td><b>Arco verde</b></td><td class="cz"><span class="va">37 – 108</span></td><td class="c1"><span class="va">47 – 128</span></td><td class="pi"><span class="va">50 – 126</span></td></tr><tr><td><b>Arco amarillo</b></td><td class="cz"><span class="va">108 – 138</span></td><td class="c1"><span class="va">128 – 160</span></td><td class="pi"><span class="va">126 – 160</span></td></tr><tr><td><b>Línea roja</b></td><td class="cz"><span class="va">138</span></td><td class="c1"><span class="va">160</span></td><td class="pi"><span class="va">160</span></td></tr></table></div>
+<div class="mnem"><b>Escalera de la cinta</b><ul><li><b>De abajo arriba</b>: VS0 · VS1 · VR · VY · VFE · VA · VNO · VNE. En el Cruiser: <b>31 · 37 · 55 · 62 · 75 · 88 · 108 · 138</b>.</li><li><b>Cada arco acaba donde marca una V</b>: el blanco en <b>VFE</b>, el verde en <b>VNO</b>, el amarillo en <b>VNE</b> (la línea roja). Y empiezan en VS0 (blanco) y VS1 (verde).</li><li><b>Planeo = Vx + 5</b> en el Cruiser (55→60) y en el C172 (60→65). El Piper rompe la regla: 64→73.</li></ul></div>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>VFE: 75 – 85 – 103</b> (Cruiser, Cessna, Piper): crece con el tamaño del avión.</li><li><b>VNE: 138 · 160 · 160</b>: solo el Cruiser es distinto.</li><li><b>VNO: 108 · 128 · 126</b>: el Cessna es mayor que el Piper (única vez).</li></ul></div>
 <div class="flag"><b>Trampa</b> El Cessna tiene todo <b>más bajo</b> que el Piper salvo <b>VNO</b> (128 frente a 126): VFE 85 frente a 103 y VA 80–97 frente a 88–111. El <b>Cruiser</b> tiene todo más bajo que los dos.</div>
 <div class="comp"><b>Complemento</b><ul><li>Blanco = rango de flaps · verde = operación normal · amarillo = solo con aire en calma · rojo = VNE.</li><li>Según el SOP, el Piper (Archer III) lleva VFE 100 · VNO 122 · VNE 155: no coincide con el POH de esta tabla (103 · 126 · 160). Pregunta a tu instructor cuál usar.</li></ul></div>
@@ -472,6 +475,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div id="visLoad" class="vis"></div>
 <div class="scroll"><table class="t3"><tr><th>Configuración</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td>Flaps arriba · <b>normal</b></td><td class="cz"><span class="va">+4 / −2 g</span></td><td class="c1"><span class="va">+3,8 g</span></td><td class="pi"><span class="va">+3,8 / −1,52 g</span></td></tr><tr><td>Flaps arriba · <b>utility</b></td><td class="cz"><span class="va">no aprobado</span></td><td class="c1"><span class="va">+4,4 g</span></td><td class="pi"><span class="va">+4,4 / −1,76 g</span></td></tr><tr><td>Flaps abajo</td><td class="cz"><span class="va">+2 / 0 g</span></td><td class="c1"><span class="va">+3,0 g</span></td><td class="pi"><span class="va">+3,0 g</span></td></tr></table></div>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Con flaps el límite baja</b>: Cruiser de +4 a +2 (la mitad); Cessna y Piper de +3,8 a +3,0.</li><li>El Cruiser solo tiene <b>categoría normal</b>; Cessna y Piper tienen normal y utility.</li></ul></div>
+<div class="mnem"><b>Los G, con números</b><ul><li><b>Negativo = 40 % del positivo</b> en Cessna y Piper: 3,8 × 0,4 = <b>1,52</b> · 4,4 × 0,4 = <b>1,76</b>. Cruiser: la mitad (+4 → −2).</li><li><b>Tres-ocho, cuatro-cuatro, tres-cero</b>: normal 3,8 · utility 4,4 · flaps abajo 3,0.</li></ul></div>
 <div class="flag"><b>Trampa</b> Con flaps abajo el límite baja a <b>+3,0 g</b> y es el mismo en normal y utility. Con flaps arriba el <b>Cruiser (+4)</b> aguanta más que el Cessna y el Piper en <b>normal (+3,8)</b>: la trampa es creer que el Cruiser, siendo el más ligero, aguanta menos.</div>
 
 </div>
@@ -624,6 +628,8 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <summary><span class="lonum">POH.7.1</span><span class="lotitle">Estructura y motor</span></summary>
 <div class="body">
 <div class="profe"><b>★ IMPORTANTE</b><ul><li>Parte de las cargas las soporta la <b>piel</b> y otra parte los <b>refuerzos internos</b> (semi-monocoque).</li><li>Los <b>dos mufflers</b> son tubos de escape que sirven para <b>calentar el carburador</b>.</li></ul></div>
+<h4>Los tres aviones, cara a cara</h4>
+<div class="f0viz" data-viz="syscmp"></div>
 <div class="key"><b>Clave</b>Fuselaje <b>semi-monocoque</b> en los tres. Piper: soporte del motor y tren de <b>acero</b>, el resto <b>aleación de aluminio</b>. Cessna: <b>alas con montantes</b>, un solo muffler.</div>
 <div class="scroll"><table class="t3"><tr><th>Parte</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Fuselaje</b></td><td class="cz"><span class="va">semi-monocoque, metal y fibra de vidrio</span></td><td class="c1"><span class="va">semi-monocoque, aluminio · alas con montantes</span></td><td class="pi"><span class="va">semi-monocoque, aleación de aluminio, fibra de vidrio y termoplásticos</span></td></tr><tr><td><b>Soporte del motor</b></td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">tubos de acero</span></td><td class="pi"><span class="va">tubos de acero</span></td></tr><tr><td><b>Tren</b></td><td class="cz"><span class="va">fijo, triciclo</span></td><td class="c1"><span class="va">fijo, triciclo</span></td><td class="pi"><span class="va">fijo, triciclo (acero)</span></td></tr><tr><td><b>Mufflers</b></td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">1</span></td><td class="pi"><span class="va">2 (calientan el carburador)</span></td></tr><tr><td><b>Instalación del motor</b></td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">enfriador de aceite · tomas de aire</span></td><td class="pi"><span class="va">enfriador de aceite · entradas de aire · admisión del carburador separada</span></td></tr></table></div>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Piper = 2 mufflers</b> (lleva la calefacción del carburador); <b>Cessna = 1</b>.</li></ul></div>
@@ -659,6 +665,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
     <li>Lo más importante y lo más probable: el <b>panel de las 3 luces</b> (Annunciator Panel) y <b>qué fallo indica cada luz</b>.</li>
     <li>Seis instrumentos, de izquierda a derecha: anemómetro (pitot), horizonte artificial, altímetro, coordinador de virajes, giro direccional y VSI.</li>
   </ul></div>
+  <div class="mnem"><b>Regla de las tres luces</b><ul><li><b>V·A·P</b>, de izquierda a derecha: <b>V</b>acío · <b>A</b>lternador · <b>P</b>resión de aceite.</li><li>Solo el alternador deja un reloj (unos <b>30 min</b> de batería). Vacío y aceite: actúa ya.</li></ul></div>
   <div class="key"><b>Clave</b>De izquierda a derecha: <b>bomba de vacío</b> · <b>alternador</b> · <b>presión de aceite</b>.</div>
   <div class="flag"><b>Ojo</b> Este es el panel del <b>Piper</b>. El Cruiser tiene pantallas Dynon SkyView (ver POH.7.8).</div>
   <h4>Annunciator panel · enciende cada luz</h4>
@@ -2077,10 +2084,11 @@ function initCru(){ document.querySelectorAll("#cruCard [data-go]").forEach(b=>b
 function initAnnun(){
   const el = $("#visAnnun");
   const L = [["Bomba de vacío","Fallan el horizonte artificial, el DGI y el coordinador de virajes si se pierde la succión."],["Alternador","Quedan unos 30 min de batería. El motor sigue dando potencia; fallan comunicaciones e instrumentos eléctricos."],["Presión de aceite","Contrástala con la temperatura. Aterriza en cuanto sea posible: el motor puede pararse."]];
+  const ACT=["Los instrumentos de vacío dejan de ser fiables: vuela con anemómetro, altímetro y VSI y aterriza cuanto antes.","Reduce la carga eléctrica, revisa el breaker y haz el ciclo OFF/ON del alternador (checklist POH.3.1). Aterriza cuanto antes: unos 30 min de batería.","Contrástala con la temperatura del aceite. Aterriza en cuanto sea posible (POH.3.2); si además sube la temperatura, el motor puede pararse."];
   let on=-1, quiz=null, msg="";
   function draw(){
     el.innerHTML = `<div class="lamps">${L.map((l,i)=>`<button class="lamp ${on===i?'on':''}" data-i="${i}" aria-label="Luz ${i+1}">${quiz?"?":l[0]}</button>`).join("")}</div>` +
-      `<div class="vismsg">${quiz?`<b>¿Qué luz se enciende si falla: ${quiz.name}?</b> ${msg}`:(on>=0?`<b>${L[on][0]}</b>: ${L[on][1]}`:"Toca una luz para encenderla.")}</div><button class="btn sm" data-q="1">${quiz?"Otra":"Ponme a prueba"}</button>${quiz?' <button class="btn sec sm" data-x="1">Salir</button>':''}`;
+      `<div class="vismsg">${quiz?`<b>¿Qué luz se enciende si falla: ${quiz.name}?</b> ${msg}`:(on>=0?`<b>${L[on][0]}</b>: ${L[on][1]}<br><b>Qué hacer:</b> ${ACT[on]}`:"Toca una luz para encenderla.")}</div><button class="btn sm" data-q="1">${quiz?"Otra":"Ponme a prueba"}</button>${quiz?' <button class="btn sec sm" data-x="1">Salir</button>':''}`;
     el.querySelectorAll(".lamp").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; if(quiz){ on=i; msg = i===quiz.i ? '<span class="pass">Correcto.</span>' : `<span class="fail">No: es la ${["izquierda","del centro","derecha"][quiz.i]}.</span>`; } else on = on===i?-1:i; draw(); });
     el.querySelector("[data-q]").onclick=()=>{ const i=Math.floor(Math.random()*3); quiz={i,name:L[i][0].toLowerCase()}; on=-1; msg=""; draw(); };
     const x=el.querySelector("[data-x]"); if(x) x.onclick=()=>{ quiz=null; on=-1; draw(); };
@@ -2838,4 +2846,5 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ try{ console.error("lens",e); }catch(_){} }
 })();
 </script>
+<script src="../viz16.js?v=0c392d1a" defer></script>
 </body></html>
