@@ -100,6 +100,36 @@ async function notams(icao) {
   return [...seen.values()];
 }
 const J = (o, ok, age) => new Response(JSON.stringify(o), { status: ok ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok ? "public, max-age=" + age : "no-store", "access-control-allow-origin": "*" } });
+
+// ---- /api/news: titulares RSS públicos (EASA, AESA, Aviation Herald). Sin IA, sin claves. Caché 6 h; últimos 50 sin duplicar URL.
+const FEEDS = [
+  { src: "EASA", cat: "Regulación", url: "https://www.easa.europa.eu/en/newsroom-and-events/news/rss.xml" },
+  { src: "EASA", cat: "Seguridad", url: "https://www.easa.europa.eu/en/domains/safety-information/rss.xml" },
+  { src: "AESA", cat: "Regulación", url: "https://www.seguridadaerea.gob.es/lang_castellano/rss/rss_noticias.xml" },
+  { src: "Aviation Herald", cat: "Seguridad", url: "https://avherald.com/h?subscribe=rss" },
+  { src: "Aviation Herald", cat: "Industria/Empleo", url: "https://www.aviationjobsearch.com/rss" }
+];
+const txt = (x, t) => { const m = x.match(new RegExp("<" + t + "[^>]*>([\\s\\S]*?)</" + t + ">", "i")); return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").trim() : ""; };
+async function readFeed(f) {
+  try {
+    const r = await fetch(f.url, { headers: { "user-agent": "atpl-fase0/1.0 (+rss)" }, cf: { cacheTtl: 21600, cacheEverything: true } });
+    if (!r.ok) return [];
+    const x = await r.text(), out = [];
+    for (const m of x.matchAll(/<(item|entry)[\s>][\s\S]*?<\/\1>/gi)) {
+      const b = m[0], title = txt(b, "title"); let link = txt(b, "link");
+      if (!link) { const h = b.match(/<link[^>]*href="([^"]+)"/i); link = h ? h[1] : ""; }
+      const d = Date.parse(txt(b, "pubDate") || txt(b, "updated") || txt(b, "published") || txt(b, "dc:date"));
+      if (title && /^https?:\/\//.test(link)) out.push({ t: title.slice(0, 220), u: link, s: f.src, c: f.cat, d: isNaN(d) ? 0 : d });
+    }
+    return out;
+  } catch (e) { return []; }
+}
+async function news() {
+  const all = (await Promise.all(FEEDS.map(readFeed))).flat(), seen = new Set(), out = [];
+  all.sort((a, b) => b.d - a.d);
+  for (const n of all) { if (seen.has(n.u)) continue; seen.add(n.u); out.push(n); if (out.length >= 50) break; }
+  return out;
+}
 export default {
   async fetch(req, env, ctx) {
     const u = new URL(req.url);
@@ -111,6 +141,10 @@ export default {
     if (u.pathname === "/api/notam") {
       const o = await memo("nt:" + icao, 600000, async () => { const l = await notams(icao); return { ok: !!l, n: l || [], at: Date.now(), src: "FAA NOTAM Search", why: l ? undefined : NT_WHY }; });
       return J(o, o.ok, 300);
+    }
+    if (u.pathname === "/api/news") {
+      const o = await memo("news", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now() }; });
+      return J(o, o.ok, 3600);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
     const o = await memo("wx:" + icao, 120000, async () => {

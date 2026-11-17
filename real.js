@@ -263,6 +263,46 @@ function cycleModel(){
 function cycleAt(u){ const C=cycleModel(), i=clamp((u-C.U0)/C.dt,0,C.rows.length-1), a=C.rows[i|0], b=C.rows[Math.min(C.rows.length-1,(i|0)+1)], k=i-(i|0), o={};
   for(const key of ["x","z","alt","pitch","psi","roll","v","xf"]) o[key]=lerp(a[key],b[key],k); return o; }
 
+/* ---------- tráfico de fondo: avioneta en circuito, planeador en térmica y rodaje a la cabecera ----------
+   Reglas del aire: el planeador (térmica a mayor altura) tiene preferencia, así que la avioneta pasa siempre por debajo y se aparta de su vertical;
+   en tierra, los aviones esperan en el punto de espera de la calle paralela y no entran en pista mientras el principal aterriza, rueda o despega. */
+const TR_P=u=>66+22*(u-53);                         // avioneta en viento en cola (hacia el este, a la altura del circuito) por debajo del planeador
+function trSil(ctx,x,y,s,dir,asp,kind,col,bank){
+  ctx.save(); ctx.translate(x,y); ctx.fillStyle=col;
+  if(kind==="g"){   // planeador: fuselaje largo y fino, cola en T; las alas se ven largas al llegar de frente y de canto al viajar de perfil
+    ctx.save(); ctx.scale(dir*s*Math.max(.14,asp),-s); ctx.beginPath(); ctx.moveTo(3.3,.2); ctx.quadraticCurveTo(3.3,.9,1.7,.95); ctx.lineTo(-.4,.8); ctx.lineTo(-6,.5); ctx.lineTo(-6.5,2.1); ctx.lineTo(-7,2.1); ctx.lineTo(-6.6,.3); ctx.lineTo(-6,.3); ctx.lineTo(-.4,.4); ctx.closePath(); ctx.fill(); ctx.restore();
+    const W=7.5*Math.sqrt(Math.max(0,1-asp*asp))+.7; ctx.save(); ctx.scale(s,-s); ctx.translate(dir*.3*asp,.95); ctx.rotate(bank); ctx.fillRect(-W,-.1,2*W,.24); ctx.restore(); }
+  else{   // avioneta de ala alta
+    ctx.scale(dir*s,-s); ctx.beginPath(); ctx.moveTo(3.6,.2); ctx.lineTo(3.6,1); ctx.lineTo(1.6,1.45); ctx.lineTo(-.8,1.5); ctx.lineTo(-4.7,1.05); ctx.lineTo(-4.9,2.1); ctx.lineTo(-5.4,2.1); ctx.lineTo(-5.2,.55); ctx.lineTo(-3.5,.3); ctx.closePath(); ctx.fill();
+    ctx.fillRect(-1.5,2.15,3.4,.26); ctx.fillRect(.2,1.45,.18,.75); ctx.fillRect(3.62,.28,.12,1.05);   // ala, montante y hélice
+    ctx.fillRect(2.3,-.05,.28,.3); ctx.fillRect(-.3,-.05,.3,.3); }
+  ctx.restore();
+}
+function trLights(ctx,x,y,s,dir,t,ph,env,k,kind){
+  const N=sstep(.12,.7,env.night); if(N<.05) return; ctx.save(); ctx.globalCompositeOperation="lighter";
+  if(kind!=="g"){ glow(ctx,x+dir*s*.4,y-s*2.1,s*1.6,"255,40,30",.7*N*k); glow(ctx,x-dir*s*.4,y-s*2.1,s*1.6,"40,255,90",.7*N*k); }
+  if(((t+ph)%1.3)<.12) glow(ctx,x-dir*s*5,y-s*2,s*3.2,"255,255,255",.9*N*k);
+  ctx.restore(); ctx.globalAlpha=1;
+}
+function trSky(ctx,S){
+  const {w,h,pm,hz0,dy,cam,t,u,env,haze}=S, N=sstep(.12,.7,env.night);
+  const tone=(c,k)=>css(mix(haze,mul(tint(c,mix([255,255,255],env.sun,.3)),.3+.7*env.amb),k));
+  // planeador en térmica: círculo de 24 s; se ve de perfil en los extremos y de frente al cruzar
+  { const ph=((t%24)/24)*2*Math.PI, xg=150+45*Math.cos(ph), vx=-Math.sin(ph), sx=(xg-cam*.22)*pm*.28, gy=hz0*.26+dy*.45+Math.sin(t*.21)*h*.004, asp=Math.abs(vx);
+    if(sx>-pm*5&&sx<w+pm*5) { trSil(ctx,sx,gy,pm*.28,vx>=0?1:-1,asp,"g",tone([226,230,238],.88),.34*(vx>=0?1:-1)); trLights(ctx,sx,gy,pm*.28,vx>=0?1:-1,t,.4,env,.5,"g"); } }
+  // avioneta en el circuito (por debajo del planeador): se desplaza hacia abajo al acercarse a su vertical
+  { const xp=TR_P(u), sx=(xp-cam*.45)*pm*.4, ph=((t%24)/24)*2*Math.PI, gsx=((150+45*Math.cos(ph))-cam*.22)*pm*.28, sep=1-clamp(Math.abs(sx-gsx)/(w*.22),0,1),
+        py=hz0*.56+dy*.55+sep*hz0*.2;
+    if(sx>-pm*8&&sx<w+pm*8){ trSil(ctx,sx,py,pm*.4,1,1,"p",tone([212,218,228],.9),0); trLights(ctx,sx,py,pm*.4,1,t,0,env,.8,"p"); } }
+}
+function trGround(ctx,S,ty,th,TX,fp){
+  const {w,h,pm,cam,t,u,env,haze}=S, tone=(c,k)=>css(mix(haze,mul(tint(c,mix([255,255,255],env.sun,.3)),.3+.7*env.amb),k)), N=sstep(.12,.7,env.night), sc=pm*.26, yb=ty+th*.5;
+  const one=(m,col,ph,rot)=>{ if(m==null) return; const x=TX(m); if(x<-12*sc||x>w+12*sc) return; trSil(ctx,x,yb,sc,1,1,"p",tone(col,.78),0);
+    if((((t+ph)%1.1)<.14)){ ctx.save(); ctx.globalCompositeOperation="lighter"; glow(ctx,x-1.2*sc,yb-3.2*sc,sc*(2.2+2*N),"255,50,40",.5+.4*N); ctx.restore(); ctx.globalAlpha=1; }   // baliza
+    if(N>.05){ ctx.save(); ctx.globalCompositeOperation="lighter"; glow(ctx,x+3.4*sc,yb-sc*.9,sc*3.4,"255,248,220",.55*N); if(rot) glow(ctx,x+sc*5,yb+th*.2,sc*4,"255,60,40",.55*N); ctx.restore(); ctx.globalAlpha=1; } };
+  const a=u<16?22:u>=40?22-2.4*Math.max(0,51-u):null, b=u<16?8:u>=40?8-2.4*Math.max(0,57-u):null;
+  one(b,[222,226,232],.5,false); one(a,[244,244,246],0,true);   // A, primero en la cola, espera con barra de parada; B detrás
+}
 /* ---------- escena 1: aeródromo, despegue, aterrizaje y media vuelta ---------- */
 function drawTakeoff(cv,env,t,tt,o){
   o=o||{}; const ctx=cv.getContext("2d"), w=cv.width, H=cv.height, pm=H*(o.pm||.105), h=pm/.105, hz0=H*(o.hz||.62), T=18, a=2.4, t0=1.2, tr=11.3, tl=12.5;
@@ -298,6 +338,8 @@ function drawTakeoff(cv,env,t,tt,o){
   const haze=env.hor;
   ridge(ctx,w,hz,h*.13,cam*pm*.03,.0011*640/h*.25+.0009,css(mix(haze,mul(env.top,.5),.34)),.21);
   ridge(ctx,w,hz+1,h*.05,cam*pm*.10+500,.006*72/h+.0012,css(mix(haze,mul([52,70,56],env.amb),.66)),.63);
+  const TS_={w,h,pm,hz0,dy,cam,t,u:o.cycle?tt%(cycleModel().UE+APP+RO+TU):-1,env,haze:env.hor};
+  if(o.cycle) trSky(ctx,TS_);
   // hierba lejana
   const G=(c,k)=>css(mul(tint(c,mix([255,255,255],env.sun,.3)),env.amb*k));
   let g=ctx.createLinearGradient(0,hz,0,y1); g.addColorStop(0,css(mix(haze,mul([112,124,80],env.amb),.55))); g.addColorStop(1,G([104,118,66],.95)); ctx.fillStyle=g; ctx.fillRect(0,hz,w,y1-hz+1);
@@ -318,7 +360,8 @@ function drawTakeoff(cv,env,t,tt,o){
     if(N>.03){ ctx.save(); ctx.globalCompositeOperation="lighter"; const m0=cam*fp-w*.08/(pm*fp), m1=m0+w/(pm*fp);
       for(let m=Math.floor(m0/30)*30;m<m1+30;m+=30){ glow(ctx,TX(m),ty-th/2,h*.014,"70,120,255",.8*N); glow(ctx,TX(m+15),ty+th/2,h*.016,"70,120,255",.85*N); }
       for(let m=Math.floor(m0/15)*15;m<m1+15;m+=15) glow(ctx,TX(m+4),ty,h*.008,"80,255,140",.6*N);
-      ctx.restore(); ctx.globalAlpha=1; } }
+      ctx.restore(); ctx.globalAlpha=1; }
+    if(o.cycle) trGround(ctx,TS_,ty,th,TX,fp); }
   // PAPI (lado lejano) y manga
   { const px0=132; if(X(px0)>-60&&X(px0)<w+60){ for(let i=0;i<4;i++){ const p=GP(px0,-20.5-i*3.3); ctx.fillStyle="#2b2e33"; ctx.fillRect(p[0]-pm*.3,p[1]-pm*.32,pm*.6,pm*.32); }
       ctx.save(); ctx.globalCompositeOperation="lighter"; for(let i=0;i<4;i++){ const p=GP(px0,-20.5-i*3.3); glow(ctx,p[0],p[1]-pm*.3,pm*(.55+.6*N),i<2?"255,40,30":"255,255,250",.75+.25*N); } ctx.restore(); ctx.globalAlpha=1; } }
@@ -371,7 +414,7 @@ function drawTakeoff(cv,env,t,tt,o){
   if(fade>0&&px>-14*pm&&px<w+14*pm&&py>-6*pm) plane3D(ctx,px,py,pm,K,env,t,o.lift); ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
   // calima sobre el horizonte
   const hg=ctx.createLinearGradient(0,hz-h*.1,0,hz+h*.05); hg.addColorStop(0,css(haze,0)); hg.addColorStop(.7,css(haze,.32)); hg.addColorStop(1,css(haze,0)); ctx.fillStyle=hg; ctx.fillRect(0,hz-h*.1,w,h*.15);
-  return {kt:v*1.944, alt:alt*3.281};
+  return {kt:v*1.944, alt:alt*3.281, cam, hz, dy, y1, y2, pm};
 }
 
 
