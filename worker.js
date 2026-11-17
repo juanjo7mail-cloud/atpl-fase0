@@ -102,12 +102,24 @@ async function notams(icao) {
 const J = (o, ok, age) => new Response(JSON.stringify(o), { status: ok ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok ? "public, max-age=" + age : "no-store", "access-control-allow-origin": "*" } });
 
 // ---- /api/news: titulares RSS públicos (EASA, AESA, Aviation Herald). Sin IA, sin claves. Caché 6 h; últimos 50 sin duplicar URL.
-const FEEDS = [
-  { src: "EASA", cat: "Regulación", url: "https://www.easa.europa.eu/en/newsroom-and-events/news/rss.xml" },
-  { src: "EASA", cat: "Seguridad", url: "https://www.easa.europa.eu/en/domains/safety-information/rss.xml" },
-  { src: "AESA", cat: "Regulación", url: "https://www.seguridadaerea.gob.es/lang_castellano/rss/rss_noticias.xml" },
-  { src: "Aviation Herald", cat: "Seguridad", url: "https://avherald.com/h?subscribe=rss" },
-  { src: "Aviation Herald", cat: "Industria/Empleo", url: "https://www.aviationjobsearch.com/rss" }
+const FEEDS = [   // ✓ = URL verificada; ? = sin verificar (si falla se omite y /api/news?debug=1 lo indica)
+  { src: "EASA", cat: "Regulación", url: "https://www.easa.europa.eu/en/newsroom-and-events/news/rss.xml" },                  // ?
+  { src: "AESA", cat: "Regulación", url: "https://www.seguridadaerea.gob.es/lang_castellano/rss/rss_noticias.xml" },           // ?
+  { src: "Aviation Herald", cat: "Seguridad", url: "https://avherald.com/h?subscribe=rss" },                                    // ? accidentes e incidentes
+  { src: "ASN", cat: "Seguridad", url: "https://news.aviation-safety.net/feed/" },                                              // ? Aviation Safety Network
+  { src: "Flightradar24", cat: "Seguridad", url: "https://www.flightradar24.com/blog/category/aviation-safety/feed/" },         // ✓
+  { src: "The Aviationist", cat: "Seguridad", url: "https://theaviationist.com/category/aviation-safety/feed/" },               // ✓
+  { src: "Simple Flying", cat: "Industria", url: "https://simpleflying.com/feed/" },                                             // ✓ flota, compras, curiosidades
+  { src: "AeroTime", cat: "Industria", url: "https://www.aerotime.aero/rss" },                                                   // ✓
+  { src: "Airline Weekly", cat: "Industria", url: "https://airlineweekly.skift.com/feed/" },                                     // ✓
+  { src: "AeroTime", cat: "Empleo", url: "https://www.aerotime.aero/rss/category/jobs" }                                         // ?
+];
+// Si el titular lo dice, manda el tema del titular sobre el del feed
+const KW = [
+  ["Seguridad", /crash|accident|incident|emergency|runway excursion|collision|mayday|diverts?|evacuat|fire|engine failure|investigation|accidente|incidente|emergencia/i],
+  ["Empleo", /hiring|recruit|cadet|pilot (shortage|training|jobs?|pay|salar)|first officer|vacanc|career|apprentice|contratación|oferta de empleo|piloto[s]? (busca|cadete)/i],
+  ["Flota", /order[s]?\b|orders|delivers?|delivery|fleet|lease|buys|acquires|a320|a321|a350|a220|737|787|777|e2|atr|retire[sd]?|pedido|flota|entrega/i],
+  ["Regulación", /\b(EASA|AESA|FAA|ICAO|regulation|rule|directive|airworthiness|licen[cs]e|AD\b|normativa)\b/i]
 ];
 const txt = (x, t) => { const m = x.match(new RegExp("<" + t + "[^>]*>([\\s\\S]*?)</" + t + ">", "i")); return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").trim() : ""; };
 async function readFeed(f) {
@@ -119,15 +131,16 @@ async function readFeed(f) {
       const b = m[0], title = txt(b, "title"); let link = txt(b, "link");
       if (!link) { const h = b.match(/<link[^>]*href="([^"]+)"/i); link = h ? h[1] : ""; }
       const d = Date.parse(txt(b, "pubDate") || txt(b, "updated") || txt(b, "published") || txt(b, "dc:date"));
-      if (title && /^https?:\/\//.test(link)) out.push({ t: title.slice(0, 220), u: link, s: f.src, c: f.cat, d: isNaN(d) ? 0 : d });
+      if (title && /^https?:\/\//.test(link)) { let c = f.cat; for (const [k, re] of KW) if (re.test(title)) { c = k; break; } out.push({ t: title.slice(0, 220), u: link, s: f.src, c, d: isNaN(d) ? 0 : d }); }
     }
     return out;
   } catch (e) { return []; }
 }
 async function news() {
-  const all = (await Promise.all(FEEDS.map(readFeed))).flat(), seen = new Set(), out = [];
+  const per = await Promise.all(FEEDS.map(readFeed)), all = per.flat(), seen = new Set(), cnt = {}, out = [];
   all.sort((a, b) => b.d - a.d);
-  for (const n of all) { if (seen.has(n.u)) continue; seen.add(n.u); out.push(n); if (out.length >= 50) break; }
+  for (const n of all) { if (seen.has(n.u) || (cnt[n.s] || 0) >= 14) continue; seen.add(n.u); cnt[n.s] = (cnt[n.s] || 0) + 1; out.push(n); if (out.length >= 50) break; }   // máx. 14 por fuente: ninguna acapara
+  out.feeds = FEEDS.map((f, i) => f.src + " · " + f.url + " → " + per[i].length);
   return out;
 }
 export default {
@@ -143,7 +156,8 @@ export default {
       return J(o, o.ok, 300);
     }
     if (u.pathname === "/api/news") {
-      const o = await memo("news", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now() }; });
+      const o = await memo("news", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds }; });
+      if (u.searchParams.get("debug")) return J({ feeds: o.feeds, ok: o.ok, count: (o.n || []).length }, true, 60);
       return J(o, o.ok, 3600);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
