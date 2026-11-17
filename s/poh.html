@@ -370,6 +370,10 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 </nav>
 
 <section id="p-notes">
+<section class="labs" aria-label="Láminas interactivas">
+<style>.labs{border:1px solid var(--line,#d5dde5);border-left:5px solid #1F6FB5;background:var(--paper,#fff);border-radius:10px;padding:12px 14px;margin:0 0 14px}.labs b{display:block;margin-bottom:8px;font-size:15px}.labs .lb{display:flex;flex-wrap:wrap;gap:8px}.labs button{font:600 14px/1.1 inherit;font-family:inherit;border:1px solid #1F6FB5;color:#1F6FB5;background:#fff;border-radius:99px;padding:8px 14px;cursor:pointer}.labs button:hover{background:#1F6FB5;color:#fff}</style>
+<b>Láminas interactivas · pulsa y se abren</b><div class="lb"><button data-lo="POH.2.1" data-v="tape" type="button">Cinta de velocidades</button><button data-lo="POH.7.1" data-v="syscmp" type="button">Sistemas cara a cara</button><button data-lo="POH.7.3" data-v="" type="button">Panel de anunciadores</button></div></section>
+<script>(function(){document.querySelectorAll(".labs button").forEach(function(b){b.addEventListener("click",function(){var d=document.getElementById("lo-"+b.dataset.lo);if(!d)return;d.open=true;var p=d.querySelector('.f0viz[data-viz="'+b.dataset.v+'"]')||d.querySelector(".f0viz,.vis");setTimeout(function(){(p||d).scrollIntoView({behavior:"smooth",block:"start"});},60);});});})();</script>
 <div class="card" id="cruCard"><b>Los 3 aviones, juntos</b><p class="muted small">Cada tabla lleva los tres aviones en el mismo orden y color: <span style="color:var(--cz);font-weight:700">Cruiser</span> · <span style="color:var(--c1);font-weight:700">C172</span> · <span style="color:var(--pi);font-weight:700">Piper</span>. Pulsa «Tapar valores» encima de cada tabla para memorizarla y «Ponme a prueba» para comprobarte.</p><div class="chips"><button class="linkbtn" data-go="lo-POH.1.5">Tabla maestra de los 3 aviones</button></div></div>
 <div class="card" id="hotCard" hidden><b>Lo que más fallas</b><div id="hotFails"></div></div>
 <h2>POH.1 · General <span class="wtag">9 preg. · 30 %</span></h2>

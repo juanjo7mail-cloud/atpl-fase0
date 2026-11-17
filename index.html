@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="fb7532eeb0f1";</script>
+<script>window.F0_BUILD="9b0dc489e182";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -480,9 +480,23 @@ input:not([type]),input[type=text],input[type=email],input[type=password],input[
 ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}ul.live .ond{width:9px;height:9px;border-radius:50%;background:#3DD68C;box-shadow:0 0 0 3px rgba(61,214,140,.25);flex:none}.st-tbl.heat th.n{font-size:11px}.st-tbl.heat td.hc{font-size:12px;min-width:44px}
 .st-box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
 .st-box h2{font:700 20px/1.1 var(--display);margin:0 0 10px}
-.nw-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.nw-bar button{font:600 13px var(--body);padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}.nw-bar button.on{background:var(--ink);color:#fff;border-color:var(--ink)}.nw-bar .all{margin-left:auto}.nw-bar button:disabled{opacity:.45;cursor:default}
-.nw-l{list-style:none;margin:0;padding:0;display:grid;gap:0}.nw-l li{display:grid;grid-template-columns:auto 1fr auto;gap:2px 10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}.nw-l li.rd{opacity:.55}.nw-l a{grid-column:1/3;font-weight:600;color:var(--ink);text-decoration:none;line-height:1.3}.nw-l a:hover{text-decoration:underline}.nw-s{font-size:12.5px;color:var(--muted);text-align:left}.nw-l li>button{grid-column:3;grid-row:1/3;font:600 12px var(--body);padding:4px 9px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
-.nw-c{font:700 11px var(--body);letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:99px;background:#E3ECF7;color:#1F4E8C;justify-self:start}.nw-c.c0{background:#FBE5E3;color:#8c1f17}.nw-c.c1{background:#E3ECF7;color:#1F4E8C}.nw-c.c2{background:#E4F2E8;color:#1E6B3A}.nw-c.c3{background:#FFF1D6;color:#8a5a00}.nw-c.c4{background:#EDE6F7;color:#5b3a8c}
+/* ---- Radar de Industria ---- */
+#radarBtn{position:relative}#radarDot{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;border-radius:9px;background:#E5392E;color:#fff;font:700 10px/16px var(--body);text-align:center;padding:0 3px;border:2px solid var(--head,#12202f);box-sizing:content-box}
+#radar{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(10,20,34,0);transition:background .25s}#radar[hidden]{display:none}#radar.on{background:rgba(10,20,34,.45)}
+#radar .rd-pan{width:min(460px,100vw);height:100%;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .26s cubic-bezier(.2,.8,.2,1);box-shadow:-12px 0 40px rgba(0,0,0,.25);padding-top:env(safe-area-inset-top,0px);padding-right:env(safe-area-inset-right,0px)}#radar.on .rd-pan{transform:none}
+.rd-hd{display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,#12202f,#1c3a56);color:#fff}.rd-hd svg{flex:none}.rd-hd h2{margin:0;font:700 20px/1.1 var(--display);letter-spacing:.3px}.rd-hd small{display:block;font:500 12.5px var(--body);color:#9fc6e8;margin-top:3px}.rd-hd button{margin-left:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:7px 12px;font:600 13px var(--body);cursor:pointer}
+#rdBody{flex:1;min-height:0;overflow:auto;padding:14px 16px calc(24px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.rd-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.rd-chips button{display:inline-flex;align-items:center;gap:5px;font:600 13px var(--body);padding:6px 11px;border-radius:99px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}.rd-chips button i{font-style:normal}.rd-chips button.on{background:var(--rc,var(--ink));border-color:var(--rc,var(--ink));color:#fff}
+.rd-hl{font:700 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:2px 0 8px}
+.rd-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.rd-card{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--rc);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0;margin-bottom:0}.rd-card.big{padding:16px;margin-bottom:16px;background:linear-gradient(180deg,var(--rb),var(--paper) 70%)}.rd-card.rd{opacity:.55}
+.rd-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.rd-b{display:inline-flex;align-items:center;gap:5px;font:700 11px var(--body);letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:99px}.rd-b i{font-style:normal;font-size:13px}.rd-src{font:500 12px var(--body);color:var(--muted)}
+.rd-card>a{font:700 16px/1.3 var(--display);color:var(--ink);text-decoration:none;overflow-wrap:anywhere}.rd-card.big>a{font-size:21px;line-height:1.2}.rd-card>a:hover{text-decoration:underline}
+.rd-act{display:flex;gap:8px;align-items:center}.rd-open{font:600 13px var(--body);color:var(--rc);text-decoration:none}.rd-act button{margin-left:auto;font:600 12px var(--body);padding:4px 9px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.rd-msg{color:var(--muted);padding:20px 0}.rd-foot{margin:16px 0 0;font-size:12px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}.rd-foot button{margin-left:auto;font:600 12px var(--body);padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}.rd-foot button:disabled{opacity:.45}
+@media (min-width:900px){.rd-grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){#radar,#radar .rd-pan{transition:none}}
+
 
 #heatBox .hbar{grid-template-columns:minmax(90px,190px) 1fr auto}#heatBox .hbar b{white-space:nowrap;text-align:right}
 .hbar{display:grid;grid-template-columns:minmax(90px,150px) 1fr 54px;gap:8px;align-items:center;font-size:14px;margin:6px 0}
@@ -496,10 +510,10 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 .st-tbl td.n{text-align:right;font-variant-numeric:tabular-nums}
 .st-scroll{overflow-x:auto}
 /* ---- autor y aviso ---- */
-.sfoot{margin:34px auto 0;max-width:1000px;padding:14px max(16px,env(safe-area-inset-left,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px));border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;font:500 13px/1.2 var(--body);color:var(--muted);box-sizing:border-box}
-.sfoot b{color:var(--ink);font-weight:600}.sfoot nav{display:flex;align-items:center;gap:4px 16px;flex-wrap:wrap}.sfoot a,.sfoot button{display:inline-flex;align-items:center;gap:6px;color:var(--ink);text-decoration:none;font:600 13px/1 var(--body);background:none;border:0;padding:6px 2px;cursor:pointer;border-bottom:1px solid transparent}
+.sfoot{width:100%;margin:34px auto 0;max-width:1000px;padding:14px max(16px,env(safe-area-inset-left,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px));border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;font:500 13px/1.2 var(--body);color:var(--muted);box-sizing:border-box}
+.sfoot b{color:var(--ink);font-weight:600}.sfoot .sfn{display:flex;align-items:center;gap:4px 16px;flex-wrap:wrap}.sfoot a,.sfoot button{display:inline-flex;align-items:center;gap:6px;color:var(--ink);text-decoration:none;font:600 13px/1 var(--body);background:none;border:0;padding:6px 2px;cursor:pointer;border-bottom:1px solid transparent}
 .sfoot a:hover,.sfoot button:hover{border-bottom-color:var(--ink)}.sfoot .need{display:none}body.logged .sfoot .need{display:inline-flex}.sfoot i{font-style:normal}
-@media (max-width:520px){.sfoot{justify-content:center;font-size:12px}.sfoot .by{display:none}.sfoot i{display:none}.sfoot nav{justify-content:center}.sfoot a,.sfoot button{font-size:12.5px}}
+@media (max-width:520px){.sfoot{flex-direction:column;justify-content:center;text-align:center;gap:6px;font-size:12.5px}.sfoot .sfn{justify-content:center;gap:2px 18px;width:100%}.sfoot a,.sfoot button{font-size:13px;padding:8px 2px}.sfoot i{display:none}}
 .credit{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
 .credit b{color:var(--ink)}
 .sheet.acctonly #shWhere,.sheet.acctonly #codeHint,.sheet.acctonly #code,.sheet.acctonly .row:has(#copyBtn),.sheet.acctonly #impBtn,.sheet.acctonly label[for=fileIn]{display:none}
@@ -610,6 +624,7 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
     <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(-7 32 32)"><rect x="3" y="18" width="58" height="32" rx="7" fill="#8E0B20"/><rect x="3" y="14" width="58" height="32" rx="7" fill="#C8102E"/><rect x="8" y="19" width="48" height="22" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="1.6" stroke-dasharray="3.2 2.4"/><circle cx="15" cy="30" r="5" fill="#fff"/><circle cx="15" cy="30" r="2.4" fill="#8E0B20"/><text x="39" y="37" font-family="Arial Black,Impact,Arial,sans-serif" font-weight="900" font-size="15.5" letter-spacing=".5" text-anchor="middle" fill="#fff">SBF</text></g></svg><span class="bt">ATPL<small>by Juanjo Ruano</small></span></div>
     <button class="vsw" id="vsw" hidden type="button" role="switch" aria-checked="false" aria-label="Vista de Inicio: tarjetas o instrumentos" title="Cambiar la vista de Inicio"><span class="tgl"><i class="nut"></i><i class="lev"></i></span><span class="lbs"><span class="lb on">Instrumentos</span><span class="lb off">Tarjetas</span></span></button>
     <button class="iconbtn" id="searchBtn" type="button" aria-haspopup="dialog" aria-label="Buscar en los apuntes"><svg viewBox="0 0 20 20" aria-hidden="true" style="transform:rotate(45deg)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z" fill="currentColor"/></svg><span>Buscar</span><kbd>/</kbd></button>
+    <button class="iconbtn" id="radarBtn" type="button" hidden aria-haspopup="dialog" aria-expanded="false" aria-controls="radar" aria-label="Radar de Industria" title="Radar de Industria"><svg viewBox="0 0 20 20" aria-hidden="true" width="18" height="18"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 10 15.2 4.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="13.4" cy="13.6" r="1.2" fill="currentColor"/></svg><b id="radarDot" hidden></b></button>
     <button class="savepill" id="saveBtn" type="button" aria-haspopup="dialog"><i></i><span id="saveTxt">Mi progreso</span></button>
     <button class="savepill" id="onBtn" type="button" hidden aria-haspopup="true" aria-expanded="false" aria-controls="onPop" title="Compañeros conectados ahora"><i class="ond"></i><span id="onN">1</span><span class="onw"> en línea</span></button>
     <button class="savepill" id="rankBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="gaPop" style="padding:3px 8px"></button>
@@ -653,6 +668,10 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
   </section>
 </main>
 
+
+<div id="radar" hidden role="dialog" aria-modal="true" aria-labelledby="rdT">
+  <aside class="rd-pan"><div class="rd-hd"><svg viewBox="0 0 20 20" width="26" height="26" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="#7fb6e6" stroke-width="1.5"/><circle cx="10" cy="10" r="3.6" fill="none" stroke="#7fb6e6" stroke-width="1.3"/><path d="M10 10 15.2 4.8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg><div><h2 id="rdT">Radar de Industria</h2><small id="rdUn">Cargando…</small></div><button type="button" id="rdClose">Cerrar</button></div><div id="rdBody"></div></aside>
+</div>
 
 <div class="sheet top" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscar en los apuntes">
   <div class="box sbox">
@@ -1378,7 +1397,7 @@ function beatFlush(){ if(!sbUser||!visStart) return; const s=Math.round((Date.no
 document.addEventListener("visibilitychange",()=>{ if(!sbUser) return; if(document.visibilityState==="hidden") beatFlush(); else visStart=Date.now(); });
 async function signedIn(user, consent){
   sbUser=user; remote=webRemote();
-  isAdmin = String(user.email||"").toLowerCase()===ADMIN_EMAIL;
+  isAdmin = String(user.email||"").toLowerCase()===ADMIN_EMAIL; radarSync();
   if(!$("#login").hidden){ $("#lgForm").classList.add("pulled"); $("#lgNames").hidden=true; await new Promise(r=>setTimeout(r, matchMedia("(prefers-reduced-motion: reduce)").matches?0:480)); }
   $("#login").hidden=true; $("#lgForm").classList.remove("pulled");
   startPresence();   // el chat y los compañeros en línea se conectan ya, sin esperar a los datos de la nube
@@ -1404,12 +1423,12 @@ async function loadMine(){
 /* ===================== buzón de sugerencias (web) ===================== */
 let SG=null;
 /* ---- pie de página: va al final del contenido de cada vista (no es fijo) ---- */
-const FOOT_CSS=`.sfoot{margin:34px auto 0;max-width:1000px;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid #d5dde5;display:flex;align-items:center;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;font:500 13px/1.2 Inter,system-ui,sans-serif;color:#5a6b7b;box-sizing:border-box}.sfoot b{color:#12202f}.sfoot nav{display:flex;gap:4px 16px;flex-wrap:wrap}.sfoot a,.sfoot button{display:inline-flex;align-items:center;gap:6px;color:#12202f;text-decoration:none;font:600 13px/1 Inter,system-ui,sans-serif;background:none;border:0;padding:6px 2px;cursor:pointer;border-bottom:1px solid transparent}.sfoot a:hover,.sfoot button:hover{border-bottom-color:#12202f}.sfoot i{font-style:normal}@media (max-width:520px){.sfoot{justify-content:center;font-size:12px}.sfoot .by,.sfoot i{display:none}.sfoot nav{justify-content:center}}`;
+const FOOT_CSS=`.sfoot{width:100%;margin:34px auto 0;max-width:1000px;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid #d5dde5;display:flex;align-items:center;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;font:500 13px/1.2 Inter,system-ui,sans-serif;color:#5a6b7b;box-sizing:border-box}.sfoot b{color:#12202f}.sfoot .sfn{display:flex;gap:4px 16px;flex-wrap:wrap}.sfoot a,.sfoot button{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:6px;color:#12202f;font:600 13px/1 Inter,system-ui,sans-serif;padding:8px 2px;cursor:pointer;border-bottom:1px solid transparent;-webkit-tap-highlight-color:transparent}.sfoot a:hover,.sfoot button:hover{border-bottom-color:#12202f}.sfoot,.sfoot *{background:none}.sfoot i{font-style:normal}@media (max-width:520px){.sfoot{flex-direction:column;justify-content:center;text-align:center;gap:6px;font-size:12.5px}.sfoot .sfn{justify-content:center;gap:2px 18px;width:100%}.sfoot i{display:none}.sfoot a,.sfoot button{padding:8px 2px}}`;
 function footEl(doc,pre){
   const f=doc.createElement("footer"); f.className="sfoot"; f.setAttribute("role","contentinfo");
-  f.innerHTML=`<span class="by">ATPL · <b>Juanjo Ruano</b></span><nav aria-label="Pie de página"><button type="button" class="need" data-f="sug" aria-haspopup="dialog"><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h11A1.5 1.5 0 0 1 17 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 14.5zm1.6.3 5.4 4.3 5.4-4.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>Buzón<i> de sugerencias</i></span></button><a class="need" href="${pre}privacidad.html" target="_blank" rel="noopener">Privacidad<i> (RGPD)</i></a>${DONATE_URL?`<a href="${DONATE_URL}" target="_blank" rel="noopener">Invítame a un café</a>`:""}</nav>`;
+  f.innerHTML=`<span class="by">ATPL · <b>Juanjo Ruano</b></span><div class="sfn" role="navigation" aria-label="Pie de página"><button type="button" class="need" data-f="sug" aria-haspopup="dialog"><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h11A1.5 1.5 0 0 1 17 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 14.5zm1.6.3 5.4 4.3 5.4-4.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>Buzón<i> de sugerencias</i></span></button><a class="need" href="${pre}privacidad.html" target="_blank" rel="noopener">Privacidad<i> (RGPD)</i></a>${DONATE_URL?`<a href="${DONATE_URL}" target="_blank" rel="noopener">Invítame a un café</a>`:""}</div>`;
   f.querySelector("[data-f=sug]").addEventListener("click",openSug); return f; }
-function footIframe(d){ try{ if(!d||!d.body||d.querySelector(".sfoot")) return; const st=d.createElement("style"); st.textContent=FOOT_CSS+".sfoot .need{display:inline-flex}"; d.head.appendChild(st); d.body.appendChild(footEl(d,"../")); }catch(e){} }
+function footIframe(d){ try{ if(!d||!d.body||d.querySelector(".sfoot")) return; const st=d.createElement("style"); st.textContent=FOOT_CSS+".sfoot .need{display:inline-flex}.sfoot .sfn{margin:0;padding:0;width:auto}"; d.head.appendChild(st); d.body.appendChild(footEl(d,"../")); }catch(e){} }
 function footInit(){ document.querySelectorAll("main > .view").forEach(v=>{ if(!v.querySelector(".sfoot")) v.appendChild(footEl(document,"")); }); }
 function openSug(){
   if(!sb||!sbUser) return;
@@ -1418,6 +1437,10 @@ function openSug(){
   $("#sugBox").hidden=false; setTimeout(()=>$("#sgBody").focus(),30);
 }
 footInit();
+$("#radarBtn").addEventListener("click",()=>($("#radar").hidden?rdOpen():rdClose()));
+$("#rdClose").addEventListener("click",rdClose);
+$("#radar").addEventListener("click",e=>{ if(e.target.id==="radar") rdClose(); });
+addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#radar").hidden) rdClose(); });
 $("#sgCancel").addEventListener("click",()=>{ $("#sugBox").hidden=true; });
 $("#sugBox").addEventListener("click",e=>{ if(e.target.id==="sugBox") $("#sugBox").hidden=true; });
 $("#sgBody").addEventListener("input",()=>{ $("#sgCnt").textContent=$("#sgBody").value.length+" / 1500"; });
@@ -1689,7 +1712,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ const p=$("#onPop
 async function signOut(){
   beatFlush(); usageFlush(); try{ if(sb&&sbUser) sb.rpc("track_usage",{p_view:"off",p_seconds:0}).then(()=>{},()=>{}); }catch(e){} clearInterval(beatT); stopPresence(); try{ if(window.F0Hangar) window.F0Hangar.stop(); }catch(e){}
   try{ await sb.auth.signOut(); }catch(e){}
-  sbUser=null; remote=null; isAdmin=false; MY={name:"",show:true};
+  sbUser=null; remote=null; isAdmin=false; try{ radarSync(); }catch(e){} MY={name:"",show:true};
   try{ SUBJ.forEach(s=>localStorage.removeItem("f0:"+s.k)); }catch(e){}
   loadAllLocal(); try{ if(window.F0Radio) window.F0Radio.leave(); }catch(e){} try{ if(window.F0Ops) window.F0Ops.leave(); }catch(e){} try{ if(window.F0Sim) window.F0Sim.leave(); }catch(e){} try{ if(window.F0Chat) window.F0Chat.leave(); }catch(e){} if(current==="stats"||current==="rank"||current==="radio"||current==="ops") show("test"); renderAcct(); renderDash(); renderTabs(); openLogin();
 }
@@ -1736,31 +1759,35 @@ async function selAll(table, cols, ord){
   }
   return {data:out,error:null};
 }
-/* ---- Noticias (privado, solo administrador): titulares RSS públicos de EASA, AESA y Aviation Herald vía /api/news ---- */
-let NW=null, NWcat="";
-const NWK="f0.news.read";
-function nwRead(){ try{ return new Set(JSON.parse(localStorage.getItem(NWK)||"[]")); }catch(e){ return new Set(); } }
-function nwSave(r){ try{ localStorage.setItem(NWK,JSON.stringify([...r].slice(-300))); }catch(e){} }
-function newsBox(){ return `<div class="st-box" id="nwFeed" style="margin-bottom:14px"><h2>Noticias · <span id="nwCnt">…</span></h2><p class="muted" id="nwMsg">Cargando titulares…</p></div>`; }
-function nwDraw(){
-  const el=$("#nwFeed"); if(!el||!NW) return;
-  const rd=nwRead(), E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  const cats=["Seguridad","Regulación","Flota","Empleo","Industria"], un=NW.filter(n=>!rd.has(n.u)), list=NW.filter(n=>!NWcat||n.c===NWcat).slice(0,50);
-  const fd=d=>d?new Date(d).toLocaleDateString("es-ES",{day:"2-digit",month:"short"}):"—";
-  el.innerHTML=`<h2>Noticias · ${un.length} sin leer</h2>
-  <div class="nw-bar"><button type="button" data-c="" class="${NWcat?"":"on"}">Todas</button>${cats.map(c=>`<button type="button" data-c="${c}" class="${NWcat===c?"on":""}">${c}</button>`).join("")}<button type="button" id="nwAll" class="all"${un.length?"":" disabled"}>Marcar todo como leído</button></div>
-  <ul class="nw-l">${list.length?list.map(n=>`<li class="${rd.has(n.u)?"rd":""}"><span class="nw-c c${cats.indexOf(n.c)}">${E(n.c)}</span><span class="nw-s">${E(n.s)} · ${fd(n.d)}</span><a href="${E(n.u)}" target="_blank" rel="noopener noreferrer" data-u="${E(n.u)}">${E(n.t)}</a><button type="button" data-r="${E(n.u)}" aria-label="${rd.has(n.u)?"Marcar como no leído":"Marcar como leído"}">${rd.has(n.u)?"Leído":"Marcar leído"}</button></li>`).join(""):`<li class="muted">Sin titulares en esta categoría.</li>`}</ul>`;
-  el.querySelectorAll("[data-c]").forEach(b=>b.addEventListener("click",()=>{ NWcat=b.dataset.c; nwDraw(); }));
-  el.querySelectorAll("[data-r]").forEach(b=>b.addEventListener("click",()=>{ const r=nwRead(); r.has(b.dataset.r)?r.delete(b.dataset.r):r.add(b.dataset.r); nwSave(r); nwDraw(); }));
-  el.querySelectorAll(".nw-l a").forEach(a=>a.addEventListener("click",()=>{ const r=nwRead(); r.add(a.dataset.u); nwSave(r); setTimeout(nwDraw,50); }));
-  const all=$("#nwAll"); if(all) all.addEventListener("click",()=>{ const r=nwRead(); NW.forEach(n=>r.add(n.u)); nwSave(r); nwDraw(); });
+/* ---- Radar de Industria (solo administrador): cajón lateral con titulares RSS de EASA, AESA, ASN, Aviation Herald, Simple Flying, AeroTime… vía /api/news ---- */
+const RD_CATS=[{k:"Seguridad",ic:"⚠",c:"#C9372C",bg:"#FBE5E3"},{k:"Regulación",ic:"⚖",c:"#1F4E8C",bg:"#E3ECF7"},{k:"Flota",ic:"✈",c:"#1E6B3A",bg:"#E4F2E8"},{k:"Empleo",ic:"🧑‍✈️",c:"#8a5a00",bg:"#FFF1D6"},{k:"Industria",ic:"✦",c:"#5b3a8c",bg:"#EDE6F7"}];
+let RD=null, RDcat="", RDload=false;
+const RDK="f0.radar.read";
+function rdRead(){ try{ return new Set(JSON.parse(localStorage.getItem(RDK)||"[]")); }catch(e){ return new Set(); } }
+function rdSave(r){ try{ localStorage.setItem(RDK,JSON.stringify([...r].slice(-400))); }catch(e){} }
+function rdBadge(){ const b=$("#radarDot"); if(!b) return; const n=RD?RD.filter(x=>!rdRead().has(x.u)).length:0; b.hidden=!n; b.textContent=n>9?"9+":n; }
+function rdAgo(d){ if(!d) return ""; const m=Math.max(1,Math.round((Date.now()-d)/60000)); return m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:m<43200?`hace ${Math.round(m/1440)} d`:new Date(d).toLocaleDateString("es-ES",{day:"2-digit",month:"short"}); }
+function rdDraw(){
+  const el=$("#rdBody"); if(!el) return; const rd=rdRead(), E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  if(!RD){ el.innerHTML=`<p class="rd-msg">${RDload?"Escaneando el radar…":"No se han podido leer las fuentes ahora. Vuelve a abrirlo en unos minutos."}</p>`; return; }
+  const cat=k=>RD_CATS.find(c=>c.k===k)||RD_CATS[4], un=RD.filter(n=>!rd.has(n.u)).length, list=RD.filter(n=>!RDcat||n.c===RDcat);
+  $("#rdUn").textContent=un?`${un} sin leer`:"Todo al día";
+  const badge=n=>{ const c=cat(n.c); return `<span class="rd-b" style="background:${c.bg};color:${c.c}"><i>${c.ic}</i>${E(n.c)}</span>`; };
+  const card=(n,big)=>{ const c=cat(n.c), r=rd.has(n.u); return `<article class="rd-card${big?" big":""}${r?" rd":""}" style="--rc:${c.c};--rb:${c.bg}"><div class="rd-top">${badge(n)}<span class="rd-src">${E(n.s)} · ${rdAgo(n.d)}</span></div><a href="${E(n.u)}" target="_blank" rel="noopener noreferrer" data-u="${E(n.u)}">${E(n.t)}</a><div class="rd-act"><a class="rd-open" href="${E(n.u)}" target="_blank" rel="noopener noreferrer" data-u="${E(n.u)}">Abrir ↗</a><button type="button" data-r="${E(n.u)}">${r?"Marcar no leído":"Marcar leído"}</button></div></article>`; };
+  const hero=list[0], rest=list.slice(1);
+  el.innerHTML=`<div class="rd-chips"><button type="button" data-c="" class="${RDcat?"":"on"}">Todas · ${RD.length}</button>${RD_CATS.map(c=>{ const n=RD.filter(x=>x.c===c.k).length; return n?`<button type="button" data-c="${c.k}" class="${RDcat===c.k?"on":""}" style="--rc:${c.c};--rb:${c.bg}"><i>${c.ic}</i>${c.k} · ${n}</button>`:""; }).join("")}</div>
+  ${hero?`<div class="rd-hl">Destacada</div>${card(hero,true)}`:`<p class="rd-msg">Sin titulares en esta categoría.</p>`}
+  ${rest.length?`<div class="rd-hl">Más titulares</div><div class="rd-grid">${rest.map(n=>card(n)).join("")}</div>`:""}
+  <p class="rd-foot">Fuentes abiertas · sin resúmenes por IA · se actualiza cada 6 h <button type="button" id="rdAll"${un?"":" disabled"}>Marcar todo leído</button></p>`;
+  el.querySelectorAll("[data-c]").forEach(b=>b.addEventListener("click",()=>{ RDcat=b.dataset.c; rdDraw(); }));
+  el.querySelectorAll("[data-r]").forEach(b=>b.addEventListener("click",()=>{ const r=rdRead(); r.has(b.dataset.r)?r.delete(b.dataset.r):r.add(b.dataset.r); rdSave(r); rdDraw(); rdBadge(); }));
+  el.querySelectorAll("a[data-u]").forEach(a=>a.addEventListener("click",()=>{ const r=rdRead(); r.add(a.dataset.u); rdSave(r); setTimeout(()=>{ rdDraw(); rdBadge(); },50); }));
+  const all=$("#rdAll"); if(all) all.addEventListener("click",()=>{ const r=rdRead(); RD.forEach(n=>r.add(n.u)); rdSave(r); rdDraw(); rdBadge(); });
 }
-async function newsInit(){
-  const el=$("#nwFeed"); if(!el) return;
-  if(NW){ nwDraw(); return; }
-  try{ const r=await fetch("/api/news"); const j=await r.json(); if(!j.ok||!j.n.length) throw 0; NW=j.n; nwDraw(); }
-  catch(e){ const m=$("#nwMsg"); if(m) m.textContent="No se han podido leer los feeds ahora. Se reintenta al volver a entrar en Stats."; }
-}
+async function rdFetch(){ if(RD||RDload||!isAdmin) return; RDload=true; rdDraw(); try{ const r=await fetch("/api/news"); const j=await r.json(); if(j.ok&&j.n&&j.n.length) RD=j.n; }catch(e){} RDload=false; rdDraw(); rdBadge(); }
+function rdOpen(){ if(!isAdmin) return; const d=$("#radar"); d.hidden=false; requestAnimationFrame(()=>d.classList.add("on")); $("#radarBtn").setAttribute("aria-expanded","true"); rdDraw(); rdFetch(); setTimeout(()=>{ const c=$("#rdClose"); if(c) c.focus(); },60); }
+function rdClose(){ const d=$("#radar"); d.classList.remove("on"); $("#radarBtn").setAttribute("aria-expanded","false"); setTimeout(()=>{ d.hidden=true; },260); const b=$("#radarBtn"); if(b) b.focus(); }
+function radarSync(){ const b=$("#radarBtn"); if(!b) return; b.hidden=!isAdmin; if(isAdmin) setTimeout(rdFetch,2500); else { const d=$("#radar"); if(d) d.hidden=true; } }
 function airacBox(){
   let M=null; try{ M=window.F0Ops&&window.F0Ops.maint&&window.F0Ops.maint(); }catch(e){}
   if(!M) return "";
@@ -1871,7 +1898,6 @@ function drawStats(){
   box.innerHTML = `<div class="dhead"><div><h1>Estadísticas</h1><p>Solo las ves tú. Visitas sin cuenta y países, en Cloudflare Web Analytics.</p></div>
     <label class="fld" style="margin-left:auto;min-width:min(100%,320px)">Ver<select id="stSel" style="font:15px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:9px 10px">${opts}</select></label></div>
   ${airacBox()}
-  ${newsBox()}
   <div class="st-grid">${kp.map(([v,l])=>`<div class="st-k"><b>${v}</b><span>${l}</span></div>`).join("")}</div>
   <div class="st-two">
     <div class="st-box"><h2>Tests por día · últimos 30 días</h2>${dayChart(all)}</div>
@@ -1895,7 +1921,6 @@ function drawStats(){
     const hm=document.createElement("div"); hm.id="heatBox"; hm.className="st-box"; hm.style.margin="14px 0"; g.after(hm); drawLive(); drawHeat();
     clearInterval(liveT); liveT=setInterval(pollLive,15000); }
   $("#stSel").addEventListener("change", e=>{ stUser=e.target.value; drawStats(); });
-  newsInit();
   box.querySelectorAll("button[data-u]").forEach(b=>b.addEventListener("click", ()=>{ stUser=b.dataset.u; drawStats(); $("#main").scrollTop=0; const v=$("#v-stats"); if(v) v.scrollTop=0; }));
 }
 
