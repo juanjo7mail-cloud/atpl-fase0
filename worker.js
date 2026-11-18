@@ -102,27 +102,52 @@ async function notams(icao) {
 const J = (o, ok, age) => new Response(JSON.stringify(o), { status: ok ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok ? "public, max-age=" + age : "no-store", "access-control-allow-origin": "*" } });
 
 // ---- /api/news: titulares RSS públicos (EASA, AESA, Aviation Herald). Sin IA, sin claves. Caché 6 h; últimos 50 sin duplicar URL.
-const FEEDS = [   // Solo fuentes abiertas. ✓ = verificada con datos; ? = sin verificar (si devuelve 0 se omite sola; /api/news?debug=1 muestra el recuento por feed)
+const GN = (q, es) => "https://news.google.com/rss/search?q=" + encodeURIComponent(q) + (es ? "&hl=es&gl=ES&ceid=ES:es" : "&hl=en-GB&gl=GB&ceid=GB:en");   // Google News RSS (búsqueda abierta). Los títulos acaban en « - Medio»: se separa en readFeed
+const FEEDS = [   // Solo fuentes abiertas. ✓ = verificada con datos; ? = sin verificar (si devuelve 0 se omite sola; /api/news?debug=1 muestra el recuento por feed). r = ES España · EU Europa · INT mundo
   { src: "EASA", cat: "Regulación", url: "https://www.easa.europa.eu/en/newsroom-and-events/news/rss.xml" },                   // ? regulación (se mantiene)
   { src: "Simple Flying", cat: "Industria", url: "https://simpleflying.com/feed/" },                                              // ✓ flota, compras, curiosidades
   { src: "AeroTime", cat: "Industria", url: "https://www.aerotime.aero/rss" },                                                    // ✓ actualidad e industria
   { src: "Aviation24.be", cat: "Industria", url: "https://www.aviation24.be/feed/" },                                             // ? actualidad aérea
   { src: "Airliner Watch", cat: "Flota", url: "https://airlinerwatch.com/feed/" },                                                // ? flotas y pedidos
-  { src: "Pilot Career News", cat: "Empleo", url: "https://pilotcareernews.com/feed/" },                                          // ? empleo de pilotos
   { src: "Airline Weekly", cat: "Industria", url: "https://airlineweekly.skift.com/feed/" },                                      // ✓
   { src: "Flightradar24", cat: "Seguridad", url: "https://www.flightradar24.com/blog/category/aviation-safety/feed/" },          // ✓ accidentes
   { src: "The Aviationist", cat: "Seguridad", url: "https://theaviationist.com/category/aviation-safety/feed/" },                // ✓ accidentes
-  { src: "Google News · Empleo", cat: "Empleo", url: "https://news.google.com/rss/search?q=contrataci%C3%B3n+pilotos+aerol%C3%ADnea+OR+Iberia+OR+%22Air+Europa%22+pilotos&hl=es&gl=ES&ceid=ES:es" },   // ? búsqueda abierta, respaldo de empleo
-  { src: "Google News · Flota", cat: "Flota", url: "https://news.google.com/rss/search?q=aerol%C3%ADnea+pedido+aviones+flota&hl=es&gl=ES&ceid=ES:es" }                                                            // ? búsqueda abierta, respaldo de flota
+  { src: "Google News · Flota", cat: "Flota", url: GN("aerolínea pedido aviones flota", true), gn: 1 },                           // ? búsqueda abierta, respaldo de flota
+  // ---------- EMPLEO (foco): portales especializados ----------
+  { src: "Pilot Career News", cat: "Empleo", r: "INT", url: "https://pilotcareernews.com/feed/" },                                // ? empleo de pilotos
+  { src: "Latest Pilot Jobs", cat: "Empleo", r: "INT", url: "https://www.latestpilotjobs.com/feed/" },                            // ? ofertas de piloto
+  { src: "AviationJobSearch", cat: "Empleo", r: "INT", url: "https://www.aviationjobsearch.com/blog/feed" },                     // ? blog/ofertas
+  { src: "Pilot Job Board", cat: "Empleo", r: "INT", url: "https://www.pilotjobsboard.com/feed/" },                              // ? ofertas
+  { src: "Aviacionline", cat: "Empleo", r: "ES", url: "https://www.aviacionline.com/feed/", kwOnly: 1 },                         // ? prensa en español; solo entran los titulares de empleo
+  { src: "Preferente", cat: "Empleo", r: "ES", url: "https://www.preferente.com/feed", kwOnly: 1 },                              // ? prensa aérea española; solo empleo
+  { src: "Aviación Digital", cat: "Empleo", r: "ES", url: "https://www.aviaciondigital.com/feed/", kwOnly: 1 },                  // ? idem
+  // ---------- EMPLEO: búsquedas abiertas en Google News (últimos 30 días) ----------
+  { src: "Google News · Empleo ES", cat: "Empleo", r: "ES", gn: 1, url: GN("pilotos aerolínea contratación OR convocatoria OR oferta when:30d", true) },
+  { src: "Google News · Iberia/Air Europa", cat: "Empleo", r: "ES", gn: 1, url: GN("(Iberia OR \"Air Europa\" OR Vueling OR Binter OR Volotea OR \"Iberia Express\" OR Ryanair OR Level) pilotos contratación OR cadetes OR selección when:60d", true) },
+  { src: "Google News · Cadetes ES", cat: "Empleo", r: "ES", gn: 1, url: GN("convocatoria cadetes pilotos OR \"programa cadete\" OR \"escuela de vuelo\" OR \"piloto cadete\" when:60d", true) },
+  { src: "Google News · Instructores", cat: "Empleo", r: "ES", gn: 1, url: GN("\"instructor de vuelo\" OR \"instructores de vuelo\" oferta OR busca OR contrata when:90d", true) },
+  { src: "Google News · Pilot jobs EU", cat: "Empleo", r: "EU", gn: 1, url: GN("airline pilot recruitment Europe OR \"cadet programme\" OR \"first officer\" hiring when:30d", false) },
+  { src: "Google News · Cadet schemes", cat: "Empleo", r: "EU", gn: 1, url: GN("\"cadet pilot\" OR \"pilot academy\" OR \"pilot training scheme\" airline Europe when:60d", false) },
+  { src: "Google News · Cargo pilots", cat: "Empleo", r: "EU", gn: 1, url: GN("cargo airline pilot hiring OR recruitment OR \"first officer\" (DHL OR Cargolux OR \"Air Atlanta\" OR \"ASL Airlines\" OR \"Swiftair\" OR \"Air Hamburg\" OR \"Atlas Air\" OR FedEx OR UPS OR Challenge OR \"Tarom\" OR \"Qatar Cargo\") when:60d", false) },
+  { src: "Google News · Business aviation", cat: "Empleo", r: "EU", gn: 1, url: GN("business aviation pilot jobs OR hiring OR \"bizjet\" captain OR \"first officer\" (NetJets OR Flexjet OR VistaJet OR \"Luxaviation\" OR \"Jetfly\" OR \"Air Hamburg\" OR \"Eastern Airways\") when:60d", false) },
+  { src: "Google News · FI / flight schools", cat: "Empleo", r: "EU", gn: 1, url: GN("\"flight instructor\" OR \"FI\" OR \"CRI\" vacancy OR hiring OR recruiting \"flight school\" OR \"ATO\" Europe when:60d", false) },
+  { src: "Google News · Aerotime careers", cat: "Empleo", r: "EU", gn: 1, url: GN("site:aerotime.aero (pilots OR hiring OR recruitment OR cadet OR careers) when:60d", false) },
+  { src: "Google News · FlightGlobal jobs", cat: "Empleo", r: "INT", gn: 1, url: GN("site:flightglobal.com pilots (recruitment OR hiring OR shortage OR cadets) when:60d", false) },
+  { src: "Google News · AviationJobSearch", cat: "Empleo", r: "INT", gn: 1, url: GN("aviationjobsearch OR \"aviation job search\" pilot jobs when:60d", false) },
+  { src: "Google News · Wizz/Ryanair/easyJet", cat: "Empleo", r: "EU", gn: 1, url: GN("(Ryanair OR easyJet OR \"Wizz Air\" OR Transavia OR Lufthansa OR KLM OR \"Air France\" OR TAP OR ITA OR SAS OR Norwegian OR Jet2 OR TUI OR Condor OR Eurowings) pilot recruitment OR \"cadet\" OR \"direct entry\" OR hiring when:45d", false) }
 ];
 // Si el titular lo dice, manda el tema del titular sobre el del feed (orden = prioridad)
 const KW = [
   ["Seguridad", /\b(crash(es|ed)?|accident|incident|emergency|runway excursion|collision|mayday|evacuat\w*|engine failure|investigation|fatal|diverts?|diverted)\b|accidente|incidente|emergencia/i],
-  ["Empleo", /\b(hiring|recruit\w*|cadets?|pilot (shortage|training|jobs?|pay|salar\w*)|first officers?|vacanc\w*|careers?|apprentice\w*|job openings?)\b|contrataci[oó]n|oferta[s]? de empleo|busca[n]? pilotos|piloto[s]? cadete|convocatoria/i],
+  ["Empleo", /\b(hiring|recruit\w*|cadets?|pilot (shortage|training|jobs?|pay|salar\w*|academy|scheme|programme|program)|first officers?|vacanc\w*|careers?|apprentice\w*|job openings?|direct entry|type rating|flight instructors?|pilot positions?|now hiring|open(s|ing)? applications?)\b|contrataci[oó]n|contrata(n|rá)?\b|ofertas? de (empleo|trabajo)|busca[n]? pilotos|piloto[s]? cadete|cadetes|convocatoria|instructor(es)? de vuelo|selecci[oó]n de pilotos|bolsa de (empleo|trabajo)|se buscan/i],
   ["Flota", /\b(orders?|delivers|deliver(y|ies)|fleet|leases?|buys|acquires|a3[1-5]\d|a220|737|787|777|e2|atr|retire[sd]?)\b|pedido|flota|entrega de|adquiere|compra de/i],
   ["Regulación", /\b(EASA|AESA|FAA|ICAO|regulation|rules?|directive|airworthiness|licen[cs]e|AD|normativa)\b/i],
   ["Curiosidades", /\b(longest|shortest|record|world'?s (first|largest|smallest|longest|busiest)|why|how (do|does|did|is|are)|facts?|history|unusual|strange|rare|secret|myths?|explained|vintage|retro)\b|curiosidad\w*|por qu[eé]|historia de|r[eé]cord/i]
 ];
+// región de una oferta/convocatoria: ES (España), EU (Europa) o INT (resto). Manda el texto; si no dice nada, la del feed.
+const REG_ES = /\b(iberia|air europa|vueling|binter|volotea|iberia express|air nostrum|swiftair|aesa|espa[nñ]a|espa[nñ]ol\w*|madrid|barcelona|canarias|baleares|sevilla|valencia|m[aá]laga|enaire|saerco|aena)\b/i;
+const REG_EU = /\b(europe\w*|eu|easa|uk|u\.k\.|britain|ireland|ryanair|easyjet|wizz|lufthansa|klm|air france|tap|ita airways|sas|norwegian|jet2|tui|condor|eurowings|transavia|luxembourg|cargolux|german\w*|france|french|italy|italian|netherlands|dutch|poland|polish|portugal|portuguese|sweden|swedish|norway|finland|greece|hungary|romania|czech|swiss|switzerland|austria|belgium|denmark|dublin|london|paris|frankfurt|amsterdam)\b/i;
+const regionOf = (t, s, fr) => REG_ES.test(t) ? "ES" : REG_EU.test(t + " " + s) ? "EU" : (fr || "INT");
 const txt = (x, t) => { const m = x.match(new RegExp("<" + t + "[^>]*>([\\s\\S]*?)</" + t + ">", "i")); return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").trim() : ""; };
 async function readFeed(f) {
   try {
@@ -133,15 +158,29 @@ async function readFeed(f) {
       const b = m[0], title = txt(b, "title"); let link = txt(b, "link");
       if (!link) { const h = b.match(/<link[^>]*href="([^"]+)"/i); link = h ? h[1] : ""; }
       const d = Date.parse(txt(b, "pubDate") || txt(b, "updated") || txt(b, "published") || txt(b, "dc:date"));
-      if (title && /^https?:\/\//.test(link)) { let c = f.cat; for (const [k, re] of KW) if (re.test(title)) { c = k; break; } out.push({ t: title.slice(0, 220), u: link, s: f.src, c, d: isNaN(d) ? 0 : d }); }
+      if (title && /^https?:\/\//.test(link)) {
+        let t = title, s = f.src;
+        if (f.gn) { const g = t.match(/^(.*\S)\s+-\s+([^-]{2,60})$/); if (g) { t = g[1]; s = g[2].trim(); } }   // Google News: «Titular - Medio» → el medio pasa a ser la fuente
+        let c = f.cat, hit = false; for (const [k, re] of KW) if (re.test(t)) { c = k; hit = k === "Empleo"; break; }
+        if (f.kwOnly && !hit) continue;   // prensa general: solo entra lo que habla de empleo
+        out.push({ t: t.slice(0, 220), u: link, s, c, d: isNaN(d) ? 0 : d, ...(c === "Empleo" ? { r: regionOf(t, s, f.r) } : {}) });
+      }
     }
     return out;
   } catch (e) { return []; }
 }
 async function news() {
-  const per = await Promise.all(FEEDS.map(readFeed)), all = per.flat(), seen = new Set(), cnt = {}, out = [];
+  const per = await Promise.all(FEEDS.map(readFeed)), all = per.flat(), seen = new Set(), seenT = new Set(), cnt = {}, emp = [], rest = [];
   all.sort((a, b) => b.d - a.d);
-  for (const n of all) { if (seen.has(n.u) || (cnt[n.s] || 0) >= 14) continue; seen.add(n.u); cnt[n.s] = (cnt[n.s] || 0) + 1; out.push(n); if (out.length >= 50) break; }   // máx. 14 por fuente: ninguna acapara
+  const nt = t => t.toLowerCase().replace(/[^a-z0-9áéíóúñ]+/g, " ").trim().slice(0, 70);
+  for (const n of all) {
+    const key = n.s + "|" + n.c, k2 = nt(n.t);
+    if (seen.has(n.u) || seenT.has(k2)) continue;
+    const lim = n.c === "Empleo" ? 10 : 14; if ((cnt[key] || 0) >= lim) continue;   // ninguna fuente acapara
+    seen.add(n.u); seenT.add(k2); cnt[key] = (cnt[key] || 0) + 1;
+    if (n.c === "Empleo") { if (emp.length < 70) emp.push(n); } else if (rest.length < 80) rest.push(n);   // Empleo tiene cupo propio: hasta 70 de 150
+  }
+  const out = emp.concat(rest).sort((a, b) => b.d - a.d);
   out.feeds = FEEDS.map((f, i) => f.src + " · " + f.url + " → " + per[i].length);
   return out;
 }
@@ -158,7 +197,7 @@ export default {
       return J(o, o.ok, 300);
     }
     if (u.pathname === "/api/news") {
-      const o = await memo("news2", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds }; });
+      const o = await memo("news3", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds }; });
       if (u.searchParams.get("debug")) return J({ feeds: o.feeds, ok: o.ok, count: (o.n || []).length }, true, 0);
       return J(o, o.ok, 900);
     }
