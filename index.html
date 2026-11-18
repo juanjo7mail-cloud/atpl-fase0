@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="d4edf414a6d5";</script>
+<script>window.F0_BUILD="d12522d0fd35";</script>
 <script src="autoupdate.js"></script>
 <script src="i18n.js"></script>
 <script src="vendor/supabase.js"></script>
@@ -326,6 +326,10 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 .iconbtn{display:flex;align-items:center;gap:6px;border:1px solid #3B5874;border-radius:20px;padding:4px 12px;background:transparent;color:#DCE6EE;font:600 13px var(--body);cursor:pointer;white-space:nowrap}
 .iconbtn svg{width:15px;height:15px}
 .iconbtn kbd{font:600 11px var(--body);color:#8CA3B6;border:1px solid #3B5874;border-radius:4px;padding:0 4px}
+.iconbtn.iconly{padding:0;border-radius:50%;width:34px;height:34px;justify-content:center}.iconbtn.iconly svg{width:17px;height:17px}
+@keyframes sdrop{from{opacity:0;transform:translateY(-14px) scale(.98)}to{opacity:1;transform:none}}@keyframes sfade{from{opacity:0}to{opacity:1}}
+.sheet.top:not([hidden]){animation:sfade .18s ease}.sheet.top:not([hidden]) .box{animation:sdrop .24s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.sheet.top:not([hidden]),.sheet.top:not([hidden]) .box{animation:none}}
 .sheet.top{place-items:start center;padding-top:max(16px,env(safe-area-inset-top,0px))}
 .sbox{max-width:720px;gap:10px;max-height:calc(100vh - 32px)}
 .sfield{display:flex;gap:8px;align-items:center}
@@ -649,7 +653,7 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
   <div class="row1">
     <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(-7 32 32)"><rect x="3" y="18" width="58" height="32" rx="7" fill="#8E0B20"/><rect x="3" y="14" width="58" height="32" rx="7" fill="#C8102E"/><rect x="8" y="19" width="48" height="22" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="1.6" stroke-dasharray="3.2 2.4"/><circle cx="15" cy="30" r="5" fill="#fff"/><circle cx="15" cy="30" r="2.4" fill="#8E0B20"/><text x="39" y="37" font-family="Arial Black,Impact,Arial,sans-serif" font-weight="900" font-size="15.5" letter-spacing=".5" text-anchor="middle" fill="#fff">SBF</text></g></svg><span class="bt">ATPL<small>by Juanjo Ruano</small></span></div>
     <button class="vsw" id="vsw" hidden type="button" role="switch" aria-checked="false" aria-label="Vista de Inicio: tarjetas o instrumentos" title="Cambiar la vista de Inicio"><span class="tgl"><i class="nut"></i><i class="lev"></i></span><span class="lbs"><span class="lb on">Instrumentos</span><span class="lb off">Tarjetas</span></span></button>
-    <button class="iconbtn" id="searchBtn" type="button" aria-haspopup="dialog" aria-label="Buscar en los apuntes"><svg viewBox="0 0 20 20" aria-hidden="true" style="transform:rotate(45deg)"><path d="M10 1c.9 0 1.4.9 1.4 2v4.6l7 4.2v1.8l-7-2v3.6l1.8 1.4V19L10 18l-3.2 1v-2.4l1.8-1.4v-3.6l-7 2v-1.8l7-4.2V3C8.6 1.9 9.1 1 10 1z" fill="currentColor"/></svg><span>Buscar</span><kbd>/</kbd></button>
+    <button class="iconbtn iconly" id="searchBtn" type="button" aria-haspopup="dialog" aria-label="Buscar en los apuntes" title="Buscar ( / )"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     <button class="iconbtn" id="radarBtn" type="button" hidden aria-haspopup="dialog" aria-expanded="false" aria-controls="radar" aria-label="Radar de Industria" title="Radar de Industria"><svg viewBox="0 0 20 20" aria-hidden="true" width="18" height="18"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 10 15.2 4.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="13.4" cy="13.6" r="1.2" fill="currentColor"/></svg><b id="radarDot" hidden></b></button>
     <button class="savepill" id="saveBtn" type="button" aria-haspopup="dialog"><i></i><span id="saveTxt">Mi progreso</span></button>
     <button class="savepill" id="onBtn" type="button" hidden aria-haspopup="true" aria-expanded="false" aria-controls="onPop" title="Compañeros conectados ahora"><i class="ond"></i><span id="onN">1</span><span class="onw"> en línea</span></button>
@@ -701,7 +705,7 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
 
 <div class="sheet top" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscar en los apuntes">
   <div class="box sbox">
-    <div class="sfield"><input id="q" type="search" placeholder="Buscar en los apuntes: hypoxia, QNH, foehn…" autocomplete="off" enterkeyhint="search" aria-describedby="qMeta"><button class="btn ghost" id="qClose" type="button">Cerrar</button></div>
+    <div class="sfield"><input id="q" type="search" placeholder="Buscar: hypoxia, QNH…" autocomplete="off" enterkeyhint="search" aria-describedby="qMeta"><button class="btn ghost" id="qClose" type="button">Cerrar</button></div>
     <p class="muted" id="qMeta" aria-live="polite"></p>
     <ol class="qres" id="qRes"></ol>
   </div>
@@ -1956,7 +1960,7 @@ function rdDraw(){
 }
 function rdMarkAll(){ if(!RD) return; const r=rdRead(); RD.forEach(n=>r.add(n.u)); rdSave(r); rdDraw(); rdBadge(); }
 { const at=$("#rdAllTop"); if(at) at.addEventListener("click",rdMarkAll); }
-async function rdFetch(){ if(RD||RDload||!isAdmin) return; RDload=true; rdDraw(); try{ const r=await fetch("/api/news?v=2"); const j=await r.json(); if(j.ok&&j.n&&j.n.length) RD=j.n; }catch(e){} RDload=false; rdDraw(); rdBadge(); }
+async function rdFetch(){ if(RD||RDload||!isAdmin) return; RDload=true; rdDraw(); try{ const r=await fetch("/api/news?v=3"); const j=await r.json(); if(j.ok&&j.n&&j.n.length) RD=j.n; }catch(e){} RDload=false; rdDraw(); rdBadge(); }
 function rdOpen(){ if(!isAdmin) return; const d=$("#radar"); d.hidden=false; requestAnimationFrame(()=>d.classList.add("on")); $("#radarBtn").setAttribute("aria-expanded","true"); rdDraw(); rdFetch(); rdTimeStart(); setTimeout(()=>{ const c=$("#rdClose"); if(c) c.focus(); },60); }
 function rdClose(){ const d=$("#radar"); rdTimeStop(); d.classList.remove("on"); $("#radarBtn").setAttribute("aria-expanded","false"); setTimeout(()=>{ d.hidden=true; },260); const b=$("#radarBtn"); if(b) b.focus(); }
 function radarSync(){ const b=$("#radarBtn"); if(!b) return; b.hidden=!isAdmin; if(isAdmin) setTimeout(rdFetch,2500); else { const d=$("#radar"); if(d) d.hidden=true; } }

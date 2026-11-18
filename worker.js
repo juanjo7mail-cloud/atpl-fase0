@@ -147,6 +147,12 @@ const KW = [
 // región de una oferta/convocatoria: ES (España), EU (Europa) o INT (resto). Manda el texto; si no dice nada, la del feed.
 const REG_ES = /\b(iberia|air europa|vueling|binter|volotea|iberia express|air nostrum|swiftair|aesa|espa[nñ]a|espa[nñ]ol\w*|madrid|barcelona|canarias|baleares|sevilla|valencia|m[aá]laga|enaire|saerco|aena)\b/i;
 const REG_EU = /\b(europe\w*|eu|easa|uk|u\.k\.|britain|ireland|ryanair|easyjet|wizz|lufthansa|klm|air france|tap|ita airways|sas|norwegian|jet2|tui|condor|eurowings|transavia|luxembourg|cargolux|german\w*|france|french|italy|italian|netherlands|dutch|poland|polish|portugal|portuguese|sweden|swedish|norway|finland|greece|hungary|romania|czech|swiss|switzerland|austria|belgium|denmark|dublin|london|paris|frankfurt|amsterdam)\b/i;
+// Empleo = SOLO puestos de vuelo (comandante, primer/segundo oficial, instructor, cadetes). Excluye oficina, tierra y técnicos.
+const EMP_IN_I = /\b(captains?|commanders?|first officers?|second officers?|co-?pilots?|flight instructors?|cadets?(hip)?|cadete\w*|comandantes?|capit[aá]n(es)?|primer(es)? oficial(es)?|segundo(s)? oficial(es)?|copiloto\w*|instructor(es)? de vuelo|(pilot|piloto)s? (wanted|needed|vacanc\w*|positions?|jobs?|hiring|recruit\w*|programme|program|scheme|academy|openings?|ofertas?|convocatoria|selecci[oó]n)|(hiring|recruiting|recruitment|vacancy|vacancies|se buscan|busca[n]?|contrata[n]?|oferta de empleo|convocatoria)[^.]{0,40}\b(pilots?|pilotos?)|(pilots?|pilotos?)[^.]{0,40}\b(hiring|recruit\w*|vacanc\w*|contrataci[oó]n|convocatoria))\b/i;
+const EMP_IN_C = /\b(FO|F\/O|SO|FI|TRI|SFI|CRI|IRI|SEP|ATPL|CPL)\b/;   // siglas: solo en mayúsculas
+const EMP_OUT_I = /\b(project managers?|engineers?|engineering|mechanics?|technicians?|cabin crew|flight attendants?|dispatch\w*|ground|marketing|sales|interns?|internship|ingenier\w*|mec[aá]nic\w*|t[eé]cnic\w*|tripulante\w*|TCP|auxiliar(es)? de vuelo|azafat\w*|handling|ventas|pr[aá]cticas|manager|analyst|accountant|recruiter|coordinator|administrat\w*)\b/i;
+const EMP_OUT_C = /\b(IT|HR)\b/;
+const isFlightJob = t => { if (EMP_OUT_C.test(t)) return false; const cad = /cadet|cadete/i.test(t); let o = t.match(EMP_OUT_I); if (o && !(cad && /^interns?|internship|pr[aá]cticas$/i.test(o[0]))) return false; return EMP_IN_I.test(t) || (EMP_IN_C.test(t) && /\b(pilots?|pilotos?|instructor|officer|captain|cadet|jobs?|hiring|recruit\w*|vacanc\w*)\b/i.test(t)); };
 const regionOf = (t, s, fr) => REG_ES.test(t) ? "ES" : REG_EU.test(t + " " + s) ? "EU" : (fr || "INT");
 const txt = (x, t) => { const m = x.match(new RegExp("<" + t + "[^>]*>([\\s\\S]*?)</" + t + ">", "i")); return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").trim() : ""; };
 async function readFeed(f) {
@@ -162,6 +168,7 @@ async function readFeed(f) {
         let t = title, s = f.src;
         if (f.gn) { const g = t.match(/^(.*\S)\s+-\s+([^-]{2,60})$/); if (g) { t = g[1]; s = g[2].trim(); } }   // Google News: «Titular - Medio» → el medio pasa a ser la fuente
         let c = f.cat, hit = false; for (const [k, re] of KW) if (re.test(t)) { c = k; hit = k === "Empleo"; break; }
+        if (c === "Empleo" && !isFlightJob(t)) continue;   // Empleo: solo tripulación de vuelo
         if (f.kwOnly && !hit) continue;   // prensa general: solo entra lo que habla de empleo
         out.push({ t: t.slice(0, 220), u: link, s, c, d: isNaN(d) ? 0 : d, ...(c === "Empleo" ? { r: regionOf(t, s, f.r) } : {}) });
       }
@@ -197,7 +204,7 @@ export default {
       return J(o, o.ok, 300);
     }
     if (u.pathname === "/api/news") {
-      const o = await memo("news3", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds }; });
+      const o = await memo("news4", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds }; });
       if (u.searchParams.get("debug")) return J({ feeds: o.feeds, ok: o.ok, count: (o.n || []).length }, true, 0);
       return J(o, o.ok, 900);
     }
