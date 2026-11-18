@@ -102,29 +102,31 @@ async function notams(icao) {
 const J = (o, ok, age) => new Response(JSON.stringify(o), { status: ok ? 200 : 502, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ok ? "public, max-age=" + age : "no-store", "access-control-allow-origin": "*" } });
 
 // ---- /api/news: titulares RSS públicos (EASA, AESA, Aviation Herald). Sin IA, sin claves. Caché 6 h; últimos 50 sin duplicar URL.
-const FEEDS = [   // ✓ = URL verificada; ? = sin verificar (si falla se omite y /api/news?debug=1 lo indica)
-  { src: "EASA", cat: "Regulación", url: "https://www.easa.europa.eu/en/newsroom-and-events/news/rss.xml" },                  // ?
-  { src: "AESA", cat: "Regulación", url: "https://www.seguridadaerea.gob.es/lang_castellano/rss/rss_noticias.xml" },           // ?
-  { src: "Aviation Herald", cat: "Seguridad", url: "https://avherald.com/h?subscribe=rss" },                                    // ? accidentes e incidentes
-  { src: "ASN", cat: "Seguridad", url: "https://news.aviation-safety.net/feed/" },                                              // ? Aviation Safety Network
-  { src: "Flightradar24", cat: "Seguridad", url: "https://www.flightradar24.com/blog/category/aviation-safety/feed/" },         // ✓
-  { src: "The Aviationist", cat: "Seguridad", url: "https://theaviationist.com/category/aviation-safety/feed/" },               // ✓
-  { src: "Simple Flying", cat: "Industria", url: "https://simpleflying.com/feed/" },                                             // ✓ flota, compras, curiosidades
-  { src: "AeroTime", cat: "Industria", url: "https://www.aerotime.aero/rss" },                                                   // ✓
-  { src: "Airline Weekly", cat: "Industria", url: "https://airlineweekly.skift.com/feed/" },                                     // ✓
-  { src: "AeroTime", cat: "Empleo", url: "https://www.aerotime.aero/rss/category/jobs" }                                         // ?
+const FEEDS = [   // Solo fuentes abiertas. ✓ = verificada con datos; ? = sin verificar (si devuelve 0 se omite sola; /api/news?debug=1 muestra el recuento por feed)
+  { src: "EASA", cat: "Regulación", url: "https://www.easa.europa.eu/en/newsroom-and-events/news/rss.xml" },                   // ? regulación (se mantiene)
+  { src: "Simple Flying", cat: "Industria", url: "https://simpleflying.com/feed/" },                                              // ✓ flota, compras, curiosidades
+  { src: "AeroTime", cat: "Industria", url: "https://www.aerotime.aero/rss" },                                                    // ✓ actualidad e industria
+  { src: "Aviation24.be", cat: "Industria", url: "https://www.aviation24.be/feed/" },                                             // ? actualidad aérea
+  { src: "Airliner Watch", cat: "Flota", url: "https://airlinerwatch.com/feed/" },                                                // ? flotas y pedidos
+  { src: "Pilot Career News", cat: "Empleo", url: "https://pilotcareernews.com/feed/" },                                          // ? empleo de pilotos
+  { src: "Airline Weekly", cat: "Industria", url: "https://airlineweekly.skift.com/feed/" },                                      // ✓
+  { src: "Flightradar24", cat: "Seguridad", url: "https://www.flightradar24.com/blog/category/aviation-safety/feed/" },          // ✓ accidentes
+  { src: "The Aviationist", cat: "Seguridad", url: "https://theaviationist.com/category/aviation-safety/feed/" },                // ✓ accidentes
+  { src: "Google News · Empleo", cat: "Empleo", url: "https://news.google.com/rss/search?q=contrataci%C3%B3n+pilotos+aerol%C3%ADnea+OR+Iberia+OR+%22Air+Europa%22+pilotos&hl=es&gl=ES&ceid=ES:es" },   // ? búsqueda abierta, respaldo de empleo
+  { src: "Google News · Flota", cat: "Flota", url: "https://news.google.com/rss/search?q=aerol%C3%ADnea+pedido+aviones+flota&hl=es&gl=ES&ceid=ES:es" }                                                            // ? búsqueda abierta, respaldo de flota
 ];
-// Si el titular lo dice, manda el tema del titular sobre el del feed
+// Si el titular lo dice, manda el tema del titular sobre el del feed (orden = prioridad)
 const KW = [
-  ["Seguridad", /crash|accident|incident|emergency|runway excursion|collision|mayday|diverts?|evacuat|fire|engine failure|investigation|accidente|incidente|emergencia/i],
-  ["Empleo", /hiring|recruit|cadet|pilot (shortage|training|jobs?|pay|salar)|first officer|vacanc|career|apprentice|contratación|oferta de empleo|piloto[s]? (busca|cadete)/i],
-  ["Flota", /order[s]?\b|orders|delivers?|delivery|fleet|lease|buys|acquires|a320|a321|a350|a220|737|787|777|e2|atr|retire[sd]?|pedido|flota|entrega/i],
-  ["Regulación", /\b(EASA|AESA|FAA|ICAO|regulation|rule|directive|airworthiness|licen[cs]e|AD\b|normativa)\b/i]
+  ["Seguridad", /\b(crash(es|ed)?|accident|incident|emergency|runway excursion|collision|mayday|evacuat\w*|engine failure|investigation|fatal|diverts?|diverted)\b|accidente|incidente|emergencia/i],
+  ["Empleo", /\b(hiring|recruit\w*|cadets?|pilot (shortage|training|jobs?|pay|salar\w*)|first officers?|vacanc\w*|careers?|apprentice\w*|job openings?)\b|contrataci[oó]n|oferta[s]? de empleo|busca[n]? pilotos|piloto[s]? cadete|convocatoria/i],
+  ["Flota", /\b(orders?|delivers|deliver(y|ies)|fleet|leases?|buys|acquires|a3[1-5]\d|a220|737|787|777|e2|atr|retire[sd]?)\b|pedido|flota|entrega de|adquiere|compra de/i],
+  ["Regulación", /\b(EASA|AESA|FAA|ICAO|regulation|rules?|directive|airworthiness|licen[cs]e|AD|normativa)\b/i],
+  ["Curiosidades", /\b(longest|shortest|record|world'?s (first|largest|smallest|longest|busiest)|why|how (do|does|did|is|are)|facts?|history|unusual|strange|rare|secret|myths?|explained|vintage|retro)\b|curiosidad\w*|por qu[eé]|historia de|r[eé]cord/i]
 ];
 const txt = (x, t) => { const m = x.match(new RegExp("<" + t + "[^>]*>([\\s\\S]*?)</" + t + ">", "i")); return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").trim() : ""; };
 async function readFeed(f) {
   try {
-    const r = await fetch(f.url, { headers: { "user-agent": "atpl-fase0/1.0 (+rss)" }, cf: { cacheTtl: 21600, cacheEverything: true } });
+    const r = await fetch(f.url, { headers: { "user-agent": "Mozilla/5.0 (compatible; atpl-rss/1.1)" }, cf: { cacheTtl: 3600, cacheEverything: true } });
     if (!r.ok) return [];
     const x = await r.text(), out = [];
     for (const m of x.matchAll(/<(item|entry)[\s>][\s\S]*?<\/\1>/gi)) {
@@ -156,9 +158,9 @@ export default {
       return J(o, o.ok, 300);
     }
     if (u.pathname === "/api/news") {
-      const o = await memo("news", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds }; });
-      if (u.searchParams.get("debug")) return J({ feeds: o.feeds, ok: o.ok, count: (o.n || []).length }, true, 60);
-      return J(o, o.ok, 3600);
+      const o = await memo("news2", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds }; });
+      if (u.searchParams.get("debug")) return J({ feeds: o.feeds, ok: o.ok, count: (o.n || []).length }, true, 0);
+      return J(o, o.ok, 900);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
     const o = await memo("wx:" + icao, 120000, async () => {

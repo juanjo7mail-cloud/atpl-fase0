@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="9b0dc489e182";</script>
+<script>window.F0_BUILD="3d5b4865b3a9";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -481,6 +481,9 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 .st-box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
 .st-box h2{font:700 20px/1.1 var(--display);margin:0 0 10px}
 /* ---- Radar de Industria ---- */
+#radarBtn.rdpulse{color:#00e676}#radarBtn.rdpulse svg{filter:drop-shadow(0 0 4px rgba(0,230,118,.7))}#radarBtn.rdpulse::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid #00e676;opacity:0;pointer-events:none;animation:rdWave 2s ease-out infinite}#radarBtn.rdpulse::before{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid #00e676;opacity:0;pointer-events:none;animation:rdWave 2s ease-out 1s infinite}@keyframes rdWave{0%{transform:scale(.7);opacity:.75}100%{transform:scale(1.7);opacity:0}}#radarBtn.rdpulse #radarDot{background:#00c853;color:#04210f}
+.rd-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--paper)}.rd-bar span{font:600 13px var(--body);color:var(--muted);flex:1;min-width:0}.rd-bar button{font:700 13px var(--body);padding:8px 14px;border-radius:9px;border:0;background:#00c853;color:#04210f;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:36px}.rd-bar button:disabled{background:var(--line);color:var(--muted);cursor:default}
+@media (prefers-reduced-motion:reduce){#radarBtn.rdpulse::before,#radarBtn.rdpulse::after{animation:none;opacity:.4;transform:scale(1.25)}}
 #radarBtn{position:relative}#radarDot{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;border-radius:9px;background:#E5392E;color:#fff;font:700 10px/16px var(--body);text-align:center;padding:0 3px;border:2px solid var(--head,#12202f);box-sizing:content-box}
 #radar{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(10,20,34,0);transition:background .25s}#radar[hidden]{display:none}#radar.on{background:rgba(10,20,34,.45)}
 #radar .rd-pan{width:min(460px,100vw);height:100%;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .26s cubic-bezier(.2,.8,.2,1);box-shadow:-12px 0 40px rgba(0,0,0,.25);padding-top:env(safe-area-inset-top,0px);padding-right:env(safe-area-inset-right,0px)}#radar.on .rd-pan{transform:none}
@@ -670,7 +673,7 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 
 
 <div id="radar" hidden role="dialog" aria-modal="true" aria-labelledby="rdT">
-  <aside class="rd-pan"><div class="rd-hd"><svg viewBox="0 0 20 20" width="26" height="26" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="#7fb6e6" stroke-width="1.5"/><circle cx="10" cy="10" r="3.6" fill="none" stroke="#7fb6e6" stroke-width="1.3"/><path d="M10 10 15.2 4.8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg><div><h2 id="rdT">Radar de Industria</h2><small id="rdUn">Cargando…</small></div><button type="button" id="rdClose">Cerrar</button></div><div id="rdBody"></div></aside>
+  <aside class="rd-pan"><div class="rd-hd"><svg viewBox="0 0 20 20" width="26" height="26" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="#7fb6e6" stroke-width="1.5"/><circle cx="10" cy="10" r="3.6" fill="none" stroke="#7fb6e6" stroke-width="1.3"/><path d="M10 10 15.2 4.8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg><div><h2 id="rdT">Radar de Industria</h2><small id="rdUn">Cargando…</small></div><button type="button" id="rdClose">Cerrar</button></div><div class="rd-bar"><span id="rdBarT">Cargando…</span><button type="button" id="rdAllTop" disabled>✓ Marcar todo como leído</button></div><div id="rdBody"></div></aside>
 </div>
 
 <div class="sheet top" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscar en los apuntes">
@@ -1760,31 +1763,33 @@ async function selAll(table, cols, ord){
   return {data:out,error:null};
 }
 /* ---- Radar de Industria (solo administrador): cajón lateral con titulares RSS de EASA, AESA, ASN, Aviation Herald, Simple Flying, AeroTime… vía /api/news ---- */
-const RD_CATS=[{k:"Seguridad",ic:"⚠",c:"#C9372C",bg:"#FBE5E3"},{k:"Regulación",ic:"⚖",c:"#1F4E8C",bg:"#E3ECF7"},{k:"Flota",ic:"✈",c:"#1E6B3A",bg:"#E4F2E8"},{k:"Empleo",ic:"🧑‍✈️",c:"#8a5a00",bg:"#FFF1D6"},{k:"Industria",ic:"✦",c:"#5b3a8c",bg:"#EDE6F7"}];
+const RD_CATS=[{k:"Seguridad",ic:"⚠",c:"#C9372C",bg:"#FBE5E3"},{k:"Regulación",ic:"⚖",c:"#1F4E8C",bg:"#E3ECF7"},{k:"Flota",ic:"✈",c:"#1E6B3A",bg:"#E4F2E8"},{k:"Empleo",ic:"🧑‍✈️",c:"#8a5a00",bg:"#FFF1D6"},{k:"Industria",ic:"✦",c:"#5b3a8c",bg:"#EDE6F7"},{k:"Curiosidades",ic:"💡",c:"#0b6e75",bg:"#DFF3F4"}];
 let RD=null, RDcat="", RDload=false;
 const RDK="f0.radar.read";
 function rdRead(){ try{ return new Set(JSON.parse(localStorage.getItem(RDK)||"[]")); }catch(e){ return new Set(); } }
 function rdSave(r){ try{ localStorage.setItem(RDK,JSON.stringify([...r].slice(-400))); }catch(e){} }
-function rdBadge(){ const b=$("#radarDot"); if(!b) return; const n=RD?RD.filter(x=>!rdRead().has(x.u)).length:0; b.hidden=!n; b.textContent=n>9?"9+":n; }
+function rdBadge(){ const b=$("#radarDot"); if(!b) return; const n=RD?RD.filter(x=>!rdRead().has(x.u)).length:0; b.hidden=!n; b.textContent=n>9?"9+":n; const bt=$("#radarBtn"); if(bt) bt.classList.toggle("rdpulse",!!n); }
 function rdAgo(d){ if(!d) return ""; const m=Math.max(1,Math.round((Date.now()-d)/60000)); return m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:m<43200?`hace ${Math.round(m/1440)} d`:new Date(d).toLocaleDateString("es-ES",{day:"2-digit",month:"short"}); }
 function rdDraw(){
   const el=$("#rdBody"); if(!el) return; const rd=rdRead(), E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   if(!RD){ el.innerHTML=`<p class="rd-msg">${RDload?"Escaneando el radar…":"No se han podido leer las fuentes ahora. Vuelve a abrirlo en unos minutos."}</p>`; return; }
   const cat=k=>RD_CATS.find(c=>c.k===k)||RD_CATS[4], un=RD.filter(n=>!rd.has(n.u)).length, list=RD.filter(n=>!RDcat||n.c===RDcat);
-  $("#rdUn").textContent=un?`${un} sin leer`:"Todo al día";
+  $("#rdUn").textContent=un?`${un} sin leer`:"Todo al día"; const bt2=$("#rdBarT"); if(bt2) bt2.textContent=un?`${un} sin leer de ${RD.length}`:"Todo al día · sin noticias pendientes"; const at=$("#rdAllTop"); if(at) at.disabled=!un;
   const badge=n=>{ const c=cat(n.c); return `<span class="rd-b" style="background:${c.bg};color:${c.c}"><i>${c.ic}</i>${E(n.c)}</span>`; };
   const card=(n,big)=>{ const c=cat(n.c), r=rd.has(n.u); return `<article class="rd-card${big?" big":""}${r?" rd":""}" style="--rc:${c.c};--rb:${c.bg}"><div class="rd-top">${badge(n)}<span class="rd-src">${E(n.s)} · ${rdAgo(n.d)}</span></div><a href="${E(n.u)}" target="_blank" rel="noopener noreferrer" data-u="${E(n.u)}">${E(n.t)}</a><div class="rd-act"><a class="rd-open" href="${E(n.u)}" target="_blank" rel="noopener noreferrer" data-u="${E(n.u)}">Abrir ↗</a><button type="button" data-r="${E(n.u)}">${r?"Marcar no leído":"Marcar leído"}</button></div></article>`; };
   const hero=list[0], rest=list.slice(1);
   el.innerHTML=`<div class="rd-chips"><button type="button" data-c="" class="${RDcat?"":"on"}">Todas · ${RD.length}</button>${RD_CATS.map(c=>{ const n=RD.filter(x=>x.c===c.k).length; return n?`<button type="button" data-c="${c.k}" class="${RDcat===c.k?"on":""}" style="--rc:${c.c};--rb:${c.bg}"><i>${c.ic}</i>${c.k} · ${n}</button>`:""; }).join("")}</div>
   ${hero?`<div class="rd-hl">Destacada</div>${card(hero,true)}`:`<p class="rd-msg">Sin titulares en esta categoría.</p>`}
   ${rest.length?`<div class="rd-hl">Más titulares</div><div class="rd-grid">${rest.map(n=>card(n)).join("")}</div>`:""}
-  <p class="rd-foot">Fuentes abiertas · sin resúmenes por IA · se actualiza cada 6 h <button type="button" id="rdAll"${un?"":" disabled"}>Marcar todo leído</button></p>`;
+  <p class="rd-foot">Fuentes abiertas · sin resúmenes por IA · se actualiza cada pocas horas</p>`;
   el.querySelectorAll("[data-c]").forEach(b=>b.addEventListener("click",()=>{ RDcat=b.dataset.c; rdDraw(); }));
   el.querySelectorAll("[data-r]").forEach(b=>b.addEventListener("click",()=>{ const r=rdRead(); r.has(b.dataset.r)?r.delete(b.dataset.r):r.add(b.dataset.r); rdSave(r); rdDraw(); rdBadge(); }));
   el.querySelectorAll("a[data-u]").forEach(a=>a.addEventListener("click",()=>{ const r=rdRead(); r.add(a.dataset.u); rdSave(r); setTimeout(()=>{ rdDraw(); rdBadge(); },50); }));
-  const all=$("#rdAll"); if(all) all.addEventListener("click",()=>{ const r=rdRead(); RD.forEach(n=>r.add(n.u)); rdSave(r); rdDraw(); rdBadge(); });
+  
 }
-async function rdFetch(){ if(RD||RDload||!isAdmin) return; RDload=true; rdDraw(); try{ const r=await fetch("/api/news"); const j=await r.json(); if(j.ok&&j.n&&j.n.length) RD=j.n; }catch(e){} RDload=false; rdDraw(); rdBadge(); }
+function rdMarkAll(){ if(!RD) return; const r=rdRead(); RD.forEach(n=>r.add(n.u)); rdSave(r); rdDraw(); rdBadge(); }
+{ const at=$("#rdAllTop"); if(at) at.addEventListener("click",rdMarkAll); }
+async function rdFetch(){ if(RD||RDload||!isAdmin) return; RDload=true; rdDraw(); try{ const r=await fetch("/api/news?v=2"); const j=await r.json(); if(j.ok&&j.n&&j.n.length) RD=j.n; }catch(e){} RDload=false; rdDraw(); rdBadge(); }
 function rdOpen(){ if(!isAdmin) return; const d=$("#radar"); d.hidden=false; requestAnimationFrame(()=>d.classList.add("on")); $("#radarBtn").setAttribute("aria-expanded","true"); rdDraw(); rdFetch(); setTimeout(()=>{ const c=$("#rdClose"); if(c) c.focus(); },60); }
 function rdClose(){ const d=$("#radar"); d.classList.remove("on"); $("#radarBtn").setAttribute("aria-expanded","false"); setTimeout(()=>{ d.hidden=true; },260); const b=$("#radarBtn"); if(b) b.focus(); }
 function radarSync(){ const b=$("#radarBtn"); if(!b) return; b.hidden=!isAdmin; if(isAdmin) setTimeout(rdFetch,2500); else { const d=$("#radar"); if(d) d.hidden=true; } }
