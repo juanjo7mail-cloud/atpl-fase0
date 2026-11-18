@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="3d5b4865b3a9";</script>
+<script>window.F0_BUILD="70b8fcd053d6";</script>
 <script src="autoupdate.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
@@ -497,6 +497,12 @@ ul.live{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}ul.live li
 .rd-card>a{font:700 16px/1.3 var(--display);color:var(--ink);text-decoration:none;overflow-wrap:anywhere}.rd-card.big>a{font-size:21px;line-height:1.2}.rd-card>a:hover{text-decoration:underline}
 .rd-act{display:flex;gap:8px;align-items:center}.rd-open{font:600 13px var(--body);color:var(--rc);text-decoration:none}.rd-act button{margin-left:auto;font:600 12px var(--body);padding:4px 9px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
 .rd-msg{color:var(--muted);padding:20px 0}.rd-foot{margin:16px 0 0;font-size:12px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}.rd-foot button{margin-left:auto;font:600 12px var(--body);padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}.rd-foot button:disabled{opacity:.45}
+.rd-mast{display:flex;flex-direction:column;gap:2px;padding:0 0 8px;margin:0 0 10px;border-bottom:3px double var(--ink)}.rd-mast b{font:700 26px/1 Georgia,"Source Serif 4",serif;letter-spacing:.01em;font-variant:small-caps}.rd-mast span{font:600 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rd-day{margin:14px 0 2px;padding:0 0 3px;border-bottom:1px solid var(--ink);font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.rd-it{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line)}.rd-it:last-of-type{border-bottom:0}
+.rd-dot{flex:none;width:18px;height:18px;margin-top:2px;padding:0;border:0;background:none;cursor:pointer;position:relative}.rd-dot::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--rc);transition:opacity .15s}.rd-it.rd .rd-dot::after{background:none;border:1.5px solid var(--line);inset:5px}
+.rd-tx{min-width:0;flex:1}.rd-meta{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font:600 10.5px var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}.rd-meta b{color:var(--rc);font-weight:800}
+.rd-it>.rd-tx>a{display:block;margin-top:1px;font:700 15px/1.26 Georgia,"Source Serif 4",serif;color:var(--ink);text-decoration:none;overflow-wrap:anywhere}.rd-it>.rd-tx>a:hover{text-decoration:underline}.rd-it.rd>.rd-tx>a{font-weight:400;color:var(--muted)}
 @media (min-width:900px){.rd-grid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){#radar,#radar .rd-pan{transition:none}}
 
@@ -1647,8 +1653,8 @@ function hlInit(f,k){
   (window.__hlF=window.__hlF||{})[k]=F;
 }
 /* ===================== aviso del buzón: señal amarilla de aeropuerto (web) =====================
-   Sale una vez tras ~15 min de uso activo. «Ahora no» o la ✕: vuelve a preguntar a las 48 h. Si envía una sugerencia, no vuelve a salir. */
-const SGN_AFTER=900, SGN_WAIT=48*3600*1000;
+   Sale tras ~15 min de uso activo y como máximo 1 vez cada 7 días (se cuenta desde que sale, lo cierres como lo cierres). Si envía una sugerencia, no vuelve a salir. */
+const SGN_AFTER=900, SGN_WAIT=7*24*3600*1000;
 let sgnS=null, sgnN=0, sgnEl=null;
 const sgnKey=()=>"f0:sgn:"+(sbUser?sbUser.id:"");
 function sgnLoad(){ if(sgnS) return sgnS; try{ sgnS=JSON.parse(localStorage.getItem(sgnKey())||"null"); }catch(e){} return sgnS=Object.assign({t:0,next:0,done:false},sgnS||{}); }
@@ -1656,11 +1662,12 @@ function sgnSave(){ try{ localStorage.setItem(sgnKey(),JSON.stringify(sgnS)); }c
 function sgnDone(){ sgnLoad().done=true; sgnSave(); sgnHide(); }
 function sgnHide(){ if(sgnEl){ sgnEl.remove(); sgnEl=null; } }
 function sgnBusy(){
-  if(["#news","#simGo","#login","#nameAsk","#devNote","#sugBox","#pwReset","#sheet","#search"].some(q=>{ const e=$(q); return e&&!e.hidden; })||$("#msOv")) return true;
+  if(["#news","#simGo","#login","#nameAsk","#devNote","#sugBox","#pwReset","#sheet","#search","#rateBox"].some(q=>{ const e=$(q); return e&&!e.hidden; })||$("#msOv")) return true;
   try{ return [...document.querySelectorAll("iframe")].some(f=>{ const q=f.contentDocument&&f.contentDocument.getElementById("quiz"); return q&&!q.hidden; }); }catch(e){ return false; }
 }
 function sgnShow(force){
   if(sgnEl||!sb||!sbUser) return;
+  if(!force){ sgnLoad().next=Date.now()+SGN_WAIT; sgnS.t=0; sgnSave(); }
   if(!document.getElementById("sgnCss")){
     const st=document.createElement("style"); st.id="sgnCss";
     st.textContent=`#sgnBox{position:fixed;left:50%;bottom:max(86px,calc(env(safe-area-inset-bottom,0px) + 80px));transform:translateX(-50%);width:min(calc(100% - 24px),400px);z-index:60;background:#FFC400;color:#111;border:3px solid #111;border-radius:10px;box-shadow:0 0 0 2px #FFC400,0 0 0 5px #111,0 14px 34px rgba(0,0,0,.45);overflow:hidden;font-family:var(--display);animation:sgnIn .4s cubic-bezier(.2,.9,.3,1.1)}
@@ -1696,6 +1703,88 @@ window.F0Aviso={demo:()=>sgnShow(true)};
 try{ if(location.hash==="#aviso-buzon") setTimeout(()=>sgnShow(true),1500); }catch(e){}
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") usageFlush(); });
 
+/* ===================== valoración de las 30 h: señal mandatoria de aeródromo (web) =====================
+   Una sola vez en la vida del usuario. Sale al acumular 30 h de uso; si ya las tenía al abrir la sesión (veterano), sale a los 15 min de esa sesión.
+   Responder o cerrar la deja hecha para siempre. Se guarda en «suggestions» (asunto RT_SUBJ) y se ve en Stats y en el buzón. */
+const RT_HOURS=30, RT_SUBJ="★ Valoración 30 h", RT_VET_WAIT=15*60*1000;
+let rtEl=null, rtSrv=0, rtMs0=null, rtT0=Date.now(), rtState=null, rtInit=false, rtBusyInit=false;
+const rtKey=()=>"f0:rate:"+(sbUser?sbUser.id:"");
+function rtLoad(){ if(rtState) return rtState; try{ rtState=JSON.parse(localStorage.getItem(rtKey())||"null"); }catch(e){} return rtState=Object.assign({done:false,vet:false},rtState||{}); }
+function rtSave(){ try{ localStorage.setItem(rtKey(),JSON.stringify(rtState)); }catch(e){} }
+function rtHide(){ if(rtEl){ rtEl.remove(); rtEl=null; } }
+function rtDone(){ rtLoad().done=true; rtSave(); rtHide(); }
+async function rtStart(){
+  if(rtInit||rtBusyInit||!sb||!sbUser) return; rtBusyInit=true;
+  try{
+    const s=rtLoad(); if(s.done){ rtInit=true; return; }
+    try{ const r=await sb.from("suggestions").select("id").eq("user_id",sbUser.id).eq("subject",RT_SUBJ).limit(1); if(!r.error&&r.data&&r.data.length){ rtDone(); rtInit=true; return; } }catch(e){}
+    try{ const r=await sb.from("profiles").select("seconds").eq("user_id",sbUser.id).maybeSingle(); if(!r.error&&r.data) rtSrv=Number(r.data.seconds)||0; }catch(e){}
+    rtMs0=(MS&&MS.secs)||0; rtT0=Date.now(); s.vet=Math.max(rtMs0,rtSrv)>=RT_HOURS*3600; rtSave(); rtInit=true;
+  } finally { rtBusyInit=false; }
+}
+function rtShow(){
+  if(rtEl||!sb||!sbUser) return;
+  if(!document.getElementById("rtCss")){
+    const st=document.createElement("style"); st.id="rtCss";
+    st.textContent=`#rateBox{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:16px;background:rgba(8,12,18,.62);animation:rtIn .25s ease-out}
+@keyframes rtIn{from{opacity:0}to{opacity:1}}
+#rateBox .rt{position:relative;width:min(100%,440px);max-height:calc(100dvh - 32px);overflow:auto;background:#C8001E;color:#fff;border-radius:12px;padding:22px 20px 18px;box-shadow:0 0 0 3px #111,0 20px 50px rgba(0,0,0,.55)}
+#rateBox .rt::before{content:"";position:absolute;inset:7px;border:2px solid #fff;border-radius:7px;pointer-events:none}
+#rateBox .x{position:absolute;top:10px;right:12px;width:36px;height:36px;border:0;background:none;color:#fff;font:700 26px/1 Arial,sans-serif;cursor:pointer;z-index:1}
+#rateBox h2{margin:0 34px 4px 0;font:700 26px/1.05 var(--display);letter-spacing:.09em;text-transform:uppercase}
+#rateBox .sub{margin:0 0 14px;font:600 14px/1.35 var(--body);opacity:.92}
+#rateBox fieldset{border:0;margin:0 0 14px;padding:0}
+#rateBox legend{padding:0;margin:0 0 7px;font:700 16px/1.3 var(--body)}
+#rateBox .sc{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+#rateBox .sc button{min-height:46px;border:2px solid #fff;border-radius:6px;background:transparent;color:#fff;font:700 21px var(--display);cursor:pointer}
+#rateBox .sc button[aria-pressed=true]{background:#fff;color:#C8001E}
+#rateBox .ends{display:flex;justify-content:space-between;margin-top:5px;font:600 11.5px var(--body);letter-spacing:.04em;opacity:.9}
+#rateBox .go{width:100%;min-height:48px;margin-top:2px;border:2px solid #fff;border-radius:6px;background:#fff;color:#C8001E;font:700 20px var(--display);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+#rateBox .go:disabled{background:transparent;color:#fff;opacity:.55;cursor:not-allowed}
+#rateBox .msg{min-height:18px;margin:8px 0 0;font:600 13px var(--body)}
+#rateBox button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){#rateBox{animation:none}}`;
+    document.head.appendChild(st);
+  }
+  const q=(id,t,a,b)=>`<fieldset data-q="${id}"><legend>${t}</legend><div class="sc">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" data-n="${n}" aria-pressed="false" aria-label="${n}">${n}</button>`).join("")}</div><div class="ends"><span>1 · ${a}</span><span>10 · ${b}</span></div></fieldset>`;
+  const o=document.createElement("div"); o.id="rateBox";
+  o.innerHTML=`<div class="rt" role="dialog" aria-modal="true" aria-labelledby="rtT"><button class="x" type="button" aria-label="Cerrar">×</button><h2 id="rtT">Tu valoración</h2><p class="sub">Solo dos preguntas. Nos ayuda a mejorar la web.</p>${q("web","¿Qué nota le pones a la web en general?","muy mala","excelente")}${q("ayuda","¿Cuánto te está ayudando a estudiar y aprobar los exámenes?","nada","muchísimo")}<button class="go" type="button" disabled>Enviar</button><p class="msg" role="status"></p></div>`;
+  const A={}, go=o.querySelector(".go"), msg=o.querySelector(".msg");
+  o.addEventListener("click",async e=>{
+    if(e.target===o||e.target.closest(".x")){ rtDone(); return; }
+    const b=e.target.closest(".sc button"); if(b){ const f=b.closest("fieldset"); A[f.dataset.q]=+b.dataset.n; f.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); go.disabled=!(A.web&&A.ayuda); return; }
+    if(e.target===go&&A.web&&A.ayuda){
+      go.disabled=true; msg.textContent="Enviando…";
+      const r=await sb.from("suggestions").insert({email:sbUser.email,name:MY.name||null,kind:"otro",subject:RT_SUBJ,body:`Nota general: ${A.web}/10 · Ayuda para estudiar y aprobar: ${A.ayuda}/10`});
+      if(r.error){ go.disabled=false; msg.textContent="No se ha podido enviar. Inténtalo en un momento."; return; }
+      SG=null; msg.textContent="¡Gracias!"; rtLoad().done=true; rtSave(); setTimeout(rtHide,1200);
+    }
+  });
+  o.addEventListener("keydown",e=>{ if(e.key==="Escape"){ e.stopPropagation(); rtDone(); } });
+  document.body.appendChild(o); rtEl=o; { const d=o.querySelector(".rt"); d.tabIndex=-1; d.style.outline="none"; d.focus({preventScroll:true}); }
+}
+setInterval(()=>{
+  if(!sb||!sbUser||rtEl||document.visibilityState!=="visible") return;
+  if(!rtInit){ rtStart(); return; }
+  const s=rtLoad(); if(s.done||rtMs0===null) return;
+  const tot=Math.max(rtMs0,rtSrv)+Math.max(0,((MS&&MS.secs)||0)-rtMs0);
+  const due=s.vet?Date.now()-rtT0>=RT_VET_WAIT:tot>=RT_HOURS*3600;
+  if(due&&!sgnBusy()&&!sgnEl) rtShow();
+},5000);
+window.F0Valora={demo:()=>rtShow()};
+async function rtStats(){
+  const box=$("#stats"); if(!box||!isAdmin||!sb) return;
+  let r; try{ r=await sb.from("suggestions").select("name,email,body,created_at").eq("subject",RT_SUBJ).order("created_at",{ascending:false}).limit(300); }catch(e){ return; }
+  if(!r||r.error) return;
+  const rows=(r.data||[]).map(x=>{ const m=String(x.body).match(/general: (\d+)\/10.*?aprobar: (\d+)\/10/); return m?{n:x.name||String(x.email||"").split("@")[0],w:+m[1],h:+m[2],d:x.created_at}:null; }).filter(Boolean);
+  const old=document.getElementById("rtStats"); if(old) old.remove();
+  const av=k=>rows.length?(rows.reduce((a,x)=>a+x[k],0)/rows.length).toFixed(1).replace(".",","):"–";
+  const sec=document.createElement("section"); sec.id="rtStats"; sec.className="card"; sec.style.cssText="margin-top:16px";
+  sec.innerHTML=`<h2 style="margin:0 0 6px">Valoraciones de las 30 h</h2><p class="muted" style="margin:0 0 10px">${rows.length} respuesta${rows.length===1?"":"s"} · web <b>${av("w")}</b>/10 · ayuda para aprobar <b>${av("h")}</b>/10</p>${rows.length?`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse"><thead><tr><th align="left">Quién</th><th>Web</th><th>Ayuda</th><th align="right">Fecha</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.n)}</td><td align="center">${x.w}</td><td align="center">${x.h}</td><td align="right">${fmtD(x.d)}</td></tr>`).join("")}</tbody></table></div>`:`<p class="muted">Aún no ha respondido nadie.</p>`}`;
+  box.appendChild(sec);
+}
+{ const _ds=drawStats; drawStats=function(){ _ds.apply(this,arguments); rtStats(); }; }
+
 /* ===================== en línea (Supabase Realtime Presence) ===================== */
 let presCh=null;
 function onlineList(){ try{ const st=presCh?presCh.presenceState():{}; return Object.entries(st).map(([k,v])=>({id:k,n:String((v[v.length-1]||{}).n||"").slice(0,40)})); }catch(e){ return []; } }
@@ -1713,7 +1802,7 @@ $("#onBtn").addEventListener("click",e=>{ e.stopPropagation(); const p=$("#onPop
 document.addEventListener("click",e=>{ const p=$("#onPop"); if(p&&!p.hidden&&!e.target.closest("#onPop")){ p.hidden=true; $("#onBtn").setAttribute("aria-expanded","false"); } });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ const p=$("#onPop"); if(p&&!p.hidden){ p.hidden=true; $("#onBtn").focus(); } } });
 async function signOut(){
-  beatFlush(); usageFlush(); try{ if(sb&&sbUser) sb.rpc("track_usage",{p_view:"off",p_seconds:0}).then(()=>{},()=>{}); }catch(e){} clearInterval(beatT); stopPresence(); try{ if(window.F0Hangar) window.F0Hangar.stop(); }catch(e){}
+  rtHide(); rtInit=false; rtState=null; rtMs0=null; beatFlush(); usageFlush(); try{ if(sb&&sbUser) sb.rpc("track_usage",{p_view:"off",p_seconds:0}).then(()=>{},()=>{}); }catch(e){} clearInterval(beatT); stopPresence(); try{ if(window.F0Hangar) window.F0Hangar.stop(); }catch(e){}
   try{ await sb.auth.signOut(); }catch(e){}
   sbUser=null; remote=null; isAdmin=false; try{ radarSync(); }catch(e){} MY={name:"",show:true};
   try{ SUBJ.forEach(s=>localStorage.removeItem("f0:"+s.k)); }catch(e){}
@@ -1775,13 +1864,15 @@ function rdDraw(){
   if(!RD){ el.innerHTML=`<p class="rd-msg">${RDload?"Escaneando el radar…":"No se han podido leer las fuentes ahora. Vuelve a abrirlo en unos minutos."}</p>`; return; }
   const cat=k=>RD_CATS.find(c=>c.k===k)||RD_CATS[4], un=RD.filter(n=>!rd.has(n.u)).length, list=RD.filter(n=>!RDcat||n.c===RDcat);
   $("#rdUn").textContent=un?`${un} sin leer`:"Todo al día"; const bt2=$("#rdBarT"); if(bt2) bt2.textContent=un?`${un} sin leer de ${RD.length}`:"Todo al día · sin noticias pendientes"; const at=$("#rdAllTop"); if(at) at.disabled=!un;
-  const badge=n=>{ const c=cat(n.c); return `<span class="rd-b" style="background:${c.bg};color:${c.c}"><i>${c.ic}</i>${E(n.c)}</span>`; };
-  const card=(n,big)=>{ const c=cat(n.c), r=rd.has(n.u); return `<article class="rd-card${big?" big":""}${r?" rd":""}" style="--rc:${c.c};--rb:${c.bg}"><div class="rd-top">${badge(n)}<span class="rd-src">${E(n.s)} · ${rdAgo(n.d)}</span></div><a href="${E(n.u)}" target="_blank" rel="noopener noreferrer" data-u="${E(n.u)}">${E(n.t)}</a><div class="rd-act"><a class="rd-open" href="${E(n.u)}" target="_blank" rel="noopener noreferrer" data-u="${E(n.u)}">Abrir ↗</a><button type="button" data-r="${E(n.u)}">${r?"Marcar no leído":"Marcar leído"}</button></div></article>`; };
-  const hero=list[0], rest=list.slice(1);
-  el.innerHTML=`<div class="rd-chips"><button type="button" data-c="" class="${RDcat?"":"on"}">Todas · ${RD.length}</button>${RD_CATS.map(c=>{ const n=RD.filter(x=>x.c===c.k).length; return n?`<button type="button" data-c="${c.k}" class="${RDcat===c.k?"on":""}" style="--rc:${c.c};--rb:${c.bg}"><i>${c.ic}</i>${c.k} · ${n}</button>`:""; }).join("")}</div>
-  ${hero?`<div class="rd-hl">Destacada</div>${card(hero,true)}`:`<p class="rd-msg">Sin titulares en esta categoría.</p>`}
-  ${rest.length?`<div class="rd-hl">Más titulares</div><div class="rd-grid">${rest.map(n=>card(n)).join("")}</div>`:""}
-  <p class="rd-foot">Fuentes abiertas · sin resúmenes por IA · se actualiza cada pocas horas</p>`;
+  const day=ts=>{ const d=new Date(ts), t=new Date(), y=new Date(t), lbl=d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"}); y.setDate(t.getDate()-1); return d.toDateString()===t.toDateString()?"Hoy · "+lbl:d.toDateString()===y.toDateString()?"Ayer · "+lbl:lbl; };
+  const hm=ts=>ts?new Date(ts).toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}):"";
+  const row=n=>{ const c=cat(n.c), r=rd.has(n.u); return `<article class="rd-it${r?" rd":""}" style="--rc:${c.c}"><button type="button" class="rd-dot" data-r="${E(n.u)}" aria-label="${r?"Marcar no leído":"Marcar leído"}" title="${r?"Marcar no leído":"Marcar leído"}"></button><div class="rd-tx"><div class="rd-meta"><b>${E(n.c)}</b><span>${E(n.s)}${n.d?" · "+hm(n.d):""}</span></div><a href="${E(n.u)}" target="_blank" rel="noopener noreferrer" data-u="${E(n.u)}">${E(n.t)}</a></div></article>`; };
+  const sorted=list.slice().sort((x,y)=>(y.d||0)-(x.d||0)); let last="", body="";
+  sorted.forEach(n=>{ const k=n.d?new Date(n.d).toDateString():"sin fecha"; if(k!==last){ last=k; body+=`<h3 class="rd-day">${n.d?day(n.d):"Sin fecha"}</h3>`; } body+=row(n); });
+  const today=new Date().toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  el.innerHTML=`<div class="rd-mast"><b>El Radar</b><span>Edición del ${today}</span></div><div class="rd-chips"><button type="button" data-c="" class="${RDcat?"":"on"}">Todas · ${RD.length}</button>${RD_CATS.map(c=>{ const n=RD.filter(x=>x.c===c.k).length; return n?`<button type="button" data-c="${c.k}" class="${RDcat===c.k?"on":""}"><i>${c.ic}</i>${c.k} · ${n}</button>`:""; }).join("")}</div>
+  ${body||`<p class="rd-msg">Sin titulares en esta categoría.</p>`}
+  <p class="rd-foot">Fuentes abiertas · sin resúmenes por IA · por fecha, de más reciente a más antigua</p>`;
   el.querySelectorAll("[data-c]").forEach(b=>b.addEventListener("click",()=>{ RDcat=b.dataset.c; rdDraw(); }));
   el.querySelectorAll("[data-r]").forEach(b=>b.addEventListener("click",()=>{ const r=rdRead(); r.has(b.dataset.r)?r.delete(b.dataset.r):r.add(b.dataset.r); rdSave(r); rdDraw(); rdBadge(); }));
   el.querySelectorAll("a[data-u]").forEach(a=>a.addEventListener("click",()=>{ const r=rdRead(); r.add(a.dataset.u); rdSave(r); setTimeout(()=>{ rdDraw(); rdBadge(); },50); }));
@@ -1975,6 +2066,10 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
+  {id:"2026-11-18", items:[
+    {big:true, i:"📰", t:"Radar de Industria, ahora como un periódico", d:"Titulares por fecha, de la más reciente a la más antigua, en filas compactas: caben muchas más noticias de un vistazo. Fuentes abiertas de empleo, flota, regulación y curiosidades.", admin:true},
+    {i:"🧪", t:"Banco de preguntas ampliado", d:"Más preguntas con variantes en Meteorología, Navegación, OPS, Derecho Aéreo, Principios de vuelo y POH, en todos los tipos de test."}
+  ]},
   {id:"2026-11-12", items:[
     {big:true, xl:true, i:"🛩️", t:"Láminas 2D y modelos 3D para estudiar", d:"Mueve los controles y mira qué pasa: los conceptos más difíciles de Principios de vuelo, AGK y Meteorología se entienden jugando con ellos.", art:`<div class="labann"><div class="lh"><span>Láminas interactivas</span><span>12 × 2D · 2 × 3D</span></div><button class="lr" type="button" data-go="081"><span class="lc">081</span><span><b class="ln">Principles of Flight</b><span class="lt"><i>Túnel de viento</i><i>Estabilidad longitudinal</i><i>Fuerzas en viraje</i><i>Polar y mejor planeo</i><i class="d3">3D · Ejes y mandos</i></span></span><span class="la" aria-hidden="true">→</span></button><button class="lr" type="button" data-go="021"><span class="lc">021</span><span><b class="ln">AGK</b><span class="lt"><i>Los cuatro tiempos</i><i>Altímetro y reglaje</i><i>Pitot-estática y obstrucciones</i><i>Paso fijo y velocidad constante</i><i class="d3">3D · Giróscopo</i><i class="d3">3D · Ejes y mandos</i></span></span><span class="la" aria-hidden="true">→</span></button><button class="lr" type="button" data-go="050"><span class="lc">050</span><span><b class="ln">Meteorología</b><span class="lt"><i>Frentes en corte</i><i>Nubes y nivel de condensación</i><i>Viento geostrófico y de gradiente</i><i>Viento, rumbo y deriva</i><i>Altímetro y reglaje</i></span></span><span class="la" aria-hidden="true">→</span></button><div class="lf">Toca una asignatura: cada lámina está dentro del tema que explica</div></div>`}
   ]},
@@ -2091,7 +2186,7 @@ function newsSeen(){ try{ return localStorage.getItem("f0:news")||""; }catch(e){
 function newsMark(){ try{ localStorage.setItem("f0:news", NEWS.reduce((m,n)=>n.id>m?n.id:m,"")); }catch(e){} }
 function showNews(){
   const seen=newsSeen(); if(seen==="~"||!$("#news").hidden||simGoOn()) return;
-  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>(!x.web||sb)&&(!x.need||window[x.need])&&!(x.sim&&simGoDone())).map(x=>x.sim&&Date.now()>=SIMGO_END?{...x,big:false}:x);   // pasada la promo, el Sim queda como una línea más y las láminas van arriba
+  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>(!x.web||sb)&&(!x.admin||isAdmin)&&(!x.need||window[x.need])&&!(x.sim&&simGoDone())).map(x=>x.sim&&Date.now()>=SIMGO_END?{...x,big:false}:x);   // pasada la promo, el Sim queda como una línea más y las láminas van arriba
   if(!items.length){ if(NEWS.some(n=>n.id>seen) && !sb) newsMark(); return; }
   if(!$("#devNote").hidden||!$("#login").hidden||!$("#nameAsk").hidden||!$("#pwReset").hidden) return;
   items.sort((a,b)=>(b.big?1:0)-(a.big?1:0));
