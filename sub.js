@@ -10,7 +10,7 @@ const GROUPS={
   "031":{all:"Todo Performance", subs:[["031","Masa y centrado"],["032","Performance"],["033","Planificación"]]},
   "061":{all:"Todo Navegación", subs:[["061","Navegación general"],["062","Radionavegación"]]}
 };
-const m=/(\d{3})\.html/.exec(location.pathname), PAGE=m&&m[1];
+const m=/\/(\d{3})(?:\.html)?\/?$/.exec(location.pathname), PAGE=m&&m[1];   // Cloudflare sirve /s/061.html como /s/061
 if(!PAGE) return;
 const G=GROUPS[PAGE]||null, LS="f0:sub:"+PAGE, ADMIN="jjc.ruano@gmail.com";
 // administrador: bandera de la app o, si aún no ha llegado, la sesión guardada en este navegador

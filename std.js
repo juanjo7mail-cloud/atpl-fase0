@@ -7,7 +7,7 @@
    · Sin el encabezado repetido justo antes del título de cada asignatura. */
 (function(){
 "use strict";
-const m=/(\d{3})\.html/.exec(location.pathname), PAGE=m&&m[1];
+const m=/\/(\d{3})(?:\.html)?\/?$/.exec(location.pathname), PAGE=m&&m[1];   // Cloudflare sirve /s/061.html como /s/061
 if(!PAGE) return;
 const $=s=>document.querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
 const CSS=`
