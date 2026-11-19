@@ -1,4 +1,4 @@
-/* Asignaturas oficiales SENASA (EN PRUEBAS: solo para la cuenta de administrador; para los alumnos no hace nada).
+/* Asignaturas oficiales SENASA (para todos los alumnos).
    · AGK, Performance y Navegación: barra para estudiar cada asignatura oficial por separado (021/022, 031/032/033, 061/062).
    · «Mi plan» = Plan Completo SENASA (13): cada pregunta va a su asignatura oficial. Las que vivían en otra página
      (p. ej. brújula 022 dentro de Navegación) salen de allí y entran en la suya (xq.json). Plan Inicial (9): todo como siempre.
@@ -14,11 +14,7 @@ const m=/(\d{3})\.html/.exec(location.pathname), PAGE=m&&m[1];
 if(!PAGE) return;
 const G=GROUPS[PAGE]||null, LS="f0:sub:"+PAGE, ADMIN="jjc.ruano@gmail.com";
 // administrador: bandera de la app o, si aún no ha llegado, la sesión guardada en este navegador
-function isAdmin(){
-  try{ if(window.parent!==window&&window.parent.F0_ADMIN) return true; }catch(e){}
-  try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(/^sb-.*-auth-token$/.test(k)){ const v=JSON.parse(localStorage.getItem(k)||"null"), u=v&&(v.user||(v.currentSession&&v.currentSession.user)); if(u&&String(u.email||"").toLowerCase()===ADMIN) return true; } } }catch(e){}
-  return false;
-}
+function isAdmin(){ return true; }   // ya en producción para todos los alumnos
 const plan13=()=>{ try{ return localStorage.getItem("f0:plan")==="13"; }catch(e){ return false; } };
 let XQ=null, RECODE={};
 const code3=q=>RECODE[q[0]]||String(q[1]||"").replace(/^X\./,"").slice(0,3);
@@ -96,10 +92,10 @@ function bar(){
     b.addEventListener("click",e=>{ const x=e.target.closest("button[data-sub]"); if(!x) return; if(quizOn()){ flash("Termina o cierra el test antes de cambiar de asignatura."); return; } apply(x.dataset.sub); }); }
   const pill=(k,label,code)=>{ const p=code?pct(code):null, n=p?Math.round(100*p.ok/p.n):null;
     return `<button type="button" role="radio" data-sub="${k}" aria-checked="${seg===k}"${seg===k?' class="on"':""}><b>${code||""}</b>${code?" ":""}<span>${label}</span>${code?"":`<span class="f0sub-short">Todo</span>`}${n!=null?`<i title="${p.ok} de ${p.n} preguntas acertadas en su último intento">${n} %</i>`:""}</button>`; };
-  b.innerHTML=`<span class="f0sub-tag" title="Solo lo ves tú (administrador)">Pruebas</span>`+pill("",G.all,"")+G.subs.map(s=>pill(s[0],s[1],s[0])).join("")+`<small class="f0sub-note"${seg?"":" hidden"}>Trial y Adaptativo siguen usando todo el bloque.</small><small class="f0sub-msg" hidden></small>`;
+  b.innerHTML=pill("",G.all,"")+G.subs.map(s=>pill(s[0],s[1],s[0])).join("")+`<small class="f0sub-note"${seg?"":" hidden"}>Trial y Adaptativo siguen usando todo el bloque.</small><small class="f0sub-msg" hidden></small>`;
 }
 function flash(t){ const m=document.querySelector("#f0sub .f0sub-msg"); if(!m) return; m.textContent=t; m.hidden=false; clearTimeout(flash._t); flash._t=setTimeout(()=>{ m.hidden=true; },2600); }
-const CSS=`#f0sub{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 4px;padding:6px;border:1px dashed rgba(127,211,255,.55);border-radius:12px;background:rgba(127,211,255,.06)}
+const CSS=`#f0sub{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 4px;padding:6px;border:1px solid rgba(140,163,182,.35);border-radius:12px;background:rgba(127,211,255,.05)}
 #f0sub button{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(140,163,182,.45);background:transparent;color:inherit;border-radius:999px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer;min-height:32px}
 #f0sub button b{font-variant-numeric:tabular-nums;opacity:.85}
 #f0sub button i{font-style:normal;font-size:11px;opacity:.7;padding-left:2px}
