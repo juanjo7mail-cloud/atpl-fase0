@@ -1029,11 +1029,12 @@ function maint(){
   const now=Date.now(), a=airac(now), rows=[];
   /* Mismos aeródromos que el desplegable del Briefing: LECU (datos propios) + todos los de AEROS. Si falta carta ADC o SUP cargados, la fila lo dice (no se da por «al día»). */
   const ALL=[{icao:"LECU",name:"Madrid / Cuatro Vientos"}].concat(AEROS.map(o=>({icao:o.icao,name:o.name}))).sort((x,y)=>x.icao<y.icao?-1:x.icao>y.icao?1:0);
+  const aipU=ic=>"https://aip.enaire.es/AIP/#"+(ic==="LECU"?"LECU/LEVS":ic==="LELO"?"LERJ":ic);
   ALL.forEach(o=>{ const ic=o.icao, c=CHARTS[ic]||(ic==="LECU"?{wef:"25-DEC-25",sup:[],base:1}:null);
-    if(!c){ rows.push({icao:ic,name:o.name,wef:"Sin carta cargada",old:false,sup:[],nd:"Sin carta ADC ni SUP cargados"}); return; }
+    if(!c){ rows.push({icao:ic,name:o.name,wef:"Sin carta cargada",old:false,sup:[],nd:"Sin carta ADC ni SUP cargados",aip:aipU(ic)}); return; }
     const sup=(c.sup||[]).filter(x=>{ const t=supDay(x[6]); return !(t!=null&&now>=t+864e5); }).map(x=>{ const e=supEnd(x[2]), t=e?e.getTime():null, f=supDay(x[5]); return {id:x[0],end:x[2],st:f!=null&&now<f?"pend":t==null?"ok":t<now?(supVer(x,now)?"ver":"late"):t-now<=30*D1?"soon":"ok",from:x[5]||"",ver:x[4]||"",to:x[6]||""}; });
     const m=/^(\d\d)-([A-Z]{3})-(\d\d)$/.exec(c.wef||""), MM={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11}, w=m?Date.UTC(2000+ +m[3],MM[m[2]],+m[1]):null;
-    rows.push({icao:ic,name:o.name,wef:c.wef||"—",old:w!=null&&now-w>365*D1,sup,nd:c.base?"Sin SUP registrados: comprueba en la AIP":""});
+    rows.push({icao:ic,name:o.name,wef:c.wef||"—",old:w!=null&&now-w>365*D1,sup,nd:c.base?"Sin SUP registrados: comprueba en la AIP":"",aip:aipU(ic)});
   });
   const late=rows.filter(r=>r.sup.some(x=>x.st==="late")), act=a.dN<=3||late.length>0;
   return {a:{idC:a.idC,idN:a.idN,nxt:dmy(a.nxt),dN:a.dN},rows,late:late.map(r=>r.icao),nd:rows.filter(r=>r.nd).map(r=>r.icao),act,link:"https://aip.enaire.es/AIP/"};
