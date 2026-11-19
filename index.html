@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="41cf7df7bc54";</script>
+<script>window.F0_BUILD="c6ca2d1dc409";</script>
 <script src="autoupdate.js"></script>
 <script src="i18n.js"></script>
 <script src="vendor/supabase.js"></script>
@@ -2138,9 +2138,10 @@ function airacBox(){
   const E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const who=M.late.length?M.late:M.rows.map(r=>r.icao);
   const msg=M.act?`Acción requerida: descarga la nueva enmienda AIP / SUP de ${E(who.join(", "))} y súbela al chat para actualizar los datos internos. <a target="_blank" rel="noopener" href="${M.link}">ENAIRE · AIP ↗</a>${M.a.dN<=3?` (AIRAC ${M.a.idN} entra en vigor el ${M.a.nxt}, en ${M.a.dN} día${M.a.dN===1?"":"s"})`:` (${M.late.length} aeródromo${M.late.length===1?"":"s"} con SUP superado)`}`
-    :`Datos AIP/AIRAC de aeródromos al día hasta ${M.a.nxt} (AIRAC ${M.a.idN}). Vigente: ${M.a.idC}.`;
-  const rows=M.rows.map(r=>`<tr><th>${r.icao}</th><td>${E(r.name)}</td><td class="${r.old?"old":""}">${E(r.wef)}${r.old?" · >1 año":""}</td><td>${r.sup.length?r.sup.map(x=>`<span class="${x.st}">${E(x.id)} → ${E(x.end)}${x.st==="late"?" (superado)":x.st==="soon"?" (≤30 d)":x.st==="ver"?" (verificado en vigor "+E(x.ver)+")":x.st==="pend"?" (vigente desde "+E(x.from)+")":x.to?" (hasta "+E(x.to)+")":""}</span>`).join("<br>"):"—"}</td></tr>`).join("");
-  return `<div class="st-box st-air${M.act?" act":""}" style="margin-bottom:14px"><h2>Control AIRAC / SUP · mantenimiento</h2><p class="ac">${msg}</p><details><summary>Ver ${M.rows.length} aeródromos</summary><div class="sc"><table><thead><tr><th>OACI</th><th>Aeródromo</th><th>Carta ADC (WEF)</th><th>Suplementos (fin estimado)</th></tr></thead><tbody>${rows}</tbody></table></div></details><p class="muted" style="margin:8px 0 0;font-size:12px">Solo lo ves tú. Ciclo AIRAC cada 28 días; avisa a 3 días o menos, o si un SUP supera su fecha.</p></div>`;
+    :`Datos AIP/AIRAC al día hasta ${M.a.nxt} (AIRAC ${M.a.idN}). Vigente: ${M.a.idC}.`;
+  const ndMsg=M.nd&&M.nd.length?` <span style="color:#8a5a00">Sin datos cargados de ${E(M.nd.join(", "))}: sube su carta ADC y sus SUP para que entren en el control.</span>`:"";
+  const rows=M.rows.map(r=>`<tr><th>${r.icao}</th><td>${E(r.name)}</td><td class="${r.old?"old":""}">${E(r.wef)}${r.old?" · >1 año":""}</td><td>${r.nd?`<span class="soon">${E(r.nd)}</span>`+(r.sup.length?"<br>":""):""}${r.sup.length?r.sup.map(x=>`<span class="${x.st}">${E(x.id)} → ${E(x.end)}${x.st==="late"?" (superado)":x.st==="soon"?" (≤30 d)":x.st==="ver"?" (verificado en vigor "+E(x.ver)+")":x.st==="pend"?" (vigente desde "+E(x.from)+")":x.to?" (hasta "+E(x.to)+")":""}</span>`).join("<br>"):(r.nd?"":"—")}</td></tr>`).join("");
+  return `<div class="st-box st-air${M.act?" act":""}" style="margin-bottom:14px"><h2>Control AIRAC / SUP · mantenimiento</h2><p class="ac">${msg}${ndMsg}</p><details><summary>Ver ${M.rows.length} aeródromos</summary><div class="sc"><table><thead><tr><th>OACI</th><th>Aeródromo</th><th>Carta ADC (WEF)</th><th>Suplementos (fin estimado)</th></tr></thead><tbody>${rows}</tbody></table></div></details><p class="muted" style="margin:8px 0 0;font-size:12px">Solo lo ves tú. Ciclo AIRAC cada 28 días; avisa a 3 días o menos, o si un SUP supera su fecha.</p></div>`;
 }
 async function renderStats(){
   const box=$("#stats"); if(!isAdmin||!sb){ box.innerHTML=""; return; }

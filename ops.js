@@ -733,13 +733,16 @@ const CSS=`.op .wkp{background:transparent;border:0;box-shadow:none}.op .wk{bord
 .op .rad::before{left:8px}.op .rad::after{right:8px}
 .op .rad .rh{display:flex;align-items:center;justify-content:space-between;margin:0 14px 8px;font:700 10px Barlow,sans-serif;letter-spacing:.16em;color:#9AA3AC}
 .op .rad .rh a{color:#9AA3AC!important;text-decoration:none;font-weight:600;letter-spacing:.06em}
-.op .rad .lcd{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
-.op .rad .scr{background:#070806;border-radius:6px;padding:6px 10px 7px;box-shadow:inset 0 2px 6px #000,0 0 0 1px #000,0 1px 0 #4a4f56;min-width:0}
+.op .rad .lcd{display:grid;grid-template-columns:minmax(0,1.25fr) auto minmax(0,1fr);gap:0;align-items:stretch;background:linear-gradient(180deg,#0b0c09,#050604);border-radius:6px;padding:0 6px;box-shadow:inset 0 2px 8px #000,0 0 0 1px #000,0 1px 0 #4a4f56}
+.op .rad .scr{background:none;padding:7px 8px 8px;min-width:0}
+.op .rad .scr.st{text-align:right}
+.op .rad .scr.st b{font-size:25px;opacity:.95}
 .op .rad .scr small{display:block;font:700 10px Barlow,sans-serif;letter-spacing:.14em;color:#8a6a1a}
 .op .rad .scr b{display:block;font:700 34px/1.05 "Barlow Condensed",Barlow,sans-serif;letter-spacing:.04em;font-variant-numeric:tabular-nums;color:#FFB000;text-shadow:0 0 8px rgba(255,176,0,.55);white-space:nowrap}
 .op .rad .scr.st b{color:#9AD7FF;text-shadow:0 0 8px rgba(120,200,255,.45)}.op .rad .scr.st small{color:#4b7a96}
 .op .rad .scr i{display:block;font:600 11px Barlow,sans-serif;font-style:normal;color:#b8bdc2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.op .rad .flip{align-self:center;width:38px;height:38px;border-radius:50%;border:1px solid #555b63;background:radial-gradient(circle at 35% 30%,#555b63,#26292d);color:#EEF1F4;font:700 18px/1 Barlow,sans-serif;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.5)}
+.op .rad .flip{align-self:center;position:relative;width:34px;height:34px;margin:0 2px;border-radius:50%;border:1px solid #3a3f2e;background:#12140e;color:#FFB000;font:700 17px/1 Barlow,sans-serif;cursor:pointer;box-shadow:inset 0 0 0 1px #000}
+.op .rad .flip::before{content:"";position:absolute;left:50%;top:-9px;bottom:-9px;width:1px;background:#1b1e14;z-index:-1}
 .op .rad .flip:active{transform:translateY(1px)}
 .op .rad .keys{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:10px}
 .op .rad .key{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 5px;border-radius:6px;border:1px solid #444950;background:linear-gradient(180deg,#34383d,#222528);color:#E6E9EC;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.45);font-family:Barlow,sans-serif;min-width:0}
@@ -921,7 +924,7 @@ const CSS=`.op .wkp{background:transparent;border:0;box-shadow:none}.op .wk{bord
 .op .sign{border-radius:2px;box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 3px 8px -2px rgba(0,0,0,.45);background:linear-gradient(180deg,#1A1A1A,#000);font-family:"Barlow Condensed",Arial,sans-serif}
 .op .sign.sm{border-radius:2px}
 .op .rt{font-size:14px}.op .rt b{font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--navy)}
-.op .rad{border-radius:3px}.op .rad .scr,.op .rad .key{border-radius:2px}.op .rad .scr b{font-family:var(--mono);font-size:30px;letter-spacing:0}.op .rad .key b{font:600 12.5px var(--mono)}.op .rad .rh,.op .rad .scr small,.op .rad .key small{font-family:var(--mono)}
+.op .rad{border-radius:3px}.op .rad .lcd,.op .rad .key{border-radius:2px}.op .rad .scr b{font-family:var(--mono);font-size:30px;letter-spacing:0}.op .rad .key b{font:600 12.5px var(--mono)}.op .rad .rh,.op .rad .scr small,.op .rad .key small{font-family:var(--mono)}
 .op .mseg{border-radius:2px}.op .mseg button{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase}
 .op .op-lbl span{border-radius:2px;font-family:var(--mono)}.op .op-ac span{font-family:var(--mono);border-radius:1px}
 .op .src,.op .op-note,.op .mapnote{font:500 11px/1.5 var(--mono);color:var(--mu)}
@@ -935,7 +938,7 @@ const CSS=`.op .wkp{background:transparent;border:0;box-shadow:none}.op .wk{bord
 .op .pn>h2{justify-content:flex-start}
 .op .tl.wd{padding-right:70px}.op .tl.wd b{font-size:21px;white-space:nowrap}
 @media (max-width:560px){.op .tl{padding:8px 9px;min-height:74px}.op .strip .tl b{font-size:16px!important}.op .strip .tl.wd{padding-right:46px}.op .tl b,.op .tl.wd b{font-size:17px}.op .strip .tl.wd b{font-size:16px}.op .tl small{font-size:9.5px;letter-spacing:.1em}.op .pn>h2{font-size:11px;letter-spacing:.1em;padding:7px 10px 6px}.op .op-tabs button,.op .op-tabs a{font-size:11px;padding:12px 11px 10px;letter-spacing:.1em}
-.op .idsel b,.op .op-top .id b{font-size:30px}.op .op-top .tm b{font-size:26px}.op .cat b,.op .ad b{font-size:15px!important}.op .cat,.op .ad{min-width:0;padding-left:13px}.op .op-sub{font-size:11px}.op .op-sub::before{flex:1 1 100%;margin:0 0 3px;text-align:center}.op .rad .scr b{font-size:24px}.op .wr .wt,.op .raw{font-size:12.5px}}
+.op .idsel b,.op .op-top .id b{font-size:30px}.op .op-top .tm b{font-size:26px}.op .cat b,.op .ad b{font-size:15px!important}.op .cat,.op .ad{min-width:0;padding-left:13px}.op .op-sub{font-size:11px}.op .op-sub::before{flex:1 1 100%;margin:0 0 3px;text-align:center}.op .rad .scr b{font-size:24px}.op .rad .scr.st b{font-size:19px}.op .rad .flip{width:30px;height:30px}.op .rad .key{padding-left:0;padding-right:0}.op .rad .key b{font-size:13px}.op .wr .wt,.op .raw{font-size:12.5px}}
 `;
 const FQ0=[["TWR","118.705","Torre","ok"],["GND (GMC)","121.805","Rodaje","ok"],["ATIS","118.230","Información","ok"],["Emergencia","121.500","H24","ok"],["TWR (reserva)","122.505","Back-up","ok"]];
 S.rad={a:0,s:1};
@@ -946,7 +949,7 @@ function radHTML(cls){
   if(!FQ) return `<section class="pn rad-na ${cls}"${mt}><h2>Frecuencias <small><a target="_blank" rel="noopener" href="${aipLink()}">Ver en la AIP ↗</a></small></h2></section>`;
   const a=FQ[Math.min(S.rad.a,FQ.length-1)], b=FQ[Math.min(S.rad.s,FQ.length-1)];
   return `<section class="rad ${cls}"${mt} aria-label="Frecuencias de ${esc(AD.short||AD.name)}"><div class="rh"><span>Frecuencias AIP · ${AD.icao}</span><a target="_blank" rel="noopener" href="${aipLink()}">AIP ↗</a></div>
-   <div class="lcd"><div class="scr"><small>ACTIVA</small><b>${a[1]}</b><i>${a[0]} · ${a[2]}</i></div><button type="button" class="flip" aria-label="Intercambiar activa y en espera" title="Intercambiar">⇄</button><div class="scr st"><small>EN ESPERA</small><b>${b[1]}</b><i>${b[0]} · ${b[2]}</i></div></div>
+   <div class="lcd" role="group" aria-label="Pantalla de radio: activa y en espera"><div class="scr"><small>ACTIVA</small><b>${a[1]}</b><i>${a[0].replace(/ \(.*/,"")} · ${a[2]}</i></div><button type="button" class="flip" aria-label="Intercambiar activa y en espera" title="Intercambiar">⇄</button><div class="scr st"><small>EN ESPERA</small><b>${b[1]}</b><i>${b[0].replace(/ \(.*/,"")} · ${b[2]}</i></div></div>
    <div class="keys" style="grid-template-columns:repeat(${FQ.length},minmax(0,1fr))">${FQ.map((f,i)=>`<button type="button" class="key${i===S.rad.a?" on":i===S.rad.s?" sb":""}" data-fq="${i}" aria-label="${f[0]} ${f[1]}"><small>${f[0].replace("TWR (reserva)","TWR 2").replace(/ \(.*/,"").replace("Emergencia","EMER")}</small><b>${f[1]}</b></button>`).join("")}</div>
    ${S.opt&&S.opt.multi?"":'<p class="rf">Toca una frecuencia para ponerla en espera y ⇄ para activarla. Frecuencias de la AIP (AD 2-LECU).</p>'}</section>`;
 }
@@ -1024,13 +1027,16 @@ function wkDraw(){ const e=S.root&&$("#opWkS",S.root); if(e) e.innerHTML=wkSeen(
 /* ---------- Panel privado (Stats): estado AIRAC / SUP / WEF de todos los aeródromos cargados ---------- */
 function maint(){
   const now=Date.now(), a=airac(now), rows=[];
-  Object.keys(CHARTS).sort().forEach(ic=>{
-    const c=CHARTS[ic], o=AEROS.find(x=>x.icao===ic), sup=(c.sup||[]).filter(x=>{ const t=supDay(x[6]); return !(t!=null&&now>=t+864e5); }).map(x=>{ const e=supEnd(x[2]), t=e?e.getTime():null, f=supDay(x[5]); return {id:x[0],end:x[2],st:f!=null&&now<f?"pend":t==null?"ok":t<now?(supVer(x,now)?"ver":"late"):t-now<=30*D1?"soon":"ok",from:x[5]||"",ver:x[4]||"",to:x[6]||""}; });
+  /* Mismos aeródromos que el desplegable del Briefing: LECU (datos propios) + todos los de AEROS. Si falta carta ADC o SUP cargados, la fila lo dice (no se da por «al día»). */
+  const ALL=[{icao:"LECU",name:"Madrid / Cuatro Vientos"}].concat(AEROS.map(o=>({icao:o.icao,name:o.name}))).sort((x,y)=>x.icao<y.icao?-1:x.icao>y.icao?1:0);
+  ALL.forEach(o=>{ const ic=o.icao, c=CHARTS[ic]||(ic==="LECU"?{wef:"25-DEC-25",sup:[],base:1}:null);
+    if(!c){ rows.push({icao:ic,name:o.name,wef:"Sin carta cargada",old:false,sup:[],nd:"Sin carta ADC ni SUP cargados"}); return; }
+    const sup=(c.sup||[]).filter(x=>{ const t=supDay(x[6]); return !(t!=null&&now>=t+864e5); }).map(x=>{ const e=supEnd(x[2]), t=e?e.getTime():null, f=supDay(x[5]); return {id:x[0],end:x[2],st:f!=null&&now<f?"pend":t==null?"ok":t<now?(supVer(x,now)?"ver":"late"):t-now<=30*D1?"soon":"ok",from:x[5]||"",ver:x[4]||"",to:x[6]||""}; });
     const m=/^(\d\d)-([A-Z]{3})-(\d\d)$/.exec(c.wef||""), MM={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11}, w=m?Date.UTC(2000+ +m[3],MM[m[2]],+m[1]):null;
-    rows.push({icao:ic,name:o?o.name:ic,wef:c.wef||"—",old:w!=null&&now-w>365*D1,sup});
+    rows.push({icao:ic,name:o.name,wef:c.wef||"—",old:w!=null&&now-w>365*D1,sup,nd:c.base?"Sin SUP registrados: comprueba en la AIP":""});
   });
   const late=rows.filter(r=>r.sup.some(x=>x.st==="late")), act=a.dN<=3||late.length>0;
-  return {a:{idC:a.idC,idN:a.idN,nxt:dmy(a.nxt),dN:a.dN},rows,late:late.map(r=>r.icao),act,link:"https://aip.enaire.es/AIP/"};
+  return {a:{idC:a.idC,idN:a.idN,nxt:dmy(a.nxt),dN:a.dN},rows,late:late.map(r=>r.icao),nd:rows.filter(r=>r.nd).map(r=>r.icao),act,link:"https://aip.enaire.es/AIP/"};
 }
 const TABS=[["res","Resumen"],["pist","Pistas"],["wx","METAR · TAF"],["ntm","NOTAM"],["map","Mapa"]];
 function ddHTML(){
