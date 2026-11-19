@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="b7d014e1e8e6";</script>
+<script>window.F0_BUILD="52be86b0d0d9";</script>
 <script src="autoupdate.js"></script>
 <script src="i18n.js"></script>
 <script src="vendor/supabase.js"></script>
@@ -704,6 +704,25 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
 #planBox .pl-seg button[aria-checked="true"] .led{background:#3DD68C;box-shadow:0 0 6px rgba(61,214,140,.85)}
 #planBox .pl-seg button:focus-visible{outline:2px solid #7FD3FF;outline-offset:1px}
 @media (max-width:420px){#planBox .pl-t{letter-spacing:.1em}#planBox .pl-seg button{padding:7px 10px;letter-spacing:.06em}}
+/* «Mi plan»: placa de control de cabina con serigrafía y corchetes guía */
+#planBox{display:flex;justify-content:center;margin:2px 0 16px}
+#planBox .pl-bz{position:relative;display:inline-flex;flex-direction:column;align-items:stretch;gap:7px;padding:9px 16px 11px;border-radius:9px;background:linear-gradient(180deg,#2e3a47,#17202a);border:1px solid #0b1118;box-shadow:inset 0 1px 0 rgba(255,255,255,.09),inset 0 -1px 0 rgba(0,0,0,.35),0 2px 8px rgba(19,38,58,.18)}
+#planBox .sc{position:absolute;width:5px;height:5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#c9d1d9,#59636e 70%);box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+#planBox .sc.a{top:5px;left:5px}#planBox .sc.b{top:5px;right:5px}#planBox .sc.c{bottom:5px;left:5px}#planBox .sc.d{bottom:5px;right:5px}
+#planBox .pl-t{display:flex;align-items:flex-start;gap:9px;margin:0 6px;color:#eef2f6;font:700 10px/1 var(--body);letter-spacing:.24em;text-transform:uppercase;white-space:nowrap}
+#planBox .pl-t::before,#planBox .pl-t::after{content:"";flex:1 1 auto;height:7px;margin-top:4px;border-top:1px solid rgba(238,242,246,.65)}
+#planBox .pl-t::before{border-left:1px solid rgba(238,242,246,.65)}
+#planBox .pl-t::after{border-right:1px solid rgba(238,242,246,.65)}
+#planBox .pl-seg{display:inline-flex;gap:4px;padding:3px;border-radius:7px;background:#0c1218;border:1px solid #05080b;box-shadow:inset 0 2px 4px rgba(0,0,0,.6)}
+#planBox .pl-seg button{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:1 1 0;border:1px solid transparent;border-radius:5px;background:transparent;color:#9fb0c0;font:700 12px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;cursor:pointer;min-height:32px;transition:background .15s,color .15s}
+#planBox .pl-seg button b{font:700 11px/1 var(--body);letter-spacing:0;padding:3px 6px;border-radius:4px;background:rgba(255,255,255,.08);color:inherit;font-variant-numeric:tabular-nums}
+#planBox .pl-seg .led{width:7px;height:7px;border-radius:50%;background:#3a4653;box-shadow:inset 0 1px 1px rgba(0,0,0,.5)}
+#planBox .pl-seg button:hover{color:#dfe7ee}
+#planBox .pl-seg button[aria-checked="true"]{background:linear-gradient(180deg,#4a5867,#2d3946);border-color:#56646f;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 1px 2px rgba(0,0,0,.5)}
+#planBox .pl-seg button[aria-checked="true"] .led{background:#3DD68C;box-shadow:0 0 7px rgba(61,214,140,.9)}
+#planBox .pl-seg button:focus-visible{outline:2px solid #7FD3FF;outline-offset:1px}
+/* Inicio: solo tests hechos y asignaturas preparadas, simétricos */
+#kpis.kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="pl" viewBox="0 0 48 20"><path fill="currentColor" d="M3 10.5c0-2.2 2-3.6 5-3.6h27c6 0 10 2.2 11.5 3.6-1.5 1.4-5.5 3.6-11.5 3.6H8c-3 0-5-1.4-5-3.6z"/><path fill="currentColor" d="M3.5 7.2 1 1h6l5.5 6.2z"/><path fill="currentColor" d="M19 13.6 27.5 19.5h5L29 13.6z"/><path fill="#fff" fill-opacity=".85" d="M34.5 8.2h6c1.6.4 3 1.3 3.8 2.2H34.5z"/></symbol></defs></svg>
@@ -971,7 +990,7 @@ async function loadAllCloud(){
     for(const s of SUBJ){ const c=all[s.k]; if(c){ STATE[s.k]=union(STATE[s.k],c); lsSet(s.k,STATE[s.k]); } }
     // lo que había solo en este navegador sube a la cuenta
     for(const s of SUBJ){ if(STATE[s.k] && JSON.stringify(STATE[s.k])!==JSON.stringify(all[s.k]||null)) await remoteSet(s.k,STATE[s.k]); }
-    try{ F0Weak.load(); }catch(e){}
+    try{ F0Weak.load().then(autoPlan,autoPlan); }catch(e){}
     return;
   }
   for(const s of SUBJ){ const c=await cloudGet(s.k); if(c){ STATE[s.k]=union(STATE[s.k],c); lsSet(s.k,STATE[s.k]); } }
@@ -1223,6 +1242,8 @@ const F0Weak=(function(){
     conv:code=>(W.v||{})[code]||"",
     setConv(code,n){ W.v=W.v||{}; if(n) W.v[code]=n; else delete W.v[code]; W.t=Date.now(); keep(); },
     setPlan(v){ W.p=v; W.t=Date.now(); keep(); },
+    manual(){ W.pm=1; W.t=Date.now(); keep(); },
+    isManual:()=>!!W.pm,
     async load(){ if(!remote||!sbUser) return; try{ const r=await remote.get("weak"), rw=r&&r.weak; if(rw&&(rw.t||0)>(W.t||0)){ W=rw; try{ localStorage.setItem("f0:weak",JSON.stringify(W)); }catch(e){} if(W.p&&W.p!==(plan13()?"13":"9")) setPlan(W.p,true); fire(); } else if((W.t||0)>((rw&&rw.t)||0)) keep(); }catch(e){} }
   };
 })();
@@ -1248,6 +1269,8 @@ function plateHTML(s,x){
 const OFFICIAL={"021":[["021","Airframe, Systems & Power Plant","Sistemas y motor",80],["022","Instrumentation","Instrumentación",60]],
   "031":[["031","Mass & Balance","Masa y centrado",25],["032","Performance","Performance",45],["033","Flight Planning","Planificación de vuelo",42]],
   "061":[["061","General Navigation","Navegación general",55],["062","Radio Navigation","Radionavegación",66]]};
+// a los 60 días del registro, el plan por defecto pasa a SENASA 13 (si el alumno no lo ha elegido a mano)
+function autoPlan(){ try{ if(!sbUser||!sbUser.created_at||F0Weak.isManual()) return; const days=(Date.now()-new Date(sbUser.created_at).getTime())/864e5, want=days>=60?"13":"9"; if((plan13()?"13":"9")!==want) setPlan(want,true); }catch(e){} }
 function plan13(){ try{ return localStorage.getItem("f0:plan")==="13"; }catch(e){ return false; } }
 let QMAP=null, qmapAsk=false;
 function needQmap(){ if(QMAP||qmapAsk) return; qmapAsk=true; fetch("s/qmap.json?v=1",{cache:"no-cache"}).then(r=>r.json()).then(j=>{ QMAP=j; if(plan13()) renderDash(); }).catch(()=>{ qmapAsk=false; }); }
@@ -1264,9 +1287,9 @@ function goSub(k,code,tab){ try{ localStorage.setItem("f0:sub:"+k,code); }catch(
 function planBox(){
   let b=$("#planBox");
   if(!b){ b=document.createElement("div"); b.id="planBox"; $("#grid").before(b);
-    b.addEventListener("click",e=>{ const x=e.target.closest("button[data-plan]"); if(x) setPlan(x.dataset.plan); }); }
+    b.addEventListener("click",e=>{ const x=e.target.closest("button[data-plan]"); if(x){ try{ F0Weak.manual(); }catch(_){} setPlan(x.dataset.plan); } }); }
   const p13=plan13();
-  b.innerHTML=`<span class="pl-t" id="plT">Mi plan</span><div class="pl-seg" role="radiogroup" aria-labelledby="plT"><button type="button" role="radio" data-plan="9" aria-checked="${!p13}" title="Plan Inicial · 9 asignaturas"><i class="led" aria-hidden="true"></i>Inicial<b>9</b></button><button type="button" role="radio" data-plan="13" aria-checked="${p13}" title="Plan Completo SENASA · 13 asignaturas"><i class="led" aria-hidden="true"></i>SENASA<b>13</b></button></div>`;
+  b.innerHTML=`<div class="pl-bz"><i class="sc a"></i><i class="sc b"></i><i class="sc c"></i><i class="sc d"></i><span class="pl-t" id="plT">Mi plan</span><div class="pl-seg" role="radiogroup" aria-labelledby="plT"><button type="button" role="radio" data-plan="9" aria-checked="${!p13}" title="Plan Inicial · 9 asignaturas"><i class="led" aria-hidden="true"></i>Inicial<b>9</b></button><button type="button" role="radio" data-plan="13" aria-checked="${p13}" title="Plan Completo SENASA · 13 asignaturas"><i class="led" aria-hidden="true"></i>SENASA<b>13</b></button></div></div>`;
 }
 function cardHTML(s,m,o){
   o=o||{}; const code=o.code||s.code, short=o.short||s.short, name=o.name||s.name;
@@ -1297,7 +1320,7 @@ function renderDash(){
   const sums=SUBJ.map(s=>({s, m:summary(s.k)}));
   const tests=sums.reduce((a,x)=>a+x.m.n,0), readyN=sums.filter(x=>x.m.lvl==="ok").length;
   const started=sums.filter(x=>x.m.n), avg = started.length ? Math.round(started.reduce((a,x)=>a+x.m.avg5,0)/started.length) : null;
-  const _sk=streakInfo(); $("#kpis").innerHTML = `<div class="kpi" title="Días seguidos con un test de 10+ preguntas (1 descanso por semana). La semana va de lunes a domingo; la meta son 5 días."><b>${_sk.count}</b><span>días activos</span><em>Constancia ${Math.min(_sk.wk,5)}/5 sem.${_sk.wk>=5?" ✓":""}</em></div><div class="kpi"><b>${tests}</b><span>tests hechos</span><em>en total</em></div><div class="kpi"><b>${avg==null?"–":avg+" %"}</b><span>media reciente</span><em>por asignatura</em></div><div class="kpi"><b>${readyN}/${SUBJ.length}</b><span>preparadas</span><em>media ≥ 85 %</em></div>`;
+  const _sk=streakInfo(); $("#kpis").innerHTML = `<div class="kpi"><b>${tests}</b><span>tests hechos</span><em>en total</em></div><div class="kpi"><b>${readyN}/${SUBJ.length}</b><span>preparadas</span><em>media ≥ 85 %</em></div>`;
   planBox();
   const p13=plan13(); $("#kpis").hidden=p13; document.documentElement.classList.toggle("p13",p13); $("#grid").classList.toggle("plates",p13); const ft=$("#dashFoot"); if(ft) ft.hidden=p13;
   if(p13){
