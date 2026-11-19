@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="52be86b0d0d9";</script>
+<script>window.F0_BUILD="a96c57179ab7";</script>
 <script src="autoupdate.js"></script>
 <script src="i18n.js"></script>
 <script src="vendor/supabase.js"></script>
@@ -1243,7 +1243,7 @@ const F0Weak=(function(){
     setConv(code,n){ W.v=W.v||{}; if(n) W.v[code]=n; else delete W.v[code]; W.t=Date.now(); keep(); },
     setPlan(v){ W.p=v; W.t=Date.now(); keep(); },
     manual(){ W.pm=1; W.t=Date.now(); keep(); },
-    isManual:()=>!!W.pm,
+    isManual:()=>!!(W.pm||W.p),   // cualquier elección guardada desde el selector cuenta como manual
     async load(){ if(!remote||!sbUser) return; try{ const r=await remote.get("weak"), rw=r&&r.weak; if(rw&&(rw.t||0)>(W.t||0)){ W=rw; try{ localStorage.setItem("f0:weak",JSON.stringify(W)); }catch(e){} if(W.p&&W.p!==(plan13()?"13":"9")) setPlan(W.p,true); fire(); } else if((W.t||0)>((rw&&rw.t)||0)) keep(); }catch(e){} }
   };
 })();
