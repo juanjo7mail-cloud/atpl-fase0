@@ -753,6 +753,23 @@ const CSS=`.op .wkp{background:transparent;border:0;box-shadow:none}.op .wk{bord
 .op .rad .key.sb{border-color:#6FC3F5}
 .op .rad .key:focus-visible,.op .rad .flip:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .op .rad .rf{margin:8px 4px 0;font:500 11px Barlow,sans-serif;color:#8E98A3}
+.op .cg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.op .cg button{display:block;padding:0;border:1px solid var(--ln);border-radius:4px;background:var(--pn);cursor:pointer;text-align:left;overflow:hidden;font:inherit;color:inherit}
+.op .cg button img{display:block;width:100%;height:150px;object-fit:cover;object-position:top;background:#fff}
+.op .cg button span{display:block;padding:5px 8px 6px;font-size:12px;line-height:1.25;overflow-wrap:anywhere;hyphens:auto}@media (max-width:560px){.op .cg button span{font-size:11px;padding:5px 6px 6px}}
+.op .cg button b{display:block;font-size:13px}
+.op .cg button small{color:var(--mu)}
+.op .cx{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.op .cx button{border:1px solid var(--ln);background:var(--pn);color:inherit;border-radius:999px;padding:3px 10px;font:600 12px Barlow,sans-serif;cursor:pointer}
+.op .cx button.old,.op .cg button.old small{color:#B7791F}
+@media (max-width:560px){.op .cg{grid-template-columns:repeat(3,minmax(0,1fr))}.op .cg button img{height:110px}}
+.f0cart{position:fixed;inset:0;z-index:100000;background:rgba(6,8,10,.94);display:flex;flex-direction:column;color:#E6E9EC;font:600 14px Barlow,system-ui,sans-serif}
+.f0cart header{display:flex;align-items:center;gap:10px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top,0px))}
+.f0cart header b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f0cart header button,.f0cart header a{background:#23272c;color:#E6E9EC;border:1px solid #444950;border-radius:999px;padding:5px 12px;font:600 13px Barlow,system-ui,sans-serif;text-decoration:none;cursor:pointer}
+.f0cart .sc{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 10px 14px}
+.f0cart img{display:block;margin:0 auto;width:100%;max-width:1000px;background:#fff;cursor:zoom-in}
+.f0cart.z img{width:230%;max-width:none;margin:0;cursor:zoom-out}
 .op .rad-d{display:none}
 @media (min-width:980px){.op .rad-d{display:block}.op .rad-m{display:none}}
 @media (max-width:360px){.op .rad .scr b{font-size:28px}.op .rad .key b{font-size:13px}}
@@ -953,6 +970,23 @@ function radHTML(cls){
    <div class="keys" style="grid-template-columns:repeat(${FQ.length},minmax(0,1fr))">${FQ.map((f,i)=>`<button type="button" class="key${i===S.rad.a?" on":i===S.rad.s?" sb":""}" data-fq="${i}" aria-label="${f[0]} ${f[1]}"><small>${f[0].replace("TWR (reserva)","TWR 2").replace(/ \(.*/,"").replace("Emergencia","EMER")}</small><b>${f[1]}</b></button>`).join("")}</div>
    ${S.opt&&S.opt.multi?"":'<p class="rf">Toca una frecuencia para ponerla en espera y ⇄ para activarla. Frecuencias de la AIP (AD 2-LECU).</p>'}</section>`;
 }
+/* Cartas AIP de LECU (ENAIRE, AD 2-LECU/LEVS): páginas incluidas como imagen. Tocar abre la carta a pantalla completa; otro toque amplía. */
+const CART1=[["adc1","ADC 1.1","Plano de aeródromo","25-DEC-25"],["pdc1","PDC 1.1","Estacionam. y atraque","06-AUG-26"],["vac1","VAC 1.1","Aproximación visual","30-NOV-23"]];
+const CART2=[["adc2","ADC 1.2","Luces de pista","17-JUN-21"],["pdc2","PDC 1.2","Puestos (1/3)","05-SEP-24"],["pdc3","PDC 1.3","Puestos (2/3)","06-AUG-26"],["pdc4","PDC 1.4","Observaciones","06-AUG-26"],["vac3","VAC 1.3","Notas VAC","24-MAR-22"],["vac4","VAC 1.4","Notas VAC","12-AUG-21"]];
+const cartOld=w=>{ const m=/^(\d\d)-([A-Z]{3})-(\d\d)$/.exec(w), MM={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11}; return m&&Date.now()-Date.UTC(2000+ +m[3],MM[m[2]],+m[1])>365*864e5; };
+function cartasHTML(mu){
+  const big=CART1.map(c=>`<button type="button" data-cart="${c[0]}" class="${cartOld(c[3])?"old":""}"><img loading="lazy" alt="${c[1]} ${c[2]}" src="ops-cart-LECU-${c[0]}.webp"><span><b>${c[1]}</b>${c[2]}<br><small>WEF ${c[3]}</small></span></button>`).join("");
+  const sm=CART2.map(c=>`<button type="button" data-cart="${c[0]}" class="${cartOld(c[3])?"old":""}" title="WEF ${c[3]}">${c[1]} · ${c[2]}</button>`).join("");
+  return `<section class="pn cart"${mu?' data-t="pist"':""}><h2>Cartas AIP · LECU <small>© ENAIRE</small></h2><div class="bd"><div class="cg">${big}</div><div class="cx">${sm}</div><p class="src" style="margin:8px 0 0">AD 2-LECU/LEVS. Copia de las páginas descargadas de la AIP: comprueba siempre la vigente en <a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">AIP ENAIRE ↗</a>. En ámbar, más de un año de antigüedad.</p></div></section>`;
+}
+function cartOpen(id){
+  const c=CART1.concat(CART2).find(x=>x[0]===id); if(!c) return;
+  const o=document.createElement("div"); o.className="f0cart"; o.setAttribute("role","dialog"); o.setAttribute("aria-label",c[1]+" "+c[2]);
+  o.innerHTML=`<header><b>LECU · ${c[1]} · ${c[2]} <small style="font-weight:500;opacity:.7">WEF ${c[3]}</small></b><a target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/#LECU/LEVS">AIP ↗</a><button type="button" data-x aria-label="Cerrar">Cerrar ✕</button></header><div class="sc"><img alt="${c[1]} ${c[2]}" src="ops-cart-LECU-${id}.webp"></div>`;
+  const close=()=>{ o.remove(); document.removeEventListener("keydown",kd); }, kd=e=>{ if(e.key==="Escape") close(); };
+  o.addEventListener("click",e=>{ if(e.target.closest("[data-x]")) close(); else if(e.target.tagName==="IMG") o.classList.toggle("z"); });
+  document.addEventListener("keydown",kd); document.body.appendChild(o);
+}
 function radDraw(){ if(!S.root) return; S.root.querySelectorAll(".rad").forEach(r=>{ const c=r.classList.contains("rad-d")?"rad-d":"rad-m"; r.outerHTML=radHTML(c); }); }
 const supDay=d=>{ const m=/^(\d\d)\/(\d\d)\/(\d\d)$/.exec(d||""); return m?Date.UTC(2000+ +m[3],+m[2]-1,+m[1]):null; };
 const supAct=(x,now)=>{ const f=supDay(x[5]), t=supDay(x[6]); return !(f!=null&&now<f)&&!(t!=null&&now>=t+864e5); };
@@ -1028,13 +1062,13 @@ function wkDraw(){ const e=S.root&&$("#opWkS",S.root); if(e) e.innerHTML=wkSeen(
 function maint(){
   const now=Date.now(), a=airac(now), rows=[];
   /* Mismos aeródromos que el desplegable del Briefing: LECU (datos propios) + todos los de AEROS. Si falta carta ADC o SUP cargados, la fila lo dice (no se da por «al día»). */
-  const ALL=[{icao:"LECU",name:"Madrid / Cuatro Vientos"}].concat(AEROS.map(o=>({icao:o.icao,name:o.name}))).sort((x,y)=>x.icao<y.icao?-1:x.icao>y.icao?1:0);
+  const ALL=[{icao:"LECU",name:"Madrid / Cuatro Vientos"}].concat(AEROS.filter(o=>CHARTS[o.icao]).map(o=>({icao:o.icao,name:o.name}))).sort((x,y)=>x.icao<y.icao?-1:x.icao>y.icao?1:0);
   const aipU=ic=>"https://aip.enaire.es/AIP/#"+(ic==="LECU"?"LECU/LEVS":ic==="LELO"?"LERJ":ic);
-  ALL.forEach(o=>{ const ic=o.icao, c=CHARTS[ic]||(ic==="LECU"?{wef:"25-DEC-25",sup:[],base:1}:null);
+  ALL.forEach(o=>{ const ic=o.icao, c=CHARTS[ic]||(ic==="LECU"?{wef:"25-DEC-25",ex:"PDC 06-AUG-26 · VAC 30-NOV-23",exOld:1,sup:[["SUP 105/26","11/06/26","11/06/27","NDB GE 421 kHz fuera de servicio","19/11/26"]]}:null);
     if(!c){ rows.push({icao:ic,name:o.name,wef:"Sin carta cargada",old:false,sup:[],nd:"Sin carta ADC ni SUP cargados",aip:aipU(ic)}); return; }
     const sup=(c.sup||[]).filter(x=>{ const t=supDay(x[6]); return !(t!=null&&now>=t+864e5); }).map(x=>{ const e=supEnd(x[2]), t=e?e.getTime():null, f=supDay(x[5]); return {id:x[0],end:x[2],st:f!=null&&now<f?"pend":t==null?"ok":t<now?(supVer(x,now)?"ver":"late"):t-now<=30*D1?"soon":"ok",from:x[5]||"",ver:x[4]||"",to:x[6]||""}; });
     const m=/^(\d\d)-([A-Z]{3})-(\d\d)$/.exec(c.wef||""), MM={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11}, w=m?Date.UTC(2000+ +m[3],MM[m[2]],+m[1]):null;
-    rows.push({icao:ic,name:o.name,wef:c.wef||"—",old:w!=null&&now-w>365*D1,sup,nd:c.base?"Sin SUP registrados: comprueba en la AIP":"",aip:aipU(ic)});
+    rows.push({icao:ic,name:o.name,wef:c.wef||"—",old:w!=null&&now-w>365*D1,sup,nd:"",ex:c.ex||"",exOld:!!c.exOld,aip:aipU(ic)});
   });
   const late=rows.filter(r=>r.sup.some(x=>x.st==="late")), act=a.dN<=3||late.length>0;
   return {a:{idC:a.idC,idN:a.idN,nxt:dmy(a.nxt),dN:a.dN},rows,late:late.map(r=>r.icao),nd:rows.filter(r=>r.nd).map(r=>r.icao),act,link:"https://aip.enaire.es/AIP/"};
@@ -1085,6 +1119,7 @@ function render(el,opt,keep){
       <tr><th>ASDA</th><td>${A.a.asda} m</td><td>${A.b.asda} m</td></tr>
       <tr><th>LDA</th><td>${A.a.lda} m</td><td>${A.b.lda} m</td></tr>
       <tr><th>Zona de parada</th><td>${A.a.swy} m</td><td>${A.b.swy} m</td></tr></tbody></table></div></section>`}
+    ${AD.icao==="LECU"?cartasHTML(mu):""}
     ${mu&&S.opt.fetchNt?`<section class="pn" data-t="ntm"><h2>NOTAM ${AD.icao} <small><a target="_blank" rel="noopener" href="https://insignia.enaire.es/">ENAIRE Insignia ↗</a></small></h2><div class="bd" id="opNt"></div></section>`:""}
     <section class="pn" data-t="res"><h2>Mínimos de instrucción <small>SOP.4.1</small></h2><div class="bd" id="opMin"></div></section>
     <section class="pn" data-t="wx"><h2>Viento y tiempo <small><a href="https://www.windy.com/${ww}?wind,8" target="_blank" rel="noopener">Windy ↗</a></small></h2><div class="op-wy"><iframe title="Mapa de viento Windy" src="${wy}" referrerpolicy="no-referrer" allow="fullscreen" loading="lazy"></iframe></div></section>
@@ -1093,6 +1128,7 @@ function render(el,opt,keep){
    </div></div>`;
   el.onclick=ev=>{
     if(ev.target.closest("#opDemo")){ S.opt.fetchWx=null; setData(demoData(S.scen)); return; }
+    const ct=ev.target.closest("[data-cart]"); if(ct){ cartOpen(ct.dataset.cart); return; }
     const k=ev.target.closest(".rad .key"), f=ev.target.closest(".rad .flip");
     if(k){ const i=+k.dataset.fq; if(i===S.rad.a) return; S.rad.s=i; radDraw(); return; }
     if(f){ const t=S.rad.a; S.rad.a=S.rad.s; S.rad.s=t; radDraw(); return; }
