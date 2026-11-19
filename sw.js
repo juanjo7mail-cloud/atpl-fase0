@@ -1,6 +1,6 @@
 /* Service worker: SIEMPRE intenta la red primero (así nadie ve versiones viejas); sin conexión usa lo último guardado.
    No toca peticiones a otros dominios (Supabase, etc.). */
-const V = "f0-v1";
+const V = "f0-v2";
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", e => e.waitUntil((async () => {
   for (const k of await caches.keys()) if (k !== V) await caches.delete(k);

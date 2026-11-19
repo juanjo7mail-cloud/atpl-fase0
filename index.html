@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="8af391240545";</script>
+<script>window.F0_BUILD="2b46b51eb99f";</script>
 <script src="autoupdate.js"></script>
 <script src="i18n.js"></script>
 <script src="vendor/supabase.js"></script>
@@ -655,7 +655,7 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
 .top .row1 .savepill{padding:3px 5px!important}
 .top .row1 #searchBtn{margin-left:0}
 /* «Mi plan» y bandas de asignaturas oficiales (en pruebas, solo administrador) */
-#planBox{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 18px;padding:10px 12px;border:1px dashed rgba(29,111,176,.45);border-radius:12px;background:rgba(29,111,176,.05)}
+#planBox{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 18px;padding:10px 12px;border:1px solid rgba(29,111,176,.25);border-radius:12px;background:rgba(29,111,176,.04)}
 #planBox .pl-tag{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#1D6FB0;border:1px solid rgba(29,111,176,.5);border-radius:4px;padding:1px 5px}
 #planBox .pl-t{font-size:15px}
 #planBox .pl-seg{display:inline-flex;border:1px solid rgba(29,111,176,.35);border-radius:999px;overflow:hidden}
@@ -683,7 +683,11 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
 .plate .rv.a{top:8px;left:8px}.plate .rv.b{top:8px;right:8px}.plate .rv.c{bottom:8px;left:8px}.plate .rv.d{bottom:8px;right:8px}
 .plate header{display:flex;align-items:center;gap:8px;padding:0 8px}
 .plate .pc{font:700 26px/1 var(--display);letter-spacing:.04em;color:var(--scl)}
-.plate .pv{margin-left:auto;font:600 10px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:#4c5d6e;border:1px solid #a9b4bf;border-radius:3px;padding:3px 5px}
+.plate .pv{margin-left:auto;position:relative}
+.plate .pv .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.plate .pv select{appearance:none;-webkit-appearance:none;font:700 10.5px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:#13263a;background:linear-gradient(#fbfcfd,#e1e6eb);border:1px solid #9aa6b2;border-radius:4px;padding:5px 20px 5px 7px;cursor:pointer;box-shadow:inset 0 1px 0 #fff;background-image:linear-gradient(45deg,transparent 50%,#4c5d6e 50%),linear-gradient(135deg,#4c5d6e 50%,transparent 50%),linear-gradient(#fbfcfd,#e1e6eb);background-position:calc(100% - 10px) 50%,calc(100% - 6px) 50%,0 0;background-size:4px 4px,4px 4px,100% 100%;background-repeat:no-repeat}
+.plate .pv select:focus-visible{outline:2px solid #1D6FB0;outline-offset:1px}
+.plate .pv select.set{color:#fff;background-image:linear-gradient(45deg,transparent 50%,#fff 50%),linear-gradient(135deg,#fff 50%,transparent 50%),linear-gradient(#1d3a5c,#0B2545);border-color:#0B2545}
 .plate h3{margin:2px 8px 0;font:700 15.5px/1.25 var(--display);letter-spacing:.02em;text-transform:uppercase;color:#13263a}
 .plate .pe{margin:0 8px;font-size:12px;color:#5b6b7b}
 .plate dl{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin:6px 8px 2px;border:1px solid #b9c3cd;border-radius:4px;background:rgba(255,255,255,.45)}
@@ -695,6 +699,7 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
 .plate .pa .btn{padding:7px 8px;font-size:12.5px;min-height:0;white-space:nowrap}
 @media (max-width:560px){#grid.plates{grid-template-columns:1fr 1fr;column-gap:10px;row-gap:10px}.plate{padding:12px 10px}.plate h3{font-size:13.5px}.plate .pe{display:none}.plate .pc{font-size:22px}}
 @media (max-width:360px){#grid.plates{grid-template-columns:1fr}}
+#dashFoot[hidden]{display:none!important}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="pl" viewBox="0 0 48 20"><path fill="currentColor" d="M3 10.5c0-2.2 2-3.6 5-3.6h27c6 0 10 2.2 11.5 3.6-1.5 1.4-5.5 3.6-11.5 3.6H8c-3 0-5-1.4-5-3.6z"/><path fill="currentColor" d="M3.5 7.2 1 1h6l5.5 6.2z"/><path fill="currentColor" d="M19 13.6 27.5 19.5h5L29 13.6z"/><path fill="#fff" fill-opacity=".85" d="M34.5 8.2h6c1.6.4 3 1.3 3.8 2.2H34.5z"/></symbol></defs></svg>
@@ -731,7 +736,7 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
       </div>
       <div class="grid" id="grid"></div>
       <div id="panel"></div>
-      <p class="foot">Aprobado con 75 %. «Preparado» = media de tus 5 últimos tests ≥ 85 % · «Casi listo» ≥ 75 % · «Reforzar» por debajo.</p>
+      <p class="foot" id="dashFoot">Aprobado con 75 %. «Preparado» = media de tus 5 últimos tests ≥ 85 % · «Casi listo» ≥ 75 % · «Reforzar» por debajo.</p>
       <div class="credit"><button class="btn ghost" id="acct" type="button" hidden aria-label="Cuenta" style="padding:6px 12px"><span id="acctTxt">Cuenta</span></button></div>
     </div>
   </section>
@@ -962,7 +967,7 @@ async function loadAllCloud(){
     for(const s of SUBJ){ const c=all[s.k]; if(c){ STATE[s.k]=union(STATE[s.k],c); lsSet(s.k,STATE[s.k]); } }
     // lo que había solo en este navegador sube a la cuenta
     for(const s of SUBJ){ if(STATE[s.k] && JSON.stringify(STATE[s.k])!==JSON.stringify(all[s.k]||null)) await remoteSet(s.k,STATE[s.k]); }
-    try{ if(isAdmin) F0Weak.load(); }catch(e){}
+    try{ F0Weak.load(); }catch(e){}
     return;
   }
   for(const s of SUBJ){ const c=await cloudGet(s.k); if(c){ STATE[s.k]=union(STATE[s.k],c); lsSet(s.k,STATE[s.k]); } }
@@ -1211,7 +1216,10 @@ const F0Weak=(function(){
     has:(k,c)=>(W.c[k]||[]).some(x=>x.c===c),
     toggle(k,c,name){ const l=W.c[k]=W.c[k]||[], i=l.findIndex(x=>x.c===c); if(i>=0) l.splice(i,1); else l.push({c,n:name||"",d:Date.now()}); W.t=Date.now(); keep(); fire(); return i<0; },
     count:(k,pre)=>(W.c[k]||[]).filter(x=>!pre||x.c.startsWith(pre)).length,
-    async load(){ if(!remote||!sbUser) return; try{ const r=await remote.get("weak"), rw=r&&r.weak; if(rw&&(rw.t||0)>(W.t||0)){ W=rw; try{ localStorage.setItem("f0:weak",JSON.stringify(W)); }catch(e){} fire(); } else if((W.t||0)>((rw&&rw.t)||0)) keep(); }catch(e){} }
+    conv:code=>(W.v||{})[code]||"",
+    setConv(code,n){ W.v=W.v||{}; if(n) W.v[code]=n; else delete W.v[code]; W.t=Date.now(); keep(); },
+    setPlan(v){ W.p=v; W.t=Date.now(); keep(); },
+    async load(){ if(!remote||!sbUser) return; try{ const r=await remote.get("weak"), rw=r&&r.weak; if(rw&&(rw.t||0)>(W.t||0)){ W=rw; try{ localStorage.setItem("f0:weak",JSON.stringify(W)); }catch(e){} if(W.p&&W.p!==(plan13()?"13":"9")) setPlan(W.p,true); fire(); } else if((W.t||0)>((rw&&rw.t)||0)) keep(); }catch(e){} }
   };
 })();
 window.F0Weak=F0Weak;
@@ -1226,20 +1234,20 @@ function plateHTML(s,x){
   const [k,code,es,en,n,time,conv]=x, split=!!OFFICIAL[k], w=F0Weak.count(k,split?code:""), go=t=>split?`data-gosub="${k}|${code}|${t}"`:`data-go="${k}" data-tab="${t}"`;
   return `<article class="plate" style="--scl:${s.c[0]};--scd:${s.c[1]}">
     <i class="rv a"></i><i class="rv b"></i><i class="rv c"></i><i class="rv d"></i>
-    <header><b class="pc">${code}</b><span class="pv" title="Convocatoria propuesta en Flyschool">${conv}ª conv.</span></header>
+    <header><b class="pc">${code}</b><label class="pv" title="Convocatoria de SENASA en la que te presentas"><span class="sr">Convocatoria</span><select data-conv="${code}"${F0Weak.conv(code)?' class="set"':""} aria-label="Convocatoria SENASA de ${code}">${["","1","2","3","4"].map(v=>`<option value="${v}"${F0Weak.conv(code)===v?" selected":""}>${v?v+"ª conv.":"Conv. —"}</option>`).join("")}</select></label></header>
     <h3>${esc(es)}</h3><p class="pe">${esc(en)}</p>
     <dl><div><dt>Preguntas</dt><dd>${n}</dd></div><div><dt>Tiempo</dt><dd>${time}</dd></div></dl>
-    <p class="pw${w?" on":""}">${w?`★ ${w} ${w===1?"tema flojo":"temas flojos"}`:"☆ Sin temas flojos"}</p>
+    ${w?`<p class="pw on">★ ${w} ${w===1?"tema flojo":"temas flojos"}</p>`:""}
     <div class="pa"><button class="btn" type="button" ${go("notes")}>Ir al temario</button><button class="btn sec" type="button" ${go("test")}>Simulacro SENASA</button></div>
   </article>`;
 }
 const OFFICIAL={"021":[["021","Airframe, Systems & Power Plant","Sistemas y motor",80],["022","Instrumentation","Instrumentación",60]],
   "031":[["031","Mass & Balance","Masa y centrado",25],["032","Performance","Performance",45],["033","Flight Planning","Planificación de vuelo",42]],
   "061":[["061","General Navigation","Navegación general",55],["062","Radio Navigation","Radionavegación",66]]};
-function plan13(){ if(!isAdmin) return false; try{ return localStorage.getItem("f0:plan")==="13"; }catch(e){ return false; } }
+function plan13(){ try{ return localStorage.getItem("f0:plan")==="13"; }catch(e){ return false; } }
 let QMAP=null, qmapAsk=false;
 function needQmap(){ if(QMAP||qmapAsk) return; qmapAsk=true; fetch("s/qmap.json?v=1",{cache:"no-cache"}).then(r=>r.json()).then(j=>{ QMAP=j; if(plan13()) renderDash(); }).catch(()=>{ qmapAsk=false; }); }
-function setPlan(v){ try{ localStorage.setItem("f0:plan",v); }catch(e){} document.querySelectorAll("iframe").forEach(f=>{ try{ f.contentWindow.postMessage({t:"f0-plan",v},"*"); }catch(e){} }); renderDash(); renderTabs(); }
+function setPlan(v,noSave){ try{ localStorage.setItem("f0:plan",v); }catch(e){} if(!noSave) try{ F0Weak.setPlan(v); }catch(e){} document.querySelectorAll("iframe").forEach(f=>{ try{ f.contentWindow.postMessage({t:"f0-plan",v},"*"); }catch(e){} }); renderDash(); renderTabs(); }
 // progreso de una asignatura oficial: de cada test, solo sus preguntas (cuenta si hay 5 o más)
 function subSummary(k,code){
   const map=QMAP&&QMAP[k]; if(!map) return summary(k);
@@ -1250,11 +1258,11 @@ function subSummary(k,code){
 }
 function goSub(k,code,tab){ try{ localStorage.setItem("f0:sub:"+k,code); }catch(e){} const f=frames[k]; if(f&&f.contentWindow){ try{ f.contentWindow.postMessage({t:"f0-sub",sub:code},"*"); }catch(e){} } show(k,{tab:tab||"notes"}); }
 function planBox(){
-  let b=$("#planBox"); if(!isAdmin){ if(b) b.remove(); return; }
+  let b=$("#planBox");
   if(!b){ b=document.createElement("div"); b.id="planBox"; $("#grid").before(b);
     b.addEventListener("click",e=>{ const x=e.target.closest("button[data-plan]"); if(x) setPlan(x.dataset.plan); }); }
   const p13=plan13();
-  b.innerHTML=`<span class="pl-tag" title="Solo lo ves tú (administrador)">Pruebas</span><b class="pl-t">Mi plan</b>
+  b.innerHTML=`<b class="pl-t">Mi plan</b>
     <div class="pl-seg" role="radiogroup" aria-label="Mi plan"><button type="button" role="radio" data-plan="9" aria-checked="${!p13}">Plan Inicial <small>9 asignaturas</small></button><button type="button" role="radio" data-plan="13" aria-checked="${p13}">Plan Completo SENASA <small>13 asignaturas</small></button></div>
     <span class="pl-h">${p13?"Cada asignatura oficial por separado, con su simulacro SENASA.":"El bloque inicial, como hasta ahora."}</span>`;
 }
@@ -1289,7 +1297,7 @@ function renderDash(){
   const started=sums.filter(x=>x.m.n), avg = started.length ? Math.round(started.reduce((a,x)=>a+x.m.avg5,0)/started.length) : null;
   const _sk=streakInfo(); $("#kpis").innerHTML = `<div class="kpi" title="Días seguidos con un test de 10+ preguntas (1 descanso por semana). La semana va de lunes a domingo; la meta son 5 días."><b>${_sk.count}</b><span>días activos</span><em>Constancia ${Math.min(_sk.wk,5)}/5 sem.${_sk.wk>=5?" ✓":""}</em></div><div class="kpi"><b>${tests}</b><span>tests hechos</span><em>en total</em></div><div class="kpi"><b>${avg==null?"–":avg+" %"}</b><span>media reciente</span><em>por asignatura</em></div><div class="kpi"><b>${readyN}/${SUBJ.length}</b><span>preparadas</span><em>media ≥ 85 %</em></div>`;
   planBox();
-  const p13=plan13(); $("#kpis").hidden=p13; document.documentElement.classList.toggle("p13",p13); $("#grid").classList.toggle("plates",p13);
+  const p13=plan13(); $("#kpis").hidden=p13; document.documentElement.classList.toggle("p13",p13); $("#grid").classList.toggle("plates",p13); const ft=$("#dashFoot"); if(ft) ft.hidden=p13;
   if(p13){
     const byK=Object.fromEntries(SUBJ.map(x=>[x.k,x]));
     $("#grid").innerHTML = ATPL13.map(x=>plateHTML(byK[x[0]],x)).join("");
@@ -1297,6 +1305,7 @@ function renderDash(){
   else $("#grid").innerHTML = sums.map(({s,m})=>cardHTML(s,m)).join("");
   drawStripes(); drawBrief();
 }
+$("#grid").addEventListener("change",e=>{ const sel=e.target.closest("select[data-conv]"); if(!sel) return; F0Weak.setConv(sel.dataset.conv,sel.value); sel.classList.toggle("set",!!sel.value); });
 $("#grid").addEventListener("click",e=>{
   if(e.target.closest("[data-radio]")){ show("radio"); return; }
   const gs=e.target.closest("button[data-gosub]"); if(gs){ const [k,c,t]=gs.dataset.gosub.split("|"); goSub(k,c,t); return; }
@@ -2095,7 +2104,7 @@ function rdMarkAll(){ if(!RD) return; const r=rdRead(); RD.forEach(n=>r.add(n.u)
 async function rdFetch(){ if(RD||RDload||!isAdmin) return; RDload=true; rdDraw(); try{ const r=await fetch("/api/news?v=3"); const j=await r.json(); if(j.ok&&j.n&&j.n.length) RD=j.n; }catch(e){} RDload=false; rdDraw(); rdBadge(); }
 function rdOpen(){ if(!isAdmin) return; const d=$("#radar"); d.hidden=false; requestAnimationFrame(()=>d.classList.add("on")); $("#radarBtn").setAttribute("aria-expanded","true"); rdDraw(); rdFetch(); rdTimeStart(); setTimeout(()=>{ const c=$("#rdClose"); if(c) c.focus(); },60); }
 function rdClose(){ const d=$("#radar"); rdTimeStop(); d.classList.remove("on"); $("#radarBtn").setAttribute("aria-expanded","false"); setTimeout(()=>{ d.hidden=true; },260); const b=$("#radarBtn"); if(b) b.focus(); }
-function radarSync(){ window.F0_ADMIN=!!isAdmin; try{ planBox(); }catch(e){} try{ document.querySelectorAll("iframe").forEach(f=>{ try{ f.contentWindow.postMessage({t:"f0-admin",on:!!isAdmin},"*"); }catch(e){} }); }catch(e){}   // bandera de funciones en pruebas (solo administrador)
+function radarSync(){ window.F0_ADMIN=!!isAdmin; try{ document.querySelectorAll("iframe").forEach(f=>{ try{ f.contentWindow.postMessage({t:"f0-admin",on:!!isAdmin},"*"); }catch(e){} }); }catch(e){}   // bandera de funciones en pruebas (solo administrador)
   const b=$("#radarBtn"); if(!b) return; b.hidden=!isAdmin; if(isAdmin) setTimeout(rdFetch,2500); else { const d=$("#radar"); if(d) d.hidden=true; } }
 function airacBox(){
   let M=null; try{ M=window.F0Ops&&window.F0Ops.maint&&window.F0Ops.maint(); }catch(e){}
