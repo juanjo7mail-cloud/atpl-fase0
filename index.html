@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="fd7c1c89e587";</script>
+<script>window.F0_BUILD="2c919699b007";</script>
 <script src="autoupdate.js"></script>
 <script src="i18n.js"></script>
 <script src="vendor/supabase.js"></script>
@@ -673,6 +673,7 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
 #menu .msub{padding-left:26px;opacity:.92}
 #menu .msub .mc{font-size:11px}
 @media (max-width:560px){#planBox .pl-seg button small{display:none}.bandh .btn{margin-left:0}.bandg{grid-template-columns:1fr}}
+#kpis[hidden]{display:none!important}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="pl" viewBox="0 0 48 20"><path fill="currentColor" d="M3 10.5c0-2.2 2-3.6 5-3.6h27c6 0 10 2.2 11.5 3.6-1.5 1.4-5.5 3.6-11.5 3.6H8c-3 0-5-1.4-5-3.6z"/><path fill="currentColor" d="M3.5 7.2 1 1h6l5.5 6.2z"/><path fill="currentColor" d="M19 13.6 27.5 19.5h5L29 13.6z"/><path fill="#fff" fill-opacity=".85" d="M34.5 8.2h6c1.6.4 3 1.3 3.8 2.2H34.5z"/></symbol></defs></svg>
@@ -1118,8 +1119,8 @@ function ranksInfo(){
   return {pass,g,star,sums};
 }
 function epaulette(g,star){
-  let s=star?'<svg viewBox="0 0 56 24" width="48" height="21" aria-hidden="true">':'<svg viewBox="18 0 38 24" width="33" height="21" aria-hidden="true">';   // solo los galones, sin la pieza de la hombrera
-  for(let i=0;i<4;i++) s+=`<rect x="${19.6+i*9}" y="3.6" width="5.2" height="16.8" rx=".9" fill="${i<g?"#E8BF45":"rgba(240,244,248,.22)"}" stroke="#0B2545" stroke-width="1.3"/>`+(i<g?`<rect x="${20.6+i*9}" y="4.6" width="1.2" height="14.8" fill="rgba(255,246,200,.55)"/>`:"");   // galón de camisa de piloto: dorado con ribete azul marino
+  let s=star?'<svg viewBox="0 0 56 24" width="48" height="21" aria-hidden="true"><rect x="1" y="2.5" width="54" height="19" rx="3" fill="#0B2545"/>':'<svg viewBox="15 0 41 24" width="36" height="21" aria-hidden="true"><rect x="15.5" y="2.5" width="40" height="19" rx="3" fill="#0B2545"/>';   // hombrera azul marino, sin marco
+  for(let i=0;i<4;i++) s+=`<rect x="${19+i*9}" y="5" width="5.6" height="14" rx=".6" fill="${i<g?"#E8BF45":"#1F3A5C"}"/>`+(i<g?`<rect x="${19.8+i*9}" y="5.8" width="1.1" height="12.4" fill="rgba(255,246,200,.55)"/>`:"");
   if(star) s+='<path d="M9 7.2l1.5 3 3.3.5-2.4 2.3.6 3.3L9 14.7l-3 1.6.6-3.3-2.4-2.3 3.3-.5z" fill="#E8BF45"/>';
   return s+"</svg>";
 }
@@ -1179,6 +1180,7 @@ function drawBrief(){
 }
 
 /* ===================== «Mi plan» y asignaturas oficiales SENASA (EN PRUEBAS: solo administrador) ===================== */
+const SENN={"010":44,"040":48,"050":84,"070":42,"081":46,"090":34};   // preguntas del examen SENASA de cada asignatura
 const OFFICIAL={"021":[["021","Airframe, Systems & Power Plant","Sistemas y motor",80],["022","Instrumentation","Instrumentación",60]],
   "031":[["031","Mass & Balance","Masa y centrado",25],["032","Performance","Performance",45],["033","Flight Planning","Planificación de vuelo",42]],
   "061":[["061","General Navigation","Navegación general",55],["062","Radio Navigation","Radionavegación",66]]};
@@ -1206,7 +1208,11 @@ function planBox(){
 }
 function cardHTML(s,m,o){
   o=o||{}; const code=o.code||s.code, short=o.short||s.short, name=o.name||s.name;
-  const acts=o.sub?`
+  if(o.p13&&!o.sub) return cardHTML(s,m,Object.assign({},o,{p13:0,one:1}));
+  const acts=o.one?`
+        <button class="btn wide" type="button" data-go="${s.k}" data-tab="test">Simulacro SENASA · ${SENN[s.k]||""} preguntas</button>
+        <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Ir a la asignatura</button>
+        <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">Más tipos de test</button>`:o.sub?`
         <button class="btn wide" type="button" data-gosub="${s.k}|${o.sub}|test">Simulacro SENASA · ${o.n} preguntas</button>
         <button class="btn sec" type="button" data-gosub="${s.k}|${o.sub}|notes">Ir a la asignatura</button>
         <button class="btn sec" type="button" data-gosub="${s.k}|${o.sub}|test">Más tipos de test</button>`:`
@@ -1231,9 +1237,10 @@ function renderDash(){
   const started=sums.filter(x=>x.m.n), avg = started.length ? Math.round(started.reduce((a,x)=>a+x.m.avg5,0)/started.length) : null;
   const _sk=streakInfo(); $("#kpis").innerHTML = `<div class="kpi" title="Días seguidos con un test de 10+ preguntas (1 descanso por semana). La semana va de lunes a domingo; la meta son 5 días."><b>${_sk.count}</b><span>días activos</span><em>Constancia ${Math.min(_sk.wk,5)}/5 sem.${_sk.wk>=5?" ✓":""}</em></div><div class="kpi"><b>${tests}</b><span>tests hechos</span><em>en total</em></div><div class="kpi"><b>${avg==null?"–":avg+" %"}</b><span>media reciente</span><em>por asignatura</em></div><div class="kpi"><b>${readyN}/${SUBJ.length}</b><span>preparadas</span><em>media ≥ 85 %</em></div>`;
   planBox();
-  if(plan13()){ needQmap();
-    $("#grid").innerHTML = sums.map(({s,m})=>{ const O=OFFICIAL[s.k]; if(!O) return cardHTML(s,m);
-      return `<section class="band" style="--scl:${s.c[0]};--scd:${s.c[1]}"><header class="bandh"><b>${esc(s.code)}</b><span>${esc(s.name)}</span><button class="btn ghost" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo del bloque · 25</button></header><div class="bandg">${O.map(x=>cardHTML(s,subSummary(s.k,x[0]),{code:x[0],short:x[2],name:x[1],sub:x[0],n:x[3]})).join("")}</div></section>`; }).join("");
+  const p13=plan13(); $("#kpis").hidden=p13; document.documentElement.classList.toggle("p13",p13);
+  if(p13){ needQmap();
+    $("#grid").innerHTML = sums.filter(({s})=>s.k!=="poh"&&s.k!=="sop").map(({s,m})=>{ const O=OFFICIAL[s.k]; if(!O) return cardHTML(s,m,{p13:1});
+      return O.map(x=>cardHTML(s,subSummary(s.k,x[0]),{code:x[0],short:x[2],name:x[1],sub:x[0],n:x[3]})).join(""); }).join("");
   }
   else $("#grid").innerHTML = sums.map(({s,m})=>cardHTML(s,m)).join("");
   drawStripes(); drawBrief();
