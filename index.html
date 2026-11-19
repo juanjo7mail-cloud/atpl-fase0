@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="15cccf188f2a";</script>
+<script>window.F0_BUILD="984d2a7b6cc7";</script>
 <script src="autoupdate.js"></script>
 <script src="i18n.js"></script>
 <script src="vendor/supabase.js"></script>
@@ -641,6 +641,11 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
 #msOv .msup{animation:msup 1.2s .6s ease-out both}
 @keyframes msup{from{transform:translateY(34px);opacity:0}}
 @media (prefers-reduced-motion:reduce){#msOv *{animation:none!important}#msOv .msring{stroke-dashoffset:var(--off)}}
+/* cabecera: iconos de la derecha limpios, sin cápsula ni fondo (solo un leve contorno de legibilidad sobre el cielo) */
+.top .row1 .iconbtn,.top .row1 .savepill{background:transparent!important;border-color:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:none!important;transition:background .15s}
+.top .row1 .iconbtn svg,.top .row1 .savepill svg{filter:drop-shadow(0 1px 1.5px rgba(4,12,24,.55))}.top .row1 .savepill{text-shadow:0 1px 2px rgba(4,12,24,.6)}
+.top .row1 .iconbtn:hover,.top .row1 .savepill:hover{background:rgba(255,255,255,.08)!important}
+.top .row1 .iconbtn:focus-visible,.top .row1 .savepill:focus-visible{outline:2px solid #7FD3FF;outline-offset:1px}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="pl" viewBox="0 0 48 20"><path fill="currentColor" d="M3 10.5c0-2.2 2-3.6 5-3.6h27c6 0 10 2.2 11.5 3.6-1.5 1.4-5.5 3.6-11.5 3.6H8c-3 0-5-1.4-5-3.6z"/><path fill="currentColor" d="M3.5 7.2 1 1h6l5.5 6.2z"/><path fill="currentColor" d="M19 13.6 27.5 19.5h5L29 13.6z"/><path fill="#fff" fill-opacity=".85" d="M34.5 8.2h6c1.6.4 3 1.3 3.8 2.2H34.5z"/></symbol></defs></svg>
