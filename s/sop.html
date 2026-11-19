@@ -215,6 +215,17 @@ select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:4px;b
 .vis svg{width:100%;height:auto;display:block}
 .visbtns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px} .visbtns .btn{padding:7px 10px;font-size:15px} .visbtns .btn.on{background:var(--ink);color:var(--paper)}
 .vismsg{margin-top:8px;font-size:15px;min-height:2.6em}
+#visPat svg{display:block;max-width:520px;margin:0 auto}
+.patcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin:8px 0}
+.patc{border:1px solid var(--line);border-top:4px solid var(--cz);border-radius:6px;background:var(--paper);padding:6px 9px 7px;min-width:0}
+.patc span{display:block;font:600 12px "Barlow Condensed",Barlow,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.patc b{display:block;font:700 22px/1.1 "Barlow Condensed",Barlow,sans-serif;color:var(--ink);overflow-wrap:anywhere}
+.patc small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.pat-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 0;font-size:16px}
+.pat-h small{color:var(--muted)} .pat-n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--magenta);color:#fff;font:700 14px "Barlow Condensed",sans-serif}
+.patk{margin:8px 0;padding-left:20px;font-size:15px} .patk li{margin:3px 0}
+.pat-hook{margin:8px 0;padding:7px 10px;border-left:4px solid var(--magenta);background:color-mix(in srgb,var(--magenta) 8%,var(--paper));font-size:15px;border-radius:0 6px 6px 0} .pat-hook b{margin-right:6px;text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+
 .steps{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
 .steps span{font:600 14px "Barlow Condensed",sans-serif;padding:3px 8px;border-radius:10px;border:1px solid var(--line);color:var(--muted)}
 .steps span.on{border-color:var(--magenta);color:var(--magenta)}
@@ -847,6 +858,268 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 </section>
 
 </div>
+
+
+
+
+
+
+<!--f0ac--><script>/* Filtro global de aeronaves (POH y SOP) — Piper PA-28 · Cessna 172 · Cruiser.
+   Un único estado compartido en localStorage ("f0:ac") que sincroniza POH y SOP (evento storage) y se conserva entre sesiones.
+   Aplica: barra de control, ocultado de columnas/filas/párrafos/figuras en apuntes, filtro de preguntas en tests y API para widgets/láminas. */
+(function(){
+  if(window.F0AC) return;
+  const KEY="f0:ac", ORDER=["pi","c1","cz"];
+  const FULL={pi:"Piper PA-28",c1:"Cessna 172",cz:"PS-28 Cruiser"}, SHORT={pi:"Piper",c1:"Cessna 172",cz:"Cruiser"}, TINT={pi:"#f0a15c",c1:"#7eb3de",cz:"#7bd389"};
+  /* prosa: nombre o equipo propio de cada avión */
+  const NM={cz:/cruiser|ps-?28|rotax|dynon|skyview|woodcomp/i, c1:/cessna|\b172\b|c172|skyhawk|mccauley/i, pi:/piper|pa-?28|cherokee|warrior|archer|sensenich|stabilator|anti-?balance/i};
+  /* preguntas: mismos criterios que acOf() del POH */
+  const NMQ={cz:/cruiser|ps-?28/i, c1:/cessna|\b172\b|c172|skyhawk/i, pi:/piper|pa-?28|cherokee|warrior|archer/i};
+  const HWQ={cz:/rotax|dynon|skyview|woodcomp|\b912\b/i, c1:/mccauley|h2ad/i, pi:/sensenich|stabilator|d2a|d3o/i};
+  let on=load(); const subs=[];
+  function load(){ try{ const a=JSON.parse(localStorage.getItem(KEY)||"null"); if(Array.isArray(a)){ const s=ORDER.filter(k=>a.indexOf(k)>=0); if(s.length) return s; } }catch(e){} return ORDER.slice(); }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(on)); }catch(e){} }
+  const has=k=>on.indexOf(k)>=0;
+  const okSet=s=>!s.length||s.every(has);
+
+  /* ---------- CSS ---------- */
+  const css=document.createElement("style"); css.id="f0ac-css";
+  css.textContent=
+'[data-acx]{display:none!important}'+
+['cz','c1','pi'].map(k=>'html.acx-'+k+' th.'+k+',html.acx-'+k+' td.'+k+',html.acx-'+k+' .chk:not(.same) .chkcol.'+k).join(',')+'{display:none!important}'+
+'html.acx-cz .chk:not(.same) .chkgrid,html.acx-c1 .chk:not(.same) .chkgrid,html.acx-pi .chk:not(.same) .chkgrid{grid-template-columns:repeat(var(--acn,3),1fr)}'+
+'@media (max-width:760px){html .chk:not(.same) .chkgrid{grid-template-columns:1fr}}'+
+['cz','c1','pi'].map(k=>'html.acx-'+k+' .dgtabs button[data-t="'+k+'"],html.acx-'+k+' .chkview-bar button[data-ac="'+k+'"]').join(',')+'{display:none!important}'+
+'html.acx-cz .figs3,html.acx-c1 .figs3,html.acx-pi .figs3{grid-template-columns:repeat(var(--acn,3),1fr)}'+
+'@media (max-width:760px){html .figs3{grid-template-columns:1fr!important}}'+
+'.f0acb{display:flex;align-items:center;gap:10px;margin:10px 0 0;padding:6px 8px;background:#0c1524;border:1px solid #2b3a55;border-radius:8px;box-shadow:inset 0 0 0 1px #000;color:#cfe0f5;font:600 12px/1 "Barlow Condensed",Barlow,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;-webkit-user-select:none;user-select:none}'+
+'.f0acb .lb{color:#7fb6ff;white-space:nowrap}'+
+'.f0acb .btns{display:flex;gap:6px;flex:1;min-width:0}'+
+'.f0acb button{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:0 6px;background:#101c31;border:1px solid #34476a;border-radius:6px;color:#8fa3c4;font:inherit;font-size:13px;letter-spacing:.05em;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;text-transform:uppercase;white-space:nowrap}'+
+'.f0acb button .led{width:9px;height:9px;border-radius:50%;background:#26324a;box-shadow:inset 0 0 0 1px #0007;flex:none}'+
+'.f0acb button[aria-pressed=true]{background:#13243f;border-color:var(--c);color:#fff}'+
+'.f0acb button[aria-pressed=true] .led{background:var(--c);box-shadow:0 0 8px var(--c)}'+
+'.f0acb button:focus-visible{outline:2px solid #ffd36e;outline-offset:1px}'+
+'.f0acb .all{flex:0 0 auto;min-height:40px;padding:0 10px;color:#ffd36e;border-color:#6b5a2a;background:#17140b}'+
+'.f0acb .all[hidden]{display:none}'+
+'.f0acb.shake{animation:f0acs .35s}@keyframes f0acs{20%{transform:translateX(-5px)}60%{transform:translateX(5px)}}'+
+'.f0acm{margin:4px 2px 0;font-size:12px;color:var(--muted,#667);min-height:0}'+
+'@media (max-width:520px){.f0acb .lb{display:none}.f0acb{gap:6px;padding:5px}.f0acb button{font-size:12px;letter-spacing:.02em;gap:5px;padding:0 3px}.f0acb .sx{display:none}}'+
+'@media (prefers-reduced-motion:reduce){.f0acb.shake{animation:none}}';
+  document.head.appendChild(css);
+
+  /* ---------- clasificación de texto ---------- */
+  const setOf=t=>ORDER.filter(k=>NM[k].test(t));
+  const TRI=/\d+(?:[.,]\d+)?\s*[–·-]\s*\d+(?:[.,]\d+)?\s*[–·-]\s*\d+/;
+  const segSet=t=>{ let s=setOf(t); if(!s.length && TRI.test(t)) s=ORDER.slice(); return s; };
+  const ABBR=/^(máx|mín|min|max|aprox|ej|vs|etc|nº|n°|fig|pág|p|ft|kt)$/i;
+  function splitSentences(h){
+    const m=h.replace(/(\S*)([.;])(\s+)(?=[A-ZÁÉÍÓÚÑ0-9«"¿¡(<])/g,(a,w,p)=>(p==="."&&ABBR.test(w))?a:w+p+"\u0001");
+    return m.split("\u0001");
+  }
+  const BLOCK=/<(ul|ol|div|table|p|svg|button|input|select|details|figure)\b/i;
+  const LEADRE=/^(Clave|Truco para recordarlo|Trampa|Ojo|★ IMPORTANTE)$/i;
+  const stripAcs=h=>h.replace(/<span class="acs"[^>]*>[\s\S]*?<\/span>/g,"");
+  const plain=h=>h.replace(/<[^>]+>/g," ");
+  function balanced(h){ const st=[]; const re=/<(\/?)([a-z0-9]+)\b[^>]*>/gi; let m; while((m=re.exec(h))){ const t=m[2].toLowerCase(); if(/^(br|img|hr|input|wbr)$/.test(t)) continue; if(m[1]){ if(st.pop()!==t) return false; } else st.push(t); } return st.length===0; }
+  /* paréntesis que traen su propio dato de otro avión: «10° (Cruiser: 12°)» → solo se oculta el paréntesis */
+  function parenWrap(el){
+    const h=el.innerHTML; let ch=false;
+    const n=h.replace(/\(((?:[^()<>]|<[^>]+>)*)\)/g,(m,inner)=>{ const t=plain(inner), S=setOf(t); if(S.length&&/\d/.test(t)){ ch=true; return '<span class="acs" data-acs="'+S.join(" ")+'">'+m+'</span>'; } return m; });
+    if(ch){ el.innerHTML=n; el.dataset.acseg="1"; }
+    return ch;
+  }
+  function segment(el){
+    let h=el.innerHTML, lead="";
+    const L=/^\s*<b>(Clave|Truco para recordarlo|Trampa|Ojo|★ IMPORTANTE)<\/b>/i.exec(h); if(L){ lead=L[0]; h=h.slice(L[0].length); }
+    if(BLOCK.test(h)) return false;
+    const sents=splitSentences(h), pieces=[];
+    sents.forEach(s=>{
+      const parts=s.split(/\s·\s/);
+      const withAc=parts.filter(p=>setOf(plain(stripAcs(p))).length).length;
+      if(parts.length>1 && withAc>=2){ parts.forEach((p,j)=>{ if(j) pieces.push({sep:1}); pieces.push({h:p}); }); }
+      else pieces.push({h:s});
+      pieces.push({gap:1});
+    });
+    pieces.pop();
+    const cont=pieces.filter(p=>p.h!==undefined);
+    if(!cont.every(p=>balanced(p.h))) return false;
+    cont.forEach(p=>{ p.s=segSet(plain(stripAcs(p.h))); });
+    const distinct=new Set(cont.map(p=>p.s.join(",")).filter(Boolean));
+    const neutral=cont.some(p=>!p.s.length);
+    if(!(distinct.size>=2 || (distinct.size===1 && neutral))) return false;
+    el.innerHTML=lead+pieces.map(p=>p.gap?" ":p.sep?'<span class="acsep"> · </span>':'<span class="acs" data-acs="'+p.s.join(" ")+'">'+p.h+'</span>').join("");
+    el.dataset.acseg="1"; return true;
+  }
+  function fixSeps(el){
+    let seen=false, pend=null;
+    [].forEach.call(el.childNodes,n=>{
+      if(n.nodeType===3){ if(pend){ pend.setAttribute("data-acx","1"); pend=null; } seen=false; return; }
+      if(n.classList&&n.classList.contains("acsep")){ pend=n; return; }
+      if(n.classList&&n.classList.contains("acs")){
+        const vis=!n.hasAttribute("data-acx");
+        if(pend){ if(vis&&seen) pend.removeAttribute("data-acx"); else pend.setAttribute("data-acx","1"); pend=null; }
+        if(vis) seen=true;
+      }
+    });
+    if(pend) pend.setAttribute("data-acx","1");
+  }
+
+  /* ---------- barrido de apuntes ---------- */
+  const LEAF="li,p,div.key,div.flag,figcaption,h4,h5,summary";
+  const SKIP=".chkcol,.ckp,.labs,.f0viz,.f0acb,.vismsg,.visbtns,.steps";
+  const own=el=>{ const c=el.cloneNode(true); [].forEach.call(c.querySelectorAll(".acs"),x=>x.remove()); return c.textContent||""; };
+  function scan(root){
+    if(!root) return;
+    root.querySelectorAll("td").forEach(el=>{ if(el.dataset.acd||el.closest(SKIP)) return; el.dataset.acd="1"; if(setOf(el.textContent||"").length>0) parenWrap(el); });
+    root.querySelectorAll(LEAF+",tr").forEach(el=>{
+      if(el.dataset.acd||el.closest(SKIP)) return;
+      if(el.tagName==="TR"){ if(el.closest("table.t3")) return; }
+      else if(el.querySelector(LEAF)) return;
+      el.dataset.acd="1";
+      if(el.tagName!=="TR") parenWrap(el);
+      const S=segSet(own(el));
+      if(el.tagName!=="TR" && S.length>=1 && /^(LI|P|DIV)$/.test(el.tagName)){ if(segment(el)) return; }
+      if(S.length) el.dataset.acs=S.join(" ");
+    });
+    root.querySelectorAll("figure").forEach(f=>{
+      if(f.dataset.acd||f.closest(SKIP)) return; f.dataset.acd="1"; if(f.classList.contains("dgtabs")) return;
+      const t=(f.textContent||"")+" "+[].map.call(f.querySelectorAll("[aria-label]"),e=>e.getAttribute("aria-label")).join(" ");
+      let S=setOf(t); [].forEach.call(f.querySelectorAll("[data-ck]"),e=>{ const k=e.getAttribute("data-ck"); if(ORDER.indexOf(k)>=0&&S.indexOf(k)<0) S.push(k); });
+      if(S.length) f.dataset.acs=S.join(" ");
+    });
+  }
+  function paint(root){
+    root=root||document;
+    root.querySelectorAll("[data-acs]").forEach(el=>{
+      const S=el.dataset.acs.split(" ").filter(Boolean);
+      if(okSet(S)) el.removeAttribute("data-acx"); else el.setAttribute("data-acx","1");
+    });
+    root.querySelectorAll("[data-acseg]").forEach(el=>{
+      fixSeps(el);
+      if(el.hasAttribute("data-acs")) return;
+      const c=el.cloneNode(true); [].forEach.call(c.querySelectorAll("[data-acx]"),x=>x.remove());
+      let t=c.textContent||""; const ld=el.firstElementChild; if(ld&&ld.tagName==="B"&&LEADRE.test(ld.textContent.trim())) t=t.replace(ld.textContent,"");
+      const empty=!t.replace(/[\s·.,;:()]/g,"").length;
+      if(empty&&el.tagName!=="TD") el.setAttribute("data-acx","1"); else el.removeAttribute("data-acx");
+    });
+    /* láminas de un grupo de aviones: se ven si hay alguno activo */
+    root.querySelectorAll("[data-acany]").forEach(el=>{
+      const S=el.dataset.acany.split(" ").filter(Boolean), show=S.some(has), h=el.previousElementSibling;
+      if(show) el.removeAttribute("data-acx"); else el.setAttribute("data-acx","1");
+      if(h&&h.tagName==="H4"){ if(!show) h.setAttribute("data-acx","1"); else if(!h.hasAttribute("data-acs")) h.removeAttribute("data-acx"); }
+    });
+    /* lección entera: el resumen nombra un avión apagado */
+    root.querySelectorAll("details").forEach(d=>{
+      const s=d.querySelector(":scope>summary[data-acs]"); if(!s) return;
+      const S=s.dataset.acs.split(" ").filter(Boolean);
+      if(okSet(S)) d.removeAttribute("data-acx"); else d.setAttribute("data-acx","1");
+    });
+    /* contenedores vacíos (caja «Truco», listas) */
+    root.querySelectorAll(".mnem,ul,ol").forEach(c=>{
+      if(c.closest(SKIP)) return;
+      const li=c.querySelectorAll("li"); if(!li.length) return;
+      const all=[].every.call(li,l=>l.hasAttribute("data-acx")||l.closest("[data-acx]")!==null&&l.closest("[data-acx]")!==c);
+      if(all) c.setAttribute("data-acx","1"); else if(!c.dataset.acs) c.removeAttribute("data-acx");
+    });
+    root.querySelectorAll("[data-acseg]").forEach(fixSeps);
+  }
+  let busy=false;
+  function fixTabs(){
+    [].forEach.call(document.querySelectorAll(".dgtabs"),f=>{ const cur=f.querySelector("button[data-t].on"); if(!cur||!has(cur.dataset.t)){ const nb=[].find.call(f.querySelectorAll("button[data-t]"),b=>has(b.dataset.t)); if(nb) nb.click(); } });
+    [].forEach.call(document.querySelectorAll(".chkview"),v=>{ if(v.hidden) return; const c=v.querySelector(".ckp"), k=c&&c.dataset.ck; if(k&&!has(k)){ v.hidden=true; v.innerHTML=""; const bar=v.parentElement&&v.parentElement.querySelector(".chkview-bar"); if(bar) [].forEach.call(bar.querySelectorAll("button"),x=>x.classList.remove("on")); } });
+    const cc=document.querySelector("#cruCard>b"); if(cc) cc.textContent=on.length===3?"Los 3 aviones, juntos":on.length===2?"Los 2 aviones activos, juntos":"Aeronave activa";
+  }
+  function refreshDom(){ if(busy) return; busy=true; try{ const r=document.getElementById("p-notes")||document.body; scan(r); paint(r); fixTabs(); }catch(e){ try{console.error("f0ac",e);}catch(_){} } busy=false; }
+
+  /* ---------- barra ---------- */
+  let bar=null, msg=null;
+  function build(){
+    if(bar) return; const nav=document.querySelector(".wrap>nav,nav[role=tablist]"); if(!nav) return;
+    bar=document.createElement("div"); bar.className="f0acb"; bar.setAttribute("role","group"); bar.setAttribute("aria-label","Filtro de aeronaves");
+    bar.innerHTML='<span class="lb">Aeronaves</span><div class="btns">'+ORDER.map(k=>'<button type="button" data-k="'+k+'" aria-pressed="true" style="--c:'+TINT[k]+'" title="'+FULL[k]+'"><i class="led"></i><span>'+SHORT[k]+'</span></button>').join("")+'</div><button type="button" class="all" hidden>Todos</button>';
+    msg=document.createElement("p"); msg.className="f0acm"; msg.setAttribute("aria-live","polite");
+    nav.parentNode.insertBefore(bar,nav); bar.after(msg);
+    bar.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; if(b.classList.contains("all")) F0AC.set(ORDER); else F0AC.toggle(b.dataset.k); });
+  }
+  function sync(){
+    const de=document.documentElement; ORDER.forEach(k=>de.classList.toggle("acx-"+k,!has(k))); de.style.setProperty("--acn",on.length);
+    if(bar){ [].forEach.call(bar.querySelectorAll("button[data-k]"),b=>b.setAttribute("aria-pressed",has(b.dataset.k)?"true":"false")); bar.querySelector(".all").hidden=on.length===3;
+      if(msg) msg.textContent=on.length===3?"":"Mostrando solo: "+ORDER.filter(has).map(k=>FULL[k]).join(" · ")+". Apuntes, láminas y tests siguen este filtro."; }
+    refreshDom();
+  }
+  function fire(){ sync(); subs.slice().forEach(f=>{ try{ f(on.slice()); }catch(e){ try{console.error("f0ac",e);}catch(_){} } }); }
+
+  /* ---------- preguntas ---------- */
+  const qmemo={};
+  function qSet(q){
+    const id=q[0]; if(qmemo[id]) return qmemo[id];
+    const st=String(q[4]||""), ops=(q[5]||[]).join(" ");
+    let S=ORDER.filter(k=>NMQ[k].test(st+" "+ops)||HWQ[k].test(st));
+    if(!S.length){
+      const m=(typeof ACQ!=="undefined"&&ACQ&&ACQ[id])?String(ACQ[id]).split(" "):[];
+      if(m.length) S=ORDER.filter(k=>m.indexOf(k)>=0);
+      else { const ex=String(q[6]||""); S=ORDER.filter(k=>NMQ[k].test(ex)||HWQ[k].test(ex)); }
+    }
+    return (qmemo[id]=S);
+  }
+  const qOf=it=>Array.isArray(it)?it:(it&&it.k==="mc"&&it.q?it.q:null);
+  const NOFIX=/^(voice|atis|foto|simb|signals|radio|calc)$/;
+  const shuf=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; };
+  function fixList(r,mode){
+    if(!Array.isArray(r)||on.length===3||(mode&&NOFIX.test(mode))) return r;
+    const out=[]; let drop=0;
+    r.forEach(it=>{ const q=qOf(it); if(!q||F0AC.keep(q)) out.push(it); else drop++; });
+    if(!drop) return r;
+    const OBJ=r.length&&!Array.isArray(r[0]);
+    const target = mode==="all" ? 0 : mode==="wrong" ? Math.min(r.length,10) : r.length;
+    if(out.length>=target) return out;
+    let B=[]; try{ B=typeof BANK!=="undefined"&&Array.isArray(BANK)?BANK:[]; }catch(e){}
+    const have=new Set(out.map(it=>{ const q=qOf(it); return q&&q[0]; }));
+    const fam=q=>{ try{ return typeof baseOf==="function"?baseOf(q[0]):q[0]; }catch(e){ return q[0]; } };
+    const seen=new Set(out.map(it=>{ const q=qOf(it); return q&&fam(q); }));
+    const inc=(document.getElementById("incComp")||{}).checked!==false, atpl=!!(document.getElementById("incTrial")||{}).checked;
+    const given=q=>{ try{ return atpl||typeof isGiven!=="function"||!!isGiven(q); }catch(e){ return true; } };
+    const first=qOf(out[0])||qOf(r[0]); const lo=mode==="lo"?String((document.getElementById("loSel")||{}).value||""):String(first?first[1]:"");
+    const P=lo.split(".");
+    const tiers=[ q=>lo&&String(q[1]).indexOf(lo)===0, q=>P.length>2&&String(q[1]).split(".").slice(0,P.length-1).join(".")===P.slice(0,-1).join("."), q=>P.length>1&&String(q[1]).split(".").slice(0,2).join(".")===P.slice(0,2).join("."), q=>!P[0]||String(q[1]).split(".")[0]===P[0], q=>true ];
+    const trial=mode==="trial"&&typeof HOT3!=="undefined"?HOT3:null;
+    const base=B.filter(q=>Array.isArray(q)&&q[4]&&q[4]!=="—"&&q[2]!=="o"&&(inc||q[2]!=="c")&&F0AC.keep(q));
+    for(const strict of [true,false]){
+      const pool=base.filter(q=>!have.has(q[0])&&(!strict||(given(q)&&(!trial||trial.has(q[0])))));
+      for(const t of tiers){ if(out.length>=target) break;
+        for(const q of shuf(pool.filter(t))){ if(out.length>=target) break; const f=fam(q); if(have.has(q[0])||seen.has(f)) continue; have.add(q[0]); seen.add(f); out.push(OBJ?{k:"mc",q}:q); } }
+      if(out.length>=target) break;
+    }
+    return out;
+  }
+  function hookTests(){
+    try{
+      if(window.__f0acHook) return; window.__f0acHook=true;
+      const d=Object.getOwnPropertyDescriptor(window,"F0DEDUP"); let inner=window.F0DEDUP;
+      const run=function(list,mode){ const r=(d&&d.get?d.get.call(window):inner).apply(this,arguments); try{ return fixList(r,mode); }catch(e){ return r; } };
+      Object.defineProperty(window,"F0DEDUP",{configurable:true,get:()=>run,set:f=>{ if(d&&d.set) d.set.call(window,f); else inner=f; }});
+    }catch(e){ try{console.error("f0ac hook",e);}catch(_){} }
+  }
+
+  const F0AC=window.F0AC={
+    ORDER, FULL, SHORT,
+    list:()=>on.slice(), has, all:()=>on.length===3, act:a=>a.filter(has),
+    set(arr){ const s=ORDER.filter(k=>arr.indexOf(k)>=0); if(!s.length||s.join()===on.join()) return; on=s; save(); fire(); },
+    toggle(k){ if(ORDER.indexOf(k)<0) return; if(has(k)){ if(on.length===1){ if(bar){ bar.classList.remove("shake"); void bar.offsetWidth; bar.classList.add("shake"); } if(msg) msg.textContent="Debe quedar al menos una aeronave activa."; return; } F0AC.set(on.filter(x=>x!==k)); } else F0AC.set(on.concat(k)); },
+    onChange:f=>{ subs.push(f); },
+    keep:q=>okSet(qSet(q)), okText:t=>okSet(segSet(String(t||""))), qSet,
+    refresh:refreshDom, hookTests, fixList
+  };
+  addEventListener("storage",e=>{ if(e.key===KEY){ const n=load(); if(n.join()!==on.join()){ on=n; fire(); } } });
+  function boot(){
+    build(); sync();
+    try{ const r=document.getElementById("p-notes"); if(r&&window.MutationObserver){ let t=0; new MutationObserver(()=>{ if(busy) return; clearTimeout(t); t=setTimeout(refreshDom,80); }).observe(r,{childList:true,subtree:true}); } }catch(e){}
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot); else boot();
+  addEventListener("load",()=>{ refreshDom(); setTimeout(refreshDom,600); });
+})();
+</script><!--/f0ac-->
 <script>
 // ---------- utilidades ----------
 const $ = s => document.querySelector(s);
@@ -1525,9 +1798,10 @@ function alloc(total, items){
 // capacidad real: cada pregunta original cuenta una vez (solo sale una variante)
 const capOf = qs => new Set(qs.map(q=>baseOf(q[0]))).size;
 // simulacro: reparto por capítulo (9 · 9 · 9 · 2 · 1) y, dentro, por el peso de cada subcapítulo
+const KP = q => !window.F0AC || F0AC.keep(q);
 function selectSenasa(lenKey, inc, atpl){
   const st = stats(), N = SEN_LEN[lenKey].n;
-  const pool = BANK.filter(q=> inSim(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
+  const pool = BANK.filter(q=> inSim(q) && KP(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
   const bySub = {}; pool.forEach(q=>(bySub[q[1]]=bySub[q[1]]||[]).push(q));
   const subsOf = k => SUB.filter(s=>s[1]===k && bySub[s[0]]).map(s=>s[0]);
   const bT = alloc(N, BLOCKS.map(b=>({k:b.k, w:b.n, cap:subsOf(b.k).reduce((a,s)=>a+capOf(bySub[s]),0)})));
@@ -1544,10 +1818,10 @@ function selectQuestions(mode, inc, lo, atpl){
   if(mode==="senasa") return selectSenasa($("#senLen").value, inc, atpl);
   const st = stats();
   if(mode==="trial"){   // preguntas de los trials y ejercicios de aplicación, una variante al azar de cada una
-    const g = {}; BANK.filter(q=>HOT3.has(q[0])).forEach(q=>{ const k=baseOf(q[0]); (g[k]=g[k]||[]).push(q); });
+    const g = {}; BANK.filter(q=>HOT3.has(q[0]) && KP(q)).forEach(q=>{ const k=baseOf(q[0]); (g[k]=g[k]||[]).push(q); });
     return shuffle(Object.values(g).map(a=>a[Math.floor(Math.random()*a.length)]).map(q=>({q,p:priority(q,st)})).sort((x,y)=>y.p-x.p).slice(0,25).map(x=>x.q));   // las 25 más flojas
   }
-  const pool = BANK.filter(q=> (inc || q[2]!=="c") && (atpl || isGiven(q)));
+  const pool = BANK.filter(q=> KP(q) && (inc || q[2]!=="c") && (atpl || isGiven(q)));
   if(mode==="wrong") return shuffle(pool.filter(q=>(st.q[q[0]]||{}).last===false || pendingFromBase(q,st)));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
   if(mode==="all") return shuffle(pool);
@@ -1777,13 +2051,14 @@ Respond ONLY with JSON, no markdown: {"questions":[{"lo":"SOP.x.x","q":"...","co
 // ---------- test ----------
 function renderSetup(){
   const st = stats();
-  const nw = BANK.filter(q=>((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
+  const nw = BANK.filter(q=>KP(q) && ((st.q[q[0]]||{}).last===false || pendingFromBase(q,st))).length;
   $("#wrongCount").textContent = nw ? `${nw} preguntas` : "Sin fallos pendientes";
-  $("#trialCount").textContent = `${new Set(BANK.filter(q=>HOT3.has(q[0])).map(q=>baseOf(q[0]))).size} preguntas de los trials y de los ejercicios de aplicación (salen 25, las más flojas), en variante`;
-  $("#allCount").textContent = `${BANK.filter(isGiven).length} dadas + ${BANK.filter(q=>!isGiven(q)).length} aún no dadas`;
+  $("#trialCount").textContent = `${new Set(BANK.filter(q=>HOT3.has(q[0]) && KP(q)).map(q=>baseOf(q[0]))).size} preguntas de los trials y de los ejercicios de aplicación (salen 25, las más flojas), en variante`;
+  $("#allCount").textContent = `${BANK.filter(q=>KP(q)&&isGiven(q)).length} dadas + ${BANK.filter(q=>KP(q)&&!isGiven(q)).length} aún no dadas`;
   const selected = $("#loSel").value;
-  $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
+  $("#loSel").innerHTML = SUB.filter(s=>!window.F0AC||F0AC.okText(loLabel(s[0]))).map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
 }
+if(window.F0AC) F0AC.onChange(()=>{ try{ renderSetup(); }catch(e){} });
 let current = [], curMode = "senasa", curLen = null, tStart = 0, tLimit = 0, tTimer = null, finishing = false, askedUnanswered = false;
 function fmtMS(s){ s=Math.max(0,Math.round(s)); return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; }
 function tick(){
@@ -2065,6 +2340,7 @@ const AC3 = ["cz","c1","pi"], ACN = {cz:"Cruiser",c1:"C172",pi:"Piper"}, ACF = {
 const SPDT = [["vr", "to", "Rotación (VR) · despegue normal", [55, 60, 65], "KIAS"], ["ic", "to", "Ascenso inicial", [62, 70, 70], "KIAS"], ["t500", "to", "A 500 ft AGL (after take-off check)", [70, 80, 80], "KIAS"], ["vx", "to", "Vx · mejor ángulo de ascenso", [55, 60, 64], "KIAS"], ["vy", "to", "Vy · mejor régimen de ascenso", [62, 70, 75], "KIAS"], ["vcc", "to", "Ascenso de crucero", [75, 80, 90], "KIAS"], ["sfvr", "to", "Rotación en pista corta", [55, 50, 50], "KIAS"], ["cl", "cr", "Crucero · potencia baja", [75, 80, 90], "KIAS"], ["cm", "cr", "Crucero · potencia media", [85, 90, 100], "KIAS"], ["ch", "cr", "Crucero · potencia alta", [95, 100, 110], "KIAS"], ["vfe", "cr", "VFE · flaps extendidos", [75, 85, 100], "KIAS"], ["vno", "cr", "VNO · operación normal", [108, 128, 122], "KIAS"], ["vne", "cr", "VNE · nunca exceder", [138, 160, 155], "KIAS"], ["gl", "cr", "Mejor planeo", [60, 65, 73], "KIAS"], ["dws", "pt", "Viento en cola · velocidad", [70, 80, 80], "KIAS"], ["dwa", "pt", "Viento en cola · velocidad tras flaps", [65, 80, 80], "KIAS"], ["bs", "pt", "Base · velocidad tras flaps", [65, 70, 70], "KIAS"], ["fs", "pt", "Final · velocidad tras flaps", [60, 55, 65], "KIAS"], ["ga1", "pt", "Go-around · velocidad inicial", [60, 60, 65], "KIAS"], ["ga2", "pt", "Go-around · velocidad de ascenso", [62, 70, 80], "KIAS"]];   // [id, grupo, etiqueta, [cz,c1,pi], unidad]
 const LIMS = {cz:{xf:12,xs:10,t:32,ts:32}, c1:{xf:15,xs:12,t:35,ts:32}, pi:{xf:15,xs:12,t:35,ts:32}};
 const uniq = a => a.filter((x,i)=>a.indexOf(x)===i);
+const ACT = () => AC3.map((a,k)=>k).filter(k=>!window.F0AC||F0AC.has(AC3[k]));
 
 // controles sobre la tabla fija de velocidades: taparla y ponerse a prueba
 function initSpdTable(elId, grp, tid){
@@ -2078,13 +2354,14 @@ function initSpdTable(elId, grp, tid){
     if(quiz) h += `<div class="vismsg"><b>${esc(quiz.t)}</b></div><div class="visbtns">${quiz.o.map(o=>`<button class="btn sec sm" data-a="${o}">${o}</button>`).join("")}</div><div class="vismsg" id="${elId}m">${quiz.m||""}</div>`;
     el.innerHTML = h; apply();
     el.querySelector("[data-h]").onclick=()=>{ hide=!hide; draw(); };
-    el.querySelector("[data-q]").onclick=()=>{ const r=pick(rows), i=Math.floor(Math.random()*3), v=r[3][i];
-      let cand = uniq(r[3].filter(x=>x!==v).concat([v+5,v-5,v+10,v-10,v+3,v-3]).filter(x=>x>0&&x!==v)).slice(0,3);
+    el.querySelector("[data-q]").onclick=()=>{ const r=pick(rows), act=ACT(), i=pick(act), v=r[3][i];
+      let cand = uniq(act.map(k=>r[3][k]).filter(x=>x!==v).concat([v+5,v-5,v+10,v-10,v+3,v-3]).filter(x=>x>0&&x!==v)).slice(0,3);
       quiz={t:`${r[2]} · ${ACF[AC3[i]]}`, o:shuffle([v,...cand]), v, m:""}; draw(); };
     const x=el.querySelector("[data-x]"); if(x) x.onclick=()=>{ quiz=null; draw(); };
     el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ const ok=+b.dataset.a===quiz.v; quiz.m = ok?'<span class="pass">Correcto.</span>':`<span class="fail">No.</span> Es ${quiz.v}.`; el.querySelector("#"+elId+"m").innerHTML=quiz.m; });
   }
   draw();
+  if(window.F0AC) F0AC.onChange(()=>{ quiz=null; draw(); });
 }
 
 // «unir»: une cada dato con su valor (como la pregunta de unir)
@@ -2093,7 +2370,7 @@ function initMatch(elId, grps){
   let items=[], done=false;
   function newRound(){
     const rows = SPDT.filter(r=>grps.includes(r[1]));
-    const all = []; rows.forEach(r=>[0,1,2].forEach(i=>all.push({t:`${r[2]} · ${ACN[AC3[i]]}`, v:r[3][i]})));
+    const all = []; rows.forEach(r=>ACT().forEach(i=>all.push({t:`${r[2]} · ${ACN[AC3[i]]}`, v:r[3][i]})));
     items = shuffle(all).slice(0,6); done=false; draw();
   }
   function draw(){
@@ -2106,14 +2383,20 @@ function initMatch(elId, grps){
     el.querySelector("[data-n]").onclick=newRound;
   }
   newRound();
+  if(window.F0AC) F0AC.onChange(newRound);
 }
 
 // pasos: paso a paso y «ordénalo»
-function initSteps(elId, scen){
+function initSteps(elId, scen0){
   const el = $("#"+elId); if(!el) return;
+  const okT = t => !window.F0AC || F0AC.okText(String(t).replace(/<[^>]+>/g,""));
+  const mkS = () => scen0.map(s=>[s[0],s[1],s[2].filter(okT)]).filter(s=>okT(s[1])&&s[2].length);
+  let scen = mkS();
+  const vis = on => { if(on) el.removeAttribute("data-acx"); else el.setAttribute("data-acx","1"); const hh=el.previousElementSibling; if(hh&&hh.tagName==="H4"){ if(on) hh.removeAttribute("data-acx"); else hh.setAttribute("data-acx","1"); } };
   let cur=0, i=0, mode="seq", rest=[], got=[], msg="";
-  function reset(){ i=0; got=[]; msg=""; rest = shuffle(scen[cur][2].map((s,k)=>k)); }
+  function reset(){ i=0; got=[]; msg=""; rest = scen.length ? shuffle(scen[cur][2].map((s,k)=>k)) : []; }
   function draw(){
+    if(!scen.length){ vis(false); return; } vis(true); if(cur>=scen.length) cur=0;
     const S = scen[cur][2];
     let h = scen.length>1 ? btnRow(scen.map((s,k)=>[k,s[1]]), cur, "data-s") : "";
     h += `<div class="visbtns"><button class="btn sec sm ${mode==='seq'?'on':''}" data-m="seq">Paso a paso</button><button class="btn sec sm ${mode==='ord'?'on':''}" data-m="ord">Ordénalo</button></div>`;
@@ -2133,6 +2416,7 @@ function initSteps(elId, scen){
     el.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{ const k=+b.dataset.o; if(k===got.length){ got.push(k); rest=rest.filter(x=>x!==k); msg=""; } else msg='<span class="fail">Ese no es el siguiente.</span>'; draw(); });
   }
   reset(); draw();
+  if(window.F0AC) F0AC.onChange(()=>{ scen=mkS(); cur=0; reset(); draw(); });
 }
 
 // entrenador de listas: lee las listas de los apuntes (DOM) y las tapa, las pregunta o las ordena
@@ -2145,15 +2429,17 @@ function initChk(elId, phases){
     CK[c.dataset.ph] = o;
   });
   phases = phases.filter(p=>CK[p]);
-  let ph=phases[0], ac="cz", mode="hide", q=null, got=[], rest=[], msg="", score=[0,0];
+  let ph=phases[0], ac=(AC3.find(a=>!window.F0AC||F0AC.has(a))||"cz"), mode="hide", q=null, got=[], rest=[], msg="", score=[0,0];
   const KN = {mem:"De memoria",dr:"Do & Read",rd:"Read & Do",blue:"Lista azul",em:"Emergencia"};
   function items(){ return CK[ph].cols[ac].filter(x=>x.va && !x.red); }
-  function newQ(){ const its=items(); const it=pick(its); const all=uniq(AC3.flatMap(a=>CK[ph].cols[a].map(x=>x.va)).filter(v=>v&&v!==it.va)); q={it, o:shuffle([it.va,...shuffle(all).slice(0,3)]), m:""}; }
+  function newQ(){ const its=items(); const it=pick(its); const all=uniq(AC3.filter(a=>!window.F0AC||F0AC.has(a)).flatMap(a=>CK[ph].cols[a].map(x=>x.va)).filter(v=>v&&v!==it.va)); q={it, o:shuffle([it.va,...shuffle(all).slice(0,3)]), m:""}; }
   function reset(){ got=[]; msg=""; const L=CK[ph].cols[ac]; rest=shuffle(L.map((x,k)=>k)); q=null; if(mode==="test") newQ(); }
   function draw(){
+    if(window.F0AC && !F0AC.has(ac)){ ac=AC3.find(a=>F0AC.has(a))||ac; reset(); }
     const L = CK[ph].cols[ac];
     let h = `<div class="visbtns">${phases.map(p=>`<button class="btn sec sm ${p===ph?'on':''}" data-p="${p}">${esc(CK[p].t)}</button>`).join("")}</div>`;
-    h += btnRow(AC3.map(a=>[a,ACN[a]]), ac, "data-a") + `<p class="small"><span class="kind ${CK[ph].kind}">${KN[CK[ph].kind]}</span></p>`;
+    if(window.F0AC && !F0AC.has(ac)){ ac=AC3.find(a=>F0AC.has(a))||ac; }
+    h += btnRow(AC3.filter(a=>!window.F0AC||F0AC.has(a)).map(a=>[a,ACN[a]]), ac, "data-a") + `<p class="small"><span class="kind ${CK[ph].kind}">${KN[CK[ph].kind]}</span></p>`;
     h += `<div class="visbtns"><button class="btn sec sm ${mode==='see'?'on':''}" data-m="see">Ver</button><button class="btn sec sm ${mode==='hide'?'on':''}" data-m="hide">Tapar valores</button><button class="btn sec sm ${mode==='test'?'on':''}" data-m="test">Test</button><button class="btn sec sm ${mode==='ord'?'on':''}" data-m="ord">Ordénala</button></div>`;
     if(mode==="see"||mode==="hide"){
       h += `<ol class="ckl">${L.map(x=>`<li class="${x.red?'red':''}"><span class="it">${esc(x.it)}</span><b class="va ${mode==='hide'&&x.va?'hid':''}">${esc(x.va)}</b></li>`).join("")}</ol>`;
@@ -2173,12 +2459,14 @@ function initChk(elId, phases){
     el.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{ const k=+b.dataset.o; if(k===got.length){ got.push(k); rest=rest.filter(x=>x!==k); msg=""; } else msg='<span class="fail">Ese no es el siguiente.</span>'; draw(); });
   }
   reset(); draw();
+  if(window.F0AC) F0AC.onChange(()=>{ if(!F0AC.has(ac)) ac=AC3.find(a=>F0AC.has(a))||ac; reset(); draw(); });
 }
 
 // climb: Vx frente a Vy
 function initClimb(){
   const el = $("#visClimb"); if(!el) return; let sel="x";
   const row = id => SPDT.find(r=>r[0]===id)[3];
+  const lst = v => ACT().map(k=>ACN[AC3[k]]+" "+v[k]).join(" · ");
   function draw(){
     const vx=row("vx"), vy=row("vy");
     el.innerHTML = `<svg viewBox="0 0 360 185" role="img" aria-label="Ascenso a Vx y a Vy"><style>.t{fill:var(--muted);font:500 15px Barlow,sans-serif} .l{font:700 19px "Barlow Condensed",sans-serif}</style>
@@ -2189,43 +2477,109 @@ function initClimb(){
       <text class="l" x="206" y="30" fill="var(--magenta)" opacity="${sel==='x'?1:.6}">Vx · más ángulo</text>
       <text class="l" x="170" y="136" fill="var(--blue)" opacity="${sel==='y'?1:.6}">Vy · más ft/min</text></svg>` +
       btnRow([["x","Vx"],["y","Vy"]], sel, "data-v") +
-      `<div class="vismsg">${sel==='x'?`<b>Vx</b> (mejor ángulo): la velocidad menor y el ángulo mayor. La usas para <b>pasar un obstáculo</b>. Cruiser ${vx[0]} · C172 ${vx[1]} · Piper ${vx[2]}.`:`<b>Vy</b> (mejor régimen): ángulo menor, pero <b>subes más pies por minuto</b>: llegas a la altitud antes y recorres más distancia horizontal. Cruiser ${vy[0]} · C172 ${vy[1]} · Piper ${vy[2]}.`}</div>`;
+      `<div class="vismsg">${sel==='x'?`<b>Vx</b> (mejor ángulo): la velocidad menor y el ángulo mayor. La usas para <b>pasar un obstáculo</b>. ${lst(vx)}.`:`<b>Vy</b> (mejor régimen): ángulo menor, pero <b>subes más pies por minuto</b>: llegas a la altitud antes y recorres más distancia horizontal. ${lst(vy)}.`}</div>`;
     el.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{ sel=b.dataset.v; draw(); });
   }
   draw();
+  if(window.F0AC) F0AC.onChange(draw);
 }
 
 // circuito de tráfico: toca un tramo
+// circuito de tráfico interactivo: elige avión y toca un tramo (datos de las listas y tablas del SOP)
 function initPattern(){
   const el = $("#visPat"); if(!el) return;
+  const NAMES = {to:"Despegue", cw:"Viento cruzado", dw:"Viento en cola", bs:"Base", fn:"Final", tm:"Toma"};
+  const EN = {to:"Take-off", cw:"Crosswind", dw:"Downwind", bs:"Base", fn:"Final", tm:"Landing"};
+  const ORD = ["to","cw","dw","bs","fn","tm"];
+  const SP = id => SPDT.find(r=>r[0]===id)[3];
+  // por tramo: velocidad principal [cz,c1,pi], etiqueta, secundaria, flaps, tercera tarjeta, puntos comunes y por avión, regla
   const LEG = {
-    up:{n:"Viento de cara / Crosswind", t:["Sigue subiendo y mira el tráfico.","A 500 ft AGL empieza a virar (check de después del despegue).","Alabeo máx. 20° (30° con altitud)."]},
-    dw:{n:"Viento en cola (downwind)", t:["Landing check. Potencia ~3800 RPM (Cruiser) · ~1800 RPM (C172 y Piper).","Velocidad 70 · 80 · 80 KIAS; flaps 12° · 10° · 1.ª muesca.","Velocidad tras los flaps: 65 · 80 · 80 KIAS."]},
-    bs:{n:"Base", t:["Alabeo máx. 30° al virar de cola a base.","Flaps: Cruiser mantiene 12° · C172 20° · Piper 2.ª muesca.","Velocidad: 65 · 70 · 70 KIAS."]},
-    fn:{n:"Final", t:["Alabeo máx. 30° de base a final. Check de final y autorización.","Flaps finales: Cruiser 30° · C172 40° · Piper 3.ª muesca.","Velocidad: 60 · 55 · 65 KIAS (Vref +5 con viento cruzado, +10 con turbulencia)."]}
+    to:{sp:SP("vr"), spl:"Rotación (VR)", sp2:SP("ic"), sp2l:"ascenso inicial",
+        fl:["12° (before take-off)","SET FOR T/O","SET FOR T/O"],
+        c3:["Potencia","FULL OPEN",""],
+        all:["Entrar en pista: final libre · XPDR ALT · LDG light ON.","Avanza los gases con suavidad: la guiñada a la izquierda se corrige con pedal derecho.","Despegue normal: potencia · rotación · ascenso inicial (lista de memoria)."],
+        ac:{cz:["Fuel pump ON al entrar en pista.","Frenos hasta 30 kt y después solo timón. A 40 kt: «Airspeed alive» y «Engine instruments green sector»; a VR: «Rotate»."],
+            c1:["DGI SET y parking brake OFF al entrar en pista."], pi:["Fuel pump ON, DGI SET y parking brake OFF al entrar en pista."]},
+        hook:"Rotación 55 · 60 · 65: de 5 en 5, del avión más pequeño al más grande. Rotas casi a tu Vx."},
+    cw:{sp:SP("t500"), spl:"A 500 ft AGL", sp2:null, fl:["RETRACT","RETRACT","RETRACT"],
+        c3:["Alabeo máx.","20° (30° con altitud)",""],
+        all:["After take-off check al pasar 500 ft AGL: velocidad · flaps · bomba · luz.","El viraje de crosswind es un viraje shallow: 20° de alabeo (30° con altitud).","El tráfico en el circuito tiene prioridad."],
+        ac:{cz:["Fuel pump OFF · LDG light OFF al salir de la ATZ/CTR."], c1:["LDG light OFF al salir de la ATZ/CTR (el C172 no lleva bomba)."], pi:["Fuel pump OFF · LDG light OFF al salir de la ATZ/CTR."]},
+        hook:"Alabeos 20 · 30 · 45: ascenso · crucero y base · rápido. La velocidad de 500 ft (70 · 80 · 80) es la que llevas también en cola."},
+    dw:{sp:SP("dws"), spl:"Velocidad en cola", sp2:SP("dwa"), sp2l:"tras los flaps",
+        fl:["12°","10°","1.ª muesca"], c3:["Potencia",["~3800 RPM","~1800 RPM","~1800 RPM"],""],
+        all:["Landing check en viento en cola: carb. heat AS REQUIRED · flaps."],
+        ac:{cz:["Fuel pump ON · flaps SET (12°).","~3800 RPM porque su Rotax tiene reductora (el máximo es 5800)."], c1:["Flaps AS REQUIRED: primera configuración 10°."], pi:["Fuel pump ON · flaps AS REQUIRED: 1.ª muesca."]},
+        hook:"Cola = velocidad de 500 ft (70 · 80 · 80). Después de los flaps: 65 · 80 · 80."},
+    bs:{sp:SP("bs"), spl:"Velocidad en base", sp2:null, fl:["mantiene 12°","20°","2.ª muesca"],
+        c3:["Alabeo máx.","30° de cola a base",""],
+        all:["Viraje de cola a base: alabeo máximo 30° (viraje medium).","Aproximación estabilizada: descenso de no más de 500 ft/min.","El SOP no fija el punto exacto para virar a base: confírmalo con tu instructor."],
+        ac:{cz:[], c1:[], pi:[]},
+        hook:"Cruiser 65-65-60 en cola, base y final. C172 80-70-55. Piper 80-70-65."},
+    fn:{sp:SP("fs"), spl:"Velocidad en final", sp2:null, fl:["30°","40°","3.ª muesca (40°)"],
+        c3:["Vref","+5 viento cruzado · +10 turbulencia",""],
+        all:["Final check: carb. heat OFF · landing clearance · flaps.","Alabeo máximo 30° de base a final.","Aproximación estabilizada (7 C): si hay duda, go-around."],
+        ac:{cz:["Con 12°: 65 kt · con 30°: 60 kt. Autorización de aterrizaje OBTAINED o pista libre CHK."],
+            c1:["Por flaps: 0° 70 · 10° 65 · 25° 60 · 40° 55."], pi:["Por flaps: 0° 75 · 10° 70 · 25° 70 · 40° 65. Ojo: 10° y 25° llevan la misma velocidad."]},
+        hook:"Final 60 · 55 · 65: el C172 es el único por debajo de 60."},
+    tm:{sp:SP("fs"), spl:"Vref de la toma", sp2:null, fl:["30°","40°","3.ª muesca (40°)"],
+        c3:["Go-around","Throttle MAX",""],
+        all:["Si la aproximación es inestable o dudas: «Go around» · potencia completa · «Flaps» · flap de ascenso.","Vref sube +5 kt con viento cruzado y +10 kt con turbulencia.","Ya en la calle y libre de tráfico: runway vacated (XPDR STBY · flaps RETRACT · equipo no esencial OFF)."],
+        ac:{cz:["Go-around: flaps SET 12 · 60 kt y, al pasar 62, climb."], c1:["Go-around: flaps retract 1 point · 60 kt, libre de obstáculos 70."], pi:["Go-around: flaps retract 1 point · 65 kt y después 80."]},
+        hook:"Go-around inicial 60 · 60 · 65; al salir de obstáculos 62 · 70 · 80."}
   };
-  let sel="dw", quiz=null;
-  const Q2 = [["Cessna 172 · flaps 20°","bs"],["Cessna 172 · flaps 10°","dw"],["Cessna 172 · flaps 40°","fn"],["Piper · 2.ª muesca","bs"],["Piper · 1.ª muesca","dw"],["Piper · 3.ª muesca","fn"],["Cruiser · primeros 12° de flaps","dw"],["Cruiser · 30° de flaps","fn"],["Cruiser · 65 KIAS tras flaps, mantiene 12°","bs"]];
+  const A = () => AC3.filter(a=>!window.F0AC||F0AC.has(a));
+  let ac = A()[0], sel = "dw", quiz = null;
+  const idx = a => AC3.indexOf(a);
+  const lst = v => A().map(a=>ACN[a]+" "+v[idx(a)]).join(" · ");
+  const col = a => `var(--${a})`;
+  function card(lab, val, sub, a){ return `<div class="patc" style="border-top-color:${col(a)}"><span>${esc(lab)}</span><b>${esc(String(val))}</b>${sub?`<small>${esc(sub)}</small>`:""}</div>`; }
   function draw(){
-    const L = LEG[sel];
-    const on = k => sel===k ? 'stroke="var(--magenta)" stroke-width="7"' : 'stroke="var(--blue)" stroke-width="3"';
-    const leg = (k,d) => `<g data-k="${k}"><path d="${d}" fill="none" ${on(k)}/><path d="${d}" fill="none" stroke="transparent" stroke-width="30" pointer-events="stroke"/></g>`;
-    el.innerHTML = `<svg viewBox="0 0 360 190" role="img" aria-label="Circuito de tráfico"><style>.t{fill:var(--muted);font:500 14px Barlow,sans-serif} .l{fill:var(--ink);font:700 18px "Barlow Condensed",sans-serif} g[data-k]{cursor:pointer}</style>
-      <rect x="110" y="120" width="140" height="20" fill="var(--line)" stroke="var(--ink)"/><text class="t" x="180" y="135" text-anchor="middle">PISTA →</text>
-      ${leg("up","M250 130 L310 130 L310 50")}<text class="l" x="300" y="92" text-anchor="end">Upwind /</text><text class="l" x="300" y="111" text-anchor="end">Crosswind</text>
-      ${leg("dw","M310 50 L30 50")}<text class="l" x="170" y="40" text-anchor="middle">Downwind</text>
-      ${leg("bs","M30 50 L30 130")}<text class="l" x="40" y="95">Base</text>
-      ${leg("fn","M30 130 L110 130")}<text class="l" x="52" y="158">Final</text>
-      <text class="t" x="180" y="182" text-anchor="middle">Toca un tramo</text></svg>` +
-      btnRow([["up","Upwind / Crosswind"],["dw","Downwind"],["bs","Base"],["fn","Final"]], sel, "data-k2") +
-      `<div class="vismsg"><b>${L.n}</b><ul>${L.t.map(x=>`<li>${x}</li>`).join("")}</ul></div>` +
-      `<button class="btn sm" data-q="1">${quiz?'Otra':'Ponme a prueba'}</button>` + (quiz?`<div class="vismsg"><b>${quiz.t}: ¿en qué tramo?</b></div><div class="visbtns">${["dw","bs","fn"].map(k=>`<button class="btn sec sm" data-a="${k}">${LEG[k].n.split(" (")[0]}</button>`).join("")}</div><div class="vismsg" id="patm">${quiz.m||""}</div>`:"");
+    if(!A().includes(ac)){ ac = A()[0]; quiz = null; }
+    const L = LEG[sel], i = idx(ac), on = k => sel===k;
+    const st = k => on(k) ? 'stroke="var(--magenta)" stroke-width="7"' : 'stroke="var(--blue)" stroke-width="3"';
+    const fill = k => on(k) ? 'var(--magenta)' : 'var(--blue)';
+    const leg = (k,d,tip,bx,by) => `<g data-k="${k}"><path d="${d}" fill="none" ${st(k)} stroke-linejoin="round" stroke-linecap="round"/><polygon points="${tip}" fill="${fill(k)}"/><path d="${d}" fill="none" stroke="transparent" stroke-width="30" pointer-events="stroke"/><circle cx="${bx}" cy="${by}" r="11" fill="${on(k)?'var(--magenta)':'var(--paper)'}" stroke="${on(k)?'var(--magenta)':'var(--blue)'}" stroke-width="2"/><text x="${bx}" y="${by+4.5}" text-anchor="middle" class="pn${on(k)?' pno':''}">${ORD.indexOf(k)+1}</text></g>`;
+    const svg = `<svg viewBox="0 0 360 214" role="img" aria-label="Circuito de tráfico con seis tramos: despegue, viento cruzado, viento en cola, base, final y toma"><style>.pn{font:700 13px "Barlow Condensed",sans-serif;pointer-events:none;fill:var(--ink)} .pno{fill:#fff} .t{fill:var(--muted);font:500 12.5px Barlow,sans-serif} .l{fill:var(--ink);font:700 15px "Barlow Condensed",sans-serif;pointer-events:none} g[data-k]{cursor:pointer}</style>
+      <rect x="150" y="154" width="125" height="30" fill="var(--line)" stroke="var(--ink)"/><text class="t" x="212" y="201" text-anchor="middle" style="pointer-events:none">PISTA</text>
+      ${leg("to","M152 176 L325 176","262,172 270,176 262,180",300,176)}
+      ${leg("cw","M325 176 L325 88 Q325 76 313 76","321,112 325,104 329,112",325,132)}
+      ${leg("dw","M313 76 L52 76 Q40 76 40 88","132,72 124,76 132,80",180,76)}
+      ${leg("bs","M40 88 L40 152 Q40 164 52 164","36,130 40,138 44,130",40,120)}
+      ${leg("fn","M52 164 L150 164","112,160 120,164 112,168",95,164)}
+      ${leg("tm","M150 164 L236 164","226,160 234,164 226,168",192,164)}
+      <text class="l" x="306" y="201" text-anchor="middle">Despegue</text><text class="l" x="314" y="104" text-anchor="end">Viento cruzado</text><text class="l" x="180" y="64" text-anchor="middle">Viento en cola</text><text class="l" x="52" y="128">Base</text><text class="l" x="95" y="150" text-anchor="middle">Final</text><text class="l" x="192" y="146" text-anchor="middle">Toma</text></svg>`;
+    const spv = L.sp[i], c3 = L.c3, c3v = Array.isArray(c3[1]) ? c3[1][i] : c3[1];
+    const keys = L.all.concat(L.ac[ac]||[]);
+    el.innerHTML = btnRow(A().map(a=>[a,ACN[a]]), ac, "data-a") + svg +
+      btnRow(ORD.map(k=>[k,NAMES[k]]), sel, "data-k2") +
+      `<div class="pat-h"><span class="pat-n">${ORD.indexOf(sel)+1}</span><b>${NAMES[sel]}</b> <small>${EN[sel]}</small> · <span style="color:${col(ac)};font-weight:700">${ACF[ac]}</span></div>` +
+      `<div class="patcs">${card(L.spl, spv+" kt", L.sp2 ? L.sp2l+" "+L.sp2[i]+" kt" : "", ac)}${card("Flaps", L.fl[i], "", ac)}${card(c3[0], c3v, "", ac)}</div>` +
+      `<ul class="patk">${keys.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` +
+      `<div class="pat-hook"><b>Regla</b> ${A().length===3 || !/\d/.test(L.hook) ? esc(L.hook) : esc(L.hook)}</div>` +
+      `<button class="btn sm" data-q="1">${quiz?'Otra':'Ponme a prueba'}</button>` +
+      (quiz ? `<div class="vismsg"><b>${esc(quiz.t)}</b></div><div class="visbtns">${quiz.o.map(o=>`<button class="btn sec sm" data-a2="${esc(String(o.k))}">${esc(o.t)}</button>`).join("")}</div><div class="vismsg" id="patm">${quiz.m||""}</div>` : "");
     el.querySelectorAll("g[data-k]").forEach(g=>g.onclick=()=>{ sel=g.dataset.k; quiz=null; draw(); });
     el.querySelectorAll("[data-k2]").forEach(b=>b.onclick=()=>{ sel=b.dataset.k2; quiz=null; draw(); });
-    el.querySelector("[data-q]").onclick=()=>{ const x=pick(Q2); quiz={t:x[0],k:x[1],m:""}; draw(); };
-    el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ const ok=b.dataset.a===quiz.k; quiz.m = ok?'<span class="pass">Correcto.</span>':`<span class="fail">No: es ${LEG[quiz.k].n.split(" (")[0]}.</span>`; el.querySelector("#patm").innerHTML=quiz.m; });
+    el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ ac=b.dataset.a; quiz=null; draw(); });
+    el.querySelector("[data-q]").onclick=()=>{ quiz = mkQuiz(); draw(); };
+    el.querySelectorAll("[data-a2]").forEach(b=>b.onclick=()=>{ const ok=b.dataset.a2===String(quiz.k); quiz.m = ok?'<span class="pass">Correcto.</span>':`<span class="fail">No: es ${esc(quiz.kt)}.</span>`; el.querySelector("#patm").innerHTML=quiz.m; });
+  }
+  // preguntas: «¿en qué tramo?» (por flaps) o «¿qué velocidad?»
+  function mkQuiz(){
+    const a = pick(A()), i = idx(a), kind = Math.random()<.5 ? "leg" : "val";
+    if(kind==="leg"){
+      const cand = ["dw","bs","fn"].filter(k=>!(a==="cz"&&k==="bs"));   // Cruiser mantiene 12° en cola y en base: se pregunta con la velocidad
+      const k = pick(cand), fl = LEG[k].fl[i];
+      return {t:`${ACF[a]} · flaps ${fl}: ¿en qué tramo?`, k, kt:NAMES[k], o:["dw","bs","fn"].map(x=>({k:x,t:NAMES[x]}))};
+    }
+    const k = pick(["dw","bs","fn","to"]), L = LEG[k], v = L.sp[i];
+    let cand = uniq(A().map(x=>L.sp[idx(x)]).concat(["dw","bs","fn","to"].map(x=>LEG[x].sp[i])).filter(x=>x!==v)).slice(0,3);
+    while(cand.length<3){ const c = v + pick([-10,-5,5,10]); if(c!==v && !cand.includes(c)) cand.push(c); }
+    return {t:`${ACF[a]} · ${NAMES[k].toLowerCase()}: ¿qué velocidad (KIAS)?`, k:v, kt:v+" kt", o:shuffle([v,...cand]).map(x=>({k:x,t:String(x)}))};
   }
   draw();
+  if(window.F0AC) F0AC.onChange(()=>{ quiz=null; draw(); });
 }
 
 // calculadora de mínimos: viento, techo, visibilidad y temperatura (deberes: WANT)
@@ -2252,11 +2606,12 @@ function initMin(){
       return `<tr><td>${ACF[a]}</td><td class="${ok1?'pass':'fail'}">${Math.round(cross)} / ${xm} kt</td><td class="${ok2?'pass':'fail'}">${Math.round(tail)} / ${tailMax} kt</td><td class="${ok3?'pass':'fail'}">${t} / ${tm} °C</td><td><b class="${ok1&&ok2&&ok3?'pass':'fail'}">${ok1&&ok2&&ok3?'SÍ':'NO'}</b></td></tr>`; };
     const visOk = solo ? vis>=visSolo : vis>=visMin, cigOk = cig>=cigMin;
     $("#mOut").innerHTML = `<p><b>Componente en pista (con racha):</b> ${head>=0?'cara':'cola'} ${Math.round(Math.abs(head))} kt · cruzado ${Math.round(cross)} kt · <span class="${head<=headMax?'pass':'fail'}">cara máx. ${headMax} kt ${head<=headMax?'OK':'superado'}</span></p>
-      <div class="scroll"><table><tr><th>Avión</th><th>Cruzado / máx.</th><th>Cola / máx.</th><th>Temp. / máx.</th><th>¿Se puede?</th></tr>${AC3.map(row).join("")}</table></div>
+      <div class="scroll"><table><tr><th>Avión</th><th>Cruzado / máx.</th><th>Cola / máx.</th><th>Temp. / máx.</th><th>¿Se puede?</th></tr>${AC3.filter(a=>!window.F0AC||F0AC.has(a)).map(row).join("")}</table></div>
       <p>Visibilidad ${vis} m: <b class="${visOk?'pass':'fail'}">${visOk?'OK':'por debajo'}</b> (mínimo ${solo?visSolo+' m según la tabla · Nota 1: solo flights MO states 5000 m + 2500 ft':visMin+' m'}) · Techo ${cig} ft: <b class="${cigOk?'pass':'fail'}">${cigOk?'OK':'por debajo'}</b> (mínimo ${cigMin} ft)</p>
       <p class="muted small">Recuerda: condiciones iguales o mejores 1 h antes y 1 h después, en salida y llegada; sin SIGMET; sin windshear; CB: decide el HT o el CFI.</p>`;
   }
   el.querySelectorAll("input,select").forEach(i=>i.addEventListener("input",calc)); calc();
+  if(window.F0AC) F0AC.onChange(calc);
   $("#mBil").onclick=()=>{ const v={mRwy:12,mWd:90,mWs:6,mWg:0,mVis:9999,mCig:5000,mT:19}; Object.entries(v).forEach(([k,x])=>{ $("#"+k).value=x; }); $("#mMode").value="fi"; calc(); };
 }
 
@@ -2267,9 +2622,10 @@ function initFlow(){
 }
 
 // une cada dato con su valor (pregunta de «unir» del examen)
-function initPairs(elId, pairs){
+function initPairs(elId, pairs0){
   const el = $("#"+elId); if(!el) return;
-  let items=[], done=false;
+  const mkP = () => pairs0.filter(p=>!window.F0AC||F0AC.okText(p[0]));
+  let pairs = mkP(), items=[], done=false;
   function newRound(){ items = shuffle(pairs.map(p=>({t:p[0], v:p[1]}))).slice(0,6); done=false; draw(); }
   function draw(){
     const vals = shuffle(uniq(pairs.map(p=>p[1])));
@@ -2281,6 +2637,7 @@ function initPairs(elId, pairs){
     el.querySelector("[data-n]").onclick=newRound;
   }
   newRound();
+  if(window.F0AC) F0AC.onChange(()=>{ pairs=mkP(); newRound(); });
 }
 
 // qué llevar al vuelo: casillas
@@ -3142,4 +3499,11 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ try{ console.error("lens",e); }catch(_){} }
 })();
 </script>
-<script src="../viz16.js?v=0c392d1a" defer></script>
+
+
+
+
+
+
+<!--f0ach--><script>try{F0AC.hookTests()}catch(e){}</script><!--/f0ach-->
+<script src="../viz16.js?v=953fbb91" defer></script>

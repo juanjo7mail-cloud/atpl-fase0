@@ -372,7 +372,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <section id="p-notes">
 <section class="labs" aria-label="Láminas interactivas">
 <style>.labs{border:1px solid var(--line,#d5dde5);border-left:5px solid #1F6FB5;background:var(--paper,#fff);border-radius:10px;padding:12px 14px;margin:0 0 14px}.labs b{display:block;margin-bottom:8px;font-size:15px}.labs .lb{display:flex;flex-wrap:wrap;gap:8px}.labs button{font:600 14px/1.1 inherit;font-family:inherit;border:1px solid #1F6FB5;color:#1F6FB5;background:#fff;border-radius:99px;padding:8px 14px;cursor:pointer}.labs button:hover{background:#1F6FB5;color:#fff}</style>
-<b>Láminas interactivas · pulsa y se abren</b><div class="lb"><button data-lo="POH.2.1" data-v="tape" type="button">Cinta de velocidades</button><button data-lo="POH.7.1" data-v="syscmp" type="button">Sistemas cara a cara</button><button data-lo="POH.7.3" data-v="" type="button">Panel de anunciadores</button></div></section>
+<b>Láminas interactivas · pulsa y se abren</b><div class="lb"><button data-lo="POH.2.1" data-v="tape" type="button">Cinta de velocidades</button><button data-lo="POH.7.1" data-v="syscmp" type="button">Sistemas cara a cara</button><button data-lo="POH.7.3" data-v="" type="button" data-acany="pi">Panel de anunciadores</button></div></section>
 <script>(function(){document.querySelectorAll(".labs button").forEach(function(b){b.addEventListener("click",function(){var d=document.getElementById("lo-"+b.dataset.lo);if(!d)return;d.open=true;var p=d.querySelector('.f0viz[data-viz="'+b.dataset.v+'"]')||d.querySelector(".f0viz,.vis");setTimeout(function(){(p||d).scrollIntoView({behavior:"smooth",block:"start"});},60);});});})();</script>
 <div class="card" id="cruCard"><b>Los 3 aviones, juntos</b><p class="muted small">Cada tabla lleva los tres aviones en el mismo orden y color: <span style="color:var(--cz);font-weight:700">Cruiser</span> · <span style="color:var(--c1);font-weight:700">C172</span> · <span style="color:var(--pi);font-weight:700">Piper</span>. Pulsa «Tapar valores» encima de cada tabla para memorizarla y «Ponme a prueba» para comprobarte.</p><div class="chips"><button class="linkbtn" data-go="lo-POH.1.5">Tabla maestra de los 3 aviones</button></div></div>
 <div class="card" id="hotCard" hidden><b>Lo que más fallas</b><div id="hotFails"></div></div>
@@ -398,6 +398,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="scroll"><table class="t3"><tr><th>Dato</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Capacidad</b></td><td class="cz"><span class="va">114 L</span></td><td class="c1"><span class="va">43 US gal</span></td><td class="pi"><span class="va">50 US gal</span></td></tr><tr><td><b>Utilizable</b></td><td class="cz"><span class="va">113 L</span></td><td class="c1"><span class="va">40 US gal</span></td><td class="pi"><span class="va">48 US gal</span></td></tr><tr><td><b>Utilizable en litros</b></td><td class="cz"><span class="va">113 L</span></td><td class="c1"><span class="va">≈ 151 L</span></td><td class="pi"><span class="va">≈ 181 L</span></td></tr><tr><td><b>Combustible</b></td><td class="cz"><span class="va">MOGAS y AVGAS</span></td><td class="c1"><span class="va">100 y 100LL AVGAS</span></td><td class="pi"><span class="va">100LL AVGAS</span></td></tr><tr><td><b>Aceite</b></td><td class="cz"><span class="va">—</span></td><td class="c1"><span class="va">capacidad 6 qts · mínimo 4 qts</span></td><td class="pi"><span class="va">6 a 8 qts</span></td></tr></table></div>
 <div class="comp"><b>Complemento</b><ul><li>Piper y Cessna miden en <b>galones US</b>; el <b>Cruiser</b> en <b>litros</b>. 1 US gal = 3,78 L.</li></ul></div>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Cruiser = métrico</b> (litros, kg, bar). <b>Piper y Cessna = americano</b> (galones, lbs, psi).</li><li>Diferencia entre capacidad y útil: <b>Piper 2 · Cessna 3 · Cruiser 1</b>.</li></ul></div>
+<div class="mnem"><b>Varilla de aceite</b><ul><li><b>Cessna 4 – 6</b> qts: mínimo 4, lleno 6. <b>Piper 6 – 8</b> qts: el Piper pide dos más en los dos extremos.</li><li>Resumen: <b>Cessna 4 · 6</b> y <b>Piper 6 · 8</b>; el POH no da esta escala para el Cruiser.</li></ul></div>
 <div class="flag"><b>Trampa</b> No confundas <b>capacidad</b> con <b>utilizable</b>: la diferencia es combustible que no puedes usar (2 en el Piper, 3 en el Cessna, 1 en el Cruiser).</div>
 
 </div>
@@ -464,6 +465,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="scroll"><table class="t3"><tr><th>Arco</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Arco blanco</b></td><td class="cz"><span class="va">31 – 75</span></td><td class="c1"><span class="va">41 – 85</span></td><td class="pi"><span class="va">44 – 103</span></td></tr><tr><td><b>Arco verde</b></td><td class="cz"><span class="va">37 – 108</span></td><td class="c1"><span class="va">47 – 128</span></td><td class="pi"><span class="va">50 – 126</span></td></tr><tr><td><b>Arco amarillo</b></td><td class="cz"><span class="va">108 – 138</span></td><td class="c1"><span class="va">128 – 160</span></td><td class="pi"><span class="va">126 – 160</span></td></tr><tr><td><b>Línea roja</b></td><td class="cz"><span class="va">138</span></td><td class="c1"><span class="va">160</span></td><td class="pi"><span class="va">160</span></td></tr></table></div>
 <div class="mnem"><b>Escalera de la cinta</b><ul><li><b>De abajo arriba</b>: VS0 · VS1 · VR · VY · VFE · VA · VNO · VNE. En el Cruiser: <b>31 · 37 · 55 · 62 · 75 · 88 · 108 · 138</b>.</li><li><b>Cada arco acaba donde marca una V</b>: el blanco en <b>VFE</b>, el verde en <b>VNO</b>, el amarillo en <b>VNE</b> (la línea roja). Y empiezan en VS0 (blanco) y VS1 (verde).</li><li><b>Planeo = Vx + 5</b> en el Cruiser (55→60) y en el C172 (60→65). El Piper rompe la regla: 64→73.</li></ul></div>
 <div class="mnem"><b>Truco para recordarlo</b><ul><li><b>VFE: 75 – 85 – 103</b> (Cruiser, Cessna, Piper): crece con el tamaño del avión.</li><li><b>VNE: 138 · 160 · 160</b>: solo el Cruiser es distinto.</li><li><b>VNO: 108 · 128 · 126</b>: el Cessna es mayor que el Piper (única vez).</li></ul></div>
+<div class="mnem"><b>Escalera de pérdidas</b><ul><li><b>VS1 = VS0 + 6</b> en los tres: Cruiser 31 → 37 · Cessna 41 → 47 · Piper 44 → 50.</li><li>Aprende solo VS0 (31 · 41 · 44) y sumas 6: ahorras tres datos.</li></ul></div>
 <div class="flag"><b>Trampa</b> El Cessna tiene todo <b>más bajo</b> que el Piper salvo <b>VNO</b> (128 frente a 126): VFE 85 frente a 103 y VA 80–97 frente a 88–111. El <b>Cruiser</b> tiene todo más bajo que los dos.</div>
 <div class="comp"><b>Complemento</b><ul><li>Blanco = rango de flaps · verde = operación normal · amarillo = solo con aire en calma · rojo = VNE.</li><li>Según el SOP, el Piper (Archer III) lleva VFE 100 · VNO 122 · VNE 155: no coincide con el POH de esta tabla (103 · 126 · 160). Pregunta a tu instructor cuál usar.</li></ul></div>
 
@@ -536,7 +538,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
   </ul></div>
   <div class="key"><b>Clave</b>Primero <b>reducir la carga eléctrica al mínimo</b>, luego revisar el breaker del alternador.</div>
   <h4>Checklist paso a paso</h4>
-  <div id="visAlt" class="vis"></div>
+  <div id="visAlt" class="vis" data-acany="pi c1"></div>
   <div class="flag"><b>Trampa</b> El motor <b>no</b> se para y el master <b>no</b> se apaga: el objetivo es alargar la batería y aterrizar cuanto antes.</div>
 </div>
 </details>
@@ -555,7 +557,8 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
    <tr><td><b>Pérdida de presión de combustible</b></td><td>Bomba ON y selector en el depósito más lleno; si no es depósito vacío, aterrizar.</td></tr>
    <tr><td><b>Rugosidad del motor</b></td><td>Calefacción de carburador ON; si no mejora en 1 minuto, OFF y buscar otras causas (magnetos).</td></tr>
   </table></div>
-  <div class="flag"><b>Trampa</b> Una pérdida de presión suele ir acompañada de una <b>subida de temperatura</b>.</div>
+  <div class="mnem"><b>Regla de los dos relojes</b><ul><li><b>P y T juntas</b>: mira siempre presión y temperatura del aceite a la vez. <b>Presión baja + temperatura alta = motor a punto de pararse</b>.</li><li><b>Parcial → cuanto antes; total → aeródromo más cercano</b>, y con humo o temperatura alta, campo fuera mientras haya potencia.</li></ul></div>
+<div class="flag"><b>Trampa</b> Una pérdida de presión suele ir acompañada de una <b>subida de temperatura</b>.</div>
 </div>
 </details>
 
@@ -647,7 +650,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="profe"><b>★ IMPORTANTE</b><ul><li>Aprenderse los <b>flaps</b>, el <b>stabilator</b> y el <b>anti-balance tab</b>.</li></ul></div>
 <div class="key"><b>Clave</b>Piper: flaps manuales <b>0° · 10° · 25° · 40°</b> y cola horizontal = <b>stabilator</b> con <b>anti-balance tab</b>. Cessna: flaps eléctricos <b>10° · 20° · Full</b>. Cruiser: flaps eléctricos continuos <b>Up · TO 12° · LDG 30°</b>.</div>
 <h4>Stabilator del Piper · mueve la palanca</h4>
-<div id="visCtrl" class="vis"></div>
+<div id="visCtrl" class="vis" data-acany="pi"></div>
 <div class="scroll"><table class="t3"><tr><th>Mandos</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Cola horizontal</b></td><td class="cz"><span class="va">elevador</span></td><td class="c1"><span class="va">elevador</span></td><td class="pi"><span class="va"><b>stabilator</b> + anti-balance tab</span></td></tr><tr><td><b>Flaps</b></td><td class="cz"><span class="va">eléctricos, continuos: Up · TO 12° · LDG 30°</span></td><td class="c1"><span class="va">eléctricos: 10° · 20° · Full</span></td><td class="pi"><span class="va">manuales: 10° · 25° · 40°</span></td></tr><tr><td><b>Compensadores</b></td><td class="cz"><span class="va">eléctricos (alabeo: alerón derecho; cabeceo: elevador)</span></td><td class="c1"><span class="va">—</span></td><td class="pi"><span class="va">manuales de guiñada y cabeceo</span></td></tr><tr><td><b>Mandos</b></td><td class="cz"><span class="va">palancas y poleas (cabeceo y alabeo); cables (guiñada)</span></td><td class="c1"><span class="va">cables</span></td><td class="pi"><span class="va">cables y poleas</span></td></tr><tr><td><b>Rueda de morro en tierra</b></td><td class="cz"><span class="va">libre: frenado diferencial</span></td><td class="c1"><span class="va">10° · hasta 30° con frenos</span></td><td class="pi"><span class="va">±30°</span></td></tr></table></div>
 <ul>
 <li>Piper: doble mando, con <b>cables y poleas</b>; compensadores manuales de <b>guiñada y cabeceo</b>.</li>
@@ -673,9 +676,9 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
   <div class="key"><b>Clave</b>De izquierda a derecha: <b>bomba de vacío</b> · <b>alternador</b> · <b>presión de aceite</b>.</div>
   <div class="flag"><b>Ojo</b> Este es el panel del <b>Piper</b>. El Cruiser tiene pantallas Dynon SkyView (ver POH.7.8).</div>
   <h4>Annunciator panel · enciende cada luz</h4>
-  <div id="visAnnun" class="vis"></div>
+  <div id="visAnnun" class="vis" data-acany="pi"></div>
   <h4>Los seis instrumentos · tócalos</h4>
-  <div id="visSix" class="vis"></div>
+  <div id="visSix" class="vis" data-acany="pi c1"></div>
 <figure class="fig ckfig"><div class="ckp" data-ck="pi"></div><figcaption>Cabina de un Piper PA-28: toca un punto o usa «Rotulador», «Paso a paso» y «Ponme a prueba».</figcaption></figure>
   <div class="flag"><b>Trampa</b> Luz del <b>centro</b> = alternador: queda batería para unos <b>30 min</b>. La luz de la <b>izquierda</b> es el vacío, no el alternador.</div>
 </div>
@@ -685,6 +688,8 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <div class="body">
 <div class="key"><b>Clave</b>Los tres: tren <b>fijo</b> de triciclo. Piper: suspensión <b>aire-aceite</b> y frenos <b>solo en las principales</b>. Cessna: frenos de disco hidráulicos. Cruiser: rueda de morro <b>libre</b>.</div>
 <div class="scroll"><table class="t3"><tr><th>Tren</th><th class="cz">Cruiser</th><th class="c1">C172</th><th class="pi">Piper</th></tr><tr><td><b>Principal</b></td><td class="cz"><span class="va">suspensión mecánica, doble muelle</span></td><td class="c1"><span class="va">frenos de disco hidráulicos · suspensión mecánica de muelle</span></td><td class="pi"><span class="va">suspensión aire-aceite · 24 psi · elongación 4,5 in</span></td></tr><tr><td><b>Morro</b></td><td class="cz"><span class="va">libre (free castering)</span></td><td class="c1"><span class="va">suspensión aire-aceite</span></td><td class="pi"><span class="va">30 psi · elongación 3,25 in</span></td></tr><tr><td><b>Frenos</b></td><td class="cz"><span class="va">frenado diferencial para girar</span></td><td class="c1"><span class="va">discos hidráulicos</span></td><td class="pi"><span class="va">solo en las principales (incluido el de parking)</span></td></tr><tr><td><b>En tierra</b></td><td class="cz"><span class="va">se gira con frenado diferencial</span></td><td class="c1"><span class="va">10° (hasta 30° con frenos)</span></td><td class="pi"><span class="va">se gira con los pedales</span></td></tr></table></div>
+<div class="mnem"><b>Truco para recordarlo</b><ul><li><b>Tren principal: solo el Piper es aire-aceite</b> (24 psi · 4,5 in). Cruiser y Cessna: muelle.</li><li><b>Morro: Cessna y Piper aire-aceite</b>; el Cruiser lo lleva libre (free castering) y gira con frenado diferencial.</li></ul></div>
+
 <figure class="fig dgf dgtabs"><div class="visbtns"><button type="button" class="btn sec sm on" data-t="cz" style="border-color:var(--cz);color:var(--cz)">PS-28 Cruiser</button><button type="button" class="btn sec sm" data-t="c1" style="border-color:var(--c1);color:var(--c1)">Cessna 172</button><button type="button" class="btn sec sm" data-t="pi" style="border-color:var(--pi);color:var(--pi)">Piper PA-28</button></div><div class="dgtab" data-t="cz"><svg class="dg" viewBox="0 0 440 350" role="img" aria-label="Tren de PS-28 Cruiser"><g class="plane" style="--pc:var(--cz)"><polygon points="200,128 62,150 62,184 202,176" class="pl"/><polygon points="240,128 378,150 378,184 238,176" class="pl"/><polygon points="206,300 140,310 140,330 206,322" class="pl"/><polygon points="234,300 300,310 300,330 234,322" class="pl"/><path d="M220 50 C236 50 240 84 240 124 L236 262 L229 326 L211 326 L204 262 L200 124 C200 84 204 50 220 50Z" class="pl fu"/><path d="M205 104 C205 90 212 82 220 82 C228 82 235 90 235 104 L233 142 L207 142Z" class="cab"/><line x1="176" y1="47" x2="264" y2="47" class="prop"/><circle cx="220" cy="51" r="6" class="pl"/></g><rect x="214.5" y="83.0" width="11" height="20" rx="3" class="wh"/><rect x="167.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="172" cy="168" r="3" fill="var(--bad)"/><rect x="263.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="268" cy="168" r="3" fill="var(--bad)"/><line x1="220" y1="103" x2="220" y2="160" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="172" y1="168" x2="268" y2="168" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="337.1" y1="57" x2="220" y2="93" stroke="var(--ink)" stroke-width="1.6"/><circle cx="220" cy="93" r="3.6" fill="var(--ink)"/><text x="430" y="62" text-anchor="end" class="dt c">Nariz libre</text><text x="430" y="80" text-anchor="end" class="dt s">free castering</text><line x1="87.10000000000001" y1="257" x2="172" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="172" cy="168" r="3.6" fill="var(--ink)"/><text x="10" y="262" class="dt c">Principal</text><text x="10" y="280" class="dt s">doble muelle mecánico</text><line x1="376.6" y1="257" x2="268" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="268" cy="168" r="3.6" fill="var(--ink)"/><text x="430" y="262" text-anchor="end" class="dt c">Frenos</text><text x="430" y="280" text-anchor="end" class="dt s">para girar: diferencial</text></svg></div><div class="dgtab" data-t="c1" hidden><svg class="dg" viewBox="0 0 440 350" role="img" aria-label="Tren de Cessna 172"><g class="plane" style="--pc:var(--c1)"><polygon points="200,128 62,150 62,184 202,176" class="pl"/><polygon points="240,128 378,150 378,184 238,176" class="pl"/><polygon points="206,300 140,310 140,330 206,322" class="pl"/><polygon points="234,300 300,310 300,330 234,322" class="pl"/><path d="M220 50 C236 50 240 84 240 124 L236 262 L229 326 L211 326 L204 262 L200 124 C200 84 204 50 220 50Z" class="pl fu"/><path d="M205 104 C205 90 212 82 220 82 C228 82 235 90 235 104 L233 142 L207 142Z" class="cab"/><line x1="176" y1="47" x2="264" y2="47" class="prop"/><circle cx="220" cy="51" r="6" class="pl"/></g><rect x="214.5" y="83.0" width="11" height="20" rx="3" class="wh"/><rect x="167.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="172" cy="168" r="3" fill="var(--bad)"/><rect x="263.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="268" cy="168" r="3" fill="var(--bad)"/><line x1="220" y1="103" x2="220" y2="160" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="172" y1="168" x2="268" y2="168" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="384.5" y1="57" x2="220" y2="93" stroke="var(--ink)" stroke-width="1.6"/><circle cx="220" cy="93" r="3.6" fill="var(--ink)"/><text x="430" y="62" text-anchor="end" class="dt c">Nariz</text><text x="430" y="80" text-anchor="end" class="dt s">aire-aceite · 10° (30° con frenos)</text><line x1="87.10000000000001" y1="257" x2="172" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="172" cy="168" r="3.6" fill="var(--ink)"/><text x="10" y="262" class="dt c">Principal</text><text x="10" y="280" class="dt s">muelle · frenos de disco</text><line x1="376.6" y1="257" x2="268" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="268" cy="168" r="3.6" fill="var(--ink)"/><text x="430" y="262" text-anchor="end" class="dt c">Frenos</text><text x="430" y="280" text-anchor="end" class="dt s">hidráulicos</text></svg></div><div class="dgtab" data-t="pi" hidden><svg class="dg" viewBox="0 0 440 350" role="img" aria-label="Tren de Piper PA-28"><g class="plane" style="--pc:var(--pi)"><polygon points="200,128 62,150 62,184 202,176" class="pl"/><polygon points="240,128 378,150 378,184 238,176" class="pl"/><polygon points="206,300 140,310 140,330 206,322" class="pl"/><polygon points="234,300 300,310 300,330 234,322" class="pl"/><path d="M220 50 C236 50 240 84 240 124 L236 262 L229 326 L211 326 L204 262 L200 124 C200 84 204 50 220 50Z" class="pl fu"/><path d="M205 104 C205 90 212 82 220 82 C228 82 235 90 235 104 L233 142 L207 142Z" class="cab"/><line x1="176" y1="47" x2="264" y2="47" class="prop"/><circle cx="220" cy="51" r="6" class="pl"/></g><rect x="214.5" y="83.0" width="11" height="20" rx="3" class="wh"/><rect x="167.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="172" cy="168" r="3" fill="var(--bad)"/><rect x="263.0" y="157.0" width="10" height="22" rx="3" class="wh"/><circle cx="268" cy="168" r="3" fill="var(--bad)"/><line x1="220" y1="103" x2="220" y2="160" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="172" y1="168" x2="268" y2="168" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="384.5" y1="57" x2="220" y2="93" stroke="var(--ink)" stroke-width="1.6"/><circle cx="220" cy="93" r="3.6" fill="var(--ink)"/><text x="430" y="62" text-anchor="end" class="dt c">Nariz</text><text x="430" y="80" text-anchor="end" class="dt s">aire-aceite · 30 psi</text><line x1="87.10000000000001" y1="257" x2="172" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="172" cy="168" r="3.6" fill="var(--ink)"/><text x="10" y="262" class="dt c">Principal</text><text x="10" y="280" class="dt s">aire-aceite · 24 psi</text><line x1="376.6" y1="257" x2="268" y2="168" stroke="var(--ink)" stroke-width="1.6"/><circle cx="268" cy="168" r="3.6" fill="var(--ink)"/><text x="430" y="262" text-anchor="end" class="dt c">Frenos</text><text x="430" y="280" text-anchor="end" class="dt s">solo en las principales · parking</text></svg></div><figcaption>Los tres tienen tren fijo de triciclo. Punto rojo = freno. Solo el Cruiser tiene la rueda de morro libre.</figcaption></figure>
 
 </div>
@@ -800,6 +805,268 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 </section>
 
 </div>
+
+
+
+
+
+
+<!--f0ac--><script>/* Filtro global de aeronaves (POH y SOP) — Piper PA-28 · Cessna 172 · Cruiser.
+   Un único estado compartido en localStorage ("f0:ac") que sincroniza POH y SOP (evento storage) y se conserva entre sesiones.
+   Aplica: barra de control, ocultado de columnas/filas/párrafos/figuras en apuntes, filtro de preguntas en tests y API para widgets/láminas. */
+(function(){
+  if(window.F0AC) return;
+  const KEY="f0:ac", ORDER=["pi","c1","cz"];
+  const FULL={pi:"Piper PA-28",c1:"Cessna 172",cz:"PS-28 Cruiser"}, SHORT={pi:"Piper",c1:"Cessna 172",cz:"Cruiser"}, TINT={pi:"#f0a15c",c1:"#7eb3de",cz:"#7bd389"};
+  /* prosa: nombre o equipo propio de cada avión */
+  const NM={cz:/cruiser|ps-?28|rotax|dynon|skyview|woodcomp/i, c1:/cessna|\b172\b|c172|skyhawk|mccauley/i, pi:/piper|pa-?28|cherokee|warrior|archer|sensenich|stabilator|anti-?balance/i};
+  /* preguntas: mismos criterios que acOf() del POH */
+  const NMQ={cz:/cruiser|ps-?28/i, c1:/cessna|\b172\b|c172|skyhawk/i, pi:/piper|pa-?28|cherokee|warrior|archer/i};
+  const HWQ={cz:/rotax|dynon|skyview|woodcomp|\b912\b/i, c1:/mccauley|h2ad/i, pi:/sensenich|stabilator|d2a|d3o/i};
+  let on=load(); const subs=[];
+  function load(){ try{ const a=JSON.parse(localStorage.getItem(KEY)||"null"); if(Array.isArray(a)){ const s=ORDER.filter(k=>a.indexOf(k)>=0); if(s.length) return s; } }catch(e){} return ORDER.slice(); }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(on)); }catch(e){} }
+  const has=k=>on.indexOf(k)>=0;
+  const okSet=s=>!s.length||s.every(has);
+
+  /* ---------- CSS ---------- */
+  const css=document.createElement("style"); css.id="f0ac-css";
+  css.textContent=
+'[data-acx]{display:none!important}'+
+['cz','c1','pi'].map(k=>'html.acx-'+k+' th.'+k+',html.acx-'+k+' td.'+k+',html.acx-'+k+' .chk:not(.same) .chkcol.'+k).join(',')+'{display:none!important}'+
+'html.acx-cz .chk:not(.same) .chkgrid,html.acx-c1 .chk:not(.same) .chkgrid,html.acx-pi .chk:not(.same) .chkgrid{grid-template-columns:repeat(var(--acn,3),1fr)}'+
+'@media (max-width:760px){html .chk:not(.same) .chkgrid{grid-template-columns:1fr}}'+
+['cz','c1','pi'].map(k=>'html.acx-'+k+' .dgtabs button[data-t="'+k+'"],html.acx-'+k+' .chkview-bar button[data-ac="'+k+'"]').join(',')+'{display:none!important}'+
+'html.acx-cz .figs3,html.acx-c1 .figs3,html.acx-pi .figs3{grid-template-columns:repeat(var(--acn,3),1fr)}'+
+'@media (max-width:760px){html .figs3{grid-template-columns:1fr!important}}'+
+'.f0acb{display:flex;align-items:center;gap:10px;margin:10px 0 0;padding:6px 8px;background:#0c1524;border:1px solid #2b3a55;border-radius:8px;box-shadow:inset 0 0 0 1px #000;color:#cfe0f5;font:600 12px/1 "Barlow Condensed",Barlow,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;-webkit-user-select:none;user-select:none}'+
+'.f0acb .lb{color:#7fb6ff;white-space:nowrap}'+
+'.f0acb .btns{display:flex;gap:6px;flex:1;min-width:0}'+
+'.f0acb button{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:0 6px;background:#101c31;border:1px solid #34476a;border-radius:6px;color:#8fa3c4;font:inherit;font-size:13px;letter-spacing:.05em;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;text-transform:uppercase;white-space:nowrap}'+
+'.f0acb button .led{width:9px;height:9px;border-radius:50%;background:#26324a;box-shadow:inset 0 0 0 1px #0007;flex:none}'+
+'.f0acb button[aria-pressed=true]{background:#13243f;border-color:var(--c);color:#fff}'+
+'.f0acb button[aria-pressed=true] .led{background:var(--c);box-shadow:0 0 8px var(--c)}'+
+'.f0acb button:focus-visible{outline:2px solid #ffd36e;outline-offset:1px}'+
+'.f0acb .all{flex:0 0 auto;min-height:40px;padding:0 10px;color:#ffd36e;border-color:#6b5a2a;background:#17140b}'+
+'.f0acb .all[hidden]{display:none}'+
+'.f0acb.shake{animation:f0acs .35s}@keyframes f0acs{20%{transform:translateX(-5px)}60%{transform:translateX(5px)}}'+
+'.f0acm{margin:4px 2px 0;font-size:12px;color:var(--muted,#667);min-height:0}'+
+'@media (max-width:520px){.f0acb .lb{display:none}.f0acb{gap:6px;padding:5px}.f0acb button{font-size:12px;letter-spacing:.02em;gap:5px;padding:0 3px}.f0acb .sx{display:none}}'+
+'@media (prefers-reduced-motion:reduce){.f0acb.shake{animation:none}}';
+  document.head.appendChild(css);
+
+  /* ---------- clasificación de texto ---------- */
+  const setOf=t=>ORDER.filter(k=>NM[k].test(t));
+  const TRI=/\d+(?:[.,]\d+)?\s*[–·-]\s*\d+(?:[.,]\d+)?\s*[–·-]\s*\d+/;
+  const segSet=t=>{ let s=setOf(t); if(!s.length && TRI.test(t)) s=ORDER.slice(); return s; };
+  const ABBR=/^(máx|mín|min|max|aprox|ej|vs|etc|nº|n°|fig|pág|p|ft|kt)$/i;
+  function splitSentences(h){
+    const m=h.replace(/(\S*)([.;])(\s+)(?=[A-ZÁÉÍÓÚÑ0-9«"¿¡(<])/g,(a,w,p)=>(p==="."&&ABBR.test(w))?a:w+p+"\u0001");
+    return m.split("\u0001");
+  }
+  const BLOCK=/<(ul|ol|div|table|p|svg|button|input|select|details|figure)\b/i;
+  const LEADRE=/^(Clave|Truco para recordarlo|Trampa|Ojo|★ IMPORTANTE)$/i;
+  const stripAcs=h=>h.replace(/<span class="acs"[^>]*>[\s\S]*?<\/span>/g,"");
+  const plain=h=>h.replace(/<[^>]+>/g," ");
+  function balanced(h){ const st=[]; const re=/<(\/?)([a-z0-9]+)\b[^>]*>/gi; let m; while((m=re.exec(h))){ const t=m[2].toLowerCase(); if(/^(br|img|hr|input|wbr)$/.test(t)) continue; if(m[1]){ if(st.pop()!==t) return false; } else st.push(t); } return st.length===0; }
+  /* paréntesis que traen su propio dato de otro avión: «10° (Cruiser: 12°)» → solo se oculta el paréntesis */
+  function parenWrap(el){
+    const h=el.innerHTML; let ch=false;
+    const n=h.replace(/\(((?:[^()<>]|<[^>]+>)*)\)/g,(m,inner)=>{ const t=plain(inner), S=setOf(t); if(S.length&&/\d/.test(t)){ ch=true; return '<span class="acs" data-acs="'+S.join(" ")+'">'+m+'</span>'; } return m; });
+    if(ch){ el.innerHTML=n; el.dataset.acseg="1"; }
+    return ch;
+  }
+  function segment(el){
+    let h=el.innerHTML, lead="";
+    const L=/^\s*<b>(Clave|Truco para recordarlo|Trampa|Ojo|★ IMPORTANTE)<\/b>/i.exec(h); if(L){ lead=L[0]; h=h.slice(L[0].length); }
+    if(BLOCK.test(h)) return false;
+    const sents=splitSentences(h), pieces=[];
+    sents.forEach(s=>{
+      const parts=s.split(/\s·\s/);
+      const withAc=parts.filter(p=>setOf(plain(stripAcs(p))).length).length;
+      if(parts.length>1 && withAc>=2){ parts.forEach((p,j)=>{ if(j) pieces.push({sep:1}); pieces.push({h:p}); }); }
+      else pieces.push({h:s});
+      pieces.push({gap:1});
+    });
+    pieces.pop();
+    const cont=pieces.filter(p=>p.h!==undefined);
+    if(!cont.every(p=>balanced(p.h))) return false;
+    cont.forEach(p=>{ p.s=segSet(plain(stripAcs(p.h))); });
+    const distinct=new Set(cont.map(p=>p.s.join(",")).filter(Boolean));
+    const neutral=cont.some(p=>!p.s.length);
+    if(!(distinct.size>=2 || (distinct.size===1 && neutral))) return false;
+    el.innerHTML=lead+pieces.map(p=>p.gap?" ":p.sep?'<span class="acsep"> · </span>':'<span class="acs" data-acs="'+p.s.join(" ")+'">'+p.h+'</span>').join("");
+    el.dataset.acseg="1"; return true;
+  }
+  function fixSeps(el){
+    let seen=false, pend=null;
+    [].forEach.call(el.childNodes,n=>{
+      if(n.nodeType===3){ if(pend){ pend.setAttribute("data-acx","1"); pend=null; } seen=false; return; }
+      if(n.classList&&n.classList.contains("acsep")){ pend=n; return; }
+      if(n.classList&&n.classList.contains("acs")){
+        const vis=!n.hasAttribute("data-acx");
+        if(pend){ if(vis&&seen) pend.removeAttribute("data-acx"); else pend.setAttribute("data-acx","1"); pend=null; }
+        if(vis) seen=true;
+      }
+    });
+    if(pend) pend.setAttribute("data-acx","1");
+  }
+
+  /* ---------- barrido de apuntes ---------- */
+  const LEAF="li,p,div.key,div.flag,figcaption,h4,h5,summary";
+  const SKIP=".chkcol,.ckp,.labs,.f0viz,.f0acb,.vismsg,.visbtns,.steps";
+  const own=el=>{ const c=el.cloneNode(true); [].forEach.call(c.querySelectorAll(".acs"),x=>x.remove()); return c.textContent||""; };
+  function scan(root){
+    if(!root) return;
+    root.querySelectorAll("td").forEach(el=>{ if(el.dataset.acd||el.closest(SKIP)) return; el.dataset.acd="1"; if(setOf(el.textContent||"").length>0) parenWrap(el); });
+    root.querySelectorAll(LEAF+",tr").forEach(el=>{
+      if(el.dataset.acd||el.closest(SKIP)) return;
+      if(el.tagName==="TR"){ if(el.closest("table.t3")) return; }
+      else if(el.querySelector(LEAF)) return;
+      el.dataset.acd="1";
+      if(el.tagName!=="TR") parenWrap(el);
+      const S=segSet(own(el));
+      if(el.tagName!=="TR" && S.length>=1 && /^(LI|P|DIV)$/.test(el.tagName)){ if(segment(el)) return; }
+      if(S.length) el.dataset.acs=S.join(" ");
+    });
+    root.querySelectorAll("figure").forEach(f=>{
+      if(f.dataset.acd||f.closest(SKIP)) return; f.dataset.acd="1"; if(f.classList.contains("dgtabs")) return;
+      const t=(f.textContent||"")+" "+[].map.call(f.querySelectorAll("[aria-label]"),e=>e.getAttribute("aria-label")).join(" ");
+      let S=setOf(t); [].forEach.call(f.querySelectorAll("[data-ck]"),e=>{ const k=e.getAttribute("data-ck"); if(ORDER.indexOf(k)>=0&&S.indexOf(k)<0) S.push(k); });
+      if(S.length) f.dataset.acs=S.join(" ");
+    });
+  }
+  function paint(root){
+    root=root||document;
+    root.querySelectorAll("[data-acs]").forEach(el=>{
+      const S=el.dataset.acs.split(" ").filter(Boolean);
+      if(okSet(S)) el.removeAttribute("data-acx"); else el.setAttribute("data-acx","1");
+    });
+    root.querySelectorAll("[data-acseg]").forEach(el=>{
+      fixSeps(el);
+      if(el.hasAttribute("data-acs")) return;
+      const c=el.cloneNode(true); [].forEach.call(c.querySelectorAll("[data-acx]"),x=>x.remove());
+      let t=c.textContent||""; const ld=el.firstElementChild; if(ld&&ld.tagName==="B"&&LEADRE.test(ld.textContent.trim())) t=t.replace(ld.textContent,"");
+      const empty=!t.replace(/[\s·.,;:()]/g,"").length;
+      if(empty&&el.tagName!=="TD") el.setAttribute("data-acx","1"); else el.removeAttribute("data-acx");
+    });
+    /* láminas de un grupo de aviones: se ven si hay alguno activo */
+    root.querySelectorAll("[data-acany]").forEach(el=>{
+      const S=el.dataset.acany.split(" ").filter(Boolean), show=S.some(has), h=el.previousElementSibling;
+      if(show) el.removeAttribute("data-acx"); else el.setAttribute("data-acx","1");
+      if(h&&h.tagName==="H4"){ if(!show) h.setAttribute("data-acx","1"); else if(!h.hasAttribute("data-acs")) h.removeAttribute("data-acx"); }
+    });
+    /* lección entera: el resumen nombra un avión apagado */
+    root.querySelectorAll("details").forEach(d=>{
+      const s=d.querySelector(":scope>summary[data-acs]"); if(!s) return;
+      const S=s.dataset.acs.split(" ").filter(Boolean);
+      if(okSet(S)) d.removeAttribute("data-acx"); else d.setAttribute("data-acx","1");
+    });
+    /* contenedores vacíos (caja «Truco», listas) */
+    root.querySelectorAll(".mnem,ul,ol").forEach(c=>{
+      if(c.closest(SKIP)) return;
+      const li=c.querySelectorAll("li"); if(!li.length) return;
+      const all=[].every.call(li,l=>l.hasAttribute("data-acx")||l.closest("[data-acx]")!==null&&l.closest("[data-acx]")!==c);
+      if(all) c.setAttribute("data-acx","1"); else if(!c.dataset.acs) c.removeAttribute("data-acx");
+    });
+    root.querySelectorAll("[data-acseg]").forEach(fixSeps);
+  }
+  let busy=false;
+  function fixTabs(){
+    [].forEach.call(document.querySelectorAll(".dgtabs"),f=>{ const cur=f.querySelector("button[data-t].on"); if(!cur||!has(cur.dataset.t)){ const nb=[].find.call(f.querySelectorAll("button[data-t]"),b=>has(b.dataset.t)); if(nb) nb.click(); } });
+    [].forEach.call(document.querySelectorAll(".chkview"),v=>{ if(v.hidden) return; const c=v.querySelector(".ckp"), k=c&&c.dataset.ck; if(k&&!has(k)){ v.hidden=true; v.innerHTML=""; const bar=v.parentElement&&v.parentElement.querySelector(".chkview-bar"); if(bar) [].forEach.call(bar.querySelectorAll("button"),x=>x.classList.remove("on")); } });
+    const cc=document.querySelector("#cruCard>b"); if(cc) cc.textContent=on.length===3?"Los 3 aviones, juntos":on.length===2?"Los 2 aviones activos, juntos":"Aeronave activa";
+  }
+  function refreshDom(){ if(busy) return; busy=true; try{ const r=document.getElementById("p-notes")||document.body; scan(r); paint(r); fixTabs(); }catch(e){ try{console.error("f0ac",e);}catch(_){} } busy=false; }
+
+  /* ---------- barra ---------- */
+  let bar=null, msg=null;
+  function build(){
+    if(bar) return; const nav=document.querySelector(".wrap>nav,nav[role=tablist]"); if(!nav) return;
+    bar=document.createElement("div"); bar.className="f0acb"; bar.setAttribute("role","group"); bar.setAttribute("aria-label","Filtro de aeronaves");
+    bar.innerHTML='<span class="lb">Aeronaves</span><div class="btns">'+ORDER.map(k=>'<button type="button" data-k="'+k+'" aria-pressed="true" style="--c:'+TINT[k]+'" title="'+FULL[k]+'"><i class="led"></i><span>'+SHORT[k]+'</span></button>').join("")+'</div><button type="button" class="all" hidden>Todos</button>';
+    msg=document.createElement("p"); msg.className="f0acm"; msg.setAttribute("aria-live","polite");
+    nav.parentNode.insertBefore(bar,nav); bar.after(msg);
+    bar.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; if(b.classList.contains("all")) F0AC.set(ORDER); else F0AC.toggle(b.dataset.k); });
+  }
+  function sync(){
+    const de=document.documentElement; ORDER.forEach(k=>de.classList.toggle("acx-"+k,!has(k))); de.style.setProperty("--acn",on.length);
+    if(bar){ [].forEach.call(bar.querySelectorAll("button[data-k]"),b=>b.setAttribute("aria-pressed",has(b.dataset.k)?"true":"false")); bar.querySelector(".all").hidden=on.length===3;
+      if(msg) msg.textContent=on.length===3?"":"Mostrando solo: "+ORDER.filter(has).map(k=>FULL[k]).join(" · ")+". Apuntes, láminas y tests siguen este filtro."; }
+    refreshDom();
+  }
+  function fire(){ sync(); subs.slice().forEach(f=>{ try{ f(on.slice()); }catch(e){ try{console.error("f0ac",e);}catch(_){} } }); }
+
+  /* ---------- preguntas ---------- */
+  const qmemo={};
+  function qSet(q){
+    const id=q[0]; if(qmemo[id]) return qmemo[id];
+    const st=String(q[4]||""), ops=(q[5]||[]).join(" ");
+    let S=ORDER.filter(k=>NMQ[k].test(st+" "+ops)||HWQ[k].test(st));
+    if(!S.length){
+      const m=(typeof ACQ!=="undefined"&&ACQ&&ACQ[id])?String(ACQ[id]).split(" "):[];
+      if(m.length) S=ORDER.filter(k=>m.indexOf(k)>=0);
+      else { const ex=String(q[6]||""); S=ORDER.filter(k=>NMQ[k].test(ex)||HWQ[k].test(ex)); }
+    }
+    return (qmemo[id]=S);
+  }
+  const qOf=it=>Array.isArray(it)?it:(it&&it.k==="mc"&&it.q?it.q:null);
+  const NOFIX=/^(voice|atis|foto|simb|signals|radio|calc)$/;
+  const shuf=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; };
+  function fixList(r,mode){
+    if(!Array.isArray(r)||on.length===3||(mode&&NOFIX.test(mode))) return r;
+    const out=[]; let drop=0;
+    r.forEach(it=>{ const q=qOf(it); if(!q||F0AC.keep(q)) out.push(it); else drop++; });
+    if(!drop) return r;
+    const OBJ=r.length&&!Array.isArray(r[0]);
+    const target = mode==="all" ? 0 : mode==="wrong" ? Math.min(r.length,10) : r.length;
+    if(out.length>=target) return out;
+    let B=[]; try{ B=typeof BANK!=="undefined"&&Array.isArray(BANK)?BANK:[]; }catch(e){}
+    const have=new Set(out.map(it=>{ const q=qOf(it); return q&&q[0]; }));
+    const fam=q=>{ try{ return typeof baseOf==="function"?baseOf(q[0]):q[0]; }catch(e){ return q[0]; } };
+    const seen=new Set(out.map(it=>{ const q=qOf(it); return q&&fam(q); }));
+    const inc=(document.getElementById("incComp")||{}).checked!==false, atpl=!!(document.getElementById("incTrial")||{}).checked;
+    const given=q=>{ try{ return atpl||typeof isGiven!=="function"||!!isGiven(q); }catch(e){ return true; } };
+    const first=qOf(out[0])||qOf(r[0]); const lo=mode==="lo"?String((document.getElementById("loSel")||{}).value||""):String(first?first[1]:"");
+    const P=lo.split(".");
+    const tiers=[ q=>lo&&String(q[1]).indexOf(lo)===0, q=>P.length>2&&String(q[1]).split(".").slice(0,P.length-1).join(".")===P.slice(0,-1).join("."), q=>P.length>1&&String(q[1]).split(".").slice(0,2).join(".")===P.slice(0,2).join("."), q=>!P[0]||String(q[1]).split(".")[0]===P[0], q=>true ];
+    const trial=mode==="trial"&&typeof HOT3!=="undefined"?HOT3:null;
+    const base=B.filter(q=>Array.isArray(q)&&q[4]&&q[4]!=="—"&&q[2]!=="o"&&(inc||q[2]!=="c")&&F0AC.keep(q));
+    for(const strict of [true,false]){
+      const pool=base.filter(q=>!have.has(q[0])&&(!strict||(given(q)&&(!trial||trial.has(q[0])))));
+      for(const t of tiers){ if(out.length>=target) break;
+        for(const q of shuf(pool.filter(t))){ if(out.length>=target) break; const f=fam(q); if(have.has(q[0])||seen.has(f)) continue; have.add(q[0]); seen.add(f); out.push(OBJ?{k:"mc",q}:q); } }
+      if(out.length>=target) break;
+    }
+    return out;
+  }
+  function hookTests(){
+    try{
+      if(window.__f0acHook) return; window.__f0acHook=true;
+      const d=Object.getOwnPropertyDescriptor(window,"F0DEDUP"); let inner=window.F0DEDUP;
+      const run=function(list,mode){ const r=(d&&d.get?d.get.call(window):inner).apply(this,arguments); try{ return fixList(r,mode); }catch(e){ return r; } };
+      Object.defineProperty(window,"F0DEDUP",{configurable:true,get:()=>run,set:f=>{ if(d&&d.set) d.set.call(window,f); else inner=f; }});
+    }catch(e){ try{console.error("f0ac hook",e);}catch(_){} }
+  }
+
+  const F0AC=window.F0AC={
+    ORDER, FULL, SHORT,
+    list:()=>on.slice(), has, all:()=>on.length===3, act:a=>a.filter(has),
+    set(arr){ const s=ORDER.filter(k=>arr.indexOf(k)>=0); if(!s.length||s.join()===on.join()) return; on=s; save(); fire(); },
+    toggle(k){ if(ORDER.indexOf(k)<0) return; if(has(k)){ if(on.length===1){ if(bar){ bar.classList.remove("shake"); void bar.offsetWidth; bar.classList.add("shake"); } if(msg) msg.textContent="Debe quedar al menos una aeronave activa."; return; } F0AC.set(on.filter(x=>x!==k)); } else F0AC.set(on.concat(k)); },
+    onChange:f=>{ subs.push(f); },
+    keep:q=>okSet(qSet(q)), okText:t=>okSet(segSet(String(t||""))), qSet,
+    refresh:refreshDom, hookTests, fixList
+  };
+  addEventListener("storage",e=>{ if(e.key===KEY){ const n=load(); if(n.join()!==on.join()){ on=n; fire(); } } });
+  function boot(){
+    build(); sync();
+    try{ const r=document.getElementById("p-notes"); if(r&&window.MutationObserver){ let t=0; new MutationObserver(()=>{ if(busy) return; clearTimeout(t); t=setTimeout(refreshDom,80); }).observe(r,{childList:true,subtree:true}); } }catch(e){}
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot); else boot();
+  addEventListener("load",()=>{ refreshDom(); setTimeout(refreshDom,600); });
+})();
+</script><!--/f0ac-->
 <script>
 // ---------- utilidades ----------
 const $ = s => document.querySelector(s);
@@ -1487,8 +1754,8 @@ function selectSenasa(lenKey, inc, atpl){
 }
 function selectQuestions(mode, inc, lo, atpl){
   const st = stats(), plane = mode==="plane";
-  const pool = BANK.filter(q=> (inc || q[2]!=="c") && (plane ? acOf(q).includes($("#acSel").value) : (atpl || isGiven(q))));
-  if(mode==="wrong") return shuffle(BANK.filter(q=>(inc || q[2]!=="c") && (st.q[q[0]]||{}).last===false));
+  const pool = BANK.filter(q=> KP(q) && (inc || q[2]!=="c") && (plane ? acOf(q).includes($("#acSel").value) : (atpl || isGiven(q))));
+  if(mode==="wrong") return shuffle(BANK.filter(q=>KP(q) && (inc || q[2]!=="c") && (st.q[q[0]]||{}).last===false));
   if(mode==="lo") return shuffle(pool.filter(q=>q[1]===lo));
   // por avión o adaptativo (30): por prioridad, como mucho 6 (o 5) de un mismo tema y una sola variante por pregunta original
   const N = Math.min(plane ? 20 : 25, pool.length), MAXLO = plane ? 6 : 5;
@@ -1716,11 +1983,13 @@ Respond ONLY with JSON, no markdown: {"questions":[{"lo":"POH.x.x","q":"...","co
 // ---------- test ----------
 function renderSetup(){
   const st = stats();
-  const selAc = $("#acSel").value || "cz";
-  $("#acSel").innerHTML = ["cz","c1","pi"].map(a=>`<option value="${a}" ${a===selAc?"selected":""}>${AC_NAME[a]} · ${BANK.filter(q=>acOf(q).includes(a)).length} preguntas</option>`).join("");
+  const AV = ["cz","c1","pi"].filter(a=>!window.F0AC||F0AC.has(a)); let selAc = $("#acSel").value || "cz"; if(!AV.includes(selAc)) selAc = AV[0];
+  $("#acSel").innerHTML = AV.map(a=>`<option value="${a}" ${a===selAc?"selected":""}>${AC_NAME[a]} · ${BANK.filter(q=>acOf(q).includes(a)).length} preguntas</option>`).join("");
   const selected = $("#loSel").value;
-  $("#loSel").innerHTML = SUB.map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
+  $("#loSel").innerHTML = SUB.filter(s=>!window.F0AC||F0AC.okText(loLabel(s[0]))).map(s=>`<option value="${s[0]}" ${s[0]===selected?'selected':''}>${esc(loLabel(s[0]))}</option>`).join("");
 }
+if(window.F0AC) F0AC.onChange(()=>{ try{ renderSetup(); }catch(e){} });
+const KP = q => !window.F0AC || F0AC.keep(q);
 let current = [], curMode = "plane", curAc = "cz", curLen = null, tStart = 0, tLimit = 0, tTimer = null, finishing = false, askedUnanswered = false;
 function fmtMS(s){ s=Math.max(0,Math.round(s)); return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; }
 function tick(){
@@ -1735,7 +2004,7 @@ const SRC_TAG = q => NOTAG.has(q.id) ? "" : `${PROFE.has(q.id)?'<span class="tag
 /* guardia final: un test por avión solo lleva preguntas de ese avión; si alguna capa metió otra, se quita y se repone con una del mismo avión */
 function planeGuard(list, mode, ac, inc){
   if(mode!=="plane") return list;
-  const okQ = q => Array.isArray(q) && acOf(q).includes(ac);
+  const okQ = q => Array.isArray(q) && acOf(q).includes(ac) && KP(q);
   const out = list.filter(okQ), have = new Set(out.map(q=>q[0])), fam = new Set(out.map(q=>baseOf(q[0])));
   if(out.length < list.length){
     const extra = shuffle(BANK.filter(q=>okQ(q) && (inc || q[2]!=="c") && !have.has(q[0]) && !fam.has(baseOf(q[0]))));
@@ -2025,17 +2294,20 @@ const SPD_INFO = {
 };
 function initSpeeds(){
   const el = $("#visSpeeds"); let ac="cruiser", sel="vfe", quiz=null;
+  const K2={cruiser:"cz",cessna:"c1",piper:"pi"}, NM2={cruiser:"Cruiser",cessna:"Cessna",piper:"Piper"}, AVL=()=>["cruiser","cessna","piper"].filter(a=>!window.F0AC||F0AC.has(K2[a]));
+  const spi=k=>(k==="va"&&window.F0AC&&!F0AC.has("cz"))?"La deflexión máxima de mandos hacia arriba puede sobrecargar el avión.":(SPD_INFO[k]?SPD_INFO[k][1]:"");
   const SW = {vs0:"#f2f4f6", vs1:"#2eaa55", vfe:"#f2f4f6", vno:"#e6b422", vne:"#e5382f"};
   function draw(){
+    if(!AVL().includes(ac)){ ac=AVL()[0]; quiz=null; }
     const s = SPD[ac], q = quiz;
     const dial = asiDial(s, {hi: q ? q.k : sel, hide: q ? [q.k] : null, needle: (!q && sel !== "va") ? s[sel] : null});
-    let ui = btnRow([["cruiser","Cruiser"],["cessna","Cessna"],["piper","Piper"]], ac, "data-ac");
+    let ui = btnRow(AVL().map(a=>[a,NM2[a]]), ac, "data-ac");
     let side = "";
     if(!q){
       ui += btnRow([["vne","VNE"],["vno","VNO"],["va","VA"],["vfe","VFE"]], sel, "data-sp");
       const v = sel==="va" ? s.va : s[sel];
       side = `<div class="asi-s">` + [["vs0","VS0 · stall, flaps out","Inicio del arco blanco"],["vs1","VS1 · stall, clean","Inicio del arco verde"],["vfe","VFE","Fin del arco blanco"],["vno","VNO","Fin del arco verde"],["vne","VNE","Línea roja"]].map(([k,n,d])=>`<div class="row ${k===sel?"on":""}" data-sp="${k}"><span class="sw" style="background:${SW[k]}"></span><b>${n.split(" ")[0]} ${s[k]}</b><span class="muted">${d}</span></div>`).join("") + `</div>`;
-      ui += `<div class="vismsg"><b>${SPD_INFO[sel] ? SPD_INFO[sel][0] : sel.toUpperCase()} · ${v} KIAS</b><br>${SPD_INFO[sel] ? SPD_INFO[sel][1] : ""}</div><button class="btn sm" data-q="1">Ponme a prueba</button>`;
+      ui += `<div class="vismsg"><b>${SPD_INFO[sel] ? SPD_INFO[sel][0] : sel.toUpperCase()} · ${v} KIAS</b><br>${spi(sel)}</div><button class="btn sm" data-q="1">Ponme a prueba</button>`;
     } else {
       side = `<div class="vismsg"><b>${q.text}</b></div><div class="visbtns">${q.opts.map(o=>`<button class="btn sec sm" data-a="${o}">${o}</button>`).join("")}</div><div class="vismsg" id="spq">${q.msg||""}</div>`;
     }
@@ -2043,38 +2315,45 @@ function initSpeeds(){
     el.querySelectorAll("[data-ac]").forEach(b=>b.onclick=()=>{ ac=b.dataset.ac; quiz=null; draw(); });
     el.querySelectorAll("[data-sp]").forEach(b=>b.onclick=()=>{ sel=b.dataset.sp; draw(); });
     const qb = el.querySelector("[data-q]"); if(qb) qb.onclick=()=>{ const k=pick(["vne","vno","va","vfe"]); const right = k==="va"?s.va:String(s[k]);
-      const pool = [...new Set(["vne","vno","va","vfe"].flatMap(x=>["cruiser","cessna","piper"].map(a=>x==="va"?SPD[a].va:String(SPD[a][x]))))]; const wrong = shuffle(pool.filter(x=>x!==right)).slice(0,3);
+      const pool = [...new Set(["vne","vno","va","vfe"].flatMap(x=>AVL().map(a=>x==="va"?SPD[a].va:String(SPD[a][x]))))]; const wrong = shuffle(pool.filter(x=>x!==right)).slice(0,3);
       quiz = {text:`¿Cuál es la ${k.toUpperCase()} del ${s.name}?`, opts:shuffle([right,...wrong]), right, k}; draw(); };
-    el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ const ok = b.dataset.a===quiz.right; quiz.msg = ok ? `<span class="pass">Correcto.</span> ${SPD_INFO[quiz.k][1]}` : `<span class="fail">No.</span> La ${quiz.k.toUpperCase()} del ${s.name} es ${quiz.right} KIAS.`; const m=quiz.msg; draw(); el.querySelector("#spq").innerHTML=m; });
+    el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ const ok = b.dataset.a===quiz.right; quiz.msg = ok ? `<span class="pass">Correcto.</span> ${spi(quiz.k)}` : `<span class="fail">No.</span> La ${quiz.k.toUpperCase()} del ${s.name} es ${quiz.right} KIAS.`; const m=quiz.msg; draw(); el.querySelector("#spq").innerHTML=m; });
   }
   draw();
+  if(window.F0AC) F0AC.onChange(()=>{ quiz=null; draw(); });
 }
 
 // factor de carga
 function initLoad(){
   const el = $("#visLoad"); let cfg="n";
-  const C = {cu:{t:"Cruiser · flaps arriba",pos:4,neg:-2,note:"+4 g y −2 g (solo categoría normal)."},
-             cd:{t:"Cruiser · flaps abajo",pos:2,neg:0,note:"+2 g y 0 g: con flaps el límite baja a la mitad."},
-             n:{t:"Cessna / Piper · flaps arriba · normal",pos:3.8,neg:-1.52,note:"+3,8 g y, en el Piper, −1,52 g."},
-             u:{t:"Cessna / Piper · flaps arriba · utility",pos:4.4,neg:-1.76,note:"+4,4 g y, en el Piper, −1,76 g."},
-             d:{t:"Cessna / Piper · flaps abajo",pos:3.0,neg:0,note:"+3,0 g en normal y en utility."}};
-  const fm = v => (v>0?'+':'')+String(v).replace(".",",")+" g";
+  const has = k => !window.F0AC || F0AC.has(k), fm = v => (v>0?'+':'')+String(v).replace(".",",")+" g";
+  const mk = () => {
+    const c1=has("c1"), pi=has("pi"), who=[c1?"Cessna":"",pi?"Piper":""].filter(Boolean).join(" / ");
+    const neg=(x)=>pi?x:0, nt=(p,n)=> pi ? `+${p} g y${c1?", en el Piper,":""} −${n} g.` : `+${p} g.`;
+    return {cu:{ac:["cz"],l:"Cruiser · arriba",t:"Cruiser · flaps arriba",pos:4,neg:-2,note:"+4 g y −2 g (solo categoría normal)."},
+            cd:{ac:["cz"],l:"Cruiser · abajo",t:"Cruiser · flaps abajo",pos:2,neg:0,note:"+2 g y 0 g: con flaps el límite baja a la mitad."},
+            n:{ac:["c1","pi"],l:"Normal · arriba",t:who+" · flaps arriba · normal",pos:3.8,neg:neg(-1.52),note:nt("3,8","1,52")},
+            u:{ac:["c1","pi"],l:"Utility · arriba",t:who+" · flaps arriba · utility",pos:4.4,neg:neg(-1.76),note:nt("4,4","1,76")},
+            d:{ac:["c1","pi"],l:"Flaps abajo",t:who+" · flaps abajo",pos:3.0,neg:0,note:"+3,0 g en normal y en utility."}};
+  };
   function draw(){
-    const c = C[cfg], sx = v => 160 + v*100;
+    const C0 = mk(), keys = Object.keys(C0).filter(k=>C0[k].ac.some(has)); if(!keys.includes(cfg)) cfg = keys[0];
+    const C = C0, c = C[cfg], sx = v => 160 + v*100;
     let g = `<svg viewBox="0 0 700 90" role="img" aria-label="Factor de carga"><style>.t{fill:var(--muted);font:500 12px Barlow,sans-serif} .l{fill:var(--ink);font:700 15px "Barlow Condensed",sans-serif}</style>`;
     for(let v=-2;v<=5;v++) g += `<line x1="${sx(v)}" x2="${sx(v)}" y1="26" y2="50" stroke="var(--line)"/><text class="t" x="${sx(v)}" y="64" text-anchor="middle">${v>0?'+':''}${v} g</text>`;
     g += `<rect x="${sx(c.neg)}" y="30" width="${sx(c.pos)-sx(c.neg)}" height="16" rx="3" fill="var(--blue)"/><line x1="${sx(0)}" x2="${sx(0)}" y1="22" y2="54" stroke="var(--ink)" stroke-width="2"/>`;
     g += `<text class="l" x="${sx(c.pos)+6}" y="43">${fm(c.pos)}</text>`;
     if(c.neg) g += `<text class="l" x="${sx(c.neg)-6}" y="43" text-anchor="end">${fm(c.neg)}</text>`;
     g += `</svg>`;
-    el.innerHTML = g + btnRow([["cu","Cruiser · arriba"],["cd","Cruiser · abajo"],["n","Normal · arriba"],["u","Utility · arriba"],["d","Flaps abajo"]], cfg, "data-c") + `<div class="vismsg"><b>${c.t}</b>: ${c.note}</div><button class="btn sm" data-q="1">Ponme a prueba</button><div class="vismsg" id="lfq"></div>`;
+    el.innerHTML = g + btnRow(keys.map(k=>[k,C[k].l]), cfg, "data-c") + `<div class="vismsg"><b>${c.t}</b>: ${c.note}</div><button class="btn sm" data-q="1">Ponme a prueba</button><div id="lfq" class="vismsg"></div>`;
     el.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ cfg=b.dataset.c; draw(); });
-    el.querySelector("[data-q]").onclick=()=>{ const k=pick(["cu","cd","n","u","d"]), right=fm(C[k].pos);
-      const pool = uniq(Object.values(C).map(x=>fm(x.pos))), wrong = shuffle(pool.filter(x=>x!==right)).slice(0,3);
+    el.querySelector("[data-q]").onclick=()=>{ const k=pick(keys), right=fm(C[k].pos);
+      const pool = uniq(keys.map(x=>fm(C[x].pos))), more = ["+2,0 g","+3,0 g","+3,8 g","+4,0 g","+4,4 g"].filter(x=>!pool.includes(x)), wrong = shuffle(pool.filter(x=>x!==right).concat(shuffle(more))).slice(0,3);
       const q = $("#lfq"); q.innerHTML = `<b>${C[k].t}: ¿límite positivo?</b><div class="visbtns" style="margin-top:6px">${shuffle([right,...wrong]).map(o=>`<button class="btn sec sm" data-a="${o}">${o}</button>`).join("")}</div><div id="lfa"></div>`;
       q.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ $("#lfa").innerHTML = b.dataset.a===right ? '<span class="pass">Correcto.</span>' : `<span class="fail">No.</span> Es ${right}.`; }); };
   }
   draw();
+  if(window.F0AC) F0AC.onChange(draw);
 }
 
 
@@ -2084,11 +2363,11 @@ function initT3(){
   document.querySelectorAll("table.t3").forEach((tb,ti)=>{
     const wrap = tb.closest(".scroll"); if(!wrap || wrap.dataset.t3) return; wrap.dataset.t3 = "1";
     const bar = document.createElement("div"); bar.className = "t3bar"; wrap.parentNode.insertBefore(bar, wrap);
-    const cols = ["cz","c1","pi"].filter(c=>tb.querySelector("td."+c));
+    const colsAll = ["cz","c1","pi"].filter(c=>tb.querySelector("td."+c)), getCols = () => colsAll.filter(c=>!window.F0AC||F0AC.has(c));
     const cells = () => [...tb.querySelectorAll("td .va")];
     let hide=false, quiz=null;
-    const rows = () => [...tb.querySelectorAll("tr")].slice(1).map(tr=>({tr, label:(tr.cells[0].textContent||"").trim(), vals:Object.fromEntries(cols.map(c=>[c,(tr.querySelector("td."+c)||{}).textContent]))}))
-       .filter(r=>cols.some(c=>r.vals[c] && r.vals[c].trim() && r.vals[c].trim()!=="—"));
+    const rows = () => { const cols = getCols(); return [...tb.querySelectorAll("tr")].slice(1).map(tr=>({tr, label:(tr.cells[0].textContent||"").trim(), vals:Object.fromEntries(cols.map(c=>[c,(tr.querySelector("td."+c)||{}).textContent]))}))
+       .filter(r=>cols.some(c=>r.vals[c] && r.vals[c].trim() && r.vals[c].trim()!=="—")); };
     function paint(){ cells().forEach(s=>{ s.classList.toggle("hid", hide && s.textContent.trim()!=="—"); s.onclick=()=>s.classList.remove("hid"); }); }
     function draw(){
       let h = `<div class="visbtns"><button class="btn sec sm ${hide?'on':''}" data-h="1">${hide?'Mostrar valores':'Tapar valores'}</button><button class="btn sm" data-q="1">${quiz?'Otra pregunta':'Ponme a prueba'}</button>${quiz?'<button class="btn sec sm" data-x="1">Salir</button>':''}</div>`;
@@ -2097,7 +2376,7 @@ function initT3(){
       bar.innerHTML = h; paint();
       bar.querySelector("[data-h]").onclick = ()=>{ hide=!hide; draw(); };
       bar.querySelector("[data-q]").onclick = ()=>{
-        const R = rows(); if(!R.length) return; const r = pick(R), usable = cols.filter(c=>r.vals[c] && r.vals[c].trim() && r.vals[c].trim()!=="—"), c = pick(usable);
+        const cols = getCols(), R = rows(); if(!R.length) return; const r = pick(R), usable = cols.filter(c=>r.vals[c] && r.vals[c].trim() && r.vals[c].trim()!=="—"), c = pick(usable);
         const right = r.vals[c].trim();
         const same = cols.map(k=>(r.vals[k]||"").trim()).filter(v=>v && v!=="—" && v!==right);
         const other = R.filter(x=>x!==r).flatMap(x=>cols.map(k=>(x.vals[k]||"").trim())).filter(v=>v && v!=="—" && v!==right && !same.includes(v));
@@ -2107,6 +2386,7 @@ function initT3(){
       bar.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{ const ok = b.dataset.a===quiz.v; quiz.m = ok?'<span class="pass">Correcto.</span>':`<span class="fail">No.</span> Es ${esc(quiz.v)}.`; bar.querySelector("[data-m]").innerHTML = quiz.m; });
     }
     draw();
+    if(window.F0AC) F0AC.onChange(()=>{ quiz=null; draw(); });
   });
 }
 const uniq = a => a.filter((x,i)=>a.indexOf(x)===i);
@@ -2879,5 +3159,12 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ try{ console.error("lens",e); }catch(_){} }
 })();
 </script>
-<script src="../viz16.js?v=0c392d1a" defer></script>
+
+
+
+
+
+
+<!--f0ach--><script>try{F0AC.hookTests()}catch(e){}</script><!--/f0ach-->
+<script src="../viz16.js?v=953fbb91" defer></script>
 </body></html>

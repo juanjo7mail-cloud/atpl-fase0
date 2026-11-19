@@ -33,6 +33,11 @@ const rng=(id,lab,min,max,val,step,unit)=>`<label>${lab}<input type="range" data
 const bind=(el,fn)=>{ const get=()=>{ const o={}; el.querySelectorAll("[data-k]").forEach(i=>{ o[i.dataset.k]=i.type==="checkbox"?i.checked:+i.value; }); return o; }; const run=()=>{ try{ fn(get()); }catch(e){ try{ console.error("F0Viz",e); }catch(_){} } }; el.addEventListener("input",run); el.addEventListener("change",run); run(); return run; };
 const setO=(el,k,v)=>{ const o=el.querySelector(`[data-o="${k}"]`); if(o) o.textContent=v; };
 const btns=(el,attr,fn)=>{ const bs=el.querySelectorAll(`[${attr}]`); const pick=v=>{ bs.forEach(b=>b.setAttribute("aria-pressed",b.getAttribute(attr)===String(v)?"true":"false")); fn(v); }; bs.forEach(b=>b.addEventListener("click",()=>pick(b.getAttribute(attr)))); return pick; };
+/* filtro global de aeronaves (POH/SOP): ver F0AC en las páginas */
+const AFS=["cz","c1","pi"], acHas=a=>!window.F0AC||window.F0AC.has(a), acFirst=()=>AFS.find(acHas)||"cz";
+const acBtns=(el,attr)=>{ el.querySelectorAll(`[${attr}]`).forEach(b=>{ b.hidden=!acHas(b.getAttribute(attr)); }); };
+const acSub=fn=>{ if(window.F0AC) window.F0AC.onChange(()=>{ try{ fn(); }catch(e){ try{ console.error("F0Viz",e); }catch(_){} } }); };
+const acNames={cz:"Cruiser",c1:"C172",pi:"Piper"};
 const pol=(cx,cy,r,brg)=>[cx+r*Math.sin(brg*R),cy-r*Math.cos(brg*R)];
 const wedge=(cx,cy,r,a,b)=>{ const p=pol(cx,cy,r,a), q=pol(cx,cy,r,b), big=((b-a+360)%360)>180?1:0; return `M${cx} ${cy}L${p[0].toFixed(1)} ${p[1].toFixed(1)}A${r} ${r} 0 ${big} 1 ${q[0].toFixed(1)} ${q[1].toFixed(1)}Z`; };
 
@@ -418,6 +423,10 @@ init(el){
   svg.addEventListener("click",e=>{ const g=e.target.closest("[data-m]"); if(g){ sel=g.dataset.m; draw(); } });
   btns(el,"data-a",v=>{ ac=v; el.querySelectorAll("[data-a]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.a===v?"true":"false")); draw(); });
   bind(el,o=>{ V0=o.v; setO(el,"v",V0); draw(); });
+  const capEl=u.q(".cap"), cap0=capEl?capEl.textContent:"";
+  const vs=()=>{ acBtns(el,"data-a"); if(!acHas(ac)){ ac=acFirst(); el.querySelectorAll("[data-a]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.a===ac?"true":"false")); }
+    if(capEl) capEl.textContent=cap0.replace("(Cruiser · C172 · Piper)","("+AFS.filter(acHas).map(k=>acNames[k]).join(" · ")+")"); draw(); };
+  acSub(vs); vs();
 }};
 
 /* ---------- 20 · Sistemas: los tres aviones cara a cara ---------- */
@@ -441,9 +450,12 @@ init(el){
    i:{n:"Instrumentos",m:"Cruiser = pantallas Dynon. Piper = relojes + vacío. Pitot siempre en el ala izquierda.",
      k:{cz:["Dynon SkyView","<small>PFD y MAP</small>","SV-D1000. La pitot-estática bajo el ala izquierda alimenta los instrumentos de reserva y las pantallas."],c1:["Estática en el fuselaje","<small>pitot bajo el ala izquierda</small>","La estática va a los lados del fuselaje. Estática alterna desde la cabina con ventanas cerradas, calefacción y defroster."],pi:["Relojes + vacío","<small>presión total y estática: ala izquierda</small>","El vacío mueve el horizonte, el DGI y el coordinador de virajes. Poca succión: filtro bloqueado."]}}};
   const u=shell(el,this.t,`<div data-g style="padding:12px"></div>`,Object.keys(T).map((k,i)=>`<button type="button" data-t="${k}" aria-pressed="${i?"false":"true"}">${T[k].n}</button>`).join(""),this.cap), g=u.q("[data-g]");
-  const draw=k=>{ const t=T[k]; g.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:10px">`+["cz","c1","pi"].map(a=>`<div style="background:#0b1622;border:1px solid #2f4560;border-top:3px solid ${C[a][1]};border-radius:6px;padding:10px 12px;min-width:0"><div style="font:700 11px/1 system-ui;letter-spacing:.12em;text-transform:uppercase;color:${C[a][1]}">${C[a][0]}</div><div style="font:700 21px/1.15 'Barlow Condensed','Arial Narrow',system-ui,sans-serif;margin:8px 0 6px;color:#f4f8fb">${t.k[a][0]}</div><div style="display:flex;align-items:flex-end;gap:6px;min-height:50px;color:#9fb3c8;font-size:11.5px;flex-wrap:wrap">${t.k[a][1].replace(/<small>/g,"<small style=\"font:500 11.5px system-ui\">")}</div><div style="margin-top:8px;font:500 12.5px/1.4 system-ui;color:#cfdbe7">${t.k[a][2]}</div></div>`).join("")+`</div>`;
-    u.out.innerHTML=`<b style="color:#ffc94d">Truco:</b> ${t.m}`; };
-  btns(el,"data-t",v=>{ el.querySelectorAll("[data-t]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===v?"true":"false")); draw(v); }); draw("e");
+  const draw=k=>{ const t=T[k]; g.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:10px">`+["cz","c1","pi"].filter(acHas).map(a=>`<div style="background:#0b1622;border:1px solid #2f4560;border-top:3px solid ${C[a][1]};border-radius:6px;padding:10px 12px;min-width:0"><div style="font:700 11px/1 system-ui;letter-spacing:.12em;text-transform:uppercase;color:${C[a][1]}">${C[a][0]}</div><div style="font:700 21px/1.15 'Barlow Condensed','Arial Narrow',system-ui,sans-serif;margin:8px 0 6px;color:#f4f8fb">${t.k[a][0]}</div><div style="display:flex;align-items:flex-end;gap:6px;min-height:50px;color:#9fb3c8;font-size:11.5px;flex-wrap:wrap">${t.k[a][1].replace(/<small>/g,"<small style=\"font:500 11.5px system-ui\">")}</div><div style="margin-top:8px;font:500 12.5px/1.4 system-ui;color:#cfdbe7">${t.k[a][2]}</div></div>`).join("")+`</div>`;
+    const tm=window.F0AC&&!window.F0AC.all()?t.m.replace(/\.\s+/g,".\u0001").split("\u0001").filter(x=>window.F0AC.okText(x)).join(" "):t.m;
+    u.out.innerHTML=tm?`<b style="color:#ffc94d">Truco:</b> ${tm}`:""; };
+  let curT="e";
+  btns(el,"data-t",v=>{ curT=v; el.querySelectorAll("[data-t]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===v?"true":"false")); draw(v); }); draw("e");
+  acSub(()=>draw(curT));
 }};
 
 /* ---------- 21 · SOP: fallo de motor tras el despegue ---------- */
@@ -465,6 +477,8 @@ init(el){
   btns(el,"data-a",v=>{ ac=v; n=-1; el.querySelectorAll("[data-a]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.a===v?"true":"false")); draw(); });
   u.q("[data-n]").addEventListener("click",()=>{ n=n+1; if(n>=A[ac][2].length) n=-1; draw(); });
   bind(el,o=>{ H=o.h; setO(el,"h",f0(H)); draw(); });
+  const vs=()=>{ acBtns(el,"data-a"); if(!acHas(ac)){ ac=acFirst(); n=-1; el.querySelectorAll("[data-a]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.a===ac?"true":"false")); } draw(); };
+  acSub(vs); vs();
 }};
 
 function mount(el){ const k=el.dataset.viz, v=V[k]; if(!v||el._v) return; el._v=1;
