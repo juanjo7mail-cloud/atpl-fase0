@@ -137,6 +137,7 @@ function weakUI(){
 document.addEventListener("click",e=>{
   const st=e.target.closest("[data-star]"); if(st){ e.preventDefault(); e.stopPropagation(); const w=WK(); if(!w) return; const c=st.dataset.star; w.toggle(PAGE,c,nameOf(c)); weakUI(); return; }
   const g=e.target.closest("[data-wgo]"); if(g){ e.preventDefault(); const c=g.dataset.wgo, el=document.getElementById("lo-"+c)||document.getElementById("ch-"+c);
+    if(/^\d{3}\.\d{2}$/.test(c)){ const d1=document.querySelector(`#notes details[id^="lo-${c}."]`); if(d1) d1.open=true; }
     if(el&&typeof window.openNotes==="function") window.openNotes(el.id); else { const h=[...document.querySelectorAll("#notes h2")].find(x=>(x.textContent||"").trim().startsWith(c)); if(h){ const d=document.querySelector(`#notes details[id^="lo-${c}."]`); if(d) d.open=true; h.scrollIntoView({behavior:"smooth",block:"start"}); } } }
 },true);
 const WCSS=`.f0star{border:0;background:transparent;color:#9aa5b1;font-size:16px;line-height:1;padding:0 4px;cursor:pointer;vertical-align:middle}
