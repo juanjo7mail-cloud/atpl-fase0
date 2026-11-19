@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="only light">
 <style>:root{color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
-<script>window.F0_BUILD="984d2a7b6cc7";</script>
+<script>window.F0_BUILD="aff86f95dd6b";</script>
 <script src="autoupdate.js"></script>
 <script src="i18n.js"></script>
 <script src="vendor/supabase.js"></script>
@@ -1090,8 +1090,8 @@ function ranksInfo(){
   return {pass,g,star,sums};
 }
 function epaulette(g,star){
-  let s='<svg viewBox="0 0 56 24" width="48" height="21" aria-hidden="true"><rect x=".8" y="2.5" width="54.4" height="19" rx="3.5" fill="#0A1724" stroke="#3B5874" stroke-width="1.2"/>';
-  for(let i=0;i<4;i++) s+=`<rect x="${19+i*9}" y="2.5" width="5.6" height="19" fill="${i<g?"#E8BF45":"#1D3347"}"/>`;
+  let s='<svg viewBox="0 0 56 24" width="48" height="21" aria-hidden="true">';   // solo los galones, sin la pieza de la hombrera
+  for(let i=0;i<4;i++) s+=i<g?`<rect x="${19+i*9}" y="3.5" width="5.6" height="17" rx="1" fill="#E8BF45"/>`:`<rect x="${19.4+i*9}" y="3.9" width="4.8" height="16.2" rx="1" fill="rgba(220,230,238,.14)" stroke="rgba(220,230,238,.6)" stroke-width=".8"/>`;
   if(star) s+='<path d="M9 7.2l1.5 3 3.3.5-2.4 2.3.6 3.3L9 14.7l-3 1.6.6-3.3-2.4-2.3 3.3-.5z" fill="#E8BF45"/>';
   return s+"</svg>";
 }
@@ -1968,7 +1968,8 @@ function rdMarkAll(){ if(!RD) return; const r=rdRead(); RD.forEach(n=>r.add(n.u)
 async function rdFetch(){ if(RD||RDload||!isAdmin) return; RDload=true; rdDraw(); try{ const r=await fetch("/api/news?v=3"); const j=await r.json(); if(j.ok&&j.n&&j.n.length) RD=j.n; }catch(e){} RDload=false; rdDraw(); rdBadge(); }
 function rdOpen(){ if(!isAdmin) return; const d=$("#radar"); d.hidden=false; requestAnimationFrame(()=>d.classList.add("on")); $("#radarBtn").setAttribute("aria-expanded","true"); rdDraw(); rdFetch(); rdTimeStart(); setTimeout(()=>{ const c=$("#rdClose"); if(c) c.focus(); },60); }
 function rdClose(){ const d=$("#radar"); rdTimeStop(); d.classList.remove("on"); $("#radarBtn").setAttribute("aria-expanded","false"); setTimeout(()=>{ d.hidden=true; },260); const b=$("#radarBtn"); if(b) b.focus(); }
-function radarSync(){ const b=$("#radarBtn"); if(!b) return; b.hidden=!isAdmin; if(isAdmin) setTimeout(rdFetch,2500); else { const d=$("#radar"); if(d) d.hidden=true; } }
+function radarSync(){ window.F0_ADMIN=!!isAdmin; try{ document.querySelectorAll("iframe").forEach(f=>{ try{ f.contentWindow.postMessage({t:"f0-admin",on:!!isAdmin},"*"); }catch(e){} }); }catch(e){}   // bandera de funciones en pruebas (solo administrador)
+  const b=$("#radarBtn"); if(!b) return; b.hidden=!isAdmin; if(isAdmin) setTimeout(rdFetch,2500); else { const d=$("#radar"); if(d) d.hidden=true; } }
 function airacBox(){
   let M=null; try{ M=window.F0Ops&&window.F0Ops.maint&&window.F0Ops.maint(); }catch(e){}
   if(!M) return "";
