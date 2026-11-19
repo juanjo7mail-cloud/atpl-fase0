@@ -22,7 +22,7 @@ function isAdmin(){
 const plan13=()=>{ try{ return localStorage.getItem("f0:plan")==="13"; }catch(e){ return false; } };
 let XQ=null, RECODE={};
 const code3=q=>RECODE[q[0]]||String(q[1]||"").replace(/^X\./,"").slice(0,3);
-const OWN=G?G.subs.map(s=>s[0]):[PAGE];
+const OWN=G?G.subs.map(s=>s[0]):(PAGE==="070"?["070","071"]:[PAGE]);
 let RAW=null, on=false, P13=false, seg="", B0=null, S0=null, BL0=null, E0=null, ready=false;
 const get=n=>{ try{ return window.eval(n); }catch(e){ return undefined; } };
 const setBank=()=>{ try{ window.eval("BANK=__f0b"); }catch(e){} };
@@ -31,7 +31,8 @@ const setBank=()=>{ try{ window.eval("BANK=__f0b"); }catch(e){} };
 function plan(bank){
   if(!P13||!XQ) return bank;
   const out=(XQ.moved[PAGE]||[]), gone=new Set(out), ids=new Set();
-  const res=bank.filter(q=>!gone.has(q[0]));
+  const RL=(XQ.relo&&XQ.relo[PAGE])||{};
+  const res=bank.filter(q=>!gone.has(q[0])).map(q=>RL[q[0]]?[q[0],RL[q[0]]].concat(q.slice(2)):q);
   res.forEach(q=>ids.add(q[0]));
   (XQ.import[PAGE]||[]).forEach(q=>{ if(!ids.has(q[0])){ res.push(q.slice()); ids.add(q[0]); } });
   const BY=get("BYID"); if(BY&&BY.set) res.forEach(q=>{ if(!BY.has(q[0])) BY.set(q[0],q); });
@@ -57,7 +58,7 @@ function snapshot(){
 }
 // el banco puede crecer (preguntas generadas): se suman al original antes de filtrar
 function full(){ const cur=get("BANK")||[], ids=new Set(B0.map(q=>q[0])); const gone=P13&&XQ?new Set(XQ.moved[PAGE]||[]):null; cur.forEach(q=>{ if(!ids.has(q[0])&&!(gone&&gone.has(q[0]))){ B0.push(q); ids.add(q[0]); } }); return B0.slice(); }
-function view(){ const all=full(); if(seg) return all.filter(q=>code3(q)===seg); if(P13&&G) return all.filter(q=>OWN.includes(code3(q))); return all; }
+function view(){ const all=full(); if(seg) return all.filter(q=>code3(q)===seg); if(P13) return all.filter(q=>OWN.includes(code3(q))); return all; }
 const quizOn=()=>{ const q=document.getElementById("quiz"); return q&&!q.hidden; };
 
 function apply(s){
@@ -70,6 +71,7 @@ function apply(s){
   const E=get("EXAMS"); if(E&&E0){ Object.keys(E).forEach(k=>delete E[k]); Object.keys(E0).forEach(k=>{ if(!seg||k===seg) E[k]=E0[k]; }); }
   // simulacro SENASA: la asignatura elegida
   ["senEx","senSubj"].forEach(id=>{ const el=document.getElementById(id); if(!el) return; [...el.options].forEach(o=>{ o.hidden=!!seg&&o.value!==seg; o.disabled=!!seg&&o.value!==seg; }); if(seg&&[...el.options].some(o=>o.value===seg)){ el.value=seg; el.dispatchEvent(new Event("change",{bubbles:true})); } });
+  const R=document.documentElement; R.dataset.f0seg=seg; R.classList.toggle("f0p13",P13);
   notes();
   ["renderNotesMeta","renderSetup","renderMap","renderHist","renderSenOpts","fillLen"].forEach(f=>{ const fn=get(f); if(typeof fn==="function"){ try{ fn(); }catch(e){} } });
   bar();
@@ -108,6 +110,7 @@ const CSS=`#f0sub{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:
 .f0sub-msg{color:#E8BF45;opacity:1}
 .f0sub-off{display:none!important}
 .f0sub-short{display:none}
+html.f0p13 #hotCard,html.f0p13 #failCard{display:none!important}
 @media (max-width:520px){#f0sub{gap:4px;padding:5px}#f0sub button{padding:4px 9px;font-size:12px}#f0sub button span,#f0sub button i,.f0sub-tag{display:none}#f0sub button .f0sub-short{display:inline}}`;
 function css(){ if(document.getElementById("f0sub-css")) return; const s=document.createElement("style"); s.id="f0sub-css"; s.textContent=CSS; document.head.appendChild(s); }
 function fromHash(){ const h=/(?:^|[#&])sub=(\d{3})/.exec(location.hash); return h&&G&&G.subs.some(s=>s[0]===h[1])?h[1]:null; }
@@ -121,7 +124,7 @@ function start(){
 function set(v){
   if(v===on) return; on=v;
   if(on){ css(); P13=plan13();
-    if(P13&&!XQ){ fetch("xq.json?v=1",{cache:"no-cache"}).then(r=>r.json()).then(j=>{ XQ=j; RECODE=(j.recode&&j.recode[PAGE])||{}; start(); }).catch(()=>{ P13=false; start(); }); }
+    if(P13&&!XQ){ fetch("xq.json?v=2",{cache:"no-cache"}).then(r=>r.json()).then(j=>{ XQ=j; RECODE=(j.recode&&j.recode[PAGE])||{}; start(); }).catch(()=>{ P13=false; start(); }); }
     else start(); }
   else{ if(ready&&(seg||P13)) location.reload(); seg=""; bar(); }
 }
