@@ -68,6 +68,9 @@ function apply(s){
   // simulacro SENASA: la asignatura elegida
   ["senEx","senSubj"].forEach(id=>{ const el=document.getElementById(id); if(!el) return; [...el.options].forEach(o=>{ o.hidden=!!seg&&o.value!==seg; o.disabled=!!seg&&o.value!==seg; }); if(seg&&[...el.options].some(o=>o.value===seg)){ el.value=seg; el.dispatchEvent(new Event("change",{bubbles:true})); } });
   const R=document.documentElement; R.dataset.f0seg=seg; R.classList.toggle("f0p13",P13);
+  // SENASA 13: entra todo el temario → fuera las marcas de «ampliación ATPL» y el test incluye siempre esa parte
+  const it=document.getElementById("incTrial"); if(it&&P13){ if(!it.checked){ it.checked=true; it.dispatchEvent(new Event("change",{bubbles:true})); } const lb=it.closest("label"); if(lb) lb.classList.add("f0p13-hide"); }
+  amp();
   notes();
   ["renderNotesMeta","renderSetup","renderMap","renderHist","renderSenOpts","fillLen"].forEach(f=>{ const fn=get(f); if(typeof fn==="function"){ try{ fn(); }catch(e){} } });
   bar(); weakUI();
@@ -106,7 +109,7 @@ const CSS=`#f0sub{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:
 .f0sub-msg{color:#E8BF45;opacity:1}
 .f0sub-off{display:none!important}
 .f0sub-short{display:none}
-html.f0p13 #hotCard,html.f0p13 #failCard{display:none!important}
+html.f0p13 #hotCard,html.f0p13 #failCard,html.f0p13 .pill.at,html.f0p13 .f0p13-hide{display:none!important}
 @media (max-width:520px){#f0sub{gap:4px;padding:5px}#f0sub button{padding:4px 9px;font-size:12px}#f0sub button span,#f0sub button i,.f0sub-tag{display:none}#f0sub button .f0sub-short{display:inline}}`;
 
 // ---------- «Mis temas flojos» (plan SENASA): estrella en cada lección y en los capítulos; lista arriba de los apuntes ----------
@@ -114,7 +117,10 @@ const WK=()=>{ try{ return window.parent!==window?window.parent.F0Weak:null; }ca
 function nameOf(code){ const d=document.getElementById("lo-"+code)||document.getElementById("lo-X."+code); if(d){ const sm=d.querySelector("summary"); if(sm){ const t=(sm.textContent||"").replace(/[☆★]/g,"").replace(new RegExp("^\\s*"+code.replace(/\./g,"\\.")),"").replace(/≈.*$/,"").trim(); return t.slice(0,80); } }
   const h=[...document.querySelectorAll("#notes h2")].find(x=>(x.textContent||"").trim().startsWith(code)); return h?(h.textContent||"").replace(code,"").replace(/^[\s·]+/,"").replace(/\d+\s*preg.*$/,"").trim().slice(0,80):""; }
 function starBtn(code){ const w=WK(), on=!!(w&&w.has(PAGE,code)); return `<button type="button" class="f0star${on?" on":""}" data-star="${code}" aria-pressed="${on}" title="${on?"Quitar de mis temas flojos":"Marcar como tema flojo"}">${on?"★":"☆"}</button>`; }
+
+function amp(){ if(!P13) return; const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT); let n; const hit=[]; while((n=w.nextNode())){ if(/ampliaci[oó]n ATPL/i.test(n.textContent)&&!/Incluir/.test(n.textContent)) hit.push(n.parentElement); } hit.forEach(e=>{ if(e&&e.closest("#notes,#map,#examBar,#test")&&!e.closest("#incTrial")) e.classList.add("f0p13-hide"); }); }
 function weakUI(){
+  try{ amp(); }catch(e){}
   const w=WK(), N=document.getElementById("notes"); if(!N) return;
   let card=document.getElementById("weakCard");
   if(!(on&&P13&&w)){ if(card) card.remove(); document.querySelectorAll(".f0star").forEach(b=>b.remove()); return; }
