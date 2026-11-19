@@ -74,7 +74,7 @@ function apply(s){
   const R=document.documentElement; R.dataset.f0seg=seg; R.classList.toggle("f0p13",P13);
   notes();
   ["renderNotesMeta","renderSetup","renderMap","renderHist","renderSenOpts","fillLen"].forEach(f=>{ const fn=get(f); if(typeof fn==="function"){ try{ fn(); }catch(e){} } });
-  bar();
+  bar(); weakUI();
 }
 // apuntes: cada bloque se asigna al código de su id (lo-/ch-/ex-) o al de la asignatura que lo encabeza
 function notes(){
@@ -112,7 +112,44 @@ const CSS=`#f0sub{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:
 .f0sub-short{display:none}
 html.f0p13 #hotCard,html.f0p13 #failCard{display:none!important}
 @media (max-width:520px){#f0sub{gap:4px;padding:5px}#f0sub button{padding:4px 9px;font-size:12px}#f0sub button span,#f0sub button i,.f0sub-tag{display:none}#f0sub button .f0sub-short{display:inline}}`;
-function css(){ if(document.getElementById("f0sub-css")) return; const s=document.createElement("style"); s.id="f0sub-css"; s.textContent=CSS; document.head.appendChild(s); }
+
+// ---------- «Mis temas flojos» (plan SENASA): estrella en cada lección y en los capítulos; lista arriba de los apuntes ----------
+const WK=()=>{ try{ return window.parent!==window?window.parent.F0Weak:null; }catch(e){ return null; } };
+function nameOf(code){ const d=document.getElementById("lo-"+code)||document.getElementById("lo-X."+code); if(d){ const sm=d.querySelector("summary"); if(sm){ const t=(sm.textContent||"").replace(/[☆★]/g,"").replace(new RegExp("^\\s*"+code.replace(/\./g,"\\.")),"").replace(/≈.*$/,"").trim(); return t.slice(0,80); } }
+  const h=[...document.querySelectorAll("#notes h2")].find(x=>(x.textContent||"").trim().startsWith(code)); return h?(h.textContent||"").replace(code,"").replace(/^[\s·]+/,"").replace(/\d+\s*preg.*$/,"").trim().slice(0,80):""; }
+function starBtn(code){ const w=WK(), on=!!(w&&w.has(PAGE,code)); return `<button type="button" class="f0star${on?" on":""}" data-star="${code}" aria-pressed="${on}" title="${on?"Quitar de mis temas flojos":"Marcar como tema flojo"}">${on?"★":"☆"}</button>`; }
+function weakUI(){
+  const w=WK(), N=document.getElementById("notes"); if(!N) return;
+  let card=document.getElementById("weakCard");
+  if(!(on&&P13&&w)){ if(card) card.remove(); document.querySelectorAll(".f0star").forEach(b=>b.remove()); return; }
+  // estrellas en las lecciones
+  N.querySelectorAll("details.lo > summary").forEach(sm=>{ const id=sm.parentElement.id||"", c=id.replace(/^lo-(X\.)?/,""); if(!/^\d{3}\./.test(c)) return;
+    let b=sm.querySelector(".f0star"); const h=starBtn(c); if(b){ if(b.outerHTML!==h) b.outerHTML=h; } else sm.insertAdjacentHTML("beforeend",h); });
+  // y en los capítulos de la barra SENASA
+  document.querySelectorAll("#examBar .xlab b, #examBar .xrl b").forEach(bb=>{ let c=(bb.textContent||"").trim(); if(/^\d{2}$/.test(c)) c=PAGE+"."+c; if(!/^\d{3}\.\d{2}$/.test(c)) return;
+    const nx=bb.nextElementSibling; const h=starBtn(c); if(nx&&nx.classList&&nx.classList.contains("f0star")){ if(nx.outerHTML!==h) nx.outerHTML=h; } else bb.insertAdjacentHTML("afterend",h); });
+  // lista arriba
+  const list=w.list(PAGE).filter(x=>!seg||x.c.startsWith(seg)).sort((a,b)=>a.c.localeCompare(b.c,undefined,{numeric:true}));
+  if(!card){ card=document.createElement("div"); card.className="card"; card.id="weakCard"; const sen=[...N.children].find(e=>/^\s*SENASA ATPL/.test((e.querySelector("b")||{}).textContent||"")); if(sen) sen.after(card); else N.prepend(card); }
+  card.innerHTML=`<b>Mis temas flojos</b>`+(list.length?`<div class="wkl">${list.map(x=>`<div class="wkr"><span class="wkc">${x.c}</span><span class="wkn">${(x.n||nameOf(x.c)).replace(/[<>&]/g,"")}</span><button class="btn sec sm" type="button" data-wgo="${x.c}">Ir al tema</button><button class="wkx" type="button" data-star="${x.c}" aria-label="Quitar ${x.c}" title="Quitar">✕</button></div>`).join("")}</div>`
+    :`<p class="muted small" style="margin:6px 0 0">Marca con ☆ las lecciones o capítulos que fallas en Aviationexam o ATPL Questions y los tendrás aquí para repasar.</p>`);
+}
+document.addEventListener("click",e=>{
+  const st=e.target.closest("[data-star]"); if(st){ e.preventDefault(); e.stopPropagation(); const w=WK(); if(!w) return; const c=st.dataset.star; w.toggle(PAGE,c,nameOf(c)); weakUI(); return; }
+  const g=e.target.closest("[data-wgo]"); if(g){ e.preventDefault(); const c=g.dataset.wgo, el=document.getElementById("lo-"+c)||document.getElementById("ch-"+c);
+    if(el&&typeof window.openNotes==="function") window.openNotes(el.id); else { const h=[...document.querySelectorAll("#notes h2")].find(x=>(x.textContent||"").trim().startsWith(c)); if(h){ const d=document.querySelector(`#notes details[id^="lo-${c}."]`); if(d) d.open=true; h.scrollIntoView({behavior:"smooth",block:"start"}); } } }
+},true);
+const WCSS=`.f0star{border:0;background:transparent;color:#9aa5b1;font-size:16px;line-height:1;padding:0 4px;cursor:pointer;vertical-align:middle}
+.f0star.on{color:#D9A21B}.f0star:hover{color:#D9A21B}
+#weakCard .wkl{display:flex;flex-direction:column;margin-top:4px}
+#weakCard .wkr{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--line,rgba(0,0,0,.12))}
+#weakCard .wkr:first-child{border-top:0}
+#weakCard .wkc{font-weight:700;font-variant-numeric:tabular-nums;flex:none}
+#weakCard .wkn{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#weakCard .btn.sm{padding:3px 9px;font-size:12px;min-height:0;flex:none}
+#weakCard .wkx{border:0;background:transparent;color:#8a97a5;cursor:pointer;font-size:14px;padding:2px 6px;flex:none}
+#weakCard .wkx:hover{color:#b3202f}`;
+function css(){ if(document.getElementById("f0sub-css")) return; const s=document.createElement("style"); s.id="f0sub-css"; s.textContent=CSS+WCSS; document.head.appendChild(s); }
 function fromHash(){ const h=/(?:^|[#&])sub=(\d{3})/.exec(location.hash); return h&&G&&G.subs.some(s=>s[0]===h[1])?h[1]:null; }
 function start(){
   let tries=0;
@@ -131,9 +168,10 @@ function set(v){
 addEventListener("message",e=>{ const d=e.data; if(!d) return;
   if(d.t==="f0-admin") set(!!d.on);
   else if(d.t==="f0-sub"&&on&&G){ if(!quizOn()) apply(d.sub||""); }
+  else if(d.t==="f0-weak"&&on){ weakUI(); }
   else if(d.t==="f0-plan"&&on){ if(plan13()!==P13&&!quizOn()) location.reload(); } });
 addEventListener("hashchange",()=>{ if(on&&G){ const s=fromHash(); if(s&&s!==seg) apply(s); } });
-function init(){ set(isAdmin()); }
+function init(){ set(isAdmin()); try{ const X=document.getElementById("examBar"); if(X) new MutationObserver(()=>{ if(on&&P13&&!X._f0w){ X._f0w=1; requestAnimationFrame(()=>{ X._f0w=0; weakUI(); }); } }).observe(X,{childList:true}); }catch(e){} }
 if(document.readyState==="complete") setTimeout(init,60); else addEventListener("load",()=>setTimeout(init,60));
 // la sesión puede llegar después de cargar la página
 let n=0; const iv=setInterval(()=>{ if(isAdmin()&&!on) set(true); if(++n>60) clearInterval(iv); },500);
