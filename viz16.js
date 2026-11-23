@@ -662,6 +662,134 @@ init(el){
 }};
 
 
+/* ---------- 090 · Alcance VHF por línea de vista ---------- */
+V.vhf={t:"Alcance VHF: línea de vista, curvatura de la Tierra y terreno",cap:"Fórmula de examen: d (NM) = 1,23 × (√H1 + √H2), con H en ft. Ya incluye la refracción normal (radio terrestre efectivo de 4/3). La curvatura del dibujo está muy exagerada en vertical para que se vea. La sierra se sitúa a mitad de camino.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 230" role="img" aria-label="Perfil entre la antena de tierra y el avión con el rayo de línea de vista"></svg>`,
+    rng("h1","Altitud del avión (H1)",500,40000,10000,500," ft")+rng("h2","Altura de la antena de tierra (H2)",0,2500,100,25," ft")+rng("d","Distancia a la estación",10,300,120,5," NM")+rng("m","Sierra a mitad de camino",0,12000,0,250," ft"),this.cap), svg=u.q("svg");
+  const RE=4587;   // radio efectivo en NM (4/3 del real) → 1,23 √h
+  bind(el,o=>{ setO(el,"h1",f0(o.h1)); setO(el,"h2",f0(o.h2)); setO(el,"d",o.d); setO(el,"m",f0(o.m));
+    const dmax=1.23*(Math.sqrt(o.h1)+Math.sqrt(o.h2)), D=o.d, bulge=x=>x*(D-x)/(2*RE)*6076, los=x=>lerp(o.h2,o.h1,x/D);
+    let minC=1e9, xm=0; for(let i=1;i<100;i++){ const x=D*i/100, ter=Math.max(0,o.m*(1-Math.pow((x-D/2)/(D*.12),2))), c=los(x)-bulge(x)-ter; if(c<minC){ minC=c; xm=x; } }
+    const ok=D<=dmax&&minC>=0, curvBlock=D>dmax, terBlock=!curvBlock&&minC<0;
+    const top=Math.max(o.h1,o.m+bulge(D/2),2000)*1.12, X=x=>30+x/D*340, Y=h=>196-h/top*170;
+    const ground=Array.from({length:61},(_,i)=>{ const x=D*i/60, ter=Math.max(0,o.m*(1-Math.pow((x-D/2)/(D*.12),2))); return `${i?"L":"M"}${X(x).toFixed(1)} ${Y(bulge(x)+ter).toFixed(1)}`; }).join("");
+    const curve=Array.from({length:61},(_,i)=>{ const x=D*i/60; return `${i?"L":"M"}${X(x).toFixed(1)} ${Y(bulge(x)).toFixed(1)}`; }).join("");
+    // en el dibujo la Tierra "sube" en medio (se representa la curvatura como un abombamiento) y el rayo es recto
+    const col=ok?"#6ee7a0":"#ff8a80";
+    svg.innerHTML=`<rect width="400" height="230" fill="#12202f"/>
+      <path d="${ground}L${X(D)} 210L${X(0)} 210Z" fill="#2b3b2f" stroke="#55705a"/><path d="${curve}" stroke="#58c4f0" stroke-width="1" stroke-dasharray="3 3" fill="none" opacity=".6"/>
+      <path d="M${X(0)} ${Y(0)}V${Y(o.h2)}" stroke="#dfe8f1" stroke-width="2.5"/><path d="M${X(0)-6} ${Y(o.h2)}l6 -8l6 8" stroke="#dfe8f1" fill="none"/><text x="${X(0)+4}" y="${Y(o.h2)-10}" font-size="9.5" fill="#9fb3c8">antena ${f0(o.h2)} ft</text>
+      <path d="M${X(0)} ${Y(o.h2)}L${X(D)} ${Y(o.h1)}" stroke="${col}" stroke-width="2" ${ok?"":`stroke-dasharray="6 4"`}/>
+      ${terBlock?`<circle cx="${X(xm)}" cy="${Y(los(xm))}" r="6" fill="none" stroke="#ff3b30" stroke-width="2"/>`:""}
+      <g transform="translate(${X(D)} ${Y(o.h1)})"><path d="M-12 0h18l6 2-6 2h-18zM-10 0l-4-7h4l5 7z" fill="#ffc94d"/></g><text x="${X(D)-4}" y="${Y(o.h1)-10}" font-size="9.5" text-anchor="end" fill="#ffc94d">avión ${f0(o.h1)} ft</text>
+      ${dmax<D*1.3?`<path d="M${X(Math.min(dmax,D))} 200v12" stroke="#ffc94d" stroke-width="2"/><text x="${Math.min(X(Math.min(dmax,D)),370)}" y="224" font-size="9.5" text-anchor="${X(Math.min(dmax,D))>330?"end":"middle"}" fill="#ffc94d">alcance ${f0(dmax)} NM</text>`:""}
+      <text x="12" y="20" font-size="10" fill="#9fb3c8">√${f0(o.h1)} = ${f1(Math.sqrt(o.h1))} · √${f0(o.h2)} = ${f1(Math.sqrt(o.h2))}</text>`;
+    u.out.innerHTML=`d = 1,23 × (√${f0(o.h1)} + √${f0(o.h2)}) = 1,23 × (${f1(Math.sqrt(o.h1))} + ${f1(Math.sqrt(o.h2))}) = <b>${f0(dmax)} NM</b>. `+
+      (ok?`A ${o.d} NM <span class="ok">hay línea de vista</span>: comunicas.`:curvBlock?`A ${o.d} NM estás <span class="bad">por debajo del horizonte radio</span>: la curvatura de la Tierra corta la señal. Sube o acércate.`:`Dentro del alcance teórico, pero <span class="bad">la sierra corta el rayo</span>: el terreno manda sobre la fórmula.`)+
+      `<br>Para duplicar el alcance hace falta <b>cuadruplicar</b> la altura (o la potencia), porque cuenta la <b>raíz</b>.`; });
+}};
+
+/* ---------- 090 · Señales luminosas de la torre ---------- */
+V.lgun={t:"Pistola de señales luminosas de la torre: qué te ordenan",cap:"Señales de la torre a aeronaves (Anexo 2 de OACI y SERA, apéndice 1). Acuse de recibo: en vuelo, de día alabeando (salvo en base y final) y de noche con dos destellos de los faros o de las luces de navegación; en tierra, de día moviendo alerones o timón y de noche con dos destellos de los faros.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 200" role="img" aria-label="Torre emitiendo la señal luminosa elegida hacia el avión"></svg>`,
+    `<button type="button" data-gw="air" aria-pressed="true">En vuelo</button><button type="button" data-gw="gnd" aria-pressed="false">En tierra</button>`
+    +`<button type="button" data-sg="G" aria-pressed="true">Verde fija</button><button type="button" data-sg="g" aria-pressed="false">Destellos verdes</button><button type="button" data-sg="R" aria-pressed="false">Roja fija</button><button type="button" data-sg="r" aria-pressed="false">Destellos rojos</button><button type="button" data-sg="w" aria-pressed="false">Destellos blancos</button><button type="button" data-sg="W" aria-pressed="false">Blanca fija</button><button type="button" data-sg="p" aria-pressed="false">Bengala roja</button>`,this.cap), svg=u.q("svg");
+  const M={air:{G:"Autorizado a <b>aterrizar</b>.",g:"<b>Regrese para aterrizar</b>: se le dará la autorización para aterrizar y rodar a su debido tiempo.",R:"<b>Ceda el paso</b> a otras aeronaves y <b>siga en el circuito</b>.",r:"<b>Aeródromo peligroso: no aterrice.</b>",w:"<b>Aterrice en este aeródromo y diríjase a la plataforma</b>; la autorización para aterrizar y rodar se dará a su debido tiempo.",W:"La blanca fija <b>no tiene significado</b> en la tabla de señales de la torre. Trampa típica: solo existen <b>destellos</b> blancos.",p:"<b>A pesar de cualquier instrucción anterior, no aterrice por ahora.</b>"},
+           gnd:{G:"Autorizado a <b>despegar</b>.",g:"Autorizado a <b>rodar</b>.",R:"<b>Pare.</b>",r:"<b>Apártese del área de aterrizaje</b> en uso.",w:"<b>Regrese al punto de partida</b> en el aeródromo.",W:"La blanca fija <b>no tiene significado</b> en la tabla de señales de la torre.",p:"La bengala roja es una señal para aeronaves <b>en vuelo</b>: no hay significado en tierra."}};
+  const C={G:"#3dff7a",g:"#3dff7a",R:"#ff3b30",r:"#ff3b30",w:"#ffffff",W:"#ffffff",p:"#ff5a3c"};
+  let gw="air", sg="G", raf=0;
+  const draw=()=>{ const t=performance.now()/1000, flash="grw".includes(sg), on=sg==="p"?true:!flash||(t%1)<.5, c=C[sg];
+    const air=gw==="air", ax=air?300:300, ay=air?60:166;
+    const beam=on&&!(sg==="p")?`<path d="M96 54L${ax-14} ${ay-10}L${ax-14} ${ay+10}Z" fill="${c}" opacity=".22"/><circle cx="96" cy="54" r="7" fill="${c}"/><circle cx="96" cy="54" r="16" fill="${c}" opacity=".25"/>`:`<circle cx="96" cy="54" r="7" fill="#3a516b"/>`;
+    const pyro=sg==="p"?(()=>{ const k=(t%2.2)/2.2, x=96+k*120, y=54-Math.sin(k*Math.PI)*46; return `<path d="M96 54Q${96+60} ${54-92} ${x} ${y}" stroke="#ff9a7a" stroke-width="1.5" stroke-dasharray="2 3" fill="none"/><circle cx="${x}" cy="${y}" r="5" fill="${c}"/><circle cx="${x}" cy="${y}" r="12" fill="${c}" opacity=".3"/>`; })():"";
+    svg.innerHTML=`<rect width="400" height="200" fill="#0c1726"/><path d="M0 180H400" stroke="#3a516b" stroke-width="2"/><rect x="0" y="180" width="400" height="20" fill="#16283b"/>
+      <path d="M78 180L84 66H108L114 180Z" fill="#3a516b"/><path d="M74 66L70 40H122L118 66Z" fill="#58c4f0" opacity=".35" stroke="#9fb3c8"/><path d="M68 40H124" stroke="#9fb3c8" stroke-width="2"/><text x="96" y="196" font-size="9.5" text-anchor="middle" fill="#9fb3c8">torre</text>
+      ${beam}${pyro}
+      <g transform="translate(${ax} ${ay})"><path d="M-18 0h28l8 3-8 3h-28zM-16 0l-6-10h6l8 10zM-4 3l-8 10h6l10-10z" fill="#ffc94d"/></g>
+      <text x="${ax}" y="${air?30:150}" font-size="10" text-anchor="middle" fill="#9fb3c8">${air?"avión en vuelo":"avión en tierra"}</text>`;
+    u.out.innerHTML=`<b style="color:${c==="#ffffff"?"#dfe8f1":c}">${{G:"Verde fija",g:"Destellos verdes",R:"Roja fija",r:"Destellos rojos",w:"Destellos blancos",W:"Blanca fija",p:"Bengala roja"}[sg]}</b> · ${air?"en vuelo":"en tierra"}: ${M[gw][sg]}`;
+    cancelAnimationFrame(raf); if(el.isConnected&&("grwp".includes(sg))) raf=requestAnimationFrame(()=>{ const r=svg.getBoundingClientRect(); if(r.bottom>0&&r.top<innerHeight&&!document.hidden) draw(); else setTimeout(draw,400); }); };
+  btns(el,"data-gw",v=>{ gw=v; draw(); }); btns(el,"data-sg",v=>{ sg=v; draw(); }); draw();
+}};
+
+/* ---------- 081 · Capa límite: transición, desprendimiento, generadores de vórtices y slat ---------- */
+V.blayer={t:"Capa límite: laminar, turbulenta y desprendida; qué cambian los generadores de vórtices y el slat",cap:"Modelo cualitativo de un perfil con pérdida desde el borde de salida. La capa laminar roza menos pero aguanta poco el gradiente de presión adverso; la turbulenta tiene más energía cerca de la pared y tarda más en desprenderse. Los generadores de vórtices la energizan; el slat abre una ranura que sopla aire rápido sobre el extradós.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 300" role="img" aria-label="Perfil con la capa límite y gráfica de coeficiente de sustentación frente al ángulo de ataque"></svg>`,
+    rng("a","Ángulo de ataque",0,26,6,.5,"°")+`<button type="button" data-vg aria-pressed="false">Generadores de vórtices</button><button type="button" data-sl aria-pressed="false">Slat extendido</button>`,this.cap), svg=u.q("svg");
+  let vg=false, sl=false, A=6;
+  const yt=x=>.6*(.2969*Math.sqrt(x)-.126*x-.3516*x*x+.2843*x*x*x-.1015*x*x*x*x), yc=x=>.04*(x<.4?(2*.4*x-x*x)/.16:((1-2*.4)+2*.4*x-x*x)/.36);
+  const C=240, ox=70, oy=120, P=(x,up)=>[ox+x*C, oy-(yc(x)+(up?1:-1)*yt(x))*C];
+  const model=()=>{ const as=15+(vg?2.5:0)+(sl?7:0), a0=9+(vg?3:0)+(sl?6:0), clmax=1.45+(vg?.1:0)+(sl?.45:0);
+    const xt=cl(.42-.02*A,.04,.42), xs=A<=a0?1:cl(1-(A-a0)/(as-a0)*.62,.15,1), stall=A>as;
+    const CL=a=>a<=as?Math.min(clmax,.2+.1*a*(clmax/(.2+.1*as))):Math.max(.55,clmax-(a-as)*.09);
+    return {as,a0,clmax,xt,xs:stall?Math.min(xs,.3):xs,stall,CL}; };
+  const draw=()=>{ const m=model(), N=60;
+    const up=Array.from({length:N+1},(_,i)=>P(i/N,true)), lo=Array.from({length:N+1},(_,i)=>P(i/N,false));
+    const foil=`M${up.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join("L")}L${lo.slice().reverse().map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join("L")}Z`;
+    // capa límite sobre el extradós: laminar fina, turbulenta más gruesa, desprendida tras xs
+    const nrm=x=>{ const a=P(Math.max(0,x-.01),true), b=P(Math.min(1,x+.01),true), dx=b[0]-a[0], dy=b[1]-a[1], l=Math.hypot(dx,dy); return [dy/l,-dx/l]; };
+    const th=x=>x<m.xt?1.5+x*4:3+(x-m.xt)*(18+(vg?-4:0));
+    const layer=(x0,x1,col,o)=>{ if(x1<=x0) return ""; const n=24, a=[], b=[]; for(let i=0;i<=n;i++){ const x=lerp(x0,x1,i/n), p=P(x,true), q=nrm(x), t=th(x); a.push(p); b.push([p[0]+q[0]*t,p[1]+q[1]*t]); }
+      return `<path d="M${a.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join("L")}L${b.reverse().map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join("L")}Z" fill="${col}" opacity="${o}"/>`; };
+    const sep=m.xs<1?(()=>{ const p=P(m.xs,true), e=P(1,true); const r=8+ (1-m.xs)*40; let s=`<path d="M${p[0]} ${p[1]}Q${(p[0]+e[0])/2} ${p[1]-r*1.6} ${e[0]+30} ${e[1]-r*.6}" stroke="#ff8a80" stroke-width="1.6" fill="none"/>`;
+      for(let i=0;i<4;i++){ const k=(i+.5)/4, x=lerp(p[0],e[0]+20,k), y=lerp(p[1],e[1],k)-r*.7*Math.sin(Math.PI*k); s+=`<path d="M${(x+5).toFixed(1)} ${y.toFixed(1)}a5 5 0 1 1 -3 -4" stroke="#ff8a80" stroke-width="1.3" fill="none"/>`; } return s; })():"";
+    const stream=Array.from({length:4},(_,i)=>{ const y=40+i*16-(i===3?0:0); return `<path d="M10 ${y}H60" stroke="#58c4f0" stroke-width="1" opacity=".5"/>`; }).join("");
+    const vgs=vg?[.11,.15,.19].map(x=>{ const p=P(x,true); return `<path d="M${(p[0]-3).toFixed(1)} ${(p[1]-.5).toFixed(1)}l3 -6l3 6" stroke="#ffc94d" stroke-width="1.4" fill="none"/>`; }).join(""):"";
+    const slat=sl?(()=>{ const a=P(0,true); return `<path d="M${a[0]-22} ${a[1]+14}Q${a[0]-26} ${a[1]-8} ${a[0]-4} ${a[1]-12}Q${a[0]-14} ${a[1]-2} ${a[0]-14} ${a[1]+12}Z" fill="#9fb3c8"/><path d="M${a[0]-26} ${a[1]+22}Q${a[0]-8} ${a[1]+6} ${a[0]+14} ${a[1]-10}" stroke="#6ee7a0" stroke-width="1.6" fill="none"/>`; })():"";
+    const CLx=a=>238+a/26*150, CLy=c=>286-c/2.1*70;
+    const curve=Array.from({length:53},(_,i)=>{ const a=i*.5; return `${i?"L":"M"}${CLx(a).toFixed(1)} ${CLy(m.CL(a)).toFixed(1)}`; }).join("");
+    svg.innerHTML=`<rect width="400" height="300" fill="#12202f"/>${stream}
+      <g transform="rotate(${A} ${ox+.25*C} ${oy})">${slat}<path d="${foil}" fill="#dfe8f1"/>
+        ${layer(0,Math.min(m.xt,m.xs),"#58c4f0",.85)}${layer(m.xt,m.xs,"#f6b73c",.8)}${sep}${vgs}
+        ${m.xt<m.xs?`<path d="M${P(m.xt,true)[0]} ${P(m.xt,true)[1]-4}v-14" stroke="#f6b73c"/><text x="${P(m.xt,true)[0]}" y="${P(m.xt,true)[1]-21}" font-size="9.5" text-anchor="middle" fill="#f6b73c">transición</text>`:""}
+        ${m.xs<1?`<circle cx="${P(m.xs,true)[0]}" cy="${P(m.xs,true)[1]}" r="3.5" fill="#ff3b30"/>`:""}</g>
+      <rect x="12" y="12" width="10" height="10" fill="#58c4f0"/><text x="26" y="21" font-size="10" fill="#58c4f0">laminar</text><rect x="78" y="12" width="10" height="10" fill="#f6b73c"/><text x="92" y="21" font-size="10" fill="#f6b73c">turbulenta</text><rect x="160" y="12" width="10" height="10" fill="#ff8a80"/><text x="174" y="21" font-size="10" fill="#ff8a80">desprendida</text>
+      <rect x="226" y="208" width="168" height="88" fill="#0f1b29"/><path d="M238 286H392M238 286V212" stroke="#3a516b"/><text x="232" y="220" font-size="9" fill="#9fb3c8">CL</text><text x="390" y="282" font-size="9" text-anchor="end" fill="#9fb3c8">AoA</text>
+      <path d="${curve}" stroke="#6ee7a0" stroke-width="2" fill="none"/><circle cx="${CLx(A)}" cy="${CLy(m.CL(A))}" r="4" fill="${m.stall?"#ff3b30":"#ffc94d"}"/>
+      <text x="${CLx(m.as)}" y="${CLy(m.clmax)-6}" font-size="9" text-anchor="middle" fill="#6ee7a0">CLmáx ${f1(m.clmax)} a ${f1(m.as)}°</text>`;
+    u.out.innerHTML=`AoA <b>${f1(A)}°</b>: transición laminar→turbulenta al <b>${f0(m.xt*100)} %</b> de la cuerda; ${m.xs>=1?"la capa límite sigue <b class=\"ok\">pegada</b> hasta el borde de salida.":m.stall?"<b class=\"bad\">PÉRDIDA</b>: el desprendimiento ha avanzado por casi todo el extradós y el CL cae.":`desprendimiento desde el <b>${f0(m.xs*100)} %</b> de la cuerda (avanza desde el borde de salida al subir el ángulo).`}<br>`
+      +`Al subir el ángulo, el punto de transición <b>avanza</b> y el de desprendimiento también. ${vg?"Los <b>generadores de vórtices</b> mezclan aire rápido en la capa límite: retrasan el desprendimiento y suben un poco el ángulo de pérdida, a cambio de algo más de resistencia. ":""}${sl?"El <b>slat</b> abre una ranura que re-energiza la capa límite desde el borde de ataque: el CLmáx y el ángulo de pérdida suben mucho, así que la pérdida llega a un ángulo de ataque mayor (más morro arriba). ":""}${!vg&&!sl?"Prueba con los generadores de vórtices y con el slat.":""}`; };
+  btns(el,"data-vg",()=>{ vg=!vg; u.q("[data-vg]").setAttribute("aria-pressed",vg); draw(); }); btns(el,"data-sl",()=>{ sl=!sl; u.q("[data-sl]").setAttribute("aria-pressed",sl); draw(); });
+  bind(el,o=>{ A=o.a; setO(el,"a",f1(A)); draw(); });
+}};
+
+/* ---------- 081 · Dutch roll frente a inestabilidad espiral ---------- */
+V.dynstab={t:"Dutch roll frente a inestabilidad espiral: quién manda, la lateral o la direccional",cap:"Modelo cualitativo tras una ráfaga que alabea el avión 10°. Dutch roll: oscilación acoplada de alabeo y guiñada cuando la estabilidad lateral (diedro, flecha) domina sobre la direccional (deriva). Espiral: cuando domina la direccional, el alabeo crece despacio y el avión se mete en una espiral descendente cada vez más cerrada.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 230" role="img" aria-label="Vista desde atrás del avión y trayectoria vista desde arriba"></svg>`,
+    rng("lat","Estabilidad lateral (diedro)",1,10,7,1,"")+rng("dir","Estabilidad direccional (deriva)",1,10,4,1,"")+`<button type="button" data-yd aria-pressed="false">Amortiguador de guiñada</button><button type="button" data-go>▶ Ráfaga</button>`,this.cap), svg=u.q("svg");
+  let lat=7, dir=4, yd=false, t0=performance.now(), raf=0, vis=true;
+  const RM=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const sim=T=>{ const r=lat/dir, dr=cl((r-.9)*1.3,0,1.6), zeta=.18/(1+dr)+(yd?.9:0), w=2.6, sp=.11*(dir-lat)/9;
+    let phi=0, psi=0, x=0, y=0; const tr=[]; const dt=1/20;
+    for(let t=0;t<=T;t+=dt){ const dutch=10*Math.exp(-zeta*t)*Math.sin(w*t)*(.2+dr), spiral=10*Math.exp(sp*t*1.6)*(sp>0?1:Math.exp(sp*t*2));
+      phi=cl(dutch+(sp>0?spiral:spiral*.6),-75,75); const beta=dutch*.6*Math.cos(w*t);
+      psi+=Math.tan(phi*R)*9.81/60*dt*3; x+=Math.sin(psi)*dt*6; y-=Math.cos(psi)*dt*6; tr.push([x,y]); }
+    return {phi,psi,tr,dr,sp}; };
+  const draw=()=>{ raf=0; if(!el.isConnected) return; const T=RM?6:((performance.now()-t0)/1000)%14, s=sim(T), phi=s.phi;
+    const tr=s.tr.map((p,i)=>`${i?"L":"M"}${(300+p[0]).toFixed(1)} ${(196+p[1]).toFixed(1)}`).join(""), L=s.tr[s.tr.length-1];
+    svg.innerHTML=`<rect width="400" height="230" fill="#12202f"/><text x="100" y="18" font-size="10" text-anchor="middle" fill="#9fb3c8">Vista desde atrás</text><text x="300" y="18" font-size="10" text-anchor="middle" fill="#9fb3c8">Trayectoria vista desde arriba</text>
+      <path d="M200 26V222" stroke="#22364c"/>
+      <g transform="translate(100 120)"><path d="M-90 0H90" stroke="#58c4f0" stroke-dasharray="4 4" opacity=".5"/>
+        <g transform="rotate(${phi.toFixed(1)})"><path d="M-70 ${-2}L-6 2H6L70 -2" stroke="#dfe8f1" stroke-width="4" fill="none" transform="translate(0 0)"/><path d="M-70 -2L-6 4M70 -2L6 4" stroke="#dfe8f1" stroke-width="3" opacity="${lat/12}"/><circle r="9" fill="#dfe8f1"/><path d="M0 -8V-34" stroke="#dfe8f1" stroke-width="3"/><path d="M-20 -6H20" stroke="#dfe8f1" stroke-width="2.5"/></g>
+        <text y="72" font-size="12" font-weight="700" text-anchor="middle" fill="${Math.abs(phi)>30?"#ff8a80":"#ffc94d"}">alabeo ${f0(phi)}°</text></g>
+      <path d="${tr}" stroke="#ffc94d" stroke-width="2" fill="none"/><circle cx="${(300+L[0]).toFixed(1)}" cy="${(196+L[1]).toFixed(1)}" r="4" fill="#ffc94d"/><circle cx="300" cy="196" r="3" fill="#9fb3c8"/>`;
+    const mode=s.dr>.15&&s.sp<=0?"dutch":s.sp>0?"spiral":"ok";
+    u.out.innerHTML=(mode==="dutch"?`<b>Dutch roll</b>: la estabilidad <b>lateral (${lat})</b> domina sobre la <b>direccional (${dir})</b>. El avión se balancea y guiña a la vez, con el morro dibujando un «ocho»; es rápido e incómodo. ${yd?"El <b class=\"ok\">amortiguador de guiñada</b> lo apaga en pocos ciclos.":"Remedio: <b>amortiguador de guiñada</b> (yaw damper)."}`
+      :mode==="spiral"?`<b class="bad">Inestabilidad espiral</b>: la estabilidad <b>direccional (${dir})</b> domina sobre la <b>lateral (${lat})</b>. La deriva mete el morro en el viraje, el ala exterior va más rápida y sustenta más, y el alabeo crece poco a poco: espiral descendente cada vez más cerrada. Es <b>lenta</b>: el piloto la corrige con alabeo.`
+      :`Equilibrio razonable entre estabilidad lateral y direccional: la perturbación se amortigua sola.`)+`<br>Regla: <b>mucho diedro → Dutch roll</b>; <b>mucha deriva → espiral</b>. Los diseñadores aceptan algo de inestabilidad espiral porque es lenta y fácil de corregir.`;
+    if(!RM&&vis&&!document.hidden) raf=requestAnimationFrame(draw); };
+  if("IntersectionObserver" in window) new IntersectionObserver(es=>{ vis=es.some(e=>e.isIntersecting); if(vis&&!raf) raf=requestAnimationFrame(draw); }).observe(svg);
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&vis&&!raf&&el.isConnected) raf=requestAnimationFrame(draw); });
+  u.q("[data-go]").addEventListener("click",()=>{ t0=performance.now(); if(!raf) draw(); });
+  u.q("[data-yd]").addEventListener("click",e=>{ yd=!yd; e.currentTarget.setAttribute("aria-pressed",yd); t0=performance.now(); if(!raf) draw(); });
+  bind(el,o=>{ lat=o.lat; dir=o.dir; setO(el,"lat",lat); setO(el,"dir",dir); t0=performance.now(); if(!raf) draw(); });
+}};
+
+
 function mount(el){ const k=el.dataset.viz, v=V[k]; if(!v||el._v) return; el._v=1;
   const go=()=>{ try{ v.init(el); }catch(e){ try{ console.error("F0Viz",k,e); }catch(_){} el.innerHTML=`<p class="lt">${v.t}</p><p class="out">No se ha podido cargar esta lámina.</p>`; } };
   if(!("IntersectionObserver" in window)){ go(); return; }

@@ -663,6 +663,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <div class="quizbox" data-refs="oneinsixty,tke,dblte"><button class="btn sec qbtn">🎯 Ponme a prueba (1 en 60)</button><div class="qarea"></div></div>
 </div>
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Crosswind con cálculo mental (MDR)</b>: XW = W × sen θ; sen 30° = 0,5 · sen 45° ≈ 0,7 · sen 60° ≈ 0,9 · a partir de 60°, casi todo el viento.</li><li><b>Drift real tras un fix fuera de track</b>: track hecho (TMG) = track planeado ± TKE; drift = TMG − heading volado.</li><li>La variación cambia con la posición y con el tiempo (el polo magnético se mueve).</li></ul></div>
+<div class="key ejr"><b>Ejemplo resuelto · de rumbo verdadero a rumbo de brújula</b>Rumbo verdadero 095°, variación 3° W, desvío 2° E.<br>Magnético = verdadero + variación W = 095 + 3 = <b>098°</b>.<br>Brújula = magnético − desvío E = 098 − 2 = <b>096°</b>.</div>
+<div class="flag f16t ejr"><b>Trampas habituales y reglas de oro</b><ul><li>De verdadero a magnético: «<b>East is least, West is best</b>»: la variación Este se resta y la Oeste se suma. Al revés si vas de magnético a verdadero.</li><li>Orden: <b>V</b>erdadero → <b>M</b>agnético → <b>B</b>rújula (variación primero, desvío después).</li><li>La variación depende del lugar (isógonas); el desvío, del avión y del rumbo (tarjeta de desvíos).</li></ul></div>
 </div>
 </details>
 
@@ -683,6 +685,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <div class="quizbox" data-refs="dep,nm,dlat"><button class="btn sec qbtn">🎯 Ponme a prueba (departure)</button><div class="qarea"></div></div>
 </div>
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Air distance</b>: NAM = NM × TAS ÷ GS. Con viento de cara, más millas de aire que de suelo.</li><li>1 NM = 1,852 km = distancia media de 1′ de latitud en el WGS-84; 1′ de longitud en el ecuador ≈ 1 NM.</li><li>Meridianos opuestos (antípodas): el camino corto pasa por el polo.</li></ul></div>
+<div class="key ejr"><b>Ejemplo resuelto · distancia por un paralelo (departure)</b>Dos puntos a 60° N separados 10° de longitud.<br>Departure = Δlong (min) × cos(latitud) = 600 × cos 60° = 600 × 0,5 = <b>300 NM</b>.<br>En el ecuador serían 600 NM: 1 minuto de arco = 1 NM solo sobre los meridianos y el ecuador.</div>
 </div>
 </details>
 
@@ -705,6 +708,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 <div class="scroll"><table><tr><th>Trial resuelto</th><th>Cálculo</th><th>Resultado</th></tr><tr><td>110 kt, 60 NM</td><td>60 ÷ 110 × 60</td><td><b>33 min</b></td></tr><tr><td>49 l/h, 55 min</td><td>49 × 55 ÷ 60</td><td><b>44,9 l</b></td></tr><tr><td>18 gal en 120 NM; ¿168 NM?</td><td>18 × 168 ÷ 120</td><td><b>25,2 gal</b></td></tr><tr><td>IAS 100 kt a 4.000 ft de densidad</td><td>regla del 2 %: 100 × 1,08</td><td><b>≈ 106–108 kt</b> (el trial da 106)</td></tr></table></div>
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Mach</b>: M = TAS ÷ velocidad del sonido. Subiendo a <b>CAS constante</b>, TAS y Mach <b>suben</b>. Subiendo a <b>Mach constante</b> en la troposfera, TAS y CAS <b>bajan</b>.</li><li><b>Gradientes</b> (regla del 1 en 60, 1 NM ≈ 6.000 ft): grados = (ft ÷ 100) ÷ NM · porcentaje = (ft ÷ 60) ÷ NM.</li><li><b>Régimen de descenso</b>: ROD = GP° × GS (NM/min) × 100 = GP % × GS (kt) · VS (ft/min) = GS × gradiente (ft/NM) ÷ 60 · senda de 3°: ROD ≈ GS × 5.</li><li>GS revisada para llegar a una hora: distancia ÷ minutos que quedan × 60 · GS media entre dos fixes: distancia ÷ tiempo.</li><li>Con más WCA, menos TAS «útil» por el track (TAS × cos WCA).</li><li>Antes de descender, conocer bien la posición: margen con el terreno.</li></ul></div>
+<div class="key ejr"><b>Ejemplo resuelto · de CAS a TAS a ojo</b>TAS ≈ CAS + 2 % por cada 1 000 ft. CAS 120 kt a 8 000 ft: 120 × (1 + 0,16) ≈ <b>139 kt</b>.<br>Más preciso con el computador: depende también de la temperatura (más calor → más TAS).</div>
 </div>
 </details>
 
@@ -730,6 +734,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <div class="flag"><b>Trampas:</b> track error ≠ drift · la <b>cruz</b> es la air position y el <b>círculo</b> la ground position.</div>
 <ul><li><b>Air position</b> (cruz): donde estarías sin viento. <b>Ground position</b> (círculo): donde estás.</li><li><b>Track error</b> = track deseado − track hecho. La GS real casi nunca es la prevista: se revisan las ETA.</li></ul>
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li><b>Speed factor</b>: SF = velocidad ÷ 60 (NM/min).</li><li><b>WCA = XWC ÷ SF</b>: TAS 120 (SF 2) y 20 kt de cruzado → 10°.</li><li>Diferencia entre posición DR y fix: corrige rumbo y GS.</li></ul></div>
+<div class="key ejr"><b>Ejemplo resuelto · regla de 1 en 60</b>Tras volar 40 NM estás 2 NM a la derecha de la derrota. Error de derrota (TKE) = 2 × 60 ÷ 40 = <b>3°</b>.<br>Quedan 60 NM al destino: ángulo de cierre = 2 × 60 ÷ 60 = <b>2°</b>.<br>Para ir directo al destino: corriges 3 + 2 = <b>5° a la izquierda</b>. Para volver a la derrota y seguirla, 2 × TKE = 6° y, al cortarla, quitas 3°.</div>
 </div>
 </details>
 
@@ -749,6 +754,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <div class="quizbox" data-refs="climb,grad"><button class="btn sec qbtn">🎯 Ponme a prueba (ascenso y descenso)</button><div class="qarea"></div></div>
 </div>
 <div class="comp"><b>ATPL · ampliación: lo que se pregunta</b><ul><li>Medias: ascenso a 2/3 de la altitud de crucero; descenso a 1/2 de la altitud de descenso (TAS y viento).</li><li>Dados distancia, velocidad y altitudes → ROD o ROC. Dados ROD, velocidad y altitudes → distancia necesaria.</li><li>Los manuales dan tablas o gráficos de tiempo, combustible y distancia de ascenso y descenso.</li></ul></div>
+<div class="key ejr"><b>Ejemplo resuelto · descenso a 3°</b>Régimen de descenso para 3° ≈ GS × 5: con 120 kt, <b>600 ft/min</b>.<br>Distancia para bajar: unas <b>3 NM por cada 1 000 ft</b>. De FL100 a 1 000 ft sobre el aeródromo (≈ 9 000 ft): unas 27 NM.<br>Con viento de cara la GS baja: menos régimen para el mismo ángulo.</div>
 </div>
 </details>
 
@@ -890,6 +896,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <text x="30" y="188" class="sm">Este: el Sol ya pasó → allí es <tspan class="bd">más tarde</tspan> → UTC = LMT <tspan class="bd tm">− arco</tspan> (east least)</text>
 </svg><figcaption>Los dos ejemplos del temario: Goose Bay (060°W) y Munich (015°E).</figcaption></figure>
 <p class="src">Equation of time: máximo ≈ 16 min a mediados de noviembre y ≈ 14 min a mediados de febrero.</p>
+<div class="key ejr"><b>Ejemplo resuelto · hora local media</b>15° de longitud = 1 h; 1° = 4 min.<br>A las 1200 UTC, en 30° E la hora local media es 1200 + 2 h = <b>1400</b>; en 45° W, 1200 − 3 h = <b>0900</b>.<br>«<b>Este, más tarde (sumar); Oeste, más temprano (restar)</b>».</div>
 </div>
 </details>
 
@@ -1083,6 +1090,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <div class="quizbox" data-refs="dme,dmegs"><button class="btn sec qbtn">🎯 Ponme a prueba (DME)</button><div class="qarea"></div></div>
 </div>
 <div class="comp"><b>ATPL · lo que se pregunta</b><ul><li>Línea de posición: un <b>círculo</b> centrado en la estación.</li><li>Ident del DME con un VOR: tono <b>más agudo</b>, cada ≈ <b>40 s</b>. Emparejado con VOR o ILS: al sintonizar uno se sintoniza el otro.</li><li>Con más de 100 aviones, se queda sin respuesta el de interrogación <b>más débil</b> (el más lejano). Un <b>TACAN</b> sirve como DME.</li></ul></div>
+<div class="key ejr"><b>Ejemplo resuelto · distancia oblicua del DME</b>El DME mide la distancia <b>oblicua</b>. A FL360 (≈ 5,9 NM de altura) con lectura de 10 NM:<br>Distancia horizontal = √(10² − 5,9²) ≈ <b>8,1 NM</b>.<br>Sobre la vertical de la estación el DME marca la altura (≈ 5,9 NM), nunca cero. Error despreciable a más de 1 NM por cada 1 000 ft de altura.</div>
 </div>
 </details>
 
@@ -6316,7 +6324,7 @@ try{ LO_REFS["090.15"]=(LO_REFS["090.15"]||[]).concat(["smodes"]); LO_REFS["090.
   }catch(e){ try{ console.error("lens",e); }catch(_){} }
 })();
 </script>
-<script src="../viz16.js?v=93e507b3" defer></script>
+<script src="../viz16.js?v=e36125aa" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>
 </body>

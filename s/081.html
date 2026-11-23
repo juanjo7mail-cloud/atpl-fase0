@@ -423,7 +423,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   </ul>
   <div class="flag"><b>Trampa:</b> <b>lift ⟂ relative airflow</b> (perpendicular) y <b>drag ∥ relative airflow</b> (paralelo). «Parallel» en la definición de lift es el cebo.</div>
 
-  <h4>The wing: aerofoil parts (partes del perfil)</h4>
+  <div class="clave ejr"><b>Ejemplo resuelto · la ecuación de la sustentación</b>L = ½ ρ V² S CL. Si la velocidad se <b>duplica</b> con el mismo ángulo de ataque, la sustentación se multiplica por <b>4</b>.<br>Para mantener L = W al doblar la velocidad, el CL (el ángulo de ataque) debe bajar a la <b>cuarta parte</b>.<br>Con la altura ρ baja: a la misma IAS la TAS sube y la sustentación se conserva (la IAS ya incluye la densidad).</div>
+<h4>The wing: aerofoil parts (partes del perfil)</h4>
   <ul>
     <li><b>Leading edge</b> (borde de ataque) · <b>trailing edge</b> (borde de salida) · <b>upper / lower surface</b>.</li>
     <li><b>Chord line</b> (línea de cuerda): straight line from leading edge to trailing edge. <b>Chord</b>: its length.</li>
@@ -779,7 +780,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <div id="blBox"></div><p class="out" id="blOut"></p>
   </div>
 
-  <h4>Cause of the stall ★</h4>
+  <div class="f0viz" data-viz="blayer"></div>
+<h4>Cause of the stall ★</h4>
   <ul>
     <li><b>Lift = ½ ρ V² S CL</b>, con <b>CL = CL<sub>α</sub> · α</b>: el CL es proporcional al ángulo de ataque, hasta el crítico.</li>
     <li>★ <b>For a given aerofoil, stalling occurs at a particular ANGLE OF ATTACK</b>: cuando el perfil llega a ese ángulo crítico, entra en pérdida.</li>
@@ -807,7 +809,9 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <div id="bankBox"></div>
   </div>
 
-  <h4>¿Raíz o cuadrado? ★</h4>
+  <div class="clave ejr"><b>Ejemplo resuelto · velocidad de pérdida en viraje y con más peso</b>Factor de carga en viraje nivelado n = 1 ÷ cos(alabeo): 30° → 1,15 · 45° → 1,41 · <b>60° → 2</b>.<br>Vs en viraje = Vs × √n. Con Vs = 50 kt a 60° de alabeo: 50 × √2 = <b>71 kt</b> (+41 %).<br>Vs ∝ √peso: un 10 % más de peso sube la Vs un ≈ <b>5 %</b> (√1,1 = 1,049).</div>
+<div class="flag f16t ejr"><b>Trampas habituales y reglas de oro</b><ul><li>La pérdida es un problema de <b>ángulo de ataque</b>, no de velocidad: puede ocurrir a cualquier velocidad y actitud.</li><li>CG <b>adelantado</b> → la cola empuja más hacia abajo → más sustentación necesaria → <b>Vs más alta</b>.</li><li>Los flaps bajan la Vs y la actitud de morro en la pérdida; la altitud no cambia la Vs en <b>IAS</b> (sí en TAS).</li></ul></div>
+<h4>¿Raíz o cuadrado? ★</h4>
   <p style="margin:6px 0;font-size:1.1em;text-align:center"><b>¿Me piden una VELOCIDAD o una FUERZA?</b><br>
   <span style="color:var(--ok)">VELOCIDAD → RAÍZ √</span> &nbsp;·&nbsp; <span style="color:var(--bad)">FUERZA → CUADRADO ²</span></p>
   <div class="scroll"><table>
@@ -964,7 +968,9 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <li>Los <b>trim</b> sirven para reducir las <b>stick forces / control pressures</b>.</li>
   </ul></div>
 
-  <h4>Equilibrio en vuelo recto y nivelado</h4>
+  <div class="comp ejr"><b>El porqué</b>Dos estabilidades tiran en sentidos opuestos. La <b>lateral</b> (diedro, ala alta, flecha) endereza el ala que baja cuando hay derrape. La <b>direccional</b> (la deriva) alinea el morro con el viento relativo. Si manda la lateral, el avión corrige el alabeo de más y entra en una oscilación acoplada de alabeo y guiñada: el <b>Dutch roll</b>. Si manda la direccional, la deriva mete el morro en el viraje antes de que el diedro levante el ala, y el alabeo crece poco a poco: la <b>espiral</b>.</div>
+<div class="f0viz" data-viz="dynstab"></div>
+<h4>Equilibrio en vuelo recto y nivelado</h4>
   <ul>
     <li>Las fuerzas opuestas <b>deben ser iguales</b> para que no quede fuerza resultante: lift = weight (p. ej. 2.000 unidades) y thrust = drag (p. ej. 200 unidades).</li>
     <li>Pero <b>lift y weight no actúan en el mismo punto</b>: el CP y el CG <b>no son constantes en vuelo</b> y casi nunca coinciden. El <b>CG se mueve</b> al cambiar la carga y al consumir combustible; el <b>CP se mueve</b> con el ángulo de ataque.</li>
@@ -1082,7 +1088,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li>★ <b>n = L / W</b>. En vuelo recto y nivelado, n = 1. En un viraje nivelado, <b>n = 1 / cos φ</b> y <b>solo depende del alabeo</b>: ni la velocidad ni el peso lo cambian.</li>
   </ul>
 
-  <h4>El diagrama de maniobra (manoeuvring envelope)</h4>
+  <div class="clave ejr"><b>Ejemplo resuelto · velocidad de maniobra</b>Va = Vs × √nmáx. Categoría normal (3,8 g) con Vs = 50 kt: 50 × √3,8 ≈ <b>97 kt</b>.<br>Con menos peso la Vs baja y la <b>Va también baja</b>: un avión ligero debe frenar más en turbulencia.<br>Por debajo de Va el avión entra en pérdida antes de pasar el límite estructural; por encima, puede romperse antes.</div>
+<h4>El diagrama de maniobra (manoeuvring envelope)</h4>
   <div class="svgbox wdg" id="vis-vn">
   <b>Diagrama V-n: cambia la categoría y el peso</b>
   <div class="ctl"><span>Categoría</span>
@@ -1189,6 +1196,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 </div>
 </details>
 
+<div class="flag f16t ejr"><b>Trampas habituales y reglas de oro</b><ul><li>Hélice que gira a derechas vista desde cabina: en el despegue el avión tiende a guiñar a la <b>izquierda</b> (estela helicoidal, factor P y par).</li><li>El <b>factor P</b> aparece con ángulo de ataque alto: la pala descendente (lado derecho) da más tracción.</li><li>La <b>precesión giroscópica</b> actúa 90° más allá en el sentido de giro: al levantar la cola de un patín de cola, guiñada a la izquierda.</li></ul></div>
 <h2 id="ch-081.08">081.08 · Flight mechanics <span class="chq">5 preg. · 11 %</span></h2>
 <div class="f0lab" data-lab="turn"></div>
 <div class="f0lab" data-lab="polar"></div>
@@ -1226,7 +1234,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   </ul>
   <div class="flag"><b>La que entra tal cual:</b> «A reduction in weight will have what effect on the glide?» → <b>baja la mejor velocidad de planeo y NO afecta al ángulo</b>.</div>
 
-  <h4>Viraje</h4>
+  <div class="clave ejr"><b>Ejemplo resuelto · distancia de planeo</b>Con L/D = 10, desde 5 000 ft sobre el terreno: 5 000 × 10 = 50 000 ft ≈ <b>8,2 NM</b> sin viento.<br>El peso <b>no cambia</b> el ángulo de planeo (depende de L/D), pero sí la velocidad a la que se consigue: más peso → más rápido, mismo alcance.<br>Con viento de cara, la distancia sobre el suelo <b>disminuye</b>; con viento de cola, aumenta.</div>
+<h4>Viraje</h4>
   <ul>
     <li>★ <b>n = 1 / cos φ</b>: el factor de carga <b>solo depende del alabeo</b>. A igual alabeo, da igual la velocidad y el peso.</li>
     <li>A más velocidad con el mismo alabeo: <b>más radio</b> y <b>menos ritmo</b> de viraje.</li>
@@ -1240,7 +1249,8 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <tr><td>Sube con el <b>cuadrado</b> de la velocidad</td><td>Baja al subir la velocidad</td></tr>
   </table></div>
 
-  <h4>Vuelo asimétrico (bimotor con un motor parado)</h4>
+  <div class="clave ejr"><b>Ejemplo resuelto · radio y régimen de viraje</b>Radio r = V² ÷ (g × tan φ). Con 100 kt (51,4 m/s) y 30°: 51,4² ÷ (9,81 × 0,577) ≈ <b>467 m</b>.<br>Viraje estándar (rate one, 3°/s): alabeo ≈ <b>TAS ÷ 10 + 7</b>. A 120 kt: ≈ 19°.<br>Con el mismo alabeo, al doblar la velocidad el radio se <b>cuadruplica</b>.</div>
+<h4>Vuelo asimétrico (bimotor con un motor parado)</h4>
   <ul>
     <li>★ <b>Motor crítico</b>: con las dos hélices girando a derechas, el <b>izquierdo</b>. Si falla, el brazo del empuje que queda es mayor por el factor P.</li>
     <li>★ <b>V<sub>MCA</sub></b> (velocidad mínima de control en el aire) <b>sube</b> con el <b>CG atrasado</b> (menos brazo de timón), con la hélice molineteando y con las alas niveladas.</li>
@@ -4327,7 +4337,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ try{ console.error("lens",e); }catch(_){} }
 })();
 </script>
-<script src="../viz16.js?v=93e507b3" defer></script>
+<script src="../viz16.js?v=e36125aa" defer></script>
 <script src="../labs.js?v=7496b38f" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>
