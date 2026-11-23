@@ -790,6 +790,237 @@ init(el){
 }};
 
 
+/* ---------- Partes del avión en 3D: gira, toca, mueve los mandos ---------- */
+V.parts3d=(()=>{
+const PT={   // clave: [español, inglés (examen), explicación]
+  fuselage:["Fuselaje","Fuselage","Cuerpo principal: aloja tripulación, pasaje y carga, y une alas, empenaje y tren. Casi todos son <b>semi-monocoque</b> (cuadernas + larguerillos + larguerones + piel). <b>Trampa:</b> en el monocoque puro la carga la lleva solo la piel."],
+  cockpit:["Cabina y parabrisas","Cockpit · windshield","Puesto de pilotaje. En los presurizados el parabrisas es <b>multicapa y calefactado</b>: el calor sirve de anti-hielo y lo hace más flexible frente al impacto de aves."],
+  engine:["Motor y capó","Engine · cowling","El capó canaliza el aire de refrigeración; las <b>cowl flaps</b> regulan la temperatura de culata (abiertas en ascenso, cerradas en descenso)."],
+  prop:["Hélice y cono","Propeller · spinner","La pala tiene más ángulo de paso en la <b>raíz</b> que en la <b>punta</b> (torsión) para que el ángulo de ataque sea parecido en toda la pala, porque la punta va mucho más rápida."],
+  firewall:["Cortafuegos","Firewall","Mamparo resistente al fuego entre el motor y la cabina. Detrás del cortafuegos empieza la cabina: por eso suele ser el <b>datum</b> de masa y centrado en muchos ligeros."],
+  wing:["Ala","Wing","Genera la sustentación y en muchos aviones lleva el combustible. Puede ser <b>cantilever</b> (sin montantes) o arriostrada con montantes (<b>strut-braced</b>, como la C172). El combustible en el ala alivia la flexión en la raíz."],
+  le:["Borde de ataque","Leading edge","Lo primero que encuentra el aire y donde más hielo se acumula. Aquí van el <b>slat</b>, el flap Krueger y las botas o el anti-hielo."],
+  te:["Borde de salida","Trailing edge","Donde se juntan extradós e intradós. Aquí van el <b>flap</b> (hacia la raíz) y el <b>alerón</b> (hacia la punta)."],
+  root:["Raíz del ala","Wing root","Unión ala-fuselaje. Soporta el <b>mayor momento flector</b> y tiene la cuerda más larga. En vuelo el ala flexa hacia arriba y la raíz es la que más trabaja."],
+  tip:["Punta del ala","Wingtip","Lleva la luz de navegación (<b>roja a la izquierda, verde a la derecha</b>). Aquí nace el torbellino de punta, origen de la resistencia inducida; los winglets la reducen."],
+  aileron:["Alerón","Aileron","Borde de salida, hacia la <b>punta</b>. Mando primario de <b>alabeo</b> (eje longitudinal). Se mueven al revés uno del otro. <b>Guiñada adversa:</b> el alerón que baja da más resistencia y el morro se va al lado contrario del viraje; se corrige con alerón diferencial o Frise y con timón."],
+  flap:["Flap","Flap","Borde de salida, hacia la <b>raíz</b>. Aumenta el <b>CL máx</b> y la resistencia, baja la velocidad de pérdida y <b>reduce el α crítico</b>. El Fowler además retrocede y aumenta la superficie."],
+  slat:["Slat","Slat","Por delante del borde de ataque: al salir deja una <b>ranura</b> que energiza la capa límite y <b>aumenta el α crítico</b> y el CL máx. No es un flap: el flap de borde de ataque es el <b>Krueger</b>."],
+  spoiler:["Spoiler / aerofreno","Spoiler · speed brake","En el <b>extradós</b>, delante del flap. Quita sustentación y mete resistencia. En vuelo: aerofreno simétrico o ayuda al alabeo (sale solo en el <b>ala que baja</b>). En tierra: ground spoilers para cargar el peso en las ruedas y frenar mejor."],
+  hstab:["Estabilizador horizontal","Horizontal stabiliser · tailplane","Da la <b>estabilidad longitudinal</b> (cabeceo). Normalmente empuja hacia <b>abajo</b> para equilibrar el morro pesado. Si es todo móvil se llama <b>stabilator</b> (Piper)."],
+  elevator:["Timón de profundidad","Elevator","Mando primario de <b>cabeceo</b> (eje lateral). Tirar → elevator <b>arriba</b> → la cola baja → morro arriba."],
+  trim:["Compensador","Trim tab","Se mueve al <b>contrario</b> que su superficie y la mantiene deflectada sin fuerza en los mandos. Trim morro arriba → tab <b>abajo</b> → elevator arriba. Quita fuerza, no cambia la estabilidad."],
+  fin:["Estabilizador vertical (deriva)","Fin · vertical stabiliser","Da la <b>estabilidad direccional</b> (guiñada): como una veleta, devuelve el morro hacia el viento relativo. Si domina sobre la lateral, aparece la inestabilidad espiral."],
+  rudder:["Timón de dirección","Rudder","Mando primario de <b>guiñada</b> (eje vertical). Pedal derecho → rudder a la derecha → morro a la derecha. Coordina los virajes y corrige la guiñada adversa y, en bimotor, la de fallo de motor."],
+  nosegear:["Tren de morro","Nose gear","En triciclo, se dirige con los pedales o un tiller (<b>nose-wheel steering</b>). El <b>shimmy damper</b> evita la vibración de la rueda."],
+  maingear:["Tren principal","Main gear","Justo <b>detrás del CG</b>: lleva ≈ <b>90 %</b> del peso. Amortiguador oleoneumático: el <b>nitrógeno</b> hace de muelle y el <b>aceite</b> amortigua (o ballesta de acero en muchos ligeros)."],
+  spar:["Larguero","Spar","Viga principal de raíz a punta: aguanta la <b>flexión</b> (cargas verticales). Suele haber delantero y trasero; con la piel forman el <b>cajón de torsión</b> (wing box). Trial: «stresses due to vertical loads» → spar."],
+  rib:["Costilla","Rib","≈ <b>Perpendicular</b> al larguero. Da la <b>forma del perfil</b> y pasa la carga de la piel al larguero. Trial: «maintain the aerodynamic shape» → ribs."],
+  stringer:["Larguerillo","Stringer","<b>Paralelo</b> al larguero (o a lo largo del fuselaje). Rigidiza la piel para que no pandee. Stringer ≠ rib."],
+  skin:["Revestimiento","Skin","Da y mantiene la forma aerodinámica y, en el semi-monocoque, también trabaja: lleva cortante y torsión."],
+  frame:["Cuaderna","Frame · former","Anillos del <b>fuselaje</b> que le dan la forma. <b>No confundir:</b> cuadernas en el fuselaje, costillas en el ala."],
+  longeron:["Larguerón de fuselaje","Longeron","Elemento longitudinal robusto del fuselaje: lleva la mayor parte de la flexión del fuselaje. Más fuerte que un larguerillo."]
+};
+const STR=["spar","rib","stringer","skin","frame","longeron","firewall"];
+const CT={   // mandos: [etiqueta, explicación, deflexiones]
+  roll:["Palanca a la derecha","Alerón derecho <b>arriba</b> (menos sustentación) e izquierdo <b>abajo</b> (más) → alabeo a la derecha sobre el eje <b>longitudinal</b>. El spoiler del ala que baja también sube un poco. La guiñada adversa lleva el morro a la izquierda: pedal derecho para coordinar."],
+  pitch:["Tirar de la palanca","Elevator <b>arriba</b> → la cola baja → <b>morro arriba</b>, sobre el eje <b>lateral</b>."],
+  yaw:["Pedal derecho","Rudder a la <b>derecha</b> → la cola va a la izquierda → <b>morro a la derecha</b>, sobre el eje <b>vertical</b>."],
+  trim:["Trim morro arriba","Tab <b>abajo</b> → la fuerza del aire en el tab empuja el elevator <b>arriba</b> y lo deja ahí sin esfuerzo. El compensador siempre va al <b>contrario</b> que su superficie."],
+  flaps:["Flaps abajo","Más curvatura (y superficie, si es Fowler): ↑ CL máx, ↑ resistencia, ↓ velocidad de pérdida y ↓ α crítico. Suele aparecer un momento de morro abajo."],
+  slats:["Slats fuera","Se abre una ranura en el borde de ataque: ↑ α crítico y ↑ CL máx. La ranura sopla aire rápido sobre el extradós."],
+  spoil:["Aerofrenos","Los dos spoilers arriba a la vez: menos sustentación y más resistencia para descender o frenar sin acelerar."]
+};
+const GR={
+  wing:{t:"3D · El ala: gírala, toca cada parte y mueve alerones, flaps, slats y spoilers",n:"el ala",p:["wing","le","te","root","tip","aileron","flap","slat","spoiler"],s:["spar","rib","stringer","skin"],c:["roll","flaps","slats","spoil"],v:[-28,34]},
+  tail:{t:"3D · Empenaje: estabilizadores, timones y compensador",n:"el empenaje",p:["hstab","elevator","trim","fin","rudder"],s:["spar","rib","skin"],c:["pitch","yaw","trim"],v:[-140,18]},
+  controls:{t:"3D · Mandos de vuelo: mueve cada superficie y mira qué hace",n:"los mandos de vuelo",p:["aileron","elevator","rudder","trim","flap","slat","spoiler"],s:["spar","rib"],c:["roll","pitch","yaw","trim","flaps","slats","spoil"],v:[-40,26]},
+  gear:{t:"3D · Tren de aterrizaje triciclo",n:"el tren",p:["nosegear","maingear","fuselage","wing"],s:["frame","spar"],c:[],v:[-38,-9],z:1.45},
+  fuselage:{t:"3D · Fuselaje, cabina, motor y estructura",n:"el fuselaje",p:["fuselage","cockpit","engine","prop","firewall"],s:["frame","longeron","stringer","skin","firewall"],c:[],v:[-52,14]}
+};
+GR.all={n:"el avión",p:["fuselage","cockpit","engine","prop","wing","le","te","root","tip","aileron","flap","slat","spoiler","hstab","elevator","trim","fin","rudder","nosegear","maingear"],s:["spar","rib","stringer","skin","frame","longeron","firewall"],c:["roll","pitch","yaw","trim","flaps","slats","spoil"],v:[-35,24]};
+const QZ=[["la viga que aguanta la flexión (cargas verticales)","spar"],["la pieza perpendicular al larguero que da la forma del perfil","rib"],["la pieza paralela al larguero que rigidiza la piel","stringer"],["el dispositivo que aumenta el α crítico","slat"],
+  ["la superficie que sale solo en el ala que baja y le quita sustentación","spoiler"],["la superficie que sube el CL máx pero reduce el α crítico","flap"],["el mando primario de alabeo","aileron"],["el mando primario de cabeceo","elevator"],["el mando primario de guiñada","rudder"],
+  ["la superficie que se mueve al contrario que su mando","trim"],["lo que da la estabilidad direccional","fin"],["lo que da la estabilidad longitudinal","hstab"],["donde se acumula más hielo","le"],["la zona con el mayor momento flector","root"],["donde está la luz verde","tip"],
+  ["el tren que lleva ≈ 90 % del peso","maingear"],["el tren con shimmy damper","nosegear"],["los anillos que dan forma al fuselaje","frame"],["el mamparo entre motor y cabina","firewall"],["el borde donde van flap y alerón","te"]];
+/* geometría (m): x adelante (morro +), y arriba, z hacia la punta derecha */
+const vs=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], va=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], vm=(a,k)=>[a[0]*k,a[1]*k,a[2]*k], vx=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]], vd=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], vn=a=>{ const l=Math.hypot(a[0],a[1],a[2])||1; return [a[0]/l,a[1]/l,a[2]/l]; }, vl=(a,b,t)=>[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
+const rotA=(p,a,b,ang)=>{ if(!ang) return p; const k=vn(vs(b,a)), v=vs(p,a), c=Math.cos(ang*R), s=Math.sin(ang*R); return va(a,va(va(vm(v,c),vm(vx(k,v),s)),vm(k,vd(k,v)*(1-c)))); };
+const naca=f=>5*(.2969*Math.sqrt(f)-.126*f-.3516*f*f+.2843*f*f*f-.1036*f*f*f*f);
+const COL={fuselage:[232,236,241],cockpit:[54,84,116],engine:[214,220,228],prop:[70,74,82],spin:[196,52,46],firewall:[176,118,64],wing:[222,227,233],le:[222,227,233],te:[222,227,233],root:[222,227,233],tip:[222,227,233],tipR:[200,40,36],tipG:[40,170,90],
+  aileron:[176,194,216],flap:[176,194,216],slat:[176,194,216],spoiler:[160,180,206],hstab:[222,227,233],elevator:[176,194,216],trim:[150,170,198],fin:[222,227,233],rudder:[176,194,216],stripe:[30,90,170],
+  nosegear:[120,128,140],maingear:[120,128,140],tyre:[38,42,48],spar:[232,150,60],rib:[120,190,240],stringer:[160,220,170],skin:[200,215,230],frame:[120,190,240],longeron:[232,150,60]};
+function build(D,str){   // D: deflexiones (grados)
+  const F=[];   // caras: {p,k(part),c(color),a,l(línea)}
+  const face=(p,k,c,a)=>F.push({p,k,c:c||COL[k],a:a==null?1:a}), line=(p,k,w,cl)=>F.push({p,k,c:COL[k],a:1,l:w||2,cl});
+  /* fuselaje: secciones (x, semiancho, alto arriba, alto abajo) */
+  const ST=[[3.6,.40,.36,.40],[3.05,.50,.46,.48],[2.2,.57,.55,.52],[1.45,.60,.86,.55],[.45,.60,.90,.55],[-.6,.56,.82,.50],[-1.8,.45,.62,.40],[-3.0,.32,.46,.28],[-3.95,.2,.34,.16],[-4.6,.11,.27,.08]], NR=16;
+  const ring=i=>{ const s=ST[i], o=[]; for(let k=0;k<NR;k++){ const t=2*Math.PI*k/NR, sn=Math.sin(t), cs=Math.cos(t); o.push([s[0],(cs>=0?s[2]:s[3])*Math.sign(cs)*Math.pow(Math.abs(cs),.8),s[1]*Math.sign(sn)*Math.pow(Math.abs(sn),.8)]); } return o; };
+  const RG=ST.map((s,i)=>ring(i));
+  for(let i=0;i<ST.length-1;i++) for(let k=0;k<NR;k++){ const a=RG[i][k], b=RG[i][(k+1)%NR], c=RG[i+1][(k+1)%NR], d=RG[i+1][k], x0=ST[i][0], x1=ST[i+1][0], cm=Math.cos(2*Math.PI*(k+.5)/NR);
+    let p="fuselage"; if(x1>=2.2) p="engine"; else if(x0<=2.2&&x1>=1.45&&cm>.2) p="cockpit"; else if(x0<=1.45&&x1>=-.6&&cm>.25&&cm<.8) p="cockpit";
+    const stripe=p==="fuselage"&&Math.abs(cm+.05)<.2&&x1<2.2;
+    face([a,b,c,d],str&&p!=="engine"&&p!=="cockpit"?"skin":p,stripe?COL.stripe:null,str&&p!=="engine"?.16:1); }
+  face(RG[0].slice().reverse(),"engine"); face(RG[ST.length-1],str?"skin":"fuselage",null,str?.16:1);
+  if(str){ face(RG[2],"firewall",null,.9);
+    for(let i=1;i<ST.length-1;i++) if(i!==2) line(RG[i],"frame",2.2,1);
+    for(const k of [2,6,10,14]) line(RG.map(r=>r[k]),"longeron",3); for(const k of [0,4,8,12]) line(RG.slice(2).map(r=>r[k]),"stringer",1.6); }
+  /* hélice */
+  { const tip=[4.02,0,0], base=[3.6,0,0], n=10; for(let k=0;k<n;k++){ const t0=2*Math.PI*k/n, t1=2*Math.PI*(k+1)/n; face([tip,[3.6,.24*Math.cos(t0),.24*Math.sin(t0)],[3.6,.24*Math.cos(t1),.24*Math.sin(t1)]],"prop",COL.spin); }
+    for(const ph of [D.ph,D.ph+180]){ const c=Math.cos(ph*R), s=Math.sin(ph*R), r0=.2, r1=1.0, w0=.13, w1=.07; const P=(r,w,sg)=>[3.72+sg*w*.35,r*c-sg*w*s*.94,r*s+sg*w*c*.94];
+      face([P(r0,w0,1),P(r1,w1,1),P(r1,w1,-1),P(r0,w0,-1)],"prop"); } }
+  /* superficie sustentadora genérica */
+  const surf=(o)=>{ const N=o.v?[0,0,1]:[0,1,0];
+    const P=(s,f,sd)=>{ const le=vl(o.R,o.T,s), c=lerp(o.c0,o.c1,s); return va(va(le,[-c*f,0,0]),vm(N,sd*o.th*c*naca(f)*(sd?1:0)+(o.cm||0)*c*4*f*(1-f))); };
+    const mv=o.mv||{}, own=(fm,sm,top)=>o.part(fm,sm,top);
+    const tf=(p,pt,s)=>{ const M=mv[pt]; return M?M(p,s):p; };
+    for(let j=0;j<o.S.length-1;j++) for(let i=0;i<o.F.length-1;i++){ const f0=o.F[i], f1=o.F[i+1], s0=o.S[j], s1=o.S[j+1], fm=(f0+f1)/2, sm=(s0+s1)/2;
+      for(const sd of [1,-1]){ const pt=own(fm,sm,sd>0); const q=[P(s0,f0,sd),P(s0,f1,sd),P(s1,f1,sd),P(s1,f0,sd)].map(p=>tf(p,pt,sm));
+        face(q,str?"skin":pt,o.col&&o.col(pt,sm,sd),str?.16:1); } }
+    // tapas de punta y de superficies móviles
+    const cap=(s,fa,fb,pt)=>{ const fs=o.F.filter(f=>f>=fa-1e-6&&f<=fb+1e-6), top=fs.map(f=>P(s,f,1)), bot=fs.slice().reverse().map(f=>P(s,f,-1)); const q=top.concat(bot).map(p=>tf(p,pt,s)); face(q,str?"skin":pt,null,str?.16:1); };
+    cap(1,0,1,o.tipPart||o.base); for(const c of o.caps||[]) for(const s of [c[2],c[3]]) cap(s,c[0],c[1],c[4]);
+    if(o.le) line(o.S.map(s=>P(s,0,0)),"le",4); if(o.te) line(o.S.map(s=>tf(P(s,1,0),own(.99,s===1?.999:s+1e-3,true),s)),"te",4);
+    if(str){ for(const f of o.spars||[]) for(let j=0;j<o.S.length-1;j++){ const s0=o.S[j], s1=o.S[j+1]; if(s1>.95) continue; face([P(s0,f,1),P(s1,f,1),P(s1,f,-1),P(s0,f,-1)],"spar",null,.95); }
+      for(const s of o.ribs||[]){ const fs=o.F.filter(f=>f<=.74); face(fs.map(f=>P(s,f,1)).concat(fs.slice().reverse().map(f=>P(s,f,-1))),"rib",null,.85); }
+      for(const f of o.strg||[]){ line(o.S.filter(s=>s<=.95).map(s=>P(s,f,1)),"stringer",1.8); line(o.S.filter(s=>s<=.95).map(s=>P(s,f,-1)),"stringer",1.8); } }
+    return P; };
+  /* alas */
+  for(const sg of [1,-1]){ const R0=[1.15,-.32,.5*sg], T0=[.78,.12,5.6*sg], c0=1.75, c1=1.05, side=sg>0?"R":"L";
+    const pf=(fm,sm,top)=>fm>.74&&sm>.06&&sm<.57?"flap":fm>.74&&sm>.60&&sm<.94?"aileron":fm<.12&&sm>.40&&sm<.94?"slat":top&&fm>.55&&fm<.70&&sm>.30&&sm<.57?"spoiler":sm>.94?"tip":sm<.06?"root":"wing";
+    const Pm=(s,f)=>{ const le=vl(R0,T0,s), c=lerp(c0,c1,s); return va(le,[-c*f,.02*c*4*f*(1-f),0]); };
+    const hinge=(f,s0,s1)=>{ let a=Pm(s0,f), b=Pm(s1,f); if(b[2]<a[2]){ const t=a; a=b; b=t; } return [a,b]; };
+    const hA=hinge(.74,.60,.94), hF=hinge(.74,.06,.57), hS=hinge(.55,.30,.57), hL=hinge(.12,.40,.94);
+    const ail=sg>0?-D.ail:D.ail, spl=Math.max(D.spl,sg>0?D.sroll:0), fl=D.flap, sl=D.slat;
+    const mv={aileron:p=>rotA(p,hA[0],hA[1],ail),
+      flap:(p,s)=>{ const c=lerp(c0,c1,s); return va(rotA(p,hF[0],hF[1],fl),[-.16*c*fl/35,-.03*c*fl/35,0]); },
+      spoiler:p=>rotA(p,hS[0],hS[1],-spl),
+      slat:(p,s)=>{ const c=lerp(c0,c1,s), k=sl/20; return va(rotA(p,hL[0],hL[1],-14*k),[.11*c*k,-.05*c*k,0]); }};
+    surf({R:R0,T:T0,c0,c1,th:.13,cm:.02,F:[0,.03,.12,.25,.40,.55,.70,.74,.87,1],S:[0,.06,.18,.30,.40,.57,.60,.77,.94,1],part:pf,mv,base:"wing",tipPart:"tip",le:1,te:1,
+      caps:[[.74,1,.06,.57,"flap"],[.74,1,.60,.94,"aileron"],[0,.12,.40,.94,"slat"]],
+      col:(pt,sm,sd)=>pt==="tip"&&sm>.97?(sg>0?COL.tipG:COL.tipR):null,
+      spars:[.25,.70],ribs:[.06,.18,.30,.40,.57,.77,.94],strg:[.42,.6]}); }
+  /* estabilizador horizontal, timón de profundidad y compensador */
+  for(const sg of [1,-1]){ const R0=[-3.55,.2,.1*sg], T0=[-3.98,.24,1.9*sg], c0=1.0, c1=.62;
+    const Pm=(s,f)=>va(vl(R0,T0,s),[-lerp(c0,c1,s)*f,0,0]); const hg=(f,s0,s1)=>{ let a=Pm(s0,f), b=Pm(s1,f); if(b[2]<a[2]){ const t=a; a=b; b=t; } return [a,b]; };
+    const hE=hg(.62,0,1), hT=hg(.86,.2,.6);
+    const pf=(fm,sm)=>fm>.86&&sg>0&&sm>.2&&sm<.6?"trim":fm>.62?"elevator":"hstab";
+    const mv={elevator:p=>rotA(p,hE[0],hE[1],D.elev),trim:p=>rotA(rotA(p,hT[0],hT[1],D.tab),hE[0],hE[1],D.elev)};
+    surf({R:R0,T:T0,c0,c1,th:.09,F:[0,.05,.15,.3,.45,.62,.74,.86,1],S:[0,.2,.4,.6,.8,1],part:pf,mv,base:"hstab",tipPart:"hstab",caps:sg>0?[[.86,1,.2,.6,"trim"]]:[],spars:[.3],ribs:[.2,.6]}); }
+  /* deriva y timón de dirección */
+  { const R0=[-3.25,.38,0], T0=[-4.12,1.78,0], c0=1.35, c1=.72, Pm=(s,f)=>va(vl(R0,T0,s),[-lerp(c0,c1,s)*f,0,0]), a=Pm(0,.62), b=Pm(1,.62);
+    surf({v:1,R:R0,T:T0,c0,c1,th:.09,F:[0,.05,.15,.3,.45,.62,.74,.86,1],S:[0,.25,.5,.75,1],part:fm=>fm>.62?"rudder":"fin",mv:{rudder:p=>rotA(p,a,b,D.rud)},base:"fin",tipPart:"fin",spars:[.3],ribs:[.25,.5,.75]}); }
+  /* tren triciclo */
+  const wheel=(c,r,w,k)=>{ const n=12, A=[], B=[]; for(let i=0;i<n;i++){ const t=2*Math.PI*i/n; A.push([c[0]+r*Math.cos(t),c[1]+r*Math.sin(t),c[2]-w/2]); B.push([c[0]+r*Math.cos(t),c[1]+r*Math.sin(t),c[2]+w/2]); }
+    for(let i=0;i<n;i++) face([A[i],A[(i+1)%n],B[(i+1)%n],B[i]],k,COL.tyre); face(A,k,[150,156,166]); face(B.slice().reverse(),k,[150,156,166]); };
+  const leg=(a,b,k,w)=>{ face([va(a,[w,0,0]),va(b,[w,0,0]),va(b,[-w,0,0]),va(a,[-w,0,0])],k); face([va(a,[0,0,w]),va(b,[0,0,w]),va(b,[0,0,-w]),va(a,[0,0,-w])],k); };
+  leg([2.55,-.45,0],[2.55,-1.05,0],"nosegear",.05); wheel([2.55,-1.08,0],.2,.12,"nosegear"); face([[2.75,-.88,-.1],[2.35,-.88,-.1],[2.35,-.88,.1],[2.75,-.88,.1]],"nosegear");
+  for(const sg of [1,-1]){ leg([-.1,-.45,.45*sg],[-.2,-1.02,1.3*sg],"maingear",.06); wheel([-.2,-1.04,1.36*sg],.26,.16,"maingear"); }
+  return F;
+}
+return {t:"3D · Partes del avión: gíralo, toca cada pieza y mueve los mandos",
+cap:"Avión genérico de ala baja con tren triciclo. Para que lo veas todo en un modelo, lleva también slats y spoilers, que en un monomotor ligero real no existen: son de los aviones de transporte. Arrastra para girar (en el móvil, en horizontal). Toca una pieza o elígela en los botones.",
+init(el){
+  const G=GR[el.dataset.part]||GR.all, gk=el.dataset.part||"all";
+  const chip=k=>`<button type="button" data-p="${k}" aria-pressed="false">${PT[k][0]}</button>`;
+  const ctl=`<div class="p3r"><span class="p3l">Modo</span><button type="button" data-m="ext" aria-pressed="true">Exterior</button><button type="button" data-m="str" aria-pressed="false">Estructura</button>${G.c.length?`<button type="button" data-m="ctl" aria-pressed="false">Mandos</button>`:""}<button type="button" data-m="quiz" aria-pressed="false">Ponme a prueba</button></div>
+  <div class="p3r"><span class="p3l">Vista</span><button type="button" data-v="34">3/4</button><button type="button" data-v="top">Planta</button><button type="button" data-v="side">Lado</button><button type="button" data-v="front">Frente</button><button type="button" data-v="rear">Atrás</button><label class="p3c"><input type="checkbox" data-lab checked> Nombres</label></div>
+  <div class="p3r" data-pe>${G.p.map(chip).join("")}</div><div class="p3r" data-ps hidden>${G.s.map(chip).join("")}</div>
+  <div class="p3r" data-pc hidden>${G.c.map(k=>`<button type="button" data-c="${k}" aria-pressed="false">${CT[k][0]}</button>`).join("")}<button type="button" data-c="0">Neutro</button></div>
+  <div class="p3r"><select data-all aria-label="Otra pieza"><option value="">Otra pieza del avión…</option>${Object.keys(PT).map(k=>`<option value="${k}">${PT[k][0]} · ${PT[k][1]}</option>`).join("")}</select></div>`;
+  const u=shell(el,G.t||this.t,`<canvas class="p3cv" aria-label="Avión en 3D: arrastra para girarlo y toca una pieza"></canvas>`,ctl,this.cap), c=u.q("canvas"), ctx=c.getContext("2d");
+  if(!document.getElementById("p3css")){ const s=document.createElement("style"); s.id="p3css"; s.textContent=`.f0viz .p3r{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-width:0}.f0viz .p3r[hidden]{display:none}.f0viz .p3l{font:700 11px/1 "Barlow Condensed","Arial Narrow",system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8fa3b8;min-width:4.2em}.f0viz .p3c{flex:0 1 auto!important;display:flex!important;gap:6px;align-items:center;font-weight:600}.f0viz .p3r select{font:600 13px system-ui,sans-serif;min-height:38px;padding:6px 10px;border-radius:6px;border:1px solid #3a516b;background:#1a2b3f;color:#e9f0f7;max-width:100%}.f0viz .p3cv{cursor:grab;touch-action:pan-y}.f0viz .p3cv:active{cursor:grabbing}.f0viz .ctl .p3r button{min-height:36px;padding:7px 11px}`; document.head.appendChild(s); }
+  const VW={"34":G.v,top:[0,89],side:[0,4],front:[90,8],rear:[-90,12]};
+  let yaw=G.v[0], pit=G.v[1], tY=yaw, tP=pit, mode="ext", sel=null, quiz=null, score=[0,0], labs=true, raf=0, drawn=[], lastT=0, vis=true;
+  const D={ail:0,elev:0,rud:0,tab:0,flap:0,slat:0,spl:0,sroll:0,ph:20}, DT={...D}, on=new Set();
+  const setCtl=()=>{ DT.ail=on.has("roll")?22:0; DT.sroll=on.has("roll")?18:0; DT.elev=(on.has("pitch")?-18:0)+(on.has("trim")?-9:0); DT.tab=on.has("trim")?16:0; DT.rud=on.has("yaw")?22:0; DT.flap=on.has("flaps")?35:0; DT.slat=on.has("slats")?20:0; DT.spl=on.has("spoil")?40:0;
+    u.qa("[data-c]").forEach(b=>b.setAttribute("aria-pressed",on.has(b.dataset.c)?"true":"false")); };
+  const say=h=>{ u.out.innerHTML=h; };
+  const info=k=>`<b>${PT[k][0]}</b> · <i>${PT[k][1]}</i> — ${PT[k][2]}`;
+  const parts=()=>mode==="str"?G.s:G.p;
+  const pick=k=>{ sel=k; u.qa("[data-p]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===k?"true":"false")); const s=u.q("[data-all]"); if(s) s.value=PT[k]&&!u.q(`[data-p="${k}"]`)?k:"";
+    if(k&&STR.includes(k)&&mode!=="str"&&mode!=="quiz") setMode("str",1); if(k&&!STR.includes(k)&&mode==="str") setMode("ext",1);
+    if(k) say(info(k)); kick(); };
+  const ask=()=>{ const pool=QZ.filter(q=>(G.p.includes(q[1])||G.s.includes(q[1]))&&(!quiz||q[1]!==quiz[1])); quiz=pool[Math.floor(Math.random()*pool.length)]||QZ[0]; sel=null; say(`Toca <b>${quiz[0]}</b> <span style="color:#8fa3b8">· aciertos ${score[0]}/${score[1]}</span>`); kick(); };
+  function setMode(m,keep){ mode=m; u.qa("[data-m]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===m?"true":"false"));
+    u.q("[data-pe]").hidden=m==="str"||m==="ctl"; u.q("[data-ps]").hidden=m!=="str"; const pc=u.q("[data-pc]"); if(pc) pc.hidden=m!=="ctl";
+    if(m!=="ctl"&&on.size){ on.clear(); setCtl(); }
+    if(m==="quiz"){ score=[0,0]; quiz=null; ask(); return; }
+    quiz=null; if(!keep){ sel=null; u.qa("[data-p]").forEach(b=>b.setAttribute("aria-pressed","false"));
+      say(m==="str"?`Piel casi transparente para ver por dentro. Toca: ${G.s.filter(x=>x!=="skin").map(x=>"<b>"+PT[x][0].toLowerCase()+"</b>").join(", ")} o la piel.`:m==="ctl"?"Pulsa un mando y mira qué superficie se mueve y hacia dónde. Puedes combinar varios.":`Toca cualquier pieza (aquí, ${G.n}) o elígela en los botones. Arrastra para girar.`); }
+    kick(); }
+  /* proyección y dibujo */
+  let W=0,H=0,dp=1;
+  const size=()=>{ dp=Math.min(2,window.devicePixelRatio||1); const cw=c.clientWidth||320, ch=Math.round(cl(cw*.5,260,420)); if(c.width!==Math.round(cw*dp)||c.height!==Math.round(ch*dp)){ c.width=Math.round(cw*dp); c.height=Math.round(ch*dp); c.style.height=ch+"px"; } W=c.width; H=c.height; };
+  const proj=(p,cy,sy,cp,sp,k,ox,oy)=>{ const x1=p[0]*cy+p[2]*sy, z1=-p[0]*sy+p[2]*cy, y2=(p[1]-.1)*cp-z1*sp, z2=(p[1]-.1)*sp+z1*cp, f=24/(24-z2); return [ox+x1*k*f,oy-y2*k*f,z2,x1,y2]; };
+  const L=vn([-.35,.62,.7]);
+  function draw(now){ raf=0; size(); const dt=Math.min(.05,((now||0)-lastT)/1000||.016); lastT=now||0; let moving=false;
+    const ez=(a,b,r)=>{ const d=b-a; if(Math.abs(d)>.05){ moving=true; return a+d*Math.min(1,dt*r); } return b; };
+    let dy=((tY-yaw+540)%360)-180; yaw=Math.abs(dy)>.1?(moving=true,yaw+dy*Math.min(1,dt*5)):tY; pit=ez(pit,tP,5);
+    for(const k of ["ail","elev","rud","tab","flap","slat","spl","sroll"]) D[k]=ez(D[k],DT[k],4.5);
+    if(sel==="prop"||sel==="engine"){ D.ph=(D.ph+dt*240)%360; moving=true; }
+    const F=build(D,mode==="str"||(mode==="quiz"&&quiz&&STR.includes(quiz[1]))), cy=Math.cos(yaw*R), sy=Math.sin(yaw*R), cp=Math.cos(pit*R), sp=Math.sin(pit*R), k=Math.min((W-(labs&&mode!=="quiz"&&W/dp>=560?240*dp:16*dp))/12.2,H/(5.4+2.6*Math.abs(Math.sin(pit*R))+1.4*Math.abs(Math.sin(yaw*R))))*(G.z||1), ox=W*.5, oy=H*(.5+.06*Math.sin(pit*R));
+    for(const f of F){ f.q=f.p.map(p=>proj(p,cy,sy,cp,sp,k,ox,oy)); let z=0; for(const q of f.q) z+=q[2]; f.z=z/f.q.length+(f.l?.05:0)+(f.k==="skin"?-.02:0); }
+    F.sort((a,b)=>a.z-b.z);
+    const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#1b3048"); g.addColorStop(.62,"#12202f"); g.addColorStop(1,"#0c1622"); ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=1; ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    { const gy=[0,-1.32,0]; ctx.strokeStyle="rgba(140,170,200,.10)"; ctx.lineWidth=dp; for(let i=-8;i<=8;i++){ for(const sw of [0,1]){ const a=proj(sw?[i,gy[1],-8]:[-8,gy[1],i],cy,sy,cp,sp,k,ox,oy), b=proj(sw?[i,gy[1],8]:[8,gy[1],i],cy,sy,cp,sp,k,ox,oy); if(pit>-2){ ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); } } } }
+    const act=new Set(); if(mode==="ctl"){ const M={roll:["aileron","spoiler"],pitch:["elevator"],yaw:["rudder"],trim:["trim","elevator"],flaps:["flap"],slats:["slat"],spoil:["spoiler"]}; on.forEach(x=>M[x].forEach(p=>act.add(p))); } if(sel) act.add(sel);
+    const hi=act.size?act:null, dim=mode!=="ctl"&&!!sel, AC=[255,201,77]; drawn=[];
+    for(const f of F){ const q=f.q, isS=!!hi&&hi.has(f.k); let c3=f.c;
+      if(f.l){ ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); if(f.cl) ctx.closePath();
+        const col=isS?AC:dim?mixC(c3,[60,76,94],.55):c3; ctx.strokeStyle=`rgb(${col.map(Math.round)})`; ctx.lineWidth=(isS?f.l+2:f.l)*dp; ctx.lineJoin="round"; ctx.globalAlpha=f.k==="le"||f.k==="te"?(isS?1:mode==="str"?0:.0):1; if(ctx.globalAlpha>0) ctx.stroke(); ctx.globalAlpha=1; drawn.push(f); continue; }
+      const n=vn(vx(vs([q[1][3],q[1][4],q[1][2]],[q[0][3],q[0][4],q[0][2]]),vs([q[2][3],q[2][4],q[2][2]],[q[0][3],q[0][4],q[0][2]]))), sh=.42+.58*Math.abs(vd(n,L));
+      if(isS) c3=AC; else if(dim) c3=mixC(c3,[64,80,98],.5);
+      const glass=f.k==="cockpit"&&!isS, spec=glass?Math.pow(Math.abs(vd(n,vn([L[0]*.4,L[1],L[2]+.6]))),12)*120:0;
+      const col=c3.map(v=>cl(v*sh+spec,0,255)|0); ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      ctx.globalAlpha=isS&&f.a<.5?.55:f.a; ctx.fillStyle=`rgb(${col})`; ctx.fill(); ctx.strokeStyle=f.a<.5?`rgba(190,210,230,${isS?.9:.28})`:`rgb(${col.map(v=>v*.86|0)})`; ctx.lineWidth=(f.a<.5?.8:.7)*dp; ctx.stroke(); ctx.globalAlpha=1; drawn.push(f); }
+    // contorno del seleccionado por encima de todo, para que se vea aunque quede detrás
+    if(hi){ ctx.save(); ctx.strokeStyle="rgba(255,201,77,.85)"; ctx.lineWidth=1.6*dp; ctx.setLineDash([4*dp,3*dp]); for(const f of F) if(hi.has(f.k)&&!f.l){ const q=f.q; ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath(); ctx.stroke(); } ctx.restore(); }
+    // nombres con líneas guía en dos columnas
+    if(labs&&mode!=="quiz"){ const ks=(mode==="str"?G.s.filter(x=>x!=="skin"):mode==="ctl"?["aileron","elevator","rudder","trim","flap","slat","spoiler"].filter(x=>G.p.includes(x)||gk==="controls"||gk==="all"):G.p);
+      const narrow=W/dp<560, ks2=narrow?(sel&&ks.includes(sel)?[sel]:sel?[sel]:[]):ks; const C=[]; for(const kk of ks2){ const fk=F.filter(f=>f.k===kk); if(!fk.length) continue; let z0=1e9, z1=-1e9; for(const f of fk){ z0=Math.min(z0,f.z); z1=Math.max(z1,f.z); }
+        let ax=0, ay=0, wt=0; for(const f of fk){ if(f.z<z1-.35*(z1-z0)-1e-6) continue; let cx2=0, cy2=0; for(const q of f.q){ cx2+=q[0]; cy2+=q[1]; } cx2/=f.q.length; cy2/=f.q.length; let A=1; if(!f.l&&f.q.length>2){ A=0; for(let a=0,b=f.q.length-1;a<f.q.length;b=a++) A+=f.q[b][0]*f.q[a][1]-f.q[a][0]*f.q[b][1]; A=Math.abs(A)/2+1; } else if(f.l) A=50*dp; ax+=cx2*A; ay+=cy2*A; wt+=A; }
+        C.push({k:kk,ax:ax/wt,ay:ay/wt}); }
+      const fs=Math.round(cl(W/dp/48,10.5,13))*dp; ctx.font=`600 ${fs}px system-ui,-apple-system,"Segoe UI",sans-serif`; const gap=fs*1.55;
+      for(const side of [0,1]){ const S=C.filter(o=>side?o.ax>=W/2:o.ax<W/2).sort((a,b)=>a.ay-b.ay); let y=fs*1.2; for(const o of S){ o.ly=Math.max(y,Math.min(o.ay,H-fs*.8)); y=o.ly+gap; }
+        let over=y-gap-(H-fs*.8); if(over>0) for(let i=S.length-1;i>=0;i--){ S[i].ly-=over; over=Math.max(0,(i>0?S[i-1].ly+gap-S[i].ly:0)); }
+        for(const o of S){ const t=PT[o.k][0], tw=ctx.measureText(t).width, lx=side?W-8*dp-tw:8*dp, ex=side?lx-5*dp:lx+tw+5*dp, isS=!!hi&&hi.has(o.k);
+          ctx.strokeStyle=isS?"rgba(255,201,77,.95)":"rgba(220,232,244,.45)"; ctx.lineWidth=dp*(isS?1.5:1); ctx.beginPath(); ctx.moveTo(ex,o.ly-fs*.32); ctx.lineTo(o.ax,o.ay); ctx.stroke(); ctx.fillStyle=isS?"#ffc94d":"rgba(220,232,244,.55)"; ctx.beginPath(); ctx.arc(o.ax,o.ay,2.2*dp,0,7); ctx.fill();
+          ctx.fillStyle="rgba(12,22,34,.72)"; ctx.fillRect(lx-3*dp,o.ly-fs*.95,tw+6*dp,fs*1.3); ctx.fillStyle=isS?"#ffc94d":"#e3ecf5"; ctx.fillText(t,lx,o.ly); } } }
+    // ejes de referencia en modo mandos
+    if(mode==="ctl"){ ctx.font=`600 ${11*dp}px system-ui,sans-serif`; ctx.fillStyle="rgba(200,215,230,.7)"; ctx.fillText("Arrastra para verlo desde otro ángulo",8*dp,H-8*dp); }
+    if(moving&&vis) raf=requestAnimationFrame(draw); }
+  const mixC=(a,b,t)=>[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
+  const kick=()=>{ if(!raf&&el.isConnected) raf=requestAnimationFrame(draw); };
+  /* selección por toque */
+  const hit=(x,y)=>{ const P=[], segD=(px,py,a,b)=>{ const dx=b[0]-a[0], dy=b[1]-a[1], l=dx*dx+dy*dy||1, t=cl(((px-a[0])*dx+(py-a[1])*dy)/l,0,1); return Math.hypot(px-a[0]-t*dx,py-a[1]-t*dy); };
+    for(let i=drawn.length-1;i>=0;i--){ const f=drawn[i]; if(f.l){ if(f.k==="le"||f.k==="te"){ if(mode==="str") continue; } for(let j=0;j<f.q.length-1;j++) if(segD(x,y,f.q[j],f.q[j+1])<7*dp){ P.push(f.k); break; } continue; }
+      const q=f.q; let ins=false; for(let a=0,b=q.length-1;a<q.length;b=a++){ if(((q[a][1]>y)!==(q[b][1]>y))&&(x<(q[b][0]-q[a][0])*(y-q[a][1])/(q[b][1]-q[a][1])+q[a][0])) ins=!ins; } if(ins) P.push(f.k); }
+    if(!P.length) return null;
+    const pref=["le","te"]; const edge=P.find(k=>pref.includes(k)); if(edge&&P.indexOf(edge)<3) return edge;
+    if(P[0]==="skin"){ const inner=P.find(k=>k!=="skin"); if(inner) return inner; } return P[0]; };
+  let dn=null;
+  c.addEventListener("pointerdown",e=>{ dn={x:e.clientX,y:e.clientY,y0:yaw,p0:pit,m:false,t:e.pointerType}; if(e.pointerType==="mouse") c.setPointerCapture(e.pointerId); });
+  c.addEventListener("pointermove",e=>{ if(!dn) return; const dx=e.clientX-dn.x, dy=e.clientY-dn.y; if(Math.hypot(dx,dy)>5) dn.m=true; if(!dn.m) return; tY=yaw=dn.y0-dx*.45; if(dn.t==="mouse") tP=pit=cl(dn.p0+dy*.35,-60,89); kick(); });
+  const up=e=>{ if(!dn) return; const was=dn; dn=null; if(was.m) return; const r=c.getBoundingClientRect(), k=hit((e.clientX-r.left)*dp,(e.clientY-r.top)*dp); if(!k) return;
+    if(mode==="quiz"&&quiz){ score[1]++; const ok=k===quiz[1]; if(ok) score[0]++; sel=k; kick();
+      say(`<b class="${ok?"ok":"bad"}">${ok?"Correcto":"No"}</b> · ${info(k)}${ok?"":`<br>Buscabas: ${info(quiz[1])}`}`); const q0=quiz; setTimeout(()=>{ if(mode==="quiz"&&quiz===q0) ask(); },ok?1900:4200); return; }
+    if(mode==="ctl"){ sel=k; say(info(k)); kick(); return; }
+    if(STR.includes(k)&&mode!=="str") setMode("str",1); pick(k); };
+  c.addEventListener("pointerup",up); c.addEventListener("pointercancel",()=>{ dn=null; });
+  u.qa("[data-m]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.m)));
+  u.qa("[data-v]").forEach(b=>b.addEventListener("click",()=>{ const v=VW[b.dataset.v]; tY=v[0]; tP=v[1]; kick(); }));
+  u.qa("[data-p]").forEach(b=>b.addEventListener("click",()=>pick(b.dataset.p)));
+  u.qa("[data-c]").forEach(b=>b.addEventListener("click",()=>{ const k=b.dataset.c; if(k==="0") on.clear(); else if(on.has(k)) on.delete(k); else on.add(k); setCtl();
+    say(k==="0"||!on.size?"Todo en neutro.":[...on].map(x=>`<b>${CT[x][0]}:</b> ${CT[x][1]}`).join("<br>")); kick(); }));
+  const sa=u.q("[data-all]"); sa.addEventListener("change",()=>{ if(sa.value){ const k=sa.value; if(mode==="quiz"||mode==="ctl") setMode(STR.includes(k)?"str":"ext",1); pick(k); } });
+  u.q("[data-lab]").addEventListener("change",e=>{ labs=e.currentTarget.checked; kick(); });
+  if("IntersectionObserver" in window) new IntersectionObserver(es=>{ vis=es.some(e=>e.isIntersecting); if(vis) kick(); }).observe(c);
+  window.addEventListener("resize",kick);
+  setMode("ext");
+}};
+})();
+
 function mount(el){ const k=el.dataset.viz, v=V[k]; if(!v||el._v) return; el._v=1;
   const go=()=>{ try{ v.init(el); }catch(e){ try{ console.error("F0Viz",k,e); }catch(_){} el.innerHTML=`<p class="lt">${v.t}</p><p class="out">No se ha podido cargar esta lámina.</p>`; } };
   if(!("IntersectionObserver" in window)){ go(); return; }

@@ -149,22 +149,26 @@ function mk172(B,W){
 }
 /* planeador de alto rendimiento: alas de gran alargamiento (18 m, cuerda 0,9 → 0,32), fuselaje fino de fibra, cabina larga acristalada y cola en T */
 function mkGlider(){
-  const W=[246,247,250], R=[214,44,40], G=[24,34,48], DK=[90,96,104];
+  const W=[246,247,250], R=[214,44,40], G=[22,32,46], FR=[70,78,90], AI=[196,204,214], DK=[90,96,104];
   return mkMesh(({F,O,loft,wsec})=>{
-    // fuselaje: [x, y centro, semialto, semiancho]
-    const FG=[[3.30,.60,.06,.05],[2.90,.62,.30,.27],[2.20,.66,.40,.33],[1.20,.66,.43,.35],[.20,.66,.40,.33],[-.80,.70,.27,.22],[-2.4,.82,.16,.13],[-4.2,.92,.11,.09],[-5.55,.98,.08,.06]];
-    const ring=s=>Array.from({length:8},(_,k)=>{ const a=k*Math.PI/4; return [s[0],s[1]+s[2]*Math.sin(a),s[3]*Math.cos(a)]; });
-    loft(FG.map(ring),(i,k)=>{ if((i===1||i===2||i===3)&&(k===1||k===2||(i>1&&(k===0||k===3)))) return G; if(i===0) return R; return W; },R,W);
+    // fuselaje de fibra: 12 lados y 12 secciones [x, y centro, semialto, semiancho]
+    const FG=[[3.42,.60,.02,.02],[3.25,.60,.15,.14],[2.95,.62,.29,.26],[2.55,.65,.37,.31],[2.05,.67,.42,.34],[1.45,.67,.44,.35],[.85,.67,.43,.34],[.20,.67,.39,.31],[-.80,.71,.27,.22],[-2.3,.81,.17,.14],[-3.9,.90,.12,.10],[-5.55,.98,.08,.06]];
+    const NK=12, ring=s=>Array.from({length:NK},(_,k)=>{ const a=k*2*Math.PI/NK; return [s[0],s[1]+s[2]*Math.sin(a),s[3]*Math.cos(a)]; });
+    // cúpula: caras superiores de las secciones 2–6, con marco oscuro en su borde
+    loft(FG.map(ring),(i,k)=>{ const top=k>=2&&k<=4; if(i===0) return R; if(i>=1&&i<=5&&top) return (i===1||i===5)?FR:G; if(i>=2&&i<=5&&(k===1||k===5)) return FR; if(i===8&&k>=7&&k<=11) return R; return W; },R,W);
     F.forEach(f=>{ if(f.c===G) f.glass=1; });
-    // ala media-alta con diedro creciente y puntas rojas (marca anticolisión)
-    const WS=[[-9,.30,.30,1.55],[-8.6,.36,.32,1.48],[-6,.58,.40,1.26],[-3,.78,.48,1.08],[0,.90,.52,1.00],[3,.78,.48,1.08],[6,.58,.40,1.26],[8.6,.36,.32,1.48],[9,.30,.30,1.55]];
-    loft(WS.map(s=>wsec(s[0],s[1],s[2],s[3],.9)),(i)=>(i===0||i===7)?R:W);
-    // deriva en flecha y estabilizador en T arriba
+    // ala de gran alargamiento con diedro, alerones en gris y puntas rojas; winglets
+    const WS=[[-9,.30,.30,1.55],[-8.6,.36,.32,1.48],[-7.2,.47,.36,1.37],[-6,.58,.40,1.26],[-3,.78,.48,1.08],[0,.90,.52,1.00],[3,.78,.48,1.08],[6,.58,.40,1.26],[7.2,.47,.36,1.37],[8.6,.36,.32,1.48],[9,.30,.30,1.55]], nW=WS.length-1;
+    loft(WS.map(s=>wsec(s[0],s[1],s[2],s[3],.9)),(i,k)=>{ if(i===0||i===nW-1) return R; if((i<=2||i>=nW-3)&&(k===2||k===3)) return AI; return W; });
+    [-1,1].forEach(sd=>{ const wl=(y,xl,xt,th)=>{ const xm=xl+(xt-xl)*.35; return [[xl,y,sd*9.02],[xm,y,sd*9.02+th],[xt,y,sd*9.02],[xm,y,sd*9.02-th]]; };
+      loft([wl(1.55,.30,0,.02),wl(1.95,.18,.0,.015)],R); });
+    // deriva en flecha con timón más oscuro y franja roja; estabilizador en T con timón de profundidad gris y puntas rojas
     const fin=(y,xl,xt,th)=>{ const xm=xl+(xt-xl)*.35; return [[xl,y,0],[xm,y,th],[xt,y,0],[xm,y,-th]]; };
-    loft([fin(.95,-4.55,-5.60,.06),fin(1.60,-4.95,-5.66,.045),fin(2.05,-5.18,-5.70,.035)],(i)=>i===1?R:W);
-    loft([[-1.55,.30,-5.02,2.07],[0,.50,-4.98,2.06],[1.55,.30,-5.02,2.07]].map(s=>wsec(s[0],s[1],s[2],s[3],.7)),W);
-    O.push({d:[.35,.18,0],r:.16});   // rueda principal
-    return [{p:[-5.5,2.12,0],k:"s"}];   // estrobo blanco en la cola (FLARM/anticolisión)
+    loft([fin(.95,-4.55,-5.60,.06),fin(1.35,-4.75,-5.63,.05),fin(1.60,-4.95,-5.66,.045),fin(2.05,-5.18,-5.70,.035)],(i,k)=>i===1?R:(k===1||k===2)&&i>0?AI:W);
+    loft([[-1.55,.30,-5.02,2.07],[-1.2,.38,-5.01,2.068],[0,.50,-4.98,2.06],[1.2,.38,-5.01,2.068],[1.55,.30,-5.02,2.07]].map(s=>wsec(s[0],s[1],s[2],s[3],.7)),(i,k)=>(i===0||i===3)?R:(k===2||k===3)?AI:W);
+    O.push({d:[.35,.18,0],r:.16}); O.push({d:[-5.3,.86,0],r:.07});   // rueda principal y patín de cola
+    // luces: navegación en las puntas (verde derecha, roja izquierda), blanca de cola y estrobo anticolisión
+    return [{p:[.18,1.58,9.0],k:"g"},{p:[.18,1.58,-9.0],k:"r"},{p:[-5.72,2.12,0],k:"w"},{p:[-5.5,2.18,0],k:"s"}];
   });
 }
 const MESH=mk172([24,84,170]), GLIDER=mkGlider(), LIV=[mk172([176,36,40]),mk172([28,110,78]),mk172([214,148,30],[240,238,232]),mk172([110,32,64])];
@@ -213,8 +217,8 @@ function plane3D(ctx,sx,sy,pm,st,env,t,lf,M){
     else if(it.prop){ ctx.save(); ctx.transform(it.u[0],it.u[1],it.v[0],it.v[1],it.a[0],it.a[1]); const g=ctx.createRadialGradient(0,0,0,0,0,1); g.addColorStop(0,"rgba(30,32,36,.30)"); g.addColorStop(.25,"rgba(30,32,36,.10)"); g.addColorStop(.86,"rgba(30,32,36,.17)"); g.addColorStop(.93,"rgba(255,214,60,.30)"); g.addColorStop(1,"rgba(30,32,36,0)"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,1,0,7); ctx.fill();
       ctx.rotate(t*31); ctx.fillStyle="rgba(24,26,30,.16)"; ctx.fillRect(-.08,-1,.16,2); ctx.restore(); }
     else{ const k=it.k; ctx.save(); ctx.globalCompositeOperation="lighter"; const R=pm*(.32+.95*nl);
-      if(k==="g"){ const a=sect(az,-4,113,.3); ctx.globalAlpha=1; ctx.fillStyle="rgb(70,255,120)"; ctx.fillRect(it.x-.8,it.y-.8,1.6,1.6); glow(ctx,it.x,it.y,R*(.7+.5*a),"60,255,110",(.35+.6*nl)*a); }
-      else if(k==="r"){ const a=sect(az,-113,4,.3); ctx.globalAlpha=1; ctx.fillStyle="rgb(255,60,50)"; ctx.fillRect(it.x-.8,it.y-.8,1.6,1.6); glow(ctx,it.x,it.y,R*(.7+.5*a),"255,45,35",(.35+.6*nl)*a); }
+      if(k==="g"||k==="r"){ const a=k==="g"?sect(az,-4,113,.3):sect(az,-113,4,.3), cr=Math.max(1.3,pm*.1); ctx.globalCompositeOperation="source-over"; ctx.globalAlpha=1; ctx.fillStyle=k==="g"?"rgb(40,235,110)":"rgb(240,40,32)"; ctx.beginPath(); ctx.arc(it.x,it.y,cr,0,7); ctx.fill();
+        ctx.fillStyle="rgba(255,255,255,.85)"; ctx.beginPath(); ctx.arc(it.x,it.y,cr*.45,0,7); ctx.fill(); ctx.globalCompositeOperation="lighter"; glow(ctx,it.x,it.y,R*(.8+.6*a),k==="g"?"60,255,110":"255,45,35",(.55+.45*nl)*a); }
       else if(k==="w"){ const a=aab>=108?1:lerp(1,0,clamp((108-aab)/22,0,1)); glow(ctx,it.x,it.y,R*.9,"255,255,245",(.3+.6*nl)*a); }
       else if(k==="b"){ if(st.bc!==0&&((t+(st.ph||0))%1.2)<.13) glow(ctx,it.x,it.y,pm*(.5+1.3*nl),"255,40,30",.95); }
       else if(k==="s"){ if(st.st!==0&&(((t+(st.ph||0))%1.6)<.06||((t+(st.ph||0)+.2)%1.6)<.06)) glow(ctx,it.x,it.y,pm*(.6+1.9*nl),"255,255,255",.95); }
@@ -346,11 +350,12 @@ function traffic(S,G){
   { const UB=7.1, d=ease(u,UB,toHold.L,4,1), P=along(toHold,d); out.push({M:live(1),x:P.x,z:P.z,alt:0,st:{psi:d>0?P.psi:0,pitch:0,roll:0,ll:(d>0&&d<toHold.L)?1:.45,st:0,ph:.81},g:1}); }
   // C: llega por la calle paralela durante el aterrizaje y para detrás, en la cola
   { const UC=CY-21, Lc=Math.abs(TQ+130), d=ease(u,UC,Lc,7,1.2), x=-130+d; if(u>UC-1) out.push({M:live(2),x,z:zT,alt:0,st:{psi:0,pitch:0,roll:0,ll:d<Lc?1:.45,st:0,ph:.13},g:1}); }
-  // planeador en térmica a la izquierda y delante del principal, a su altura; el principal vira a la derecha para cederle el paso
-  { const om=2*Math.PI/17, a=om*(u-17.3)+2.2, R=8, cx=300, cz=-24;
-    if(u>11&&u<24) out.push({M:GLIDER,x:cx+R*Math.cos(a),z:cz+R*Math.sin(a),alt:7.0+.12*(u-17.3),st:{psi:a+Math.PI/2,pitch:-3*D2R,roll:34*D2R,ll:0,st:1,ph:.6}}); }
+  // planeador en tránsito, rumbo opuesto: cruce de frente con separación amplia → ambos viran a su derecha (SERA.3210) y se cruzan izquierda con izquierda;
+  // el planeador pasa por el lado cercano, ~26-30 m de separación lateral y más bajo; alas casi niveladas para que en pantalla nunca se toquen
+  { const uc=14.6, q=u-uc, br=sstep(-3.2,-.6,q)*(1-sstep(.8,3,q));
+    if(u>10.5&&u<20.5) out.push({M:GLIDER,x:250-25*q,z:26+4*sstep(-3,1,q),alt:5.4-.06*q,st:{psi:Math.PI-.12*br,pitch:-2*D2R,roll:9*D2R*br,ll:0,st:1,ph:.6}}); }
   // avioneta en el circuito: el principal la alcanza en el tramo de vuelta y la adelanta dejándola a su izquierda (lado cercano), 2 m más baja
-  { const uc=38.5, xc=359, vT=21; if(u>33&&u<47){ let x=xc-vT*(Math.min(u,41.5)-uc), z=13, alt=7.3, psi=Math.PI;
+  { const uc=38.5, xc=359, vT=21; if(u>33&&u<47){ let x=xc-vT*(Math.min(u,41.5)-uc), z=30, alt=5.4, psi=Math.PI;   // a unos 36 m por el lado cercano y 3,4 m más baja
       if(u>41.5){ const q=u-41.5; for(let k=0,n=Math.ceil(q/.1);k<n;k++){ const qq=Math.min(q,(k+1)*.1), dt=qq-k*.1, ps=Math.PI-.5*sstep(0,4,qq); x+=vT*Math.cos(ps)*dt; z+=vT*Math.sin(ps)*dt; } psi=Math.PI-.5*sstep(0,4,q); alt+=1.4*q; }
       const q=Math.max(0,u-41.5); out.push({M:LIV[3],x,z,alt,st:{psi,pitch:(3+3*sstep(0,2,q))*D2R,roll:-26*D2R*sstep(0,1.5,q)*(1-sstep(3.5,6,q)),ll:1,ph:.21}}); } }
   return out;
@@ -447,22 +452,22 @@ function drawTakeoff(cv,env,t,tt,o){
       const p=GM(((t*1.7)%1)<.5?XL-5.4:XL+5.4,zb); glow(ctx,p[0],p[1]-pm*sb*.5,pm*sb*(.55+.6*N),"255,200,40",.5+.4*N);
       ctx.restore(); ctx.globalAlpha=1; } }
   // PAPI (4 unidades junto al punto de visada): el color de cada una depende del ángulo real con que la ve el piloto del avión en final
-  { const px0=PAPI.x, th=K.pth; if(X(px0)>-60&&X(px0)<w+60){ for(let i=0;i<4;i++){ const p=GP(px0,PAPI.z0-i*PAPI.dz); ctx.fillStyle="#2b2e33"; ctx.fillRect(p[0]-pm*.3,p[1]-pm*.32,pm*.6,pm*.32); }
+  { const px0=PAPI.x, th=K.pth; if(X(px0)>-60&&X(px0)<w+60){ for(let i=0;i<4;i++){ const p=GP(px0,PAPI.z0-i*PAPI.dz); ctx.fillStyle="#1d2024"; ctx.fillRect(p[0]-pm*.55,p[1]-pm*.62,pm*1.1,pm*.62); }
       ctx.save(); ctx.globalCompositeOperation="lighter";
       for(let i=0;i<4;i++){ const p=GP(px0,PAPI.z0-i*PAPI.dz), wf=th==null?(i>=2?1:0):sstep(PAPI.S[i]-.05,PAPI.S[i]+.05,th), c=mix([255,40,30],[255,255,250],wf);
-        glow(ctx,p[0],p[1]-pm*.3,pm*(.5+.45*N),(c[0]|0)+","+(c[1]|0)+","+(c[2]|0),.7+.2*N); }
+        glow(ctx,p[0],p[1]-pm*.32,Math.max(5,pm*(.95+.6*N)),(c[0]|0)+","+(c[1]|0)+","+(c[2]|0),.85+.15*N); }
       ctx.restore(); ctx.globalAlpha=1;
-      for(let i=0;i<4;i++){ const p=GP(px0,PAPI.z0-i*PAPI.dz), wf=th==null?(i>=2?1:0):sstep(PAPI.S[i]-.05,PAPI.S[i]+.05,th); ctx.fillStyle=css(mix([235,30,24],[255,255,248],wf)); ctx.beginPath(); ctx.arc(p[0],p[1]-pm*.3,Math.max(1,pm*.16),0,7); ctx.fill(); } } }
+      for(let i=0;i<4;i++){ const p=GP(px0,PAPI.z0-i*PAPI.dz), wf=th==null?(i>=2?1:0):sstep(PAPI.S[i]-.05,PAPI.S[i]+.05,th); ctx.fillStyle=css(mix([235,30,24],[255,255,248],wf)); ctx.beginPath(); ctx.arc(p[0],p[1]-pm*.32,Math.max(1.8,pm*.3),0,7); ctx.fill(); } } }
   // manga de viento: cono a franjas (5 franjas ≈ 3 kt cada una; extendida del todo a 15 kt), apunta hacia donde va el viento y ondea con las rachas
   const WD=windAt(tt);
-  { const m0=Math.floor((cam+40)/260)*260+96, zp=-20.5, H0=4.2, p=GP(m0,zp), Wn=clamp(WD.kt/15,0,1), SP=(x,z,y)=>{ const q=GP(x,z); return [q[0],q[1]-y*pm]; };
+  { const m0=Math.floor((cam+40)/260)*260+96, zp=-20.5, H0=5.5, p=GP(m0,zp), Wn=clamp(WD.kt/15,0,1), SP=(x,z,y)=>{ const q=GP(x,z); return [q[0],q[1]-y*pm]; };
     ctx.strokeStyle=css(mul([210,214,220],.3+.7*env.amb)); ctx.lineWidth=Math.max(1,h*.006); ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(p[0],p[1]-H0*pm); ctx.stroke();
-    let cx=m0, cz=zp, cy=H0; const dd=WD.d+.09*Math.sin(tt*5.3)*(.4+Wn), pts=[SP(cx,cz,cy)], R=[.42], n=5, Ls=3.6;
+    let cx=m0, cz=zp, cy=H0; const dd=WD.d+.09*Math.sin(tt*5.3)*(.4+Wn), pts=[SP(cx,cz,cy)], R=[.62], n=5, Ls=5.2;
     for(let i=1;i<=n;i++){ const dl=(lerp(78,3,Math.pow(Wn,.8))+(i/n)*(1-Wn)*14+3.5*Math.sin(tt*7.3+i*.9)*(.25+Wn))*D2R, sl=Ls/n;
-      cx+=Math.cos(dl)*Math.cos(dd)*sl; cz+=Math.cos(dl)*Math.sin(dd)*sl; cy-=Math.sin(dl)*sl; pts.push(SP(cx,cz,cy)); R.push(lerp(.42,.17,i/n)*(1-.25*(1-Wn)*(i/n))); }
+      cx+=Math.cos(dl)*Math.cos(dd)*sl; cz+=Math.cos(dl)*Math.sin(dd)*sl; cy-=Math.sin(dl)*sl; pts.push(SP(cx,cz,cy)); R.push(lerp(.62,.26,i/n)*(1-.25*(1-Wn)*(i/n))); }
     const kk=.32+.68*env.amb;
     for(let i=0;i<n;i++){ const a=pts[i], b=pts[i+1], dx=b[0]-a[0], dy=b[1]-a[1], l=Math.hypot(dx,dy)||1, nx=-dy/l, ny=dx/l, ra=R[i]*pm, rb=R[i+1]*pm, sh=.82+.18*Math.sin(i*1.7+tt*3);
-      ctx.fillStyle=css(mul(i%2?[238,238,236]:[236,92,28],kk*sh)); ctx.beginPath(); ctx.moveTo(a[0]+nx*ra,a[1]+ny*ra); ctx.lineTo(b[0]+nx*rb,b[1]+ny*rb); ctx.lineTo(b[0]-nx*rb,b[1]-ny*rb); ctx.lineTo(a[0]-nx*ra,a[1]-ny*ra); ctx.closePath(); ctx.fill(); }
+      ctx.fillStyle=css(mul(i%2?[248,248,246]:[255,96,20],kk*sh)); ctx.strokeStyle="rgba(40,24,16,.55)"; ctx.lineWidth=Math.max(.8,pm*.05); ctx.beginPath(); ctx.moveTo(a[0]+nx*ra,a[1]+ny*ra); ctx.lineTo(b[0]+nx*rb,b[1]+ny*rb); ctx.lineTo(b[0]-nx*rb,b[1]-ny*rb); ctx.lineTo(a[0]-nx*ra,a[1]-ny*ra); ctx.closePath(); ctx.fill(); ctx.stroke(); }
     if(N>.1){ ctx.save(); ctx.globalCompositeOperation="lighter"; glow(ctx,p[0],p[1]-H0*pm-pm*.4,pm*1.4,"255,236,190",.7*N); glow(ctx,p[0],p[1]-H0*pm-pm*.9,pm*.6,"255,40,30",.6*N); ctx.restore(); ctx.globalAlpha=1; } }
   // asfalto
   ctx.save(); ctx.beginPath(); ctx.rect(0,y1,w,y2-y1); ctx.clip();
@@ -509,8 +514,9 @@ function drawTakeoff(cv,env,t,tt,o){
   if(o.cycle){ if(TS_.cyc!==FX.c){ FX.c=TS_.cyc; FX.sm.length=0; FX.tr.length=0; }
     const wv=WD.kt*.514;
     // humo blanco discreto al tocar: nace en las dos ruedas principales, se queda donde nació y deriva con el viento
-    if(K.td>=0&&K.td<.25&&FX.smc!==TS_.cyc){ FX.smc=TS_.cyc; for(const sd of [-1,1]){ const b=b2w(K,[0,.2,sd*1.25]);
-        for(let i=0;i<7;i++) FX.sm.push({x:xw+b[0]+(i-3)*.35,z:K.z+b[2]+(rnd()-.5)*.4,t0:tt+i*.035,L:1.1+rnd()*.6,r:1.3+rnd()*.9}); } }
+    if(K.td>=0&&K.td<.5){ const q=1-K.td/.5;   // humo de las ruedas principales: bocanada al tocar y estela que sigue a las ruedas ~0,8 s
+      if(FX.smc!==TS_.cyc){ FX.smc=TS_.cyc; for(const sd of [-1,1]){ const b=b2w(K,[0,.2,sd*1.25]); for(let i=0;i<9;i++) FX.sm.push({x:xw+b[0]+(i-4)*.3,z:K.z+b[2]+(rnd()-.5)*.5,t0:tt+i*.02,L:1.8+rnd()*.8,r:2.2+rnd()*1.4,a:1}); } }
+      else if(FX.sl!==tt){ FX.sl=tt; for(const sd of [-1,1]){ const b=b2w(K,[0,.2,sd*1.25]); FX.sm.push({x:xw+b[0],z:K.z+b[2],t0:tt,L:1.2+rnd()*.5,r:1.2+1.4*q,a:.75*q}); } } }
     // estelas de condensación en las puntas de plano con factor de carga alto (viraje cerrado o recogida tras la barrena)
     const Cm=cycleModel(), uu=TS_.u; let nld=1/Math.max(.25,Math.cos(K.roll||0));
     if(uu>=TOTL&&uu<Cm.UE-.1){ const c2=cycleAt(uu+.06), qd=(c2.pitch-K.pitch)/.06; nld=Math.max(nld,1+Math.max(0,(K.v||0)*qd*Math.cos(K.roll||0))/9.81); }
@@ -522,15 +528,16 @@ function drawTakeoff(cv,env,t,tt,o){
           if(pr&&p.t-pr.t<.12){ const ag=tt-p.t; ctx.strokeStyle=`rgba(255,255,255,${(.55*p.i*(1-ag/1.8)*(1-.55*N)).toFixed(3)})`; ctx.beginPath(); ctx.moveTo(pr.q[0],pr.q[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); }
           pr={t:p.t,q}; } }
       ctx.restore(); }
-    for(const p of FX.sm){ const ag=tt-p.t0; if(ag<0) continue; const k=ag/p.L, q=GP(p.x+wv*Math.cos(WD.d)*ag*.6,p.z+wv*Math.sin(WD.d)*ag*.6), r=pm*lerp(.25,p.r,Math.sqrt(k));
-      glow(ctx,q[0],q[1]-pm*(.3+.7*k),r,"236,236,234",.42*Math.pow(1-k,1.5)*(1-.45*N)); }
+    for(const p of FX.sm){ const ag=tt-p.t0; if(ag<0) continue; const k=ag/p.L, q=GP(p.x+wv*Math.cos(WD.d)*ag*.6,p.z+wv*Math.sin(WD.d)*ag*.6), r=Math.max(3,pm*lerp(.4,p.r,Math.sqrt(k))), A=(p.a==null?1:p.a)*Math.pow(1-k,1.3)*(1-.35*N);
+      glow(ctx,q[0],q[1]-pm*(.35+.8*k),r*1.15,"120,124,132",.30*A);   // borde gris: contraste sobre el asfalto claro
+      glow(ctx,q[0],q[1]-pm*(.35+.8*k),r,"248,248,246",.85*A); }
     ctx.globalAlpha=1; }
   // avión
   const fade=o.cycle?1:sstep(0,.8,tt)*(1-sstep(T-1,T-.2,tt))*(tt<T?1:0);
   const drawMain=()=>{ ctx.globalAlpha=fade; if(fade>0&&px>-14*pm&&px<w+14*pm&&py>-6*pm) plane3D(ctx,px,py,pm,K,env,t,o.lift); ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over"; };
   let mainDone=false;
   if(TRF.length){ TRF.sort((a,b)=>a.z-b.z);
-    for(const T of TRF){ const q=T.alt>0?GP(T.x,T.z):GM(T.x,T.z); T.sk=sOf(T.z); T.sx=q[0]; T.sy=q[1]-T.alt*pm; T.vis=T.sx>-12*pm&&T.sx<w+12*pm&&T.sy>-5*pm&&T.sy<H+3*pm;
+    for(const T of TRF){ const q=T.alt>0?GP(T.x,T.z):GM(T.x,T.z); T.sk=T.alt>0?1-.3*clamp((-15-T.z)/45,0,1):sOf(T.z); T.sx=q[0]; T.sy=q[1]-T.alt*pm; T.vis=T.sx>-12*pm&&T.sx<w+12*pm&&T.sy>-5*pm&&T.sy<H+3*pm;
       if(T.vis&&T.alt<8&&(env.el>1||env.night>.5)){ const sh2=clamp(1-T.alt/8,0,1), off=env.el>1?clamp(1/Math.tan(Math.max(env.el,8)*D2R),0,3)*(env.az<180?1:-1):0, gq=GM(T.x,T.z), ss=pm*T.sk;   // sombra en el suelo
         ctx.save(); ctx.translate(gq[0],gq[1]); ctx.transform(ss,0,ss*PS,ss*kz,0,0); ctx.translate(off*(1+T.alt*.6),T.alt*.5); ctx.rotate(T.st.psi); ctx.fillStyle=`rgba(0,0,0,${(.26*env.amb+.07)*sh2*(1-.5*sstep(.6,1,env.cover))})`;
         if(T.M===GLIDER){ ctx.beginPath(); ctx.ellipse(-1,0,4.4,.32,0,0,7); ctx.fill(); ctx.beginPath(); ctx.ellipse(.4,0,.45,9,0,0,7); ctx.fill(); }

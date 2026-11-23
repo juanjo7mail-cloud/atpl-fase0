@@ -517,7 +517,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <li><b>Aspect ratio</b> = b / c = b² / S. Lo llamó lo más importante del bloque.</li>
 <li>La definición de <b>MAC</b>: cuerda por el centro geométrico de la planta, referencia de estabilidad longitudinal.</li>
 <li><b>Spanwise flow</b>: arriba hacia el encastre, abajo hacia la punta; izquierda horario y derecha antihorario vistos desde atrás; más fuerte en la punta y a alto AoA.</li></ul></div>
-  <h4>Three-dimensional wing</h4>
+  <div class="f0viz" data-viz="parts3d" data-part="wing"></div><h4>Three-dimensional wing</h4>
   <ul>
     <li><b>Wing area (S)</b>: plan surface area. <b>Wing span (b)</b> (envergadura): tip to tip. <b>Average chord (c)</b>: b × c = S.</li>
     <li>★ <b>Aspect ratio (AR)</b> (alargamiento) = <b>wing span / average chord</b> = b / c = b² / S.</li>
@@ -976,7 +976,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
     <li>Pero <b>lift y weight no actúan en el mismo punto</b>: el CP y el CG <b>no son constantes en vuelo</b> y casi nunca coinciden. El <b>CG se mueve</b> al cambiar la carga y al consumir combustible; el <b>CP se mueve</b> con el ángulo de ataque.</li>
   </ul>
 
-  <h4>Los dos couples (pares) y la cola ★</h4>
+  <div class="f0viz" data-viz="parts3d" data-part="tail"></div><h4>Los dos couples (pares) y la cola ★</h4>
   <ul>
     <li><b>Par lift/weight</b>: según quién esté delante, encabrita o pica.</li>
     <li><b>Par thrust/drag</b>: si la <b>línea de thrust está por DEBAJO</b> de la de drag → <b>nose-up</b>. Si está por <b>encima</b> → <b>nose-down</b>.</li>
@@ -1003,7 +1003,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
   <p class="legend">Fíjate en la trampa: el <b>alerón</b> está en la punta del ala (cerca del eje lateral) pero gira alrededor del <b>longitudinal</b>.</p>
   </div>
 
-  <h4>Las tres superficies primarias ★ (la tabla clave)</h4>
+  <div class="f0viz" data-viz="parts3d" data-part="controls"></div><h4>Las tres superficies primarias ★ (la tabla clave)</h4>
   <div class="scroll"><table>
   <tr><th>Superficie</th><th>Dónde está</th><th>Movimiento</th><th>Eje de rotación</th><th>Estabilidad</th></tr>
   <tr><td><b>Aileron</b></td><td>Puntas del ala</td><td><b>Roll</b> (alabeo)</td><td><b>Longitudinal</b></td><td>Lateral</td></tr>
@@ -4337,7 +4337,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ try{ console.error("lens",e); }catch(_){} }
 })();
 </script>
-<script src="../viz16.js?v=e36125aa" defer></script>
+<script src="../viz16.js?v=3f8f4cfe" defer></script>
 <script src="../labs.js?v=7496b38f" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>

@@ -609,31 +609,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <line x1="20" y1="276" x2="48" y2="276" class="ln cmu dsh"/><text x="56" y="280" class="sm"><tspan class="bd">Stringer (larguerillo)</tspan>: paralelo al larguero · rigidiza la piel</text>
 </svg>
 <figcaption>Ala vista desde arriba. La <b>skin (revestimiento)</b> es el contorno: da y mantiene la forma aerodinámica y puede ayudar a la resistencia. Algunos aviones (C172) llevan además <b>external struts (montantes)</b> que pasan parte de la carga del ala al fuselaje.</figcaption>
-</figure><div class="flag"><b>Trampa:</b> Trial: ribs perpendiculares al spar · la forma del perfil la dan las ribs · las cargas verticales, el spar.</div><figure class="fig" id="visWing">
-<b class="wtitle">Interactivo · toca cada pieza del ala</b>
-<div class="ctl" role="group" aria-label="Capa">
-<button data-wm="struct" aria-pressed="true">Estructura</button><button data-wm="surf">Superficies</button><button data-wm="quiz">Ponme a prueba</button>
-</div>
-<svg viewBox="0 0 660 230" role="img" aria-label="Ala interactiva: estructura y superficies">
-
-<g id="wStruct">
-<path data-part="skin" class="wp wline" d="M40,40 L600,80 L600,170 L40,200 Z" style="stroke-width:3"/>
-<g data-part="stringer" class="wp wline dsh"><line x1="40" y1="59" x2="600" y2="91"/><line x1="40" y1="112" x2="600" y2="120.5"/><line x1="40" y1="128" x2="600" y2="129.5"/><line x1="40" y1="176" x2="600" y2="156.5"/></g>
-<g data-part="rib" class="wp wline"><line x1="120" y1="45.7" x2="120" y2="195.7"/><line x1="200" y1="51.4" x2="200" y2="191.4"/><line x1="280" y1="57.1" x2="280" y2="187.1"/><line x1="360" y1="62.9" x2="360" y2="182.9"/><line x1="440" y1="68.6" x2="440" y2="178.6"/><line x1="520" y1="74.3" x2="520" y2="174.3"/></g>
-<g data-part="spar" class="wp wline" style="stroke-width:5"><line x1="40" y1="80" x2="600" y2="102.5"/><line x1="40" y1="152" x2="600" y2="143"/></g>
-</g>
-<g id="wSurf">
-<path data-part="slat" class="wp" d="M330,52 L590,71 L590,79.3 L330,60.7 Z"/>
-<path data-part="aileron" class="wp" d="M440,163 L580,158 L580,171.1 L440,178.6 Z"/>
-<path data-part="flap" class="wp" d="M60,170 L400,165 L400,180.7 L60,198.9 Z"/>
-<path data-part="spoiler" class="wp" d="M200,130 L360,126 L360,140 L200,144 Z"/>
-</g>
-<text x="320" y="30" text-anchor="middle" class="sm mu">borde de ataque ↑ (hacia el aire)</text>
-<text x="40" y="222" class="sm mu">raíz · fuselaje</text><text x="600" y="222" text-anchor="end" class="sm mu">punta</text>
-</svg>
-<div class="simtxt" id="wingTxt">Toca una pieza.</div>
-<figcaption>Vista desde arriba. Las superficies se ven a la vez para que fijes <b>dónde va cada una</b>: el slat delante del borde de ataque, el spoiler en el extradós delante del flap, el flap en el borde de salida hacia la raíz y el alerón en el borde de salida hacia la punta.</figcaption>
-</figure><h4>Wing position</h4><figure class="fig" id="figWingPos">
+</figure><div class="flag"><b>Trampa:</b> Trial: ribs perpendiculares al spar · la forma del perfil la dan las ribs · las cargas verticales, el spar.</div><div class="f0viz" id="visWing" data-viz="parts3d" data-part="wing"></div><h4>Wing position</h4><figure class="fig" id="figWingPos">
 <svg viewBox="0 0 660 205" role="img" aria-label="Ala alta, media y baja; diedro, plano y anhedro">
 <g class="ln" style="stroke-width:2">
 <circle cx="110" cy="60" r="18" class="fp"/><line x1="20" y1="43" x2="200" y2="43" class="thk"/><line x1="110" y1="42" x2="110" y2="22"/>
@@ -669,14 +645,14 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <text x="250" y="20" class="sm mu">• bisagras (hinges) en la parte trasera</text>
 </svg>
 <figcaption>El <b>tail assembly</b> son <b>los dos estabilizadores</b>, horizontal y vertical (en el avión hay dos semiestabilizadores horizontales y uno vertical). Cada uno lleva atrás, en bisagras, su superficie móvil: <b>rudder</b> en el vertical, <b>elevator</b> en el horizontal. Da la <b>estabilidad longitudinal y direccional</b> y el <b>control longitudinal</b>. <span style="color:var(--ok)">Trial: «Horizontal and vertical stabilizer».</span></figcaption>
-</figure><div class="comp"><b>ATPL</b><ul><li><b>Spar</b> = alma (<b>web</b>) + cordones (<b>caps</b>). <b>Torsion box</b>: spars + piel entre ellos; aguanta la torsión.</li><li><b>High wing</b>: buena visibilidad abajo, estabilidad lateral. <b>Low wing</b>: tren corto, más efecto suelo. <b>T-tail</b>: fuera de la estela del ala, pero riesgo de <b>deep stall</b> y deriva más pesada.</li><li><b>Flutter</b>: vibración aeroelástica que se amplifica; se evita con <b>mass balance</b> por delante de la bisagra y una caja de torsión rígida.</li><li>Fallo de motor en un bimotor: cargas asimétricas; mucho pie de golpe puede sobrecargar la deriva.</li></ul></div>
+</figure><div class="f0viz" data-viz="parts3d" data-part="tail"></div><div class="comp"><b>ATPL</b><ul><li><b>Spar</b> = alma (<b>web</b>) + cordones (<b>caps</b>). <b>Torsion box</b>: spars + piel entre ellos; aguanta la torsión.</li><li><b>High wing</b>: buena visibilidad abajo, estabilidad lateral. <b>Low wing</b>: tren corto, más efecto suelo. <b>T-tail</b>: fuera de la estela del ala, pero riesgo de <b>deep stall</b> y deriva más pesada.</li><li><b>Flutter</b>: vibración aeroelástica que se amplifica; se evita con <b>mass balance</b> por delante de la bisagra y una caja de torsión rígida.</li><li>Fallo de motor en un bimotor: cargas asimétricas; mucho pie de golpe puede sobrecargar la deriva.</li></ul></div>
 </div>
 </details>
 
 <details class="lo" id="lo-021.02.04" data-lo="021.02.04">
 <summary><span class="lonum">021.02.04</span><span class="lotitle">Fuselage, landing gear, doors, floor, windscreen and windows</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Tres fuselajes: <b>tubular (reticular)</b>, <b>monocasco</b> y <b>semimonocasco</b>.</li><li>Vocabulario en inglés: frame (cuaderna), stringer (larguerillo), longeron, skin.</li></ul></div><div class="key"><b>Clave</b>Monocoque: skin + frames, la piel lo carga todo. Semi-monocoque: + stringers y longerons, el más usado.</div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Tres fuselajes: <b>tubular (reticular)</b>, <b>monocasco</b> y <b>semimonocasco</b>.</li><li>Vocabulario en inglés: frame (cuaderna), stringer (larguerillo), longeron, skin.</li></ul></div><div class="f0viz" data-viz="parts3d" data-part="fuselage"></div><div class="key"><b>Clave</b>Monocoque: skin + frames, la piel lo carga todo. Semi-monocoque: + stringers y longerons, el más usado.</div>
 <p>El <b>fuselage</b> es el cuerpo al que se unen alas, cola, motor y tren; lleva la carga de pago y <b>transmite las cargas</b> de alas, cola, deriva y tren. Si está presurizado, aguanta además los esfuerzos axiales y circunferenciales de la presurización.</p><figure class="fig" id="figFus">
 <svg viewBox="0 0 660 215" role="img" aria-label="Tres tipos de fuselaje: tubular, monocasco y semimonocasco">
 <text x="110" y="20" text-anchor="middle" class="lg">Tubular (truss)</text>
@@ -745,7 +721,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <details class="lo" id="lo-021.04.01" data-lo="021.04.01">
 <summary><span class="lonum">021.04.01</span><span class="lotitle">Landing gear</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Misión principal: <b>absorber las cargas</b> del aterrizaje y soportar el avión (puede llevar ruedas o no: esquís, flotadores).</li><li>Dos configuraciones: <b>triciclo</b> (principal + rueda de morro delante; la estándar, más manejable) y <b>patín de cola</b> (más difícil, menos manejable en tierra).</li><li><b>Fijo</b> (más barato y simple) o <b>retráctil</b>.</li></ul></div><div class="key"><b>Clave</b>Oleo: nitrógeno = muelle, aceite = amortiguación. Triciclo: principal justo detrás del CG (≈ 90 % del peso).</div><ul><li>Tren <b>fijo</b>: ballesta de acero, cuerda elástica u oleoneumático. <b>Retráctil</b>: menos resistencia.</li><li><b>Triciclo</b>: principal justo detrás del CG; de patín de cola, al revés.</li><li>Cargas del tren: compresión, flexión hacia atrás, laterales, hacia delante y torsión.</li><li>Extensión de emergencia: depósito hidráulico de reserva, <b>nitrógeno comprimido</b> o <b>gravedad</b>.</li></ul><div class="flag"><b>Trampa:</b> en el oleo, el aceite amortigua y el nitrógeno hace de muelle (lo diste al revés).</div><div class="comp"><b>ATPL</b><ul><li>Componentes: shock strut, drag struts, side stays, <b>torsion links</b>, <b>downlocks</b> (over-centre).</li><li><b>VLO</b>: máx. para subir o bajar el tren · <b>VLE</b>: máx. volando con él fuera.</li><li><b>Squat switch</b> (weight-on-wheels) y <b>ground locks</b> contra la retracción en tierra.</li><li>Secuencia de emergencia: desbloquear (uplocks) → bajar → blocar abajo. Tres verdes = abajo y blocado.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Misión principal: <b>absorber las cargas</b> del aterrizaje y soportar el avión (puede llevar ruedas o no: esquís, flotadores).</li><li>Dos configuraciones: <b>triciclo</b> (principal + rueda de morro delante; la estándar, más manejable) y <b>patín de cola</b> (más difícil, menos manejable en tierra).</li><li><b>Fijo</b> (más barato y simple) o <b>retráctil</b>.</li></ul></div><div class="f0viz" data-viz="parts3d" data-part="gear"></div><div class="key"><b>Clave</b>Oleo: nitrógeno = muelle, aceite = amortiguación. Triciclo: principal justo detrás del CG (≈ 90 % del peso).</div><ul><li>Tren <b>fijo</b>: ballesta de acero, cuerda elástica u oleoneumático. <b>Retráctil</b>: menos resistencia.</li><li><b>Triciclo</b>: principal justo detrás del CG; de patín de cola, al revés.</li><li>Cargas del tren: compresión, flexión hacia atrás, laterales, hacia delante y torsión.</li><li>Extensión de emergencia: depósito hidráulico de reserva, <b>nitrógeno comprimido</b> o <b>gravedad</b>.</li></ul><div class="flag"><b>Trampa:</b> en el oleo, el aceite amortigua y el nitrógeno hace de muelle (lo diste al revés).</div><div class="comp"><b>ATPL</b><ul><li>Componentes: shock strut, drag struts, side stays, <b>torsion links</b>, <b>downlocks</b> (over-centre).</li><li><b>VLO</b>: máx. para subir o bajar el tren · <b>VLE</b>: máx. volando con él fuera.</li><li><b>Squat switch</b> (weight-on-wheels) y <b>ground locks</b> contra la retracción en tierra.</li><li>Secuencia de emergencia: desbloquear (uplocks) → bajar → blocar abajo. Tres verdes = abajo y blocado.</li></ul></div>
 </div>
 </details>
 
@@ -777,7 +753,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <details class="lo" id="lo-021.05.01" data-lo="021.05.01">
 <summary><span class="lonum">021.05.01</span><span class="lotitle">Aeroplane: primary flight controls</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Primarios</b>: mueven el avión en uno de sus ejes. <b>Secundarios</b>: el resto. El objetivo de un mando es <b>crear un momento</b>.</li><li>Los <b>tres ejes</b> (longitudinal, lateral, normal), sus movimientos (<b>roll, pitch, yaw</b>) y sus superficies, también en inglés.</li><li>Alerón arriba → pierde sustentación porque <b>disminuye la curvatura</b>.</li></ul></div><div class="key"><b>Clave</b>El morro va hacia donde apunta el borde de salida de la superficie; la cola, al revés. Pull → elevator ARRIBA → morro arriba.</div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Primarios</b>: mueven el avión en uno de sus ejes. <b>Secundarios</b>: el resto. El objetivo de un mando es <b>crear un momento</b>.</li><li>Los <b>tres ejes</b> (longitudinal, lateral, normal), sus movimientos (<b>roll, pitch, yaw</b>) y sus superficies, también en inglés.</li><li>Alerón arriba → pierde sustentación porque <b>disminuye la curvatura</b>.</li></ul></div><div class="f0viz" data-viz="parts3d" data-part="controls"></div><div class="key"><b>Clave</b>El morro va hacia donde apunta el borde de salida de la superficie; la cola, al revés. Pull → elevator ARRIBA → morro arriba.</div>
 <p>En vuelo estable, <b>momento cero</b> en los tres ejes. Los mandos crean un momento cambiando la fuerza de un plano: su <b>camber</b>, su <b>angle of attack</b> o <b>«spoiling»</b> el flujo (spoilers).</p><div class="scroll"><table><tr><th>Axis (eje)</th><th>Movement</th><th>Surface</th><th>Control</th></tr><tr><td><b>Longitudinal</b> (morro–cola)</td><td><b>Roll</b> (alabeo)</td><td>Ailerons · o spoilers</td><td>Yoke izquierda-derecha</td></tr><tr><td><b>Lateral</b> (punta–punta)</td><td><b>Pitch</b> (cabeceo)</td><td>Elevator · o stabilator</td><td>Yoke adelante-atrás</td></tr><tr><td><b>Normal</b> (vertical)</td><td><b>Yaw</b> (guiñada)</td><td>Rudder</td><td>Pedals</td></tr></table></div><h4>Pruébalo: mueve los mandos</h4><figure class="fig" id="simFig">
 <svg viewBox="0 0 660 240" role="img" aria-label="Simulador de mandos: alabeo, cabeceo y guiñada">
 <text x="110" y="18" text-anchor="middle" class="bd">ROLL · rear view</text><text x="110" y="34" text-anchor="middle" class="sm mu">eje longitudinal · ailerons</text>
@@ -866,7 +842,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <details class="lo" id="lo-021.05.02" data-lo="021.05.02">
 <summary><span class="lonum">021.05.02</span><span class="lotitle">Aeroplane: secondary flight controls</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>★ Ojo: los flaps aumentan el <b>coeficiente de sustentación (CL)</b>, bajan la velocidad de pérdida, suben la resistencia y <b>reducen el ángulo de ataque crítico</b>.</li><li>★ El <b>slat aumenta el ángulo de ataque crítico</b>.</li><li><b>Trimming</b> (ya visto en PoF): reduce las <b>stick forces</b> y la carga de trabajo.</li><li><b>Speed brakes y spoilers</b> son las <b>mismas superficies</b>: en vuelo, pocos grados para <b>reducir la velocidad o aumentar el régimen de descenso</b>; en tierra, al tocar el tren, todo arriba para <b>romper la sustentación</b>. En un viraje se levanta muy poco.</li></ul></div><div class="key"><b>Clave</b>Trim tab: se mueve al CONTRARIO que su superficie. Flap de borde de ataque = Krueger; slat ≠ flap.</div><h4>Trim tabs (aletas compensadoras)</h4><figure class="fig" id="figTrim">
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>★ Ojo: los flaps aumentan el <b>coeficiente de sustentación (CL)</b>, bajan la velocidad de pérdida, suben la resistencia y <b>reducen el ángulo de ataque crítico</b>.</li><li>★ El <b>slat aumenta el ángulo de ataque crítico</b>.</li><li><b>Trimming</b> (ya visto en PoF): reduce las <b>stick forces</b> y la carga de trabajo.</li><li><b>Speed brakes y spoilers</b> son las <b>mismas superficies</b>: en vuelo, pocos grados para <b>reducir la velocidad o aumentar el régimen de descenso</b>; en tierra, al tocar el tren, todo arriba para <b>romper la sustentación</b>. En un viraje se levanta muy poco.</li></ul></div><div class="f0viz" data-viz="parts3d" data-part="wing"></div><div class="key"><b>Clave</b>Trim tab: se mueve al CONTRARIO que su superficie. Flap de borde de ataque = Krueger; slat ≠ flap.</div><h4>Trim tabs (aletas compensadoras)</h4><figure class="fig" id="figTrim">
 <svg viewBox="0 0 660 165" role="img" aria-label="Aleta compensadora: se mueve al contrario que la superficie">
 <g transform="translate(30,10)">
 <path d="M0,70 C0,58 40,54 90,55 L120,62 L120,78 L90,85 C40,86 0,82 0,70 Z" class="fp ln"/>
@@ -4005,7 +3981,7 @@ document.querySelectorAll("[data-mini]").forEach(b=>b.addEventListener("click",(
 
 // --- ala: estructura y superficies ---
 (function(){
-  const fig = document.getElementById("visWing"); if(!fig) return;
+  const fig = document.getElementById("visWing"); if(!fig||!fig.querySelector("svg")) return;
   const INFO = {
     spar:"<b>Spar (larguero)</b>: viga principal de raíz a punta. Aguanta la <b>flexión</b> (cargas verticales de sustentación y peso). Trial: «stresses due to vertical loads» → spar.",
     rib:"<b>Rib (costilla)</b>: ≈ <b>perpendicular</b> al larguero. Da la <b>forma del perfil</b> y pasa la carga de la piel al larguero. Trial: «maintain the aerodynamic shape» → ribs.",
@@ -5301,7 +5277,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
   }catch(e){ try{ console.error("lens",e); }catch(_){} }
 })();
 </script>
-<script src="../viz16.js?v=e36125aa" defer></script>
+<script src="../viz16.js?v=3f8f4cfe" defer></script>
 <script src="../labs.js?v=7496b38f" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>

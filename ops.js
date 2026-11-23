@@ -1090,20 +1090,68 @@ function wkHTML(){
 const wkSec=()=>`<section class="pn wkp" data-t="res" id="opWkS">${wkSeen()?"":wkHTML()}</section>`;
 function wkDraw(){ const e=S.root&&$("#opWkS",S.root); if(e) e.innerHTML=wkSeen()?"":wkHTML(); }
 /* ---------- Panel privado (Stats): estado AIRAC / SUP / WEF de todos los aeródromos cargados ---------- */
+/* ---- Comprobación en la AIP de ENAIRE (el 4.º campo "i" de un SUP = solo IFR: aproximaciones RNP/LPV o ILS; se muestra pero no pide acción) (lista de enmiendas y lista de suplementos), hecha a mano en cada ciclo ----
+   amdt[ciclo].it[OACI] = [[tipo, qué cambia, fichero de la enmienda en contenido_AMDT o ""]]. Clave interna: LERJ = LELO.
+   sup[OACI] = [[número, WEF si aún es futuro, resumen]] tal como figuran en la lista oficial. */
+const AIPU="https://aip.enaire.es/AIP/";
+const AIPCHK={fecha:"23/11/26",
+ amdt:{"2612":{wef:"26-NOV-26",src:"AIRAC AMDT 11/26 y AIP AMDT 413/26",it:{
+   LEAM:[["ADC","ADC 1: nueva edición","LE_Amdt_A_2026_11_AD_2_LEAM_ADC_1_es.pdf"],["IFR","SID, STAR, IAC y AOC (no afectan al VFR)",""]],
+   LEBA:[["AD2","Datos del aeródromo (AD 2)",""],["IFR","IAC 1 a 3 (no afectan al VFR)","LE_Amdt_2026_413_AD_2_LEBA_IAC_1_es.pdf"]],
+   LEBZ:[["AD2","Datos del aeródromo (AD 2)",""]],
+   LEGR:[["VAC","VAC 1: nueva edición",""],["AD2","Datos del aeródromo (AD 2)","LE_Amdt_A_2026_11_AD_2_LEGR_es.pdf"],["IFR","SID, STAR e IAC (no afectan al VFR)",""]],
+   LELL:[["PDC","PDC 1: nueva edición","LE_Amdt_A_2026_11_AD_2_LELL_PDC_1_es.pdf"],["AD2","Datos del aeródromo (AD 2)","LE_Amdt_A_2026_11_AD_2_LELL_es.pdf"]],
+   LEPP:[["AD2","Datos del aeródromo (AD 2)","LE_Amdt_A_2026_11_AD_2_LEPP_es.pdf"],["IFR","SID, STAR e IAC (no afectan al VFR)",""]],
+   LESO:[["AD2","Datos del aeródromo (AD 2)",""]],
+   LEXJ:[["AD2","Datos del aeródromo (AD 2)","LE_Amdt_A_2026_11_AD_2_LEXJ_es.pdf"]],
+   LEVD:[["VAC","VAC 1: nueva edición","LE_Amdt_2026_413_AD_2_LEVD_VAC_1_es.pdf"]]}},
+  "2613":{wef:"24-DEC-26",src:"AIRAC AMDT 12/26",it:{
+   LECU:[["AD2","Datos del aeródromo (AD 2)","LE_Amdt_A_2026_12_AD_2_LECU_LEVS_es.pdf"]],
+   LELO:[["AD2","Datos del aeródromo (AD 2)","LE_Amdt_A_2026_12_AD_2_LERJ_es.pdf"]]}}},
+ sup:{LEAB:[["176/25","","Riesgo de FOD en APN E-1"]],LEAM:[["204/26","26-NOV-26","Baja temporal del VOR/DME AMR"],["161/26","","RNP APCH con mínimos LPV no utilizables","i"]],
+  LEAS:[["209/26","","Luces de obstáculo WDI inutilizables"],["207/26","","Luces de identificación de umbral RWY 11 inutilizables"],["162/26","","RNP APCH con mínimos LPV no utilizables","i"],["095/26","","Área para vuelos de aeronaves no tripuladas"]],
+  LEBA:[["163/26","","RNP APCH con mínimos LPV no utilizables","i"],["126/26","","Luces de identificación de umbral RWY 03 y 21 inutilizables"]],
+  LEBG:[["164/26","","RNP APCH con mínimos LPV no utilizables","i"],["154/26","","Iluminación controlada por el piloto fuera de servicio"],["103/26","","Barra de parada y letrero de la TWY B inutilizables"]],
+  LECH:[["215/26","26-NOV-26","Baja de maniobras RNP APCH con mínimos LPV","i"]],
+  LECU:[["214/26","26-NOV-26","Grúas torre en las proximidades"],["153/26","","Grúa en las proximidades"]],
+  LEJR:[["170/26","","RNP APCH con mínimos LPV no utilizables","i"]],
+  LELC:[["085/26","","Categoría reducida del SSEI militar"]],
+  LELL:[["226/26","26-NOV-26","Grúas en las proximidades"],["213/25","","Luces de identificación de umbral RWY 13 y 31 inutilizables"],["151/26","","Grúas en las proximidades"],["110/26","","Reconfiguración de la plataforma R3"],["097/26","","Grúas en las proximidades"]],
+  LELO:[["194/26","","Erratas en letreros de TORA en la RWY 29"],["175/26","","RNP APCH con mínimos LPV no utilizables","i"],["146/26","","Baja temporal de la senda GP del ILS","i"],["096/26","","Precaución al rodar por la TWY A"],["027/26","","PRKG 1H y 4H cerrados"]],
+  LEPP:[["184/26","","Obras de ampliación de franja"],["174/26","","RNP APCH con mínimos LPV no utilizables","i"],["227/25","","Restricciones al DVOR PPN"]],
+  LESA:[["217/26","26-NOV-26","RWY 07/25 cerrada"],["163/25","","RWY 07/25 cerrada"],["089/26","","Precaución con el ILS GP RWY 21","i"]],
+  LESO:[["177/26","","RNP APCH con mínimos LPV no utilizables","i"],["082/25","","Grúas en las proximidades"]],
+  LETL:[["055/26","","Puestos de estacionamiento cerrados"],["054/26","","Grúas en el aeropuerto"]],
+  LEXJ:[["181/26","","RNP APCH con mínimos LPV no utilizables","i"],["040/26","","Grúas en las proximidades"]]}};
+const AIPF=ic=>ic==="LECU"?"LECU_LEVS":ic==="LELO"?"LERJ":ic, VACES={LEAB:1,LEAM:1,LEBA:1,LECH:1,LEGR:1};
+const aipDoc=(ic,k)=>AIPU+"contenido_AIP/AD/AD2/"+AIPF(ic)+"/LE_AD_2_"+AIPF(ic)+"_"+k+"_1_"+(k==="VAC"&&VACES[ic]?"es":"en")+".pdf";
+const supKey=id=>{ const m=/(\d+)\s*\/\s*(\d\d)/.exec(String(id)); return m?(+m[1])+"/"+m[2]:String(id); };
+const dW=s=>{ const m=/^(\d\d)-([A-Z]{3})-(\d\d)$/.exec(s||""), MM={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11}; return m?Date.UTC(2000+ +m[3],MM[m[2]],+m[1]):null; };
 function maint(){
   const now=Date.now(), a=airac(now), rows=[];
   /* Mismos aeródromos que el desplegable del Briefing: LECU (datos propios) + todos los de AEROS. Si falta carta ADC o SUP cargados, la fila lo dice (no se da por «al día»). */
   const ALL=[{icao:"LECU",name:"Madrid / Cuatro Vientos"}].concat(AEROS.filter(o=>CHARTS[o.icao]).map(o=>({icao:o.icao,name:o.name}))).sort((x,y)=>x.icao<y.icao?-1:x.icao>y.icao?1:0);
+  const NX=AIPCHK.amdt[a.idN], NX2=AIPCHK.amdt[String(+a.idN+1)];
   const aipU=ic=>"https://aip.enaire.es/AIP/#"+(ic==="LECU"?"LECU/LEVS":ic==="LELO"?"LERJ":ic);
   ALL.forEach(o=>{ const ic=o.icao, c=CHARTS[ic]||(ic==="LECU"?LECU_X:null);
     if(!c){ rows.push({icao:ic,name:o.name,wef:"Sin carta cargada",old:false,sup:[],nd:"Sin carta ADC ni SUP cargados",aip:aipU(ic)}); return; }
     const sup=(c.sup||[]).filter(x=>{ const t=supDay(x[6]); return !(t!=null&&now>=t+864e5); }).map(x=>{ const e=supEnd(x[2]), t=e?e.getTime():null, f=supDay(x[5]); return {id:x[0],end:x[2],st:f!=null&&now<f?"pend":t==null?"ok":t<now?(supVer(x,now)?"ver":"late"):t-now<=30*D1?"soon":x[4]?"okv":"ok",from:x[5]||"",ver:x[4]||"",to:x[6]||""}; });
     const dc=DOCS[ic], dvw=dc&&dc.v[0]?dc.v[0][3]:"", dpw=dc&&dc.c1[1]?dc.c1[1][3]:"", dx={t:[dpw?"PDC "+dpw:(dc&&dc.np?"Sin PDC en la AIP":""),dvw?"VAC "+dvw:""].filter(Boolean).join(" · "),o:!!((dpw&&cartOld(dpw))||(dvw&&cartOld(dvw)))};
     const m=/^(\d\d)-([A-Z]{3})-(\d\d)$/.exec(c.wef||""), MM={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11}, w=m?Date.UTC(2000+ +m[3],MM[m[2]],+m[1]):null;
-    rows.push({icao:ic,name:o.name,wef:c.wef||"—",old:w!=null&&now-w>365*D1,sup,ns:c.ns||"",nd:"",ex:dx.t,exOld:dx.o,aip:aipU(ic)});
+    // documentos con su fecha cargada, su PDF oficial y si cambian en el próximo ciclo
+    const ch=(NX&&NX.it[ic])||[], ch2=(NX2&&NX2.it[ic])||[], nw=NX?dW(NX.wef):null;
+    const docs=[["ADC",c.wef||""],["PDC",dc&&dc.np?"np":dpw],["VAC",dvw]].map(d=>{ const k=d[0], cx=ch.find(x=>x[0]===k), lw=dW(d[1]); return {k,d:d[1],u:d[1]==="np"?"":aipDoc(ic,k),chg:!!cx,txt:cx?cx[1]:"",f:cx&&cx[2]?AIPU+"contenido_AMDT/"+cx[2]:"",done:!!(cx&&lw!=null&&nw!=null&&lw>=nw)}; });
+    const oth=ch.filter(x=>x[0]!=="ADC"&&x[0]!=="PDC"&&x[0]!=="VAC").map(x=>({k:x[0],txt:x[1],f:x[2]?AIPU+"contenido_AMDT/"+x[2]:""}));
+    // suplementos: lista oficial frente a los cargados
+    const off=AIPCHK.sup[ic]||[], ld=(c.sup||[]).map(x=>supKey(x[0])), miss=off.filter(x=>!ld.includes(supKey(x[0]))), xtra=(c.sup||[]).filter(x=>!off.some(y=>supKey(y[0])===supKey(x[0]))).map(x=>x[0]);
+    rows.push({icao:ic,name:o.name,wef:c.wef||"—",old:w!=null&&now-w>365*D1,sup,ns:c.ns||"",nd:"",ex:dx.t,exOld:dx.o,aip:aipU(ic),docs,oth,ch2:ch2.map(x=>x[1]),off,miss:miss.filter(x=>!x[3]),missI:miss.filter(x=>x[3]),xtra});
   });
+  AEROS.filter(o=>!CHARTS[o.icao]).forEach(o=>rows.push({icao:o.icao,name:o.name,vfr:true,sup:[],docs:[],oth:[],off:[],miss:[],missI:[],xtra:[],aip:"https://guiavfr.enaire.es/"}));
+  rows.sort((x,y)=>x.icao<y.icao?-1:x.icao>y.icao?1:0);
   const late=rows.filter(r=>r.sup.some(x=>x.st==="late")), act=a.dN<=3||late.length>0;
-  return {a:{idC:a.idC,idN:a.idN,nxt:dmy(a.nxt),dN:a.dN},rows,late:late.map(r=>r.icao),nd:rows.filter(r=>r.nd).map(r=>r.icao),act,link:"https://aip.enaire.es/AIP/"};
+  return {a:{idC:a.idC,idN:a.idN,nxt:dmy(a.nxt),dN:a.dN},rows,late:late.map(r=>r.icao),nd:rows.filter(r=>r.nd).map(r=>r.icao),act,link:AIPU,
+    chk:{fecha:AIPCHK.fecha,nx:NX?{id:a.idN,wef:NX.wef,src:NX.src}:null,nx2:NX2?{id:String(+a.idN+1),wef:NX2.wef,src:NX2.src}:null},
+    links:{amdt:AIPU+"ENMIENDAS-es.html",sup:AIPU+"Suplementos-es.html",vfr:"https://guiavfr.enaire.es/"}};
 }
 const TABS=[["res","Resumen"],["pist","Pistas"],["wx","METAR · TAF"],["ntm","NOTAM"],["map","Mapa"]];
 function ddHTML(){

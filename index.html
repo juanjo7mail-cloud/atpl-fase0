@@ -477,6 +477,25 @@ html{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
 input:not([type]),input[type=text],input[type=email],input[type=password],input[type=search],textarea{cursor:text!important}
 /* ---- estadísticas (solo admin) ---- */
 .st-air{border-left:5px solid #1E8A42}.st-air.act{border-left-color:#C9372C;background:#FBE5E3}.st-air .ac{margin:0 0 10px;font-weight:600}.st-air.act .ac{color:#8c1f17}.st-air table{width:100%;border-collapse:collapse;font-size:13px}.st-air th,.st-air td{text-align:left;padding:4px 8px 4px 0;border-bottom:1px solid var(--line);vertical-align:top}.st-air .late{color:#C9372C;font-weight:700}.st-air .soon{color:#B7791F;font-weight:700}.st-air .old{color:#B7791F}.st-air .ver,.st-air .pend,.st-air .okv{color:#1E8A42;font-weight:700}.st-air .sc{overflow-x:auto}.st-air .lk{display:inline-block;font-size:12px;font-weight:600;color:#1D6FB0;text-decoration:none;border:1px solid #BCD3E6;border-radius:999px;padding:1px 9px;margin:2px 4px 2px 0;white-space:nowrap}.st-air .lk:hover{background:#EAF3FA}.st-air .lks{display:block;margin-top:6px}
+.st-air .steps{margin:0 0 10px;padding-left:20px;font-size:13.5px;line-height:1.5}
+.st-air .steps li{margin:0 0 6px}
+.st-air .ck{display:block;color:#1E5E8A;font-size:12.5px}
+.st-air .flt{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}
+.st-air .flt button{font:600 12.5px system-ui,sans-serif;padding:5px 10px;border-radius:999px;border:1px solid #BCD3E6;background:#fff;color:#1D6FB0;cursor:pointer}
+.st-air .flt button[aria-pressed=true]{background:#1D6FB0;color:#fff;border-color:#1D6FB0}
+.st-air.fchg tr.nochg,.st-air.fchg tr.vfr{display:none}
+.st-air .dcw{display:block;margin:2px 0}
+.st-air .dc{display:inline-block;font:700 12px ui-monospace,Menlo,Consolas,monospace;text-decoration:none;border-radius:5px;padding:2px 7px;border:1px solid}
+.st-air .dc.ok{color:#1E8A42;border-color:#A9D8B8;background:#EEF8F1}
+.st-air .dc.done{color:#1E8A42;border-color:#1E8A42;background:#DDF2E4}
+.st-air .dc.chg{color:#fff;border-color:#C9372C;background:#C9372C}
+.st-air .dc.na{color:#6b7480;border-color:#d5dbe2;background:#f4f6f8}
+.st-air small.ok{color:#1E8A42;font-weight:700}
+.st-air .oth{font-size:12px;margin-top:4px}
+.st-air .miss{margin-top:4px;font-size:12px;color:#8c1f17}
+.st-air .xtra{margin-top:4px;font-size:12px;color:#8a5a00}
+.st-air .pill{display:inline-block;font-size:12px;font-weight:700;color:#1D6FB0;background:#EAF3FA;border:1px solid #BCD3E6;border-radius:999px;padding:1px 9px;margin-right:6px}
+.st-air tr.need th{color:#C9372C}
 .st-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:6px 0 18px}
 .st-k{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .st-k b{display:block;font:700 30px/1 var(--display);font-variant-numeric:tabular-nums}
@@ -2135,14 +2154,28 @@ function radarSync(){ window.F0_ADMIN=!!isAdmin; try{ document.querySelectorAll(
 function airacBox(){
   let M=null; try{ M=window.F0Ops&&window.F0Ops.maint&&window.F0Ops.maint(); }catch(e){}
   if(!M) return "";
-  const E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  const who=M.late.length?M.late:M.rows.map(r=>r.icao);
-  const msg=M.act?`Acción requerida: descarga la nueva enmienda AIP / SUP de ${E(who.join(", "))} y súbela al chat para actualizar los datos internos. <a target="_blank" rel="noopener" href="${M.link}">ENAIRE · AIP ↗</a>${M.a.dN<=3?` (AIRAC ${M.a.idN} entra en vigor el ${M.a.nxt}, en ${M.a.dN} día${M.a.dN===1?"":"s"})`:` (${M.late.length} aeródromo${M.late.length===1?"":"s"} con SUP superado)`}`
-    :`Datos AIP/AIRAC al día hasta ${M.a.nxt} (AIRAC ${M.a.idN}). Vigente: ${M.a.idC}.`;
-  const lk=(M.nd&&M.nd.length)||M.late.length?` <span class="lks"><a class="lk" target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/">AIP · AD 2 Aeródromos ↗</a><a class="lk" target="_blank" rel="noopener" href="https://aip.enaire.es/AIP/">Suplementos SUP vigentes ↗</a></span>`:"";
-  const ndMsg=(M.nd&&M.nd.length?` <span style="color:#8a5a00">Sin datos cargados de ${E(M.nd.join(", "))}: sube su carta ADC y sus SUP para que entren en el control.</span>`:"")+lk;
-  const rows=M.rows.map(r=>`<tr><th>${r.icao}</th><td>${E(r.name)}</td><td class="${r.old?"old":""}">${E(r.wef)}${r.old?" · >1 año":""}${r.ex?`<br><small class="${r.exOld?"old":""}">${E(r.ex)}</small>`:""}</td><td>${r.nd?`<span class="soon">${E(r.nd)}</span> <a class="lk" target="_blank" rel="noopener" href="${r.aip}">AD 2 ${r.icao} · Carta ADC ↗</a>`+(r.sup.length?"<br>":""):""}${r.sup.some(x=>x.st==="late")?` <a class="lk" target="_blank" rel="noopener" href="${r.aip}">Nueva enmienda ↗</a><br>`:""}${r.sup.length?r.sup.map(x=>`<span class="${x.st}">${E(x.id)} → ${E(x.end)}${x.st==="late"?" (superado)":x.st==="soon"?" (≤30 d)":x.st==="ver"?" (verificado en vigor "+E(x.ver)+")":x.st==="okv"?" (EST · verificado "+E(x.ver)+")":x.st==="pend"?" (vigente desde "+E(x.from)+")":x.to?" (hasta "+E(x.to)+")":""}</span>`).join("<br>"):(r.nd?"":r.ns?`<span class="okv">Sin SUP vigentes (verificado ${E(r.ns)})</span>`:"—")}</td></tr>`).join("");
-  return `<div class="st-box st-air${M.act?" act":""}" style="margin-bottom:14px"><h2>Control AIRAC / SUP · mantenimiento</h2><p class="ac">${msg}${ndMsg}</p><details><summary>Ver ${M.rows.length} aeródromos</summary><div class="sc"><table><thead><tr><th>OACI</th><th>Aeródromo</th><th>Carta ADC (WEF)</th><th>Suplementos (fin estimado)</th></tr></thead><tbody>${rows}</tbody></table></div></details><p class="muted" style="margin:8px 0 0;font-size:12px">Solo lo ves tú. Ciclo AIRAC cada 28 días; avisa a 3 días o menos, o si un SUP supera su fecha.</p></div>`;
+  const E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])), A=(u,t,c)=>`<a class="${c||"lk"}" target="_blank" rel="noopener" href="${E(u)}">${t}</a>`;
+  const AIP=M.rows.filter(r=>!r.vfr), VFR=M.rows.filter(r=>r.vfr), nx=M.chk&&M.chk.nx, nx2=M.chk&&M.chk.nx2;
+  const need=r=>r.docs.some(d=>d.chg&&!d.done)||r.oth.some(x=>x.k==="AD2")||r.miss.length>0||r.xtra.length>0||r.sup.some(x=>x.st==="late");
+  const chg=AIP.filter(r=>r.docs.some(d=>d.chg)||r.oth.length), nMiss=AIP.reduce((n,r)=>n+r.miss.length,0), nI=AIP.reduce((n,r)=>n+(r.missI||[]).length,0), nX=AIP.reduce((n,r)=>n+r.xtra.length,0), todo=AIP.filter(need), act=M.act||todo.length>0;
+  const when=M.a.dN<=0?"ya está en vigor":`entra en vigor el ${M.a.nxt}, en ${M.a.dN} día${M.a.dN===1?"":"s"}`;
+  const head=`<p class="ac">AIRAC ${M.a.idN} ${when}. Vigente: ${M.a.idC}.${todo.length?` <b>${todo.length} aeródromo${todo.length===1?"":"s"}</b> con algo que revisar.`:" Todo al día."}</p>`;
+  const steps=`<ol class="steps">
+    <li><b>Enmiendas.</b> Abre ${A(M.links.amdt,"Lista de enmiendas (AMDT) ↗")} y busca las de <b>WEF ${nx?E(nx.wef):M.a.nxt}</b>.${nx?` <span class="ck">Comprobado el ${E(M.chk.fecha)} (${E(nx.src)}): cambian ${chg.length} de nuestros aeródromos: ${chg.map(r=>`<b>${r.icao==="LELO"?"LERJ":r.icao}</b>`).join(", ")}.</span>`:` <span class="soon">Este ciclo aún no está comprobado: anota qué aeródromos de la tabla aparecen.</span>`}</li>
+    <li><b>Suplementos.</b> Abre ${A(M.links.sup,"Lista de suplementos (SUP) ↗")} y compárala con los cargados.${M.chk?` <span class="ck">Comprobado el ${E(M.chk.fecha)}: ${nMiss?`<b class="late">${nMiss} SUP</b> que afectan al VFR sin cargar`:"ningún SUP con efecto VFR sin cargar"}${nI?` (más ${nI} solo IFR, informativos)`:""}${nX?` y <b class="soon">${nX}</b> cargado${nX===1?"":"s"} que no figura${nX===1?"":"n"} en ella`:""}.</span>`:""}</li>
+    <li><b>Descarga</b> los documentos marcados en <span class="late">rojo</span>: hasta el ${nx?E(nx.wef):M.a.nxt}, desde el enlace «enmienda»; desde ese día, el PDF de la AIP ya es la edición nueva. <b>Súbelos al chat</b> y se cargan.</li></ol>`;
+  const chip=(r,d)=>{ if(d.d==="np") return `<span class="dc na">PDC · no publicada</span>`; if(!d.d) return `<span class="dc na">${d.k} · sin cargar</span>`;
+    const cls=d.chg?(d.done?"done":"chg"):"ok"; return `<span class="dcw">${A(d.u,`${d.k} · ${E(d.d)}`,"dc "+cls)}${d.chg?(d.done?` <small class="ok">✓ ya cargada</small>`:` <small class="late">→ nueva ${E(nx.wef)}</small>${d.f?" "+A(d.f,"enmienda ↗","lk"):""}`):""}</span>`; };
+  const rowH=r=>{ if(r.vfr) return `<tr class="vfr"><th>${r.icao}</th><td>${E(r.name)}</td><td colspan="2"><span class="pill">Guía VFR / No AIP</span> Aeródromo privado: no se publica en la AIP de ENAIRE, solo en la ${A(M.links.vfr,"Guía VFR ↗")}. Sin alertas.</td></tr>`;
+    const docs=r.docs.map(d=>chip(r,d)).join("")+(r.oth.length?`<div class="oth">${r.oth.map(x=>`<span class="${x.k==="IFR"?"muted":"soon"}">${E(x.txt)}</span>${x.k==="IFR"?(x.f?" "+A(x.f,"enmienda ↗"):""):" "+A(x.f||M.links.amdt,"enmienda ↗")}`).join("<br>")}</div>`:"")+(r.ch2&&r.ch2.length&&nx2?`<div class="oth muted">En AIRAC ${E(nx2.id)} (${E(nx2.wef)}): ${E(r.ch2.join(", "))}</div>`:"");
+    const ld=r.sup.length?r.sup.map(x=>`<span class="${x.st}">${E(x.id)} → ${E(x.end)}${x.st==="late"?" (superado)":x.st==="soon"?" (≤30 d)":x.st==="ver"?" (verificado en vigor "+E(x.ver)+")":x.st==="okv"?" (EST · verificado "+E(x.ver)+")":x.st==="pend"?" (vigente desde "+E(x.from)+")":x.to?" (hasta "+E(x.to)+")":""}</span>`).join("<br>"):(r.off.length?"":r.ns?`<span class="okv">Sin SUP (verificado ${E(r.ns)})</span>`:"—");
+    const ms=r.miss.length?`<div class="miss"><b>Sin cargar (lista oficial):</b> ${r.miss.map(x=>`SUP ${E(x[0])}${x[1]?" (desde "+E(x[1])+")":""} · ${E(x[2])}`).join("; ")}</div>`:"", mi=r.missI&&r.missI.length?`<div class="oth muted">Solo IFR, sin cargar: ${r.missI.map(x=>`SUP ${E(x[0])}${x[1]?" (desde "+E(x[1])+")":""} · ${E(x[2])}`).join("; ")}</div>`:"", xs=r.xtra.length?`<div class="xtra"><b>Cargado pero no figura en la lista oficial:</b> ${E(r.xtra.join(", "))}. Revisa si ya terminó o si es de otro aeródromo.</div>`:"";
+    return `<tr class="${need(r)?"need":"nochg"}"><th>${r.icao==="LELO"?"LERJ":r.icao}</th><td>${E(r.name)}<br>${A(r.aip,"AD 2 ↗")}</td><td>${docs}</td><td>${ld}${ms}${xs}${mi}</td></tr>`; };
+  const f0=act?" fchg":"";
+  return `<div class="st-box st-air${act?" act":""}${f0}" style="margin-bottom:14px"><h2>Control AIRAC / SUP · mantenimiento</h2>${head}${steps}
+    <div class="flt"><button type="button" aria-pressed="${!!act}" onclick="const b=this.closest('.st-air');b.classList.add('fchg');this.setAttribute('aria-pressed','true');this.nextElementSibling.setAttribute('aria-pressed','false')">Solo lo que hay que revisar (${todo.length})</button><button type="button" aria-pressed="${!act}" onclick="const b=this.closest('.st-air');b.classList.remove('fchg');this.setAttribute('aria-pressed','true');this.previousElementSibling.setAttribute('aria-pressed','false')">Todos (${M.rows.length})</button></div>
+    <div class="sc"><table><thead><tr><th>OACI</th><th>Aeródromo</th><th>Documentos cargados → AIRAC ${E(M.a.idN)}</th><th>Suplementos cargados · lista oficial</th></tr></thead><tbody>${AIP.map(rowH).join("")}${VFR.map(rowH).join("")}</tbody></table></div>
+    <p class="muted" style="margin:8px 0 0;font-size:12px">Solo lo ves tú. Rojo: documento que cambia en el próximo ciclo; verde: sin cambios o ya cargado. Cada etiqueta abre el PDF oficial. La comprobación de la lista de enmiendas y de suplementos es del ${E(M.chk?M.chk.fecha:"—")}; en cada ciclo se actualiza al cargar los documentos nuevos.</p></div>`;
 }
 async function renderStats(){
   const box=$("#stats"); if(!isAdmin||!sb){ box.innerHTML=""; return; }
