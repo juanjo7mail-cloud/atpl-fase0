@@ -170,30 +170,40 @@ function mkGlider(){
 const MESH=mk172([24,84,170]), GLIDER=mkGlider(), LIV=[mk172([176,36,40]),mk172([28,110,78]),mk172([214,148,30],[240,238,232]),mk172([110,32,64])];
 const LTS=MESH.L;
 const sect=(az,a,b,res)=>{ const d=az<a?a-az:az>b?az-b:0; return d<=0?1:lerp(1,res,clamp(d/26,0,1)); };   // sector reglamentario: fuera de él queda solo el reflejo del farol
-const SORT=[];
+const SORT=[], CB=[0,0,0];
+const nrm3=v=>{ const l=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/l,v[1]/l,v[2]/l]; };
+const VW=[-PD[0],-PD[1],-PD[2]], LN=nrm3([-.35,.85,.45]), HN=nrm3([LN[0]+VW[0],LN[1]+VW[1],LN[2]+VW[2]]);   // vista hacia la cámara y luz nocturna (focos de plataforma)
+/* cuerpo → mundo con la misma rotación que plane3D (para estelas de punta de plano y humo de ruedas) */
+function b2w(st,b){ const cp=Math.cos(st.psi), sp=Math.sin(st.psi), ca=Math.cos(st.pitch), sa=Math.sin(st.pitch), cr=Math.cos(st.roll), sr=Math.sin(st.roll);
+  const y1=b[1]*cr-b[2]*sr, z1=b[2]*cr+b[1]*sr, x2=b[0]*ca-y1*sa, y2=y1*ca+b[0]*sa; return [cp*x2-sp*z1,y2,sp*x2+cp*z1]; }
 function plane3D(ctx,sx,sy,pm,st,env,t,lf,M){
   lf=lf||0; M=M||MESH;
   const cp=Math.cos(st.psi), sp=Math.sin(st.psi), ca=Math.cos(st.pitch), sa=Math.sin(st.pitch), cr=Math.cos(st.roll), sr=Math.sin(st.roll);
   // cuerpo → mundo (alabeo, cabeceo sobre las ruedas, rumbo)
   const TR=(b,o)=>{ const y1=b[1]*cr-b[2]*sr, z1=b[2]*cr+b[1]*sr, x2=b[0]*ca-y1*sa, y2=y1*ca+b[0]*sa; o[0]=cp*x2-sp*z1; o[1]=y2; o[2]=sp*x2+cp*z1; return o; };
+  // amortiguadores: al tocar, el fuselaje baja unos centímetros sobre las ruedas (las ruedas y la parte baja de las patas no se mueven)
+  const cm=st.cmp||0, TP=(b,o)=>{ if(cm&&b[1]>.42){ CB[0]=b[0]; CB[1]=b[1]-cm*Math.min(1,(b[1]-.42)/.4); CB[2]=b[2]; b=CB; } return TR(b,o); };
   const PR=(wv,o)=>{ const dep=wv[0]*PD[0]+wv[1]*PD[1]+wv[2]*PD[2], k=PDIST/(PDIST+dep)*pm; o[0]=sx+k*(wv[0]+PS*wv[2]); o[1]=sy+k*(-wv[1]+PZ*wv[2]); return dep; };
   const Lc=mix([255,255,255],env.sun,.4), amb=.38+.30*env.amb+.20*lf+.08*env.night, dif=.16+.56*env.amb+.10*lf, sxn=lerp(-.75,.75,clamp((env.az-60)/240,0,1)), sl=Math.hypot(sxn,.62,.55), L=[sxn/sl,.62/sl,.55/sl];
+  const HV=nrm3([L[0]+VW[0],L[1]+VW[1],L[2]+VW[2]]), SD=(.18+.62*env.amb)*(1-.75*sstep(.45,1,env.cover))*(1-.85*env.night), SN=.55*sstep(.25,.8,env.night), SC=mix([255,255,255],env.sun,.35), NC=[255,222,176];
   const tv=[0,0,0], nv=[0,0,0], items=SORT; items.length=0;
   for(const f of M.F){ TR(f.n,nv); const vis=-(nv[0]*PD[0]+nv[1]*PD[1]+nv[2]*PD[2]); if(vis<=.015) continue;
-    let dep=0; for(let i=0;i<f.p.length;i++){ TR(f.p[i],tv); dep+=PR(tv,f.q[i]); } f.dep=dep/f.p.length;
+    let dep=0; for(let i=0;i<f.p.length;i++){ TP(f.p[i],tv); dep+=PR(tv,f.q[i]); } f.dep=dep/f.p.length;
     const lam=Math.max(0,nv[0]*L[0]+nv[1]*L[1]+nv[2]*L[2]), sky=.5+.5*nv[1]; let c;
-    if(f.glass){ const g=mix(mul(env.top,.5),mul(env.hor,.85),clamp(.4+.6*lam,0,1)); c=mix(mix(f.c,g,.55),[255,255,255],Math.pow(lam,6)*.5*env.amb); }
-    else{ const k=amb*(.72+.28*sky)+dif*lam; c=[f.c[0]*k*Lc[0]/255,f.c[1]*k*Lc[1]/255,f.c[2]*k*Lc[2]/255]; }
+    const hd=Math.max(0,nv[0]*HV[0]+nv[1]*HV[1]+nv[2]*HV[2]), hn=Math.max(0,nv[0]*HN[0]+nv[1]*HN[1]+nv[2]*HN[2]);
+    if(f.glass){ const g=mix(mul(env.top,.5),mul(env.hor,.85),clamp(.4+.6*lam,0,1)), fr=Math.pow(1-clamp(vis,0,1),3)*.45;
+      c=mix(mix(f.c,g,.55+fr),[255,255,255],Math.pow(lam,6)*.5*env.amb); c=mix(c,SC,clamp(SD*1.6*Math.pow(hd,60),0,.9)); c=mix(c,NC,clamp(SN*1.8*Math.pow(hn,70),0,.85)); }
+    else{ const k=amb*(.72+.28*sky)+dif*lam; c=[f.c[0]*k*Lc[0]/255,f.c[1]*k*Lc[1]/255,f.c[2]*k*Lc[2]/255]; c=mix(c,SC,clamp(SD*.75*Math.pow(hd,22),0,.7)); c=mix(c,NC,clamp(SN*.8*Math.pow(hn,26),0,.6)); }
     f.col=css(c); items.push(f); }
   const o2=[0,0], o3=[0,0];
-  for(const p of M.O){ if(p.l){ TR(p.l[0],tv); const d1=PR(tv,o2); p.a=[o2[0],o2[1]]; TR(p.l[1],tv); const d2=PR(tv,o3); p.b=[o3[0],o3[1]]; p.dep=(d1+d2)/2-.05; }
-    else if(p.d){ TR(p.d,tv); p.dep=PR(tv,o2)-.12; p.a=[o2[0],o2[1]]; }
-    else{ TR(p.prop,tv); p.dep=PR(tv,o2); p.a=[o2[0],o2[1]]; TR([p.prop[0],p.prop[1]+p.r,0],tv); PR(tv,o3); p.u=[o3[0]-o2[0],o3[1]-o2[1]]; TR([p.prop[0],p.prop[1],p.r],tv); PR(tv,o3); p.v=[o3[0]-o2[0],o3[1]-o2[1]]; }
+  for(const p of M.O){ if(p.l){ TP(p.l[0],tv); const d1=PR(tv,o2); p.a=[o2[0],o2[1]]; TP(p.l[1],tv); const d2=PR(tv,o3); p.b=[o3[0],o3[1]]; p.dep=(d1+d2)/2-.05; }
+    else if(p.d){ TP(p.d,tv); p.dep=PR(tv,o2)-.12; p.a=[o2[0],o2[1]]; }
+    else{ TP(p.prop,tv); p.dep=PR(tv,o2); p.a=[o2[0],o2[1]]; TP([p.prop[0],p.prop[1]+p.r,0],tv); PR(tv,o3); p.u=[o3[0]-o2[0],o3[1]-o2[1]]; TP([p.prop[0],p.prop[1],p.r],tv); PR(tv,o3); p.v=[o3[0]-o2[0],o3[1]-o2[1]]; }
     items.push(p); }
   // hacia dónde está la cámara en ejes del avión → sectores de las luces
   const cw=[-PD[0],-PD[1],-PD[2]], cf=cw[0]*cp+cw[2]*sp, crr=-cw[0]*sp+cw[2]*cp, az=Math.atan2(crr,cf)/D2R, aab=Math.abs(az);
   const nl=.2+.8*sstep(.15,.75,env.night), kk=.36+.64*env.amb;
-  for(const l of M.L){ TR(l.p,tv); l.dep=PR(tv,o2)-.3; l.x=o2[0]; l.y=o2[1]; l.lt=1; items.push(l); }
+  for(const l of M.L){ TP(l.p,tv); l.dep=PR(tv,o2)-.3; l.x=o2[0]; l.y=o2[1]; l.lt=1; items.push(l); }
   items.sort((a,b)=>b.dep-a.dep);
   ctx.lineJoin="round"; ctx.lineCap="round";
   for(const it of items){
@@ -267,6 +277,18 @@ const TOP=q=>{ const tg=Math.max(0,q-TOT0), tq=Math.min(tg,TOTL-TOT0), vl=TOA*(T
   return {x:.5*TOA*tq*tq+(tg>tq?vl*(tg-tq)*1.04:0), z:8.5*sstep(1.6,5.6,ta), alt:ALTF(ta), pitch:(sstep(TOTR,TOTL,q)*7.5+sstep(TOTL,TOTL+2,q)*2.5)*D2R, psi:15*D2R*sstep(1.4,4.6,ta)*(1-.4*sstep(6,9,ta)),
     roll:(24*sstep(1.1,3.8,ta)*(1-sstep(5.5,9,ta))+(ta>0?2.6*Math.sin(ta*3.4)*Math.exp(-ta*.9):0))*D2R, v:tg>tq?vl*1.04:TOA*tg}; };
 let CYC=null;
+/* PAPI de la pista contraria (aterrizaje hacia x decreciente): 4 unidades a la izquierda de la pista, reglaje ICAO para senda de 3°.
+   Cada unidad se ve blanca por encima de su ángulo y roja por debajo; la más cercana a la pista tiene el reglaje más alto. */
+const PAPI={x:170, z0:-18.2, dz:2.3, G:3, eye:1.5, hf:1.2, S:[3.5,3.17,2.83,2.5]}, TG=Math.tan(PAPI.G*D2R);
+/* viento: velocidad (kt) y dirección hacia la que sopla (rad, en el plano del suelo: 0 = +x, π/2 = hacia la cámara); racheado y lento */
+function windAt(t){ const k=7.5+4*Math.sin(t/37)+2.2*Math.sin(t/11.3+1.7)+3*(noise(t*.031,.37)-.5), d=Math.PI/2+.95*Math.sin(t/53+2.2)+.12*Math.sin(t/7.1);
+  return {kt:clamp(k,1.5,18), d}; }
+/* capas de nubes bajas en el horizonte: una tira suave que se repite y se desplaza */
+function hbands(env){ const c=document.createElement("canvas"), W=512, Hh=40; c.width=W; c.height=Hh; const x=c.getContext("2d"), im=x.createImageData(W,Hh), d=im.data, L=env.lit, S=env.shade, Hz=env.hor;
+  for(let j=0;j<Hh;j++){ const v=j/Hh, env2=Math.sin(Math.PI*v)*Math.pow(1-v,.4);
+    for(let i=0;i<W;i++){ const u=i/W, n=noise(u*3,v*.45+.21)*.65+noise(u*9+.4,v*1.3+.6)*.35, den=sstep(.47,.74,n)*env2;
+      const col=mix(mix(L,S,clamp(v*1.25,0,1)),Hz,.35), o=(j*W+i)*4; d[o]=col[0]; d[o+1]=col[1]; d[o+2]=col[2]; d[o+3]=255*clamp(den*1.15,0,1); } }
+  x.putImageData(im,0,0); return c; }
 function cycleModel(){
   if(CYC) return CYC;
   const dt=1/30, U0=TOTL, TS=22, E=1.8, S=4.2, R=2.4, CC=10, tE=TS+E, tS=tE+S, tR=tS+R, UE=tR+CC, X1=VD*VD/(2*AD)+29*APP;
@@ -350,9 +372,19 @@ function drawTakeoff(cv,env,t,tt,o){
     else if(u<TAK){ const c=cycleAt(u); K={xw:c.x, z:c.z, alt:c.alt, pitch:c.pitch, psi:c.psi, roll:c.roll, v:c.v, ll:1, cam:c.xf+c.z*PS*(1-sstep(C.TS,C.TS+3,u))-viewM*fr(u)}; }
     else{ const s=u-TAK, camEnd=cycleAt(TAK).xf-viewM*fr(TAK), xtd=vd*vd/(2*ad);
       if(s<AP_+RO_){ let xp, z=0, alt=0, pitch, v, psi=Math.PI, roll=0;
-        if(s<AP_){ const q=1-s/AP_; xp=xtd+29*(AP_-s); alt=9*Math.pow(q,1.7); pitch=(1.5+4.5*sstep(AP_-2.2,AP_,s))*D2R; v=29; roll=4.5*D2R*Math.sin(s*2.3)*q; psi=Math.PI-5*D2R*(1-sstep(AP_-1.3,AP_-.1,s)); z=-1.2*q; }
-        else{ const r=s-AP_, zf=x=>-10*sstep(RO_-6.6,RO_-.7,x); xp=xtd-(vd*r-.5*ad*r*r); pitch=6*(1-sstep(0,1.6,r))*D2R; v=vd-ad*r; z=zf(r); psi=Math.atan2((zf(r+.05)-z)/.05,-Math.max(.4,v)); roll=1.2*D2R*Math.sin(r*5)*Math.exp(-r*1.4); }
-        K={xw:xp, z, alt, pitch, v, psi, roll, ll:1, cam:lerp(camEnd, xp-viewM*lerp(.62,fx0,sstep(3,AP_+RO_,s)), sstep(0,4.5,s)), td:(s>=AP_&&s<AP_+1.6)?(s-AP_)/1.6:-1}; }
+        let cmp=0;
+        // senda de 3° hacia el punto de visada (junto al PAPI) para el ojo del piloto: entra algo alto (4 blancas → 3 blancas), corrige a 2/2,
+        // y a ~1,2 m de las ruedas empieza la recogida: baja la velocidad vertical hasta casi cero y sube el morro a ~7° para tocar con las principales
+        const sf=AP_-((PAPI.x+(PAPI.hf+PAPI.eye)/TG)-xtd)/29;
+        if(s<AP_){ const q=1-s/AP_; xp=xtd+29*(AP_-s);
+          if(s<sf){ alt=(xp-PAPI.x)*TG-PAPI.eye+1.3*(1-sstep(0,2.2,s)); pitch=.5*D2R; }
+          else{ const p=(s-sf)/(AP_-sf); alt=PAPI.hf*(.9*Math.pow(1-p,2.6)+.1*(1-p)); pitch=lerp(.5,7,sstep(0,.85,p))*D2R; }
+          v=29; roll=4.5*D2R*Math.sin(s*2.3)*q*(1-sstep(sf-.6,sf,s)); psi=Math.PI-5*D2R*(1-sstep(AP_-1.3,AP_-.1,s)); z=-1.2*q; }
+        else{ const r=s-AP_, zf=x=>-10*sstep(RO_-6.6,RO_-.7,x); xp=xtd-(vd*r-.5*ad*r*r); pitch=7*(1-sstep(.2,1.8,r))*D2R; v=vd-ad*r; z=zf(r); psi=Math.atan2((zf(r+.05)-z)/.05,-Math.max(.4,v)); roll=1.2*D2R*Math.sin(r*5)*Math.exp(-r*1.4);
+          cmp=r<1.6?.12*Math.exp(-r*3.4)*Math.sin(r*13):0; if(cmp<0) cmp*=.5;
+          const rn=r-1.75; if(rn>0&&rn<1) cmp+=.035*Math.exp(-rn*4)*Math.sin(rn*12); }   // el morro baja: pequeño rebote del tren de morro
+        K={xw:xp, z, alt, pitch, v, psi, roll, ll:1, cmp, cam:lerp(camEnd, xp-viewM*lerp(.8,fx0,sstep(3,AP_+RO_,s)), sstep(0,3,s)), td:(s>=AP_&&s<AP_+1.6)?(s-AP_)/1.6:-1,
+          pth:s<AP_?(s<sf?Math.atan2(alt+PAPI.eye,xp-PAPI.x)/D2R:PAPI.G):null}; }   // en la recogida el piloto ya mira la pista: el PAPI se deja en la última lectura (2 y 2)
       else{ const r=sstep(0,1,(s-AP_-RO_)/TU_), an=Math.PI*r; K={xw:-5*Math.sin(an), z:-5-5*Math.cos(an), alt:0, pitch:0, v:3.4*Math.sin(an), psi:Math.PI-an, roll:2.6*D2R*Math.sin(an), ll:1, cam:-viewM*fx0}; } } }
   if(K.td==null) K.td=-1;
   const xw=K.xw, alt=K.alt, v=K.v, cam=K.cam, X=m=>(m-cam)*pm;
@@ -366,6 +398,10 @@ function drawTakeoff(cv,env,t,tt,o){
   if(env.night>.05) moon(ctx,w*(.58+.3*((env.date.getHours()+6)%12)/12),hz*.34,Math.max(3,h*.045),env);
   clouds(ctx,-w*.05,dy*.5,w*1.1,hz0,env,t*.004+cam*.00012,h>150?3:2,150);
   const haze=env.hor;
+  { const hk=(env.lit[0]|0)+"|"+(env.shade[0]|0)+"|"+(env.hor[2]|0); if(cv._hbk!==hk){ cv._hbk=hk; cv._hb=hbands(env); }
+    const hb=cv._hb, bh=h*.16, bw=bh*512/40*2.2, A=(.28+.5*sstep(.05,.8,env.cover))*(1-.55*env.night);
+    [[.0,1,.13,A],[.5,.62,.07,A*.75]].forEach(L=>{ const yy=hz-bh*L[1]-h*.01, off=(((t*L[2]*h+cam*pm*.02*L[1]+L[0]*bw)%bw)+bw)%bw; ctx.globalAlpha=L[3];
+      for(let xx=-off;xx<w;xx+=bw) ctx.drawImage(hb,xx,yy,bw,bh*L[1]); }); ctx.globalAlpha=1; }
   ridge(ctx,w,hz,h*.13,cam*pm*.03,.0011*640/h*.25+.0009,css(mix(haze,mul(env.top,.5),.34)),.21);
   ridge(ctx,w,hz+1,h*.05,cam*pm*.10+500,.006*72/h+.0012,css(mix(haze,mul([52,70,56],env.amb),.66)),.63);
   const CYL=cycleModel().UE+APP+RO+TU, TS_={u:o.cycle?tt%CYL:-1,CY:CYL,cyc:Math.floor(tt/CYL)};
@@ -377,11 +413,18 @@ function drawTakeoff(cv,env,t,tt,o){
   let ab=cv._ab; if(!ab) ab=cv._ab=document.createElement("canvas"); if(cv._abk!==key){ cv._abk=key; buildApron(ab,u,env); }
   const base=Math.ceil(AP.hgt*u), ay=hz+h*.012-base; if(ax0<w&&ax0+ab.width>0) ctx.drawImage(ab,Math.round(ax0),Math.round(ay));
   { const ax=m=>ax0+m*u, top=m=>hz+h*.012-m*u; ctx.save(); ctx.globalCompositeOperation="lighter";
-    const ph=(t*.9)%2, on=ph<.16||(ph>1&&ph<1.16); if(on) glow(ctx,ax(AP.tower),top(21),Math.max(5,(3+8*N)*u*1.6),ph<1?"120,255,150":"255,255,255",.55+.4*N);   // faro de aeródromo: verde y blanco alternos
+    { const bx=ax(AP.tower), by=top(21), ba=t*2*Math.PI/5;   // faro de aeródromo: dos haces opuestos (verde y blanco) que giran a 12 rpm; destello al apuntar a la cámara
+      for(let k=0;k<2;k++){ const a=ba+k*Math.PI, fc=Math.sin(a), cs=Math.cos(a), col=k?"255,255,255":"120,255,150";
+        if(N>.05){ const Lb=h*(1.1+.9*Math.abs(cs)), ex=bx+cs*Lb, ey=by+Lb*.025, wd=Lb*(.05+.07*Math.max(0,fc)), al=.20*N*(.3+.7*Math.max(0,fc))*Math.min(1,Math.abs(cs)*3+.15);
+          const g2=ctx.createLinearGradient(bx,by,ex,ey); g2.addColorStop(0,`rgba(${col},${al})`); g2.addColorStop(1,`rgba(${col},0)`); ctx.globalAlpha=1; ctx.fillStyle=g2;
+          ctx.beginPath(); ctx.moveTo(bx,by); ctx.lineTo(ex,ey-wd); ctx.lineTo(ex,ey+wd); ctx.closePath(); ctx.fill(); }
+        if(fc>.97) glow(ctx,bx,by,Math.max(5,(3+8*N)*u*1.6),col,(.4+.55*N)*sstep(.97,1,fc)); } }
     if((t%2)<1){ glow(ctx,ax(AP.tower),top(24.2),Math.max(2,3*u),"255,50,40",.5+.45*N); glow(ctx,ax(AP.radar),top(15.4),Math.max(2,3*u),"255,50,40",.5+.45*N); glow(ctx,ax(947.7),top(19.4),Math.max(2,2.6*u),"255,50,40",.3+.5*N); }
     ctx.restore(); ctx.globalAlpha=1;
     const rw=Math.abs(Math.cos(t*1.9))*4.6*u+.8; ctx.fillStyle=css(mix(haze,mul([70,76,88],env.amb),.6)); ctx.fillRect(ax(AP.radar)-rw,top(14.6),rw*2,Math.max(1,1.5*u)); }   // radar girando
   if(N>.03){ ctx.save(); ctx.globalCompositeOperation="lighter"; for(let i=0;i<34;i++){ const xx=((i*137.5+cam*pm*.03)%(w+60)+w+60)%(w+60)-30, yy=hz-h*.004-((i*29)%9)*h*.004; glow(ctx,xx,yy,h*.011,(i%5===0)?"255,170,110":"255,226,170",.5*N); } ctx.restore(); ctx.globalAlpha=1; }
+  { const hA=(.10+.16*(1-env.amb)+.18*sstep(.3,1,env.cover))*(1-.4*N), g3=ctx.createLinearGradient(0,hz-h*.05,0,y1);   // bruma atmosférica: lo lejano se funde con el color del horizonte
+    g3.addColorStop(0,css(haze,0)); g3.addColorStop(.35,css(haze,hA)); g3.addColorStop(1,css(haze,hA*.15)); ctx.fillStyle=g3; ctx.fillRect(0,hz-h*.05,w,y1-hz+h*.05); }
   // calle de rodaje paralela y enlace con punto de espera, en metros reales sobre el suelo (misma proyección que la pista)
   const rng=Math.max(8,(y1-hz)/(pm*kz)), GT={zT:-15-.72*rng, w:Math.max(4,.26*rng)}; GT.zE=GT.zT+GT.w/2; GT.zH=(GT.zE-15)/2;
   const TRF=o.cycle?traffic(TS_,GT):[], stopBar=!TRF.length||!(TS_.u>5.8&&TS_.u<14);
@@ -403,12 +446,24 @@ function drawTakeoff(cv,env,t,tt,o){
       for(let k=-2;k<=2;k++){ const p=GM(XL+k*1.8,zb); if(stopBar) glow(ctx,p[0],p[1],pm*sb*(.5+.6*N),"255,40,30",.5+.5*N); else glow(ctx,p[0],p[1],pm*sb*(.45+.5*N),"80,255,140",.35+.5*N); }
       const p=GM(((t*1.7)%1)<.5?XL-5.4:XL+5.4,zb); glow(ctx,p[0],p[1]-pm*sb*.5,pm*sb*(.55+.6*N),"255,200,40",.5+.4*N);
       ctx.restore(); ctx.globalAlpha=1; } }
-  // PAPI (lado lejano) y manga
-  { const px0=132; if(X(px0)>-60&&X(px0)<w+60){ for(let i=0;i<4;i++){ const p=GP(px0,-18.2-i*2.3); ctx.fillStyle="#2b2e33"; ctx.fillRect(p[0]-pm*.3,p[1]-pm*.32,pm*.6,pm*.32); }
-      ctx.save(); ctx.globalCompositeOperation="lighter"; for(let i=0;i<4;i++){ const p=GP(px0,-18.2-i*2.3); glow(ctx,p[0],p[1]-pm*.3,pm*(.55+.6*N),i<2?"255,40,30":"255,255,250",.75+.25*N); } ctx.restore(); ctx.globalAlpha=1; } }
-  { const m0=Math.floor((cam+40)/260)*260+96, p=GP(m0,-20.5), ph=5*pm*.8; ctx.strokeStyle=css(mul([210,214,220],env.amb)); ctx.lineWidth=Math.max(1,h*.006); ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(p[0],p[1]-ph); ctx.stroke();
-    const fl=Math.sin(t*5)*.12; ctx.fillStyle=css(mul([232,96,30],.35+.65*env.amb)); ctx.beginPath(); ctx.moveTo(p[0],p[1]-ph); ctx.lineTo(p[0]+2.6*pm,p[1]-ph+pm*(.5+fl)); ctx.lineTo(p[0]+2.6*pm,p[1]-ph+pm*(.9+fl)); ctx.lineTo(p[0],p[1]-ph+pm*.8); ctx.closePath(); ctx.fill();
-    if(N>.1){ ctx.save(); ctx.globalCompositeOperation="lighter"; glow(ctx,p[0],p[1]-ph-pm*.4,pm*1.4,"255,236,190",.7*N); ctx.restore(); ctx.globalAlpha=1; } }
+  // PAPI (4 unidades junto al punto de visada): el color de cada una depende del ángulo real con que la ve el piloto del avión en final
+  { const px0=PAPI.x, th=K.pth; if(X(px0)>-60&&X(px0)<w+60){ for(let i=0;i<4;i++){ const p=GP(px0,PAPI.z0-i*PAPI.dz); ctx.fillStyle="#2b2e33"; ctx.fillRect(p[0]-pm*.3,p[1]-pm*.32,pm*.6,pm*.32); }
+      ctx.save(); ctx.globalCompositeOperation="lighter";
+      for(let i=0;i<4;i++){ const p=GP(px0,PAPI.z0-i*PAPI.dz), wf=th==null?(i>=2?1:0):sstep(PAPI.S[i]-.05,PAPI.S[i]+.05,th), c=mix([255,40,30],[255,255,250],wf);
+        glow(ctx,p[0],p[1]-pm*.3,pm*(.5+.45*N),(c[0]|0)+","+(c[1]|0)+","+(c[2]|0),.7+.2*N); }
+      ctx.restore(); ctx.globalAlpha=1;
+      for(let i=0;i<4;i++){ const p=GP(px0,PAPI.z0-i*PAPI.dz), wf=th==null?(i>=2?1:0):sstep(PAPI.S[i]-.05,PAPI.S[i]+.05,th); ctx.fillStyle=css(mix([235,30,24],[255,255,248],wf)); ctx.beginPath(); ctx.arc(p[0],p[1]-pm*.3,Math.max(1,pm*.16),0,7); ctx.fill(); } } }
+  // manga de viento: cono a franjas (5 franjas ≈ 3 kt cada una; extendida del todo a 15 kt), apunta hacia donde va el viento y ondea con las rachas
+  const WD=windAt(tt);
+  { const m0=Math.floor((cam+40)/260)*260+96, zp=-20.5, H0=4.2, p=GP(m0,zp), Wn=clamp(WD.kt/15,0,1), SP=(x,z,y)=>{ const q=GP(x,z); return [q[0],q[1]-y*pm]; };
+    ctx.strokeStyle=css(mul([210,214,220],.3+.7*env.amb)); ctx.lineWidth=Math.max(1,h*.006); ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(p[0],p[1]-H0*pm); ctx.stroke();
+    let cx=m0, cz=zp, cy=H0; const dd=WD.d+.09*Math.sin(tt*5.3)*(.4+Wn), pts=[SP(cx,cz,cy)], R=[.42], n=5, Ls=3.6;
+    for(let i=1;i<=n;i++){ const dl=(lerp(78,3,Math.pow(Wn,.8))+(i/n)*(1-Wn)*14+3.5*Math.sin(tt*7.3+i*.9)*(.25+Wn))*D2R, sl=Ls/n;
+      cx+=Math.cos(dl)*Math.cos(dd)*sl; cz+=Math.cos(dl)*Math.sin(dd)*sl; cy-=Math.sin(dl)*sl; pts.push(SP(cx,cz,cy)); R.push(lerp(.42,.17,i/n)*(1-.25*(1-Wn)*(i/n))); }
+    const kk=.32+.68*env.amb;
+    for(let i=0;i<n;i++){ const a=pts[i], b=pts[i+1], dx=b[0]-a[0], dy=b[1]-a[1], l=Math.hypot(dx,dy)||1, nx=-dy/l, ny=dx/l, ra=R[i]*pm, rb=R[i+1]*pm, sh=.82+.18*Math.sin(i*1.7+tt*3);
+      ctx.fillStyle=css(mul(i%2?[238,238,236]:[236,92,28],kk*sh)); ctx.beginPath(); ctx.moveTo(a[0]+nx*ra,a[1]+ny*ra); ctx.lineTo(b[0]+nx*rb,b[1]+ny*rb); ctx.lineTo(b[0]-nx*rb,b[1]-ny*rb); ctx.lineTo(a[0]-nx*ra,a[1]-ny*ra); ctx.closePath(); ctx.fill(); }
+    if(N>.1){ ctx.save(); ctx.globalCompositeOperation="lighter"; glow(ctx,p[0],p[1]-H0*pm-pm*.4,pm*1.4,"255,236,190",.7*N); glow(ctx,p[0],p[1]-H0*pm-pm*.9,pm*.6,"255,40,30",.6*N); ctx.restore(); ctx.globalAlpha=1; } }
   // asfalto
   ctx.save(); ctx.beginPath(); ctx.rect(0,y1,w,y2-y1); ctx.clip();
   const sc=(y2-y1)/64; ctx.save(); { const P=256*sc*4; ctx.translate(-((((cam*pm)%P)+P)%P),y1); } ctx.scale(sc*4,sc); ctx.fillStyle=ctx.createPattern(asph,"repeat"); ctx.fillRect(0,0,(w/(sc*4))+260,64); ctx.restore();
@@ -421,9 +476,10 @@ function drawTakeoff(cv,env,t,tt,o){
   const wl=css(mul(tint([236,236,230],mix([255,255,255],env.sun,.3)),.3+.7*env.amb)); ctx.fillStyle=wl;
   const xa=Math.max(THR,cam-60), xb=cam+viewM+60; ctx.fillRect(xa,-RW/2+.6,xb-xa,.9); ctx.fillRect(xa,RW/2-1.5,xb-xa,.9);
   for(let m=Math.max(30,Math.floor(cam/60)*60-60);m<xb;m+=60) ctx.fillRect(m,-.45,30,.9);
-  if(X(THR+60)>-pm*40){ for(let i=0;i<8;i++){ const z=-12.6+i*3.6-(i>3?0:0); ctx.fillRect(THR+2,z-1+(i>3?.0:0),12,1.9); }   // barras de umbral
+  if(X(THR+60)>-pm*40){ for(let i=0;i<8;i++){ const z=-12.6+i*3.6; ctx.fillRect(THR+6,z-.9,22,1.8); }   // umbral: 8 franjas de 1,8 m para pista de 30 m («piano keys»), a 6 m del borde
     ctx.save(); ctx.translate(THR+25,0); ctx.rotate(Math.PI/2); ctx.font="bold 9.5px Arial,Helvetica,sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("27",0,0); ctx.restore(); }
-  [[150,6],[240,4]].forEach(q=>{ ctx.fillRect(q[0],-9.5,22.5,q[1]); ctx.fillRect(q[0],9.5-q[1],22.5,q[1]); });   // punto de visada y zona de contacto
+  ctx.fillRect(150,-9.5,22.5,6); ctx.fillRect(150,3.5,22.5,6);   // punto de visada
+  [[75,3],[240,2],[330,2],[420,1],[510,1]].forEach(q=>{ for(let k=0;k<q[1];k++){ const z0=3.5+k*3.3; ctx.fillRect(q[0],-z0-1.8,22.5,1.8); ctx.fillRect(q[0],z0,22.5,1.8); } });   // TDZ: pares de 3, 2, 2, 1, 1 franjas
   ctx.restore(); ctx.restore();
   // hierba cercana
   g=ctx.createLinearGradient(0,y2,0,H); g.addColorStop(0,G([92,108,56],.9)); g.addColorStop(1,G([66,82,40],.85)); ctx.fillStyle=g; ctx.fillRect(0,y2,w,H-y2);
@@ -449,7 +505,26 @@ function drawTakeoff(cv,env,t,tt,o){
   // borde cercano: balizas
   for(let m=Math.max(THR+13,Math.floor(cam/60)*60-60);m<xb;m+=60){ const p=GP(m+15,RW/2+.6), x=p[0], y=Math.min(p[1],y2+h*.02); ctx.fillStyle="#3a3d42"; ctx.fillRect(x-1,y-h*.02,2,h*.02);
     ctx.save(); ctx.globalCompositeOperation="lighter"; glow(ctx,x,y-h*.024,h*(.02+.04*env.night),"255,246,214",.3+.6*sstep(.1,.6,env.night)); ctx.restore(); ctx.globalAlpha=1; }
-  if(K.td>=0){ const q=K.td, sp0=GP(28*28/(2*2.6),K.z), sx=sp0[0]+q*pm*9; ctx.fillStyle=`rgba(225,228,232,${.42*(1-q)})`; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.arc(sx+i*pm*1.3*q,sp0[1]-h*.012-q*h*.05*(1+i*.3),h*(.014+.03*q)*(1+i*.2),0,7); ctx.fill(); } }
+  const FX=cv._fx||(cv._fx={sm:[],tr:[],c:-1,smc:-1});
+  if(o.cycle){ if(TS_.cyc!==FX.c){ FX.c=TS_.cyc; FX.sm.length=0; FX.tr.length=0; }
+    const wv=WD.kt*.514;
+    // humo blanco discreto al tocar: nace en las dos ruedas principales, se queda donde nació y deriva con el viento
+    if(K.td>=0&&K.td<.25&&FX.smc!==TS_.cyc){ FX.smc=TS_.cyc; for(const sd of [-1,1]){ const b=b2w(K,[0,.2,sd*1.25]);
+        for(let i=0;i<7;i++) FX.sm.push({x:xw+b[0]+(i-3)*.35,z:K.z+b[2]+(rnd()-.5)*.4,t0:tt+i*.035,L:1.1+rnd()*.6,r:1.3+rnd()*.9}); } }
+    // estelas de condensación en las puntas de plano con factor de carga alto (viraje cerrado o recogida tras la barrena)
+    const Cm=cycleModel(), uu=TS_.u; let nld=1/Math.max(.25,Math.cos(K.roll||0));
+    if(uu>=TOTL&&uu<Cm.UE-.1){ const c2=cycleAt(uu+.06), qd=(c2.pitch-K.pitch)/.06; nld=Math.max(nld,1+Math.max(0,(K.v||0)*qd*Math.cos(K.roll||0))/9.81); }
+    const em=sstep(1.3,2.0,nld)*(alt>1.5?1:0);
+    if(em>.02) for(const sd of [-1,1]){ const b=b2w(K,[-.44,2.3,sd*5.45]); FX.tr.push({x:xw+b[0],z:K.z+b[2],a:alt+b[1],t:tt,s:sd,i:em}); }
+    FX.tr=FX.tr.filter(p=>tt-p.t<1.8); FX.sm=FX.sm.filter(p=>tt-p.t0<p.L);
+    if(FX.tr.length>1){ ctx.save(); ctx.lineCap="round"; ctx.lineWidth=Math.max(.8,pm*.07);
+      for(const sd of [-1,1]){ let pr=null; for(const p of FX.tr){ if(p.s!==sd) continue; const q=GP(p.x+wv*Math.cos(WD.d)*(tt-p.t)*.3,p.z+wv*Math.sin(WD.d)*(tt-p.t)*.3); q[1]-=p.a*pm;
+          if(pr&&p.t-pr.t<.12){ const ag=tt-p.t; ctx.strokeStyle=`rgba(255,255,255,${(.55*p.i*(1-ag/1.8)*(1-.55*N)).toFixed(3)})`; ctx.beginPath(); ctx.moveTo(pr.q[0],pr.q[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); }
+          pr={t:p.t,q}; } }
+      ctx.restore(); }
+    for(const p of FX.sm){ const ag=tt-p.t0; if(ag<0) continue; const k=ag/p.L, q=GP(p.x+wv*Math.cos(WD.d)*ag*.6,p.z+wv*Math.sin(WD.d)*ag*.6), r=pm*lerp(.25,p.r,Math.sqrt(k));
+      glow(ctx,q[0],q[1]-pm*(.3+.7*k),r,"236,236,234",.42*Math.pow(1-k,1.5)*(1-.45*N)); }
+    ctx.globalAlpha=1; }
   // avión
   const fade=o.cycle?1:sstep(0,.8,tt)*(1-sstep(T-1,T-.2,tt))*(tt<T?1:0);
   const drawMain=()=>{ ctx.globalAlpha=fade; if(fade>0&&px>-14*pm&&px<w+14*pm&&py>-6*pm) plane3D(ctx,px,py,pm,K,env,t,o.lift); ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over"; };

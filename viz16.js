@@ -11,7 +11,7 @@ const CSS=`
 .f0viz svg text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;fill:#dfe8f1}
 .f0viz .ctl .sl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px 22px}
 .f0viz .ctl .bt{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.f0viz .ctl{display:grid;gap:12px;background:#0f1b29;color:#e9f0f7;padding:12px 14px;font:600 13.5px/1.25 system-ui,-apple-system,"Segoe UI",sans-serif}
+.f0viz .ctl{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin:0;background:#0f1b29;color:#e9f0f7;padding:12px 14px;font:600 13.5px/1.25 system-ui,-apple-system,"Segoe UI",sans-serif}
 .f0viz .ctl label{flex:1 1 240px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px 10px;min-width:0;color:#e9f0f7}
 .f0viz .ctl label:has(input[type=checkbox]){flex:0 1 auto;display:flex}
 .f0viz .ctl input[type=range]{grid-column:1/-1;order:2;width:100%;margin:0;accent-color:#ffc94d}
@@ -168,21 +168,6 @@ init(el){
       ${A.map(a=>{ const xe=.76, he=a.roc*(xe/a.gs*60), yy=Math.max(8,y0-he*YS), xx=he*YS>y0-8?x0+xe*XS*((y0-8)/(he*YS)):x0+xe*XS; return `<path d="M${x0} ${y0}L${xx.toFixed(1)} ${yy.toFixed(1)}" stroke="${a.c}" stroke-width="2.6"/><text x="${Math.min(372,xx+4)}" y="${yy+4}" font-size="11" fill="${a.c}">${a.n}</text><circle cx="${x0+D*XS}" cy="${Math.max(8,y0-a.hd*YS)}" r="3.5" fill="${a.c}"/>`; }).join("")}
       <text x="${x0+D*XS/2}" y="${y0+18}" font-size="10" text-anchor="middle" fill="#9fb3c8">0,5 NM</text><g transform="translate(330 30)"><path d="M${hw>=0?24:-24} 0H${hw>=0?-18:18}m0 0l${hw>=0?8:-8} -5m${hw>=0?-8:8} 5l${hw>=0?8:-8} 5" stroke="#dfe8f1" stroke-width="2" fill="none" opacity="${hw?1:.25}"/><text y="20" font-size="10" text-anchor="middle" fill="#9fb3c8">${hw>0?"viento en cara":hw<0?"viento en cola":"calma"}</text></g>`;
     u.out.innerHTML=A.map(a=>`<b style="color:${a.c}">${a.n}</b>: ${a.roc} ft/min · gradiente <b>${f1(a.gr)} %</b> · sobre el obstáculo a <b class="${a.hd>=350?"ok":a.hd>=300?"":"bad"}">${f0(a.hd)} ft</b>`).join("<br>")+`<br>El régimen (ft/min) no cambia con el viento; el gradiente sobre el suelo, sí: el viento en cara lo <b>mejora</b>.`; });
-}};
-
-/* ---------- 8 · PET y PSR ---------- */
-V.pet={t:"PET y PSR: muévelos con el viento",cap:"O = velocidad sobre el suelo en la ida; H = en la vuelta. PET = D × H ÷ (O + H). PSR (tiempo) = autonomía × H ÷ (O + H).",
-init(el){
-  const u=shell(el,this.t,`<svg viewBox="0 0 400 150" role="img" aria-label="Posición del PET y del PSR en la ruta"></svg>`,rng("d","Distancia A–B",300,1500,900,50," NM")+rng("v","TAS",120,480,300,10," kt")+rng("w","Viento en la ida (− cola · + cara)",-80,80,40,5," kt")+rng("e","Autonomía segura",2,10,5,.5," h"),this.cap), svg=u.q("svg");
-  bind(el,o=>{ const D=o.d, O=o.v-o.w, H=o.v+o.w, E=o.e; ["d","v","e"].forEach(k=>setO(el,k,String(o[k]).replace(".",","))); setO(el,"w",(o.w>0?"+":"")+o.w);
-    const pet=D*H/(O+H), tpet=pet/O, tp=E*H/(O+H), psr=tp*O, X=x=>30+cl(x/D,0,1.06)*320;
-    svg.innerHTML=`<rect width="400" height="150" fill="#12202f"/><path d="M30 80H350" stroke="#dfe8f1" stroke-width="3"/><circle cx="30" cy="80" r="6" fill="#dfe8f1"/><circle cx="350" cy="80" r="6" fill="#dfe8f1"/><text x="30" y="104" font-size="12" text-anchor="middle">A</text><text x="350" y="104" font-size="12" text-anchor="middle">B</text>
-      <path d="M190 80V44" stroke="#5d6977" stroke-dasharray="3 3"/><text x="190" y="38" font-size="9.5" text-anchor="middle" fill="#9fb3c8">mitad</text>
-      <path d="M${X(pet)} 80V54" stroke="#6ee7a0" stroke-width="2"/><circle cx="${X(pet)}" cy="80" r="5" fill="#6ee7a0"/><text x="${X(pet)}" y="26" font-size="11" text-anchor="middle" fill="#6ee7a0">PET</text>
-      <path d="M${X(psr)} 80V112" stroke="#f6b73c" stroke-width="2"/><circle cx="${X(psr)}" cy="80" r="5" fill="#f6b73c"/><text x="${X(psr)}" y="128" font-size="11" text-anchor="middle" fill="#f6b73c">PSR${psr>D?" (más allá de B)":""}</text>
-      <path d="M${o.w>=0?120:80} 138H${o.w>=0?80:120}m0 0l${o.w>=0?7:-7} -4m${o.w>=0?-7:7} 4l${o.w>=0?7:-7} 4" stroke="#9fb3c8" stroke-width="1.6" fill="none" opacity="${o.w?1:.2}"/><text x="130" y="142" font-size="10" fill="#9fb3c8">${o.w?"viento":"sin viento"}</text>`;
-    const hm=t=>{ const h=Math.floor(t), m=Math.round((t-h)*60); return h+" h "+String(m).padStart(2,"0")+" min"; };
-    u.out.innerHTML=`O = <b>${O} kt</b> · H = <b>${H} kt</b><br><b class="ok">PET</b>: a <b>${f0(pet)} NM</b> de A (${hm(tpet)}). ${o.w>0?"Con viento en cara en la ida queda <b>más allá de la mitad</b>: se desplaza hacia el viento.":o.w<0?"Con viento en cola en la ida queda <b>antes de la mitad</b>.":"Sin viento, justo en la mitad."}<br><b style="color:#f6b73c">PSR</b>: a <b>${f0(psr)} NM</b> de A (${hm(tp)} de ida). ${o.w?"Cualquier viento lo <b>acorta</b> respecto a la calma ("+f0(E*o.v/2)+" NM).":"Es el máximo: con viento siempre será menor."}`; });
 }};
 
 /* ---------- 9 · Estabilidad: ELR frente a DALR y SALR ---------- */
@@ -480,6 +465,202 @@ init(el){
   const vs=()=>{ acBtns(el,"data-a"); if(!acHas(ac)){ ac=acFirst(); n=-1; el.querySelectorAll("[data-a]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.a===ac?"true":"false")); } draw(); };
   acSub(vs); vs();
 }};
+
+/* ---------- 031 · Envolvente de masa y centrado en % MAC ---------- */
+V.cgmac={t:"Masa y centrado: carga el avión y sigue el CG en la envolvente (% MAC)",cap:"Avión de ejemplo (monomotor de 4 plazas, cifras redondeadas; datum en el cortafuegos): vacío 680 kg con brazo 1,00 m · asientos delanteros 0,94 m · traseros 1,85 m · equipaje 2,41 m (máx. 54 kg) · combustible 1,22 m (0,72 kg/L, máx. 200 L). LEMAC a 0,80 m y MAC de 1,50 m. MTOM 1 157 kg. Límite delantero: 6 % MAC hasta 885 kg y 16 % MAC a la MTOM; trasero: 27 % MAC.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 452" role="img" aria-label="Esquema lateral del avión con las estaciones de carga, regla de la MAC y envolvente de masa frente a CG en porcentaje de MAC"></svg>`,
+    rng("f","Asientos delanteros",0,200,160,5," kg")+rng("r","Asientos traseros",0,200,0,5," kg")+rng("b","Equipaje",0,54,20,1," kg")+rng("l","Combustible al despegue",0,200,140,5," L")+rng("t","Combustible del viaje (trip)",0,200,60,5," L"),this.cap), svg=u.q("svg");
+  const E={m:680,a:1.00}, LE=.80, MAC=1.50, MTOM=1157, AFT=27, KG=.72, fwd=m=>m<=885?6:6+(m-885)/(MTOM-885)*10, pc=a=>(a-LE)/MAC*100;
+  const ST=[{k:"f",a:.94,n:"Delante",c:"#58c4f0"},{k:"r",a:1.85,n:"Detrás",c:"#b78cf0"},{k:"b",a:2.41,n:"Equipaje",c:"#f6b73c"},{k:"l",a:1.22,n:"Combustible",c:"#6ee7a0"}];
+  const XS=a=>62+a*45;   // esquema lateral: 45 px por metro, datum (cortafuegos) en x = 62
+  const XR=p=>40+p*8;    // regla de la MAC: 0–40 % en 320 px
+  const XE=p=>52+(p-0)*9.4, YE=m=>436-(m-650)*.40;   // envolvente: 0–34 % MAC · 650–1 200 kg
+  const fmt=x=>x.toFixed(2).replace(".",",");
+  bind(el,o=>{ const t=Math.min(o.t,o.l); ["f","r","b","l"].forEach(k=>setO(el,k,o[k])); setO(el,"t",t);
+    const load=fuelL=>{ const items=[[E.m,E.a],[o.f,.94],[o.r,1.85],[o.b,2.41],[fuelL*KG,1.22]], m=items.reduce((s,i)=>s+i[0],0), mo=items.reduce((s,i)=>s+i[0]*i[1],0); return {m,mo,cg:mo/m,p:pc(mo/m)}; };
+    const TO=load(o.l), LD=load(o.l-t), ZF=load(0), ok=P=>P.m<=MTOM+1e-9&&P.p>=fwd(P.m)-1e-9&&P.p<=AFT+1e-9, oT=ok(TO), oL=ok(LD), oZ=ok(ZF);
+    const col=b=>b?"#6ee7a0":"#ff3b30";
+    // esquema lateral del avión de ala alta
+    const fus=`<path d="M${XS(-1.05)} 64q4 -14 16 -16H${XS(0)}l6 -18H${XS(2.1)}l22 14H${XS(6.2)}l16 -26h10l-4 30v10l-34 4H${XS(1.6)}l-20 4H${XS(0)}l-26 -2q-10 -2 -12 -14z" fill="#2a3f57" stroke="#9fb3c8" stroke-width="1.2"/>
+      <path d="M${XS(0)} 30H${XS(2.1)}" stroke="#9fb3c8" stroke-width="1"/><path d="M${XS(.15)} 34l14 -2V44h-14z M${XS(.62)} 32h22v12h-22z M${XS(1.38)} 32h18l8 12h-26z" fill="#58c4f0" opacity=".35"/>
+      <rect x="${XS(LE)}" y="22" width="${MAC*45}" height="6" rx="3" fill="#dfe8f1"/><text x="${XS(LE+MAC/2)}" y="16" font-size="9.5" text-anchor="middle" fill="#9fb3c8">ala · MAC</text>
+      <path d="M${XS(-1.05)+2} 52v18" stroke="#dfe8f1" stroke-width="2"/><path d="M${XS(0)} 44v56" stroke="#ffc94d" stroke-dasharray="3 3"/><text x="${XS(0)+4}" y="100" font-size="9.5" fill="#ffc94d">datum</text>
+      <circle cx="${XS(-.5)}" cy="91" r="5" fill="#1a2b3f" stroke="#9fb3c8"/><circle cx="${XS(1.65)}" cy="91" r="6" fill="#1a2b3f" stroke="#9fb3c8"/>`;
+    const st=ST.slice().sort((a,b)=>a.a-b.a).map((s,i)=>{ const m=s.k==="l"?o.l*KG:o[s.k], r=m>0?3+Math.sqrt(m)*.5:2.5, y=60, lx=58+i*95;
+      return `<path d="M${XS(s.a)} ${y}L${XS(s.a)} 96L${lx} 112" stroke="${s.c}" stroke-width=".9" fill="none" opacity=".7"/><circle cx="${XS(s.a)}" cy="${y}" r="${r.toFixed(1)}" fill="${s.c}" fill-opacity="${m>0?.85:.25}" stroke="#12202f"/><text x="${lx}" y="124" font-size="9.5" text-anchor="middle" fill="${s.c}">${s.n} ${f0(m)} kg</text><text x="${lx}" y="135" font-size="8.5" text-anchor="middle" fill="#9fb3c8">brazo ${s.a.toFixed(2).replace(".",",")} m</text>`; }).join("");
+    const cgS=`<path d="M${XS(TO.cg)} 40l-6 -10h12z" fill="${col(oT)}"/><text x="${XS(TO.cg)}" y="12" font-size="10" font-weight="700" text-anchor="middle" fill="${col(oT)}">CG</text>`;
+    // regla de la MAC
+    const fl=fwd(TO.m), rule=`<text x="40" y="150" font-size="10" fill="#9fb3c8">Regla de la MAC (0 % = LEMAC · 100 % = TEMAC)</text>
+      <rect x="${XR(0)}" y="156" width="${XR(40)-XR(0)}" height="12" fill="#1a2b3f"/><rect x="${XR(fl)}" y="156" width="${XR(AFT)-XR(fl)}" height="12" fill="#6ee7a0" opacity=".28"/>
+      ${[0,10,20,30,40].map(p=>`<path d="M${XR(p)} 168v5" stroke="#9fb3c8"/><text x="${XR(p)}" y="184" font-size="9.5" text-anchor="middle" fill="#9fb3c8">${p} %</text>`).join("")}
+      <path d="M${XR(fl)} 152v20M${XR(AFT)} 152v20" stroke="#6ee7a0" stroke-width="1.5"/>
+      ${[[ZF,"#9fb3c8","ZFM"],[LD,"#58c4f0","LM"],[TO,"#ffc94d","TOM"]].map(q=>`<path d="M${XR(cl(q[0].p,-2,42))} 154l-5 -8h10z" fill="${q[1]}"/>`).join("")}`;
+    // envolvente
+    const env=`<rect x="${XE(0)}" y="${YE(1200)}" width="${XE(34)-XE(0)}" height="${YE(650)-YE(1200)}" fill="#0f1b29"/>
+      ${[700,800,900,1000,1100,1200].map(m=>`<path d="M${XE(0)} ${YE(m)}H${XE(34)}" stroke="#22364c"/><text x="${XE(0)-4}" y="${YE(m)+3}" font-size="9.5" text-anchor="end" fill="#9fb3c8">${f0(m)}</text>`).join("")}
+      ${[0,5,10,15,20,25,30].map(p=>`<path d="M${XE(p)} ${YE(1200)}V${YE(650)}" stroke="#22364c"/><text x="${XE(p)}" y="${YE(650)+12}" font-size="9.5" text-anchor="middle" fill="#9fb3c8">${p}</text>`).join("")}
+      <text x="${XE(17)}" y="${YE(650)+24}" font-size="10" text-anchor="middle" fill="#9fb3c8">CG en % MAC</text><text x="14" y="${YE(925)}" font-size="10" fill="#9fb3c8" transform="rotate(-90 14 ${YE(925)})" text-anchor="middle">masa (kg)</text>
+      <path d="M${XE(6)} ${YE(680)}V${YE(885)}L${XE(16)} ${YE(MTOM)}H${XE(AFT)}V${YE(680)}Z" fill="#6ee7a0" fill-opacity=".14" stroke="#6ee7a0" stroke-width="1.6"/>
+      <text x="${XE(21.5)}" y="${YE(MTOM)-5}" font-size="9.5" text-anchor="middle" fill="#6ee7a0">MTOM ${f0(MTOM)} kg</text>
+      <path d="M${XE(cl(ZF.p,-1,35))} ${YE(ZF.m)}L${XE(cl(LD.p,-1,35))} ${YE(LD.m)}L${XE(cl(TO.p,-1,35))} ${YE(Math.min(TO.m,1210))}" stroke="#dfe8f1" stroke-width="1.3" stroke-dasharray="4 3" fill="none"/>
+      ${[[ZF,"#9fb3c8","ZFM",oZ],[LD,"#58c4f0","LM",oL],[TO,"#ffc94d","TOM",oT]].map(q=>{ const x=XE(cl(q[0].p,-1,35)), y=YE(Math.min(q[0].m,1210)); return `<circle cx="${x}" cy="${y}" r="5.5" fill="${q[1]}" stroke="${q[3]?"#12202f":"#ff3b30"}" stroke-width="${q[3]?1:3}"/><text x="${x+8}" y="${y+4}" font-size="10" font-weight="700" fill="${q[1]}">${q[2]}</text>`; }).join("")}`;
+    svg.innerHTML=`<rect width="400" height="452" fill="#12202f"/>${fus}${st}${cgS}${rule}${env}`;
+    const line=(n,P,b)=>`<b>${n}</b>: ${f0(P.m)} kg · momento ${f0(P.mo)} kg·m · CG ${fmt(P.cg)} m = <b>${f1(P.p)} % MAC</b> ${b?'<span class="ok">✓</span>':`<span class="bad">✗ ${P.m>MTOM?"pasa la MTOM":P.p<fwd(P.m)?"por delante del límite":"por detrás del límite"}</span>`}`;
+    u.out.innerHTML=`${line("Despegue (TOM)",TO,oT)}<br>${line("Aterrizaje (LM)",LD,oL)}<br>${line("Sin combustible (ZFM)",ZF,oZ)}<br>% MAC = (CG − LEMAC) ÷ MAC × 100 = (${fmt(TO.cg)} − 0,80) ÷ 1,50 × 100. ${o.l>0?(TO.cg<1.22?"El combustible (1,22 m) está <b>detrás</b> del CG: al quemarlo, el CG <b>avanza</b>.":"El combustible (1,22 m) está <b>delante</b> del CG: al quemarlo, el CG <b>se retrasa</b>."):""}`; });
+}};
+
+/* ---------- 032 · Despegue, aterrizaje y gradiente (Clase B) ---------- */
+V.todr={t:"Performance: despegue, aterrizaje y ascenso frente a TORA, TODA, ASDA y LDA",cap:"Avión de ejemplo a MTOM en ISA a nivel del mar, asfalto seco, sin viento ni pendiente: despegue hasta 50 ft 480 m (carrera 260 m), aterrizaje desde 50 ft 400 m (carrera 190 m), 700 ft/min a 70 KIAS. Factores orientativos (CAA Safety Sense 7): despegue +10 %/1 000 ft, hierba seca ×1,20, mojada ×1,30, ±5 % por cada 1 % de pendiente; aterrizaje +5 %/1 000 ft, asfalto mojado ×1,15, hierba seca ×1,15, mojada ×1,35. Viento con la regla de Clase B: 50 % del de cara y 150 % del de cola. Pista: TORA 800 m · TODA 900 m (CWY 100) · ASDA 850 m (SWY 50) · LDA 700 m (umbral desplazado 100 m).",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 352" role="img" aria-label="Pista con TORA, TODA, ASDA y LDA, distancias de despegue y aterrizaje y perfil de ascenso"></svg>`,
+    rng("s","Pendiente (− bajada · + subida)",-2,2,0,.5," %")+rng("w","Viento (− cola · + cara)",-10,20,0,1," kt")+rng("da","Altitud de densidad",0,8000,0,250," ft")
+    +`<button type="button" data-sf="0" aria-pressed="true">Asfalto seco</button><button type="button" data-sf="1" aria-pressed="false">Asfalto mojado</button><button type="button" data-sf="2" aria-pressed="false">Hierba seca</button><button type="button" data-sf="3" aria-pressed="false">Hierba mojada</button>`
+    +`<button type="button" data-fl="1" aria-pressed="true">Flaps recomendados (10° / 30°)</button><button type="button" data-fl="0" aria-pressed="false">Flaps 0°</button>`,this.cap), svg=u.q("svg");
+  const RW={tora:800,toda:900,asda:850,lda:700,dth:100}, X=m=>18+m*.39, SF=[["asfalto seco",1,1],["asfalto mojado",1,1.15],["hierba seca",1.2,1.15],["hierba mojada",1.3,1.35]];
+  let sf=0, fl=1, last={};
+  const draw=o=>{ const w=o.w, s=o.s, da=o.da, weT=w>0?.5*w:1.5*w, wind=(V,we)=>Math.pow((V-we)/V,2);
+    // despegue
+    const fT=Math.pow(1.1,da/1000)*SF[sf][1]*(1+.05*s)*wind(55,weT)*(fl?1:1.12), tod=480*fT, gr=260*fT;
+    // aterrizaje (pendiente: cuesta abajo alarga)
+    const fL=Math.pow(1.05,da/1000)*SF[sf][2]*(1-.05*s)*wind(60,weT)*(fl?1:1.35), ld=400*fL, lr=190*fL, ldr=ld/.7;
+    // ascenso: régimen cae con la altitud de densidad; flaps de despegue restan un 10 %; el gradiente es sobre el suelo
+    const roc=700*(1-.07*da/1000)*(fl?.9:1), tas=70*(1+.02*da/1000), gs=tas-w, grd=roc/(gs*101.27)*100, ang=Math.atan(grd/100)/R;
+    const c1=tod*1.25<=RW.tora, c2=tod<=RW.tora&&tod*1.15<=RW.toda&&tod*1.3<=RW.asda, okT=c1||c2, okL=ldr<=RW.lda;
+    const dim=(a,b,y,t,c)=>`<path d="M${X(a)} ${y}H${X(b)}M${X(a)} ${y-4}v8M${X(b)} ${y-4}v8" stroke="${c}" stroke-width="1.3"/><text x="${(X(a)+X(b))/2}" y="${y-4}" font-size="9.5" text-anchor="middle" fill="${c}">${t}</text>`;
+    const rwy=(y,lab,dy)=>`<rect x="${X(0)}" y="${y-5}" width="${X(RW.tora)-X(0)}" height="10" fill="#3b4652"/><rect x="${X(RW.tora)}" y="${y-5}" width="${X(RW.asda)-X(RW.tora)}" height="10" fill="#6b5a2a"/>
+      <path d="M${X(RW.tora)+3} ${y-3}l5 3l-5 3M${X(RW.tora)+10} ${y-3}l5 3l-5 3" stroke="#f6b73c" fill="none"/><rect x="${X(RW.tora)}" y="${y-9}" width="${X(RW.toda)-X(RW.tora)}" height="18" fill="none" stroke="#58c4f0" stroke-dasharray="3 3"/>
+      <path d="M${X(0)} ${y}H${X(RW.tora)}" stroke="#dfe8f1" stroke-dasharray="6 6" stroke-width=".8"/><text x="${X(0)}" y="${y+(dy||20)}" font-size="9.5" fill="#9fb3c8">${lab}</text>`;
+    const yT=96, h50=26, xLo=X(Math.min(gr,1000)), xT=X(Math.min(tod,1000));
+    const toP=`<path d="M${X(0)} ${yT-1}H${xLo}" stroke="#ffc94d" stroke-width="3"/><path d="M${xLo} ${yT-1}Q${(xLo+xT)/2} ${yT-2} ${xT} ${yT-h50}" stroke="#ffc94d" stroke-width="2.4" fill="none"/>
+      <path d="M${xT} ${yT-h50}l${Math.min(60,400-xT)} ${-Math.min(60,400-xT)*Math.tan(ang*R)*6}" stroke="#ffc94d" stroke-width="1.6" stroke-dasharray="4 3"/><circle cx="${xT}" cy="${yT-h50}" r="3.5" fill="#ffc94d"/><text x="${xT>340?xT-7:xT+7}" y="${yT-h50+12}" font-size="9.5" text-anchor="${xT>340?"end":"start"}" fill="#ffc94d">50 ft</text>`;
+    const yL=196, xTh=X(RW.dth), xTd=X(Math.min(RW.dth+ld-lr,1000)), xSt=X(Math.min(RW.dth+ld,1000));
+    const ldP=`<path d="M${xTh} ${yL-h50}Q${(xTh+xTd)/2} ${yL-4} ${xTd} ${yL-1}" stroke="#58c4f0" stroke-width="2.4" fill="none"/><path d="M${xTd} ${yL-1}H${xSt}" stroke="#58c4f0" stroke-width="3"/><circle cx="${xTh}" cy="${yL-h50}" r="3.5" fill="#58c4f0"/>
+      <path d="M${xTh} ${yL-12}v22" stroke="#dfe8f1" stroke-width="2"/><text x="${xTh}" y="${yL+20}" font-size="9.5" text-anchor="middle" fill="#dfe8f1">umbral</text>`;
+    // perfil de ascenso a escala real (vertical ×5)
+    const px0=40, py0=338, pxs=150/1000;   // 1 000 m horizontales = 150 px; la altura se dibuja ×3
+    const prof=`<rect x="${px0-30}" y="246" width="372" height="102" fill="#0f1b29"/><text x="${px0-24}" y="262" font-size="10" fill="#9fb3c8">Ascenso tras los 50 ft (altura ×3)</text>
+      <path d="M${px0} ${py0}H${px0+330}" stroke="#3a516b" stroke-width="2"/>${[0,500,1000,1500,2000].map(m=>`<path d="M${px0+m*pxs} ${py0}v4" stroke="#9fb3c8"/><text x="${px0+m*pxs}" y="${py0+13}" font-size="9" text-anchor="middle" fill="#9fb3c8">${f0(m)} m</text>`).join("")}
+      <clipPath id="tdc"><rect x="${px0}" y="266" width="330" height="${py0-266}"/></clipPath>
+      <g clip-path="url(#tdc)"><path d="M${px0} ${py0}l2000 ${-2000*.05*3}" stroke="#9fb3c8" stroke-width="1" stroke-dasharray="3 3"/><path d="M${px0} ${py0}l2000 ${-2000*grd/100*3}" stroke="#ffc94d" stroke-width="2.4"/></g>
+      ${(()=>{ const ex=Math.min(330,(py0-270)/(grd/100*3)), e5=Math.min(330,(py0-270)/(.05*3)); return `<text x="${Math.min(px0+e5+4,360)}" y="${py0-e5*.05*3+10}" font-size="9" fill="#9fb3c8">5 %</text><text x="${Math.min(px0+ex,348)}" y="${Math.max(280,py0-ex*grd/100*3-6)}" font-size="10.5" font-weight="700" text-anchor="end" fill="#ffc94d">${f1(grd)} % · ${f1(ang)}°</text>`; })()}`;
+    svg.innerHTML=`<rect width="400" height="352" fill="#12202f"/><text x="18" y="16" font-size="10.5" font-weight="700" fill="#ffc94d">DESPEGUE →</text>
+      ${dim(0,RW.tora,32,"TORA "+RW.tora,"#dfe8f1")}${dim(0,RW.asda,48,"ASDA "+RW.asda,"#f6b73c")}${dim(0,RW.toda,64,"TODA "+RW.toda,"#58c4f0")}${rwy(yT,"carrera y despegue hasta 50 ft"+(s?` · pista ${s>0?"cuesta arriba":"cuesta abajo"} ${f1(Math.abs(s))} %`:""))}${toP}
+      <text x="18" y="134" font-size="10.5" font-weight="700" fill="#58c4f0">ATERRIZAJE →</text>${dim(RW.dth,RW.dth+RW.lda,150,"LDA "+RW.lda,"#dfe8f1")}${dim(RW.dth,RW.dth+Math.min(ldr,900),166,"LDR = LD ÷ 0,7 · "+f0(ldr),okL?"#6ee7a0":"#ff8a80")}${rwy(yL,"desde 50 ft sobre el umbral hasta parar",32)}${ldP}${prof}`;
+    u.out.innerHTML=`<b>Despegue</b> (${SF[sf][0]}, flaps ${fl?"10°":"0°"}): carrera <b>${f0(gr)} m</b> · hasta 50 ft <b>${f0(tod)} m</b> (factor ×${fT.toFixed(2).replace(".",",")}). TOD × 1,25 = ${f0(tod*1.25)} m ${c1?"≤":">"} TORA · o bien TOD ≤ TORA, × 1,15 = ${f0(tod*1.15)} ${tod*1.15<=RW.toda?"≤":">"} TODA y × 1,3 = ${f0(tod*1.3)} ${tod*1.3<=RW.asda?"≤":">"} ASDA → ${okT?'<span class="ok">cumple</span>':'<span class="bad">no cumple</span>'}.<br><b>Aterrizaje</b> (flaps ${fl?"30°":"0°"}): <b>${f0(ld)} m</b> desde 50 ft · requerida ÷ 0,7 = <b>${f0(ldr)} m</b> ${okL?'<span class="ok">≤ LDA</span>':'<span class="bad">> LDA: no cumple</span>'}.<br><b>Ascenso</b>: ${f0(roc)} ft/min a ${f0(tas)} kt TAS, ${f0(gs)} kt sobre el suelo → gradiente <b>${f1(grd)} %</b> (${f1(ang)}°). ${w>0?"El viento de cara <b>aumenta el ángulo</b> sobre el suelo, no el régimen.":w<0?"El viento de cola <b>aplana el ángulo</b> sobre el suelo.":""}${da?" La altitud de densidad alarga las carreras y reduce el régimen.":""}`; };
+  btns(el,"data-sf",v=>{ sf=+v; draw(last); }); btns(el,"data-fl",v=>{ fl=+v; draw(last); });
+  bind(el,o=>{ last=o; setO(el,"s",(o.s>0?"+":"")+f1(o.s)); setO(el,"w",(o.w>0?"+":"")+o.w); setO(el,"da",f0(o.da)); draw(o); });
+}};
+
+/* ---------- 033 · PET y PNR (PSR) animados ---------- */
+V.pet={t:"PET y PNR (PSR): muévelos con el viento y la autonomía",cap:"O = velocidad sobre el suelo en la ida (TAS − viento de cara); H = en la vuelta (TAS + viento). PET = D × H ÷ (O + H). PNR: tiempo = autonomía × H ÷ (O + H) y distancia = autonomía × O × H ÷ (O + H). Autonomía segura = sin contar la reserva.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 300" role="img" aria-label="Ruta entre A y B con el PET y el PNR, y gráfica de la distancia al PNR según el viento"></svg>`,rng("d","Distancia A–B",300,1500,900,50," NM")+rng("v","TAS",120,480,300,10," kt")+rng("w","Viento en la ida (− cola · + cara)",-80,80,40,5," kt")+rng("e","Autonomía segura",2,10,4,.5," h")+`<button type="button" data-play aria-pressed="false">▶ Volar hasta el PNR y volver</button>`,this.cap), svg=u.q("svg");
+  let st=null, anim=null, raf=0;
+  const X=(x,D)=>30+cl(x/D,0,1.08)*320, hm=t=>{ const h=Math.floor(t), m=Math.round((t-h)*60); return (m===60?h+1:h)+" h "+String(m===60?0:m).padStart(2,"0")+" min"; };
+  const draw=()=>{ const o=st, D=o.d, O=o.v-o.w, H=o.v+o.w, E=o.e, pet=D*H/(O+H), tpet=pet/O, tp=E*H/(O+H), pnr=tp*O, p0=E*o.v/2;
+    let px=null, fuel=1, back=false;
+    if(anim){ const k=cl((performance.now()-anim)/7000,0,1), T=k*E; back=T>tp; px=back?pnr-(T-tp)*H:T*O; fuel=1-k; if(k>=1){ anim=null; u.q("[data-play]").setAttribute("aria-pressed","false"); } }
+    const dmin=E*(o.v*o.v-6400)/(2*o.v), XC=w=>40+(w+80)/160*320, YC=d=>280-(d-dmin)/Math.max(1,p0-dmin)*80;   // gráfica: viento −80…+80 kt; eje vertical ampliado entre el PNR con 80 kt y el de calma
+    const curve=Array.from({length:33},(_,i)=>{ const ww=-80+i*5, dd=E*(o.v*o.v-ww*ww)/(2*o.v); return `${i?"L":"M"}${XC(ww).toFixed(1)} ${YC(dd).toFixed(1)}`; }).join("");
+    const ymax=YC(p0);
+    svg.innerHTML=`<rect width="400" height="300" fill="#12202f"/>
+      <path d="M30 70H350" stroke="#dfe8f1" stroke-width="3"/><circle cx="30" cy="70" r="6" fill="#dfe8f1"/><circle cx="350" cy="70" r="6" fill="#dfe8f1"/><text x="30" y="94" font-size="12" text-anchor="middle">A</text><text x="350" y="94" font-size="12" text-anchor="middle">B</text>
+      <path d="M190 70V36" stroke="#5d6977" stroke-dasharray="3 3"/><text x="190" y="30" font-size="9.5" text-anchor="middle" fill="#9fb3c8">mitad</text>
+      <path d="M${X(pet,D)} 70V46" stroke="#6ee7a0" stroke-width="2"/><circle cx="${X(pet,D)}" cy="70" r="5" fill="#6ee7a0"/><text x="${X(pet,D)}" y="18" font-size="11" font-weight="700" text-anchor="middle" fill="#6ee7a0">PET</text>
+      <path d="M${X(pnr,D)} 70V100" stroke="#f6b73c" stroke-width="2"/><circle cx="${X(pnr,D)}" cy="70" r="5" fill="#f6b73c"/><text x="${X(pnr,D)}" y="114" font-size="11" font-weight="700" text-anchor="middle" fill="#f6b73c">PNR${pnr>D?" (más allá de B)":""}</text>
+      <path d="M${X(p0,D)} 66v16" stroke="#f6b73c" stroke-dasharray="2 2" opacity=".7"/><text x="${X(p0,D)+4}" y="88" font-size="9" fill="#f6b73c" opacity=".85">en calma</text>
+      <path d="M${o.w>=0?320:280} 128H${o.w>=0?280:320}m0 0l${o.w>=0?7:-7} -4m${o.w>=0?-7:7} 4l${o.w>=0?7:-7} 4" stroke="#9fb3c8" stroke-width="1.6" fill="none" opacity="${o.w?1:.2}"/><text x="330" y="132" font-size="10" fill="#9fb3c8">${o.w?"viento":"calma"}</text>
+      ${px!=null?`<g transform="translate(${X(px,D)} 70) scale(${back?-1:1} 1)"><path d="M10 0L-6 -3L-9 -9H-11L-9 0L-11 9H-9L-6 3Z" fill="#ffc94d"/></g>`:""}
+      <rect x="30" y="122" width="120" height="8" fill="#1a2b3f"/><rect x="30" y="122" width="${120*fuel}" height="8" fill="${fuel>.15?"#6ee7a0":"#ff3b30"}"/><text x="30" y="144" font-size="9.5" fill="#9fb3c8">combustible utilizable</text>
+      <rect x="30" y="160" width="350" height="136" fill="#0f1b29"/><text x="40" y="176" font-size="10" fill="#9fb3c8">Distancia al PNR según el viento (misma TAS y autonomía)</text>
+      <path d="M${XC(0)} 182V284" stroke="#3a516b" stroke-dasharray="3 3"/><path d="M40 284H360" stroke="#3a516b"/><text x="360" y="276" font-size="9" text-anchor="end" fill="#9fb3c8">${f0(dmin)} NM</text><text x="44" y="${YC(p0)+14}" font-size="9" fill="#9fb3c8">${f0(p0)} NM</text>
+      ${[-80,-40,0,40,80].map(ww=>`<text x="${XC(ww)}" y="${296}" font-size="9" text-anchor="middle" fill="#9fb3c8">${ww>0?"+":""}${ww}</text>`).join("")}
+      <path d="${curve}" stroke="#f6b73c" stroke-width="2" fill="none"/><circle cx="${XC(o.w)}" cy="${YC(pnr)}" r="5" fill="#f6b73c"/><text x="${XC(0)}" y="${ymax-6}" font-size="9.5" text-anchor="middle" fill="#f6b73c">máximo sin viento</text>`;
+    u.out.innerHTML=`O = <b>${O} kt</b> · H = <b>${H} kt</b><br><b class="ok">PET</b>: a <b>${f0(pet)} NM</b> de A (${hm(tpet)}). ${o.w>0?"Con viento de cara en la ida queda <b>pasada la mitad</b>: se desplaza hacia el viento.":o.w<0?"Con viento de cola en la ida queda <b>antes de la mitad</b>.":"Sin viento, justo en la mitad."}<br><b style="color:#f6b73c">PNR</b>: a <b>${f0(pnr)} NM</b> de A (${hm(tp)} de ida y ${hm(E-tp)} de vuelta). ${o.w?`Distancia al PNR = autonomía × (TAS² − viento²) ÷ (2 × TAS): con cualquier viento, de cara o de cola, es <b>menor</b> que en calma (${f0(p0)} NM), porque lo que ganas en un tramo lo pierdes con creces en el otro.`:"Sin viento es el máximo posible: cualquier viento lo acercará a A."}`;
+    if(anim){ cancelAnimationFrame(raf); raf=requestAnimationFrame(()=>{ if(el.isConnected) draw(); }); } };
+  u.q("[data-play]").addEventListener("click",e=>{ anim=performance.now(); e.currentTarget.setAttribute("aria-pressed","true"); draw(); });
+  bind(el,o=>{ st=o; ["d","v","e"].forEach(k=>setO(el,k,String(o[k]).replace(".",","))); setO(el,"w",(o.w>0?"+":"")+o.w); draw(); });
+}};
+
+/* ---------- 040 · Ilusiones visuales en la aproximación ---------- */
+V.illus={t:"Ilusiones de aproximación: lo que ves, lo que crees y la senda que acabas volando",cap:"Modelo simplificado: el piloto intenta que la pista se vea con la forma de siempre (30 m de ancho, plana, senda de 3°). El «agujero negro» sigue el experimento de Kraft: sin referencias del terreno se mantiene constante el ángulo con que se ven las luces de la pista, y la trayectoria resultante es un arco que queda muy por debajo de la senda. Pista de 2 000 m. El PAPI dice siempre la verdad.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 352" role="img" aria-label="Vista del piloto y perfil lateral de la aproximación con la senda real y la percibida"></svg>`,
+    `<button type="button" data-ill="n" aria-pressed="true">Normal</button><button type="button" data-ill="w" aria-pressed="false">Pista ancha</button><button type="button" data-ill="s" aria-pressed="false">Pista estrecha</button><button type="button" data-ill="u" aria-pressed="false">Cuesta arriba</button><button type="button" data-ill="d" aria-pressed="false">Cuesta abajo</button><button type="button" data-ill="b" aria-pressed="false">Agujero negro (noche)</button>`
+    +rng("W","Anchura de la pista",15,60,30,1," m")+rng("sl","Pendiente de la pista",-3,3,0,.5," %")+rng("x","Distancia a la pista",.5,5,3,.1," NM"),this.cap), svg=u.q("svg");
+  const L=2000, G=3*R, NM=1852, hole={on:false};
+  const set=(k,v)=>{ const i=el.querySelector(`[data-k="${k}"]`); i.value=v; };
+  const flown=(dm,W,sl)=>{ if(hole.on){ const D=5*NM, h0=D*Math.tan(G), k=(D*(D+L)+h0*h0)/(2*h0), x=-dm; return k-Math.sqrt(Math.max(0,k*k-x*(x-L))); }
+    const g=Math.asin(cl(Math.sin(G)*W/30,-1,1))-Math.atan(sl/100); return dm*Math.tan(Math.max(.3*R,g)); };
+  const gFlown=(W,sl)=>Math.max(.3*R,Math.asin(cl(Math.sin(G)*W/30,-1,1))-Math.atan(sl/100))/R;
+  const draw=o=>{ const W=o.W, sl=o.sl, dm=o.x*NM, h=dm*Math.tan(G), night=hole.on;
+    // vista del piloto desde la senda correcta de 3°
+    const f=dm*1.15, cx=200, cy=104, aim=300, p=Math.atan2(h,dm+aim), cp=Math.cos(p), sp=Math.sin(p);
+    const P=(x,z,y0)=>{ const yy=(y0==null?Math.max(0,x)*sl/100:y0), dx=x+dm, dy=yy-h, dep=dx*cp-dy*sp, up=dx*sp+dy*cp; return [cx+f*z/dep, cy-f*up/dep]; };
+    const hz=cy-f*Math.tan(p), poly=(pts)=>pts.map((q,i)=>(i?"L":"M")+q[0].toFixed(1)+" "+q[1].toFixed(1)).join("")+"Z";
+    const rw=poly([P(0,-W/2),P(L,-W/2),P(L,W/2),P(0,W/2)]), gh=poly([P(0,-15,0),P(L,-15,0),P(L,15,0),P(0,15,0)]);
+    const cline=Array.from({length:20},(_,i)=>{ const a=P(60+i*96,0), b=P(60+i*96+40,0); return `M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}`; }).join("");
+    const thb=Array.from({length:8},(_,i)=>{ const z=-W/2+W*(i+.5)/8, a=P(6,z), b=P(36,z); return `M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}`; }).join("");
+    const th=Math.atan2(h+1.5,dm+aim)/R, S=[3.5,3.17,2.83,2.5], papi=S.map((sv,i)=>{ const q=P(aim,-W/2-15-i*9,0); return `<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="2.6" fill="${th>sv?"#fffdf2":"#ff3b30"}"/>`; }).join("");
+    const lights=night?Array.from({length:22},(_,i)=>{ const x=i*L/21, a=P(x,-W/2), b=P(x,W/2); return `<circle cx="${a[0].toFixed(1)}" cy="${a[1].toFixed(1)}" r="1.5" fill="#ffe9b0"/><circle cx="${b[0].toFixed(1)}" cy="${b[1].toFixed(1)}" r="1.5" fill="#ffe9b0"/>`; }).join("")
+      +Array.from({length:9},(_,i)=>{ const q=P(0,-W/2+W*i/8); return `<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="1.6" fill="#6ee7a0"/>`; }).join(""):"";
+    const town=night?Array.from({length:40},(_,i)=>{ const q=P(-dm*.15+((i*733)%2400)+400,((i*397)%1600)-800+(i%2?900:-900),0); return q[1]>hz&&q[1]<185?`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="1" fill="#ffcf8a" opacity=".7"/>`:""; }).join(""):"";
+    const view=`<defs><clipPath id="ilc"><rect x="0" y="0" width="400" height="182"/></clipPath></defs><g clip-path="url(#ilc)">
+      <rect width="400" height="${Math.max(0,hz)}" fill="${night?"#060b16":"#7fb2e6"}"/><rect y="${hz}" width="400" height="${182-hz}" fill="${night?"#05080d":"#6f8a4e"}"/>
+      <path d="${rw}" fill="${night?"#080b10":"#3f464f"}" stroke="${night?"none":"#cfd6dd"}" stroke-width=".8"/>${night?"":`<path d="${cline}${thb}" stroke="#f2f2ee" stroke-width="1.4"/>`}
+      ${night?"":`<path d="${gh}" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-dasharray="4 3" opacity=".95"/>`}${lights}${town}${papi}</g>
+      <rect x="6" y="${night?156:142}" width="236" height="${night?20:34}" rx="4" fill="#12202f" opacity=".8"/><text x="12" y="${night?170:156}" font-size="10" fill="#dfe8f1">Vista con zoom desde la senda correcta de 3°</text>${night?"":`<text x="12" y="170" font-size="9.5" fill="#ffffff">- - - imagen habitual (30 m, plana)</text>`}`;
+    // perfil lateral
+    const X=nm=>335-nm*58, Y=ft=>336-ft*.085, ft=m=>m/.3048;
+    const pts=Array.from({length:51},(_,i)=>{ const nm=5-i*.1, hh=flown(nm*NM,W,sl); return `${i?"L":"M"}${X(nm).toFixed(1)} ${Y(ft(hh)).toFixed(1)}`; }).join("");
+    const ter=nm=>430*Math.max(0,1-Math.pow((nm-2.6)/.95,2));   // colina oscura antes de la pista
+    const hill=night?`<path d="M${X(3.6)} ${Y(0)}${Array.from({length:41},(_,i)=>{ const nm=3.6-i*.05; return `L${X(nm).toFixed(1)} ${Y(ter(nm)).toFixed(1)}`; }).join("")}Z" fill="#2b3a2a"/>`:"";
+    const hf=flown(dm,W,sl), hT=h, dFt=ft(hf-hT), plane=(x,y,c)=>`<path d="M${x+7} ${y}l-10 -3v-4h-2v4l-4 3l4 3v4h2v-4z" fill="${c}"/>`;
+    const minClr=night?Math.min(...Array.from({length:41},(_,i)=>{ const nm=3.6-i*.05; return ft(flown(nm*NM,W,sl))-ter(nm); })):null;
+    const prof=`<rect x="0" y="190" width="400" height="162" fill="#0f1b29"/><text x="390" y="205" font-size="10" text-anchor="end" fill="#9fb3c8">Perfil lateral (altura exagerada)</text>
+      <path d="M0 ${Y(0)}H400" stroke="#3a516b" stroke-width="2"/><rect x="${X(0)}" y="${Y(0)-2}" width="${2000/NM*58}" height="4" fill="#9fb3c8"/>${hill}
+      ${[0,1,2,3,4,5].map(n=>`<text x="${X(n)}" y="${Y(0)+12}" font-size="9" text-anchor="middle" fill="#9fb3c8">${n} NM</text>`).join("")}
+      <path d="M${X(5)} ${Y(ft(5*NM*Math.tan(G)))}L${X(0)} ${Y(0)}" stroke="#6ee7a0" stroke-width="2"/><path d="M12 ${Y(0)-34}h18" stroke="#6ee7a0" stroke-width="2"/><text x="34" y="${Y(0)-31}" font-size="9.5" fill="#6ee7a0">senda real de 3°</text><path d="M12 ${Y(0)-20}h18" stroke="#ff8a80" stroke-width="2" stroke-dasharray="5 3"/><text x="34" y="${Y(0)-17}" font-size="9.5" fill="#ff8a80">senda que acabas volando</text>
+      <clipPath id="ilp"><rect x="0" y="212" width="400" height="140"/></clipPath><path d="${pts}" stroke="#ff8a80" stroke-width="2.2" stroke-dasharray="6 4" fill="none" clip-path="url(#ilp)"/>
+      ${plane(X(o.x),Y(ft(hT)),"#6ee7a0")}${plane(X(o.x),Y(ft(hf)),"#ff8a80")}<path d="M${X(o.x)} ${Y(ft(hT))}V${Y(ft(hf))}" stroke="#dfe8f1" stroke-dasharray="2 2"/>`;
+    svg.innerHTML=`<rect width="400" height="352" fill="#12202f"/>${view}${prof}`;
+    const g2=gFlown(W,sl), pr=Math.round(dFt);
+    let msg;
+    if(night) msg=`<b>Agujero negro</b>: de noche, sin luces en el terreno, solo ves la pista. Si mantienes la forma de las luces, vuelas un <b>arco por debajo de la senda</b>: a ${f1(o.x)} NM vas <b class="bad">${f0(Math.abs(pr))} ft bajo</b> y el margen mínimo con el terreno se queda en <b class="${minClr<200?"bad":""}">${f0(Math.max(0,minClr))} ft</b>. Solución: altímetro, senda ILS/PAPI y altitudes mínimas por distancia.`;
+    else if(Math.abs(g2-3)<.1) msg=`Pista de 30 m y plana: la imagen coincide con la habitual y vuelas la <b class="ok">senda correcta de 3°</b>. El PAPI muestra <b>2 blancas y 2 rojas</b>.`;
+    else{ const hi=g2>3; msg=`${W>30?"La pista <b>ancha</b> parece más cerca y más baja":W<30?"La pista <b>estrecha</b> parece más lejos y más alta":""}${W!==30&&sl?"; además, ":""}${sl>0?"la pendiente <b>ascendente</b> la hace parecer más empinada: crees ir <b>alto</b>":sl<0?"la pendiente <b>descendente</b> la aplana: crees ir <b>bajo</b>":""}. Para ver la imagen de siempre acabas volando una senda de <b>${f1(g2)}°</b>: a ${f1(o.x)} NM vas <b class="bad">${f0(Math.abs(pr))} ft ${hi?"alto":"bajo"}</b>. ${hi?"Riesgo: aproximación alta, recoges alto y aterrizas largo.":"Riesgo: aproximación baja, recoges tarde o tocas antes del umbral."} El <b>PAPI</b> te lo diría: desde tu posición verías ${hi?"más blancas":"más rojas"}.`; }
+    u.out.innerHTML=msg.charAt(0).toUpperCase()+msg.slice(1); };
+  let last=null;
+  btns(el,"data-ill",v=>{ hole.on=v==="b"; const pre={n:[30,0],w:[45,0],s:[18,0],u:[30,2],d:[30,-2],b:[45,0]}[v]; set("W",pre[0]); set("sl",pre[1]); el.querySelector('[data-k="W"]').dispatchEvent(new Event("input",{bubbles:true})); });
+  bind(el,o=>{ last=o; setO(el,"W",o.W); setO(el,"sl",(o.sl>0?"+":"")+f1(o.sl)); setO(el,"x",f1(o.x)); draw(o); });
+}};
+
+/* ---------- 040 · Tiempo útil de conciencia (TUC) ---------- */
+V.tuc={t:"Hipoxia: tiempo útil de conciencia (TUC) según la altitud de cabina",cap:"Valores orientativos de la tabla de estos apuntes (sentado en reposo · con actividad moderada · tras descompresión rápida). El TUC es el tiempo para darte cuenta y actuar, no hasta perder el conocimiento; el EPT es aún más corto. Escala de tiempo logarítmica.",
+init(el){
+  const u=shell(el,this.t,`<svg viewBox="0 0 400 290" role="img" aria-label="Gráfica del tiempo útil de conciencia frente a la altitud de cabina"></svg>`,
+    rng("a","Altitud de cabina",18000,40000,30000,500," ft")+`<button type="button" data-tu="0" aria-pressed="false">Sentado en reposo</button><button type="button" data-tu="1" aria-pressed="true">Con actividad moderada</button><button type="button" data-tu="2" aria-pressed="false">Tras descompresión rápida</button>`,this.cap), svg=u.q("svg");
+  const T=[[18000,[2400,1800,1350]],[20000,[600,300,180]],[25000,[300,180,120]],[30000,[90,45,30]],[35000,[45,30,20]],[40000,[25,18,12]]];
+  const N=["sentado en reposo","con actividad moderada","tras descompresión rápida"], C=["#58c4f0","#ffc94d","#ff8a80"];
+  const tuc=(a,k)=>{ let i=0; while(i<T.length-2&&a>T[i+1][0]) i++; const A=T[i], B=T[i+1], f=cl((a-A[0])/(B[0]-A[0]),0,1); return Math.exp(lerp(Math.log(A[1][k]),Math.log(B[1][k]),f)); };
+  const X=a=>48+(a-18000)/22000*330, Y=s=>246-(Math.log10(s)-1)/(Math.log10(3600)-1)*214;
+  const fmt=s=>s>=90?(s>=600?f0(s/60)+" min":f1(s/60)+" min"):f0(s)+" s";
+  let k=1, last=null;
+  const draw=o=>{ const a=o.a, v=tuc(a,k);
+    const curves=[0,1,2].map(j=>`<path d="${Array.from({length:45},(_,i)=>{ const aa=18000+i*500; return `${i?"L":"M"}${X(aa).toFixed(1)} ${Y(tuc(aa,j)).toFixed(1)}`; }).join("")}" stroke="${C[j]}" stroke-width="${j===k?3:1.4}" fill="none" opacity="${j===k?1:.55}"/>`).join("");
+    const grid=[10,30,60,300,600,1800,3600].map(s=>`<path d="M48 ${Y(s)}H378" stroke="#22364c"/><text x="44" y="${Y(s)+3}" font-size="9" text-anchor="end" fill="#9fb3c8">${s<60?s+" s":s/60+" min"}</text>`).join("")
+      +[20000,25000,30000,35000,40000].map(x=>`<path d="M${X(x)} 32V246" stroke="#22364c"/><text x="${X(x)}" y="260" font-size="9" text-anchor="middle" fill="#9fb3c8">${f0(x/1000)}k</text>`).join("");
+    svg.innerHTML=`<rect width="400" height="290" fill="#12202f"/>${grid}<text x="213" y="274" font-size="10" text-anchor="middle" fill="#9fb3c8">altitud de cabina (ft)</text>
+      ${[0,1,2].map(j=>`<rect x="${60+j*112}" y="8" width="10" height="10" fill="${C[j]}"/><text x="${74+j*112}" y="17" font-size="9" fill="#9fb3c8">${["reposo","actividad","descompresión"][j]}</text>`).join("")}
+      ${curves}<path d="M${X(a)} 32V246" stroke="#dfe8f1" stroke-dasharray="3 3"/><circle cx="${X(a)}" cy="${Y(v)}" r="6" fill="${C[k]}" stroke="#12202f" stroke-width="2"/>
+      <text x="${cl(X(a),70,330)}" y="${Math.max(44,Y(v)-12)}" font-size="12" font-weight="700" text-anchor="middle" fill="${C[k]}">${fmt(v)}</text>
+`;
+    u.out.innerHTML=`A <b>${f0(a)} ft</b> de cabina, ${N[k]}: TUC ≈ <b>${fmt(v)}</b>${a>=25000?". Tu primera acción: <b>mascarilla de oxígeno al 100 %</b> y después descenso de emergencia; no hay tiempo para diagnosticar":". Ponte el oxígeno antes de que la euforia te quite el juicio"}. La actividad, el tabaco, el cansancio y una descompresión rápida lo <b>acortan</b>.`; };
+  btns(el,"data-tu",v=>{ k=+v; if(last) draw(last); });
+  bind(el,o=>{ last=o; setO(el,"a",f0(o.a)); draw(o); });
+}};
+
 
 function mount(el){ const k=el.dataset.viz, v=V[k]; if(!v||el._v) return; el._v=1;
   const go=()=>{ try{ v.init(el); }catch(e){ try{ console.error("F0Viz",k,e); }catch(_){} el.innerHTML=`<p class="lt">${v.t}</p><p class="out">No se ha podido cargar esta lámina.</p>`; } };
