@@ -151,7 +151,7 @@ const FEEDS = [   // Solo fuentes abiertas. ✓ = verificada con datos; ? = sin 
   { src: "Aviatory", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://aviatory.app/rss.xml" },   // ? candidata
   { src: "Aviatory", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://aviatory.app/blog/rss.xml" },   // ? candidata                              // ? WordPress: feed general (solo entra lo que habla de empleo)
   { src: "Aviation Insider", cat: "Empleo", r: "EU", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:aviationinsider.com (pilot OR recruitment OR \"first officer\" OR cadet OR hiring) when:120d", false) },
-  { src: "Brookfield Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://www.brookfieldav.com/blog-feed.xml" },                   // ? Wix: resúmenes mensuales «Aviation Jobs Worldwide»
+  { src: "Brookfield Aviation", cat: "Industria", r: "INT", v: 1, wl: 1, url: "https://www.brookfieldav.com/blog-feed.xml" },                   // ? Wix: resúmenes mensuales «Aviation Jobs Worldwide»
   { src: "Brookfield Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:brookfieldav.com (pilot OR jobs OR \"first officer\" OR captain) when:120d", false) },
   { src: "FCi Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:fci.aero (pilot OR captain OR \"first officer\" OR jobs) when:120d", false) },   // sin RSS público: respaldo por búsqueda
   { src: "Aviatory", cat: "Empleo", r: "INT", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:aviatory.app (pilot OR \"first officer\" OR hiring OR jobs) when:120d", false) }              // sin RSS público: respaldo por búsqueda
@@ -187,7 +187,7 @@ const EMP_IN_C = /\b(FO|F\/O|SO|FI|TRI|SFI|CRI|IRI|SEP|ATPL|CPL)\b/;   // siglas
 const EMP_OUT_I = /\b(project managers?|engineers?|engineering|mechanics?|technicians?|cabin crew|flight attendants?|dispatch\w*|ground|marketing|sales|interns?|internship|ingenier\w*|mec[aá]nic\w*|t[eé]cnic\w*|tripulante\w*|TCP|auxiliar(es)? de vuelo|azafat\w*|handling|ventas|pr[aá]cticas|manager|analyst|accountant|recruiter|coordinator|administrat\w*)\b/i;
 const EMP_OUT_C = /\b(IT|HR)\b/;
 const isFlightJob = t => { if (EMP_OUT_C.test(t)) return false; const cad = /cadet|cadete/i.test(t); let o = t.match(EMP_OUT_I); if (o && !(cad && /^interns?|internship|pr[aá]cticas$/i.test(o[0]))) return false; return EMP_IN_I.test(t) || (EMP_IN_C.test(t) && /\b(pilots?|pilotos?|instructor|officer|captain|cadet|jobs?|hiring|recruit\w*|vacanc\w*)\b/i.test(t)); };
-const JOBW = /\b(pilots?|first officers?|captains?|cadets?|jobs?|hiring|recruit\w*|vacanc\w*|type rating|low[- ]?hours?|careers?|openings?)\b/i;
+const JOBW = /\b(first officers?|captains?|cadets?|jobs?|hiring|recruit\w*|vacanc\w*|type rating|low[- ]?hours?|openings?)\b/i;   // sin «pilot»/«career» sueltos: colarían artículos generales
 const LH_I = /\b(low[- ]?hours?|no type rating|without (a )?type rating|non[- ]?type[- ]?rated|non[- ]?rated|ab[- ]?initio|zero[- ]?hours?|frozen ATPL|junior first officers?|new(ly)? (qualified|licen[cs]ed)|sin habilitaci[oó]n|sin type rating|sin experiencia)\b/i;
 const LH_C = /\b(NTR|MPL)\b/;   // siglas: solo en mayúsculas
 const CAD = /\bcadets?\b|cadete\w*/i;
