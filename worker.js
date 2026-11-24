@@ -137,7 +137,19 @@ const FEEDS = [   // Solo fuentes abiertas. ✓ = verificada con datos; ? = sin 
   { src: "Google News · Wizz/Ryanair/easyJet", cat: "Empleo", r: "EU", gn: 1, url: GN("(Ryanair OR easyJet OR \"Wizz Air\" OR Transavia OR Lufthansa OR KLM OR \"Air France\" OR TAP OR ITA OR SAS OR Norwegian OR Jet2 OR TUI OR Condor OR Eurowings) pilot recruitment OR \"cadet\" OR \"direct entry\" OR hiring when:45d", false) },
   // ---------- FUENTES VIGILADAS (v:1 → ★ en el Radar; wl:1 → los titulares de oferta entran siempre en Empleo; keep:1 → la fuente se muestra con su nombre) ----------
   { src: "Aviation Insider", cat: "Empleo", r: "EU", v: 1, wl: 1, url: "https://aviationinsider.com/category/pilot-recruitment/feed/" },   // ? WordPress: categoría de reclutamiento
-  { src: "Aviation Insider", cat: "Industria", r: "EU", v: 1, wl: 1, url: "https://aviationinsider.com/feed/" },                              // ? WordPress: feed general (solo entra lo que habla de empleo)
+  { src: "Aviation Insider", cat: "Industria", r: "EU", v: 1, wl: 1, url: "https://aviationinsider.com/feed/" },
+  { src: "Aviation Insider", cat: "Empleo", r: "EU", v: 1, wl: 1, url: "https://www.aviationinsider.com/category/pilot-recruitment/feed/" },   // ? candidata
+  { src: "Aviation Insider", cat: "Industria", r: "EU", v: 1, wl: 1, url: "https://www.aviationinsider.com/feed/" },   // ? candidata
+  { src: "Aviation Insider", cat: "Industria", r: "EU", v: 1, wl: 1, url: "https://aviationinsider.com/feed" },   // ? candidata
+  { src: "Aviation Insider", cat: "Industria", r: "EU", v: 1, wl: 1, url: "https://aviationinsider.com/rss.xml" },   // ? candidata
+  { src: "Aviation Insider", cat: "Industria", r: "EU", v: 1, wl: 1, url: "https://aviationinsider.com/blog-feed.xml" },   // ? candidata
+  { src: "FCi Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://fci.aero/feed/" },   // ? candidata
+  { src: "FCi Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://fci.aero/?feed=job_feed" },   // ? candidata
+  { src: "FCi Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://fci.aero/jobs/feed/" },   // ? candidata
+  { src: "FCi Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://careers.fci.aero/rss" },   // ? candidata
+  { src: "Aviatory", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://aviatory.app/feed" },   // ? candidata
+  { src: "Aviatory", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://aviatory.app/rss.xml" },   // ? candidata
+  { src: "Aviatory", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://aviatory.app/blog/rss.xml" },   // ? candidata                              // ? WordPress: feed general (solo entra lo que habla de empleo)
   { src: "Aviation Insider", cat: "Empleo", r: "EU", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:aviationinsider.com (pilot OR recruitment OR \"first officer\" OR cadet OR hiring) when:120d", false) },
   { src: "Brookfield Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://www.brookfieldav.com/blog-feed.xml" },                   // ? Wix: resúmenes mensuales «Aviation Jobs Worldwide»
   { src: "Brookfield Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:brookfieldav.com (pilot OR jobs OR \"first officer\" OR captain) when:120d", false) },
