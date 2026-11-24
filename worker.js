@@ -134,7 +134,29 @@ const FEEDS = [   // Solo fuentes abiertas. ✓ = verificada con datos; ? = sin 
   { src: "Google News · Aerotime careers", cat: "Empleo", r: "EU", gn: 1, url: GN("site:aerotime.aero (pilots OR hiring OR recruitment OR cadet OR careers) when:60d", false) },
   { src: "Google News · FlightGlobal jobs", cat: "Empleo", r: "INT", gn: 1, url: GN("site:flightglobal.com pilots (recruitment OR hiring OR shortage OR cadets) when:60d", false) },
   { src: "Google News · AviationJobSearch", cat: "Empleo", r: "INT", gn: 1, url: GN("aviationjobsearch OR \"aviation job search\" pilot jobs when:60d", false) },
-  { src: "Google News · Wizz/Ryanair/easyJet", cat: "Empleo", r: "EU", gn: 1, url: GN("(Ryanair OR easyJet OR \"Wizz Air\" OR Transavia OR Lufthansa OR KLM OR \"Air France\" OR TAP OR ITA OR SAS OR Norwegian OR Jet2 OR TUI OR Condor OR Eurowings) pilot recruitment OR \"cadet\" OR \"direct entry\" OR hiring when:45d", false) }
+  { src: "Google News · Wizz/Ryanair/easyJet", cat: "Empleo", r: "EU", gn: 1, url: GN("(Ryanair OR easyJet OR \"Wizz Air\" OR Transavia OR Lufthansa OR KLM OR \"Air France\" OR TAP OR ITA OR SAS OR Norwegian OR Jet2 OR TUI OR Condor OR Eurowings) pilot recruitment OR \"cadet\" OR \"direct entry\" OR hiring when:45d", false) },
+  // ---------- FUENTES VIGILADAS (v:1 → ★ en el Radar; wl:1 → los titulares de oferta entran siempre en Empleo; keep:1 → la fuente se muestra con su nombre) ----------
+  { src: "Aviation Insider", cat: "Empleo", r: "EU", v: 1, wl: 1, url: "https://aviationinsider.com/category/pilot-recruitment/feed/" },   // ? WordPress: categoría de reclutamiento
+  { src: "Aviation Insider", cat: "Industria", r: "EU", v: 1, wl: 1, url: "https://aviationinsider.com/feed/" },                              // ? WordPress: feed general (solo entra lo que habla de empleo)
+  { src: "Aviation Insider", cat: "Empleo", r: "EU", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:aviationinsider.com (pilot OR recruitment OR \"first officer\" OR cadet OR hiring) when:120d", false) },
+  { src: "Brookfield Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, url: "https://www.brookfieldav.com/blog-feed.xml" },                   // ? Wix: resúmenes mensuales «Aviation Jobs Worldwide»
+  { src: "Brookfield Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:brookfieldav.com (pilot OR jobs OR \"first officer\" OR captain) when:120d", false) },
+  { src: "FCi Aviation", cat: "Empleo", r: "INT", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:fci.aero (pilot OR captain OR \"first officer\" OR jobs) when:120d", false) },   // sin RSS público: respaldo por búsqueda
+  { src: "Aviatory", cat: "Empleo", r: "INT", v: 1, wl: 1, keep: 1, gn: 1, url: GN("site:aviatory.app (pilot OR \"first officer\" OR hiring OR jobs) when:120d", false) }              // sin RSS público: respaldo por búsqueda
+];
+// Fuentes vigiladas: enlace directo a su zona de ofertas. Se sirven al Radar (panel «Fuentes vigiladas»).
+const WATCH = [
+  { n: "Aviation Insider", u: "https://aviationinsider.com/category/pilot-recruitment/", d: "Convocatorias europeas y procesos low-hour, con guías de entrevista y simulador.", ig: "aviation.insider" },
+  { n: "FCi Aviation", u: "https://fci.aero/job-category/captains-and-first-officers/", d: "Reclutamiento internacional y contratos commuting (E190, A320, B737…).", ig: "fci_crews" },
+  { n: "Brookfield Aviation", u: "https://www.brookfieldav.com/airline-pilot-jobs", d: "Contratos de Primer Oficial y Comandante (E190/E195, A320…). El detalle de cada oferta pide registro.", ig: "brookfieldaviation" },
+  { n: "Aviatory", u: "https://aviatory.app", d: "Resúmenes semanales de aerolíneas que buscan Primer Oficial.", ig: "aviatoryapp" }
+];
+// Convocatorias verificadas a mano el 24/11/26 contra la página original. «ver» = fecha de comprobación; si cambia o cierra, se retira aquí.
+const JOBS = [
+  { u: "https://www.flightdeckfriend.com/job/brussels-airlines-non-rated-first-officers-5/", src: "Brussels Airlines (vía FlightDeckFriend)", t: "Brussels Airlines · Primer Oficial A320neo sin habilitación", pos: "Primer Oficial", ac: "A320neo (flota Airbus)", base: "Bruselas (Bélgica)", hrs: "Sin mínimo: admiten low-hour", tr: "No la exige (acepta con y sin TR)", req: "ATPL(A) o CPL(A)/IR con ATPL teórico, ME/IR, MCC, UPRT avanzado, inglés ICAO 4, holandés o francés (B2), CMA1, certificado de buena conducta", r: "EU", lh: 1, open: 0, ver: "24/11/26", note: "Proceso cerrado hoy; se repite en oleadas." },
+  { u: "https://fci.aero/jobs/royal-air-maroc-e190-captains-first-officers-436692/", src: "FCi Aviation", t: "Royal Air Maroc · Comandantes y Primeros Oficiales E190", pos: "Comandante y Primer Oficial", ac: "E190", base: "Marruecos (contrato commuting)", hrs: "PO: 300 h en E190/170 · Cte: 1.000 h PIC en E190/170", tr: "Sí, TR vigente", req: "CMA1; contrato de 5 años renovable, 7 días libres al mes y 24 de vacaciones; incorporaciones mensuales", r: "INT", lh: 0, open: 1, ver: "24/11/26", note: "Cerca de España, pero pide TR y horas en el tipo." },
+  { u: "https://fci.aero/jobs/a320-tr-ntr-captain-opportunities-with-european-carrier-i-non-eu-pilots-438517/", src: "FCi Aviation", t: "Wizz Air · Comandantes A320 con y sin habilitación", pos: "Comandante", ac: "A320", base: "Malta (pilotos no UE: Tirana, Iași, Chișinău)", hrs: "3.500 h factorizadas; 1.000 h PIC en jet multipiloto >50 t (sin TR)", tr: "Acepta con y sin TR", req: "ATPL EASA con IR, CMA1, inglés ICAO 4; permanente, completo o parcial, con rotación commuting", r: "EU", lh: 0, open: 1, ver: "24/11/26", note: "Referencia de mercado: aún no es para ti (comandante)." },
+  { u: "https://pilotsdb.brookfieldav.com/showjob/01292/E190-195-First-Officers---Air-Peace", src: "Brookfield Aviation", t: "Air Peace · Primeros Oficiales E190/E195", pos: "Primer Oficial", ac: "E190/E195", base: "Lagos (Nigeria)", hrs: "3.000 h totales, 500 h como SIC en E175/195", tr: "Sí, habilitación E175/195", req: "ATP con la habilitación, CMA1, inglés ICAO 4; 1 año renovable, 8 semanas dentro y 3 fuera, 7.000 USD al mes", r: "INT", lh: 0, open: 1, ver: "24/11/26", note: "Referencia: pide experiencia en el tipo." }
 ];
 // Si el titular lo dice, manda el tema del titular sobre el del feed (orden = prioridad)
 const KW = [
@@ -153,6 +175,10 @@ const EMP_IN_C = /\b(FO|F\/O|SO|FI|TRI|SFI|CRI|IRI|SEP|ATPL|CPL)\b/;   // siglas
 const EMP_OUT_I = /\b(project managers?|engineers?|engineering|mechanics?|technicians?|cabin crew|flight attendants?|dispatch\w*|ground|marketing|sales|interns?|internship|ingenier\w*|mec[aá]nic\w*|t[eé]cnic\w*|tripulante\w*|TCP|auxiliar(es)? de vuelo|azafat\w*|handling|ventas|pr[aá]cticas|manager|analyst|accountant|recruiter|coordinator|administrat\w*)\b/i;
 const EMP_OUT_C = /\b(IT|HR)\b/;
 const isFlightJob = t => { if (EMP_OUT_C.test(t)) return false; const cad = /cadet|cadete/i.test(t); let o = t.match(EMP_OUT_I); if (o && !(cad && /^interns?|internship|pr[aá]cticas$/i.test(o[0]))) return false; return EMP_IN_I.test(t) || (EMP_IN_C.test(t) && /\b(pilots?|pilotos?|instructor|officer|captain|cadet|jobs?|hiring|recruit\w*|vacanc\w*)\b/i.test(t)); };
+const JOBW = /\b(pilots?|first officers?|captains?|cadets?|jobs?|hiring|recruit\w*|vacanc\w*|type rating|low[- ]?hours?|careers?|openings?)\b/i;
+const LH_I = /\b(low[- ]?hours?|no type rating|without (a )?type rating|non[- ]?type[- ]?rated|non[- ]?rated|ab[- ]?initio|zero[- ]?hours?|frozen ATPL|junior first officers?|new(ly)? (qualified|licen[cs]ed)|sin habilitaci[oó]n|sin type rating|sin experiencia)\b/i;
+const LH_C = /\b(NTR|MPL)\b/;   // siglas: solo en mayúsculas
+const CAD = /\bcadets?\b|cadete\w*/i;
 const regionOf = (t, s, fr) => REG_ES.test(t) ? "ES" : REG_EU.test(t + " " + s) ? "EU" : (fr || "INT");
 const txt = (x, t) => { const m = x.match(new RegExp("<" + t + "[^>]*>([\\s\\S]*?)</" + t + ">", "i")); return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").trim() : ""; };
 async function readFeed(f) {
@@ -166,11 +192,13 @@ async function readFeed(f) {
       const d = Date.parse(txt(b, "pubDate") || txt(b, "updated") || txt(b, "published") || txt(b, "dc:date"));
       if (title && /^https?:\/\//.test(link)) {
         let t = title, s = f.src;
-        if (f.gn) { const g = t.match(/^(.*\S)\s+-\s+([^-]{2,60})$/); if (g) { t = g[1]; s = g[2].trim(); } }   // Google News: «Titular - Medio» → el medio pasa a ser la fuente
+        if (f.gn) { const g = t.match(/^(.*\S)\s+-\s+([^-]{2,60})$/); if (g) { t = g[1]; if (!f.keep) s = g[2].trim(); } }   // Google News: «Titular - Medio» → el medio pasa a ser la fuente
         let c = f.cat, hit = false; for (const [k, re] of KW) if (re.test(t)) { c = k; hit = k === "Empleo"; break; }
-        if (c === "Empleo" && !isFlightJob(t)) continue;   // Empleo: solo tripulación de vuelo
+        const jobish = f.wl && JOBW.test(t) && !EMP_OUT_I.test(t) && !EMP_OUT_C.test(t);   // fuentes vigiladas: cualquier titular de oferta/convocatoria de vuelo
+        if (jobish) { c = "Empleo"; hit = true; }
+        if (c === "Empleo" && !jobish && !isFlightJob(t)) continue;   // Empleo: solo tripulación de vuelo
         if (f.kwOnly && !hit) continue;   // prensa general: solo entra lo que habla de empleo
-        out.push({ t: t.slice(0, 220), u: link, s, c, d: isNaN(d) ? 0 : d, ...(c === "Empleo" ? { r: regionOf(t, s, f.r) } : {}) });
+        out.push({ t: t.slice(0, 220), u: link, s, c, d: isNaN(d) ? 0 : d, ...(f.v ? { v: 1 } : {}), ...(c === "Empleo" ? { r: regionOf(t, s, f.r), ...(LH_I.test(t) || LH_C.test(t) ? { lh: 1 } : {}), ...(CAD.test(t) ? { cd: 1 } : {}) } : {}) });
       }
     }
     return out;
@@ -204,7 +232,7 @@ export default {
       return J(o, o.ok, 300);
     }
     if (u.pathname === "/api/news") {
-      const o = await memo("news4", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds }; });
+      const o = await memo("news5", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
       if (u.searchParams.get("debug")) return J({ feeds: o.feeds, ok: o.ok, count: (o.n || []).length }, true, 0);
       return J(o, o.ok, 900);
     }
