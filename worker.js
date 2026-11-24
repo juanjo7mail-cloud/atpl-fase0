@@ -235,8 +235,8 @@ export default {
       return J(o, o.ok, 300);
     }
     if (u.pathname === "/api/news") {
-      const o = await memo("news7", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
-      if (u.searchParams.get("debug")) return J({ feeds: o.feeds, ok: o.ok, count: (o.n || []).length }, true, 0);
+      const o = await memo("news8", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
+      if (u.searchParams.get("debug")) return J({ build: "radar-2026-11-24c", feeds: o.feeds, ok: o.ok, count: (o.n || []).length, at: o.at }, true, 0);
       return J(o, o.ok, 900);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
