@@ -195,7 +195,7 @@ async function readFeed(f) {
         let t = title, s = f.src;
         if (f.gn) { const g = t.match(/^(.*\S)\s+-\s+([^-]{2,60})$/); if (g) { t = g[1]; if (!f.keep) s = g[2].trim(); } }   // Google News: «Titular - Medio» → el medio pasa a ser la fuente
         let c = f.cat, hit = false; for (const [k, re] of KW) if (re.test(t)) { c = k; hit = k === "Empleo"; break; }
-        const jobish = f.wl && JOBW.test(t) && !EMP_OUT_I.test(t) && !EMP_OUT_C.test(t);   // fuentes vigiladas: cualquier titular de oferta/convocatoria de vuelo
+        const jobish = f.wl && JOBW.test(t) && !EMP_OUT_I.test(t) && !EMP_OUT_C.test(t) && !/^(how|why|what|who|when|beyond|the)\b/i.test(t);   // los titulares de artículo («Why recruitment needs…») no son ofertas   // fuentes vigiladas: cualquier titular de oferta/convocatoria de vuelo
         if (jobish) { c = "Empleo"; hit = true; }
         if (c === "Empleo" && !jobish && !isFlightJob(t)) continue;   // Empleo: solo tripulación de vuelo
         if (f.kwOnly && !hit) continue;   // prensa general: solo entra lo que habla de empleo
@@ -235,7 +235,7 @@ export default {
     }
     if (u.pathname === "/api/news") {
       const o = await memo("news9", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
-      if (u.searchParams.get("debug")) return J({ build: "radar-2026-11-24d", feeds: o.feeds, ok: o.ok, count: (o.n || []).length, at: o.at }, true, 0);
+      if (u.searchParams.get("debug")) return J({ build: "radar-2026-11-24e", feeds: o.feeds, ok: o.ok, count: (o.n || []).length, at: o.at }, true, 0);
       return J(o, o.ok, 900);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
