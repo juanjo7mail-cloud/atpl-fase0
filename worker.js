@@ -206,7 +206,9 @@ async function readFeed(f) {
   } catch (e) { f.st = "error"; return []; }
 }
 async function news() {
-  const per = await Promise.all(FEEDS.map(readFeed)), all = per.flat(), seen = new Set(), seenT = new Set(), cnt = {}, emp = [], rest = [];
+  // Google News devuelve 429/503 si le llegan ~20 consultas a la vez desde la misma IP: se escalonan (600 ms entre cada una); el resto va en paralelo
+  const sleep = ms => new Promise(r => setTimeout(r, ms)); let gi = 0;
+  const per = await Promise.all(FEEDS.map(f => f.gn ? sleep(600 * gi++).then(() => readFeed(f)) : readFeed(f))), all = per.flat(), seen = new Set(), seenT = new Set(), cnt = {}, emp = [], rest = [];
   all.sort((a, b) => b.d - a.d);
   const nt = t => t.toLowerCase().replace(/[^a-z0-9áéíóúñ]+/g, " ").trim().slice(0, 70);
   for (const n of all) {
@@ -233,7 +235,7 @@ export default {
       return J(o, o.ok, 300);
     }
     if (u.pathname === "/api/news") {
-      const o = await memo("news6", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
+      const o = await memo("news7", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
       if (u.searchParams.get("debug")) return J({ feeds: o.feeds, ok: o.ok, count: (o.n || []).length }, true, 0);
       return J(o, o.ok, 900);
     }
