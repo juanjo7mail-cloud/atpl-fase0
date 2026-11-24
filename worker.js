@@ -206,9 +206,8 @@ async function readFeed(f) {
   } catch (e) { f.st = "error"; return []; }
 }
 async function news() {
-  // Google News devuelve 429/503 si le llegan ~20 consultas a la vez desde la misma IP: se escalonan (600 ms entre cada una); el resto va en paralelo
-  const sleep = ms => new Promise(r => setTimeout(r, ms)); let gi = 0;
-  const per = await Promise.all(FEEDS.map(f => f.gn ? sleep(600 * gi++).then(() => readFeed(f)) : readFeed(f))), all = per.flat(), seen = new Set(), seenT = new Set(), cnt = {}, emp = [], rest = [];
+  // Nota 24/11/26: Google News responde 429/503 a la IP del worker aunque se escalonen las consultas (probado a 600 ms: no mejora y añade 17 s). /api/news?debug=1 muestra el estado HTTP de cada feed.
+  const per = await Promise.all(FEEDS.map(readFeed)), all = per.flat(), seen = new Set(), seenT = new Set(), cnt = {}, emp = [], rest = [];
   all.sort((a, b) => b.d - a.d);
   const nt = t => t.toLowerCase().replace(/[^a-z0-9áéíóúñ]+/g, " ").trim().slice(0, 70);
   for (const n of all) {
@@ -235,8 +234,8 @@ export default {
       return J(o, o.ok, 300);
     }
     if (u.pathname === "/api/news") {
-      const o = await memo("news8", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
-      if (u.searchParams.get("debug")) return J({ build: "radar-2026-11-24c", feeds: o.feeds, ok: o.ok, count: (o.n || []).length, at: o.at }, true, 0);
+      const o = await memo("news9", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
+      if (u.searchParams.get("debug")) return J({ build: "radar-2026-11-24d", feeds: o.feeds, ok: o.ok, count: (o.n || []).length, at: o.at }, true, 0);
       return J(o, o.ok, 900);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
