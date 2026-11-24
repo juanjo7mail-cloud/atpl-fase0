@@ -2132,7 +2132,7 @@ function rdDraw(){
   const row=n=>{ const c=cat(n.c), r=rd.has(n.u); return `<article class="rd-it${r?" rd":""}" style="--rc:${c.c}">${kick(n)}${link(n)}</article>`; };
   /* mesa de empleo: lo más reciente en Empleo, arriba, cuando no hay filtro */
   let band="", rest=list;
-  if(!RDcat){ const pri=n=>(n.r==="ES"?4:n.r==="EU"?3:0)+(n.lh?3:0)+(n.cd?1:0)+(n.v?1:0), jobs=list.filter(n=>n.c==="Empleo").sort((a,b)=>pri(b)-pri(a)||byD(a,b)).slice(0,8), ids=new Set(jobs.map(n=>n.u));
+  if(!RDcat){ const pri=n=>(n.r==="ES"?4:n.r==="EU"?3:0)+(n.lh?3:0)+(n.cd?1:0), jobs=list.filter(n=>n.c==="Empleo").sort((a,b)=>pri(b)-pri(a)||byD(a,b)).slice(0,8), ids=new Set(jobs.map(n=>n.u));
     if(jobs.length){ band=`<section class="rd-job" style="--rc:#8a5a00"><h3>★ ${T("Mesa de empleo","Jobs desk")} <small>${T("España, Europa y low-hour primero","Spain, Europe and low-hour first")}</small></h3><div class="rd-cols">${jobs.map(row).join("")}</div></section>`; rest=list.filter(n=>!ids.has(n.u)); } }
   let lead=""; if(rest.length){ const n=rest[0], c=cat(n.c), r=rd.has(n.u); lead=`<article class="rd-lead${r?" rd":""}" style="--rc:${c.c}">${kick(n,true)}${link(n)}</article>`; rest=rest.slice(1); }
   let last="", body="", grp=[];

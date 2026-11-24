@@ -185,8 +185,8 @@ const txt = (x, t) => { const m = x.match(new RegExp("<" + t + "[^>]*>([\\s\\S]*
 async function readFeed(f) {
   try {
     const r = await fetch(f.url, { headers: { "user-agent": "Mozilla/5.0 (compatible; atpl-rss/1.1)" }, cf: { cacheTtl: 3600, cacheEverything: true } });
-    if (!r.ok) return [];
-    const x = await r.text(), out = [];
+    if (!r.ok) { f.st = "HTTP " + r.status; return []; }
+    const x = await r.text(), out = []; f.st = "";
     for (const m of x.matchAll(/<(item|entry)[\s>][\s\S]*?<\/\1>/gi)) {
       const b = m[0], title = txt(b, "title"); let link = txt(b, "link");
       if (!link) { const h = b.match(/<link[^>]*href="([^"]+)"/i); link = h ? h[1] : ""; }
@@ -203,7 +203,7 @@ async function readFeed(f) {
       }
     }
     return out;
-  } catch (e) { return []; }
+  } catch (e) { f.st = "error"; return []; }
 }
 async function news() {
   const per = await Promise.all(FEEDS.map(readFeed)), all = per.flat(), seen = new Set(), seenT = new Set(), cnt = {}, emp = [], rest = [];
@@ -217,7 +217,7 @@ async function news() {
     if (n.c === "Empleo") { if (emp.length < 70) emp.push(n); } else if (rest.length < 80) rest.push(n);   // Empleo tiene cupo propio: hasta 70 de 150
   }
   const out = emp.concat(rest).sort((a, b) => b.d - a.d);
-  out.feeds = FEEDS.map((f, i) => f.src + " · " + f.url + " → " + per[i].length);
+  out.feeds = FEEDS.map((f, i) => f.src + " · " + f.url + " → " + per[i].length + (f.st ? " [" + f.st + "]" : ""));
   return out;
 }
 export default {
@@ -233,7 +233,7 @@ export default {
       return J(o, o.ok, 300);
     }
     if (u.pathname === "/api/news") {
-      const o = await memo("news5", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
+      const o = await memo("news6", 21600000, async () => { const n = await news(); return { ok: n.length > 0, n, at: Date.now(), feeds: n.feeds, j: JOBS, w: WATCH }; });
       if (u.searchParams.get("debug")) return J({ feeds: o.feeds, ok: o.ok, count: (o.n || []).length }, true, 0);
       return J(o, o.ok, 900);
     }
