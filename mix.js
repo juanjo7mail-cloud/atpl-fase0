@@ -7,18 +7,17 @@ const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"]/g,c=>
 const shuf=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const CSS=`
-.mxbar{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 12px}
-.mxbar button{display:inline-flex;gap:7px;align-items:center;min-height:36px;padding:6px 14px 6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;line-height:1}
+.mxbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 18px}
+.mxbar button{display:flex;flex-direction:row;gap:8px;align-items:center;justify-content:center;min-width:0;height:46px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;line-height:1;text-align:center;box-shadow:0 1px 2px rgba(19,38,58,.08)}
 .mxbar button:hover{border-color:var(--accent)}
-.mxbar .ic{font-size:17px;line-height:1}
-.mxbar b{font:700 14px/1 var(--display);letter-spacing:.03em;white-space:nowrap}
+.mxbar .ic{font-size:18px;line-height:1;flex:none}
+.mxbar b{font:700 14px/1.1 var(--display);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .mxbar .sh{display:none}
+@media (max-width:900px){ .mxbar .lg{display:none} .mxbar .sh{display:inline} }
 @media (max-width:560px){
- .mxbar{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 10px}
- .mxbar button{flex-direction:column;gap:3px;min-height:0;padding:7px 2px 6px;border-radius:10px;justify-content:center}
- .mxbar .ic{font-size:18px}
- .mxbar b{font-size:12px;letter-spacing:.02em}
- .mxbar .lg{display:none} .mxbar .sh{display:inline}
+ .mxbar{gap:8px}
+ .mxbar button{flex-direction:column;gap:4px;height:52px;padding:0 4px}
+ .mxbar b{font-size:12.5px;letter-spacing:.02em}
 }
 .mx{position:fixed;inset:0;z-index:9000;background:rgba(6,14,22,.62);display:flex;align-items:flex-start;justify-content:center;padding:max(10px,env(safe-area-inset-top,0px)) 10px 10px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .mxp{width:min(860px,100%);background:var(--paper);color:var(--ink);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;margin:min(5vh,36px) 0 24px}

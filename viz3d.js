@@ -1,4 +1,4 @@
-/* Láminas 3D (serie 3) y esquemas interactivos: globo, ILS/VOR, meteorología 3D, derecho de paso, CG, túnel, motor, estela, espacios aéreos A–G, METAR/TAF y, en 010, señales, alturas mínimas con circuito e interceptación.
+/* Láminas 3D (serie 3) y esquemas interactivos: globo, ILS/VOR, meteorología 3D, derecho de paso, CG, túnel, motor, estela, espacios aéreos A–G, METAR/TAF, en 010 señales, alturas mínimas con circuito e interceptación, proyecciones (061) y oído interno (040).
    Motor 3D propio en canvas 2D (sin WebGL ni librerías): ligero y funciona en cualquier móvil.
    Se registran en F0Viz (viz16.js) y se montan en <div class="f0viz" data-viz="…">. Solo dibujan mientras están en pantalla. */
 (function(){
@@ -1440,6 +1440,176 @@ init(el){
   const Q=quiz(u,QZ,c=>{ sr=c.s.s; my=c.s.my||0; T=0; press(u,"data-s",""); press(u,"data-my",""); });
   u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); press(u,"data-s",sr); say(); } });
   say(); S.kick();
+}};
+})();
+
+/* =====================================================================
+   18 · PROYECCIONES CARTOGRÁFICAS EN 3D (061): Mercator (cilindro), Lambert cónica conforme (cono secante) y estereográfica polar (plano)
+   Esfera de radio 1. Mercator y Lambert se colocan sobre su superficie con su fórmula matemática (no son proyecciones de luz);
+   la estereográfica polar sí es geométrica: rayos desde el polo opuesto.
+   ===================================================================== */
+V.proj3d=(()=>{
+const RD=Math.PI/180, P3=(la,lo)=>[Math.cos(la*RD)*Math.sin(lo*RD),Math.sin(la*RD),Math.cos(la*RD)*Math.cos(lo*RD)];
+const MERC=la=>Math.log(Math.tan(Math.PI/4+la*RD/2)), ML=70;
+// Lambert con paralelos estándar 30° y 60° N; cono geométrico secante por esos dos paralelos (semiángulo 45°, vértice en y = 1,366)
+const S1=30, S2=60, NL=Math.log(Math.cos(S1*RD)/Math.cos(S2*RD))/Math.log(Math.tan(Math.PI/4+S2*RD/2)/Math.tan(Math.PI/4+S1*RD/2));
+const RHO=la=>Math.pow(Math.tan(Math.PI/4+la*RD/2),-NL), AY=.5+Math.cos(S1*RD)*1, SL1=Math.hypot(Math.cos(S1*RD),AY-Math.sin(S1*RD)), GA=Math.atan2(Math.cos(S1*RD),AY-Math.sin(S1*RD));
+const SLANT=la=>RHO(la)/RHO(S1)*SL1;
+const ON={m:(la,lo)=>Math.abs(la)>ML?null:[Math.sin(lo*RD),MERC(la),Math.cos(lo*RD)],
+          l:(la,lo)=>la<0||la>88?null:(s=>[s*Math.sin(GA)*Math.sin(lo*RD),AY-s*Math.cos(GA),s*Math.sin(GA)*Math.cos(lo*RD)])(SLANT(la)),
+          p:(la,lo)=>la<15?null:(r=>[r*Math.sin(lo*RD),1,r*Math.cos(lo*RD)])(2*Math.tan((90-la)*RD/2))};
+const K={m:la=>1/Math.cos(la*RD), l:la=>(RHO(la)/Math.cos(la*RD))/(RHO(S1)/Math.cos(S1*RD)), p:la=>2/(1+Math.sin(la*RD))};
+const NAME={m:"Mercator · cilíndrica",l:"Lambert cónica conforme · cono secante",p:"Estereográfica polar · plano tangente"};
+const ROUTE={ny:[[40.47,-3.56],[40.64,-73.78],"Madrid → Nueva York"],ty:[[40.47,-3.56],[35.77,140.39],"Madrid → Tokio"]};
+const gc=(A,B,n)=>{ const a=P3(...A), b=P3(...B), om=Math.acos(Math.max(-1,Math.min(1,vdot(a,b)))), s=Math.sin(om); return Array.from({length:n+1},(_,i)=>{ const t=i/n, p=vadd(vmul(a,Math.sin((1-t)*om)/s),vmul(b,Math.sin(t*om)/s)); return [Math.asin(p[1])/RD,Math.atan2(p[0],p[2])/RD]; }); };
+const rl=(A,B,n)=>{ let dl=B[1]-A[1]; if(dl>180) dl-=360; if(dl<-180) dl+=360; const y0=MERC(A[0]), y1=MERC(B[0]); return Array.from({length:n+1},(_,i)=>{ const t=i/n, y=y0+(y1-y0)*t; return [(2*Math.atan(Math.exp(y))-Math.PI/2)/RD,A[1]+dl*t]; }); };
+const QZ=[
+ {q:"En <b>Mercator</b>, ¿qué línea es recta?",o:["La loxodrómica (rhumb line)","La ortodrómica (great circle)","Las dos"],a:0,e:"Mercator: meridianos paralelos y rumbo constante = <b>recta</b>. La ortodrómica sale curva, <b>cóncava hacia el ecuador</b>.",s:{p:"m"}},
+ {q:"¿Dónde es exacta la escala en <b>Mercator</b>?",o:["En el ecuador (y crece con la secante de la latitud)","En los paralelos estándar","En el polo"],a:0,e:"Cilindro tangente en el ecuador: escala exacta allí y crece con <b>sec φ</b>: a 60° es el doble.",s:{p:"m",la:60}},
+ {q:"En la <b>Lambert</b>, ¿dónde es exacta la escala?",o:["En los dos paralelos estándar; entre ellos algo menor","En el ecuador","Solo en el paralelo de origen"],a:0,e:"Cono <b>secante</b>: corta la Tierra en los dos paralelos estándar. Entre ellos la escala es algo <b>menor</b> que 1 y fuera, algo mayor.",s:{p:"l",la:45}},
+ {q:"En la <b>Lambert</b>, ¿qué forma tiene la ortodrómica?",o:["Casi recta (ligeramente cóncava al paralelo de origen)","Una curva cóncava al ecuador","Una espiral"],a:0,e:"Clave ATPL: <b>Lambert = great circle ≈ recto</b>; la loxodrómica es <b>cóncava al polo</b>.",s:{p:"l"}},
+ {q:"Convergencia de la carta en una <b>Lambert</b>:",o:["Δlongitud × n (constante del cono = sen del paralelo de origen)","Δlongitud × sen de la latitud media","Cero: los meridianos son paralelos"],a:0,e:"En la Lambert la convergencia de la carta es <b>constante</b>: Δλ × n, con n = sen φ₀ (paralelo de origen).",s:{p:"l"}},
+ {q:"¿Desde dónde se proyecta la <b>estereográfica polar</b>?",o:["Desde el polo opuesto, sobre un plano tangente al polo","Desde el centro de la Tierra","Desde el infinito"],a:0,e:"Rayos desde el <b>polo opuesto</b>: por eso es conforme. Escala exacta en el polo y crece al alejarse (k = 2 / (1 + sen φ)).",s:{p:"p"}},
+ {q:"En la <b>estereográfica polar</b>, la ortodrómica cerca del polo es…",o:["Casi recta","Una curva cóncava al ecuador","Un círculo alrededor del polo"],a:0,e:"Cerca del polo la ortodrómica es <b>casi recta</b> y la loxodrómica, cóncava al polo. Convergencia de la carta = Δλ (n = 1).",s:{p:"p"}},
+ {q:"¿Qué tienen en común las tres proyecciones de la carta aeronáutica?",o:["Son conformes: los ángulos se conservan","Son equivalentes: las áreas se conservan","La escala es la misma en toda la carta"],a:0,e:"Mercator, Lambert y estereográfica polar son <b>conformes</b> (ortomórficas): rumbos y formas pequeñas correctos.",s:{p:"m"}}];
+return {t:"3D · Proyecciones: Mercator, Lambert y estereográfica polar",
+cap:"Esfera de radio 1. En Mercator y Lambert cada punto se coloca en su superficie con la fórmula de la proyección (no son proyecciones de luz); la estereográfica polar sí lo es, desde el polo opuesto. Lambert de ejemplo con paralelos estándar 30° y 60° N. Arrastra para girar.",
+init(el){
+  const ctl=row("Proyección",bt("data-p","m","Mercator",1)+bt("data-p","l","Lambert")+bt("data-p","p","Estereográfica polar")+bt("data-m","quiz","Ponme a prueba"))
+   +row("Ruta",Object.keys(ROUTE).map((k,i)=>bt("data-r",k,ROUTE[k][2],!i)).join("")+`<label class="v3k"><input type="checkbox" data-rays checked> Rayos de proyección</label>`)
+   +row("",sl("la","Latitud para leer la escala",0,85,60,1))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shell(el,this.t,"Globo terrestre dentro de la superficie de proyección: cilindro, cono o plano",ctl,this.cap);
+  let pj="m", rk="ny", rays=true, la=60, qm=false;
+  const S=orbit(u.c,{yaw:-25,pit:18,ar:.66,hmin:320,hmax:520,pmin:-30,pmax:89,draw});
+  function draw(S){ const x=S.x, W=S.W, H=S.H, d=S.dp, k=Math.min(W,H)*(pj==="m"?.22:.27), T=pj==="m"?[0,.1,0]:pj==="l"?[0,.55,0]:[0,.4,0];
+    S.cam(k,W*.5,H*.52,T,12); const P=S.P;
+    x.setTransform(1,0,0,1,0,0); const g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,"#0b1626"); g.addColorStop(1,"#13263b"); x.fillStyle=g; x.fillRect(0,0,W,H);
+    const back=p=>vdot(p,S.eye)<0;
+    const ln=(pts,c,w,al,dash)=>{ x.strokeStyle=c; x.lineWidth=(w||1)*d; x.globalAlpha=al==null?1:al; x.setLineDash(dash?dash.map(v=>v*d):[]); x.beginPath(); let on=false; for(const p of pts){ if(!p){ on=false; continue; } const q=P(p); on?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]); on=true; } x.stroke(); x.setLineDash([]); x.globalAlpha=1; };
+    const lb=(p,t,c)=>{ if(!p) return; const q=P(p); tag(x,q[0],q[1],t,{dp:d,fs:11,al:"c",c:c||"#fff"}); };
+    // superficie de proyección (translúcida, por bandas)
+    const surf=[], band=(f,la0,la1)=>{ for(let lo=-180;lo<180;lo+=15){ const a=f(la0,lo), b=f(la0,lo+15), c=f(la1,lo+15), e=f(la1,lo); if(a&&b&&c&&e){ const q=[a,b,c,e].map(P); surf.push({z:q.reduce((s,v)=>s+v[2],0)/4,q}); } } };
+    if(pj==="m") for(let l=-ML;l<ML;l+=10) band(ON.m,l,l+10); else if(pj==="l") for(let l=0;l<88;l+=8) band(ON.l,l,Math.min(88,l+8)); else for(let l=15;l<90;l+=5) band(ON.p,l,l+5);
+    // globo: cara oculta primero
+    const sph=(f)=>{ for(let lo=-180;lo<180;lo+=30){ const pts=[]; for(let l=-90;l<=90;l+=5){ const p=P3(l,lo); pts.push(f(p)?p:null); } ln(pts,"#8fb3d6",1,.55); } for(let l=-60;l<=60;l+=30){ const pts=[]; for(let lo=-180;lo<=180;lo+=5){ const p=P3(l,lo); pts.push(f(p)?p:null); } ln(pts,l===0?"#ffffff":"#8fb3d6",l===0?1.6:1,.55); } };
+    sph(back);
+    surf.sort((a,b)=>a.z-b.z).forEach(s=>{ x.globalAlpha=.16; x.fillStyle="#ffd24d"; x.beginPath(); s.q.forEach((v,i)=>i?x.lineTo(v[0],v[1]):x.moveTo(v[0],v[1])); x.closePath(); x.fill(); x.globalAlpha=1; });
+    { const og=x.createRadialGradient(...P([0,0,0]).slice(0,2),0,...P([0,0,0]).slice(0,2),k); og.addColorStop(0,"rgba(47,111,174,.55)"); og.addColorStop(1,"rgba(23,63,109,.35)"); const c0=P([0,0,0]); x.fillStyle=og; x.beginPath(); x.arc(c0[0],c0[1],k,0,7); x.fill(); }
+    sph(p=>!back(p));
+    // meridianos y paralelos sobre la superficie
+    const F=ON[pj];
+    for(let lo=-180;lo<180;lo+=30){ const pts=[]; for(let l=-90;l<=90;l+=2) pts.push(F(l,lo)); ln(pts,"#ffe7a0",1.2,.85); }
+    const pars=pj==="m"?[-60,-30,0,30,60]:pj==="l"?[0,15,30,45,60,75]:[20,30,45,60,75];
+    for(const l of pars){ const pts=[]; for(let lo=-180;lo<=180;lo+=4) pts.push(F(l,lo)); const std=(pj==="l"&&(l===S1||l===S2))||(pj==="m"&&l===0); ln(pts,std?"#6ee7a0":"#ffe7a0",std?3:1.2,std?1:.85); }
+    if(pj==="p") glowAt(x,P([0,1,0]),"rgba(110,231,160,1)",10*d,1);
+    // latitud elegida: anillo en el globo y en la superficie, con su escala
+    { const pts=[], pts2=[]; for(let lo=-180;lo<=180;lo+=4){ pts.push(P3(la,lo)); pts2.push(F(la,lo)); } ln(pts,"#ff8a80",2,.9,[4,3]); ln(pts2,"#ff8a80",2.4,1); lb(F(la,60)||P3(la,60),`${la}° · escala ×${f2p(K[pj](la))}`,"#ffc0b8"); }
+    // rayos de la estereográfica (desde el polo sur)
+    if(pj==="p"&&rays) for(const [l,lo] of [[30,0],[45,90],[60,-90],[75,180],[30,180]]){ const a=[0,-1,0], b=ON.p(l,lo); ln([a,P3(l,lo),b],"#9fe0ff",1.2,.8,[5,4]); }
+    // rutas: en el globo y en la superficie
+    const R=ROUTE[rk], G=gc(R[0],R[1],80), L=rl(R[0],R[1],80);
+    ln(G.map(q=>P3(...q)),"#ff6b6b",2,.55); ln(L.map(q=>P3(...q)),"#55d0ff",2,.55);
+    ln(G.map(q=>F(...q)),"#ff6b6b",3.2); ln(L.map(q=>F(...q)),"#55d0ff",3.2);
+    lb(F(...R[0]),"Madrid","#fff"); lb(F(...R[1]),R[2].split("→ ")[1],"#fff");
+    lb(pj==="m"?[0,MERC(ML)+.15,1]:pj==="l"?[0,AY+.12,0]:[0,1.08,-1.9],NAME[pj],"#ffd24d");
+    // leyenda
+    const fs=11.5*d; x.font=`600 ${fs}px system-ui,sans-serif`; let y=H-10*d-2*fs*1.5; for(const [c,t] of [["#ff6b6b","Ortodrómica · great circle"],["#55d0ff","Loxodrómica · rhumb line"],["#6ee7a0",pj==="m"?"Escala exacta: ecuador":pj==="l"?"Escala exacta: paralelos estándar 30° y 60°":"Escala exacta: el polo"]]){ x.fillStyle="rgba(8,16,28,.75)"; x.fillRect(8*d,y-fs*.85,x.measureText(t).width+30*d,fs*1.3); x.fillStyle=c; x.fillRect(12*d,y-fs*.25,14*d,3*d); x.fillStyle="#e9f0f7"; x.textBaseline="middle"; x.fillText(t,30*d,y); y+=fs*1.5; }
+    return false; }
+  function f2p(v){ return (Math.round(v*100)/100).toString().replace(".",","); }
+  const say=()=>{ if(qm) return; const kk=f2p(K[pj](la));
+    u.out.innerHTML=pj==="m"?`<b>Mercator</b>: cilindro tangente en el ecuador. Meridianos <b>rectas paralelas</b> (convergencia de la carta 0) y paralelos cada vez más separados. <b>Loxodrómica recta</b>; ortodrómica <b>cóncava al ecuador</b>. Escala exacta en el ecuador y crece con sec φ: a ${la}° vale <b>×${kk}</b>. Uso hasta unos 70°.`
+     :pj==="l"?`<b>Lambert cónica conforme</b>: cono <b>secante</b> en los paralelos estándar <b>30° y 60°</b> (en verde). Meridianos rectas que convergen; convergencia de la carta <b>constante = Δλ × n</b> (aquí n ≈ ${f2p(NL)}). <b>Ortodrómica ≈ recta</b>; loxodrómica <b>cóncava al polo</b>. Escala a ${la}°: <b>×${kk}</b> (menor que 1 entre los paralelos estándar). Buena entre 30° y 70°.`
+     :`<b>Estereográfica polar</b>: plano tangente en el polo y rayos desde el <b>polo opuesto</b> (azules). Meridianos rectas radiales; convergencia de la carta = <b>Δλ</b> (n = 1). Cerca del polo la <b>ortodrómica es casi recta</b> y la loxodrómica, cóncava al polo. Escala exacta en el polo; a ${la}°: <b>×${kk}</b>. Uso de 70° a 90°.`; };
+  const I=u.q('[data-k="la"]'), O=u.q('[data-o="la"]'); const setLa=v=>{ la=+v; I.value=la; O.textContent=la+"°"; say(); S.kick(); }; I.addEventListener("input",()=>setLa(I.value));
+  const setP=p=>{ pj=p; press(u,"data-p",p); S.go(p==="p"?-25:-25,p==="p"?38:18); say(); S.kick(); };
+  u.qa("[data-p]").forEach(b=>b.addEventListener("click",()=>{ if(qm){ qm=false; press(u,"data-m","x"); Q.stop(); } setP(b.dataset.p); }));
+  u.qa("[data-r]").forEach(b=>b.addEventListener("click",()=>{ rk=b.dataset.r; press(u,"data-r",rk); S.kick(); }));
+  u.q("[data-rays]").addEventListener("change",e=>{ rays=e.target.checked; S.kick(); });
+  const Q=quiz(u,QZ,c=>{ pj=c.s.p; press(u,"data-p",pj); if(c.s.la!=null){ la=c.s.la; I.value=la; O.textContent=la+"°"; } S.go(-25,pj==="p"?38:18); S.kick(); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); say(); } });
+  setLa(60); setP("m");
+}};
+})();
+
+/* =====================================================================
+   19 · SISTEMA VESTIBULAR Y DESORIENTACIÓN EN 3D (040): canales semicirculares, endolinfa y cúpula, otolitos
+   Modelo de primer orden: la endolinfa alcanza la velocidad del canal con una constante de tiempo de unos segundos (escena acelerada).
+   ===================================================================== */
+V.vest3d=(()=>{
+const PH=[
+ {k:"in",n:"1 · Empiezas a virar",d:16},{k:"sus",n:"2 · Viraje mantenido"},{k:"out",n:"3 · Nivelas (somatogirálica)"},{k:"lean",n:"4 · The leans",d:16},{k:"sg",n:"5 · Aceleras (somatográvica)",d:10}];
+const QZ=[
+ {q:"Empiezas un viraje. ¿Qué hace la endolinfa del canal horizontal?",o:["Se queda atrás por inercia, dobla la cúpula y notas el giro","Gira a la vez que el canal: no notas nada","Se mueve hacia delante del canal"],a:0,e:"Al <b>acelerar</b> el giro, el canal gira y la endolinfa se retrasa: dobla la <b>cúpula</b> y el cerebro nota el giro correctamente.",s:"in"},
+ {q:"Tras unos 20 s de viraje a ritmo constante…",o:["La endolinfa gira con el canal, la cúpula vuelve al centro y sientes que vas recto","Sigues notando el giro igual","Notas que el giro aumenta"],a:0,e:"Los canales solo detectan <b>aceleraciones angulares</b>. Con giro constante la endolinfa se iguala y la sensación desaparece.",s:"sus"},
+ {q:"Sales de un viraje largo y nivelas. ¿Qué sientes?",o:["Que giras hacia el lado contrario","Que sigues recto, como es real","Que el morro sube"],a:0,e:"Ilusión <b>somatogirálica</b>: al frenar el giro la endolinfa sigue moviéndose y dobla la cúpula al otro lado. La tentación de volver a virar lleva a la <b>espiral mortal</b>.",s:"out"},
+ {q:"<b>The leans</b>: un alabeo muy lento no se nota; al corregir rápido a nivelado…",o:["Sientes que estás alabeado hacia el otro lado y te inclinas hacia el lado original","Sientes el alabeo real","Sientes que el morro baja"],a:0,e:"El alabeo lento quedó <b>por debajo del umbral</b> (unos 0,5 °/s²). La corrección sí se nota, así que el cerebro cree que ahora estás inclinado al lado contrario.",s:"lean"},
+ {q:"Despegue o motor y al aire de noche, acelerando fuerte. ¿Qué sientes?",o:["Que el morro sube (ilusión somatográvica)","Que el morro baja","Que giras"],a:0,e:"Los <b>otolitos</b> no distinguen aceleración de inclinación: la aceleración hacia delante se siente como <b>morro arriba</b>. Si picas para corregirlo, vas hacia el suelo.",s:"sg"},
+ {q:"¿Qué detecta cada parte del oído interno?",o:["Canales: aceleración angular · otolitos: aceleración lineal y gravedad","Canales: aceleración lineal · otolitos: giros","Los dos detectan velocidad constante"],a:0,e:"Tres <b>canales semicirculares</b> a 90° (aceleración angular) y dos <b>otolitos</b>, utrículo y sáculo (aceleración lineal y gravedad).",s:"in"}];
+const TXT={
+ in:"<b>Empiezas a virar</b>: el canal horizontal gira con la cabeza y la <b>endolinfa se queda atrás</b> por inercia. Dobla la <b>cúpula</b> y el cerebro nota el giro: <span class=\"ok\">sensación correcta</span>.",
+ sus:"<b>Viraje mantenido</b>: tras unos <b>20 s</b> la endolinfa ya gira igual que el canal, la cúpula vuelve al centro y <b class=\"bad\">sientes que vas recto</b> aunque sigas virando.",
+ out:"<b>Nivelas</b> tras el viraje largo: el canal se para pero la endolinfa sigue girando y dobla la cúpula al <b>lado contrario</b>: <b class=\"bad\">sientes que viras al otro lado</b> (ilusión <b>somatogirálica</b>). Si corriges por sensación vuelves a entrar en el viraje original: <b>espiral mortal</b>. Mira los instrumentos.",
+ lean:"<b>The leans</b>: el avión se inclina tan despacio que queda <b>por debajo del umbral</b> de los canales (unos 0,5 °/s²) y no lo notas. Al ver el horizonte artificial corriges rápido a nivelado: esa corrección sí se nota y <b class=\"bad\">sientes que estás alabeado al otro lado</b>, así que te inclinas hacia el lado original.",
+ sg:"<b>Aceleración fuerte</b> (despegue, motor y al aire): la inercia empuja la membrana de los <b>otolitos</b> hacia atrás, igual que si inclinaras la cabeza atrás. <b class=\"bad\">Sientes el morro arriba</b> (ilusión <b>somatográvica</b>); si picas para corregirlo, vas hacia el suelo, sobre todo de noche."};
+return {t:"3D · Oído interno: canales semicirculares, otolitos y desorientación",
+cap:"Modelo esquemático del laberinto derecho, muy aumentado y con la escena acelerada. Los canales miden aceleración angular y los otolitos aceleración lineal y gravedad; ninguno mide posición. Umbral y tiempos como en el temario: unos 0,5 °/s² y unos 20 s para que la endolinfa se iguale.",
+init(el){
+  const ctl=row("Fase",PH.map((p,i)=>bt("data-ph",p.k,p.n,!i)).join(""))+row("",`<button type="button" data-rp>⟲ Repetir</button>`+bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shell(el,this.t,"Laberinto del oído interno en 3D con los tres canales semicirculares, la endolinfa y los otolitos",ctl,this.cap);
+  let ph="in", T=0, qm=false, ang=0, om=0, ome=0, rollR=0, rollP=0, relA=0, relR=0, rRate=0;
+  const S=orbit(u.c,{yaw:-35,pit:20,ar:w=>w<620?1.2:.62,hmin:320,hmax:560,pmin:-20,pmax:80,draw}); S.anim=true;
+  const ring=(c,n,u0,v0,r)=>Array.from({length:n+1},(_,i)=>{ const a=i/n*2*Math.PI; return vadd(c,vadd(vmul(u0,r*Math.cos(a)),vmul(v0,r*Math.sin(a)))); });
+  // canales (centro, ejes del plano): horizontal, anterior y posterior, a 90°
+  const s2=Math.SQRT1_2, CAN=[{k:"h",n:"canal horizontal (lateral)",c:[.55,0,0],u:[1,0,0],v:[0,0,1],col:[255,170,80]},{k:"a",n:"canal anterior",c:[0,.6,.35],u:[s2,0,s2],v:[0,1,0],col:[110,200,255]},{k:"p",n:"canal posterior",c:[0,.6,-.35],u:[s2,0,-s2],v:[0,1,0],col:[160,230,140]}];
+  function step(dt){ T+=dt; const deg=Math.PI/180;
+    // velocidad del canal (giro de la cabeza) según la fase
+    if(ph==="in"){ om=T<2?T*.6:1.2; } else if(ph==="sus"){ om=1.2; } else if(ph==="out"){ om=T<1.2?1.2*(1-T/1.2):0; } else om=0;
+    const tau=ph==="sus"?1.2:2.2; ome+=(om-ome)*Math.min(1,dt/tau); ang+=om*dt;
+    if(ph==="lean"){ const p0=rollP; rollR=T<10?20*T/10:T<11.5?20*(1-(T-10)/1.5):0; rollP=T<10?0:T<11.5?-20*(T-10)/1.5:-20*Math.max(0,1-(T-11.5)/6); rRate=dt>0?(rollP-p0)/dt:0; relR+=rRate*dt/12; } else rRate=0;
+    relA+=(ome-om)*dt*1.4;
+    const P=PH.find(p=>p.k===ph); if(P.d&&T>P.d){ T=0; if(ph==="in"){ om=0; ome=0; } } }
+  function draw(S,dt){ const x=S.x, W=S.W, H=S.H, d=S.dp; step(Math.min(dt,.05)); const nar=W/d<620, k=nar?Math.min(W,H*.62)*.4:Math.min(W*.62,H)*.42;
+    S.cam(k,nar?W*.5:W*.36,nar?H*.34:H*.52,[0,.35,0],8); const yaw=ph==="lean"||ph==="sg"?0:ang, cy=Math.cos(yaw), sy=Math.sin(yaw), Rot=p=>[p[0]*cy+p[2]*sy,p[1],-p[0]*sy+p[2]*cy], P=p=>S.P(Rot(p));
+    x.setTransform(1,0,0,1,0,0); const g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,"#121d2b"); g.addColorStop(1,"#0b1520"); x.fillStyle=g; x.fillRect(0,0,W,H);
+    const items=[];
+    // vestíbulo (utrículo y sáculo) y cóclea
+    const vb=P([0,0,0]); items.push({z:vb[2],f:()=>{ const gr=x.createRadialGradient(vb[0]-k*.08,vb[1]-k*.08,2,vb[0],vb[1],k*.26); gr.addColorStop(0,"#f3e6d2"); gr.addColorStop(1,"#b99c7a"); x.fillStyle=gr; x.beginPath(); x.ellipse(vb[0],vb[1],k*.26,k*.2,0,0,7); x.fill(); }});
+    { const pts=[]; for(let i=0;i<=80;i++){ const a=i/80*Math.PI*5, r=.32*(1-i/95); pts.push([-.35+r*Math.cos(a)*.6,-.35+r*Math.sin(a)*.6,-.15-i*.003]); } const q=pts.map(P); items.push({z:q[0][2],f:()=>{ x.strokeStyle="#d9c3a5"; x.lineWidth=9*d; x.lineCap="round"; x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.stroke(); }}); }
+    // canales: tubo grueso por segmentos
+    const act=ph==="lean"?"a":ph==="sg"?"":"h";
+    for(const C of CAN){ const pts=ring(C.c,60,C.u,C.v,.55), q=pts.map(P), on=C.k===act;
+      for(let i=0;i<60;i++){ const a=q[i], b=q[i+1]; items.push({z:(a[2]+b[2])/2,f:()=>{ x.strokeStyle=`rgba(${C.col.join(",")},${on?.95:.45})`; x.lineWidth=(on?13:10)*d; x.lineCap="round"; x.beginPath(); x.moveTo(a[0],a[1]); x.lineTo(b[0],b[1]); x.stroke(); }}); }
+      // cúpula en la ampolla (al principio del anillo) doblada por la endolinfa
+      const rel=C.k==="h"?(ome-om):C.k==="a"&&ph==="lean"?Math.max(-1.2,Math.min(1.2,rRate/12)):0, a0=pts[2], cup=P(a0);
+      items.push({z:cup[2]+.01,f:()=>{ x.save(); x.translate(cup[0],cup[1]); x.rotate(-rel*.9); x.fillStyle=on?"#ffffff":"rgba(255,255,255,.6)"; x.beginPath(); x.ellipse(0,0,3*d,11*d,0,0,7); x.fill(); x.restore(); }});
+      // endolinfa: partículas dentro del canal activo
+      if(on){ for(let j=0;j<14;j++){ const base=j/14*2*Math.PI, off=(C.k==="h"?relA:relR)+base; const p=vadd(C.c,vadd(vmul(C.u,.55*Math.cos(off)),vmul(C.v,.55*Math.sin(off)))), q2=P(p);
+          items.push({z:q2[2]+.02,f:()=>{ x.fillStyle="#fffbe0"; x.beginPath(); x.arc(q2[0],q2[1],2.6*d,0,7); x.fill(); }}); } } }
+    // otolitos (utrículo): membrana con cristales; se desplaza atrás al acelerar
+    const acc=ph==="sg"?Math.min(1,T/2)*(T<8?1:Math.max(0,1-(T-8)/2)):0, sh=-.12*acc, oc=[[ -.12+sh,.02,-.08],[.12+sh,.02,-.08],[.12+sh,.02,.08],[-.12+sh,.02,.08]].map(P);
+    items.push({z:P([0,.05,0])[2]+.05,f:()=>{ x.fillStyle=ph==="sg"?"#fff2b0":"rgba(255,242,176,.7)"; x.beginPath(); oc.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); for(let i=0;i<9;i++){ const q=P([-.09+sh+(i%3)*.09,.04,-.05+Math.floor(i/3)*.05]); x.fillStyle="#c9a24a"; x.fillRect(q[0]-2*d,q[1]-2*d,4*d,4*d); } }});
+    items.sort((a,b)=>a.z-b.z).forEach(o=>o.f());
+    for(const C of CAN){ const q=P(vadd(C.c,vmul(C.v,.72))); if(C.k===act||W/d>620) tag(x,q[0],q[1],C.n,{dp:d,fs:10.5,al:"c",c:C.k===act?"#ffd24d":"#cfd8e3"}); }
+    { const q=P([0,-.05,.3]); tag(x,q[0],q[1],"otolitos (utrículo)",{dp:d,fs:10.5,al:"c",c:ph==="sg"?"#ffd24d":"#cfd8e3"}); }
+    // panel: lo que hace el avión y lo que sientes
+    const bx=nar?8*d:W*.7, bw=nar?W-16*d:W*.28, by=nar?H*.66:12*d, bh=nar?H*.34-8*d:H-24*d; x.fillStyle="rgba(8,16,28,.82)"; x.fillRect(bx,by,bw,bh);
+    const plane=(cx,cyy,roll,pitch,lab,turn)=>{ const s=nar?Math.min(bw*.15,bh*.3):Math.min(bw*.32,bh*.14); x.save(); x.translate(cx,cyy); x.fillStyle="#22384f"; x.beginPath(); x.arc(0,0,s*1.25,0,7); x.fill();
+      x.save(); x.beginPath(); x.arc(0,0,s*1.25,0,7); x.clip(); x.rotate(-roll*Math.PI/180); x.fillStyle="#3f78b8"; x.fillRect(-s*2,-s*2+pitch*s/14,s*4,s*2); x.fillStyle="#7a5a3a"; x.fillRect(-s*2,pitch*s/14,s*4,s*2); x.restore();
+      x.strokeStyle="#ffd24d"; x.lineWidth=3*d; x.beginPath(); x.moveTo(-s*.8,0); x.lineTo(-s*.2,0); x.lineTo(0,s*.15); x.lineTo(s*.2,0); x.lineTo(s*.8,0); x.stroke();
+      if(turn){ x.strokeStyle=turn>0?"#6ee7a0":"#ff8a80"; x.lineWidth=3*d; x.beginPath(); x.arc(0,0,s*1.45,-Math.PI/2,-Math.PI/2+turn*1.2,turn<0); x.stroke(); }
+      x.restore(); x.font=`700 ${11*d}px system-ui,sans-serif`; x.fillStyle="#cfd8e3"; x.textAlign="center"; x.fillText(lab,cx,cyy+s*1.25+16*d); x.textAlign="left"; };
+    const rb=ph==="in"||ph==="sus"?20:ph==="out"?Math.max(0,20*(1-T/1.2)):ph==="lean"?rollR:0;
+    const realTurn=om>.05?Math.min(1,om):0, feltTurn=(om-ome);
+    plane(nar?bx+bw*.27:bx+bw/2,nar?by+bh*.42:by+bh*.27,rb,0,"El avión",realTurn);
+    plane(nar?bx+bw*.73:bx+bw/2,nar?by+bh*.42:by+bh*.7,ph==="lean"?rollP:ph==="out"&&feltTurn<-.15?-12:(ph==="in"&&feltTurn>.15?rb:0),ph==="sg"?acc*18:0,"Lo que sientes",Math.abs(feltTurn)>.12?Math.max(-1,Math.min(1,feltTurn)):0);
+    return true; }
+  const say=()=>{ if(qm) return; u.out.innerHTML=TXT[ph]; };
+  const go=p=>{ ph=p; T=0; relA=0; relR=0; if(p==="in"){ om=0; ome=0; } if(p==="sus"){ om=1.2; ome=0; } if(p==="out"){ om=1.2; ome=1.2; } rollR=0; rollP=0; press(u,"data-ph",p); say(); S.kick(); };
+  u.qa("[data-ph]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.ph)));
+  u.q("[data-rp]").addEventListener("click",()=>go(ph));
+  const Q=quiz(u,QZ,c=>{ go(c.s); press(u,"data-ph",""); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); press(u,"data-ph",ph); say(); } });
+  go("in");
 }};
 })();
 
