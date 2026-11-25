@@ -1309,13 +1309,13 @@ function plateHTML(s,x){
 const OFFICIAL={"021":[["021","Airframe, Systems & Power Plant","Sistemas y motor",80],["022","Instrumentation","Instrumentación",60]],
   "031":[["031","Mass & Balance","Masa y centrado",25],["032","Performance","Performance",45],["033","Flight Planning","Planificación de vuelo",42]],
   "061":[["061","General Navigation","Navegación general",55],["062","Radio Navigation","Radionavegación",66]]};
-/* Cambio automático a ATPL (13). El alumno pasa a ATPL en cuanto cumple una de estas dos condiciones:
-   1) llega el inicio de la etapa ATPL de la promoción: martes 1 de diciembre de 2026, 00:00 hora de Madrid;
-   2) han pasado 60 días desde que creó su cuenta.
-   Se aplica una sola vez: si DESPUÉS de ese momento el alumno elige un plan a mano, se respeta siempre.
-   Una elección anterior a ese momento (o sin fecha, de versiones antiguas) no bloquea el cambio. */
+/* Cambio automático a ATPL (13), una sola vez por alumno:
+   - Cuenta creada ANTES del 1-dic-2026 00:00 (Madrid), la promoción actual: pasa a ATPL el 1-dic-2026 00:00 o, si antes cumple 60 días desde el alta, ese día.
+   - Cuenta creada A PARTIR del 1-dic-2026 00:00 (alumnos nuevos): empieza en Fase Inicial y pasa a ATPL solo a los 60 días del alta.
+   Si DESPUÉS de ese momento el alumno elige un plan a mano, se respeta siempre.
+   Una elección anterior (o sin fecha, de versiones antiguas) no bloquea el cambio. Sin sesión no se cambia nada. */
 const ATPL_GO=Date.UTC(2026,10,30,23,0,0);   // 2026-12-01 00:00 Europe/Madrid (CET, UTC+1)
-function atplSince(){ let t=ATPL_GO; try{ if(sbUser&&sbUser.created_at){ const r=new Date(sbUser.created_at).getTime()+60*864e5; if(r<t) t=r; } }catch(e){} return t; }
+function atplSince(){ try{ if(sbUser&&sbUser.created_at){ const c=new Date(sbUser.created_at).getTime(), r=c+60*864e5; return c<ATPL_GO ? Math.min(ATPL_GO,r) : r; } }catch(e){} return Infinity; }
 function autoPlan(persist){ try{
   const cur=plan13()?"13":"9", sp=F0Weak.savedPlan(), at=F0Weak.planAt(), since=atplSince();
   let want, mine=false;
