@@ -807,5 +807,223 @@ init(el){
 }};
 })();
 
+/* =====================================================================
+   10 · TRIÁNGULO DE VIENTOS (problema directo) Y COMBUSTIBLE DEL TRAMO (033)
+   Rumbo verdadero + TAS + viento → derrota, deriva y GS. Avión de ejemplo de pistón: 32 L/h. Reservas según la política de combustible.
+   ===================================================================== */
+V.wtfuel=(()=>{
+const wr=a=>((a%360)+360)%360, sg=a=>((a+540)%360)-180;
+const tri=o=>{ const th=o.th*R, w=(o.wd+180)*R, ax=o.tas*Math.sin(th), ay=o.tas*Math.cos(th), wx=o.ws*Math.sin(w), wy=o.ws*Math.cos(w), gx=ax+wx, gy=ay+wy;
+  const tr=wr(Math.atan2(gx,gy)/R), gs=Math.hypot(gx,gy), dr=sg(tr-o.th), b=(o.wd-o.th)*R, xw=o.ws*Math.sin(b), wca=Math.asin(cl(xw/o.tas,-1,1))/R, gs2=o.tas*Math.cos(wca*R)-o.ws*Math.cos(b);
+  return {ax,ay,wx,wy,gx,gy,tr,gs,dr,wca,hdg:wr(o.th+wca),gs2,xw,hw:o.ws*Math.cos(b)}; };
+const QZ=[
+ {q:"Rumbo 090°, viento <b>de 360°</b>. ¿Hacia dónde te deriva?",o:["Hacia la derecha (deriva a estribor): derrota mayor que el rumbo","Hacia la izquierda","No hay deriva"],a:0,e:"El viento del Norte te empuja hacia el Sur: con rumbo 090 la derrota queda por encima de 090, deriva a la <b>derecha</b>. Para corregir, apuntas el morro <b>hacia el viento</b> (a la izquierda).",s:{th:90,wd:360,ws:25}},
+ {q:"Para mantener la derrota con viento de la <b>derecha</b>, el WCA lleva el morro…",o:["A la derecha, hacia el viento","A la izquierda","Recto: solo cambia la GS"],a:0,e:"Siempre se corrige <b>hacia el viento</b>: viento de la derecha → rumbo mayor que la derrota.",s:{th:360,wd:60,ws:20}},
+ {q:"Viento de cara puro de 20 kt con TAS 120 kt. ¿GS?",o:["100 kt","120 kt","140 kt"],a:0,e:"Sin componente cruzada no hay deriva y la GS es TAS − viento de cara = <b>100 kt</b>.",s:{th:270,wd:270,ws:20}},
+ {q:"¿De dónde viene el viento «270/20»?",o:["Del Oeste, hacia el Este","Del Este, hacia el Oeste","Del Norte"],a:0,e:"En meteorología y en el triángulo el viento se da <b>de dónde viene</b>: 270/20 sopla del Oeste a 20 kt.",s:{th:360,wd:270,ws:20}},
+ {q:"Combustible de <b>contingencia</b> según la política estándar:",o:["5 % del combustible del viaje (con un mínimo)","10 % del bloque","30 min siempre"],a:0,e:"Contingencia: el mayor entre el <b>5 % del trip</b> y 5 min de espera a 1.500 ft (hay reducciones con alternativo en ruta).",s:{}},
+ {q:"Reserva final (<i>final reserve</i>) de un avión de <b>pistón</b> en VFR diurno de transporte:",o:["45 min","30 min","10 min"],a:0,e:"Pistón: <b>45 min</b>. Reactor: <b>30 min</b> en espera a 1.500 ft sobre el aeródromo de destino o alternativo, en ISA.",s:{eng:"p"}}];
+return {t:"Triángulo de vientos y combustible del tramo: del rumbo a la derrota",
+cap:"Problema directo del computador (CR-3 / E6B): con el rumbo verdadero, la TAS y el viento sale la derrota y la GS. Para el inverso (de la derrota deseada al rumbo) tienes la lámina de 061.01.06. Combustible de ejemplo: pistón 32 L/h; contingencia 5 % del trip (mínimo 5 min); alternativo a 120 kt; reserva final 45 min (pistón) o 30 min (reactor) al consumo de espera, aquí el mismo de crucero para simplificar; rodaje 5 L.",
+init(el){
+  const svg=`<svg viewBox="0 0 400 330" style="max-height:440px" role="img" aria-label="Triángulo de velocidades con rumbo, viento y derrota, y desglose del combustible"><rect width="400" height="330" fill="#12202f"/><g data-g font-family="system-ui,sans-serif" font-size="11"></g></svg>`;
+  const ctl=row("",sl("th","Rumbo verdadero (TH)",0,359,60,1)+sl("tas","TAS",80,200,120,1)+sl("wd","Viento: de dónde viene",0,359,330,5)+sl("ws","Viento: intensidad",0,60,25,1))
+   +row("Tramo",sl("d","Distancia",20,400,150,5)+sl("alt","Distancia al alternativo",0,150,40,5)+bt("data-e","p","Pistón · 45 min",1)+bt("data-e","j","Reactor · 30 min")+bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shellS(el,this.t,svg,ctl,this.cap), G=u.q("[data-g]"); const o={th:60,tas:120,wd:330,ws:25,d:150,alt:40,eng:"p"}; let qm=false; const FF=32;
+  const U={th:"°",tas:" kt",wd:"°",ws:" kt",d:" NM",alt:" NM"};
+  const draw=()=>{ const r=tri(o), cx=122, cy=140, k=104/Math.max(o.tas,r.gs,1), P=(x,y)=>[cx+x*k,cy-y*k];
+    const ar=(x0,y0,x1,y1,c,w,dash)=>{ const a=P(x0,y0), b=P(x1,y1), an=Math.atan2(b[1]-a[1],b[0]-a[0]); return `<path d="M${a[0]} ${a[1]} L${b[0]} ${b[1]}" stroke="${c}" stroke-width="${w}" fill="none"${dash?` stroke-dasharray="${dash}"`:""}/><path d="M${b[0]} ${b[1]} L${b[0]-9*Math.cos(an-.4)} ${b[1]-9*Math.sin(an-.4)} L${b[0]-9*Math.cos(an+.4)} ${b[1]-9*Math.sin(an+.4)}z" fill="${c}"/>`; };
+    const lab=(x0,y0,x1,y1,t,c,side)=>{ const a=P(x0,y0), b=P(x1,y1), mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2, L=Math.hypot(b[0]-a[0],b[1]-a[1])||1, nx=-(b[1]-a[1])/L*side, ny=(b[0]-a[0])/L*side, X=cl(mx+nx*16,40,205), Y=cl(my+ny*16,14,318);
+      return `<text x="${X}" y="${Y+4}" fill="${c}" font-weight="700" font-size="10.5" text-anchor="middle" paint-order="stroke" stroke="#12202f" stroke-width="3">${t}</text>`; };
+    let h=`<circle cx="${cx}" cy="${cy}" r="110" fill="none" stroke="rgba(160,190,220,.15)"/><text x="${cx}" y="${cy-114}" text-anchor="middle" fill="#8fa3b8" font-size="10">N</text><circle cx="${cx}" cy="${cy}" r="3" fill="#cfd8e3"/>`;
+    const sd=r.dr>=0?1:-1;
+    h+=ar(0,0,r.ax,r.ay,"#55d0ff",3.5)+ar(r.ax,r.ay,r.gx,r.gy,"#9fe0ff",2.5,"5 3")+ar(0,0,r.gx,r.gy,"#ffd24d",3.5);
+    [["#55d0ff",`Rumbo y TAS · TH ${d3(o.th)}° · ${o.tas} kt`,""],["#9fe0ff",`Viento · W/V ${d3(o.wd)}°/${o.ws} kt`,"5 3"],["#ffd24d",`Derrota y GS · TR ${d3(r.tr)}° · ${Math.round(r.gs)} kt`,""]].forEach(([c,t,da],i)=>{ const yy=270+i*18; h+=`<path d="M8 ${yy-4} H30" stroke="${c}" stroke-width="3"${da?` stroke-dasharray="${da}"`:""}/><text x="36" y="${yy}" fill="${c}" font-weight="700" font-size="11">${t}</text>`; });
+    // combustible
+    const tt=o.d/r.gs*60, trip=FF*tt/60, cont=Math.max(trip*.05,FF*5/60), alt=FF*(o.alt/120), fr=FF*(o.eng==="p"?45:30)/60, taxi=5, tot=taxi+trip+cont+alt+fr;
+    const parts=[["Rodaje",taxi,"#8fa3b8"],["Trip",trip,"#ffd24d"],["Conting.",cont,"#ff9f43"],["Altern.",alt,"#b78cf0"],[`Reserva ${o.eng==="p"?45:30}'`,fr,"#ff6b6b"]];
+    const bx=262, by=30, bh=240, sc=bh/Math.max(tot,1); let y=by+bh; h+=`<text x="${bx+18}" y="${by-12}" text-anchor="middle" fill="#cfd8e3" font-weight="700" font-size="10.5">Combustible</text>`;
+    let ly=1e9; for(const [n,v,c] of parts){ const hh=v*sc; y-=hh; h+=`<rect x="${bx}" y="${y}" width="36" height="${Math.max(0,hh-1)}" fill="${c}"/>`; const ty=Math.min(y+hh/2+4,ly-12); ly=ty; h+=`<text x="${bx+42}" y="${ty}" fill="#dfe8f1" font-size="10">${n} ${f1(v)} L</text>`; }
+    h+=`<text x="${bx+18}" y="${by+bh+18}" text-anchor="middle" fill="#ffd24d" font-weight="800" font-size="12">${f1(tot)} L</text><text x="${bx+18}" y="${by+bh+32}" text-anchor="middle" fill="#8fa3b8" font-size="10">${Math.floor(tt/60)} h ${String(Math.round(tt%60)).padStart(2,"0")} min de vuelo</text>`;
+    G.innerHTML=h;
+    if(qm) return;
+    const dr=r.dr; u.out.innerHTML=`Rumbo <b>${d3(o.th)}°</b> con viento ${d3(o.wd)}/${o.ws}: derrota <b>${d3(r.tr)}°</b>, deriva <b>${f1(Math.abs(dr))}° ${dr>.05?"a la derecha":dr<-.05?"a la izquierda":""}</b>, GS <b>${Math.round(r.gs)} kt</b>. Para volar ${d3(o.th)}° como <b>derrota</b> harías falta un WCA de <b>${f1(Math.abs(r.wca))}° ${r.wca>0?"a la derecha":r.wca<0?"a la izquierda":""}</b> (rumbo ${d3(r.hdg)}°, GS ${Math.round(r.gs2)} kt). Componentes: ${f0(Math.abs(r.xw))} kt cruzado ${r.xw>0?"de la derecha":"de la izquierda"}${Math.abs(r.hw)<.5?" y nada de cara ni de cola":` y ${f0(Math.abs(r.hw))} kt ${r.hw>0?"de cara":"de cola"}`}. Tramo de ${o.d} NM: <b>${Math.round(o.d/r.gs*60)} min</b>, trip ${f1(trip)} L, en total <b>${f1(tot)} L</b>.`; };
+  const IN={}; for(const k of ["th","tas","wd","ws","d","alt"]){ IN[k]=u.q(`[data-k="${k}"]`); IN[k+"o"]=u.q(`[data-o="${k}"]`); IN[k].addEventListener("input",()=>{ o[k]=+IN[k].value; sync(); }); }
+  const sync=()=>{ for(const k of ["th","tas","wd","ws","d","alt"]){ IN[k].value=o[k]; IN[k+"o"].textContent=(k==="th"||k==="wd"?d3(o[k]):o[k])+U[k]; } press(u,"data-e",o.eng); draw(); };
+  u.qa("[data-e]").forEach(b=>b.addEventListener("click",()=>{ o.eng=b.dataset.e; sync(); }));
+  const Q=quiz(u,QZ,c=>{ Object.assign(o,{tas:120},c.s); sync(); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); draw(); } });
+  sync();
+}};
+})();
+
+/* =====================================================================
+   11 · MOTOR DE PISTÓN Y HÉLICE DE PASO VARIABLE EN 3D (021)
+   A: ciclo Otto con doble encendido (magnetos L y R), mezcla, detonación y preignición. B: pala con su triángulo de velocidades al 75 % del radio.
+   ===================================================================== */
+V.eng3d=(()=>{
+const MIX={rich:["Rica",[120,170,255],"EGT baja y motor frío; algo menos de potencia y riesgo de bujías sucias."],best:["Máxima potencia",[110,220,170],"≈ 100 °F en el lado rico del pico de EGT: la mejor potencia."],lean:["Pobre",[255,210,90],"EGT cerca del pico; más eficiente, pero si te pasas el motor va áspero y pierde potencia."],det:["Detonación",[255,120,90],"Mezcla demasiado pobre, temperatura alta o combustible de octanaje bajo: el gas sin quemar explota de golpe."],pre:["Preignición",[255,90,160],"Un punto caliente (carbonilla, electrodo) enciende la mezcla ANTES de la chispa."]};
+const QZ=[
+ {q:"Prueba de magnetos: al pasar de BOTH a L las RPM caen un poco. ¿Por qué?",o:["Solo salta una bujía por cilindro y la combustión es más lenta","Porque se apaga un cilindro","Porque se empobrece la mezcla"],a:0,e:"Cada magneto alimenta una de las dos bujías de cada cilindro. Con una sola, el frente de llama tarda más: <b>pequeña caída de RPM</b> (en un C172, hasta 150 rpm y 50 de diferencia entre L y R).",t:"a",s:{mag:"L"}},
+ {q:"Al seleccionar un solo magneto las RPM <b>no caen nada</b>. ¿Qué indica?",o:["Posible magneto sin masa (P-lead suelto): el motor puede arrancar solo","Que el motor está perfecto","Que la mezcla es rica"],a:0,e:"Ninguna caída es sospechosa: el magneto «apagado» puede no estar puesto a masa. Es peligroso: la hélice puede arrancar al moverla a mano.",t:"a",s:{mag:"R"}},
+ {q:"¿Qué es la <b>detonación</b>?",o:["La combustión explosiva del gas que queda sin quemar, después de la chispa","El encendido antes de la chispa por un punto caliente","El petardeo en el escape"],a:0,e:"Detonación: tras la chispa, la mezcla del fondo explota de golpe. Causas: mezcla pobre, temperatura alta, mucha presión de admisión con pocas RPM, octanaje bajo. Remedio: <b>enriquecer</b>, reducir potencia, abrir cowl flaps.",t:"a",s:{mix:"det"}},
+ {q:"¿Y la <b>preignición</b>?",o:["La mezcla se enciende antes de la chispa por un punto caliente","Una explosión después de la chispa","El fallo de un magneto"],a:0,e:"Preignición: un punto caliente (carbonilla incandescente, electrodo de bujía) enciende la mezcla <b>antes</b> de que salte la chispa. Puede acompañar a la detonación y dañar pistones.",t:"a",s:{mix:"pre"}},
+ {q:"Hélice de velocidad constante: al aumentar la TAS, el gobernador…",o:["Aumenta el ángulo de pala (paso largo) para mantener RPM y ángulo de ataque","Reduce el ángulo de pala","No toca la pala: cambian las RPM"],a:0,e:"Más velocidad = más ángulo de avance. Para mantener las RPM y un ángulo de ataque eficaz, el gobernador <b>aumenta el paso</b>. Despegue: paso corto (fine) y altas RPM; crucero: paso largo (coarse).",t:"b",s:{tas:150}},
+ {q:"¿Para qué sirve poner la hélice en <b>bandera</b>?",o:["Para que la pala quede de filo al viento y el motor parado frene lo mínimo","Para aumentar la tracción en el despegue","Para frenar en el aterrizaje"],a:0,e:"En bandera la pala queda a unos 85–90°, casi paralela a la corriente: la hélice deja de girar (no hace molinete) y la resistencia del motor parado es <b>mínima</b>. Clave en un bimotor con un motor parado.",t:"b",s:{pm:"f"}}];
+return {t:"3D · Motor de pistón (ciclo Otto) y hélice de paso variable",
+cap:"Motor en cámara lenta. Encendido adelantado unos 25° antes del punto muerto superior y válvulas que abren justo en los puntos muertos (simplificado). Hélice de ejemplo de 2 m de diámetro a 2.400 rpm; el gobernador busca unos 4° de ángulo de ataque al 75 % del radio, con tope de paso corto en 12°. Datos de la prueba de magnetos como los de un C172: cada avión tiene los suyos.",
+init(el){
+  const ctl=row("Vista",bt("data-t","a","A · Motor (4 tiempos)",1)+bt("data-t","b","B · Hélice")+bt("data-m","quiz","Ponme a prueba"))
+   +row("Mezcla",Object.keys(MIX).map((k,i)=>bt("data-x",k,MIX[k][0],k==="best")).join(""),"data-pa")
+   +row("Magnetos",bt("data-g","B","BOTH",1)+bt("data-g","L","L")+bt("data-g","R","R")+sl("rpm","RPM",1000,2700,2100,50),"data-pa2")
+   +row("Hélice",bt("data-p","c","Velocidad constante",1)+bt("data-p","x","Paso fijo 22°")+bt("data-p","f","Bandera")+sl("tas","TAS",0,180,60,1),"data-pb hidden")+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shell(el,this.t,"Motor de pistón y hélice en 3D",ctl,this.cap);
+  let tab="a", mix="best", mag="B", rpm=2100, pm="c", tas=60, ph=0, rot=0, qm=false, shake=0;
+  const S=orbit(u.c,{yaw:-30,pit:14,ar:.6,hmin:300,hmax:470,pmin:-30,pmax:80,draw}); S.anim=true;
+  const prop=()=>{ const om=(pm==="f"?0:2400)*2*Math.PI/60, V=tas*.5144, phi=pm==="f"?90:Math.atan2(V,om*.75)/R, beta=pm==="f"?88:pm==="x"?22:Math.max(12,Math.min(40,phi+4)); return {phi,beta,alpha:beta-phi,V}; };
+  function draw(S,dt,t){ const x=S.x, W=S.W, H=S.H, d=S.dp, k=Math.min(W,H)*.32;
+    x.setTransform(1,0,0,1,0,0); const g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,"#16283d"); g.addColorStop(1,"#0b1522"); x.fillStyle=g; x.fillRect(0,0,W,H);
+    const L=(pts,c,w,a)=>{ x.globalAlpha=a==null?1:a; x.strokeStyle=c; x.lineWidth=(w||1)*d; x.beginPath(); pts.forEach((p,i)=>{ const q=S.P(p); i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]); }); x.stroke(); x.globalAlpha=1; };
+    const ring=(y,r,n,z0)=>Array.from({length:(n||32)+1},(_,i)=>{ const a=i/(n||32)*2*Math.PI; return [r*Math.cos(a),y,r*Math.sin(a)+(z0||0)]; });
+    const fillQ=(pts,c,a)=>{ const q=pts.map(S.P); x.globalAlpha=a==null?1:a; x.fillStyle=c; x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); x.globalAlpha=1; };
+    if(tab==="a"){ const sh=shake>0?(Math.random()-.5)*6*d*shake:0; shake=Math.max(0,shake-dt*2);
+      S.cam(k,W*.42+sh,H*.55,[0,.45,0],8);
+      ph=(ph+dt*360*(.25+rpm/4200))%720; const th=ph%360*R, rc=.35, Lr=1.0, cy0=-.6, pin=[rc*Math.sin(th),cy0+rc*Math.cos(th),0], py=cy0+rc*Math.cos(th)+Math.sqrt(Lr*Lr-(rc*Math.sin(th))**2), top=py+.2, HEAD=1.3;
+      const st=ph<180?0:ph<360?1:ph<540?2:3, sp=ph>=335&&ph<375, fire=ph>=355&&ph<470, det=mix==="det"&&ph>=380&&ph<420, pre=mix==="pre"&&ph>=290&&ph<360;
+      if(det&&ph<386) shake=1;
+      // gas en la cámara
+      const mc=MIX[mix][1]; let gc=[mc[0]*.8,mc[1]*.85,mc[2]],ga=.28;
+      if(st===1) { gc=[mc[0]*.9+60*(ph-180)/180,mc[1]*.8,mc[2]*.8]; ga=.32; } if(st===2){ const f=Math.max(0,1-(ph-360)/180); gc=[255,150+60*f,60]; ga=.25+.45*f; } if(st===3){ gc=[150,150,160]; ga=.22; } if(pre){ gc=[255,90,160]; ga=.5; }
+      const ex=S.eye[0], ez=S.eye[2], en=Math.hypot(ex,ez)||1, sx=-ez/en, sz=ex/en;   // silueta del cilindro vista desde la cámara
+      const side=(y0,y1,r)=>{ r=r||.5; const a=S.P([-sx*r,y0,-sz*r]), b=S.P([sx*r,y0,sz*r]), c=S.P([sx*r,y1,sz*r]), e=S.P([-sx*r,y1,-sz*r]); return [a,b,c,e]; };
+      { const q=side(top,HEAD); x.globalAlpha=ga; x.fillStyle=`rgb(${gc.map(v=>Math.min(255,v)|0)})`; x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); x.globalAlpha=1; }
+      // cilindro transparente
+      for(const y of [.2,.6,1.0,HEAD]) L(ring(y,.52),"#9fb7d4",1,.45); for(let i=0;i<8;i++){ const a=i/8*2*Math.PI; L([[.52*Math.cos(a),.2,.52*Math.sin(a)],[.52*Math.cos(a),HEAD,.52*Math.sin(a)]],"#9fb7d4",1,.3); }
+      fillQ(ring(HEAD+.12,.6,24),"#3a4a5c",.85);
+      // válvulas: admisión (izq.) abierta en el tiempo 1, escape (dcha.) en el 4
+      const lift=(on,f)=>on?Math.sin(Math.PI*f)*.13:0, li=lift(st===0,ph/180), le=lift(st===3,(ph-540)/180);
+      for(const [vx,lf,c,lb] of [[-.24,li,"#55d0ff","admisión"],[.24,le,"#c0c6cf","escape"]]){ L([[vx,HEAD+.35,0],[vx,HEAD-lf,0]],"#cfd8e3",3); fillQ(ring(HEAD-lf,.11,16,0).map(p=>[p[0]+vx,p[1],p[2]]),c,.95); const q=S.P([vx,HEAD+.42,0]); tag(x,q[0],q[1],lb+(lf>.01?" · abierta":""),{dp:d,fs:10.5,al:"c",c}); }
+      // bujías (doble encendido)
+      for(const [pz,m] of [[-.3,"L"],[.3,"R"]]){ L([[0,HEAD+.25,pz],[0,HEAD-.02,pz]],"#e9e3d3",4); const on=sp&&(mag==="B"||mag===m); if(on){ const q=S.P([0,HEAD-.04,pz]); const gr=x.createRadialGradient(q[0],q[1],0,q[0],q[1],22*d); gr.addColorStop(0,"rgba(190,230,255,1)"); gr.addColorStop(1,"rgba(120,180,255,0)"); x.fillStyle=gr; x.beginPath(); x.arc(q[0],q[1],22*d,0,7); x.fill(); } const q=S.P([0,HEAD+.3,pz]); tag(x,q[0],q[1],"bujía "+m,{dp:d,fs:10,al:"c",c:"#e9e3d3"}); }
+      if(pre){ const q=S.P([-.35,HEAD-.1,.2]); x.fillStyle="#ff4fa0"; x.beginPath(); x.arc(q[0],q[1],5*d,0,7); x.fill(); tag(x,q[0]-8*d,q[1]-12*d,"punto caliente",{dp:d,fs:10.5,al:"r",c:"#ff9fd0"}); }
+      if(det){ const q=S.P([.35,top+.15,-.2]); x.strokeStyle="#fff3c0"; x.lineWidth=2*d; for(let i=0;i<7;i++){ x.beginPath(); x.moveTo(q[0],q[1]); x.lineTo(q[0]+(Math.random()-.5)*60*d,q[1]+(Math.random()-.5)*40*d); x.stroke(); } tag(x,q[0]+10*d,q[1]-16*d,"¡DETONACIÓN!",{dp:d,fs:12,c:"#fff",bg:"rgba(200,40,30,.9)",w:800}); }
+      // pistón, biela y cigüeñal
+      fillQ(ring(top,.48,24),"#b9c2cc"); { const q=side(top,top-.3,.48); x.fillStyle="#8d97a3"; x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); fillQ(ring(top-.3,.48,24),"#8d97a3"); fillQ(ring(top,.48,24),"#c3ccd6"); } L(ring(top,.48,24),"#6b7684",1.2);
+      L([[0,py,0],pin],"#cfd8e3",7); L([[0,cy0,-.25],[0,cy0,.25]],"#55606d",9); fillQ(ring(0,.42,24).map(p=>[p[0],cy0+p[2]*0+p[0]*0+(p[2]),.2]).map((p,i,a)=>p),"#3d4855",.0);
+      const cw=Array.from({length:25},(_,i)=>{ const a=i/24*2*Math.PI; return [.42*Math.sin(a),cy0+.42*Math.cos(a),.12]; }); fillQ(cw,"#55606d",.9); L([[0,cy0,.13],[pin[0],pin[1],.13]],"#cfd8e3",5); { const q=S.P(pin); x.fillStyle="#ffd24d"; x.beginPath(); x.arc(q[0],q[1],5*d,0,7); x.fill(); }
+      // rótulo del tiempo
+      const NM=["1 · Admisión · Intake","2 · Compresión · Compression","3 · Explosión · Power","4 · Escape · Exhaust"]; tag(x,W/2,18*d,NM[st],{dp:d,fs:13,al:"c",c:"#ffd24d",w:800});
+      // panel: RPM, EGT y CHT
+      const drop=mag==="B"?0:mag==="L"?100:115, rp=rpm-drop, egt={rich:.45,best:.75,lean:.9,det:.85,pre:.8}[mix], cht={rich:.45,best:.6,lean:.7,det:.95,pre:.95}[mix], bx=W-150*d, by=40*d;
+      x.fillStyle="rgba(8,16,28,.8)"; x.fillRect(bx,by,140*d,92*d); x.font=`700 ${12*d}px system-ui,sans-serif`; x.fillStyle="#e9f0f7"; x.textBaseline="alphabetic"; x.fillText(`${rp} rpm${drop?` (−${drop})`:""}`,bx+8*d,by+18*d);
+      [["EGT",egt,"#ffb08a"],["CHT",cht,cht>.9?"#ff6b6b":"#ffd24d"]].forEach(([n,v,c],i)=>{ const y=by+36*d+i*26*d; x.font=`600 ${10.5*d}px system-ui,sans-serif`; x.fillStyle="#cfd8e3"; x.fillText(n,bx+8*d,y); x.fillStyle="#24364b"; x.fillRect(bx+40*d,y-9*d,90*d,9*d); x.fillStyle=c; x.fillRect(bx+40*d,y-9*d,90*d*v,9*d); });
+    } else {
+      S.cam(k*.95,W*.4,H*.52,[0,0,0],8); const P=prop(); rot=(rot+dt*(pm==="f"?0:4))%(2*Math.PI);
+      // buje y cono
+      fillQ(Array.from({length:25},(_,i)=>{ const a=i/24*2*Math.PI; return [0,.16*Math.cos(a),.16*Math.sin(a)]; }),"#cfd8e3");
+      L([[0,0,0],[.5,0,0]],"#6b7684",3); { const q=S.P([.55,0,0]); tag(x,q[0],q[1],"avance · TAS →",{dp:d,fs:10.5,c:"#9fe0ff"}); }
+      // palas torsionadas (más ángulo en la raíz)
+      const items=[]; for(const sg of [0,Math.PI]){ const ra=rot+sg; for(let i=0;i<10;i++){ const r0=.18+i*.1, r1=r0+.1, bl=r=>{ const tw=P.beta+(pm==="f"?0:Math.atan2(P.V||1,(2400*2*Math.PI/60)*Math.max(r,.05)*1)/R-P.phi); return (pm==="f"?88:Math.max(P.beta,Math.min(80,tw)))*R; };
+          const sec=(r)=>{ const b=bl(r), c=.11*(1.1-.4*r), ca=Math.cos(ra), sa=Math.sin(ra); const pts=[[-c*Math.sin(b),r,c*Math.cos(b)],[c*Math.sin(b),r,-c*Math.cos(b)]]; return pts.map(p=>[p[0],p[1]*ca-p[2]*sa,p[1]*sa+p[2]*ca]); };
+          const A=sec(r0), B=sec(r1), q=[A[0],B[0],B[1],A[1]], pq=q.map(S.P); items.push({z:pq.reduce((s,p)=>s+p[2],0)/4,q:pq,c:i===5?"#ffd24d":"#2f3a46"}); } }
+      items.sort((a,b)=>a.z-b.z).forEach(it=>{ x.fillStyle=it.c; x.beginPath(); it.q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); x.strokeStyle="rgba(200,210,220,.4)"; x.lineWidth=.6*d; x.stroke(); });
+      // triángulo de velocidades al 75 % del radio
+      const bw=Math.min(W*.36,230*d), bh=bw*.85, bx=W-bw-10*d, by=10*d; x.fillStyle="rgba(8,16,28,.85)"; x.fillRect(bx,by,bw,bh);
+      const ox=bx+bw*.15, oy=by+bh*.82, sc=bw*.7/190, om=(pm==="f"?0:2400*2*Math.PI/60*.75);
+      const vec=(dx,dy,c,lab)=>{ x.strokeStyle=c; x.fillStyle=c; x.lineWidth=2.4*d; x.beginPath(); x.moveTo(ox,oy); x.lineTo(ox+dx,oy-dy); x.stroke(); if(lab){ x.font=`600 ${10*d}px system-ui,sans-serif`; x.fillText(lab,ox+dx+4*d,oy-dy); } };
+      vec(om*sc,0,"#cfd8e3","giro ωr"); vec(0,P.V*sc,"#9fe0ff","TAS"); vec(om*sc,P.V*sc,"#55d0ff","");
+      const cb=P.beta*R, Lc=bw*.6; x.strokeStyle="#ffd24d"; x.lineWidth=4*d; x.beginPath(); x.moveTo(ox,oy); x.lineTo(ox+Lc*Math.cos(cb),oy-Lc*Math.sin(cb)); x.stroke();
+      x.font=`700 ${10.5*d}px system-ui,sans-serif`; x.fillStyle="#ffd24d"; x.fillText(`β ${f1(P.beta)}° (cuerda)`,ox+Lc*Math.cos(cb)-60*d,oy-Lc*Math.sin(cb)-6*d);
+      x.fillStyle="#e9f0f7"; x.fillText(`φ ${f1(P.phi)}° · α ${f1(P.alpha)}°`,bx+8*d,by+16*d);
+      tag(x,W/2,18*d,pm==="f"?"BANDERA · feather":pm==="x"?"PASO FIJO":"VELOCIDAD CONSTANTE · gobernador",{dp:d,fs:13,al:"c",c:"#ffd24d",w:800}); }
+    return true; }
+  const say=()=>{ if(qm) return; if(tab==="a"){ const m=MIX[mix]; u.out.innerHTML=`<b>${mix==="det"||mix==="pre"?m[0]:"Mezcla "+m[0].toLowerCase()}</b>: ${m[2]} ${mix==="det"?"Remedio: <b>enriquecer</b>, reducir potencia y abrir cowl flaps.":mix==="pre"?"Puede llevar a detonación y dañar el pistón; reducir potencia y enriquecer.":""} Magnetos: <b>${mag==="B"?"BOTH":mag}</b>${mag==="B"?" (las dos bujías de cada cilindro)":` → solo salta la bujía ${mag}: caída de ${mag==="L"?100:115} rpm, dentro del límite de ejemplo (150 rpm y 50 de diferencia).`}`; }
+    else { const P=prop(); u.out.innerHTML=pm==="f"?`<b>Bandera</b>: pala a ${f1(P.beta)}°, de filo al viento. La hélice se para y el motor muerto frena lo mínimo.`:`TAS <b>${tas} kt</b> → ángulo de avance φ = <b>${f1(P.phi)}°</b> al 75 % del radio. Ángulo de pala β = <b>${f1(P.beta)}°</b> y ángulo de ataque α = β − φ = <b>${f1(P.alpha)}°</b>. ${pm==="c"?(P.beta<=12.01?"En el tope de <b>paso corto (fine)</b>: despegue y ascenso, máximas RPM.":"El gobernador <b>aumenta el paso</b> con la velocidad para mantener las RPM y un α eficaz."):P.alpha>12?"Con paso fijo y poca velocidad el α es enorme: la pala trabaja casi en pérdida (poca tracción en el despegue).":P.alpha<1?"Con paso fijo y mucha velocidad el α se acerca a cero: la hélice apenas tracciona (y las RPM se disparan).":"Paso fijo: solo es eficaz en una velocidad, la de diseño."}`; } };
+  const setTab=t=>{ tab=t; press(u,"data-t",t); u.q("[data-pa]").hidden=t!=="a"; u.q("[data-pa2]").hidden=t!=="a"; u.q("[data-pb]").hidden=t!=="b"; S.go(t==="a"?-30:-40,t==="a"?14:12); say(); };
+  u.qa("[data-t]").forEach(b=>b.addEventListener("click",()=>{ if(qm){ qm=false; press(u,"data-m","x"); Q.stop(); } setTab(b.dataset.t); }));
+  u.qa("[data-x]").forEach(b=>b.addEventListener("click",()=>{ mix=b.dataset.x; press(u,"data-x",mix); say(); }));
+  u.qa("[data-g]").forEach(b=>b.addEventListener("click",()=>{ mag=b.dataset.g; press(u,"data-g",mag); say(); }));
+  u.qa("[data-p]").forEach(b=>b.addEventListener("click",()=>{ pm=b.dataset.p; press(u,"data-p",pm); say(); }));
+  for(const [kk,suf] of [["rpm"," rpm"],["tas"," kt"]]){ const I=u.q(`[data-k="${kk}"]`), O=u.q(`[data-o="${kk}"]`); O.textContent=I.value+suf; I.addEventListener("input",()=>{ if(kk==="rpm") rpm=+I.value; else tas=+I.value; O.textContent=I.value+suf; say(); }); }
+  const Q=quiz(u,QZ,c=>{ setTab(c.t); const s0=c.s; if(s0.mag){ mag=s0.mag; press(u,"data-g",mag); } if(s0.mix){ mix=s0.mix; press(u,"data-x",mix); } if(s0.tas!=null){ tas=s0.tas; u.q('[data-k="tas"]').value=tas; u.q('[data-o="tas"]').textContent=tas+" kt"; } if(s0.pm){ pm=s0.pm; press(u,"data-p",pm); } });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); say(); } });
+  setTab("a");
+}};
+})();
+
+/* =====================================================================
+   12 · ESTELA TURBULENTA EN 3D (070): los dos torbellinos bajan, se separan junto al suelo y derivan con el viento cruzado
+   Metros reales. Pista de 3.000 m y 45 m de ancho; se aproxima hacia +x; el viento cruzado positivo sopla de izquierda a derecha (z+).
+   ===================================================================== */
+V.wake3d=(()=>{
+const CAT={H:{n:"Heavy (pesado)",b:62,w0:2.4,life:150},M:{n:"Medium (medio)",b:34,w0:1.6,life:100}};
+const QZ=[
+ {q:"¿Cuándo genera un avión la estela <b>más fuerte</b>?",o:["Pesado, limpio (sin flaps) y lento","Ligero, con flaps y rápido","Con viento fuerte"],a:0,e:"La intensidad crece con el peso y el C<sub>L</sub>: <b>heavy, clean, slow</b>. Por eso el despegue y la aproximación (lentos) son los momentos críticos.",s:{m:"l",cw:0}},
+ {q:"Aterrizas detrás de un <b>heavy</b>. ¿Qué trayectoria evita su estela?",o:["Por encima de su senda y tomando más allá de su punto de toma","Por debajo de su senda y tomando antes","Igual que la suya"],a:0,e:"Los torbellinos bajan desde su trayectoria: quédate <b>por encima</b> y toma <b>más allá</b> de donde tomó él, porque al tocar deja de generarlos.",s:{m:"l",cw:0}},
+ {q:"Despegas detrás de un <b>heavy</b> que acaba de despegar. ¿Qué haces?",o:["Rotar antes de su punto de rotación y subir por encima de su trayectoria","Rotar después de su punto de rotación","Despegar enseguida y quedarte bajo"],a:0,e:"Sus torbellinos empiezan donde rotó: <b>despega antes</b> de ese punto y sube <b>por encima</b> de su trayectoria (o espera la separación de tiempo).",s:{m:"t",cw:0}},
+ {q:"¿Qué viento cruzado es el <b>más peligroso</b> en la pista?",o:["Uno flojo, de unos 3–5 kt","Uno fuerte, de más de 15 kt","La calma total"],a:0,e:"Junto al suelo cada torbellino se aparta del eje a unos 2–3 kt. Un cruzado flojo de 3–5 kt frena el de <b>barlovento</b> y lo deja <b>quieto sobre la pista</b>; uno fuerte los barre a los dos.",s:{m:"l",cw:3}},
+ {q:"¿Cómo se mueven los torbellinos después de formarse?",o:["Bajan unos 300–500 ft/min y se estabilizan 500–900 ft por debajo","Suben por encima del avión","Se quedan a la misma altura"],a:0,e:"Bajan a unos <b>300–500 ft/min</b> hasta unos <b>500–900 ft</b> por debajo de la trayectoria; cerca del suelo se separan lateralmente y se disipan en uno a tres minutos.",s:{m:"l",cw:0}}];
+const MESH=(()=>{ const f=[], L=60, w=3.2; const q=[[0,w,0],[0,0,w],[0,-w,0],[0,0,-w]];
+  for(let i=0;i<4;i++){ const a=q[i], b=q[(i+1)%4]; f.push([[L*.5,0,0],vadd(a,[L*.32,0,0]),vadd(b,[L*.32,0,0])]); f.push([vadd(a,[L*.32,0,0]),vadd(a,[-L*.35,0,0]),vadd(b,[-L*.35,0,0]),vadd(b,[L*.32,0,0])]); f.push([vadd(a,[-L*.35,0,0]),[-L*.5,1,0],vadd(b,[-L*.35,0,0])]); }
+  for(const s of [1,-1]){ f.push([[6,-1,0],[-8,-1,31*s],[-13,-1,31*s],[-9,-1,0]]); f.push([[-22,1,0],[-27,1,10*s],[-29,1,10*s],[-28,1,0]]); } f.push([[-21,2,0],[-28,13,0],[-30,13,0],[-28,2,0]]); return f; })();
+return {t:"3D · Estela turbulenta: torbellinos de punta de plano al aterrizar y al despegar",
+cap:"Modelo simplificado con tiempo acelerado; altura y distancias laterales exageradas ×4 para que se vean. Los torbellinos bajan unos 300–500 ft/min, frenan junto al suelo (efecto suelo) y allí se separan a unos 2–3 kt cada uno; el viento cruzado los arrastra a los dos. Separación entre torbellinos ≈ 3/4 de la envergadura. Los mínimos de separación por estela los fija el ATC (OACI Doc 4444).",
+init(el){
+  const ctl=row("Maniobra",bt("data-mv","l","Aterrizaje detrás",1)+bt("data-mv","t","Despegue detrás")+bt("data-c","H","Heavy",1)+bt("data-c","M","Medium")+bt("data-m","quiz","Ponme a prueba"))
+   +row("",sl("cw","Viento cruzado (− desde la derecha · + desde la izquierda)",-10,10,3,1)+`<button type="button" data-rs>⟲ Repetir el paso</button>`)
+   +row("Vista",bt("data-v","34","3/4",1)+bt("data-v","be","Desde atrás, en el eje")+bt("data-v","si","Lateral")+bt("data-v","to","Planta"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shell(el,this.t,"Escena 3D con un avión pesado y sus torbellinos de estela sobre la pista",ctl,this.cap);
+  let mv="l", cat="H", cw=3, T=0, view="34", qm=false;
+  const V0=70, GS=3*R, TD=350, ROT=1700, CL=7*R, X0=-1600, EV=4, EZ=4;
+  const path=x=>mv==="l"?Math.max(0,(TD-x)*Math.tan(GS)):Math.max(0,(x-ROT)*Math.tan(CL));
+  const S=orbit(u.c,{yaw:-58,pit:22,ar:.6,hmin:300,hmax:480,pmin:2,pmax:89,draw}); S.anim=true;
+  function draw(S,dt,t){ const x=S.x, W=S.W, H=S.H, d=S.dp, C=CAT[cat];
+    T+=dt*6; const xa=mv==="l"?X0+V0*T:(T<25?.5*(V0/25)*T*T:.5*V0*25+V0*(T-25)), Tend=mv==="l"?(TD-X0)/V0+C.life:25+(3000-ROT)/V0+C.life; if(T>Tend) T=0;
+    const span=3600, tgt=view==="be"?[mv==="l"?-200:ROT+300,160,0]:[mv==="l"?200:ROT+300,200,0], k=Math.min(W,H*1.6)/span*(view==="be"?1.9:1.15);
+    S.cam(k,W*.5,H*.6,tgt,span*6); const P0=S.P, P=p=>P0([p[0],p[1]*EV,p[2]*EZ]);
+    x.setTransform(1,0,0,1,0,0); const sk=x.createLinearGradient(0,0,0,H); sk.addColorStop(0,"#5d8fc4"); sk.addColorStop(1,"#d7e3ea"); x.fillStyle=sk; x.fillRect(0,0,W,H);
+    const fillP=(pts,c,a)=>{ const q=pts.map(P); x.globalAlpha=a==null?1:a; x.fillStyle=c; x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); x.globalAlpha=1; };
+    const ln=(pts,c,w,dash,a)=>{ const q=pts.map(P); x.globalAlpha=a==null?1:a; x.strokeStyle=c; x.lineWidth=(w||1)*d; x.setLineDash(dash?dash.map(v=>v*d):[]); x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.stroke(); x.setLineDash([]); x.globalAlpha=1; };
+    const lb=(p,tt,c)=>{ const q=P(p); tag(x,q[0],q[1],tt,{dp:d,fs:11,al:"c",c:c||"#fff"}); };
+    fillP([[-1800,0,-320],[3200,0,-320],[3200,0,320],[-1800,0,320]],"#7d9a5b"); x.globalAlpha=.25; for(let gx=-1800;gx<=3200;gx+=500) ln([[gx,0,-320],[gx,0,320]],"#4d6b35",1); x.globalAlpha=1;
+    fillP([[0,0,-22.5],[3000,0,-22.5],[3000,0,22.5],[0,0,22.5]],"#3c4046"); ln([[30,.2,0],[2970,.2,0]],"#f4f4f0",1,[6,6]);
+    for(let i=-3;i<=3;i++) ln([[2,0,i*6],[40,0,i*6]],"#f4f4f0",1.5);
+    // trayectorias: la del precedente (roja) y la tuya recomendada (verde)
+    const pr=[], my=[]; for(let xx=X0;xx<=3000;xx+=50){ pr.push([xx,path(xx),0]); }
+    if(mv==="l"){ for(let xx=X0;xx<=TD+500;xx+=50) my.push([xx,Math.max(0,(TD+450-xx)*Math.tan(3.4*R)),0]); } else { for(let xx=0;xx<=3000;xx+=50) my.push([xx,Math.max(0,(xx-1100)*Math.tan(9*R)),0]); }
+    ln(pr,"#ff6b6b",2,[8,5]); ln(my,"#6ee7a0",3);
+    if(mv==="l"){ ln([[TD,0,-30],[TD,0,30]],"#ff6b6b",3); lb([TD,0,-45],"su toma","#ffb0b0"); ln([[TD+450,0,-30],[TD+450,0,30]],"#6ee7a0",3); lb([TD+450,0,45],"tu toma: más allá","#b6f5cf"); lb([-1100,(TD+1550)*Math.tan(3.4*R)+25,0],"tú: por encima de su senda","#b6f5cf"); }
+    else { ln([[ROT,0,-30],[ROT,0,30]],"#ff6b6b",3); lb([ROT,0,-45],"su rotación","#ffb0b0"); ln([[1100,0,-30],[1100,0,30]],"#6ee7a0",3); lb([1100,0,45],"tú: rota antes","#b6f5cf"); lb([2600,(2600-1100)*Math.tan(9*R)+25,0],"tú: por encima de su trayectoria","#b6f5cf"); }
+    // torbellinos: nacen en su trayectoria cuando vuela, bajan, frenan en el suelo, se separan y derivan
+    const cwm=cw*.5144, out=1.3, items=[];
+    const gx0=mv==="l"?X0:ROT, gx1=Math.min(xa,mv==="l"?TD:3000);
+    for(let gx=gx0;gx<=gx1;gx+=90){ const tg=mv==="l"?(gx-X0)/V0:25+(gx-ROT)/V0, age=T-tg; if(age<0||age>C.life) continue; const y0=path(gx), sink=C.w0, hmin=C.b*.5;
+      const tfall=Math.max(0,(y0-hmin)/sink), yv=Math.max(hmin,y0-sink*Math.min(age,Math.min(tfall,130/sink*1.0)))-0, ground=yv<=hmin+1, tg2=Math.max(0,age-tfall);
+      const st=1-age/C.life;
+      for(const sd of [-1,1]){ const z=sd*C.b*.39+cwm*age+(ground?sd*out*tg2:0), cx=gx, cy=Math.max(hmin*.6,yv), r=C.b*.12, rot=sd*(t*6+gx*.03);
+        for(let j=0;j<8;j++){ const a=rot+j/8*2*Math.PI; const p=[cx+j*6,cy+r*Math.sin(a)/EV*2.2,z+r*Math.cos(a)/EZ*2.2], q=P(p); items.push({z:q[2],f:()=>{ x.fillStyle=`rgba(200,110,255,${.85*st})`; x.beginPath(); x.arc(q[0],q[1],Math.max(1.4,2.2*d),0,7); x.fill(); }}); } } }
+    items.sort((a,b)=>a.z-b.z).forEach(o=>o.f());
+    // el avión precedente
+    if(mv==="l"?xa<TD+600:true){ const ax=Math.min(xa,mv==="l"?TD+600:3500), ay=path(ax), pit=mv==="l"?-3*R:(ax>ROT?CL:0), c=Math.cos(pit), sn=Math.sin(pit);
+      const K=2.6, fs=MESH.map(f=>{ const w=f.map(p=>[ax+(p[0]*c-p[1]*sn)*K,(ay+8)*EV+(p[0]*sn+p[1]*c)*K,p[2]*K]), q=w.map(P0); return {q,z:q.reduce((s,p)=>s+p[2],0)/q.length}; }).sort((a,b)=>a.z-b.z);
+      for(const f of fs){ x.fillStyle="#e3e8ef"; x.strokeStyle="rgba(40,50,60,.35)"; x.lineWidth=.6*d; x.beginPath(); f.q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); x.stroke(); }
+      lb([ax,ay+8+60/EV*2.6,0],C.n,"#ffffff"); }
+    tag(x,10*d,18*d,`t = ${Math.round(Math.max(0,T-(mv==="l"?(TD-X0)/V0:25)))} s tras ${mv==="l"?"su toma":"su despegue"} · viento cruzado ${Math.abs(cw)} kt`,{dp:d,fs:11.5,c:"#ffd24d"});
+    return true; }
+  const say=()=>{ if(qm) return; const cwk=Math.abs(cw), upw=Math.abs(2.5-cwk);
+    u.out.innerHTML=`${mv==="l"?"<b>Aterrizaje detrás de un "+CAT[cat].n.split(" ")[0]+"</b>: quédate <b>por encima</b> de su senda (verde) y toma <b>más allá</b> de su punto de toma, donde deja de generar torbellinos.":"<b>Despegue detrás de un "+CAT[cat].n.split(" ")[0]+"</b>: <b>rota antes</b> de su punto de rotación y sube <b>por encima</b> de su trayectoria; si no puedes, espera la separación."} `+
+      (cwk===0?"Sin viento cruzado los dos torbellinos se separan del eje a unos 2–3 kt y salen de la pista.":cwk<=5?`<b class="bad">Trampa clásica</b>: con ${cwk} kt de cruzado el torbellino de <b>barlovento</b> casi no se mueve (deriva neta ≈ ${f1(upw)} kt) y se queda <b>sobre la pista</b>.`:`Con ${cwk} kt de cruzado el viento barre los dos torbellinos fuera de la pista, hacia sotavento.`); };
+  const VW={"34":[-58,22],be:[-90,6],si:[0,4],to:[-90,89]};
+  u.qa("[data-v]").forEach(b=>b.addEventListener("click",()=>{ view=b.dataset.v; const v=VW[view]; S.go(v[0],v[1]); press(u,"data-v",view); }));
+  u.qa("[data-mv]").forEach(b=>b.addEventListener("click",()=>{ mv=b.dataset.mv; T=0; press(u,"data-mv",mv); say(); }));
+  u.qa("[data-c]").forEach(b=>b.addEventListener("click",()=>{ cat=b.dataset.c; press(u,"data-c",cat); say(); }));
+  const I=u.q('[data-k="cw"]'), O=u.q('[data-o="cw"]'); const setCw=v=>{ cw=+v; I.value=cw; O.textContent=(cw>0?"+":"")+cw+" kt"; say(); }; I.addEventListener("input",()=>setCw(I.value));
+  u.q("[data-rs]").addEventListener("click",()=>{ T=0; });
+  const Q=quiz(u,QZ,c=>{ mv=c.s.m; press(u,"data-mv",mv); setCw(c.s.cw); T=0; });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); say(); } });
+  setCw(3);
+}};
+})();
+
 F.init();
 })();
