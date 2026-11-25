@@ -38,6 +38,9 @@
   var missing={}; window.F0I18N_MISSING=missing;
   var textMap=new WeakMap(), attrMap=new WeakMap(), pending=new WeakMap();
   var AT=["placeholder","title","aria-label","alt"];
+  /* zonas que van siempre en inglés (Inicio y cabecera): data-en */
+  function forced(n){ var e=n&&(n.nodeType===1?n:n.parentElement); return !!(e&&e.closest&&e.closest("[data-en]")); }
+  function scanForced(){ document.querySelectorAll("[data-en]").forEach(function(r){ scan(r); }); }
   function lead(t){ return t.match(/^\s*/)[0]; } function trail(t){ return t.match(/\s*$/)[0]; }
   function doText(n){
     var cur=n.nodeValue, rec=textMap.get(n);
@@ -63,8 +66,8 @@
   }
   function restore(){
     var w=document.createTreeWalker(document.body||document.documentElement,NodeFilter.SHOW_TEXT,null), n, list=[]; while((n=w.nextNode())) list.push(n);
-    list.forEach(function(n){ var r=textMap.get(n); if(r&&n.nodeValue===r.en){ n.nodeValue=r.es; } textMap.delete(n); });
-    document.querySelectorAll("[placeholder],[title],[aria-label],[alt]").forEach(function(e){ var m=attrMap.get(e); if(!m) return; Object.keys(m).forEach(function(a){ if(e.getAttribute(a)===m[a].en) e.setAttribute(a,m[a].es); }); attrMap.delete(e); });
+    list.forEach(function(n){ if(forced(n)) return; var r=textMap.get(n); if(r&&n.nodeValue===r.en){ n.nodeValue=r.es; } textMap.delete(n); });
+    document.querySelectorAll("[placeholder],[title],[aria-label],[alt]").forEach(function(e){ if(forced(e)) return; var m=attrMap.get(e); if(!m) return; Object.keys(m).forEach(function(a){ if(e.getAttribute(a)===m[a].en) e.setAttribute(a,m[a].es); }); attrMap.delete(e); });
     if(document.documentElement.getAttribute("data-es-title")){ document.title=document.documentElement.getAttribute("data-es-title"); }
   }
   /* ---------- traducción automática del navegador para lo largo (apuntes, explicaciones) ---------- */
@@ -105,11 +108,11 @@
   function observe(){
     if(mo||!document.body) return;
     mo=new MutationObserver(function(ms){
-      if(lang!=="en") return;
+      var en=lang==="en";
       ms.forEach(function(m){
-        if(m.type==="childList"){ m.addedNodes.forEach(function(x){ if(x.nodeType===1||x.nodeType===3) scan(x); }); }
-        else if(m.type==="characterData"){ doText(m.target); }
-        else if(m.type==="attributes"){ doAttr(m.target,m.attributeName); }
+        if(m.type==="childList"){ m.addedNodes.forEach(function(x){ if(x.nodeType!==1&&x.nodeType!==3) return; if(en||forced(x)) scan(x); else if(x.querySelectorAll) x.querySelectorAll("[data-en]").forEach(function(r){ scan(r); }); }); }
+        else if(m.type==="characterData"){ if(en||forced(m.target)) doText(m.target); }
+        else if(m.type==="attributes"){ if(en||forced(m.target)) doAttr(m.target,m.attributeName); }
       });
     });
     mo.observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:AT});
@@ -120,7 +123,7 @@
   }
   function apply(){
     document.documentElement.setAttribute("lang",lang);
-    if(lang==="en"){ observe(); scan(document.body); titleTr(); } else { restore(); }
+    if(lang==="en"){ observe(); scan(document.body); titleTr(); } else { restore(); if(document.querySelector("[data-en]")){ observe(); scanForced(); } }
     paintSwitch();
   }
   function paintSwitch(){
@@ -147,6 +150,6 @@
   document.addEventListener("click",function(e){ var b=e.target.closest&&e.target.closest(".slang button[data-lang]"); if(b){ e.preventDefault(); setLang(b.getAttribute("data-lang")); } },true);
   /* el pie de página se crea al vuelo: cada vez que aparece, repinta el selector */
   window.F0i18n={get:function(){return lang;}, set:setLang, t:function(s){ if(lang!=="en") return s; var x=lookup(s); return x===null?s:x; }, scan:function(){ if(lang==="en") scan(document.body); }, paint:paintSwitch, missing:function(){ return Object.keys(missing); }};
-  function boot(){ paintSwitch(); if(lang==="en"){ if(hasApi()) initTr().then(pump); apply(); } else document.documentElement.setAttribute("lang","es"); }
+  function boot(){ paintSwitch(); if(lang==="en"){ if(hasApi()) initTr().then(pump); apply(); } else { document.documentElement.setAttribute("lang","es"); if(document.querySelector("[data-en]")){ observe(); scanForced(); } } }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot); else boot();
 })();

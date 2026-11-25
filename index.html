@@ -29,8 +29,6 @@
 <script src="ops.js"></script>
 <script>window.F0Sim=(function(){var el=null,p=null,me;return me={render:function(e){el=e;e.innerHTML="<p style=\"padding:24px;color:var(--muted)\">Cargando el Sim…</p>";if(!p){p=new Promise(function(ok,ko){var s=document.createElement("script");s.src="sim.js";s.onload=ok;s.onerror=function(){p=null;s.remove();ko();};document.head.appendChild(s);});}p.then(function(){if(el&&window.F0Sim!==me)window.F0Sim.render(el);},function(){if(el)el.innerHTML="<p style=\"padding:24px\">No se pudo cargar el Sim. Revisa la conexión y vuelve a abrir la pestaña.</p>";});},leave:function(){el=null;}};})();</script>
 <script src="hangar.js"></script>
-<script src="mix.js" defer></script>
-<script src="mix2.js" defer></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f1d0070793724820ae63bfa8c465ba85"}'></script>
 </head>
 <body>
@@ -176,7 +174,7 @@ iframe.subj{display:block;width:100%;height:100%;border:0;background:var(--bg)}
   font:700 13px/1 var(--display);letter-spacing:.22em;color:#d5dee6;text-shadow:0 -1px 0 rgba(0,0,0,.7);border-bottom:1px solid #06090d;border-radius:4px 4px 0 0;
   background:radial-gradient(circle at 16px 50%,#8d97a3 0 2px,#161c23 2.4px 4px,transparent 4.4px),radial-gradient(circle at calc(100% - 16px) 50%,#8d97a3 0 2px,#161c23 2.4px 4px,transparent 4.4px),linear-gradient(180deg,#2e3945,#18202a);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 3px 6px rgba(0,0,0,.3)}
-#news .box::before{content:"NOVEDADES"}
+#news .box::before{content:"WHAT’S NEW"}
 #sugBox .box::after,#news .box::after{content:"";position:absolute;inset:44px 0 0 0;pointer-events:none;opacity:.2;mix-blend-mode:multiply;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 #sugBox .box>*,#news .box>*{position:relative;z-index:1}
@@ -748,11 +746,17 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
 #planBox .pl-seg button[aria-checked="true"]{background:linear-gradient(180deg,#4a5867,#2d3946);border-color:#56646f;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 1px 2px rgba(0,0,0,.5)}
 #planBox .pl-seg button[aria-checked="true"] .led{background:#3DD68C;box-shadow:0 0 7px rgba(61,214,140,.9)}
 #planBox .pl-seg button:focus-visible{outline:2px solid #7FD3FF;outline-offset:1px}
-/* Inicio: briefing, Mi plan, herramientas y asignaturas en la misma rejilla y con la misma separación (18 px) */
-#planBox{display:block;margin:0 0 18px}
-#planBox .pl-bz{display:flex;width:100%;box-sizing:border-box;padding:9px 14px 11px}
+/* Inicio (etapa ATPL): una sola fila con «My plan» a la izquierda y BRIEFING · LECU a la derecha, alineados con la rejilla; en móvil, apilados */
+#v-test .dhead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:stretch;margin:0 0 22px}
+#v-test .dhead>#kpis{display:none!important}
+#v-test .dhead>#brief{flex:none;min-width:0;align-self:stretch}
+#v-test .dhead>#brief[hidden]{display:none}
+#v-test .dhead>#brief button{height:100%;min-height:82px;box-sizing:border-box}
+#planBox{display:flex;margin:0;min-width:0}
+#planBox .pl-bz{display:flex;flex-direction:column;justify-content:center;width:100%;box-sizing:border-box;padding:9px 14px 11px}
 #planBox .pl-seg{display:flex}
 #planBox .pl-seg button{white-space:nowrap}
+@media (max-width:760px){ #v-test .dhead{grid-template-columns:minmax(0,1fr);gap:16px;margin-bottom:16px} }
 @media (max-width:560px){ #planBox .pl-seg button{letter-spacing:.06em;padding:7px 8px;gap:6px} }
 /* Inicio: solo tests hechos y asignaturas preparadas, simétricos */
 #kpis.kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
@@ -760,9 +764,9 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="pl" viewBox="0 0 48 20"><path fill="currentColor" d="M3 10.5c0-2.2 2-3.6 5-3.6h27c6 0 10 2.2 11.5 3.6-1.5 1.4-5.5 3.6-11.5 3.6H8c-3 0-5-1.4-5-3.6z"/><path fill="currentColor" d="M3.5 7.2 1 1h6l5.5 6.2z"/><path fill="currentColor" d="M19 13.6 27.5 19.5h5L29 13.6z"/><path fill="#fff" fill-opacity=".85" d="M34.5 8.2h6c1.6.4 3 1.3 3.8 2.2H34.5z"/></symbol></defs></svg>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="msg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE08A"/><stop offset=".55" stop-color="#E8BF45"/><stop offset="1" stop-color="#B98A14"/></linearGradient><linearGradient id="msn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#25496B"/><stop offset="1" stop-color="#14304A"/></linearGradient><symbol id="msstar" viewBox="-10 -10 20 20"><path d="M0-10 2.6-2.6 10 0 2.6 2.6 0 10-2.6 2.6-10 0-2.6-2.6z" fill="#FFF3B8"/></symbol></defs></svg>
-<div id="gaPop" class="pop" hidden role="dialog" aria-label="Galones"></div>
-<div id="onPop" hidden role="dialog" aria-label="Compañeros en línea"></div>
-<header class="top">
+<div id="gaPop" class="pop" hidden role="dialog" aria-label="Galones" data-en></div>
+<div id="onPop" hidden role="dialog" aria-label="Compañeros en línea" data-en></div>
+<header class="top" data-en>
   <canvas class="art" id="hdrCv" aria-hidden="true"></canvas>
   <div class="veil"></div>
   <div class="row1">
@@ -781,10 +785,10 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
     <button class="arr r" id="tabNext" type="button" tabindex="-1" aria-label="Pestañas siguientes" hidden><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M7.5 4l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
   </div>
 </header>
-<div class="menu" id="menu" role="menu" aria-label="Todas las pestañas" hidden></div>
+<div class="menu" id="menu" role="menu" aria-label="Todas las pestañas" hidden data-en></div>
 
 <main id="main">
-  <section class="view" id="v-test" role="tabpanel">
+  <section class="view" id="v-test" role="tabpanel" data-en>
     <div class="dash">
       <div class="dhead">
         <div class="kpis" id="kpis"></div>
@@ -792,7 +796,7 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
       </div>
       <div class="grid" id="grid"></div>
       <div id="panel"></div>
-      <p class="foot" id="dashFoot">Aprobado con 75 %. «Preparado» = media de tus 5 últimos tests ≥ 85 % · «Casi listo» ≥ 75 % · «Reforzar» por debajo.</p>
+      <p class="foot" id="dashFoot">Pass mark 75 %. «Ready» = average of your last 5 tests ≥ 85 % · «Almost ready» ≥ 75 % · «Needs work» below that.</p>
       <div class="credit"><button class="btn ghost" id="acct" type="button" hidden aria-label="Cuenta" style="padding:6px 12px"><span id="acctTxt">Cuenta</span></button></div>
     </div>
   </section>
@@ -826,12 +830,12 @@ html body .sfoot .slang{display:inline-flex;align-items:center;gap:8px;margin:0 
   </div>
 </div>
 
-<div class="sheet" id="news" hidden role="dialog" aria-modal="true" aria-labelledby="nwT">
+<div class="sheet" id="news" hidden role="dialog" aria-modal="true" aria-labelledby="nwT" data-en>
   <div class="box nbox">
-    <div class="sky" aria-hidden="true"><i class="cl a"></i><i class="cl b"></i><svg class="plane" viewBox="0 0 360 84" aria-hidden="true"><g class="ban"><path d="M6 26h172l-8 16 8 16H6l7-16z" fill="#fff" stroke="#C8102E" stroke-width="2.5" stroke-linejoin="round"/><text x="92" y="48" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="15" letter-spacing=".6" fill="#C8102E">NOVEDADES</text></g><path d="M178 42 236 44" stroke="#14304A" stroke-width="1.6" fill="none"/><path d="M238 44q0-9 14-10h46q24 0 34 10-10 10-34 10h-46q-14-1-14-10z" fill="#0E7C86"/><path d="M243 38l-9-20h17l9 18z" fill="#14304A"/><path d="M272 46l16 26h15l-9-26z" fill="#14304A"/><rect x="243" y="46.5" width="66" height="3" fill="#C8102E"/><path d="M300 38h14q7 2 9 7h-23z" fill="#DFF1F1"/><ellipse class="prop" cx="336" cy="44" rx="2.4" ry="14" fill="#14304A"/></svg></div>
-    <h2 id="nwT">¡Novedades a bordo!</h2>
+    <div class="sky" aria-hidden="true"><i class="cl a"></i><i class="cl b"></i><svg class="plane" viewBox="0 0 360 84" aria-hidden="true"><g class="ban"><path d="M6 26h172l-8 16 8 16H6l7-16z" fill="#fff" stroke="#C8102E" stroke-width="2.5" stroke-linejoin="round"/><text x="92" y="48" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="15" letter-spacing=".6" fill="#C8102E">WHAT’S NEW</text></g><path d="M178 42 236 44" stroke="#14304A" stroke-width="1.6" fill="none"/><path d="M238 44q0-9 14-10h46q24 0 34 10-10 10-34 10h-46q-14-1-14-10z" fill="#0E7C86"/><path d="M243 38l-9-20h17l9 18z" fill="#14304A"/><path d="M272 46l16 26h15l-9-26z" fill="#14304A"/><rect x="243" y="46.5" width="66" height="3" fill="#C8102E"/><path d="M300 38h14q7 2 9 7h-23z" fill="#DFF1F1"/><ellipse class="prop" cx="336" cy="44" rx="2.4" ry="14" fill="#14304A"/></svg></div>
+    <h2 id="nwT">What’s new on board</h2>
     <ul class="nlist" id="nwList"></ul>
-    <div class="row"><button class="btn" id="nwOk" type="button">¡A volar!</button></div>
+    <div class="row"><button class="btn" id="nwOk" type="button">Let’s fly!</button></div>
   </div>
 </div>
 
@@ -1023,7 +1027,7 @@ async function loadAllCloud(){
     for(const s of SUBJ){ const c=all[s.k]; if(c){ STATE[s.k]=union(STATE[s.k],c); lsSet(s.k,STATE[s.k]); } }
     // lo que había solo en este navegador sube a la cuenta
     for(const s of SUBJ){ if(STATE[s.k] && JSON.stringify(STATE[s.k])!==JSON.stringify(all[s.k]||null)) await remoteSet(s.k,STATE[s.k]); }
-    try{ F0Weak.load().then(autoPlan,autoPlan); }catch(e){}
+    try{ F0Weak.load().then(()=>autoPlan(true),()=>autoPlan(true)); }catch(e){}
     return;
   }
   for(const s of SUBJ){ const c=await cloudGet(s.k); if(c){ STATE[s.k]=union(STATE[s.k],c); lsSet(s.k,STATE[s.k]); } }
@@ -1254,9 +1258,9 @@ function drawBrief(){
   if(!(window.F0Ops&&window.F0Ops.brief)){ el.hidden=true; return; }
   const ico='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 21 4l-5 17-4-7-7-2z"/></svg>';
   const paint=()=>{ const d=BR.d, ok=d&&Date.now()-BR.t<30*6e4;
-    el.innerHTML=`<button type="button" data-v="ops" aria-label="Abrir BRIEFING: tiempo, pista y cartas"><span class="sky" aria-hidden="true"></span>`+
-      `<span class="b1"><span class="bt">${ico}BRIEFING · LECU</span><span class="bz" title="Hora Zulu (UTC)">${zulu()}</span>`+(ok?`<span class="bc ${d.cat}">${d.cat}</span><span class="ba ${d.ad?"":"no"}"><i></i>AD ${d.ad?"ABIERTO":"CERRADO"}</span>`:"")+`</span>`+
-      `<span class="b2">`+(ok?`<span class="bd"><b>${d.temp!=null?Math.round(d.temp)+" °C":"—"}</b> · ${esc(d.wind)} · ${esc(d.vis)}${d.age!=null&&d.age>60?` · <span class="old">hace ${Math.round(d.age/60)} h</span>`:""}</span>`:`<span class="bd">Tiempo, pista y cartas de 23 aeródromos</span>`)+`<span class="bg"><i>ABRIR </i>→</span></span></button>`; el.hidden=false; skyApply(); };
+    el.innerHTML=`<button type="button" data-v="ops" aria-label="Open BRIEFING: weather, runway and charts"><span class="sky" aria-hidden="true"></span>`+
+      `<span class="b1"><span class="bt">${ico}BRIEFING · LECU</span><span class="bz" title="Zulu time (UTC)">${zulu()}</span>`+(ok?`<span class="bc ${d.cat}">${d.cat}</span><span class="ba ${d.ad?"":"no"}"><i></i>AD ${d.ad?"OPEN":"CLOSED"}</span>`:"")+`</span>`+
+      `<span class="b2">`+(ok?`<span class="bd"><b>${d.temp!=null?Math.round(d.temp)+" °C":"—"}</b> · ${esc(d.wind)} · ${esc(d.vis)}${d.age!=null&&d.age>60?` · <span class="old">${Math.round(d.age/60)} h ago</span>`:""}</span>`:`<span class="bd">Weather, runway & charts for 23 aerodromes</span>`)+`<span class="bg"><i>OPEN </i>→</span></span></button>`; el.hidden=false; skyApply(); };
   paint();
   if(Date.now()-BR.t>5*6e4&&!BR.busy){ BR.busy=true;
     window.F0Ops.brief(()=>fetch("/api/wx",{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })).then(d=>{ BR.d=d; BR.t=Date.now(); }).catch(()=>{}).then(()=>{ BR.busy=false; if(current==="test") paint(); }); }
@@ -1274,11 +1278,13 @@ const F0Weak=(function(){
     count:(k,pre)=>(W.c[k]||[]).filter(x=>!pre||x.c.startsWith(pre)).length,
     conv:code=>(W.v||{})[code]||"",
     setConv(code,n){ W.v=W.v||{}; if(n) W.v[code]=n; else delete W.v[code]; W.t=Date.now(); keep(); },
-    setPlan(v){ W.p=v; W.t=Date.now(); keep(); },
+    setPlan(v){ W.p=v; W.pt=W.t=Date.now(); keep(); },
     manual(){ W.pm=1; W.t=Date.now(); keep(); },
+    planAt:()=>W.pt||0,   // cuándo se eligió (a mano o por el cambio automático) el plan guardado
+    loaded:false,
     isManual:()=>!!(W.pm||W.p),
     savedPlan:()=>W.p||"",   // cualquier elección guardada desde el selector cuenta como manual
-    async load(){ if(!remote||!sbUser) return; try{ const r=await remote.get("weak"), rw=r&&r.weak; if(rw&&(rw.t||0)>(W.t||0)){ W=rw; try{ localStorage.setItem("f0:weak",JSON.stringify(W)); }catch(e){} if(W.p&&W.p!==(plan13()?"13":"9")) setPlan(W.p,true); fire(); } else if((W.t||0)>((rw&&rw.t)||0)) keep(); }catch(e){} }
+    async load(){ if(!remote||!sbUser) return; try{ this.loaded=true; const r=await remote.get("weak"), rw=r&&r.weak; if(rw&&(rw.t||0)>(W.t||0)){ W=rw; try{ localStorage.setItem("f0:weak",JSON.stringify(W)); }catch(e){} if(W.p&&W.p!==(plan13()?"13":"9")) setPlan(W.p,true); fire(); } else if((W.t||0)>((rw&&rw.t)||0)) keep(); }catch(e){} }
   };
 })();
 window.F0Weak=F0Weak;
@@ -1293,18 +1299,32 @@ function plateHTML(s,x){
   const [k,code,es,en,n,time,conv]=x, split=!!OFFICIAL[k], w=F0Weak.count(k,split?code:""), go=t=>split?`data-gosub="${k}|${code}|${t}"`:`data-go="${k}" data-tab="${t}"`;
   return `<article class="plate" style="--scl:${s.c[0]};--scd:${s.c[1]}">
     <i class="rv a"></i><i class="rv b"></i><i class="rv c"></i><i class="rv d"></i>
-    <header><b class="pc">${code}</b><label class="pv" title="Convocatoria de SENASA en la que te presentas"><span class="sr">Convocatoria</span><select data-conv="${code}"${F0Weak.conv(code)?' class="set"':""} aria-label="Convocatoria SENASA de ${code}">${["","1","2","3","4"].map(v=>`<option value="${v}"${F0Weak.conv(code)===v?" selected":""}>${v?v+"ª conv.":"Conv. —"}</option>`).join("")}</select></label></header>
-    <h3>${esc(es)}</h3><p class="pe">${esc(en)}</p>
-    <dl><div><dt>Preguntas</dt><dd>${n}</dd></div><div><dt>Tiempo</dt><dd>${time}</dd></div></dl>
-    ${w?`<p class="pw on">★ ${w} ${w===1?"tema flojo":"temas flojos"}</p>`:""}
-    <div class="pa"><button class="btn" type="button" ${go("notes")}>Ir al temario</button><button class="btn sec" type="button" ${go("test")}>Simulacro SENASA</button></div>
+    <header><b class="pc">${code}</b><label class="pv" title="SENASA exam sitting you plan to take"><span class="sr">Sitting</span><select data-conv="${code}"${F0Weak.conv(code)?' class="set"':""} aria-label="SENASA sitting for ${code}">${["","1","2","3","4"].map(v=>`<option value="${v}"${F0Weak.conv(code)===v?" selected":""}>${v?["","1st","2nd","3rd","4th"][v]+" sitting":"Sitting —"}</option>`).join("")}</select></label></header>
+    <h3>${esc(en)}</h3>
+    <dl><div><dt>Questions</dt><dd>${n}</dd></div><div><dt>Time</dt><dd>${time}</dd></div></dl>
+    ${w?`<p class="pw on">★ ${w} weak ${w===1?"topic":"topics"}</p>`:""}
+    <div class="pa"><button class="btn" type="button" ${go("notes")}>Study notes</button><button class="btn sec" type="button" ${go("test")}>SENASA mock exam</button></div>
   </article>`;
 }
 const OFFICIAL={"021":[["021","Airframe, Systems & Power Plant","Sistemas y motor",80],["022","Instrumentation","Instrumentación",60]],
   "031":[["031","Mass & Balance","Masa y centrado",25],["032","Performance","Performance",45],["033","Flight Planning","Planificación de vuelo",42]],
   "061":[["061","General Navigation","Navegación general",55],["062","Radio Navigation","Radionavegación",66]]};
-// a los 60 días del registro, el plan por defecto pasa a SENASA 13 (si el alumno no lo ha elegido a mano)
-function autoPlan(){ try{ const sp=F0Weak.savedPlan(); if(sp){ if((plan13()?"13":"9")!==sp) setPlan(sp,true); return; } if(!sbUser||!sbUser.created_at||F0Weak.isManual()) return; const days=(Date.now()-new Date(sbUser.created_at).getTime())/864e5, want=days>=60?"13":"9"; if((plan13()?"13":"9")!==want) setPlan(want,true); }catch(e){} }
+/* Cambio automático a ATPL (13). El alumno pasa a ATPL en cuanto cumple una de estas dos condiciones:
+   1) llega el inicio de la etapa ATPL de la promoción: martes 1 de diciembre de 2026, 00:00 hora de Madrid;
+   2) han pasado 60 días desde que creó su cuenta.
+   Se aplica una sola vez: si DESPUÉS de ese momento el alumno elige un plan a mano, se respeta siempre.
+   Una elección anterior a ese momento (o sin fecha, de versiones antiguas) no bloquea el cambio. */
+const ATPL_GO=Date.UTC(2026,10,30,23,0,0);   // 2026-12-01 00:00 Europe/Madrid (CET, UTC+1)
+function atplSince(){ let t=ATPL_GO; try{ if(sbUser&&sbUser.created_at){ const r=new Date(sbUser.created_at).getTime()+60*864e5; if(r<t) t=r; } }catch(e){} return t; }
+function autoPlan(persist){ try{
+  const cur=plan13()?"13":"9", sp=F0Weak.savedPlan(), at=F0Weak.planAt(), since=atplSince();
+  let want, mine=false;
+  if(Date.now()<since) want=sp||cur;                    // aún en Fase Inicial: manda lo que haya elegido (por defecto, 9)
+  else if(sp&&at>=since){ want=sp; mine=true; }         // eligió después de entrar en la etapa ATPL: se respeta
+  else want="13";                                       // le toca ATPL y no ha elegido nada después: pasa a ATPL
+  if(Date.now()>=since&&!mine&&persist!==false&&(persist||F0Weak.loaded)){ F0Weak.setPlan("13"); }   // queda guardado (y en la nube) para no repetirlo
+  if(cur!==want) setPlan(want,true);
+}catch(e){} }
 function plan13(){ try{ return localStorage.getItem("f0:plan")==="13"; }catch(e){ return false; } }
 let QMAP=null, qmapAsk=false;
 function needQmap(){ if(QMAP||qmapAsk) return; qmapAsk=true; fetch("s/qmap.json?v=1",{cache:"no-cache"}).then(r=>r.json()).then(j=>{ QMAP=j; if(plan13()) renderDash(); }).catch(()=>{ qmapAsk=false; }); }
@@ -1320,32 +1340,32 @@ function subSummary(k,code){
 function goSub(k,code,tab){ try{ localStorage.setItem("f0:sub:"+k,code); }catch(e){} const f=frames[k]; if(f&&f.contentWindow){ try{ f.contentWindow.postMessage({t:"f0-sub",sub:code},"*"); }catch(e){} } show(k,{tab:tab||"notes"}); }
 function planBox(){
   let b=$("#planBox");
-  if(!b){ b=document.createElement("div"); b.id="planBox"; $("#grid").before(b);
+  if(!b){ b=document.createElement("div"); b.id="planBox"; $("#brief").before(b);
     b.addEventListener("click",e=>{ const x=e.target.closest("button[data-plan]"); if(x){ try{ F0Weak.manual(); }catch(_){} setPlan(x.dataset.plan); } }); }
   const p13=plan13();
-  b.innerHTML=`<div class="pl-bz"><i class="sc a"></i><i class="sc b"></i><i class="sc c"></i><i class="sc d"></i><span class="pl-t" id="plT">Mi plan</span><div class="pl-seg" role="radiogroup" aria-labelledby="plT"><button type="button" role="radio" data-plan="9" aria-checked="${!p13}" title="Fase Inicial · 9 asignaturas"><i class="led" aria-hidden="true"></i>Fase Inicial<b>9</b></button><button type="button" role="radio" data-plan="13" aria-checked="${p13}" title="ATPL completo (SENASA) · 13 asignaturas"><i class="led" aria-hidden="true"></i>ATPL<b>13</b></button></div></div>`;
+  b.innerHTML=`<div class="pl-bz"><i class="sc a"></i><i class="sc b"></i><i class="sc c"></i><i class="sc d"></i><span class="pl-t" id="plT">My plan</span><div class="pl-seg" role="radiogroup" aria-labelledby="plT"><button type="button" role="radio" data-plan="9" aria-checked="${!p13}" title="Initial Phase · 9 subjects"><i class="led" aria-hidden="true"></i>Initial Phase<b>9</b></button><button type="button" role="radio" data-plan="13" aria-checked="${p13}" title="Full ATPL · 13 EASA subjects"><i class="led" aria-hidden="true"></i>ATPL<b>13</b></button></div></div>`;
 }
 function cardHTML(s,m,o){
   o=o||{}; const code=o.code||s.code, short=o.short||s.short, name=o.name||s.name;
   if(o.p13&&!o.sub) return cardHTML(s,m,Object.assign({},o,{p13:0,one:1}));
   const acts=o.one?`
-        <button class="btn wide" type="button" data-go="${s.k}" data-tab="test">Simulacro SENASA · ${SENN[s.k]||""} preguntas</button>
-        <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Ir a la asignatura</button>
-        <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">Más tipos de test</button>`:o.sub?`
-        <button class="btn wide" type="button" data-gosub="${s.k}|${o.sub}|test">Simulacro SENASA · ${o.n} preguntas</button>
-        <button class="btn sec" type="button" data-gosub="${s.k}|${o.sub}|notes">Ir a la asignatura</button>
-        <button class="btn sec" type="button" data-gosub="${s.k}|${o.sub}|test">Más tipos de test</button>`:`
-        <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Test adaptativo · ${s.k==="010"?20:25}</button>
-        <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Ir a la asignatura</button>
-        <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">Más tipos de test</button>
-        ${dueCount(s.k)?`<button class="btn ghost wide" type="button" data-review="${s.k}" title="${dueCount(s.k)} pendientes de hoy · se completa hasta 20 con tus falladas y preguntas nuevas">🔁 Repasar hoy · 20</button>`:""}`;
+        <button class="btn wide" type="button" data-go="${s.k}" data-tab="test">SENASA mock exam · ${SENN[s.k]||""} questions</button>
+        <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Go to the subject</button>
+        <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">More test types</button>`:o.sub?`
+        <button class="btn wide" type="button" data-gosub="${s.k}|${o.sub}|test">SENASA mock exam · ${o.n} questions</button>
+        <button class="btn sec" type="button" data-gosub="${s.k}|${o.sub}|notes">Go to the subject</button>
+        <button class="btn sec" type="button" data-gosub="${s.k}|${o.sub}|test">More test types</button>`:`
+        <button class="btn wide" type="button" data-go="${s.k}" data-mode="adaptive">Adaptive test · ${s.k==="010"?20:25}</button>
+        <button class="btn sec" type="button" data-go="${s.k}" data-tab="notes">Go to the subject</button>
+        <button class="btn sec" type="button" data-go="${s.k}" data-tab="test">More test types</button>
+        ${dueCount(s.k)?`<button class="btn ghost wide" type="button" data-review="${s.k}" title="${dueCount(s.k)} due today · topped up to 20 with your wrong answers and new questions">🔁 Review today · 20</button>`:""}`;
   return `
     <article class="card fold ${m.n?'':'empty'}${o.sub?' off':''}" style="--scl:${s.c[0]};--scd:${s.c[1]}">
       <div class="fd"><div class="back"></div><div class="ftab">${code}</div><i class="clip"></i>
-        <div class="fsh"><div class="hd">ATPL(A) · Ficha de estudio</div><div class="ttl">${esc(short)}</div><div class="sub">${name!==short?esc(name):""}</div>
+        <div class="fsh"><div class="hd">ATPL(A) · Study sheet</div><div class="ttl">${esc(short)}</div><div class="sub">${name!==short?esc(name):""}</div>
           ${fspark(m)}
-          <div class="st3">${m.n?`<span>Último<b>${m.last} %</b></span><span>Media 5<b>${m.avg5} %</b></span><span title="Media de todos los tests hechos (${m.n})">Media total<b>${m.avgAll} %</b></span><span>Tests<b>${m.n}</b></span>`:`<span style="grid-column:1/-1">Aún no has hecho ningún test</span>`}</div></div>
-        <span class="ink ${m.lvl}">${m.label}</span><div class="front"><span>${esc(short)}</span></div></div>
+          <div class="st3">${m.n?`<span>Last<b>${m.last} %</b></span><span>Avg 5<b>${m.avg5} %</b></span><span title="Average of all tests taken (${m.n})">Avg all<b>${m.avgAll} %</b></span><span>Tests<b>${m.n}</b></span>`:`<span style="grid-column:1/-1">You haven’t taken any test yet</span>`}</div></div>
+        <span class="ink ${m.lvl}">${({"Preparado":"Ready","Casi listo":"Almost ready","Reforzar":"Needs work","Sin empezar":"Not started"})[m.label]||m.label}</span><div class="front"><span>${esc(short)}</span></div></div>
       <div class="acts">${acts}
       </div>
     </article>`;
@@ -1356,7 +1376,7 @@ function renderDash(){
   const started=sums.filter(x=>x.m.n), avg = started.length ? Math.round(started.reduce((a,x)=>a+x.m.avg5,0)/started.length) : null;
   const _sk=streakInfo(); $("#kpis").innerHTML = `<div class="kpi"><b>${tests}</b><span>tests hechos</span><em>en total</em></div><div class="kpi"><b>${readyN}/${SUBJ.length}</b><span>preparadas</span><em>media ≥ 85 %</em></div>`;
   planBox();
-  const p13=plan13(); $("#kpis").hidden=p13; document.documentElement.classList.toggle("p13",p13); $("#grid").classList.toggle("plates",p13); const ft=$("#dashFoot"); if(ft) ft.hidden=p13;
+  const p13=plan13(); $("#kpis").hidden=true; document.documentElement.classList.toggle("p13",p13); $("#grid").classList.toggle("plates",p13); const ft=$("#dashFoot"); if(ft) ft.hidden=p13;
   if(p13){
     const byK=Object.fromEntries(SUBJ.map(x=>[x.k,x]));
     $("#grid").innerHTML = ATPL13.map(x=>plateHTML(byK[x[0]],x)).join("");
@@ -2369,6 +2389,11 @@ function drawRank(){
 // Para anunciar algo: añade una entrada AL PRINCIPIO (id = fecha AAAA-MM-DD). web:true = solo en la web con cuenta.
 // SOLO lo relevante para el alumno (asignaturas nuevas, tests, funciones), con título corto y SIN descripción. Nada interno (diseño, arreglos, rendimiento) ni sorpresas (logros).
 const NEWS=[
+  {id:"2026-11-25", only:true, items:[
+    {i:"🎓", sd:1, t:"Ready for ATPL · 13 EASA subjects", d:"Home is now in English with the full 13-subject EASA syllabus. On 1 December the app switches you to ATPL mode automatically (you can always change it in My plan), and the notes hide what was only for the Initial Phase."},
+    {i:"🛩️", sd:1, t:"14 interactive 3D & flight-lab simulators", d:"Wind tunnel, 4-stroke piston engine & constant-speed prop, 3D globe & map projections, VOR/ILS in 3D, weather fronts & CBs, wake turbulence, SERA right of way, signals & interception, inner-ear illusions, CG and take-off performance."},
+    {i:"📡", sd:1, t:"Live LECU briefing & clean Home", d:"Cuatro Vientos weather and airfield status at a glance, next to a clutter-free subject grid."}
+  ]},
   {id:"2026-11-18", items:[
     {big:true, i:"📰", t:"Radar de Industria, ahora como un periódico", d:"Titulares por fecha, de la más reciente a la más antigua, en filas compactas: caben muchas más noticias de un vistazo. Fuentes abiertas de empleo, flota, regulación y curiosidades.", admin:true},
     {i:"🧪", t:"Banco de preguntas ampliado", d:"Más preguntas con variantes en Meteorología, Navegación, OPS, Derecho Aéreo, Principios de vuelo y POH, en todos los tipos de test."}
@@ -2489,11 +2514,12 @@ function newsSeen(){ try{ return localStorage.getItem("f0:news")||""; }catch(e){
 function newsMark(){ try{ localStorage.setItem("f0:news", NEWS.reduce((m,n)=>n.id>m?n.id:m,"")); }catch(e){} }
 function showNews(){
   const seen=newsSeen(); if(seen==="~"||!$("#news").hidden||simGoOn()) return;
-  const items=NEWS.filter(n=>n.id>seen).flatMap(n=>n.items).filter(x=>(!x.web||sb)&&(!x.admin||isAdmin)&&(!x.need||window[x.need])&&!(x.sim&&simGoDone())).map(x=>x.sim&&Date.now()>=SIMGO_END?{...x,big:false}:x);   // pasada la promo, el Sim queda como una línea más y las láminas van arriba
+  const fresh=NEWS.filter(n=>n.id>seen), top=fresh.reduce((m,n)=>!m||n.id>m.id?n:m,null);
+  const items=(top&&top.only?[top]:fresh).flatMap(n=>n.items).filter(x=>(!x.web||sb)&&(!x.admin||isAdmin)&&(!x.need||window[x.need])&&!(x.sim&&simGoDone())).map(x=>x.sim&&Date.now()>=SIMGO_END?{...x,big:false}:x);   // pasada la promo, el Sim queda como una línea más y las láminas van arriba
   if(!items.length){ if(NEWS.some(n=>n.id>seen) && !sb) newsMark(); return; }
   if(!$("#devNote").hidden||!$("#login").hidden||!$("#nameAsk").hidden||!$("#pwReset").hidden) return;
   items.sort((a,b)=>(b.big?1:0)-(a.big?1:0));
-  $("#nwList").innerHTML=items.map(x=>x.big?`<li class="big${x.xl?" xl":""}"><span class="ni" aria-hidden="true">${x.i}</span><div><em>NUEVO</em><b>${esc(x.t)}</b>${x.d?`<span class="t">${esc(x.d)}</span>`:""}${x.art||""}${x.go&&(x.go!=="ops"||window.F0Ops)?`<button class="btn go" type="button" data-go="${x.go}">${x.cta?esc(x.cta):"Abrir "+(x.go==="ops"?"OPS":"ya")} →</button>`:""}</div></li>`:`<li><span class="ni" aria-hidden="true">${x.i}</span><div><b>${esc(x.t)}</b></div></li>`).join("");
+  $("#nwList").innerHTML=items.map(x=>x.big?`<li class="big${x.xl?" xl":""}"><span class="ni" aria-hidden="true">${x.i}</span><div><em>NEW</em><b>${esc(x.t)}</b>${x.d?`<span class="t">${esc(x.d)}</span>`:""}${x.art||""}${x.go&&(x.go!=="ops"||window.F0Ops)?`<button class="btn go" type="button" data-go="${x.go}">${x.cta?esc(x.cta):"Open "+(x.go==="ops"?"OPS":"now")} →</button>`:""}</div></li>`:`<li><span class="ni" aria-hidden="true">${x.i}</span><div><b>${esc(x.t)}</b>${x.sd&&x.d?`<span class="t">${esc(x.d)}</span>`:""}</div></li>`).join("");
   $("#nwList").querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{ closeNews(); show(b.dataset.go); window.scrollTo(0,0); }));
   $("#news").hidden=false; $("#nwOk").focus({preventScroll:true}); const nb=$("#news .box"); if(nb) nb.scrollTop=0;
 }
@@ -2636,6 +2662,9 @@ const boot = (async ()=>{
     if(owner && db){ await loadAllCloud(); $("#saveBtn").classList.add("cloud"); $("#saveTxt").textContent="En tu cuenta"; renderDash(); renderTabs(); }
   }catch(e){}
 })();
+try{ autoPlan(false); }catch(e){}   // al abrir: muestra ya el plan que toca (se guarda al cargar la cuenta)
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") autoPlan(); });
+setInterval(()=>{ if(!document.hidden) autoPlan(); },15*6e4);
 boot.then(()=>{ setTimeout(deviceNote, 400); simGoStart(); setTimeout(showNews, 1000); setTimeout(()=>{ msReady=true; msCheck(); msRank(); },2500); });
 /* cambio de idioma: repinta lo que genera el JS con fechas y textos propios (el resto lo traduce i18n.js) */
 addEventListener("f0-lang",()=>{ setTimeout(()=>{ try{ if($("#radar")&&!$("#radar").hidden) rdDraw(); }catch(e){} try{ renderDash(); }catch(e){} try{ renderTabs(); }catch(e){} try{ if(current==="stats") drawStats(); }catch(e){} },30); });
