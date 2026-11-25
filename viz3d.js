@@ -1,4 +1,4 @@
-/* Láminas 3D (serie 3) y esquemas interactivos: globo, ILS/VOR, meteorología 3D, derecho de paso, CG, túnel, motor, estela, espacios aéreos A–G y METAR/TAF.
+/* Láminas 3D (serie 3) y esquemas interactivos: globo, ILS/VOR, meteorología 3D, derecho de paso, CG, túnel, motor, estela, espacios aéreos A–G, METAR/TAF y, en 010, señales, alturas mínimas con circuito e interceptación.
    Motor 3D propio en canvas 2D (sin WebGL ni librerías): ligero y funciona en cualquier móvil.
    Se registran en F0Viz (viz16.js) y se montan en <div class="f0viz" data-viz="…">. Solo dibujan mientras están en pantalla. */
 (function(){
@@ -1189,6 +1189,257 @@ init(el){
   const Q=quiz(u,QZ,q=>{ press(u,"data-e",q.x); press(u,"data-live",""); load([EX[q.x][1]]); });
   u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); say(sel); } });
   load([EX[0][1]]);
+}};
+})();
+
+/* ---------- utilidades para las escenas de 010 ---------- */
+const PLANE=(()=>{ const f=[]; const L=8.5, w=.75;   // avioneta de ala alta esquemática (m), morro en +x
+  const q=[[0,w,0],[0,0,w],[0,-w,0],[0,0,-w]]; for(let i=0;i<4;i++){ const a=q[i], b=q[(i+1)%4]; f.push([[L*.5,0,0],vadd(a,[L*.3,0,0]),vadd(b,[L*.3,0,0])]); f.push([vadd(a,[L*.3,0,0]),vadd(a,[-L*.25,0,0]),vadd(b,[-L*.25,0,0]),vadd(b,[L*.3,0,0])]); f.push([vadd(a,[-L*.25,0,0]),[-L*.5,.2,0],vadd(b,[-L*.25,0,0])]); }
+  f.push([[1.2,.8,0],[-.2,.8,5.5],[-1.2,.8,5.5],[-.4,.8,0]]); f.push([[1.2,.8,0],[-.2,.8,-5.5],[-1.2,.8,-5.5],[-.4,.8,0]]);
+  f.push([[-3.4,.2,0],[-3.9,.2,1.8],[-4.3,.2,1.8],[-4.2,.2,0]]); f.push([[-3.4,.2,0],[-3.9,.2,-1.8],[-4.3,.2,-1.8],[-4.2,.2,0]]); f.push([[-3.3,.3,0],[-4.1,1.9,0],[-4.4,1.9,0],[-4.2,.3,0]]); return f; })();
+const JET=(()=>{ const f=[], L=16;   // caza esquemático de ala en delta (m), morro en +x
+  const q=[[0,.9,0],[0,0,.9],[0,-.9,0],[0,0,-.9]]; for(let i=0;i<4;i++){ const a=q[i], b=q[(i+1)%4]; f.push([[L*.5,0,0],vadd(a,[L*.22,0,0]),vadd(b,[L*.22,0,0])]); f.push([vadd(a,[L*.22,0,0]),vadd(a,[-L*.5,0,0]),vadd(b,[-L*.5,0,0]),vadd(b,[L*.22,0,0])]); }
+  f.push([[2,0,0],[-6,0,5],[-7.5,0,5],[-7.5,0,0]]); f.push([[2,0,0],[-6,0,-5],[-7.5,0,-5],[-7.5,0,0]]); f.push([[-4,.6,0],[-7.6,3.4,0],[-8.2,3.4,0],[-8,.6,0]]); f.push([[-5,0,0],[-7.5,0,2.4],[-8,0,2.4],[-8,0,0]]); f.push([[-5,0,0],[-7.5,0,-2.4],[-8,0,-2.4],[-8,0,0]]); return f; })();
+/* pinta una malla: pos, rumbo (rad, 0 = +x, positivo hacia −z), cabeceo y alabeo; devuelve también los puntos de las luces */
+function meshDraw(x,P,M,pos,yaw,pit,rol,K,col,lit,d,out){ const cy=Math.cos(yaw), sy=Math.sin(yaw), cp=Math.cos(pit), sp=Math.sin(pit), cr=Math.cos(rol), sr=Math.sin(rol);
+  const T=p=>{ let [a,b,c]=[p[0]*K,p[1]*K,p[2]*K]; let b1=b*cr-c*sr, c1=b*sr+c*cr; b=b1; c=c1; let a1=a*cp-b*sp, b2=a*sp+b*cp; a=a1; b=b2; return [pos[0]+a*cy+c*sy,pos[1]+b,pos[2]-a*sy+c*cy]; };
+  const fs=M.map(f=>{ const w=f.map(T), q=w.map(P); if(q.some(v=>!v)) return null; const n=vnorm(vcross(vsub(w[1],w[0]),vsub(w[2],w[0]))); return {q,z:q.reduce((s,v)=>s+v[2],0)/q.length,sh:.55+.45*Math.abs(vdot(n,vnorm([-.3,.9,.4])))}; }).filter(Boolean);
+  if(out) out.push(...fs.map(f=>({z:f.z,f:()=>{ x.beginPath(); f.q.forEach((v,i)=>i?x.lineTo(v[0],v[1]):x.moveTo(v[0],v[1])); x.closePath(); x.fillStyle=`rgb(${col.map(v=>v*f.sh*lit|0)})`; x.fill(); }})));
+  return T; }
+const glowAt=(x,q,c,r,a)=>{ if(!q) return; const g=x.createRadialGradient(q[0],q[1],0,q[0],q[1],r); g.addColorStop(0,c); g.addColorStop(.25,c); g.addColorStop(1,"rgba(0,0,0,0)"); x.globalAlpha=a==null?1:a; x.fillStyle=g; x.beginPath(); x.arc(q[0],q[1],r,0,7); x.fill(); x.globalAlpha=1; };
+
+/* =====================================================================
+   15 · SEÑALES LUMINOSAS Y ÁREA DE SEÑALES EN 3D (010, SERA apéndice 1): la torre apunta con la pistola de luz a un avión en vuelo o en tierra
+   ===================================================================== */
+V.sig3d=(()=>{
+const LS=[
+ {k:"gs",n:"Verde fija",c:"#3cf07f",fl:0,air:"Autorizado a aterrizar",gnd:"Autorizado a despegar"},
+ {k:"gf",n:"Verde a destellos",c:"#3cf07f",fl:1,air:"Regrese para aterrizar (la autorización para aterrizar y para rodar se le dará a su debido tiempo)",gnd:"Autorizado a rodar"},
+ {k:"rs",n:"Roja fija",c:"#ff3b30",fl:0,air:"Ceda el paso a las otras aeronaves y siga en el circuito",gnd:"Pare"},
+ {k:"rf",n:"Roja a destellos",c:"#ff3b30",fl:1,air:"Aeródromo peligroso: no aterrice",gnd:"Apártese del área de aterrizaje en uso"},
+ {k:"wf",n:"Blanca a destellos",c:"#ffffff",fl:1,air:"Aterrice en este aeródromo y diríjase a la plataforma (las autorizaciones para aterrizar y rodar se le darán a su debido tiempo)",gnd:"Regrese a su punto de partida en el aeródromo"},
+ {k:"py",n:"Bengala roja",c:"#ff3b30",fl:2,air:"A pesar de cualquier instrucción anterior, no aterrice por ahora",gnd:"— (sin significado en tierra)"}];
+const GS=[
+ {k:"x2",n:"Cuadrado rojo con dos diagonales amarillas",m:"Prohibido aterrizar, y la prohibición puede prolongarse"},
+ {k:"x1",n:"Cuadrado rojo con una diagonal amarilla",m:"Precaución especial en la aproximación y el aterrizaje (mal estado del área de maniobras u otra causa)"},
+ {k:"db",n:"Mancuerna blanca",m:"Aterrizar, despegar y rodar solo por pistas y calles de rodaje"},
+ {k:"dbs",n:"Mancuerna con una franja negra en cada círculo",m:"Aterrizar y despegar solo en pistas; las demás maniobras no tienen que limitarse a pistas y calles de rodaje"},
+ {k:"gl",n:"Doble cruz blanca",m:"Hay planeadores volando"},
+ {k:"tt",n:"T de aterrizaje",m:"Aterrizar y despegar en la dirección del palo de la T, hacia el travesaño"},
+ {k:"rh",n:"Flecha en sentido horario",m:"Virajes a la derecha antes de aterrizar y después de despegar"},
+ {k:"cx",n:"Cruces sobre la pista",m:"Pista (o calle) no apta para el movimiento de aeronaves"}];
+const ACK="<b>Acuse de recibo</b>: en vuelo, de día alabeando (salvo en base y final) y de noche con dos destellos de las luces de aterrizaje o, si no tiene, de navegación; en tierra, de día moviendo alerones o timón y de noche con dos destellos de esas luces.";
+const BANK=[]; LS.forEach(l=>{ for(const tg of ["a","g"]){ if(l.k==="py"&&tg==="g") continue; const pool=LS.filter(o=>o!==l&&o.k!=="py").map(o=>tg==="a"?o.air:o.gnd);
+  BANK.push({q:`Estás <b>${tg==="a"?"en vuelo":"en tierra"}</b> y la torre te envía esta señal. ¿Qué significa?`,o:[tg==="a"?l.air:l.gnd,...shuf3(pool).slice(0,2)],a:0,e:`<b>${l.n}</b> ${tg==="a"?"en vuelo":"en tierra"}: ${tg==="a"?l.air:l.gnd}.`,s:{l:l.k,tg}}); } });
+GS.forEach(g=>BANK.push({q:"¿Qué significa la señal que ves en el área de señales (o sobre la pista)?",o:[g.m,...shuf3(GS.filter(o=>o!==g).map(o=>o.m)).slice(0,2)],a:0,e:`<b>${g.n}</b>: ${g.m}.`,s:{g:g.k}}));
+function shuf3(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+return {t:"3D · Señales luminosas de la torre y área de señales",
+cap:"SERA, apéndice 1. Escena esquemática con la vertical exagerada ×3 y el área de señales agrandada para que se vea. El avión en vuelo está en final de la pista 09 y el de tierra, en el punto de espera. Arrastra para girar la vista.",
+init(el){
+  const ctl=row("Avión",bt("data-tg","a","En vuelo",1)+bt("data-tg","g","En tierra"))+row("Luz",LS.map((l,i)=>bt("data-l",l.k,l.n,!i)).join(""))
+   +row("Área de señales",GS.map(g=>bt("data-g",g.k,g.n.replace("Cuadrado rojo con ","Rojo · ").replace("Mancuerna con una franja negra en cada círculo","Mancuerna con franjas"))).join(""))+row("",bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shell(el,this.t,"Aeródromo en 3D con la torre, la pistola de señales, un avión en vuelo y otro en tierra, y el área de señales",ctl,this.cap);
+  let tg="a", lk="gs", gk="x2", qm=false, fl=0;
+  const EV=3, TW=[60,0,-210], SA=[-200,0,-210], AIR=[-860,70,0], GND=[-640,0,-70];
+  const S=orbit(u.c,{yaw:-38,pit:24,ar:.62,hmin:300,hmax:480,pmin:4,pmax:89,draw}); S.anim=true;
+  function draw(S,dt,t){ const x=S.x, W=S.W, H=S.H, d=S.dp, span=1150, k=Math.min(W,H*1.6)/span*1.2;
+    S.cam(k,W*.5,H*.56,[-380,30,-110],span*6); const P0=S.P, P=p=>P0([p[0],p[1]*EV,p[2]]);
+    x.setTransform(1,0,0,1,0,0); const sk=x.createLinearGradient(0,0,0,H); sk.addColorStop(0,"#5f8fc2"); sk.addColorStop(1,"#cfdde8"); x.fillStyle=sk; x.fillRect(0,0,W,H);
+    const fillP=(pts,c)=>{ const q=pts.map(P); x.fillStyle=c; x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); };
+    const ln=(pts,c,w,dash)=>{ const q=pts.map(P); x.strokeStyle=c; x.lineWidth=(w||1)*d; x.setLineDash(dash?dash.map(v=>v*d):[]); x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.stroke(); x.setLineDash([]); };
+    const lb=(p,tt,c)=>{ const q=P(p); tag(x,q[0],q[1],tt,{dp:d,fs:11,al:"c",c:c||"#fff"}); };
+    // terreno, pista 09/27, calle de rodaje y plataforma
+    fillP([[-1500,0,-700],[900,0,-700],[900,0,500],[-1500,0,500]],"#7d9a5b");
+    fillP([[-700,0,-20],[700,0,-20],[700,0,20],[-700,0,20]],"#3c4046"); ln([[-670,.1,0],[670,.1,0]],"#f4f4f0",1,[8,8]);
+    for(let i=-3;i<=3;i++){ ln([[-690,.1,i*5],[-650,.1,i*5]],"#f4f4f0",1.4); ln([[650,.1,i*5],[690,.1,i*5]],"#f4f4f0",1.4); } lb([-700,0,40],"09","#fff"); lb([700,0,40],"27","#fff");
+    fillP([[-660,0,-120],[-620,0,-120],[-620,0,-20],[-660,0,-20]],"#4a4e54"); fillP([[-660,0,-140],[200,0,-140],[200,0,-110],[-660,0,-110]],"#4a4e54"); fillP([[-60,0,-300],[200,0,-300],[200,0,-140],[-60,0,-140]],"#555a61");
+    ln([[-675,.2,-45],[-605,.2,-45]],"#ffd24d",2.5);
+    // cruces de pista cerrada
+    if(gk==="cx") for(const cx of [-450,0,450]){ ln([[cx-22,.3,-16],[cx+22,.3,16]],"#ffd24d",5); ln([[cx-22,.3,16],[cx+22,.3,-16]],"#ffd24d",5); }
+    // área de señales (agrandada ×3) y su panel
+    const s0=SA, A=60; fillP([[s0[0]-A,0,s0[2]-A],[s0[0]+A,0,s0[2]-A],[s0[0]+A,0,s0[2]+A],[s0[0]-A,0,s0[2]+A]],"#1d2228"); ln([[s0[0]-A,.2,s0[2]-A],[s0[0]+A,.2,s0[2]-A],[s0[0]+A,.2,s0[2]+A],[s0[0]-A,.2,s0[2]+A],[s0[0]-A,.2,s0[2]-A]],"#f4f4f0",2);
+    lb([s0[0],0,s0[2]-A-22],"área de señales","#fff");
+    const RQ=(a,b,c,e,col)=>fillP([[s0[0]+a*1.6,.4,s0[2]+b*1.6],[s0[0]+c*1.6,.4,s0[2]+b*1.6],[s0[0]+c*1.6,.4,s0[2]+e*1.6],[s0[0]+a*1.6,.4,s0[2]+e*1.6]],col);
+    const Q=(pts,col)=>fillP(pts.map(p=>[s0[0]+p[0]*1.6,.5,s0[2]+p[1]*1.6]),col);
+    const disc=(cx,cz,r,col)=>{ const pts=[]; for(let i=0;i<20;i++){ const a=i/20*2*Math.PI; pts.push([cx+r*Math.cos(a),cz+r*Math.sin(a)]); } Q(pts,col); };
+    if(gk==="x2"||gk==="x1"){ RQ(-30,-30,30,30,"#d62a2a"); Q([[-30,-26],[-26,-30],[30,26],[26,30]],"#ffd400"); if(gk==="x2") Q([[30,-26],[26,-30],[-30,26],[-26,30]],"#ffd400"); }
+    if(gk==="db"||gk==="dbs"){ RQ(-18,-4,18,4,"#f4f4f0"); disc(-22,0,10,"#f4f4f0"); disc(22,0,10,"#f4f4f0"); if(gk==="dbs"){ RQ(-24,-10,-20,10,"#111"); RQ(20,-10,24,10,"#111"); } }
+    if(gk==="gl"){ RQ(-30,-9,30,-4,"#f4f4f0"); RQ(-30,4,30,9,"#f4f4f0"); RQ(-9,-30,-4,30,"#f4f4f0"); RQ(4,-30,9,30,"#f4f4f0"); }
+    if(gk==="tt"){ RQ(-28,-4,18,4,"#f4f4f0"); RQ(18,-24,26,24,"#f4f4f0"); lb([s0[0]-50,0,s0[2]-50],"aterriza hacia el travesaño →","#fff"); }
+    if(gk==="rh"){ const pts=[]; for(let i=0;i<=26;i++){ const a=-Math.PI*.9+i/26*Math.PI*1.6; pts.push([20*Math.cos(a),20*Math.sin(a)]); } const o=[],ii=[]; pts.forEach(p=>{ const n=Math.hypot(p[0],p[1]); o.push([p[0]*(n+4)/n,p[1]*(n+4)/n]); ii.push([p[0]*(n-4)/n,p[1]*(n-4)/n]); }); Q(o.concat(ii.reverse()),"#ff8a1c");
+      const e=pts[pts.length-1], a=Math.atan2(e[1],e[0])+Math.PI/2; Q([[e[0]+10*Math.cos(a),e[1]+10*Math.sin(a)],[e[0]-10*Math.cos(a-Math.PI/2),e[1]-10*Math.sin(a-Math.PI/2)],[e[0]+10*Math.cos(a-Math.PI/2),e[1]+10*Math.sin(a-Math.PI/2)]],"#ff8a1c"); }
+    // objetos 3D: torre y aviones (ordenados por profundidad)
+    const items=[]; const box=(c,w,h,dd,col)=>{ const [X,Y,Z]=c; const v=[[X-w,Y,Z-dd],[X+w,Y,Z-dd],[X+w,Y,Z+dd],[X-w,Y,Z+dd],[X-w,Y+h,Z-dd],[X+w,Y+h,Z-dd],[X+w,Y+h,Z+dd],[X-w,Y+h,Z+dd]];
+      [[0,1,5,4,.8],[1,2,6,5,.65],[2,3,7,6,.9],[3,0,4,7,.7],[4,5,6,7,1]].forEach(([a,b,c2,e,sh])=>{ const q=[v[a],v[b],v[c2],v[e]].map(P); items.push({z:q.reduce((s,p)=>s+p[2],0)/4,f:()=>{ x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fillStyle=`rgb(${col.map(cc=>cc*sh|0)})`; x.fill(); }}); }); };
+    box(TW,10,28,10,[210,206,196]); box([TW[0],28,TW[2]],14,8,14,[120,170,200]); box([TW[0],36,TW[2]],15,2,15,[90,95,100]);
+    meshDraw(x,P,PLANE,AIR,0,-3*R,0,5.5,[236,238,242],1,d,items); meshDraw(x,P,PLANE,GND,-Math.PI/2,0,0,5.5,[236,238,242],1,d,items);
+    items.sort((a,b)=>a.z-b.z).forEach(o=>o.f());
+    lb([AIR[0],AIR[1]+30,AIR[2]],"en vuelo · final 09",tg==="a"?"#ffd24d":"#fff"); lb([GND[0]-70,0,GND[2]-40],"en tierra",tg==="g"?"#ffd24d":"#fff"); lb([TW[0],50,TW[2]],"torre","#fff");
+    // haz de la pistola de señales o bengala
+    const L=LS.find(l=>l.k===lk), src=[TW[0]-14,32,TW[2]], dst=tg==="a"?AIR:[GND[0],3,GND[2]];
+    fl+=dt; const on=L.fl===0||(L.fl===1&&Math.floor(fl*2.4)%2===0);
+    if(L.fl===2){ const ph=(fl%3)/3, px=src[0]-ph*260, py=src[1]+Math.sin(ph*Math.PI)*120, pz=src[2]+ph*80; for(let i=0;i<16;i++){ const pp=Math.max(0,ph-i*.012), q=P([src[0]-pp*260,src[1]+Math.sin(pp*Math.PI)*120,src[2]+pp*80]); glowAt(x,q,"rgba(255,70,50,.9)",(6-i*.3)*d,1-i/16); } glowAt(x,P([px,py,pz]),"rgba(255,200,180,1)",14*d,1); }
+    else if(on){ const a=P(src), b=P(dst); const g=x.createLinearGradient(a[0],a[1],b[0],b[1]); g.addColorStop(0,L.c); g.addColorStop(1,"rgba(255,255,255,0)"); x.strokeStyle=g; x.globalAlpha=.55; x.lineWidth=9*d; x.lineCap="round"; x.beginPath(); x.moveTo(a[0],a[1]); x.lineTo(b[0],b[1]); x.stroke(); x.globalAlpha=1; x.lineWidth=2.5*d; x.strokeStyle=L.c; x.beginPath(); x.moveTo(a[0],a[1]); x.lineTo(b[0],b[1]); x.stroke(); glowAt(x,a,L.c,16*d,1); glowAt(x,b,L.c,22*d,.8); }
+    return true; }
+  const say=()=>{ if(qm) return; const L=LS.find(l=>l.k===lk), G=GS.find(g=>g.k===gk);
+    u.out.innerHTML=`<b>${L.n}</b> · en vuelo: <b>${L.air}</b> · en tierra: <b>${L.gnd}</b>.<br><b>${G.n}</b>: ${G.m}.<br>${ACK}`; };
+  u.qa("[data-tg]").forEach(b=>b.addEventListener("click",()=>{ tg=b.dataset.tg; press(u,"data-tg",tg); say(); }));
+  u.qa("[data-l]").forEach(b=>b.addEventListener("click",()=>{ lk=b.dataset.l; fl=0; press(u,"data-l",lk); if(lk==="py"&&tg==="g"){ tg="a"; press(u,"data-tg","a"); } say(); }));
+  u.qa("[data-g]").forEach(b=>b.addEventListener("click",()=>{ gk=b.dataset.g; press(u,"data-g",gk); say(); }));
+  const Q=quiz(u,BANK,c=>{ const s=c.s; if(s.l){ lk=s.l; tg=s.tg; gk="none"; press(u,"data-l","?"); press(u,"data-tg",tg); } else { gk=s.g; lk="none_"; press(u,"data-g","?"); } fl=0; S.kick(); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); if(!LS.some(l=>l.k===lk)) lk="gs"; if(!GS.some(g=>g.k===gk)) gk="x2"; press(u,"data-l",lk); press(u,"data-g",gk); say(); } });
+  LS.push({k:"none_",n:"",c:"rgba(0,0,0,0)",fl:0,air:"",gnd:""});   // en el test de señales de tierra no hay haz
+  say(); S.kick();
+}};
+})();
+
+/* =====================================================================
+   16 · ALTURAS MÍNIMAS (SERA.5005 y 5015) Y CIRCUITO DE AERÓDROMO (SERA.3225) EN 3D (010)
+   ===================================================================== */
+V.minh3d=(()=>{
+const FT=.3048;
+const TOWN=[-2700,-500], OBS=(()=>{ let sd=7; const r=()=>{ sd=(sd*1664525+1013904223)>>>0; return sd/4294967296; }; const o=[];
+  for(let i=0;i<70;i++){ const x=lerp(TOWN[0]+80,TOWN[1]-80,r()), z=(r()-.5)*900; o.push({x,z,h:12+r()*28,w:22+r()*26,t:"b"}); }
+  o.push({x:-1650,z:-260,h:92,w:5,t:"a",n:"antena 300 ft"}); o.push({x:1300,z:180,h:45,w:4,t:"a",n:"mástil 150 ft"}); for(let i=0;i<26;i++) o.push({x:lerp(0,2600,r()),z:(r()-.5)*1200,h:8+r()*10,w:7,t:"t"}); return o; })();
+const LEG=[["Ascenso · upwind","tras despegar, en el eje de pista"],["Viento cruzado · crosswind","primer viraje, perpendicular a la pista"],["Viento en cola · downwind","paralelo a la pista y en sentido contrario al aterrizaje"],["Base","perpendicular a la pista, antes de final"],["Final","alineado con la pista hasta la toma"]];
+const QZ=[
+ {q:"VFR sobre una <b>ciudad</b>: ¿altura mínima?",o:["1 000 ft sobre el obstáculo más alto en un radio de 600 m","500 ft sobre el suelo","1 000 ft sobre el obstáculo más alto en 8 km"],a:0,e:"SERA.5005(f): sobre zonas pobladas o concentraciones al aire libre, <b>300 m (1 000 ft)</b> sobre el obstáculo más alto dentro de <b>600 m</b> del avión.",s:{m:"alt",x:-1500,h:900,r:"v"}},
+ {q:"VFR en <b>campo abierto</b>: ¿altura mínima?",o:["500 ft sobre el suelo o el agua, o sobre el obstáculo más alto en 150 m","1 000 ft sobre el suelo","300 ft sobre el suelo"],a:0,e:"Fuera de zonas pobladas: <b>150 m (500 ft)</b> sobre el suelo o el agua, o sobre el obstáculo más alto dentro de <b>150 m</b> del avión.",s:{m:"alt",x:900,h:400,r:"v"}},
+ {q:"IFR fuera de zonas montañosas: ¿altura mínima?",o:["1 000 ft sobre el obstáculo más alto en 8 km","2 000 ft sobre el obstáculo más alto en 8 km","500 ft sobre el terreno"],a:0,e:"SERA.5015: <b>300 m (1 000 ft)</b> sobre el obstáculo más alto en <b>8 km</b> de la posición estimada; en zonas de alta montaña, <b>600 m (2 000 ft)</b>.",s:{m:"alt",x:600,h:1200,r:"i"}},
+ {q:"Sin otra indicación, ¿hacia qué lado se vira en el circuito?",o:["A la izquierda","A la derecha","Depende del viento"],a:0,e:"SERA.3225: <b>todos los virajes a la izquierda</b> al aproximarse para aterrizar y después de despegar, salvo otra indicación del ATC o del aeródromo.",s:{m:"circ",rh:0}},
+ {q:"En el área de señales ves una <b>flecha en sentido horario</b>. ¿Qué haces?",o:["Virajes a la derecha antes de aterrizar y después de despegar","Aterrizar en la dirección de la flecha","Circuito prohibido"],a:0,e:"La flecha de color llamativo en sentido horario indica <b>circuito a derechas</b>.",s:{m:"circ",rh:1}},
+ {q:"¿Cuál es el orden de los tramos del circuito?",o:["Ascenso, viento cruzado, viento en cola, base y final","Viento en cola, ascenso, base, viento cruzado y final","Ascenso, base, viento en cola, viento cruzado y final"],a:0,e:"<b>Upwind → crosswind → downwind → base → final</b>.",s:{m:"circ",rh:0}},
+ {q:"¿En qué tramo vuelas paralelo a la pista y en sentido contrario al de aterrizaje?",o:["Viento en cola (downwind)","Base","Viento cruzado (crosswind)"],a:0,e:"El <b>downwind</b> va paralelo a la pista, con el viento de cola si se aterriza contra el viento.",s:{m:"circ",rh:0}}];
+return {t:"3D · Alturas mínimas sobre ciudad y campo abierto, y el circuito de aeródromo",
+cap:"SERA.5005(f) para VFR y SERA.5015 para IFR; circuito según SERA.3225 (virajes a la izquierda salvo otra indicación). Salvo para despegar o aterrizar, o con permiso de la autoridad. Vertical exagerada ×3. La altura del circuito no la fija SERA: la publica cada aeródromo (aquí 1 000 ft como ejemplo).",
+init(el){
+  const ctl=row("Tema",bt("data-m","alt","Alturas mínimas",1)+bt("data-m","circ","Circuito")+bt("data-m","quiz","Ponme a prueba"))
+   +row("",bt("data-r","v","VFR",1)+bt("data-r","i","IFR")+sl("x","Posición del avión",-2600,2500,-1500,25)+sl("h","Altura sobre el suelo",100,2500,900,25),"data-pa")
+   +row("",bt("data-rh","0","Circuito a izquierdas",1)+bt("data-rh","1","A derechas (flecha)")+LEG.map((l,i)=>bt("data-lg",i,(i+1)+" · "+l[0].split(" · ")[0])).join(""),"data-pc hidden")+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shell(el,this.t,"Escena 3D con una ciudad, campo abierto, un avión y el circuito del aeródromo",ctl,this.cap);
+  let mode="alt", rule="v", ax=-1500, hh=900, rh=0, leg=-1, qm=false, ph=0;
+  const EV=3, ALT=1000*FT, RWY=[1500,0,-200];   // umbral de la pista 09 del aeródromo del circuito
+  const S=orbit(u.c,{yaw:-30,pit:26,ar:.6,hmin:300,hmax:480,pmin:4,pmax:89,draw}); S.anim=true;
+  const req=()=>{ if(rule==="i"){ const o=OBS.filter(b=>Math.hypot(b.x-ax,b.z)<=8000).reduce((m,b)=>Math.max(m,b.h),0); return {need:o/FT+1000,why:"1 000 ft sobre el obstáculo más alto en 8 km",r:8000,o}; }
+    const town=ax>=TOWN[0]&&ax<=TOWN[1];
+    if(town){ const o=OBS.filter(b=>Math.hypot(b.x-ax,b.z)<=600).reduce((m,b)=>Math.max(m,b.h),0); return {need:o/FT+1000,why:"zona poblada: 1 000 ft sobre el obstáculo más alto en 600 m",r:600,o,town}; }
+    const o=OBS.filter(b=>Math.hypot(b.x-ax,b.z)<=150).reduce((m,b)=>Math.max(m,b.h),0); return {need:Math.max(500,o/FT+500),why:"campo abierto: 500 ft sobre el suelo o sobre el obstáculo más alto en 150 m",r:150,o}; };
+  function draw(S,dt,t){ const x=S.x, W=S.W, H=S.H, d=S.dp, circ=(mode==="circ")||(mode==="quiz"&&qs&&qs.m==="circ"), span=circ?4600:5600, k=Math.min(W,H*1.6)/span*1.2;
+    S.cam(k,W*.5,H*.58,circ?[RWY[0]+550,250,RWY[2]+(rh?650:-650)]:[0,150,0],span*6); const P0=S.P, P=p=>P0([p[0],p[1]*EV,p[2]]);
+    x.setTransform(1,0,0,1,0,0); const sk=x.createLinearGradient(0,0,0,H); sk.addColorStop(0,"#5f8fc2"); sk.addColorStop(1,"#d7e3ea"); x.fillStyle=sk; x.fillRect(0,0,W,H);
+    const fillP=(pts,c,a)=>{ const q=pts.map(P); x.globalAlpha=a==null?1:a; x.fillStyle=c; x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); x.globalAlpha=1; };
+    const ln=(pts,c,w,dash,a)=>{ const q=pts.map(P); x.globalAlpha=a==null?1:a; x.strokeStyle=c; x.lineWidth=(w||1)*d; x.setLineDash(dash?dash.map(v=>v*d):[]); x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.stroke(); x.setLineDash([]); x.globalAlpha=1; };
+    const lb=(p,tt,c)=>{ const q=P(p); tag(x,q[0],q[1],tt,{dp:d,fs:11,al:"c",c:c||"#fff"}); };
+    fillP([[-3000,0,-1900],[3800,0,-1900],[3800,0,900],[-3000,0,900]],"#7d9a5b"); fillP([[TOWN[0],0,-480],[TOWN[1],0,-480],[TOWN[1],0,480],[TOWN[0],0,480]],"#a39c8c");
+    if(!circ) lb([(TOWN[0]+TOWN[1])/2,0,560],"zona poblada","#fff"), lb([1400,0,560],"campo abierto","#fff");
+    // pista del aeródromo
+    fillP([[RWY[0],0,RWY[2]-15],[RWY[0]+1100,0,RWY[2]-15],[RWY[0]+1100,0,RWY[2]+15],[RWY[0],0,RWY[2]+15]],"#3c4046"); ln([[RWY[0]+20,.2,RWY[2]],[RWY[0]+1080,.2,RWY[2]]],"#f4f4f0",1,[8,8]); lb([RWY[0]-40,0,RWY[2]+40],"09","#fff");
+    const items=[];
+    for(const b of OBS){ const c=b.t==="b"?[196,190,178]:b.t==="t"?[60,110,55]:[200,60,60]; const w=b.w/2, v=[[b.x-w,0,b.z-w],[b.x+w,0,b.z-w],[b.x+w,0,b.z+w],[b.x-w,0,b.z+w],[b.x-w,b.h,b.z-w],[b.x+w,b.h,b.z-w],[b.x+w,b.h,b.z+w],[b.x-w,b.h,b.z+w]];
+      for(const [a,bb,c2,e,sh] of [[0,1,5,4,.8],[1,2,6,5,.65],[2,3,7,6,.9],[3,0,4,7,.7],[4,5,6,7,1]]){ const q=[v[a],v[bb],v[c2],v[e]].map(P); items.push({z:q.reduce((s,p)=>s+p[2],0)/4,f:()=>{ x.beginPath(); q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fillStyle=`rgb(${c.map(cc=>cc*sh|0)})`; x.fill(); }}); } }
+    let mv=true;
+    if(!circ){ const R0=req(), ok=hh>=R0.need, Y=hh*FT, A=[ax,Y,0];
+      // radio de búsqueda del obstáculo y altura exigida
+      const rr=Math.min(R0.r,2900), ring=[]; for(let i=0;i<=48;i++){ const a=i/48*2*Math.PI; ring.push([ax+rr*Math.cos(a),.5,rr*Math.sin(a)]); } ln(ring,"#ffd24d",2,[6,4]);
+      const ny=R0.need*FT; fillP([[ax-rr,ny,-rr*.25],[ax+rr,ny,-rr*.25],[ax+rr,ny,rr*.25],[ax-rr,ny,rr*.25]],ok?"#6ee7a0":"#ff6b6b",.18); ln([[ax-rr,ny,0],[ax+rr,ny,0]],ok?"#2a9d5c":"#d93d3d",2.5);
+      ln([[ax,0,0],A],"rgba(20,30,40,.5)",1,[3,3]); meshDraw(x,P,PLANE,A,0,0,0,9,ok?[236,238,242]:[255,170,170],1,d,items);
+      items.sort((a,b)=>a.z-b.z).forEach(o=>o.f());
+      lb([ax,ny+25,-rr*.25],`mínimo ${f0(R0.need)} ft`,ok?"#b6f5cf":"#ffc0c0"); lb([ax,Y+45,0],`${f0(hh)} ft`,"#ffd24d"); lb([ax+rr*.7,0,rr*.75],rule==="i"?"radio 8 km":R0.town?"radio 600 m":"radio 150 m","#ffe7a0");
+      for(const b of OBS) if(b.t==="a") lb([b.x,b.h+40,b.z],b.n,"#ffd0d0"); mv=false; }
+    else { const lft=!rh, sgn=lft?-1:1, A0=RWY[0]+1100, Z0=RWY[2], L1=1500, Wd=1300*sgn;
+      const C=[[RWY[0]+100,0,Z0],[A0+L1*.6,ALT,Z0],[A0+L1*.6,ALT,Z0+Wd],[RWY[0]-900,ALT,Z0+Wd],[RWY[0]-900,ALT,Z0],[RWY[0]+60,0,Z0]];
+      const segs=[[C[0],C[1]],[C[1],C[2]],[C[2],C[3]],[C[3],C[4]],[C[4],C[5]]]; const len=segs.map(s=>Math.hypot(...vsub(s[1],s[0]))), tot=len.reduce((a,b)=>a+b,0);
+      segs.forEach((s,i)=>{ ln([s[0],s[1]],leg===i?"#ffd24d":"rgba(255,255,255,.85)",leg===i?4:2.5); const m=vmul(vadd(s[0],s[1]),.5); lb([m[0],m[1]+60,m[2]],(i+1)+" · "+LEG[i][0],leg===i?"#ffd24d":"#fff"); });
+      ph=(ph+dt*.045)%1; let dd=ph*tot, i=0; while(i<4&&dd>len[i]){ dd-=len[i]; i++; } const s=segs[i], f=dd/len[i], p=vadd(s[0],vmul(vsub(s[1],s[0]),f)), dir=vsub(s[1],s[0]), yaw=Math.atan2(-dir[2],dir[0]);
+      meshDraw(x,P,PLANE,p,yaw,Math.atan2(dir[1],Math.hypot(dir[0],dir[2])),i>0&&f<.12?sgn*-.5:0,9,[236,238,242],1,d,items);
+      // área de señales junto a la pista: T de aterrizaje y, si es a derechas, la flecha
+      const SA=[RWY[0]+500,0,RWY[2]+120]; fillP([[SA[0]-60,0,SA[2]-60],[SA[0]+60,0,SA[2]-60],[SA[0]+60,0,SA[2]+60],[SA[0]-60,0,SA[2]+60]],"#1d2228");
+      fillP([[SA[0]-45,.5,SA[2]-6],[SA[0]+25,.5,SA[2]-6],[SA[0]+25,.5,SA[2]+6],[SA[0]-45,.5,SA[2]+6]],"#f4f4f0"); fillP([[SA[0]+25,.5,SA[2]-36],[SA[0]+37,.5,SA[2]-36],[SA[0]+37,.5,SA[2]+36],[SA[0]+25,.5,SA[2]+36]],"#f4f4f0");
+      if(rh){ const pts=[]; for(let j=0;j<=20;j++){ const a=-Math.PI*.9+j/20*Math.PI*1.6; pts.push([SA[0]+30*Math.cos(a),.6,SA[2]+30*Math.sin(a)]); } ln(pts,"#ff8a1c",4); }
+      items.sort((a,b)=>a.z-b.z).forEach(o=>o.f()); lb([SA[0],0,SA[2]+90],rh?"T + flecha: circuito a derechas":"T de aterrizaje","#fff"); }
+    return mv; }
+  let qs=null;
+  const say=()=>{ if(qm) return; if(mode==="alt"){ const R0=req(), ok=hh>=R0.need;
+      u.out.innerHTML=`<b>${rule==="i"?"IFR":"VFR"}</b> · ${R0.why}. Obstáculo más alto en el radio: <b>${f0(R0.o/FT)} ft</b> → mínimo <b>${f0(R0.need)} ft</b> sobre el suelo. Vas a <b>${f0(hh)} ft</b>: ${ok?"<span class=\"ok\">cumples</span>.":"<b class=\"bad\">demasiado bajo</b>."} ${rule==="i"?"En zonas de alta montaña, 2 000 ft.":""}`; }
+    else u.out.innerHTML=`Circuito <b>${rh?"a derechas":"a izquierdas"}</b>: ${rh?"lo indica la flecha en sentido horario del área de señales (o el ATC).":"es el estándar: SERA.3225, virajes a la izquierda salvo otra indicación."} ${leg>=0?`<b>${leg+1} · ${LEG[leg][0]}</b>: ${LEG[leg][1]}.`:"Pulsa un tramo para ver qué es."} La T de aterrizaje marca el sentido: se aterriza hacia el travesaño.`; };
+  const setMode=m=>{ mode=m; press(u,"data-m",m); u.q("[data-pa]").hidden=m!=="alt"; u.q("[data-pc]").hidden=m!=="circ"; if(m==="quiz") Q.start(); else { Q.stop(); qs=null; say(); } S.kick(); };
+  const XI=u.q('[data-k="x"]'), XO=u.q('[data-o="x"]'), HI=u.q('[data-k="h"]'), HO=u.q('[data-o="h"]');
+  const sync=()=>{ XI.value=ax; HI.value=hh; XO.textContent=ax>=TOWN[0]&&ax<=TOWN[1]?"sobre la ciudad":"campo abierto"; HO.textContent=f0(hh)+" ft"; press(u,"data-r",rule); press(u,"data-rh",rh); say(); S.kick(); };
+  XI.addEventListener("input",()=>{ ax=+XI.value; sync(); }); HI.addEventListener("input",()=>{ hh=+HI.value; sync(); });
+  u.qa("[data-r]").forEach(b=>b.addEventListener("click",()=>{ rule=b.dataset.r; sync(); }));
+  u.qa("[data-rh]").forEach(b=>b.addEventListener("click",()=>{ rh=+b.dataset.rh; sync(); }));
+  u.qa("[data-lg]").forEach(b=>b.addEventListener("click",()=>{ leg=+b.dataset.lg; press(u,"data-lg",leg); say(); }));
+  u.qa("[data-m]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.m)));
+  const Q=quiz(u,QZ,c=>{ qs=c.s; if(qs.m==="alt"){ ax=qs.x; hh=qs.h; rule=qs.r; } else { rh=qs.rh; } sync(); });
+  sync();
+}};
+})();
+
+/* =====================================================================
+   17 · INTERCEPTACIÓN DE AERONAVES CIVILES EN 3D (010, SERA apéndice 2 · OACI Anexo 2, apéndice 2): lo que ves desde tu cabina
+   ===================================================================== */
+V.icpt3d=(()=>{
+const SR={
+ 1:{n:"Serie 1 · «Sígame»",me:"Usted ha sido interceptado. Sígame.",sig:"Ligeramente por encima, delante y normalmente a tu izquierda, alabea y hace destellos irregulares con las luces de navegación; tras tu acuse, vira despacio, nivelado, normalmente a la izquierda, hacia el rumbo deseado.",resp:"Alabear, hacer destellos irregulares con las luces de navegación y seguirle. Significa «Entendido, cumpliré»."},
+ 2:{n:"Serie 2 · «Puede proseguir»",me:"Puede proseguir.",sig:"Maniobra brusca de separación: viraje en ascenso de 90° o más, sin cruzar tu línea de vuelo.",resp:"Alabear. Significa «Entendido, cumpliré»."},
+ 3:{n:"Serie 3 · «Aterrice en este aeródromo»",me:"Aterrice en este aeródromo.",sig:"Baja el tren, enciende las luces de aterrizaje fijas y sobrevuela la pista en uso.",resp:"Bajar el tren, encender las luces de aterrizaje fijas, seguirle y, si tras sobrevolar la pista el aterrizaje es seguro, aterrizar. Significa «Entendido, cumpliré»."}};
+const MINE={
+ 4:{n:"Serie 4 · «El aeródromo designado no es adecuado»",sig:"Subir el tren y hacer destellos con las luces de aterrizaje al pasar sobre la pista en uso entre 1 000 y 2 000 ft sobre el aeródromo, y seguir en circuito.",resp:"Si quiere que le sigas a otro aeródromo, sube el tren y usa la Serie 1; si te deja ir, la Serie 2."},
+ 5:{n:"Serie 5 · «No puedo cumplir»",sig:"Encender y apagar con regularidad todas las luces, de forma que se distinga de los destellos.",resp:"Serie 2: «Entendido»."},
+ 6:{n:"Serie 6 · «En peligro»",sig:"Destellos irregulares de todas las luces disponibles.",resp:"Serie 2: «Entendido»."}};
+const QZ=[
+ {q:"Mira al interceptor (a tu izquierda). ¿Qué te está diciendo?",o:["Usted ha sido interceptado. Sígame","Puede proseguir","Aterrice en este aeródromo"],a:0,e:"Serie 1: alabeo y destellos irregulares de las luces de navegación, por encima, delante y a tu izquierda.",s:{s:1}},
+ {q:"¿Qué significa esta maniobra del interceptor?",o:["Puede proseguir","Sígame","Aterrice en este aeródromo"],a:0,e:"Serie 2: viraje brusco en ascenso de 90° o más, <b>sin cruzar tu línea de vuelo</b>.",s:{s:2}},
+ {q:"Tren abajo, luces de aterrizaje fijas y sobrevuelo de la pista. ¿Qué significa?",o:["Aterrice en este aeródromo","Sígame","El aeródromo no es adecuado"],a:0,e:"Serie 3. Respondes bajando el tren, con luces de aterrizaje fijas, siguiéndole y aterrizando si es seguro.",s:{s:3}},
+ {q:"Te ha hecho la Serie 1. ¿Cómo respondes de día y de noche?",o:["Alabeando, con destellos irregulares de las luces de navegación, y siguiéndole","Bajando el tren","Encendiendo y apagando todas las luces con regularidad"],a:0,e:"Respuesta a la Serie 1, de día o de noche: alabear, destellos irregulares de las luces de navegación y seguirle.",s:{s:1}},
+ {q:"Quieres decirle «<b>no puedo cumplir</b>». ¿Qué haces?",o:["Encender y apagar todas las luces con regularidad (distinto de los destellos)","Destellos irregulares de todas las luces","Alabear"],a:0,e:"Serie 5. Los destellos <b>irregulares</b> de todas las luces son la Serie 6: «en peligro».",s:{s:1,my:5}},
+ {q:"Interceptado: además de seguir las señales, ¿qué haces?",o:["Avisar al ATS, llamar en 121,5 MHz y poner 7700 salvo otra instrucción","Squawk 7500 y silencio de radio","Squawk 7600 y seguir el plan de vuelo"],a:0,e:"SERA.11015: seguir las instrucciones del interceptor, notificarlo al ATS, intentar contacto en <b>121,5 MHz</b> (o 243,0) y seleccionar el modo A <b>7700</b> salvo otra instrucción del ATS.",s:{s:1}}];
+return {t:"3D · Interceptación: lo que ves desde tu cabina y qué respondes",
+cap:"SERA, apéndice 2 (= OACI Anexo 2, apéndice 2). Escena esquemática desde la cabina del avión interceptado; arrastra para mirar alrededor. La posición del interceptor puede invertirse si el tiempo o el terreno lo exigen; si tú eres un helicóptero, se coloca a tu derecha.",
+init(el){
+  const ctl=row("Señal del interceptor",[1,2,3].map(i=>bt("data-s",i,SR[i].n,i===1)).join(""))+row("Tus señales",[4,5,6].map(i=>bt("data-my",i,MINE[i].n)).join(""))+row("",bt("data-n","0","De día",1)+bt("data-n","1","De noche")+bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shell(el,this.t,"Vista desde la cabina del avión interceptado con el caza interceptor maniobrando",ctl,this.cap);
+  let sr=1, my=0, night=0, T=0, qm=false;
+  const S=orbit(u.c,{yaw:-30,pit:4,ar:.58,hmin:280,hmax:460,pmin:-25,pmax:40,ky:.35,draw}); S.anim=true;
+  // cámara de cabina: tú vuelas hacia +x a 100 kt; el interceptor se mueve respecto a ti
+  function draw(S,dt,t){ const x=S.x, W=S.W, H=S.H, d=S.dp, F=Math.min(W,H)*1.05; T+=dt;
+    const yw=S.yaw*R, pt=S.pit*R, rollMe=(my===0&&(T%12)>7&&(T%12)<10&&sr!==3)?Math.sin(T*4)*.25:0;   // tu respuesta: alabeo
+    const cy=Math.cos(yw), sy=Math.sin(yw), cp=Math.cos(pt), sp=Math.sin(pt), cr=Math.cos(rollMe), srr=Math.sin(rollMe);
+    const P=p=>{ let X=p[0]*cy+p[2]*sy, Z=-p[0]*sy+p[2]*cy, Y=p[1]; const X2=X*cp+Y*sp, Y2=-X*sp+Y*cp; X=X2; Y=Y2; if(X<1) return null; let sx=Z/X*F, sy2=Y/X*F; const a=sx*cr-sy2*srr, b=sx*srr+sy2*cr; return [W/2+a,H*.45-b,X]; };
+    x.setTransform(1,0,0,1,0,0);
+    // cielo, horizonte y suelo
+    const hz=P([1e5,-1200,0]), hy=hz?hz[1]:H*.5; const sk=x.createLinearGradient(0,0,0,H); if(night){ sk.addColorStop(0,"#02040b"); sk.addColorStop(1,"#0c1626"); } else { sk.addColorStop(0,"#3f78b8"); sk.addColorStop(1,"#c9dcec"); } x.fillStyle=sk; x.fillRect(0,0,W,H);
+    x.save(); x.translate(W/2,hy); x.rotate(rollMe); x.fillStyle=night?"#05080c":"#6f8d55"; x.fillRect(-W*1.5,0,W*3,H*2); x.restore();
+    if(night){ x.fillStyle="#fff"; for(let i=0;i<70;i++){ x.globalAlpha=.25+.6*((i*37)%10)/10; x.fillRect(((i*73.7)%1+i*.618)%1*W,((i*31)%17)/17*hy*.95,d,d); } x.globalAlpha=1; }
+    // pista delante y abajo (para la Serie 3 y la 4)
+    const rwy=[[3200,-1200,-25],[5200,-1200,-25],[5200,-1200,25],[3200,-1200,25]].map(P); if(rwy.every(Boolean)&&(sr===3||my===4)){ x.fillStyle=night?"#1a1e24":"#3c4046"; x.beginPath(); rwy.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fill(); if(night) for(let i=0;i<=10;i++) for(const zz of [-25,25]){ const q=P([3200+i*200,-1200,zz]); glowAt(x,q,"#ffe9a8",3*d,1); } }
+    // interceptor
+    const ph=T%12; let pos, hd=0, pi=0, rl=0, gear=false, nav=true, flash=false, land=false;
+    if(sr===1){ pos=[60,8,-25]; if(ph<7){ rl=Math.sin(T*5)*.45; flash=true; } else { const k2=sst(7,12,ph); hd=k2*.6; pos=[60+k2*40,8,-25-k2*70]; } }
+    else if(sr===2){ pos=[60,8,-25]; if(ph>3){ const k2=sst(3,7,ph); hd=k2*1.7; pi=k2*.5; rl=-k2*1.0; pos=[60+k2*60,8+k2*90,-25-k2*80]; } }
+    else { gear=true; land=true; const k2=sst(0,12,ph); pos=[70+k2*2000,8-k2*700,-25+k2*10]; pi=-.12; }
+    const Wv=[]; const body=meshDraw(x,P,JET,pos,hd,pi,rl,1,night?[16,18,22]:[150,158,168],1,d,Wv);
+    Wv.sort((a,b)=>b.z-a.z).forEach(o=>o.f());   // más lejos primero (aquí z = distancia)
+    if(gear){ for(const g of [[3,-1.6,0],[-2,-1.6,2.2],[-2,-1.6,-2.2]]){ const a=P(body([g[0],0,g[2]])), b=P(body(g)); if(a&&b){ x.strokeStyle=night?"#333":"#222"; x.lineWidth=2*d; x.beginPath(); x.moveTo(a[0],a[1]); x.lineTo(b[0],b[1]); x.stroke(); } } }
+    // luces del interceptor
+    const irr=flash?(((Math.sin(T*7.3)+Math.sin(T*3.1)+Math.sin(T*11.7))>.6)):true;
+    if(nav&&irr){ glowAt(x,P(body([-6.5,0,5])),"rgba(60,255,120,1)",(night?16:9)*d,1); glowAt(x,P(body([-6.5,0,-5])),"rgba(255,60,50,1)",(night?16:9)*d,1); glowAt(x,P(body([-8.2,3.4,0])),"rgba(255,255,255,1)",(night?12:7)*d,1); }
+    if(land) glowAt(x,P(body([8,-.5,0])),"rgba(255,250,220,1)",(night?30:18)*d,1);
+    // tu morro y tus puntas de ala (para tus señales)
+    const myOn=my===5?Math.floor(T*1.2)%2===0:my===6?((Math.sin(T*9.1)+Math.sin(T*4.3))>.4):true;
+    x.save(); x.translate(W/2,H); x.rotate(rollMe); x.fillStyle=night?"#0a0e13":"#d9dde3"; x.beginPath(); x.moveTo(-W*.6,0); x.lineTo(-W*.6,-H*.1); x.lineTo(-W*.08,-H*.16); x.lineTo(W*.08,-H*.16); x.lineTo(W*.6,-H*.1); x.lineTo(W*.6,0); x.closePath(); x.fill(); x.restore();
+    if(myOn){ glowAt(x,[W*.04,H*.88],"rgba(255,60,50,1)",14*d,1); glowAt(x,[W*.96,H*.88],"rgba(60,255,120,1)",14*d,1); if(my) glowAt(x,[W/2,H*.86],"rgba(255,250,220,1)",22*d,1); }
+    if(my===4&&gear===false) tag(x,W/2,H*.08,"tú: tren arriba y destellos de luces de aterrizaje sobre la pista",{dp:d,fs:11.5,al:"c",c:"#ffd24d"});
+    tag(x,W/2,18*d,night?"DE NOCHE":"DE DÍA",{dp:d,fs:11,al:"c",c:"#ffd24d"});
+    return true; }
+  const say=()=>{ if(qm) return; if(my){ const m=MINE[my]; u.out.innerHTML=`<b>${m.n}</b> (lo haces tú): ${m.sig}<br><b>Respuesta del interceptor</b>: ${m.resp}`; return; }
+    const s=SR[sr]; u.out.innerHTML=`<b>${s.n}</b> · significa «${s.me}» ${s.sig}<br><b>Tu respuesta</b> (de día y de noche): ${s.resp}<br>Además (SERA.11015): sigue sus instrucciones, avisa al ATS, llama en <b>121,5 MHz</b> (o 243,0) y pon <b>7700</b> salvo otra instrucción del ATS.`; };
+  u.qa("[data-s]").forEach(b=>b.addEventListener("click",()=>{ sr=+b.dataset.s; my=0; T=0; press(u,"data-s",sr); press(u,"data-my",""); say(); }));
+  u.qa("[data-my]").forEach(b=>b.addEventListener("click",()=>{ my=+b.dataset.my; sr=my===4?3:1; T=0; press(u,"data-my",my); press(u,"data-s",""); say(); }));
+  u.qa("[data-n]").forEach(b=>b.addEventListener("click",()=>{ night=+b.dataset.n; press(u,"data-n",night); }));
+  const Q=quiz(u,QZ,c=>{ sr=c.s.s; my=c.s.my||0; T=0; press(u,"data-s",""); press(u,"data-my",""); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); press(u,"data-s",sr); say(); } });
+  say(); S.kick();
 }};
 })();
 

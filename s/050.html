@@ -119,7 +119,11 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <meta name="color-scheme" content="only light">
 <style id="f0-mob">:root{color-scheme:only light}html .q,html .q *,html .expl,html .expl *,html #hist *{min-width:0;overflow-wrap:anywhere;word-wrap:break-word}html .q .choice{align-items:flex-start;flex-wrap:nowrap;max-width:100%}html .q .choice>span{flex:1 1 auto;min-width:0}html .q .choice>input{flex:0 0 auto}html .qhead{flex-wrap:wrap;gap:4px 12px}html .q img,html .q svg,html .q figure,html .expl img,html .expl svg{max-width:100%;height:auto}html .q table,html .expl table{display:block;max-width:100%;overflow-x:auto}html .q pre,html .q code,html .expl code{white-space:pre-wrap}@media (min-width:600px) and (max-width:1400px){html .wrap{max-width:880px;padding-left:24px;padding-right:24px}html .q{padding:16px 20px}html .qtext{font-size:18px;line-height:1.5}html .choice{font-size:17px;line-height:1.45;padding:12px 14px;min-height:48px}html .expl{font-size:16px;line-height:1.5}}.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}</style>
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
-<script src="../i18n.js"></script><style id="mnemoCss">.mnemo{background:color-mix(in srgb,#f2a900 12%,transparent);border-left:3px solid #e0a000;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.mnemo .mt{display:block;color:#b47a00;margin-bottom:4px;letter-spacing:.01em}[data-theme="dark"] .mnemo .mt{color:#ffc94d}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mnemo .mt{color:#ffc94d}}.mnemo ul{margin:4px 0 0;padding-left:20px}.mnemo li{margin:3px 0}.mnemo li b:first-child{color:inherit}</style></head><body>
+<script src="../i18n.js"></script><style id="mnemoCss">.mnemo{background:color-mix(in srgb,#f2a900 12%,transparent);border-left:3px solid #e0a000;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.mnemo .mt{display:block;color:#b47a00;margin-bottom:4px;letter-spacing:.01em}[data-theme="dark"] .mnemo .mt{color:#ffc94d}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mnemo .mt{color:#ffc94d}}.mnemo ul{margin:4px 0 0;padding-left:20px}.mnemo li{margin:3px 0}.mnemo li b:first-child{color:inherit}</style><style id="phCss">html.p13 [data-ph="ini"]{display:none!important}html:not(.p13) [data-ph="atpl"]{display:none!important}html.p13 .profe:has(li):not(:has(li:not([data-ph="ini"]))){display:none!important}</style>
+<script id="phJs">/* Mi plan (f0:plan): «9» = Fase Inicial, «13» = ATPL. data-ph="ini" solo se ve en Fase Inicial y data-ph="atpl" solo en ATPL */
+(function(){ function s(){ try{ document.documentElement.classList.toggle("p13",localStorage.getItem("f0:plan")==="13"); }catch(e){} } s();
+  addEventListener("storage",function(e){ if(e.key==="f0:plan") s(); }); addEventListener("message",function(e){ if(e.data&&e.data.t==="f0-plan") s(); }); })();</script>
+</head><body>
 <title>050 · Meteorology</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
 <style>
@@ -1644,8 +1648,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   <details class="lo atpl" id="lo-050.02.07" data-lo="050.02.07">
     <summary><span class="lonum">050.02.07</span><span class="lotitle">Jet streams</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · ampliación</b>
-    <p>Ampliación sobre el temario base. Está montado desde los objetivos de aprendizaje de EASA, que es lo que se mide.</p></div>
+  <div class="atplbox" data-ph="ini"><b>ATPL · ampliación</b>
+    <p>No se dio en la Fase Inicial. Montado desde los objetivos de aprendizaje de EASA, que es lo que se examina.</p></div>
   <p>Un <span class="en">jet stream</span> es una banda estrecha de viento muy fuerte justo bajo la tropopausa. Para que se llame jet, el núcleo tiene que alcanzar <b>60 kt</b> o más (en la carta SIGWX solo se dibujan los de 80 kt o más).</p>
   <ul>
     <li><b>Por qué existe:</b> un gradiente HORIZONTAL de temperatura fuerte entre dos masas hace que el gradiente de presión crezca con la altura. Ese «viento térmico» es el jet. Sin contraste de masas, no hay jet.</li>
@@ -1861,7 +1865,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
 
   <div class="note">
     <span class="tag">Cómo lo va a preguntar</span>
-    <p>En temario base <strong>no hay fotos</strong>: se pregunta por el nombre y la abreviatura, no por la imagen (eso llega en el ATPL). Hay que saber decirlas en inglés y reconocer la abreviatura.</p>
+    <p>En Fase Inicial <strong>no hay fotos</strong>: se pregunta por el nombre y la abreviatura, no por la imagen (eso llega en el ATPL). Hay que saber decirlas en inglés y reconocer la abreviatura.</p>
   </div>
     <div class="flag f16t"><b>Trampas de examen</b><ul><li>Nubes <b>bajas</b>: hasta 6 500 ft (St, Sc). <b>Medias</b>: 6 500–23 000 ft (Ac, As). <b>Altas</b>: por encima (Ci, Cc, Cs). Ns, Cu y Cb tienen gran desarrollo vertical.</li><li><b>Nimbo</b> = precipitación: Ns da lluvia continua; Cb da chubascos.</li><li>Aire estable → nubes estratiformes; aire inestable → nubes cumuliformes.</li></ul></div>
 </div>
@@ -2100,8 +2104,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   <details class="lo atpl" id="lo-050.07.04" data-lo="050.07.04">
     <summary><span class="lonum">050.07.04</span><span class="lotitle">Tropical revolving storms</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · ampliación</b>
-    <p>Capítulo entero sin dar en temario base y con peso real. Recreado desde los LO de EASA.</p></div>
+  <div class="atplbox" data-ph="ini"><b>ATPL · ampliación</b>
+    <p>Capítulo que no se dio en la Fase Inicial y con peso real en el examen. Recreado desde los LO de EASA.</p></div>
   <p><b>Ciclón tropical</b> (<span class="en">tropical revolving storm</span>): la borrasca más profunda que existe. Según la zona se llama huracán (Atlántico y Pacífico este), tifón (Pacífico oeste) o ciclón (Índico).</p>
   <h4>Las condiciones para que nazca</h4>
   <ul>
@@ -2124,8 +2128,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   <details class="lo atpl" id="lo-050.08.01" data-lo="050.08.01">
     <summary><span class="lonum">050.08.01</span><span class="lotitle">Climatic zones</span></summary>
     <div class="body">
-  <div class="atplbox"><b>ATPL · ampliación</b>
-    <p>Todo el capítulo 050.08 (8 preguntas, casi un 10 %) se quedó fuera de temario base. Esto es lo que piden los LO.</p></div>
+  <div class="atplbox" data-ph="ini"><b>ATPL · ampliación</b>
+    <p>Todo el capítulo 050.08 (8 preguntas, casi un 10 %) se quedó fuera de la Fase Inicial. Esto es lo que piden los LO.</p></div>
   <p>Clasificación por latitud y por continentalidad:</p>
   <div class="tablewrap"><table>
     <thead><tr><th>Zona</th><th>Temperatura</th><th>Precipitación</th></tr></thead>
@@ -2818,7 +2822,7 @@ hs.forEach(function(x,i){ x.onclick=function(){sel(i)}; });
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale el temario base.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale la Fase Inicial.</small></span></label>
     <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las del temario y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
@@ -5131,7 +5135,7 @@ function renderMap(){
       <div class="muted cmeta">${[...c.lo].sort().map(l=>esc(loLabelEs(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
     </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
 
-  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media. EASA solo publica el reparto por capítulo: dentro, es una estimación por número de objetivos de aprendizaje ATPL(A)">≈ Preg.</th><th>Estado</th><th title="Preguntas del temario base (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 respuestas (entre paréntesis, el total)">Dominio</th><th title="Tus últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10 o más y sin bajar · Casi listo ≥ 75 % · Bajando ≥ 75 % pero a peor · Reforzar &lt; 75 % · Pocos datos &lt; 5">Mi valoración</th></tr>`;
+  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media. EASA solo publica el reparto por capítulo: dentro, es una estimación por número de objetivos de aprendizaje ATPL(A)">≈ Preg.</th><th>Estado</th><th title="Preguntas de la Fase Inicial (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 respuestas (entre paréntesis, el total)">Dominio</th><th title="Tus últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10 o más y sin bajar · Casi listo ≥ 75 % · Bajando ≥ 75 % pero a peor · Reforzar &lt; 75 % · Pocos datos &lt; 5">Mi valoración</th></tr>`;
   const groups = CHAPTERS.map(c=>({t:`${c[0]} · ${c[2]} · ${c[3]} preguntas`, k:c[0]}))
                          .concat([{t:"De otras asignaturas (061 · 033 · 022 · 010)", k:"050.00"}]);
   groups.forEach(g=>{
@@ -5269,7 +5273,7 @@ $("#finishBtn").addEventListener("click", async ()=>{
         const b=byCH[c], p=Math.round(b.ok/b.total*100);
         return `<div class="chrow"><span>${c} · ${esc(CHES[c])}</span><span class="n">${b.ok}/${b.total} · ${p} %</span></div>`;
       }).join("")}${desv.length?`<p class="muted" style="font-size:14px;margin:6px 0 0">El reparto no es el oficial porque falta banco en ${desv.map(c=>c[0]).join(", ")}: esas preguntas se han repartido entre los demás capítulos. Marca «Incluir ampliación ATPL» para que salga exacto.</p>`:""}</div>
-      <div style="margin-top:12px"><b>temario base contra ATPL</b>
+      <div style="margin-top:12px"><b>Fase Inicial contra ATPL</b>
         <div class="chrow"><span>Temario base</span><span class="n">${okF}/${nF}${nF?` · ${Math.round(okF/nF*100)} %`:""}</span></div>
         <div class="chrow"><span>ampliación ATPL</span><span class="n">${okA}/${nA}${nA?` · ${Math.round(okA/nA*100)} %`:""}</span></div></div>
       <div style="margin-top:12px"><b>Ritmo</b>
@@ -6096,7 +6100,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     const los=q=>{ const a=String(q[1]),b=loOf(q); return a===b?[a]:[a,b]; };   // clave de tema: la del banco y la de subOf()
     const okQ=q=>Array.isArray(q)&&q[4]&&q[4]!=="—"&&q[2]!=="o";
 
-    /* completa `items` hasta `target` sin repetir ids. Primero lo que no repite familia (y es temario base), luego lo demás */
+    /* completa `items` hasta `target` sin repetir ids. Primero lo que no repite familia (y es Fase Inicial), luego lo demás */
     function padTo(items,target,o){
       o=o||{}; const out=items.slice(); if(out.length>=target) return out;
       const have=new Set(out.map(it=>{ const q=qOf(it); return q&&q[0]; }).filter(Boolean));
@@ -6154,7 +6158,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
 })();
 </script>
 <script src="../viz16.js?v=3f8f4cfe" defer></script>
-<script src="../viz3d.js?v=c4596a92" defer></script>
+<script src="../viz3d.js?v=3a255b96" defer></script>
 <script src="../labs.js?v=7496b38f" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>

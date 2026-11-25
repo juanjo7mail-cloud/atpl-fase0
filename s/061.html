@@ -522,7 +522,11 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <meta name="color-scheme" content="only light">
 <style id="f0-mob">:root{color-scheme:only light}html .q,html .q *,html .expl,html .expl *,html #hist *{min-width:0;overflow-wrap:anywhere;word-wrap:break-word}html .q .choice{align-items:flex-start;flex-wrap:nowrap;max-width:100%}html .q .choice>span{flex:1 1 auto;min-width:0}html .q .choice>input{flex:0 0 auto}html .qhead{flex-wrap:wrap;gap:4px 12px}html .q img,html .q svg,html .q figure,html .expl img,html .expl svg{max-width:100%;height:auto}html .q table,html .expl table{display:block;max-width:100%;overflow-x:auto}html .q pre,html .q code,html .expl code{white-space:pre-wrap}@media (min-width:600px) and (max-width:1400px){html .wrap{max-width:880px;padding-left:24px;padding-right:24px}html .q{padding:16px 20px}html .qtext{font-size:18px;line-height:1.5}html .choice{font-size:17px;line-height:1.45;padding:12px 14px;min-height:48px}html .expl{font-size:16px;line-height:1.5}}.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}</style>
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
-<script src="../i18n.js"></script><style id="mnemoCss">.mnemo{background:color-mix(in srgb,#f2a900 12%,transparent);border-left:3px solid #e0a000;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.mnemo .mt{display:block;color:#b47a00;margin-bottom:4px;letter-spacing:.01em}[data-theme="dark"] .mnemo .mt{color:#ffc94d}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mnemo .mt{color:#ffc94d}}.mnemo ul{margin:4px 0 0;padding-left:20px}.mnemo li{margin:3px 0}.mnemo li b:first-child{color:inherit}</style></head>
+<script src="../i18n.js"></script><style id="mnemoCss">.mnemo{background:color-mix(in srgb,#f2a900 12%,transparent);border-left:3px solid #e0a000;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.mnemo .mt{display:block;color:#b47a00;margin-bottom:4px;letter-spacing:.01em}[data-theme="dark"] .mnemo .mt{color:#ffc94d}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mnemo .mt{color:#ffc94d}}.mnemo ul{margin:4px 0 0;padding-left:20px}.mnemo li{margin:3px 0}.mnemo li b:first-child{color:inherit}</style><style id="phCss">html.p13 [data-ph="ini"]{display:none!important}html:not(.p13) [data-ph="atpl"]{display:none!important}html.p13 .profe:has(li):not(:has(li:not([data-ph="ini"]))){display:none!important}</style>
+<script id="phJs">/* Mi plan (f0:plan): «9» = Fase Inicial, «13» = ATPL. data-ph="ini" solo se ve en Fase Inicial y data-ph="atpl" solo en ATPL */
+(function(){ function s(){ try{ document.documentElement.classList.toggle("p13",localStorage.getItem("f0:plan")==="13"); }catch(e){} } s();
+  addEventListener("storage",function(e){ if(e.key==="f0:plan") s(); }); addEventListener("message",function(e){ if(e.data&&e.data.t==="f0-plan") s(); }); })();</script>
+</head>
 <body>
 <style>h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-top:10px}</style>
 <div class="wrap">
@@ -602,7 +606,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <details class="lo" id="lo-061.01.03" data-lo="061.01.03">
 <summary><span class="lonum">061.01.03</span><span class="lotitle">Direction</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Variación máxima 180°</b>. <b>Agonic</b> = el isogonal de variación 0.</li><li>Variation west, magnetic best · deviation west, compass best: <b>«practicar estos ejercicios»</b> (C‑M‑T).</li><li>★ «Te dan el <b>drift</b> para que te líes, pero necesitas el <b>WCA</b>» (SENASA y temario base).</li><li>1 en 60: te piden el <b>paralelo</b> (solo TKE) o ir <b>directo</b> (TKE + CA). Ejercicio de aplicación: 5 NM fuera en 40 NM → 7,5°.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li><b>Variación máxima 180°</b>. <b>Agonic</b> = el isogonal de variación 0.</li><li>Variation west, magnetic best · deviation west, compass best: <b>«practicar estos ejercicios»</b> (C‑M‑T).</li><li>★ «Te dan el <b>drift</b> para que te líes, pero necesitas el <b>WCA</b>» (SENASA y Fase Inicial).</li><li>1 en 60: te piden el <b>paralelo</b> (solo TKE) o ir <b>directo</b> (TKE + CA). Ejercicio de aplicación: 5 NM fuera en 40 NM → 7,5°.</li></ul></div>
 <div class="key"><b>Clave</b><b>C → D → M → V → T</b>: de compass a true, East suma y West resta (al revés, West is best) · <b>WCA = drift con el signo cambiado</b> · <b>TKE = 60 × fuera ÷ volado</b>.</div>
 <div class="flag"><b>Trampas:</b> drift 8° R → HDG = TRK − 8 (sumar es la trampa) · el TKE no es el drift · isogonal es de variación; isoclinal es de dip · el viento se corrige con el heading, no con el track.</div><div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>T-V-M-D-C: «<i>True Virgins Make Dull Company</i>»</b> — <b>T</b>rue → <b>V</b>ariation → <b>M</b>agnetic → <b>D</b>eviation → <b>C</b>ompass. En castellano: «<b>T</b>odas <b>V</b>uestras <b>M</b>adres <b>D</b>icen <b>C</b>osas». Y el signo: «<b>East is least, West is best</b>»: variación o desvío Este se restan; Oeste se suman.</li></ul></div>
 <div class="scroll"><table><tr><th>Término</th><th>Qué es</th></tr><tr><td><b>Course</b></td><td>El track previsto, el que dibujas en la carta</td></tr><tr><td><b>Heading</b></td><td>Hacia dónde apunta el morro (eje longitudinal)</td></tr><tr><td><b>Track</b> (TMG)</td><td>Por dónde vas de verdad sobre el suelo</td></tr><tr><td><b>Drift</b></td><td>Del heading al track: lo que te desvía el viento</td></tr><tr><td><b>WCA</b></td><td>Del track al heading: la corrección, al lado contrario</td></tr></table></div>
@@ -729,7 +733,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <details class="lo" id="lo-061.01.07" data-lo="061.01.07">
 <summary><span class="lonum">061.01.07</span><span class="lotitle">Dead reckoning (DR)</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>El chequeo FREDA existe, pero no cae.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li data-ph="ini">El chequeo FREDA existe, pero en la Fase Inicial no cae.</li></ul></div>
 <div class="key"><b>Clave</b>DR = partir de un <b>fix</b> + track y distancia medidos + el mejor viento → <b>heading y GS</b> (y la ETA).</div>
 <div class="flag"><b>Trampas:</b> track error ≠ drift · la <b>cruz</b> es la air position y el <b>círculo</b> la ground position.</div><div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>Regla de 1 en 60</b> — 1 NM de desvío a 60 NM = 1°. Error de derrota = desvío × 60 ÷ distancia volada; corrección para volver al destino = error + desvío × 60 ÷ distancia que queda.</li></ul></div>
 <ul><li><b>Air position</b> (cruz): donde estarías sin viento. <b>Ground position</b> (círculo): donde estás.</li><li><b>Track error</b> = track deseado − track hecho. La GS real casi nunca es la prevista: se revisan las ETA.</li></ul>
@@ -851,7 +855,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <details class="lo" id="lo-061.04.03" data-lo="061.04.03">
 <summary><span class="lonum">061.04.03</span><span class="lotitle">Practical use</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Símbolos: no caen, pero reconoce <b>NDB, VOR, DME y VOR/DME</b>.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Símbolos: reconoce <b>NDB, VOR, DME y VOR/DME</b><span data-ph="ini">; en la Fase Inicial no se preguntan</span>.</li></ul></div>
 <div class="key"><b>Clave</b><b>MEF</b>: obstáculo más alto del rectángulo; al terreno natural se le suman <b>300 ft</b> y se redondea a la centena superior.</div>
 <div class="flag"><b>Trampas:</b> al mástil (artificial) no se le suman los 300 ft.</div>
 
@@ -1023,7 +1027,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <details class="lo" id="lo-062.02.02" data-lo="062.02.02">
 <summary><span class="lonum">062.02.02</span><span class="lotitle">Non-directional radio beacon (NDB)/automatic direction finding (ADF)</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>NDB en tierra (LF/MF, 190–1.750 kHz) · ADF en el avión. <b>QDM = MH + RB</b>.</li><li>★ RBI y RMI: «en SENASA preguntan <b>con trampa</b>: el RBI de card móvil con el <b>heading mal puesto</b>».</li><li>Errores del ADF: «en temario base no los va a preguntar» (en ATPL sí: abajo).</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>NDB en tierra (LF/MF, 190–1.750 kHz) · ADF en el avión. <b>QDM = MH + RB</b>.</li><li>★ RBI y RMI: «en SENASA preguntan <b>con trampa</b>: el RBI de card móvil con el <b>heading mal puesto</b>».</li><li data-ph="ini">Los errores del ADF no entran en la Fase Inicial; en ATPL sí (abajo).</li></ul></div>
 <div class="key"><b>Clave</b><b>QDM = MH + RB</b> (−360 si pasa) · <b>QDR = QDM ± 180</b> · RMI: punta QDM, cola QDR · locator 10–25 NM, en ruta 50 NM o más.</div>
 <div class="flag"><b>Trampas:</b> RBI de card móvil mal puesta: la punta NO es el QDM; usa el RB con el MH real · homing con viento = curva · QDM = MH + RB, no «±».</div><div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>Las Q: «QDM, hacia Mí»</b> — <b>QDM</b>: rumbo magnético para ir <b>hacia</b> la estación. <b>QDR</b>: radial magnético <b>desde</b> ella (QDM ± 180). <b>QUJ</b> y <b>QTE</b>: lo mismo en verdadero (hacia y desde).</li></ul></div>
 <div class="formula"><div class=""><b>QDM = MH + RB</b><span>−360 si pasa</span></div><div class="k"><b>QDR = QDM ± 180</b><span>la cola de la aguja</span></div><div class="g"><b>True brg = TH + RB</b><span>o C → M → T y + RB</span></div></div>
@@ -1051,7 +1055,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <details class="lo" id="lo-062.02.03" data-lo="062.02.03">
 <summary><span class="lonum">062.02.03</span><span class="lotitle">VHF omnidirectional radio range (VOR): conventional VOR (CVOR) and Doppler VOR (DVOR)</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>Radial por <b>diferencia de fase</b> entre la reference phase y la variable phase.</li><li>TO/FROM: el curso del OBS <b>± 90°</b> te dice si vas hacia o desde la estación.</li><li>Cono de silencio: «ejercicio de SENASA, sacar el ángulo; no es de temario base».</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li>Radial por <b>diferencia de fase</b> entre la reference phase y la variable phase.</li><li>TO/FROM: el curso del OBS <b>± 90°</b> te dice si vas hacia o desde la estación.</li><li>Cono de silencio: ejercicio de SENASA (sacar el ángulo)<span data-ph="ini">; no entra en la Fase Inicial</span>.</li></ul></div>
 <div class="key"><b>Clave</b><b>Radial = QDR</b> (desde la estación) · <b>1 punto = 2°</b>, fondo de escala 10° · el CDI <b>no depende del rumbo</b> · en el radial 090: <b>090 FROM</b> o <b>270 TO</b>.</div>
 <div class="flag"><b>Trampas:</b> TO/FROM dice si el CURSO SELECCIONADO te lleva hacia o desde la estación, no hacia dónde vuela el avión · solo usar sin bandera OFF y con el ident correcto.</div><div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>«Vuela hacia la aguja» y «TO/FROM es dónde estás»</b> — La aguja del CDI te enseña dónde queda el radial elegido. TO/FROM depende de tu <b>posición</b> respecto a la estación y del OBS, nunca del rumbo. Escala completa del VOR: ±10° (2° por punto en un CDI de 5 puntos).</li></ul></div>
 <div class="formula"><div class=""><b>Radial = QDR</b><span>siempre DESDE</span></div><div class="k"><b>1 punto = 2°</b><span>5 puntos = 10° o más</span></div><div class="g"><b>OBS ± 90° → TO / FROM</b><span>sobre la línea: OFF</span></div></div>
@@ -1357,7 +1361,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <details class="lo" id="lo-X.033" data-lo="X.033">
 <summary><span class="lonum">X.033</span><span class="lotitle">Operational flight plan and fuel with reserves</span></summary>
 <div class="body">
-<div class="profe"><b>★ IMPORTANTE</b><ul><li>El plan de vuelo en la web de ENAIRE: <b>no hay preguntas</b> y de momento no hay que saber rellenarlo.</li></ul></div>
+<div class="profe"><b>★ IMPORTANTE</b><ul><li data-ph="ini">El plan de vuelo en la web de ENAIRE: <b>no hay preguntas</b> y en la Fase Inicial no hay que saber rellenarlo.</li></ul></div>
 <div class="key"><b>Clave</b>TAS de la tabla: columna <b>KTAS</b> · combustible mínimo = consumo × tiempo <b>+ reserva</b>.</div>
 <div class="flag"><b>Trampas:</b> en la tabla, 96 es KIAS y 94 KCAS: la TAS es 95.</div>
 <div class="scroll"><table>
@@ -1409,7 +1413,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel" aria-label="Tema"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale el temario base.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incAtpl"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale la Fase Inicial.</small></span></label>
     <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las del temario y del trial.</small></span></label>
     <p class="muted small" id="paceNote"></p>
     <button class="btn" id="startBtn">Empezar</button>
@@ -1691,7 +1695,7 @@ for(const id of ["tr11","tr14","tr17"]){ const q=BASE.find(x=>x[0]===id); if(q) 
 { const q=BASE.find(x=>x[0]==="tr8"); if(q) q[3]="units"; }
 { const q=BASE.find(x=>x[0]==="tr7"); if(q) q[3]="ofp"; }
 { const q=BASE.find(x=>x[0]==="tr6"); if(q) q[3]="tas"; }
-REFS.tas="En altura el aire es menos denso: para la misma IAS la TAS es mayor (≈ 106 kt con 100 kt IAS a 4.000 ft de altitud de densidad). El cálculo exacto es con el computador, que no entra en temario base.";
+REFS.tas="En altura el aire es menos denso: para la misma IAS la TAS es mayor (≈ 106 kt con 100 kt IAS a 4.000 ft de altitud de densidad). El cálculo exacto es con el computador, que no entra en la Fase Inicial.";
 { const q=BASE.find(x=>x[0]==="tr10"); if(q){ q[1]="090.9"; q[3]="th"; } }
 Object.assign(REFS,{
  units:"Unidades ★: 1 NM = 1.852 m = 1,852 km = 6.080 ft · 1 SM = 1.609 m · 1 ft = 0,3048 m · 1 m = 3,28 ft · 1 in = 2,54 cm · 1° de great circle = 60 NM.",
@@ -4916,7 +4920,7 @@ function renderMap(){
       <div class="bar"><i style="width:${Math.round(c.fails/maxF*100)}%;background:${c.recent?'var(--ok)':'var(--bad)'}"></i></div>
       <div class="muted cmeta">${[...c.lo].map(l=>esc(loLabel(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
     </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
-  let rows = `<tr><th title="Código EASA del subcapítulo">LO del syllabus</th><th>Tema</th><th title="Estimación: preguntas del capítulo repartidas por el número de LOs ATPL(A); EASA solo publica el reparto por capítulo">≈ Preg.</th><th title="Temario base o ampliación ATPL">Estado</th><th title="Preguntas en el banco: temario base + ATPL">Banco</th><th title="Aciertos en tus últimas 10 respuestas (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado: ≥ 85 % con 10 o más y sin bajar · Casi listo: ≥ 75 % · Bajando: ≥ 75 % pero empeorando · Reforzar: < 75 % · Pocos datos: menos de 5">Mi valoración</th></tr>`;
+  let rows = `<tr><th title="Código EASA del subcapítulo">LO del syllabus</th><th>Tema</th><th title="Estimación: preguntas del capítulo repartidas por el número de LOs ATPL(A); EASA solo publica el reparto por capítulo">≈ Preg.</th><th title="Temario base o ampliación ATPL">Estado</th><th title="Preguntas en el banco: Fase Inicial + ATPL">Banco</th><th title="Aciertos en tus últimas 10 respuestas (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado: ≥ 85 % con 10 o más y sin bajar · Casi listo: ≥ 75 % · Bajando: ≥ 75 % pero empeorando · Reforzar: < 75 % · Pocos datos: menos de 5">Mi valoración</th></tr>`;
   const groups = BLOCKS.map(b=>({t:`${b.code} · ${b.name} · ${b.n} preguntas`, k:b.k})).concat([{t:"De otras asignaturas", k:"X"}]);
   groups.forEach(g=>{
     rows += `<tr><th colspan="8" style="padding-top:14px">${esc(g.t)}</th></tr>`;
@@ -6269,7 +6273,7 @@ try{ LO_REFS["090.15"]=(LO_REFS["090.15"]||[]).concat(["smodes"]); LO_REFS["090.
     const los=q=>{ const a=String(q[1]),b=loOf(q); return a===b?[a]:[a,b]; };   // clave de tema: la del banco y la de subOf()
     const okQ=q=>Array.isArray(q)&&q[4]&&q[4]!=="—"&&q[2]!=="o";
 
-    /* completa `items` hasta `target` sin repetir ids. Primero lo que no repite familia (y es temario base), luego lo demás */
+    /* completa `items` hasta `target` sin repetir ids. Primero lo que no repite familia (y es Fase Inicial), luego lo demás */
     function padTo(items,target,o){
       o=o||{}; const out=items.slice(); if(out.length>=target) return out;
       const have=new Set(out.map(it=>{ const q=qOf(it); return q&&q[0]; }).filter(Boolean));
@@ -6327,7 +6331,7 @@ try{ LO_REFS["090.15"]=(LO_REFS["090.15"]||[]).concat(["smodes"]); LO_REFS["090.
 })();
 </script>
 <script src="../viz16.js?v=3f8f4cfe" defer></script>
-<script src="../viz3d.js?v=c4596a92" defer></script>
+<script src="../viz3d.js?v=3a255b96" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>
 </body>

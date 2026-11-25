@@ -8,7 +8,7 @@ const CAND = {"LEMD":[40.4934,-3.5722],"LEGT":[40.2941,-3.7238],"LETO":[40.4879,
 const km = (a, b) => { const R = Math.PI / 180, dl = (b[0] - a[0]) * R, dn = (b[1] - a[1]) * R, x = Math.sin(dl / 2) ** 2 + Math.cos(a[0] * R) * Math.cos(b[0] * R) * Math.sin(dn / 2) ** 2; return Math.round(12742 * Math.asin(Math.sqrt(x))); };
 function stationsFor(icao) {   // el propio aeródromo y, si no emite, las 3 estaciones conocidas más cercanas
   if (!icao || icao === "LECU") return STATIONS.map(s => [s, null]);
-  const here = AERO[icao];
+  const here = AERO[icao] || CAND[icao];
   return [[icao, 0]].concat(Object.keys(CAND).filter(k => k !== icao).map(k => [k, km(here, CAND[k])]).sort((p, q) => p[1] - q[1]).slice(0, 3));
 }
 const AW = "https://aviationweather.gov/api/data/";
@@ -239,8 +239,9 @@ export default {
       return J(o, o.ok, 900);
     }
     if (u.pathname !== "/api/wx") return env.ASSETS.fetch(req);
-    const o = await memo("wx:" + icao, 120000, async () => {
-      const list = stationsFor(icao), [metar, taf] = await Promise.all([first("metar", "rawOb", list), first("taf", "rawTAF", list)]);
+    const wx = AERO[q] || CAND[q] ? q : "LECU";   // METAR/TAF: también los aeropuertos con parte propio (LEMD, LEBL…), sin desviarlos a otra estación
+    const o = await memo("wx:" + wx, 120000, async () => {
+      const list = stationsFor(wx), [metar, taf] = await Promise.all([first("metar", "rawOb", list), first("taf", "rawTAF", list)]);
       return { ok: !!(metar || taf), metar, taf, at: Date.now() };
     });
     return J(o, o.ok, 120);

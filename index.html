@@ -1175,11 +1175,8 @@ $("#tabs").addEventListener("keydown",e=>{
 const TZ="Europe/Madrid";
 const madDay=d=>new Date(d).toLocaleDateString("sv-SE",{timeZone:TZ});
 function addDays(key,n){ const d=new Date(key+"T12:00:00Z"); d.setUTCDate(d.getUTCDate()+n); return d.toISOString().slice(0,10); }
-// día de estudio: 10 o más preguntas en el día, sumando todos los modos (tests, simulacro global, sesión de 15 min…)
-function studyDays(){ const per={}; SUBJ.forEach(x=>{ const st=STATE[x.k]; if(!st||!Array.isArray(st.attempts)) return; const ign=new Set([...(st.ignored||[]),...Object.keys(st.ignore||{}).filter(y=>st.ignore[y])]);
-  st.attempts.forEach(a=>{ if(!a||a.ignore||a.partial||!(a.total>0)||!a.date||a.mode==="voice"||a.mode==="atis"||ign.has(a.id)) return; const d=madDay(a.date); per[d]=(per[d]||0)+a.total; }); });
-  return new Set(Object.keys(per).filter(d=>per[d]>=10)); }
-// racha: días seguidos con 10+ preguntas; se perdona 1 día de descanso por semana
+function studyDays(){ const s=new Set(); SUBJ.forEach(x=>attemptsOf(x.k).forEach(a=>{ if(a.total>=10) s.add(madDay(a.date)); })); return s; }
+// racha: días seguidos con algún test de 10+ preguntas; se perdona 1 día de descanso por semana
 function streakInfo(){
   const days=studyDays(), today=madDay(Date.now()); let cur=days.has(today)?today:addDays(today,-1), count=0, lastMiss=null;
   for(let i=0;i<400;i++){
@@ -1320,7 +1317,7 @@ function planBox(){
   if(!b){ b=document.createElement("div"); b.id="planBox"; $("#grid").before(b);
     b.addEventListener("click",e=>{ const x=e.target.closest("button[data-plan]"); if(x){ try{ F0Weak.manual(); }catch(_){} setPlan(x.dataset.plan); } }); }
   const p13=plan13();
-  b.innerHTML=`<div class="pl-bz"><i class="sc a"></i><i class="sc b"></i><i class="sc c"></i><i class="sc d"></i><span class="pl-t" id="plT">Mi plan</span><div class="pl-seg" role="radiogroup" aria-labelledby="plT"><button type="button" role="radio" data-plan="9" aria-checked="${!p13}" title="Plan Inicial · 9 asignaturas"><i class="led" aria-hidden="true"></i>Inicial<b>9</b></button><button type="button" role="radio" data-plan="13" aria-checked="${p13}" title="Plan Completo SENASA · 13 asignaturas"><i class="led" aria-hidden="true"></i>SENASA<b>13</b></button></div></div>`;
+  b.innerHTML=`<div class="pl-bz"><i class="sc a"></i><i class="sc b"></i><i class="sc c"></i><i class="sc d"></i><span class="pl-t" id="plT">Mi plan</span><div class="pl-seg" role="radiogroup" aria-labelledby="plT"><button type="button" role="radio" data-plan="9" aria-checked="${!p13}" title="Fase Inicial · 9 asignaturas"><i class="led" aria-hidden="true"></i>Fase Inicial<b>9</b></button><button type="button" role="radio" data-plan="13" aria-checked="${p13}" title="ATPL completo (SENASA) · 13 asignaturas"><i class="led" aria-hidden="true"></i>ATPL<b>13</b></button></div></div>`;
 }
 function cardHTML(s,m,o){
   o=o||{}; const code=o.code||s.code, short=o.short||s.short, name=o.name||s.name;
@@ -2452,7 +2449,7 @@ const NEWS=[
     {i:"🎛️", t:"Vista de instrumentos", d:"Arriba, junto al buscador, hay un interruptor: Tarjetas o Instrumentos. En el panel cada asignatura es un reloj cuya aguja marca la media de tus 5 últimos tests (verde = aprobado)."}
   ]},
   {id:"2026-10-25c", items:[
-    {i:"📆", t:"Constancia diaria", d:"Cada día con 10 o más preguntas suma (tests, simulacro global o sesión de 15 min). Tienes un descanso por semana sin perder la racha. En Inicio ves tu racha, el objetivo de preguntas de hoy y tus alas de dominio."},
+    {i:"📆", t:"Constancia diaria", d:"Cada día con un test de 10+ preguntas suma. Tienes un descanso por semana sin perder la racha. Arriba, en Inicio, ves tu racha y la meta de 5 días."},
     {i:"🎖️", t:"Galones", d:"Arriba, junto a tu cuenta: de 0 a 4 galones según cuántas asignaturas apruebas (75 % con 5+ tests) y la ★ de capitán transoceánico si además tienes todas con 85 % o más. Púlsalos para ver cómo subir."},
     {i:"🔁", t:"Repasar hoy", d:"Tus fallos vuelven a los 1, 3, 7 y 14 días. Si hay pendientes, la tarjeta de la asignatura tiene el botón «Repasar hoy»: siempre 20 preguntas, primero tus pendientes y después tus falladas y preguntas nuevas."},
     {i:"📲", t:"Instálala en el iPad o el iPhone", d:"En Safari: Compartir → Añadir a pantalla de inicio. Se abre como una app, a pantalla completa.", web:true}

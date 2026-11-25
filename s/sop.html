@@ -82,7 +82,11 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <meta name="color-scheme" content="only light">
 <style id="f0-mob">:root{color-scheme:only light}html .q,html .q *,html .expl,html .expl *,html #hist *{min-width:0;overflow-wrap:anywhere;word-wrap:break-word}html .q .choice{align-items:flex-start;flex-wrap:nowrap;max-width:100%}html .q .choice>span{flex:1 1 auto;min-width:0}html .q .choice>input{flex:0 0 auto}html .qhead{flex-wrap:wrap;gap:4px 12px}html .q img,html .q svg,html .q figure,html .expl img,html .expl svg{max-width:100%;height:auto}html .q table,html .expl table{display:block;max-width:100%;overflow-x:auto}html .q pre,html .q code,html .expl code{white-space:pre-wrap}@media (min-width:600px) and (max-width:1400px){html .wrap{max-width:880px;padding-left:24px;padding-right:24px}html .q{padding:16px 20px}html .qtext{font-size:18px;line-height:1.5}html .choice{font-size:17px;line-height:1.45;padding:12px 14px;min-height:48px}html .expl{font-size:16px;line-height:1.5}}.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}</style>
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
-<script src="../i18n.js"></script></head><body>
+<script src="../i18n.js"></script><style id="phCss">html.p13 [data-ph="ini"]{display:none!important}html:not(.p13) [data-ph="atpl"]{display:none!important}html.p13 .profe:has(li):not(:has(li:not([data-ph="ini"]))){display:none!important}</style>
+<script id="phJs">/* Mi plan (f0:plan): «9» = Fase Inicial, «13» = ATPL. data-ph="ini" solo se ve en Fase Inicial y data-ph="atpl" solo en ATPL */
+(function(){ function s(){ try{ document.documentElement.classList.toggle("p13",localStorage.getItem("f0:plan")==="13"); }catch(e){} } s();
+  addEventListener("storage",function(e){ if(e.key==="f0:plan") s(); }); addEventListener("message",function(e){ if(e.data&&e.data.t==="f0-plan") s(); }); })();</script>
+</head><body>
 <title>SOP · Standard Operating Procedures</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -418,7 +422,7 @@ table.t3 tr > :nth-child(2):nth-last-child(1){width:auto}
 <header>
   <div class="code">SOP</div>
   <h1>Standard Operating Procedures</h1>
-  <p><b title="Práctica interna de temario base: el reparto de preguntas es una estimación">PS-28 Cruiser · Cessna 172 · Piper PA-28 · reparto estimado de preguntas</b></p>
+  <p><b title="Práctica interna de la Fase Inicial: el reparto de preguntas es una estimación">PS-28 Cruiser · Cessna 172 · Piper PA-28 · reparto estimado de preguntas</b></p>
 </header>
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-tab="notes">Apuntes</button>
@@ -3442,7 +3446,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     const los=q=>{ const a=String(q[1]),b=loOf(q); return a===b?[a]:[a,b]; };   // clave de tema: la del banco y la de subOf()
     const okQ=q=>Array.isArray(q)&&q[4]&&q[4]!=="—"&&q[2]!=="o";
 
-    /* completa `items` hasta `target` sin repetir ids. Primero lo que no repite familia (y es temario base), luego lo demás */
+    /* completa `items` hasta `target` sin repetir ids. Primero lo que no repite familia (y es Fase Inicial), luego lo demás */
     function padTo(items,target,o){
       o=o||{}; const out=items.slice(); if(out.length>=target) return out;
       const have=new Set(out.map(it=>{ const q=qOf(it); return q&&q[0]; }).filter(Boolean));

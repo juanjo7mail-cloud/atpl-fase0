@@ -105,7 +105,11 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <meta name="color-scheme" content="only light">
 <style id="f0-mob">:root{color-scheme:only light}html .q,html .q *,html .expl,html .expl *,html #hist *{min-width:0;overflow-wrap:anywhere;word-wrap:break-word}html .q .choice{align-items:flex-start;flex-wrap:nowrap;max-width:100%}html .q .choice>span{flex:1 1 auto;min-width:0}html .q .choice>input{flex:0 0 auto}html .qhead{flex-wrap:wrap;gap:4px 12px}html .q img,html .q svg,html .q figure,html .expl img,html .expl svg{max-width:100%;height:auto}html .q table,html .expl table{display:block;max-width:100%;overflow-x:auto}html .q pre,html .q code,html .expl code{white-space:pre-wrap}@media (min-width:600px) and (max-width:1400px){html .wrap{max-width:880px;padding-left:24px;padding-right:24px}html .q{padding:16px 20px}html .qtext{font-size:18px;line-height:1.5}html .choice{font-size:17px;line-height:1.45;padding:12px 14px;min-height:48px}html .expl{font-size:16px;line-height:1.5}}.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}</style>
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
-<script src="../i18n.js"></script><style id="mnemoCss">.mnemo{background:color-mix(in srgb,#f2a900 12%,transparent);border-left:3px solid #e0a000;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.mnemo .mt{display:block;color:#b47a00;margin-bottom:4px;letter-spacing:.01em}[data-theme="dark"] .mnemo .mt{color:#ffc94d}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mnemo .mt{color:#ffc94d}}.mnemo ul{margin:4px 0 0;padding-left:20px}.mnemo li{margin:3px 0}.mnemo li b:first-child{color:inherit}</style></head><body>
+<script src="../i18n.js"></script><style id="mnemoCss">.mnemo{background:color-mix(in srgb,#f2a900 12%,transparent);border-left:3px solid #e0a000;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.mnemo .mt{display:block;color:#b47a00;margin-bottom:4px;letter-spacing:.01em}[data-theme="dark"] .mnemo .mt{color:#ffc94d}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mnemo .mt{color:#ffc94d}}.mnemo ul{margin:4px 0 0;padding-left:20px}.mnemo li{margin:3px 0}.mnemo li b:first-child{color:inherit}</style><style id="phCss">html.p13 [data-ph="ini"]{display:none!important}html:not(.p13) [data-ph="atpl"]{display:none!important}html.p13 .profe:has(li):not(:has(li:not([data-ph="ini"]))){display:none!important}</style>
+<script id="phJs">/* Mi plan (f0:plan): «9» = Fase Inicial, «13» = ATPL. data-ph="ini" solo se ve en Fase Inicial y data-ph="atpl" solo en ATPL */
+(function(){ function s(){ try{ document.documentElement.classList.toggle("p13",localStorage.getItem("f0:plan")==="13"); }catch(e){} } s();
+  addEventListener("storage",function(e){ if(e.key==="f0:plan") s(); }); addEventListener("message",function(e){ if(e.data&&e.data.t==="f0-plan") s(); }); })();</script>
+</head><body>
 <meta charset="utf-8">
 <title>031 · 032 · 033 · Flight Performance and Planning</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -970,7 +974,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
       <label class="mode"><input type="radio" name="mode" value="lo"> Un tema <small>Todas las preguntas de un solo tema del temario.<select id="loSel" aria-label="Tema"></select></small></label>
       <label class="mode"><input type="radio" name="mode" value="all"> Banco completo <small id="allCount"></small></label>
     </div>
-    <label class="row chk"><input type="checkbox" id="incTrial"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale el temario base.</small></span></label>
+    <label class="row chk"><input type="checkbox" id="incTrial"> <span>Incluir ampliación ATPL<small>Sin marcar, solo sale la Fase Inicial.</small></span></label>
     <label class="row chk"><input type="checkbox" id="incComp" checked> <span>Incluir complemento<small>Preguntas de refuerzo propias, además de las del temario y del trial.</small></span></label>
     <button class="btn" id="startBtn">Empezar</button>
     <p id="startMsg" class="muted small"></p>
@@ -2724,7 +2728,7 @@ function renderMap(){
       <div class="bar"><i style="width:${Math.round(c.fails/maxF*100)}%;background:${c.recent?'var(--ok)':'var(--bad)'}"></i></div>
       <div class="muted cmeta">${[...c.lo].map(l=>esc(loLabel(l))).join(" · ")}${c.vis?` · <button class="linkbtn" data-go="${c.vis}">ver el visual</button>`:''}</div>
     </div>`).join("") : '<p class="muted">Aún no hay fallos.</p>';
-  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media (estimación por número de LOs)">≈ Preg.</th><th>Estado</th><th title="Preguntas del temario base (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
+  let rows = `<tr><th>LO del syllabus</th><th>Tema</th><th title="Preguntas que caen de media (estimación por número de LOs)">≈ Preg.</th><th>Estado</th><th title="Preguntas de la Fase Inicial (+ ATPL)">Banco</th><th title="Aciertos en tus últimas 10 (entre paréntesis, el total)">Dominio</th><th title="Últimas 10 frente a las 10 anteriores">Tendencia</th><th title="Preparado ≥ 85 % con 10+ y sin bajar · Casi listo ≥ 75 % · Bajando · Reforzar < 75 % · Pocos datos < 5">Mi valoración</th></tr>`;
   const groups = BLOCKS.map(b=>({t:`${b.code} · ${b.name} · ${b.n} preguntas`, k:b.k})).concat([{t:"De otras asignaturas (050 Meteorology)", k:"X"}]);
   groups.forEach(g=>{
     rows += `<tr><th colspan="8" style="padding-top:14px">${esc(g.t)}</th></tr>`;
@@ -2835,7 +2839,7 @@ $("#startBtn").addEventListener("click",()=>{
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
-const MODE_NAME = {s15:"Sesión 15 min",global:"Simulacro global",multi:"Multitema",adaptive:"Adaptativo",fase0:"temario base",calc:"Solo cálculos",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"SENASA"};
+const MODE_NAME = {s15:"Sesión 15 min",global:"Simulacro global",multi:"Multitema",adaptive:"Adaptativo",fase0:"Fase Inicial",calc:"Solo cálculos",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"SENASA"};
 function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curSubj} ${SEN_LEN(curSubj)[curLen].label.toLowerCase()}`:(MODE_NAME[curMode]||"Test")}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[subOf(q.lo)]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>{
@@ -3566,7 +3570,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
     const los=q=>{ const a=String(q[1]),b=loOf(q); return a===b?[a]:[a,b]; };   // clave de tema: la del banco y la de subOf()
     const okQ=q=>Array.isArray(q)&&q[4]&&q[4]!=="—"&&q[2]!=="o";
 
-    /* completa `items` hasta `target` sin repetir ids. Primero lo que no repite familia (y es temario base), luego lo demás */
+    /* completa `items` hasta `target` sin repetir ids. Primero lo que no repite familia (y es Fase Inicial), luego lo demás */
     function padTo(items,target,o){
       o=o||{}; const out=items.slice(); if(out.length>=target) return out;
       const have=new Set(out.map(it=>{ const q=qOf(it); return q&&q[0]; }).filter(Boolean));
@@ -3624,7 +3628,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
 })();
 </script>
 <script src="../viz16.js?v=3f8f4cfe" defer></script>
-<script src="../viz3d.js?v=c4596a92" defer></script>
+<script src="../viz3d.js?v=3a255b96" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>
 </body></html>

@@ -6,14 +6,20 @@
 const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const shuf=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 const pick=a=>a[Math.floor(Math.random()*a.length)];
-const tally=n=>{ try{ const d=new Date().toLocaleDateString("sv-SE",{timeZone:"Europe/Madrid"}); let o=JSON.parse(localStorage.getItem("f0:mxday")||"null"); if(!o||o.d!==d) o={d,n:0}; o.n+=n; localStorage.setItem("f0:mxday",JSON.stringify(o)); }catch(e){} try{ window.dispatchEvent(new Event("f0-mx")); }catch(e){} };
 const CSS=`
-.mxbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px;margin:4px 0 14px}
-.mxbar button{display:flex;gap:12px;align-items:center;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.mxbar{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 12px}
+.mxbar button{display:inline-flex;gap:7px;align-items:center;min-height:36px;padding:6px 14px 6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;line-height:1}
 .mxbar button:hover{border-color:var(--accent)}
-.mxbar .ic{font-size:26px;line-height:1}
-.mxbar b{display:block;font:700 17px/1.1 var(--display);letter-spacing:.02em}
-.mxbar small{display:block;color:var(--muted);font-size:12.5px;line-height:1.25;margin-top:2px}
+.mxbar .ic{font-size:17px;line-height:1}
+.mxbar b{font:700 14px/1 var(--display);letter-spacing:.03em;white-space:nowrap}
+.mxbar .sh{display:none}
+@media (max-width:560px){
+ .mxbar{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 10px}
+ .mxbar button{flex-direction:column;gap:3px;min-height:0;padding:7px 2px 6px;border-radius:10px;justify-content:center}
+ .mxbar .ic{font-size:18px}
+ .mxbar b{font-size:12px;letter-spacing:.02em}
+ .mxbar .lg{display:none} .mxbar .sh{display:inline}
+}
 .mx{position:fixed;inset:0;z-index:9000;background:rgba(6,14,22,.62);display:flex;align-items:flex-start;justify-content:center;padding:max(10px,env(safe-area-inset-top,0px)) 10px 10px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .mxp{width:min(860px,100%);background:var(--paper);color:var(--ink);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;margin:min(5vh,36px) 0 24px}
 .mxh{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--head);color:#fff}
@@ -117,7 +123,7 @@ function flash(){
     body.innerHTML=`<div class="row" style="justify-content:space-between"><span class="chip">${esc(q.cat)}</span><span class="muted">${i+1} / 10 · aciertos ${ok}</span></div>${on15?`<div class="bar" style="margin:4px 0 8px"><i data-left style="width:100%;background:var(--warn)"></i></div>`:""}<div class="vis">${q.svg}</div><div class="qt">${q.q}</div>${q.ord.map(j=>`<button type="button" class="opt" data-o="${j}">${esc(q.o[j]).replace(/&lt;b&gt;|&lt;\/b&gt;/g,"")}</button>`).join("")}<div data-exp></div>`;
     body.querySelectorAll("[data-o]").forEach(b=>b.addEventListener("click",()=>answer(+b.dataset.o)));
     cancelAnimationFrame(timer); timer=requestAnimationFrame(tick); };
-  const answer=j=>{ const q=qs[i]; if(q.ans) return; q.ans=1; tally(1); const good=j===0; if(good) ok++; else wrong.push(q);
+  const answer=j=>{ const q=qs[i]; if(q.ans) return; q.ans=1; const good=j===0; if(good) ok++; else wrong.push(q);
     body.querySelectorAll("[data-o]").forEach(b=>{ const v=+b.dataset.o; b.disabled=true; if(v===0) b.classList.add("ok"); else if(v===j) b.classList.add("bad"); });
     body.querySelector("[data-exp]").innerHTML=`<div class="exp"><b>${good?"Correcto":j<0?"Se acabó el tiempo":"No"}</b> · ${q.e}</div><div class="row"><button type="button" class="btn2 pri" data-n>${i<9?"Siguiente →":"Ver resultado"}</button></div>`;
     body.querySelector("[data-n]").addEventListener("click",()=>{ if(i<9){ i++; show(); } else end(); }); body.querySelector("[data-n]").focus(); };
@@ -155,7 +161,7 @@ function build(N){ const Q=quotas(N), out=[]; let stState=(typeof STATE!=="undef
     sel.forEach(q=>out.push({s:s[0],page:s[4],id:q[0],lo:q[1],t:q[2],o:q[3],e:q[4],ord:shuf(q[3].map((x,j)=>j)),ans:null,key:s[0]==="081"&&BANK.key.includes(q[0]),fail:fl.has(q[0])})); });
   return shuf(out); }
 function globalSim(){
-  const body=open("🎯 Simulacro global Fase 0","<p>Cargando el banco de preguntas…</p>");
+  const body=open("🎯 Simulacro global","<p>Cargando el banco de preguntas…</p>");
   loadBank().then(()=>setup()).catch(e=>{ body.innerHTML=`<p>No se ha podido cargar el banco (${esc(e.message)}). Revisa la conexión y vuelve a intentarlo.</p>`; });
   let qs=[], i=0, end=0, timer=0, fin=false;
   function setup(){ const tot=Object.values(BANK.subj).reduce((s,a)=>s+a.length,0);
@@ -280,9 +286,11 @@ function cheat(){
 /* ---------- accesos en la portada ---------- */
 function mount(){ const g=document.getElementById("grid"); if(!g||document.querySelector(".mxbar")) return;
   const bar=document.createElement("div"); bar.className="mxbar";
-  bar.innerHTML=`<button type="button" data-a="flash"><span class="ic">⚡</span><span><b>Flash-Check visual</b><small>10 preguntas con imagen · 60 s</small></span></button><button type="button" data-a="sim"><span class="ic">🎯</span><span><b>Simulacro global</b><small>13 asignaturas mezcladas · nota por asignatura</small></span></button><button type="button" data-a="cheat"><span class="ic">📋</span><span><b>Fórmulas y velocidades V</b><small>Chuletario con buscador</small></span></button>`;
+  bar.setAttribute("aria-label","Herramientas de repaso");
+  const B=(a,ic,lg,sh,tt)=>`<button type="button" data-a="${a}" title="${tt}"><span class="ic" aria-hidden="true">${ic}</span><b><span class="lg">${lg}</span><span class="sh">${sh}</span></b></button>`;
+  bar.innerHTML=B("flash","⚡","Flash-Check","Flash","10 preguntas con imagen en 60 s")+B("sim","🎯","Simulacro global","Simulacro","13 asignaturas mezcladas, con nota por asignatura")+B("cheat","📋","Fórmulas y velocidades V","Fórmulas","Fórmulas, velocidades V, conversiones y reglas, con buscador");
   g.parentNode.insertBefore(bar,g);
   bar.querySelector('[data-a="flash"]').addEventListener("click",flash); bar.querySelector('[data-a="sim"]').addEventListener("click",globalSim); bar.querySelector('[data-a="cheat"]').addEventListener("click",cheat); }
-window.F0Mix={flash,globalSim,cheat,_:{tally,open,close,clock,mmss,esc,shuf,pick,SVG,loadBank,failedIds,bank:()=>BANK}};
+window.F0Mix={flash,globalSim,cheat,_:{open,close,clock,mmss,esc,shuf,pick,SVG,loadBank,failedIds,bank:()=>BANK}};
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",mount); else mount();
 })();
