@@ -119,7 +119,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <meta name="color-scheme" content="only light">
 <style id="f0-mob">:root{color-scheme:only light}html .q,html .q *,html .expl,html .expl *,html #hist *{min-width:0;overflow-wrap:anywhere;word-wrap:break-word}html .q .choice{align-items:flex-start;flex-wrap:nowrap;max-width:100%}html .q .choice>span{flex:1 1 auto;min-width:0}html .q .choice>input{flex:0 0 auto}html .qhead{flex-wrap:wrap;gap:4px 12px}html .q img,html .q svg,html .q figure,html .expl img,html .expl svg{max-width:100%;height:auto}html .q table,html .expl table{display:block;max-width:100%;overflow-x:auto}html .q pre,html .q code,html .expl code{white-space:pre-wrap}@media (min-width:600px) and (max-width:1400px){html .wrap{max-width:880px;padding-left:24px;padding-right:24px}html .q{padding:16px 20px}html .qtext{font-size:18px;line-height:1.5}html .choice{font-size:17px;line-height:1.45;padding:12px 14px;min-height:48px}html .expl{font-size:16px;line-height:1.5}}.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}</style>
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
-<script src="../i18n.js"></script></head><body>
+<script src="../i18n.js"></script><style id="mnemoCss">.mnemo{background:color-mix(in srgb,#f2a900 12%,transparent);border-left:3px solid #e0a000;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.mnemo .mt{display:block;color:#b47a00;margin-bottom:4px;letter-spacing:.01em}[data-theme="dark"] .mnemo .mt{color:#ffc94d}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mnemo .mt{color:#ffc94d}}.mnemo ul{margin:4px 0 0;padding-left:20px}.mnemo li{margin:3px 0}.mnemo li b:first-child{color:inherit}</style></head><body>
 <title>050 · Meteorology</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
 <style>
@@ -960,7 +960,7 @@ Campo a 1.200 ft, QNH 1003  →  AP = 1.200 + 270      = 1.470 ft</span>
 
   <p>Las <strong>temperaturas superiores a la ISA afectan negativamente a las prestaciones</strong> en despegue, crucero y ascenso. Hay que consultar las gráficas de performance sobre todo con temperatura alta, altitud alta y mucha carga: los tres a la vez es el escenario crítico.</p>
     <div class="flag f16t"><b>Trampas de examen</b><ul><li>ISA al nivel del mar: <b>15 °C, 1013,25 hPa, 1,225 kg/m³</b>. Gradiente: <b>−1,98 °C por 1 000 ft</b> hasta 36 090 ft; desde ahí, <b>−56,5 °C</b> constante.</li><li>Desviación ISA = temperatura real − temperatura ISA <b>a esa altitud</b>.</li><li>1 hPa ≈ <b>27 ft</b> cerca del nivel del mar (30 ft como regla), pero ≈ 50 ft a 18 000 ft.</li></ul></div>
-</div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>ISA: «15, 1013 y 2 por mil»</b> — <b>15 °C</b> y <b>1013,25 hPa</b> al nivel del mar; baja <b>≈ 2 °C cada 1.000 ft</b> (1,98) hasta 11 km (36.090 ft) y se queda en −56,5 °C.</li></ul></div></div>
   </details>
 </section>
 <section>
@@ -1257,7 +1257,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   </div>
     <div class="key ejr"><b>Ejemplo resuelto · altitud verdadera con frío</b>Altímetro con QNH indica 5 000 ft sobre un aeródromo a nivel del mar; temperatura ISA −10 °C.<br>Corrección ≈ 4 % de la altura por cada 10 °C: 4 % × 5 000 = <b>200 ft</b>.<br>Altitud verdadera ≈ 5 000 − 200 = <b>4 800 ft</b>: con frío vas más bajo de lo que indica.</div>
 <div class="flag f16t ejr"><b>Trampas habituales y reglas de oro</b><ul><li>«<b>De alta a baja, cuidado abajo</b>»: hacia menos presión o hacia más frío sin reajustar, el altímetro marca de más.</li><li>1 hPa ≈ <b>27 ft</b> cerca del suelo (≈ 30 ft en las cuentas rápidas; más pies por hPa en altura).</li><li>La corrección por temperatura se aplica a la <b>altura sobre la fuente del reglaje</b> (el aeródromo), no a la altitud total.</li></ul></div>
-</div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>«De alta a baja, mira abajo»</b> — Igual con la temperatura: «<b>de calor a frío, mira abajo</b>». Con aire más frío que ISA estás más bajo de lo que marca el altímetro: unos 4 % por cada 10 °C.</li></ul></div></div>
   </details>
   <details class="lo" id="lo-050.02.01" data-lo="050.02.01">
     <summary><span class="lonum">050.02.01</span><span class="lotitle">Definition and measurement of wind</span></summary>
@@ -1316,7 +1316,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <p class="dia-cap">Se suman: banderín 50, pluma entera 10, media 5. Las plumas van en el extremo <strong>del que viene</strong> el viento; el círculo es la estación.</p>
   </div>
     <div class="flag f16t"><b>Trampas de examen</b><ul><li>El viento se nombra por la dirección <b>de donde viene</b>. <b>Veer</b> = gira en sentido horario; <b>back</b> = en sentido antihorario.</li><li>Racha (<b>gust</b>): aumento breve. Turbonada (<b>squall</b>): dura al menos un minuto.</li><li>En superficie el viento se mide a <b>10 m</b> de altura.</li></ul></div>
-</div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b><i>Veer</i> y <i>back</i></b> — <b>Veer</b>: el viento rola en sentido <b>horario</b> (de 270° a 300°). <b>Back</b>: antihorario. En el hemisferio Norte, al subir el viento vira y al bajar a superficie rola a la izquierda.</li></ul></div></div>
   </details>
   <details class="lo" id="lo-050.02.02" data-lo="050.02.02">
     <summary><span class="lonum">050.02.02</span><span class="lotitle">Primary cause of wind</span></summary>
@@ -1444,13 +1444,14 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
   </div>
 
   <div class="flag"><b>Las dos trampas</b>
-    <p><b>Backing es girar a MENOS grados</b> (090 → 060), no «girar a la izquierda del avión». Y el viento siempre se nombra por <b>de dónde viene</b>, nunca por hacia dónde va: si el aire se mueve hacia el oeste, el viento es <b>del este</b>.</p></div>
+    <p><b>Backing es girar a MENOS grados</b> (090 → 060), no «girar a la izquierda del avión». Y el viento siempre se nombra por <b>de dónde viene</b>, nunca por hacia dónde va: si el aire se mueve hacia el oeste, el viento es <b>del este</b>.</p></div><div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>Buys Ballot: «de espaldas al viento, bajas a la izquierda» (HN)</b> — En el hemisferio Norte, de espaldas al viento, las bajas presiones a la <b>izquierda</b>; en el Sur, a la derecha. Alrededor de la baja el viento gira antihorario en el Norte y horario en el Sur.</li></ul></div>
 
   <div class="note">
     <span class="tag">Complemento · vocabulario</span>
     <p>Girar hacia menos grados se dice <span class="en">backing</span>; hacia más grados, <span class="en">veering</span>. En el hemisferio norte, al bajar hacia el suelo el viento <strong>backs</strong> y pierde fuerza. Al subir desde la superficie, <strong>veers</strong> y gana fuerza.</p>
   </div>
     <div class="flag f16t ejr"><b>Trampas habituales y reglas de oro</b><ul><li>Buys Ballot (hemisferio norte): de espaldas al viento, las <b>bajas presiones a la izquierda</b>.</li><li>Por rozamiento, el viento en superficie <b>rola a la izquierda</b> (backs) y amaina respecto al de 2 000 ft: unos <b>30°</b> sobre tierra y <b>10°</b> sobre el mar.</li><li>En el METAR y el TAF el viento va referido al norte <b>verdadero</b>; el que da la torre o el ATIS, al <b>magnético</b>.</li></ul></div>
+<div class="f0viz" data-viz="wx3d" data-tab="bb"></div>
 </div>
   </details>
   <details class="lo" id="lo-050.02.03" data-lo="050.02.03">
@@ -1911,7 +1912,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <span class="tag">Nota de precisión</span>
     <p>En muchos apuntes pone que la niebla de advección <em>«puede aguantar con viento de 15 a 25 kt»</em>. El criterio oficial dice lo contrario: se forma con viento <strong>de hasta 15 kt</strong>, y <strong>por encima de 15 kt se levanta y se convierte en estrato</strong>. Quédate con la versión oficial.</p>
   </div>
-    </div>
+    <div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>Niebla: «Radiación = reposo; advección = arrastre»</b> — <b>Radiación</b>: noche despejada, viento flojo, sobre tierra. <b>Advección</b>: aire cálido y húmedo arrastrado sobre una superficie fría (mar, costa); aguanta con viento moderado.</li></ul></div></div>
   </details>
   <details class="lo" id="lo-050.05.01" data-lo="050.05.01">
     <summary><span class="lonum">050.05.01</span><span class="lotitle">Development of precipitation</span></summary>
@@ -2032,7 +2033,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <span class="tag">Nota de precisión</span>
     <p>En muchos apuntes la pendiente del frente frío aparece como <em>«2 %»</em>. El temario dice <strong>1:80</strong>, que es un 1,25 %. La del cálido, 1:150, sí coincide con el 0,66 % de esos apuntes.</p>
   </div>
-    </div>
+    <div class="f0viz" data-viz="wx3d" data-tab="fr"></div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>Frente cálido: «Ci, Cs, As, Ns»</b> — Por delante del frente cálido ves primero cirros y al final nimbostratos con lluvia continua. Frente frío: franja estrecha de <b>CB</b> y chubascos. En el hemisferio Norte, con el paso de cualquier frente el viento <b>vira</b>.</li></ul></div></div>
   </details>
   <details class="lo" id="lo-050.07.01" data-lo="050.07.01">
     <summary><span class="lonum">050.07.01</span><span class="lotitle">The principal pressure areas</span></summary>
@@ -2231,7 +2233,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <p>La palabra clave es el <strong>tamaño de la gota</strong>: pequeñas → <span class="en">rime</span>, rugoso y opaco; grandes → <span class="en">clear ice</span>, liso y transparente. Y el rango: el <span class="en">clear ice</span> vive en la franja estrecha de 0 a −10 °C dentro de nubes de tormenta.</p>
   </div>
     <div class="flag f16t ejr"><b>Trampas habituales y reglas de oro</b><ul><li><b>Hielo claro</b> (clear): gotas grandes, de 0 a −15 °C aprox., el más peligroso por peso y forma. <b>Escarcha</b> (rime): gotas pequeñas, más frío.</li><li><b>Lluvia engelante</b>: indica una capa cálida encima. Salida: subir a la capa cálida o salir del área, no quedarse debajo.</li><li>El hielo en el ala reduce el CLmáx y el ángulo de pérdida: la pérdida llega <b>antes y sin aviso habitual</b>.</li></ul></div>
-</div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>«Gota grande, hielo claro»</b> — Gotas subfundidas grandes (0 a −10 °C aprox., nubes de desarrollo): <b>hielo claro</b>, transparente, duro y pesado. Gotas pequeñas (−10 a −20 °C, estratiformes): <b>escarcha</b> (rime), blanca y quebradiza.</li></ul></div></div>
   </details>
   <details class="lo" id="lo-050.09.02" data-lo="050.09.02">
     <summary><span class="lonum">050.09.02</span><span class="lotitle">Turbulence</span></summary>
@@ -2305,7 +2307,8 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <div class="f0viz" data-viz="tstorm"></div>
 <div class="flag f16t"><b>Trampas de examen</b><ul><li>Tres ingredientes: <b>humedad</b>, <b>inestabilidad</b> y un <b>disparador</b> (calentamiento, orografía, frente, convergencia).</li><li>Tres fases: <b>cúmulo</b> (solo ascendencias), <b>madurez</b> (ascendencias y descendencias; empieza con la primera precipitación y es la más violenta) y <b>disipación</b> (solo descendencias).</li><li>El granizo puede caer fuera de la nube, bajo el yunque; el <b>frente de racha</b> puede adelantarse 15–20 NM.</li><li>Tormentas de <b>masa de aire</b>: aisladas, por la tarde. <b>Frontales</b>: en línea y a cualquier hora.</li></ul></div>
 <div class="f16q f16t"><b>Duda frecuente · ¿Por dónde esquivo una tormenta?</b>Por el lado de <b>barlovento</b>, a 10 NM o más (20 NM si es severa), y nunca por debajo del yunque.</div>
-</div>
+<div class="f0viz" data-viz="wx3d" data-tab="cb"></div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>Tormenta: «sube · sube y baja · baja»</b> — Cúmulo: solo ascendentes. Madurez: ascendentes y descendentes (la más peligrosa). Disipación: solo descendentes.</li></ul></div></div>
   </details>
   <details class="lo atpl" id="lo-050.09.05" data-lo="050.09.05">
     <summary><span class="lonum">050.09.05</span><span class="lotitle">Tornadoes</span></summary>
@@ -2567,7 +2570,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <li><strong>QNH</strong>: <code>Q</code> y el valor en hPa, <strong>truncado al entero inferior</strong>.</li>
   </ul>
     <div class="flag f16t ejr"><b>Trampas habituales y reglas de oro</b><ul><li><b>CAVOK</b>: visibilidad ≥ 10 km, sin nubes por debajo de 5 000 ft (o de la altitud mínima de sector si es mayor), sin CB ni TCU y sin tiempo significativo.</li><li><b>9999</b> = 10 km o más. La visibilidad del METAR va en <b>metros</b>; la RVR, en metros con su pista (R27/0600).</li><li><b>BECMG</b>: el cambio es permanente; <b>TEMPO</b>: fluctuaciones de menos de una hora que en total no superan la mitad del periodo.</li><li>Nubes: FEW 1–2, SCT 3–4, BKN 5–7, OVC 8 octas. <b>Techo</b> = la capa más baja BKN u OVC.</li></ul></div>
-</div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>CAVOK: «10 · 5.000 · cero CB»</b> — Visibilidad de <b>10 km</b> o más, sin nubes por debajo de <b>5.000 ft</b> (o de la MSA más alta, si es mayor), <b>ningún CB ni TCU</b> y ningún fenómeno significativo.</li></ul></div></div>
   </details>
   <details class="lo" id="lo-050.10.02" data-lo="050.10.02">
     <summary><span class="lonum">050.10.02</span><span class="lotitle">Weather charts</span></summary>
@@ -6150,6 +6153,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
 })();
 </script>
 <script src="../viz16.js?v=3f8f4cfe" defer></script>
+<script src="../viz3d.js?v=531c9834" defer></script>
 <script src="../labs.js?v=7496b38f" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>

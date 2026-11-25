@@ -105,7 +105,7 @@ body .wrap .card{padding-left:14px;padding-right:14px}
 <meta name="color-scheme" content="only light">
 <style id="f0-mob">:root{color-scheme:only light}html .q,html .q *,html .expl,html .expl *,html #hist *{min-width:0;overflow-wrap:anywhere;word-wrap:break-word}html .q .choice{align-items:flex-start;flex-wrap:nowrap;max-width:100%}html .q .choice>span{flex:1 1 auto;min-width:0}html .q .choice>input{flex:0 0 auto}html .qhead{flex-wrap:wrap;gap:4px 12px}html .q img,html .q svg,html .q figure,html .expl img,html .expl svg{max-width:100%;height:auto}html .q table,html .expl table{display:block;max-width:100%;overflow-x:auto}html .q pre,html .q code,html .expl code{white-space:pre-wrap}@media (min-width:600px) and (max-width:1400px){html .wrap{max-width:880px;padding-left:24px;padding-right:24px}html .q{padding:16px 20px}html .qtext{font-size:18px;line-height:1.5}html .choice{font-size:17px;line-height:1.45;padding:12px 14px;min-height:48px}html .expl{font-size:16px;line-height:1.5}}.masthead{position:relative;z-index:0;display:flow-root;margin-bottom:10px}html nav[role=tablist]{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:0;margin:0 0 16px!important;padding:0!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ground,#fff);border-bottom:2px solid var(--ink,#14304A)}nav[role=tablist]::-webkit-scrollbar{display:none}html nav[role=tablist] button{flex:1 0 auto!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 14px!important;font-size:15px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;border:0!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent;touch-action:manipulation}html nav[role=tablist] button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--accent,#1D6FB0)}</style>
 <script>addEventListener("DOMContentLoaded",function(){var n=document.querySelector("nav[role=tablist]");if(!n)return;n.addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTimeout(function(){n.scrollTo({left:b.offsetLeft-(n.clientWidth-b.offsetWidth)/2,behavior:"smooth"})},0)})});</script>
-<script src="../i18n.js"></script></head><body>
+<script src="../i18n.js"></script><style id="mnemoCss">.mnemo{background:color-mix(in srgb,#f2a900 12%,transparent);border-left:3px solid #e0a000;padding:8px 10px;margin:10px 0;border-radius:4px;font-size:15px}.mnemo .mt{display:block;color:#b47a00;margin-bottom:4px;letter-spacing:.01em}[data-theme="dark"] .mnemo .mt{color:#ffc94d}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mnemo .mt{color:#ffc94d}}.mnemo ul{margin:4px 0 0;padding-left:20px}.mnemo li{margin:3px 0}.mnemo li b:first-child{color:inherit}</style></head><body>
 <meta charset="utf-8">
 <title>031 · 032 · 033 · Flight Performance and Planning</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -401,12 +401,13 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <li>CG adelantado o atrasado <b>respecto al centro de presiones</b>: uno <b>más estable</b> con mandos <b>más duros</b>; el otro <b>menos estable</b> y mandos <b>más ligeros</b>. «Tener claro el concepto».</li>
     <li>Hay que calcular el CG en tierra <b>y en el aire</b>: al quemar combustible se mueve.</li>
   </ul></div>
-  <div class="key"><b>Clave</b>Adelantado: estable, morro pesado, la cola empuja más abajo. Atrasado: nervioso, ligero, la cola empuja menos.</div>
+  <div class="key"><b>Clave</b>Adelantado: estable, morro pesado, la cola empuja más abajo. Atrasado: nervioso, ligero, la cola empuja menos.</div><div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>«Morro pesado, seguro pero perezoso; cola pesada, ágil pero peligroso»</b> — CG adelantado: más estable, más Vs, más consumo, mandos pesados. CG retrasado: menos estable, menos Vs y consumo, mandos ligeros y difícil salir de pérdida o barrena.</li></ul></div>
   <h4>Mueve el CG</h4>
   <div id="visFwd"></div>
   <div class="comp"><b>Complemento</b>El CG va hacia donde va la masa: si una pata de tren se recoge hacia delante, al bajarla el CG se retrasa un poco (el caso típico del A320).</div>
 <div class="flag f16t"><b>Trampas de examen</b><ul><li>CG <b>adelantado</b>: más estable, más fuerza en el mando, <b>mayor</b> velocidad de pérdida y más consumo. CG <b>retrasado</b>: menos estable, mandos ligeros, menor velocidad de pérdida y mejor alcance.</li><li>El límite delantero lo fija la <b>controlabilidad</b> (poder rotar y hacer la recogida); el trasero, la <b>estabilidad</b>.</li></ul></div>
 <div class="f16q f16t"><b>Duda frecuente · ¿Por qué con el CG delante sube la velocidad de pérdida?</b>Porque la cola tiene que empujar más hacia abajo para equilibrar, y el ala debe sustentar el peso <b>más</b> esa carga: es como si el avión pesara más.</div>
+<div class="f0viz" data-viz="cgfx"></div>
 </div>
 </details>
 
@@ -422,7 +423,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
     <li>Masa y peso son distintos, pero aquí <b>W = m</b>. 1 kg ≈ <b>2,2 lb</b> · 1 US gal ≈ <b>6 lb</b> · 1 in = <b>2,54 cm</b> · combustible ≈ <b>0,7 kg/l</b>.</li>
   </ul></div>
   <div class="key"><b>Clave</b>DOM + payload = <b>ZFM</b> · DOM + TOF = <b>OM</b> · ZFM + TOF = <b>TOM</b> · TOM − trip = <b>LM</b> · TOM + taxi = <b>RM</b>.</div>
-  <div class="flag"><b>Trampas:</b> los pasajeros son <b>payload</b>, no items del DOM · el taxi <b>no</b> está en el TOF · traffic load = payload · useful load = payload + TOF.</div>
+  <div class="flag"><b>Trampas:</b> los pasajeros son <b>payload</b>, no items del DOM · el taxi <b>no</b> está en el TOF · traffic load = payload · useful load = payload + TOF.</div><div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>La cadena de masas: B · D · Z · T · L</b> — <b>BEM</b> + tripulación y catering = <b>DOM</b> · + carga de pago = <b>ZFM</b> · + combustible de despegue = <b>TOM</b> · − combustible del viaje = <b>LM</b>. Frase: «<b>B</b>ebe <b>D</b>os <b>Z</b>umos, <b>T</b>ómalos <b>L</b>ento».</li></ul></div>
   <h4>La escalera de masas · constrúyela</h4>
   <div id="visChain"></div>
   <div class="scroll"><table class="deftable">
@@ -660,7 +661,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <div class="f16q f16t"><b>Duda frecuente · Para librar un obstáculo, ¿Vx o Vy?</b><b>Vx</b>: ganas más altura por distancia recorrida. Vy te lleva antes a una altitud, pero habiendo recorrido más suelo.</div>
 <div class="key ejr"><b>Ejemplo resuelto · gradiente y régimen de ascenso</b>Gradiente (%) = (empuje − resistencia) ÷ peso × 100. Con T − D = 6 000 N y W = 100 000 N → <b>6 %</b>.<br>Régimen (ft/min) ≈ gradiente (%) × velocidad sobre el suelo (kt): 6 × 120 = <b>720 ft/min</b> (exacto: × 1,013).<br>Con 20 kt de viento de cara y la misma TAS, el régimen no cambia, pero el gradiente sobre el suelo sube: 720 ÷ (100 × 1,013) ≈ <b>7,1 %</b>.</div>
 <div class="flag f16t ejr"><b>Trampas habituales y reglas de oro</b><ul><li><b>Vx</b> da el mayor <b>ángulo</b> (gradiente); <b>Vy</b>, el mayor <b>régimen</b>. Con la altura se acercan hasta coincidir en el techo absoluto.</li><li>Más masa → menos gradiente y menos régimen. El viento cambia el gradiente sobre el suelo, <b>nunca</b> el régimen.</li><li>Reactor: <b>Vx = VMD</b> y Vy mayor. Hélice: <b>Vy ≈ VMD</b> y Vx menor (cerca de VMP).</li></ul></div>
-</div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>«Vx salva el obstáculo, Vy gana altura»</b> — <b>Vx</b>: máximo ángulo (más altura por distancia). <b>Vy</b>: máximo régimen (más altura por minuto; la <b>y</b> es el eje vertical). Al subir, la Vx (IAS) aumenta y la Vy disminuye hasta coincidir en el techo absoluto.</li></ul></div></div>
 </details>
 
 <details class="lo" id="lo-032.01.05" data-lo="032.01.05">
@@ -688,7 +689,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
   <tr><td>Hierba seca (despegue)</td><td>× <b>1,2</b></td></tr>
 </table></div>Pendiente (%) = diferencia de elevación ÷ longitud × 100 (las dos en la misma unidad).</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Lo que <b>alarga</b> el despegue: masa alta, altitud de densidad alta, viento en cola, pendiente arriba, pista blanda, mojada o con hierba.</li><li>En los cálculos se cuenta solo el <b>50 % del viento en cara</b> y el <b>150 % del viento en cola</b>.</li><li>Un 10 % más de masa alarga la carrera de despegue alrededor de un <b>20 %</b>.</li></ul></div>
 <div class="f0viz" data-viz="todr"></div>
-</div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>«Tres H: <i>hot, high, humid</i>»</b> — Calor, altura y humedad bajan la densidad: más carrera y peor ascenso. Viento en los cálculos: se cuenta como mucho el <b>50 %</b> del de cara y al menos el <b>150 %</b> del de cola.</li></ul></div></div>
 </details>
 
 <details class="lo atpl" id="lo-032.02.04" data-lo="032.02.04">
@@ -778,7 +779,7 @@ h2.subj{font-size:30px;margin-top:40px;border-top:2px solid var(--ink);padding-t
 <details class="lo" id="lo-033.01.01" data-lo="033.01.01">
 <summary><span class="lonum">033.01.01</span><span class="lotitle">VFR navigation plan</span></summary>
 <div class="body"><!--p2:033.01.01--><div class="profe"><b>★ IMPORTANTE</b><ul><li>El <b>operational flight plan</b> (OFPL) es obligatorio.</li><li>Esquema de preparación <b>A-W-A-R-E</b>: <b>A</b>erodrome (AIP, NOTAM) · <b>W</b>eather · <b>A</b>ircraft (procedimientos, emergencias, limitaciones, performance) · <b>R</b>oute (OFPL, mapa, combustible) · <b>E</b>mergency.</li></ul></div><!--/p2:033.01.01--><div class="comp"><b>ATPL</b>Escala 1:500 000 → 1 cm = <b>5 km</b>. VFR por encima de 3000 ft AGL: rumbo magnético 000–179 → miles <b>impares + 500</b>; 180–359 → <b>pares + 500</b>. Tiempo = distancia ÷ GS · combustible = tiempo × consumo. Variación oeste se suma («west is best»).</div><div class="flag f16t"><b>Trampas de examen</b><ul><li>Rumbo magnético = rumbo verdadero ∓ variación (<b>este resta, oeste suma</b>). El viento del parte está en verdaderos; el de torre, en magnéticos.</li><li>La altitud de seguridad VFR se calcula sobre el obstáculo más alto del tramo, no sobre la elevación media.</li></ul></div>
-</div>
+<div class="mnemo"><b class="mt">💡 Truco · regla nemotécnica ATPL</b><ul><li><b>Regla de 1 en 60</b> — 1 NM de desvío a 60 NM = 1° de error. Error de derrota (°) = desvío × 60 ÷ distancia volada. Para volver al destino, corrige ese ángulo más el que aún te queda hasta él.</li></ul></div></div>
 </details>
 
 <h2>033.02 · Flight planning for IFR flights <span class="wtag">13 preg. · 31 %</span></h2>
@@ -3621,6 +3622,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
 })();
 </script>
 <script src="../viz16.js?v=3f8f4cfe" defer></script>
+<script src="../viz3d.js?v=531c9834" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>
 </body></html>

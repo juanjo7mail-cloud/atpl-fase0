@@ -402,6 +402,15 @@ function drawTakeoff(cv,env,t,tt,o){
   const sxp=w*lerp(.1,.9,clamp((env.az-60)/240,0,1)); sunDisc(ctx,sxp,hz-(env.el/38)*hz,Math.max(3,h*.035),env,hz);
   if(env.night>.05) moon(ctx,w*(.58+.3*((env.date.getHours()+6)%12)/12),hz*.34,Math.max(3,h*.045),env);
   clouds(ctx,-w*.05,dy*.5,w*1.1,hz0,env,t*.004+cam*.00012,h>150?3:2,150);
+  // estela de condensación de un reactor en crucero (FL300–FL400): de día o al atardecer y con poco cielo cubierto; una cada ~50 s con rumbo y altura distintos
+  if(env.night<.6&&env.cover<.85){ const PER=50, kq=Math.floor(t/PER), uq=(t%PER)/PER, r1=Math.abs(Math.sin(kq*12.9898+3.1)*43758.5453)%1, r2=(r1*7.13)%1, r3=(r1*13.7)%1;
+    const dir=r1<.5?1:-1, y0=(hz0-dy*0)*(.08+.2*r2)+dy*.3, sl=(r3-.5)*.16, xh=lerp(dir>0?-.15:1.15,dir>0?1.15:-.15,uq)*w, yh=y0+(xh-w/2)*sl*dir;
+    const Lc=w*.5, lit=mix([255,255,255],env.sun,.4), al=(1-env.night/.6)*(1-.6*env.cover)*sstep(0,.06,uq)*sstep(1,.94,uq);
+    if(al>.02){ ctx.save(); ctx.lineCap="round"; ctx.strokeStyle=css(lit); const n=22, pt=f=>[xh-dir*Lc*f,yh-dir*Lc*f*sl*dir+f*f*h*.012];
+      for(let i=0;i<n;i++){ const f0=i/n, f1=(i+1)/n, a0=pt(f0), a1=pt(f1), wd=Math.max(.8,h*.003)*(1+f0*5), sp=wd*.9+h*.002;
+        ctx.globalAlpha=al*.6*(1-f0)*(1-.4*f0); ctx.lineWidth=wd; for(const o of [-sp,sp]){ ctx.beginPath(); ctx.moveTo(a0[0],a0[1]+o*(1+f0)); ctx.lineTo(a1[0],a1[1]+o*(1+f1)); ctx.stroke(); } }
+      ctx.restore();
+      ctx.globalAlpha=al; ctx.fillStyle=css(mul(lit,.7)); ctx.fillRect(xh-Math.max(1.5,h*.006),yh-1,Math.max(3,h*.012),Math.max(1.5,h*.004)); ctx.globalAlpha=1; } }
   const haze=env.hor;
   { const hk=(env.lit[0]|0)+"|"+(env.shade[0]|0)+"|"+(env.hor[2]|0); if(cv._hbk!==hk){ cv._hbk=hk; cv._hb=hbands(env); }
     const hb=cv._hb, bh=h*.16, bw=bh*512/40*2.2, A=(.28+.5*sstep(.05,.8,env.cover))*(1-.55*env.night);
@@ -450,7 +459,22 @@ function drawTakeoff(cv,env,t,tt,o){
       const zb=GT.zH-.8, sb=sOf(zb);
       for(let k=-2;k<=2;k++){ const p=GM(XL+k*1.8,zb); if(stopBar) glow(ctx,p[0],p[1],pm*sb*(.5+.6*N),"255,40,30",.5+.5*N); else glow(ctx,p[0],p[1],pm*sb*(.45+.5*N),"80,255,140",.35+.5*N); }
       const p=GM(((t*1.7)%1)<.5?XL-5.4:XL+5.4,zb); glow(ctx,p[0],p[1]-pm*sb*.5,pm*sb*(.55+.6*N),"255,200,40",.5+.4*N);
-      ctx.restore(); ctx.globalAlpha=1; } }
+      ctx.restore(); ctx.globalAlpha=1; }
+    // vehículo «Follow-Me» circulando por la calle de rodaje: ajedrezado amarillo y negro, rótulo FOLLOW ME y rotativo ámbar parpadeando
+    { const FM=cv._fm||(cv._fm={x:null,t,w:6}), dtq=clamp(t-FM.t,0,.1); FM.t=t;
+      if(FM.x==null||FM.x<cam-viewM*.7-40||FM.x>cam+viewM*1.7+40){ FM.w+=dtq; if(FM.w>5){ FM.w=0; FM.x=cam-viewM*.1; } } else FM.x+=dtq*7;
+      if(FM.x!=null){ const z=GT.zT+.9, sc=pm*sOf(z), p=GM(FM.x,z), L=4.6*sc, Hb=.75*sc, X0=p[0]-L/2, Y0=p[1]-.25*sc, A=.3+.7*env.amb;
+        if(p[0]>-L*2&&p[0]<w+L*2&&sc>.6){
+          ctx.fillStyle=`rgba(0,0,0,${.25*env.amb})`; ctx.beginPath(); ctx.ellipse(p[0],p[1]+.05*sc,L*.55,.35*sc,0,0,7); ctx.fill();
+          const nq=8; for(let i=0;i<nq;i++) for(let j=0;j<2;j++){ ctx.fillStyle=(i+j)%2?css(mul([30,30,32],A)):css(mul([250,200,20],A)); ctx.fillRect(X0+i*L/nq,Y0-Hb+j*Hb/2,L/nq+.5,Hb/2+.5); }
+          ctx.fillStyle=css(mul([40,50,62],A)); ctx.beginPath(); ctx.moveTo(X0+L*.2,Y0-Hb); ctx.lineTo(X0+L*.3,Y0-Hb-.6*sc); ctx.lineTo(X0+L*.72,Y0-Hb-.6*sc); ctx.lineTo(X0+L*.85,Y0-Hb); ctx.closePath(); ctx.fill();
+          ctx.fillStyle=css(mul([250,200,20],A)); ctx.fillRect(X0+L*.33,Y0-Hb-1.05*sc,L*.36,.38*sc);
+          if(sc>5){ ctx.fillStyle=css(mul([20,20,22],A)); ctx.font=`800 ${Math.max(6,.28*sc)}px Arial,Helvetica,sans-serif`; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("FOLLOW ME",X0+L*.51,Y0-Hb-.86*sc); ctx.textAlign="left"; ctx.textBaseline="alphabetic"; }
+          ctx.fillStyle="#15171a"; for(const fx of [.2,.8]){ ctx.beginPath(); ctx.arc(X0+L*fx,Y0,.32*sc,0,7); ctx.fill(); }
+          const on=((t*1.5)%1)<.45, bxm=X0+L*.51, bym=Y0-Hb-1.2*sc; ctx.fillStyle=on?"#ffb020":"#7a5410"; ctx.fillRect(bxm-.18*sc,bym-.12*sc,.36*sc,.22*sc);
+          ctx.save(); ctx.globalCompositeOperation="lighter"; if(on) glow(ctx,bxm,bym,Math.max(4,sc*(1.4+1.6*N)),"255,170,30",.55+.4*N);
+          if(N>.2){ glow(ctx,X0+L*1.02,Y0-Hb*.45,Math.max(3,sc*(.8+1.2*N)),"255,246,214",.6*N); glow(ctx,X0-L*.02,Y0-Hb*.45,Math.max(2,sc*.6),"255,40,30",.6*N); }
+          ctx.restore(); ctx.globalAlpha=1; } } } }
   // PAPI (4 unidades junto al punto de visada): el color de cada una depende del ángulo real con que la ve el piloto del avión en final
   { const px0=PAPI.x, th=K.pth; if(X(px0)>-60&&X(px0)<w+60){ for(let i=0;i<4;i++){ const p=GP(px0,PAPI.z0-i*PAPI.dz); ctx.fillStyle="#1d2024"; ctx.fillRect(p[0]-pm*.55,p[1]-pm*.62,pm*1.1,pm*.62); }
       ctx.save(); ctx.globalCompositeOperation="lighter";
@@ -574,5 +598,5 @@ function sky(c,o){
   const draw=()=>{ if(document.hidden||!c.isConnected||!fit(c)) return; try{ drawSky(c,envAt(new Date(),c._cov!=null?c._cov:cover),performance.now()/1000); }catch(e){} };
   draw(); if(c._iv) clearInterval(c._iv); c._iv=setInterval(()=>{ if(!c.isConnected){ clearInterval(c._iv); return; } draw(); },still()?30000:300);
 }
-window.F0Real={plane3D,PD,header,sky,setCover:v=>{ if(v!=null&&isFinite(v)) cover=clamp(+v,0,1); },envAt,drawTakeoff,drawSky};
+window.F0Real={plane3D,PD,GL:GLIDER,header,sky,setCover:v=>{ if(v!=null&&isFinite(v)) cover=clamp(+v,0,1); },envAt,drawTakeoff,drawSky};
 })();
