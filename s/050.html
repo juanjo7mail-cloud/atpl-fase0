@@ -5297,7 +5297,7 @@ $("#finishBtn").addEventListener("click", async ()=>{
 });
 
 // ---------- historial ----------
-const MODENAME = {sim:"Simulacro SENASA",multi:"Multitema",adaptive:"Adaptativo",wrong:"Fallos",lo:"Por tema",all:"Completo",trial:"Trial",foto:"Nubes por foto",simb:"Símbolos",ofi:"Oficiales"};
+const MODENAME = {global:"Simulacro global",sim:"Simulacro SENASA",multi:"Multitema",adaptive:"Adaptativo",wrong:"Fallos",lo:"Por tema",all:"Completo",trial:"Trial",foto:"Nubes por foto",simb:"Símbolos",ofi:"Oficiales"};
 function renderHist(){
   const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
   const done = list.filter(r=>r.items && !r.ignore);

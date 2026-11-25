@@ -29,6 +29,7 @@
 <script src="ops.js"></script>
 <script>window.F0Sim=(function(){var el=null,p=null,me;return me={render:function(e){el=e;e.innerHTML="<p style=\"padding:24px;color:var(--muted)\">Cargando el Sim…</p>";if(!p){p=new Promise(function(ok,ko){var s=document.createElement("script");s.src="sim.js";s.onload=ok;s.onerror=function(){p=null;s.remove();ko();};document.head.appendChild(s);});}p.then(function(){if(el&&window.F0Sim!==me)window.F0Sim.render(el);},function(){if(el)el.innerHTML="<p style=\"padding:24px\">No se pudo cargar el Sim. Revisa la conexión y vuelve a abrir la pestaña.</p>";});},leave:function(){el=null;}};})();</script>
 <script src="hangar.js"></script>
+<script src="mix.js" defer></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f1d0070793724820ae63bfa8c465ba85"}'></script>
 </head>
 <body>
@@ -1031,7 +1032,7 @@ async function saveSubj(k,v){ STATE[k]=union(v,STATE[k]); lsSet(k,STATE[k]); awa
 function attemptsOf(k){
   const st=STATE[k]; if(!st||!Array.isArray(st.attempts)) return [];
   const ign=new Set([...(st.ignored||[]), ...Object.keys(st.ignore||{}).filter(x=>st.ignore[x])]);
-  return st.attempts.filter(a=>a&&a.total>0&&typeof a.pct==="number"&&!a.ignore&&!a.partial&&a.mode!=="voice"&&a.mode!=="atis"&&!ign.has(a.id))
+  return st.attempts.filter(a=>a&&a.total>0&&typeof a.pct==="number"&&!a.ignore&&!a.partial&&a.mode!=="voice"&&a.mode!=="atis"&&a.mode!=="global"&&!ign.has(a.id))
     .sort((a,b)=>new Date(a.date)-new Date(b.date));
 }
 function summary(k){
@@ -2051,7 +2052,7 @@ async function signOut(){
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
-const MODE_ES = {atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Trial", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas clave", notes:"Desde los apuntes"};
+const MODE_ES = {global:"Simulacro global",atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Trial", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas clave", notes:"Desde los apuntes"};
 const uname = u => (u.full_name||"").trim() || String(u.email||"").split("@")[0];
 const fmtDT = d => { if(!d) return "–"; const x=new Date(d), n=new Date(), hm=x.toLocaleTimeString(LOC(),{hour:"2-digit",minute:"2-digit"});
   if(x.toDateString()===n.toDateString()) return "hoy · "+hm;

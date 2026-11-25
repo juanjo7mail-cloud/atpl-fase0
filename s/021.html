@@ -3855,7 +3855,7 @@ function tick(){
 }
 const NOTAG = new Set();
 const SRC_TAG = q => NOTAG.has(q.id) ? "" : `${q.src==="e"?'<span class="tag tr">TRIAL</span> ':''}${PROFE.has(q.id)?'<span class="tag pf">★ OJO</span> ':''}${q.src==="a"?'<span class="tag at">ATPL</span> ':(q.nd?'<span class="tag">ampliación ATPL</span> ':'')}${q.src==="c"?'<span class="tag">complemento</span> ':''}${q.src==="g"?'<span class="tag g">generada</span> ':''}`;
-const MODE_NAME = {multi:"Multitema",adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo"};
+const MODE_NAME = {global:"Simulacro global",multi:"Multitema",adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo"};
 $("#startBtn").addEventListener("click",()=>{
   curMode = document.querySelector('input[name=mode]:checked').value;
   curEx = $("#senEx").value; curLen = curMode==="senasa" ? $("#senLen").value : null;

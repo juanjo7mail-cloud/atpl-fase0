@@ -5025,7 +5025,7 @@ $("#startBtn").addEventListener("click",()=>{
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
-const MODE_NAME = {multi:"Multitema",adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro SENASA",calc:"Solo cálculo",slides:"Temario + Trial"};
+const MODE_NAME = {global:"Simulacro global",multi:"Multitema",adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro SENASA",calc:"Solo cálculo",slides:"Temario + Trial"};
 function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curEx==="both"?"061 + 062":curEx} · ${senLen(curEx,curLen).label.toLowerCase()}`:(MODE_NAME[curMode]||"Test")}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>finishTest(false));

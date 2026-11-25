@@ -3067,7 +3067,7 @@ $("#finishBtn").addEventListener("click", async ()=>{
 });
 
 // ---------- historial ----------
-const MODE_NAME = {examen:"Simulacro SENASA", profe:"Preguntas clave", multi:"Multitema",adaptive:"Adaptativo", slides:"Temario + Trial", trial:"Trial", wrong:"Solo fallos", lo:"Por capítulo", all:"Banco completo", campus:"Trial", clase:"Preguntas clave"};
+const MODE_NAME = {global:"Simulacro global",examen:"Simulacro SENASA", profe:"Preguntas clave", multi:"Multitema",adaptive:"Adaptativo", slides:"Temario + Trial", trial:"Trial", wrong:"Solo fallos", lo:"Por capítulo", all:"Banco completo", campus:"Trial", clase:"Preguntas clave"};
 function renderHist(){
   const list = [...(state.attempts||[])].sort((a,b)=>new Date(b.date)-new Date(a.date));
   if($("#histEvo")) $("#histEvo").innerHTML = chartSVG();
