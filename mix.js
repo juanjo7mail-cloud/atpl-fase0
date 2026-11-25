@@ -6,6 +6,7 @@
 const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const shuf=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 const pick=a=>a[Math.floor(Math.random()*a.length)];
+const tally=n=>{ try{ const d=new Date().toLocaleDateString("sv-SE",{timeZone:"Europe/Madrid"}); let o=JSON.parse(localStorage.getItem("f0:mxday")||"null"); if(!o||o.d!==d) o={d,n:0}; o.n+=n; localStorage.setItem("f0:mxday",JSON.stringify(o)); }catch(e){} try{ window.dispatchEvent(new Event("f0-mx")); }catch(e){} };
 const CSS=`
 .mxbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px;margin:4px 0 14px}
 .mxbar button{display:flex;gap:12px;align-items:center;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;box-shadow:0 1px 0 rgba(0,0,0,.04)}
@@ -116,7 +117,7 @@ function flash(){
     body.innerHTML=`<div class="row" style="justify-content:space-between"><span class="chip">${esc(q.cat)}</span><span class="muted">${i+1} / 10 · aciertos ${ok}</span></div>${on15?`<div class="bar" style="margin:4px 0 8px"><i data-left style="width:100%;background:var(--warn)"></i></div>`:""}<div class="vis">${q.svg}</div><div class="qt">${q.q}</div>${q.ord.map(j=>`<button type="button" class="opt" data-o="${j}">${esc(q.o[j]).replace(/&lt;b&gt;|&lt;\/b&gt;/g,"")}</button>`).join("")}<div data-exp></div>`;
     body.querySelectorAll("[data-o]").forEach(b=>b.addEventListener("click",()=>answer(+b.dataset.o)));
     cancelAnimationFrame(timer); timer=requestAnimationFrame(tick); };
-  const answer=j=>{ const q=qs[i]; if(q.ans) return; q.ans=1; const good=j===0; if(good) ok++; else wrong.push(q);
+  const answer=j=>{ const q=qs[i]; if(q.ans) return; q.ans=1; tally(1); const good=j===0; if(good) ok++; else wrong.push(q);
     body.querySelectorAll("[data-o]").forEach(b=>{ const v=+b.dataset.o; b.disabled=true; if(v===0) b.classList.add("ok"); else if(v===j) b.classList.add("bad"); });
     body.querySelector("[data-exp]").innerHTML=`<div class="exp"><b>${good?"Correcto":j<0?"Se acabó el tiempo":"No"}</b> · ${q.e}</div><div class="row"><button type="button" class="btn2 pri" data-n>${i<9?"Siguiente →":"Ver resultado"}</button></div>`;
     body.querySelector("[data-n]").addEventListener("click",()=>{ if(i<9){ i++; show(); } else end(); }); body.querySelector("[data-n]").focus(); };
@@ -282,6 +283,6 @@ function mount(){ const g=document.getElementById("grid"); if(!g||document.query
   bar.innerHTML=`<button type="button" data-a="flash"><span class="ic">⚡</span><span><b>Flash-Check visual</b><small>10 preguntas con imagen · 60 s</small></span></button><button type="button" data-a="sim"><span class="ic">🎯</span><span><b>Simulacro global</b><small>13 asignaturas mezcladas · nota por asignatura</small></span></button><button type="button" data-a="cheat"><span class="ic">📋</span><span><b>Fórmulas y velocidades V</b><small>Chuletario con buscador</small></span></button>`;
   g.parentNode.insertBefore(bar,g);
   bar.querySelector('[data-a="flash"]').addEventListener("click",flash); bar.querySelector('[data-a="sim"]').addEventListener("click",globalSim); bar.querySelector('[data-a="cheat"]').addEventListener("click",cheat); }
-window.F0Mix={flash,globalSim,cheat};
+window.F0Mix={flash,globalSim,cheat,_:{tally,open,close,clock,mmss,esc,shuf,pick,SVG,loadBank,failedIds,bank:()=>BANK}};
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",mount); else mount();
 })();

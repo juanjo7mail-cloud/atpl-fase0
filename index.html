@@ -30,6 +30,7 @@
 <script>window.F0Sim=(function(){var el=null,p=null,me;return me={render:function(e){el=e;e.innerHTML="<p style=\"padding:24px;color:var(--muted)\">Cargando el Sim…</p>";if(!p){p=new Promise(function(ok,ko){var s=document.createElement("script");s.src="sim.js";s.onload=ok;s.onerror=function(){p=null;s.remove();ko();};document.head.appendChild(s);});}p.then(function(){if(el&&window.F0Sim!==me)window.F0Sim.render(el);},function(){if(el)el.innerHTML="<p style=\"padding:24px\">No se pudo cargar el Sim. Revisa la conexión y vuelve a abrir la pestaña.</p>";});},leave:function(){el=null;}};})();</script>
 <script src="hangar.js"></script>
 <script src="mix.js" defer></script>
+<script src="mix2.js" defer></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f1d0070793724820ae63bfa8c465ba85"}'></script>
 </head>
 <body>
@@ -1032,7 +1033,7 @@ async function saveSubj(k,v){ STATE[k]=union(v,STATE[k]); lsSet(k,STATE[k]); awa
 function attemptsOf(k){
   const st=STATE[k]; if(!st||!Array.isArray(st.attempts)) return [];
   const ign=new Set([...(st.ignored||[]), ...Object.keys(st.ignore||{}).filter(x=>st.ignore[x])]);
-  return st.attempts.filter(a=>a&&a.total>0&&typeof a.pct==="number"&&!a.ignore&&!a.partial&&a.mode!=="voice"&&a.mode!=="atis"&&a.mode!=="global"&&!ign.has(a.id))
+  return st.attempts.filter(a=>a&&a.total>0&&typeof a.pct==="number"&&!a.ignore&&!a.partial&&a.mode!=="voice"&&a.mode!=="atis"&&a.mode!=="global"&&a.mode!=="s15"&&!ign.has(a.id))
     .sort((a,b)=>new Date(a.date)-new Date(b.date));
 }
 function summary(k){
@@ -1174,8 +1175,11 @@ $("#tabs").addEventListener("keydown",e=>{
 const TZ="Europe/Madrid";
 const madDay=d=>new Date(d).toLocaleDateString("sv-SE",{timeZone:TZ});
 function addDays(key,n){ const d=new Date(key+"T12:00:00Z"); d.setUTCDate(d.getUTCDate()+n); return d.toISOString().slice(0,10); }
-function studyDays(){ const s=new Set(); SUBJ.forEach(x=>attemptsOf(x.k).forEach(a=>{ if(a.total>=10) s.add(madDay(a.date)); })); return s; }
-// racha: días seguidos con algún test de 10+ preguntas; se perdona 1 día de descanso por semana
+// día de estudio: 10 o más preguntas en el día, sumando todos los modos (tests, simulacro global, sesión de 15 min…)
+function studyDays(){ const per={}; SUBJ.forEach(x=>{ const st=STATE[x.k]; if(!st||!Array.isArray(st.attempts)) return; const ign=new Set([...(st.ignored||[]),...Object.keys(st.ignore||{}).filter(y=>st.ignore[y])]);
+  st.attempts.forEach(a=>{ if(!a||a.ignore||a.partial||!(a.total>0)||!a.date||a.mode==="voice"||a.mode==="atis"||ign.has(a.id)) return; const d=madDay(a.date); per[d]=(per[d]||0)+a.total; }); });
+  return new Set(Object.keys(per).filter(d=>per[d]>=10)); }
+// racha: días seguidos con 10+ preguntas; se perdona 1 día de descanso por semana
 function streakInfo(){
   const days=studyDays(), today=madDay(Date.now()); let cur=days.has(today)?today:addDays(today,-1), count=0, lastMiss=null;
   for(let i=0;i<400;i++){
@@ -2052,7 +2056,7 @@ async function signOut(){
 }
 
 /* ===================== estadísticas (solo admin) ===================== */
-const MODE_ES = {global:"Simulacro global",atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Trial", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas clave", notes:"Desde los apuntes"};
+const MODE_ES = {global:"Simulacro global",s15:"Sesión 15 min",atis:"Escucha ATIS", voice:"Radio por voz", adaptive:"Adaptativo", wrong:"Mis fallos", trial:"Trial", senasa:"Simulacro SENASA", sim:"Simulacro SENASA", examen:"Simulacro SENASA", ofi:"Simulacro SENASA", fase0:"Trial", lo:"Por tema", calc:"Cálculos", foto:"Nubes por foto", all:"Banco completo", campus:"Trial", simb:"Símbolos del mapa", profe:"Preguntas clave", notes:"Desde los apuntes"};
 const uname = u => (u.full_name||"").trim() || String(u.email||"").split("@")[0];
 const fmtDT = d => { if(!d) return "–"; const x=new Date(d), n=new Date(), hm=x.toLocaleTimeString(LOC(),{hour:"2-digit",minute:"2-digit"});
   if(x.toDateString()===n.toDateString()) return "hoy · "+hm;
@@ -2448,7 +2452,7 @@ const NEWS=[
     {i:"🎛️", t:"Vista de instrumentos", d:"Arriba, junto al buscador, hay un interruptor: Tarjetas o Instrumentos. En el panel cada asignatura es un reloj cuya aguja marca la media de tus 5 últimos tests (verde = aprobado)."}
   ]},
   {id:"2026-10-25c", items:[
-    {i:"📆", t:"Constancia diaria", d:"Cada día con un test de 10+ preguntas suma. Tienes un descanso por semana sin perder la racha. Arriba, en Inicio, ves tu racha y la meta de 5 días."},
+    {i:"📆", t:"Constancia diaria", d:"Cada día con 10 o más preguntas suma (tests, simulacro global o sesión de 15 min). Tienes un descanso por semana sin perder la racha. En Inicio ves tu racha, el objetivo de preguntas de hoy y tus alas de dominio."},
     {i:"🎖️", t:"Galones", d:"Arriba, junto a tu cuenta: de 0 a 4 galones según cuántas asignaturas apruebas (75 % con 5+ tests) y la ★ de capitán transoceánico si además tienes todas con 85 % o más. Púlsalos para ver cómo subir."},
     {i:"🔁", t:"Repasar hoy", d:"Tus fallos vuelven a los 1, 3, 7 y 14 días. Si hay pendientes, la tarjeta de la asignatura tiene el botón «Repasar hoy»: siempre 20 preguntas, primero tus pendientes y después tus falladas y preguntas nuevas."},
     {i:"📲", t:"Instálala en el iPad o el iPhone", d:"En Safari: Compartir → Añadir a pantalla de inicio. Se abre como una app, a pantalla completa.", web:true}

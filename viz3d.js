@@ -1,4 +1,4 @@
-/* Láminas 3D (serie 3): globo terrestre, aproximación ILS/VOR, meteorología 3D, derecho de paso y centro de gravedad.
+/* Láminas 3D (serie 3) y esquemas interactivos: globo, ILS/VOR, meteorología 3D, derecho de paso, CG, túnel, motor, estela, espacios aéreos A–G y METAR/TAF.
    Motor 3D propio en canvas 2D (sin WebGL ni librerías): ligero y funciona en cualquier móvil.
    Se registran en F0Viz (viz16.js) y se montan en <div class="f0viz" data-viz="…">. Solo dibujan mientras están en pantalla. */
 (function(){
@@ -1022,6 +1022,173 @@ init(el){
   const Q=quiz(u,QZ,c=>{ mv=c.s.m; press(u,"data-mv",mv); setCw(c.s.cw); T=0; });
   u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); say(); } });
   setCw(3);
+}};
+})();
+
+/* =====================================================================
+   13 · ESPACIOS AÉREOS OACI A–G (010): corte vertical, servicios y mínimos VMC (SERA.5001, apéndice 4 de SERA)
+   ===================================================================== */
+V.airsp=(()=>{
+const K="ABCDEFG", COL={A:"#7a2e2e",B:"#7a4a1e",C:"#2e4f7a",D:"#2e6a7a",E:"#3f6a3a",F:"#5e5a2a",G:"#4a4a4a"};
+const SP="250 kt IAS por debajo de 10 000 ft AMSL";
+const CL={
+ A:{vfr:0,clr:"Sí (solo IFR)",rad:"Sí",sep:"Todos separados de todos: solo vuelan IFR",svc:"VFR no permitido",spd:"No aplicable"},
+ B:{vfr:1,clr:"Sí, también VFR",rad:"Sí, también VFR",sep:"Todos separados de todos (IFR y VFR)",svc:"Control: separación de todo el tráfico",spd:"No aplicable"},
+ C:{vfr:1,clr:"Sí, también VFR",rad:"Sí, también VFR",sep:"IFR separado de IFR y de VFR · VFR separado de IFR",svc:"Separación del IFR e información de tráfico sobre otros VFR (asesoramiento para evitarlos si lo pides)",spd:"VFR: "+SP+" · IFR: no aplicable"},
+ D:{vfr:1,clr:"Sí, también VFR",rad:"Sí, también VFR",sep:"Solo IFR de IFR",svc:"Información de tráfico sobre IFR y VFR (asesoramiento para evitarlos si lo pides)",spd:"IFR y VFR: "+SP},
+ E:{vfr:1,clr:"IFR sí · VFR no",rad:"IFR sí · VFR no",sep:"Solo IFR de IFR",svc:"Información de tráfico en la medida de lo posible",spd:"IFR y VFR: "+SP},
+ F:{vfr:1,clr:"No",rad:"IFR que participa sí · VFR no",sep:"IFR que participa en el asesoramiento, separado en la medida de lo posible",svc:"Información de vuelo si la pides",spd:"IFR y VFR: "+SP},
+ G:{vfr:1,clr:"No",rad:"IFR sí · VFR no",sep:"Ninguna",svc:"Información de vuelo si la pides",spd:"IFR y VFR: "+SP}};
+const vmc=(c,alt,ter)=>{ const lim=Math.max(3000,ter+1000);
+  if(alt>=10000) return {b:"a 10 000 ft AMSL o más",vis:"8 km",cld:"1 500 m en horizontal y 1 000 ft (300 m) en vertical",free:false};
+  if(alt>lim||!"FG".includes(c)) return {b:alt>lim?"por debajo de 10 000 ft AMSL":"tramo bajo, pero en clase "+c+" no hay reducción",vis:"5 km",cld:"1 500 m en horizontal y 1 000 ft (300 m) en vertical",free:false};
+  return {b:"tramo bajo de F y G: 3 000 ft AMSL o 1 000 ft AGL, lo más alto",vis:"5 km (1 500 m a 140 kt IAS o menos, si lo permite la autoridad)",cld:"libre de nubes y con la superficie a la vista",free:true}; };
+// escala vertical por tramos: el tramo bajo se ve más grande
+const H=300, Y=a=>{ const f=a<=5000?a/5000*.42:.42+(a-5000)/14500*.5; return H-14-f*(H-30); };
+const QZ=[
+ {q:"Clase <b>G</b>, 2 000 ft AMSL, terreno a 500 ft, 100 kt. ¿Mínimos VMC?",o:["1 500 m de visibilidad, libre de nubes y con la superficie a la vista","5 km, 1 500 m y 1 000 ft de las nubes","8 km, 1 500 m y 1 000 ft de las nubes"],a:0,e:"A 2 000 ft AMSL estás en el tramo bajo (3 000 ft AMSL o 1 000 ft AGL, lo más alto): en F y G basta <b>libre de nubes y superficie a la vista</b>, con 5 km… o 1 500 m si vas a 140 kt o menos y lo permite la autoridad.",s:{c:"G",alt:2000,ter:500}},
+ {q:"Clase <b>G</b>, 3 500 ft AMSL sobre terreno a 3 000 ft. ¿Mínimos VMC?",o:["5 km · libre de nubes y con la superficie a la vista","5 km · 1 500 m y 1 000 ft de las nubes","8 km · 1 500 m y 1 000 ft de las nubes"],a:0,e:"El límite es <b>3 000 ft AMSL o 1 000 ft AGL, lo más alto</b>: aquí 3 000 + 1 000 = 4 000 ft. A 3 500 ft sigues en el tramo bajo.",s:{c:"G",alt:3500,ter:3000}},
+ {q:"Clase <b>E</b>, FL 120. ¿Mínimos VMC?",o:["8 km · 1 500 m y 1 000 ft de las nubes","5 km · 1 500 m y 1 000 ft de las nubes","5 km · libre de nubes"],a:0,e:"A 10 000 ft AMSL o más: <b>8 km</b> de visibilidad y 1 500 m / 1 000 ft de las nubes, en cualquier clase.",s:{c:"E",alt:12000,ter:0}},
+ {q:"Clase <b>D</b>, 2 500 ft AMSL. ¿Mínimos VMC?",o:["5 km · 1 500 m y 1 000 ft de las nubes","Libre de nubes y superficie a la vista","8 km · 1 500 m y 1 000 ft"],a:0,e:"«Libre de nubes» solo vale en <b>F y G</b>. En D, aunque vayas bajo, 5 km y 1 500 m / 1 000 ft.",s:{c:"D",alt:2500,ter:0}},
+ {q:"Vuelas VFR en clase <b>E</b>. ¿Necesitas autorización ATC y radio?",o:["No: ni autorización ni radio obligatoria","Sí, las dos","Solo radio"],a:0,e:"En E el VFR no necesita autorización ni radio (salvo que sea una RMZ o TMZ). El IFR sí.",s:{c:"E",alt:5000,ter:0}},
+ {q:"¿En qué clase el VFR recibe <b>separación</b> de otros VFR?",o:["Solo en B","En B y C","En B, C y D"],a:0,e:"Solo en <b>B</b> se separa a todos de todos. En C el VFR se separa del IFR, pero de otro VFR solo recibe información de tráfico.",s:{c:"B",alt:6000,ter:0}},
+ {q:"En clase <b>C</b>, ¿de quién se separa a un VFR?",o:["De los IFR; de otros VFR solo información de tráfico","De todos","De nadie: solo información"],a:0,e:"Clase C: IFR separado de IFR y VFR; VFR separado de IFR y con <b>información</b> sobre otros VFR.",s:{c:"C",alt:6000,ter:0}},
+ {q:"¿En qué clase <b>no</b> se puede volar VFR?",o:["A","B","F"],a:0,e:"Clase <b>A</b>: solo IFR.",s:{c:"A",alt:15000,ter:0}},
+ {q:"Clase <b>D</b>, 8 000 ft AMSL. ¿Límite de velocidad?",o:["250 kt IAS","No hay límite en espacio controlado","200 kt IAS"],a:0,e:"Por debajo de 10 000 ft AMSL: <b>250 kt IAS</b> en C (solo VFR), D, E, F y G. En A y B no se aplica.",s:{c:"D",alt:8000,ter:0}},
+ {q:"En un CTR, ¿cuándo no puedes despegar ni entrar VFR sin autorización especial?",o:["Con techo por debajo de 1 500 ft o visibilidad en tierra por debajo de 5 km","Con techo por debajo de 1 000 ft o visibilidad de menos de 8 km","Con cualquier nube por debajo de 3 000 ft"],a:0,e:"SERA.5005: en un CTR, con <b>techo &lt; 1 500 ft</b> o <b>visibilidad en tierra &lt; 5 km</b>, solo con autorización ATC (VFR especial).",s:{c:"D",alt:1500,ter:0}}];
+return {t:"Espacios aéreos A–G: servicios y mínimos VMC según la altitud",
+cap:"Mínimos VMC de SERA.5001 y servicios de su apéndice 4. AMSL = sobre el nivel del mar; AGL = sobre el terreno. El límite del tramo bajo es 3 000 ft AMSL o 1 000 ft AGL, lo que sea más alto. Por encima de FL 195 no se vuela VFR salvo autorización. Escala vertical deformada para que se vea el tramo bajo.",
+init(el){
+  const svg=`<svg viewBox="0 0 420 ${H}" role="img" aria-label="Corte vertical del espacio aéreo con la altitud del avión y la distancia a las nubes"><rect data-bg width="420" height="${H}" fill="${COL.D}"/>
+   <rect width="420" height="${H}" fill="url(#asg)"/><defs><linearGradient id="asg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs>
+   <g font-size="12.5" fill="#e9f0f7">${[[19500,"FL 195"],[10000,"10 000 ft AMSL"],[3000,"3 000 ft AMSL"]].map(([a,t])=>`<line x1="0" x2="420" y1="${Y(a)}" y2="${Y(a)}" stroke="#fff" stroke-opacity=".55" stroke-dasharray="${a===10000?"":"6 4"}"/><text x="6" y="${Y(a)-4}">${t}</text>`).join("")}
+   <path data-ter fill="#6b5a3d" stroke="#3b2f1d"/><line data-agl x1="0" x2="420" stroke="#ffc94d" stroke-dasharray="3 4"/><text data-aglt x="6" font-size="12.5" fill="#ffc94d">1 000 ft AGL</text>
+   <text data-cls x="410" y="34" text-anchor="end" font-size="30" font-weight="800" fill="#fff" opacity=".9">D</text>
+   <g data-cloud><ellipse cx="0" cy="0" rx="38" ry="15" fill="#f1f4f8"/><ellipse cx="-20" cy="5" rx="24" ry="11" fill="#e3e8ef"/><ellipse cx="22" cy="5" rx="24" ry="11" fill="#e3e8ef"/></g>
+   <g data-gap stroke="#ffc94d" stroke-width="1.6" fill="#ffc94d" font-size="12.5" font-weight="700"><line data-gh/><line data-gv/><text data-ght/><text data-gvt/></g>
+   <g data-ac><path d="M-16 0 L10 -2 L16 0 L10 2 Z M-4 -1 L2 -12 L6 -12 L4 -1 Z M-4 1 L2 12 L6 12 L4 1 Z M-14 -1 L-12 -6 L-9 -6 L-10 -1 Z" fill="#ffc94d" stroke="#12202f" stroke-width=".8"/></g>
+   <text data-alt x="6" font-size="14" font-weight="800" fill="#ffc94d"></text></g></svg>`;
+  const ctl=row("Clase",[...K].map(c=>bt("data-c",c,c,c==="D")).join(""))+`<div class="sl">${sl("a","Altitud del avión (ft AMSL)",500,19500,2500,250)}${sl("t","Terreno (ft AMSL)",0,5000,0,250)}</div>`+row("",bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shellS(el,this.t,svg,ctl,this.cap); let c="D", qm=false;
+  const ai=u.q('[data-k="a"]'), ti=u.q('[data-k="t"]');
+  const draw=()=>{ const alt=+ai.value, ter=+ti.value; if(alt<ter+200){ ai.value=ter+250; return draw(); }
+    u.q('[data-o="a"]').textContent=f0(alt)+" ft"; u.q('[data-o="t"]').textContent=f0(ter)+" ft";
+    u.q("[data-bg]").setAttribute("fill",COL[c]); u.q("[data-cls]").textContent=c;
+    const yt=Y(ter); u.q("[data-ter]").setAttribute("d",`M0 ${H} L0 ${yt+6} Q60 ${yt-4} 120 ${yt} T240 ${yt} T420 ${yt+3} L420 ${H} Z`);
+    const ya=Y(ter+1000); u.q("[data-agl]").setAttribute("y1",ya); u.q("[data-agl]").setAttribute("y2",ya); u.q("[data-aglt]").setAttribute("y",ya-4); u.q("[data-aglt]").setAttribute("x",ter+1000>3000?6:250);
+    const yac=Y(alt), m=vmc(c,alt,ter); u.q("[data-ac]").setAttribute("transform",`translate(150 ${yac})`); u.q("[data-alt]").setAttribute("y",yac-16); u.q("[data-alt]").setAttribute("x",108); u.q("[data-alt]").textContent=f0(alt)+" ft";
+    // nube a la distancia mínima (esquema, sin escala horizontal)
+    const cx=m.free?250:300, cy=m.free?yac-30:Math.max(28,yac-48); u.q("[data-cloud]").setAttribute("transform",`translate(${cx} ${cy})`);
+    const g=u.q("[data-gap]"); g.style.display=m.free?"none":"";
+    if(!m.free){ const L=(s,a)=>{ const e=u.q(s); for(const k in a) e.setAttribute(k,a[k]); }; L("[data-gh]",{x1:170,x2:cx-40,y1:yac,y2:yac}); L("[data-ght]",{x:178,y:yac+14}); u.q("[data-ght]").textContent="1 500 m";
+      L("[data-gv]",{x1:cx,x2:cx,y1:cy+14,y2:yac}); L("[data-gvt]",{x:cx+6,y:(cy+14+yac)/2+4}); u.q("[data-gvt]").textContent="1 000 ft"; }
+    if(qm) return;
+    const k=CL[c];
+    u.out.innerHTML=`<b>Clase ${c}</b>${k.vfr?"":" · <span class=\"bad\">VFR no permitido</span>"}<br>Autorización ATC: <b>${k.clr}</b> · Radio: <b>${k.rad}</b><br>Separación: ${k.sep}<br>Servicio al VFR: ${k.svc}<br>Velocidad: ${k.spd}<br><span class="ok">Mínimos VMC</span> · ${m.b}: visibilidad <b>${m.vis}</b> · nubes: <b>${m.cld}</b>${!k.vfr?" <i>(solo orientativo)</i>":""}${alt>19500?"":""}`; };
+  u.qa("[data-c]").forEach(b=>b.addEventListener("click",()=>{ c=b.dataset.c; press(u,"data-c",c); draw(); }));
+  [ai,ti].forEach(i=>i.addEventListener("input",draw));
+  const Q=quiz(u,QZ,q=>{ c=q.s.c; press(u,"data-c",c); ti.value=q.s.ter; ai.value=q.s.alt; draw(); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); draw(); } });
+  draw();
+}};
+})();
+
+/* =====================================================================
+   14 · METAR Y TAF: DESCIFRADOR GRUPO A GRUPO, EJEMPLOS Y PARTES REALES (050)
+   ===================================================================== */
+V.metar=(()=>{
+const EX=[
+ ["CAVOK","METAR LEMD 251030Z 02008KT 340V060 CAVOK 12/M01 Q1027 NOSIG="],
+ ["Chubascos y CB","METAR LEBL 251000Z 17012G25KT 9000 -SHRA FEW020CB SCT030 BKN080 16/11 Q1009 TEMPO 4000 TSRA="],
+ ["Niebla engelante","METAR LEVS 250630Z 00000KT 0300 R13/0450N FZFG VV001 M02/M02 Q1031 BECMG 2000 BR="],
+ ["Tormenta con granizo","METAR LEZG 251500Z 31025G38KT 6000 +TSRAGR BKN015CB OVC040 18/14 Q1004 RETS NOSIG="],
+ ["SPECI","SPECI LECU 251145Z 25015G27KT 3000 RA BKN008 OVC015 10/09 Q1001="],
+ ["TAF con TEMPO y PROB","TAF LEMD 250500Z 2506/2612 21010KT 9999 SCT040 BECMG 2512/2514 24018G30KT TEMPO 2515/2520 4000 SHRA BKN030CB PROB30 TEMPO 2602/2606 0800 FG="],
+ ["TAF con TX/TN","TAF LEBB 251100Z 2512/2618 33012KT 6000 BKN012 TX18/2514Z TN09/2606Z BECMG 2516/2518 9999 NSW SCT025="]];
+const WX={MI:"baja (shallow)",BC:"en bancos",PR:"parcial",DR:"levantado a poca altura",BL:"levantado (ventisca)",SH:"chubascos de",TS:"tormenta",FZ:"engelante (gotas subfundidas)",
+ DZ:"llovizna",RA:"lluvia",SN:"nieve",SG:"cinarra",PL:"hielo granulado",GR:"granizo (5 mm o más)",GS:"granizo pequeño o nieve granulada",UP:"precipitación desconocida",IC:"cristales de hielo",
+ BR:"neblina (1 000–5 000 m)",FG:"niebla (menos de 1 000 m)",FU:"humo",VA:"ceniza volcánica",DU:"polvo",SA:"arena",HZ:"calima",PO:"remolinos de polvo",SQ:"turbonada",FC:"nube de embudo (tornado)",SS:"tempestad de arena",DS:"tempestad de polvo"};
+const COV={FEW:"pocas (1–2 octas)",SCT:"dispersas (3–4 octas)",BKN:"muy nubosas (5–7 octas)",OVC:"cubierto (8 octas)"};
+const day=(d,h,m)=>`día ${+d} a las ${h}${m!=null?":"+m:":00"} UTC`;
+function parse(raw){ const tk=raw.replace(/=+\s*$/,"").trim().split(/\s+/), out=[]; let kind="METAR", pos=0, rmk=false;
+  const P=(t,c,m)=>out.push({t,c,m});
+  for(const t of tk){ let m;
+    if(rmk){ P(t,"x","Observación nacional (RMK): no se usa en el examen."); continue; }
+    if(/^(METAR|SPECI|TAF)$/.test(t)){ kind=t; P(t,"id",t==="METAR"?"Informe <b>rutinario</b> de aeródromo (cada 30 o 60 min).":t==="SPECI"?"Informe <b>especial</b>: se emite cuando el tiempo cambia de forma significativa.":"<b>Pronóstico</b> de aeródromo (TAF)."); pos=1; continue; }
+    if(pos===1&&/^[A-Z]{4}$/.test(t)&&!/^(AUTO|CAVOK|NSIG|NOSIG|TEMPO|BECMG)$/.test(t)){ P(t,"id",`Indicador OACI del aeródromo. <b>LE</b> = España.`); pos=2; continue; }
+    if(/^(AMD|COR|AUTO|NIL|CNL)$/.test(t)){ P(t,"id",{AMD:"TAF <b>enmendado</b>.",COR:"Informe <b>corregido</b>.",AUTO:"Informe <b>automático</b>, sin observador.",NIL:"Informe <b>vacío</b> (no hay datos).",CNL:"TAF <b>cancelado</b>."}[t]); continue; }
+    if((m=/^(\d{2})(\d{2})(\d{2})Z$/.exec(t))){ P(t,"tm",(kind==="TAF"?"Emitido el ":"Observado el ")+day(m[1],m[2],m[3])+"."); continue; }
+    if((m=/^(\d{2})(\d{2})\/(\d{2})(\d{2})$/.exec(t))){ P(t,"tm",`Periodo: del ${day(m[1],m[2])} al ${day(m[3],m[4])}.`); continue; }
+    if((m=/^(\d{3}|VRB)(\d{2,3})(?:G(\d{2,3}))?(KT|MPS)$/.exec(t))){ const u=m[4]==="KT"?"kt":"m/s";
+      P(t,"wd",t.startsWith("00000")?"Viento en <b>calma</b>.":`Viento ${m[1]==="VRB"?"de dirección <b>variable</b>":`de <b>${m[1]}°</b> (verdadero)`} a <b>${+m[2]} ${u}</b>${m[3]?` con <b>rachas de ${+m[3]} ${u}</b>`:""}.`); continue; }
+    if((m=/^(\d{3})V(\d{3})$/.exec(t))){ P(t,"wd",`La dirección <b>varía entre ${m[1]}° y ${m[2]}°</b>.`); continue; }
+    if(t==="CAVOK"){ P(t,"vs","<b>CAVOK</b>: visibilidad de 10 km o más, ninguna nube por debajo de 5 000 ft (o de la altitud mínima de sector, la mayor), <b>ningún CB ni TCU</b> y ningún fenómeno significativo."); continue; }
+    if((m=/^(\d{4})(NDV)?$/.exec(t))){ const v=+m[1]; P(t,"vs",v===9999?"Visibilidad de <b>10 km o más</b>.":v===0?"Visibilidad de <b>menos de 50 m</b>.":`Visibilidad de <b>${f0(v)} m</b>.`); continue; }
+    if((m=/^(\d{4})(N|NE|E|SE|S|SW|W|NW)$/.exec(t))){ P(t,"vs",`Visibilidad mínima de <b>${f0(+m[1])} m</b> hacia el ${m[2]}.`); continue; }
+    if((m=/^R(\d{2}[LCR]?)\/([PM])?(\d{4})(?:V([PM])?(\d{4}))?(FT)?([UDN])?$/.exec(t))){ const pre=x=>x==="P"?"más de ":x==="M"?"menos de ":"";
+      P(t,"rv",`<b>RVR</b> (alcance visual en pista) de la pista ${m[1]}: <b>${pre(m[2])}${f0(+m[3])}${m[6]?" ft":" m"}</b>${m[5]?` variando hasta ${pre(m[4])}${f0(+m[5])} m`:""}${m[7]?` · tendencia: <b>${{U:"aumentando",D:"disminuyendo",N:"sin cambios"}[m[7]]}</b>`:""}.`); continue; }
+    if((m=/^(RE)?(\+|-|VC)?(MI|BC|PR|DR|BL|SH|TS|FZ)?((?:DZ|RA|SN|SG|PL|GR|GS|UP|IC|BR|FG|FU|VA|DU|SA|HZ|PO|SQ|FC|SS|DS)*)$/.exec(t))&&(m[3]||m[4])){
+      const ph=(m[4].match(/../g)||[]).map(x=>WX[x]), it=m[2]==="+"?"fuerte":m[2]==="-"?"débil":"", vc=m[2]==="VC";
+      let s=m[3]==="TS"?"tormenta"+(ph.length?" con "+ph.join(" y "):""):m[3]==="SH"?(ph.length?"chubascos de "+ph.join(" y "):"chubascos"):m[3]?ph.join(" y ")+" "+WX[m[3]]:ph.join(" y ");
+      P(t,"wx",`${m[1]?"<b>Tiempo reciente</b> (en la última hora, ya no ahora): ":"Tiempo presente: "}<b>${s}${it?" "+it:""}</b>${vc?" <b>en las proximidades</b> (8–16 km)":""}.`); continue; }
+    if(t==="NSW"){ P(t,"wx","<b>NSW</b>: se acaba el tiempo significativo."); continue; }
+    if((m=/^(FEW|SCT|BKN|OVC)(\d{3}|\/\/\/)(CB|TCU|\/\/\/)?$/.exec(t))){ P(t,"cl",`Nubes <b>${COV[m[1]]}</b> con base a <b>${m[2]==="///"?"?":f0(+m[2]*100)} ft</b> sobre el aeródromo${m[3]==="CB"?" · <b>cumulonimbos</b>":m[3]==="TCU"?" · <b>cúmulos en torre</b>":""}.${/BKN|OVC/.test(m[1])?" Cuenta como <b>techo</b>.":""}`); continue; }
+    if((m=/^VV(\d{3}|\/\/\/)$/.exec(t))){ P(t,"cl",`Cielo oculto · <b>visibilidad vertical de ${m[1]==="///"?"?":f0(+m[1]*100)} ft</b> (cuenta como techo).`); continue; }
+    if(/^(NSC|NCD|SKC|CLR)$/.test(t)){ P(t,"cl",{NSC:"<b>NSC</b>: sin nubes significativas (ninguna por debajo de 5 000 ft o de la MSA y sin CB ni TCU).",NCD:"<b>NCD</b>: la estación automática no detecta nubes.",SKC:"<b>SKC</b>: cielo despejado.",CLR:"<b>CLR</b>: sin nubes por debajo de 12 000 ft (estación automática)."}[t]); continue; }
+    if((m=/^(M?\d{2})\/(M?\d{2})$/.exec(t))){ const T=x=>(x[0]==="M"?-1:1)*+x.replace("M",""); P(t,"tp",`Temperatura <b>${T(m[1])} °C</b> y punto de rocío <b>${T(m[2])} °C</b>${T(m[1])-T(m[2])<=2?" · muy juntos: riesgo de niebla o nubes bajas":""}.`); continue; }
+    if((m=/^Q(\d{4})$/.exec(t))){ P(t,"pr",`<b>QNH ${+m[1]} hPa</b>.`); continue; }
+    if((m=/^A(\d{4})$/.exec(t))){ P(t,"pr",`QNH <b>${m[1].slice(0,2)},${m[1].slice(2)} inHg</b>.`); continue; }
+    if((m=/^T([XN])(M?\d{2})\/(\d{2})(\d{2})Z$/.exec(t))){ P(t,"tp",`Temperatura <b>${m[1]==="X"?"máxima":"mínima"} de ${(m[2][0]==="M"?"-":"")+(+m[2].replace("M",""))} °C</b> prevista el ${day(m[3],m[4])}.`); continue; }
+    if(t==="NOSIG"){ P(t,"tr","<b>NOSIG</b>: sin cambios significativos previstos en las <b>próximas 2 horas</b>."); continue; }
+    if(t==="BECMG"){ P(t,"tr","<b>BECMG</b>: cambio <b>gradual y duradero</b>; lo que sigue se queda al final del periodo."); continue; }
+    if(t==="TEMPO"){ P(t,"tr","<b>TEMPO</b>: cambios <b>temporales</b>; cada uno dura menos de 1 hora y, en total, menos de la mitad del periodo."); continue; }
+    if((m=/^PROB(30|40)$/.exec(t))){ P(t,"tr",`<b>Probabilidad del ${m[1]} %</b> de lo que sigue.`); continue; }
+    if((m=/^FM(\d{2})(\d{2})(\d{2})$/.exec(t))){ P(t,"tr",`<b>Desde</b> el ${day(m[1],m[2],m[3])}: cambio rápido a lo que sigue.`); continue; }
+    if((m=/^(TL|AT)(\d{2})(\d{2})$/.exec(t))){ P(t,"tr",`${m[1]==="TL"?"Hasta":"A"} las ${m[2]}:${m[3]} UTC.`); continue; }
+    if(t==="WS"){ P(t,"wx","<b>Cizalladura</b> (windshear) en la pista o la senda."); continue; }
+    if(t==="RMK"){ rmk=true; P(t,"x","Empiezan las observaciones nacionales (RMK)."); continue; }
+    if(/^R\d{2}[LCR]?\/[\d\/]{6}$|^\d{8}$/.test(t)){ P(t,"rv","Estado de la pista (depósitos, espesor y frenado)."); continue; }
+    P(t,"x","Grupo que este descifrador no reconoce.");
+  }
+  return out; }
+const CC={id:"#8fa3b8",tm:"#9fe0ff",wd:"#6ee7a0",vs:"#ffc94d",rv:"#ffb07a",wx:"#ff8a80",cl:"#c9a6ff",tp:"#7dd3fc",pr:"#f9a8d4",tr:"#fde68a",x:"#64748b"};
+const QZ=[
+ {q:"¿Qué garantiza <b>CAVOK</b>?",o:["10 km o más, sin nubes bajo 5 000 ft (o MSA), sin CB ni TCU y sin fenómenos significativos","Cielo completamente despejado","8 km o más y techo de 1 500 ft o más"],a:0,e:"CAVOK no es cielo despejado: puede haber nubes por encima de 5 000 ft (o de la MSA). Lo que nunca puede haber es CB o TCU.",x:0},
+ {q:"¿Qué significa <b>340V060</b>?",o:["La dirección del viento varía entre 340° y 060°","Viento de 340° a 60 kt","Visibilidad variable entre 340 y 600 m"],a:0,e:"El grupo dddVddd da los extremos de la dirección cuando varía 60° o más.",x:0},
+ {q:"En LEBL, ¿qué indica <b>FEW020CB</b>?",o:["1–2 octas de cumulonimbos con base a 2 000 ft sobre el aeródromo","Pocas nubes a 20 000 ft","Techo de cumulonimbos a 200 ft"],a:0,e:"Altura en centenares de pies sobre el aeródromo: 020 = 2 000 ft. FEW = 1–2 octas.",x:1},
+ {q:"En LEBL, ¿qué significa <b>TEMPO 4000 TSRA</b>?",o:["Ratos de menos de 1 h con 4 000 m de visibilidad, tormenta y lluvia","El tiempo cambia de forma definitiva a 4 000 m con tormenta","Tormenta durante 4 horas"],a:0,e:"TEMPO = fluctuaciones temporales: cada una menos de 1 h y, sumadas, menos de la mitad del periodo.",x:1},
+ {q:"En LEVS, ¿cuál es el <b>techo</b>?",o:["100 ft: VV001 (cielo oculto, visibilidad vertical)","No hay techo: no hay nubes cifradas","1 000 ft"],a:0,e:"VV001 = visibilidad vertical de 100 ft. Cuenta como techo.",x:2},
+ {q:"En LEVS, ¿qué es <b>R13/0450N</b>?",o:["RVR de la pista 13: 450 m, sin cambios","Pista 13 cerrada durante 450 minutos","Viento de 130° a 45 kt"],a:0,e:"R + pista / valor en metros + tendencia (U aumenta, D disminuye, N sin cambios).",x:2},
+ {q:"En LEVS, ¿qué es <b>FZFG</b>?",o:["Niebla engelante: gotas subfundidas, visibilidad bajo 1 000 m y temperatura bajo 0 °C","Llovizna engelante","Neblina helada por encima de 1 000 m"],a:0,e:"FZ + FG. Las gotas siguen líquidas bajo 0 °C y se congelan al tocar el avión.",x:2},
+ {q:"En LEZG, ¿qué significa <b>RETS</b>?",o:["Hubo tormenta en la última hora, pero ya no ahora","Tormenta prevista","Tormenta en las proximidades"],a:0,e:"RE = tiempo reciente: ocurrió en la última hora (o desde el último informe) y ya no está.",x:3},
+ {q:"SPECI de LECU. ¿Se puede entrar VFR en el CTR sin autorización especial?",o:["No: techo de 800 ft (BKN008) y visibilidad de 3 km, por debajo de 1 500 ft y 5 km","Sí: la visibilidad es de 3 km","Sí: BKN no cuenta como techo"],a:0,e:"SERA.5005: en un CTR hacen falta techo de 1 500 ft y 5 km de visibilidad en tierra; si no, solo VFR especial con autorización.",x:4},
+ {q:"TAF de LEMD: ¿qué dice <b>BECMG 2512/2514 24018G30KT</b>?",o:["Entre las 12 y las 14 UTC del día 25 el viento pasa a 240/18 con rachas de 30 y se queda así","El viento sopla así solo entre las 12 y las 14","Rachas de 30 kt a las 25:12"],a:0,e:"BECMG: cambio gradual dentro del periodo indicado; a partir del final, manda lo nuevo.",x:5},
+ {q:"TAF de LEMD: ¿qué significa <b>PROB30 TEMPO 2602/2606 0800 FG</b>?",o:["30 % de probabilidad de ratos de niebla con 800 m entre las 02 y las 06 UTC del día 26","Niebla segura de 02 a 06 UTC","Visibilidad de 30 m con niebla"],a:0,e:"PROB30 o PROB40 + TEMPO: probabilidad de fluctuaciones temporales.",x:5},
+ {q:"TAF de LEBB: ¿qué es <b>TX18/2514Z</b>?",o:["Máxima de 18 °C el día 25 a las 14 UTC","Visibilidad de 18 km","Viento máximo de 18 kt"],a:0,e:"TX máxima, TN mínima, con el día y la hora en que se esperan.",x:6}];
+return {t:"METAR y TAF: toca cada grupo y se ilumina su significado",
+cap:"Ejemplos con el formato OACI (Anexo 3) que usa AEMET; los aeródromos y valores son de ejemplo. «En vivo» trae el último METAR y TAF publicados (aviationweather.gov) a través de esta web. Alturas de nubes sobre el aeródromo; vientos en grados verdaderos.",
+init(el){
+  const fig=`<div class="mtr" style="background:#12202f;padding:12px 14px;min-height:150px"><div data-raw style="font:600 16px/2 ui-monospace,'SF Mono',Menlo,Consolas,monospace;display:flex;flex-wrap:wrap;gap:4px 6px"></div><div data-lg style="display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:8px;font:12px system-ui,sans-serif;color:#8fa3b8"></div></div>`;
+  const ctl=row("Ejemplo",EX.map((e,i)=>bt("data-e",i,e[0],!i)).join(""))+row("En vivo",["LEMD","LEBL","LEVS","LECU","LEPA","LEBB"].map(c=>bt("data-live",c,c)).join(""))+row("",bt("data-all","1","Leer todo")+bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shellS(el,this.t,fig,ctl,this.cap); let toks=[], qm=false, all=false, sel=-1;
+  const LG=[["wd","viento"],["vs","visibilidad"],["rv","RVR"],["wx","tiempo"],["cl","nubes"],["tp","temperatura"],["pr","presión"],["tr","tendencia"],["tm","fecha y hora"]];
+  u.q("[data-lg]").innerHTML=LG.map(([k,n])=>`<span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${CC[k]};margin-right:4px"></i>${n}</span>`).join("");
+  const say=i=>{ sel=i; u.qa("[data-t]").forEach(b=>{ const on=+b.dataset.t===i; b.style.background=on?CC[toks[+b.dataset.t].c]:"transparent"; b.style.color=on?"#12202f":CC[toks[+b.dataset.t].c]; });
+    if(qm) return; if(all){ u.out.innerHTML=toks.map(t=>`<span style="color:${CC[t.c]};font-family:ui-monospace,Menlo,monospace">${esc3(t.t)}</span> · ${t.m}`).join("<br>"); return; }
+    u.out.innerHTML=i<0?"Toca o pasa el ratón por cada grupo.":`<span style="font-family:ui-monospace,Menlo,monospace;color:${CC[toks[i].c]}">${esc3(toks[i].t)}</span> · ${toks[i].m}`; };
+  const esc3=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const load=(raws,head)=>{ toks=[]; const parts=raws.map(r=>parse(r)); u.q("[data-raw]").innerHTML=(head?`<div style="flex-basis:100%;font:12px system-ui,sans-serif;color:#8fa3b8">${head}</div>`:"")+parts.map((p,k)=>{ const s=p.map(t=>{ toks.push(t); const i=toks.length-1; return `<button type="button" data-t="${i}" style="font:inherit;background:transparent;color:${CC[t.c]};border:1px solid ${CC[t.c]}55;border-radius:4px;padding:0 5px;cursor:pointer;line-height:1.7">${esc3(t.t)}</button>`; }).join(""); return (k?'<div style="flex-basis:100%;height:6px"></div>':"")+s; }).join("");
+    u.qa("[data-t]").forEach(b=>{ const i=+b.dataset.t; b.addEventListener("click",()=>say(i)); b.addEventListener("pointerenter",e=>{ if(e.pointerType==="mouse") say(i); }); b.addEventListener("focus",()=>say(i)); }); say(-1); };
+  u.qa("[data-e]").forEach(b=>b.addEventListener("click",()=>{ press(u,"data-e",b.dataset.e); press(u,"data-live",""); load([EX[+b.dataset.e][1]]); }));
+  u.qa("[data-live]").forEach(b=>b.addEventListener("click",async()=>{ const ic=b.dataset.live; press(u,"data-live",ic); press(u,"data-e",""); u.out.textContent="Buscando el último METAR y TAF de "+ic+"…";
+    try{ const r=await fetch("/api/wx?icao="+ic,{cache:"no-store"}); if(!r.ok) throw new Error(r.status); const d=await r.json(); const L=[];
+      if(d.metar&&d.metar.raw) L.push(/^(METAR|SPECI) /.test(d.metar.raw)?d.metar.raw:"METAR "+d.metar.raw); if(d.taf&&d.taf.raw) L.push(/^TAF /.test(d.taf.raw)?d.taf.raw:"TAF "+d.taf.raw);
+      if(!L.length) throw new Error("sin datos"); const st=(d.metar&&d.metar.station)||ic; load(L,`Real · ${st}${st!==ic?` (estación más cercana a ${ic})`:""} · ${new Date(d.at||Date.now()).toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`); }
+    catch(e){ u.out.innerHTML=`No se ha podido traer el parte de ${ic} ahora mismo (sin conexión o sin datos). Usa los ejemplos.`; } }));
+  u.q("[data-all]").addEventListener("click",e=>{ all=!all; e.currentTarget.setAttribute("aria-pressed",all); say(sel); });
+  const Q=quiz(u,QZ,q=>{ press(u,"data-e",q.x); press(u,"data-live",""); load([EX[q.x][1]]); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); say(sel); } });
+  load([EX[0][1]]);
 }};
 })();
 

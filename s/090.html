@@ -2882,7 +2882,7 @@ function loSummary(at){
 }
 function renderHist(){
   const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const modeName = {global:"Simulacro global",atis:"Escucha ATIS",multi:"Multitema",adaptive:"Adaptativo",wrong:"Fallos",lo:"Un tema",all:"Banco completo",trial:"Simulacro del trial",campus:"Trial",senasa:"SENASA",slides:"Temario",calc:"Números",voice:"Radio por voz"};
+  const modeName = {s15:"Sesión 15 min",global:"Simulacro global",atis:"Escucha ATIS",multi:"Multitema",adaptive:"Adaptativo",wrong:"Fallos",lo:"Un tema",all:"Banco completo",trial:"Simulacro del trial",campus:"Trial",senasa:"SENASA",slides:"Temario",calc:"Números",voice:"Radio por voz"};
   $("#histEvo").innerHTML = evoChart();
   $("#histBody").innerHTML = list.length ? `<div class="card"><div class="scroll"><table class="hist"><tr><th>Fecha</th><th>Tipo</th><th>Nota</th><th></th><th></th></tr>${
     list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${modeName[r.mode]||r.mode}${r.format==="prof"?' <span class="muted">formato temario base</span>':''}${r.mode==="senasa"?` <span class="muted">${(SEN_LEN[r.len]||{}).label||""} · ${fmtMS(r.usedS||0)}</span>`:""}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig||r.mode==='voice'||r.mode==='atis'?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Detalle</button>`:''}${isTrialAt(r)?` · <button class="linkbtn" data-ig="${r.id}">${ig?'volver a contar':'no contar (al azar)'}</button>`:''}</td></tr>
@@ -4407,7 +4407,7 @@ try{ buildBank(); renderSetup(); renderNotesMeta(); const t = document.querySele
 })();
 </script>
 <script src="../viz16.js?v=3f8f4cfe" defer></script>
-<script src="../viz3d.js?v=75355044" defer></script>
+<script src="../viz3d.js?v=c4596a92" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>
 </body>

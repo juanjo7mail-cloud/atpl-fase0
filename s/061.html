@@ -5025,7 +5025,7 @@ $("#startBtn").addEventListener("click",()=>{
   if(tLimit){ tTimer=setInterval(tick,1000); } tick();
   updProg(); window.scrollTo({top:0});
 });
-const MODE_NAME = {global:"Simulacro global",multi:"Multitema",adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro SENASA",calc:"Solo cálculo",slides:"Temario + Trial"};
+const MODE_NAME = {s15:"Sesión 15 min",global:"Simulacro global",multi:"Multitema",adaptive:"Adaptativo",trial:"Trial",wrong:"Mis fallos",lo:"Un tema",all:"Banco completo",senasa:"Simulacro SENASA",calc:"Solo cálculo",slides:"Temario + Trial"};
 function updProg(){ $("#progress").textContent = `Respondidas ${current.filter(q=>q.ans!==null).length} de ${current.length} · ${curMode==="senasa"?`Simulacro SENASA ${curEx==="both"?"061 + 062":curEx} · ${senLen(curEx,curLen).label.toLowerCase()}`:(MODE_NAME[curMode]||"Test")}`; }
 function refText(q){ const keys = q.ref ? [q.ref] : (LO_REFS[q.lo]||[]); return keys.map(k=>REFS[k]).filter(Boolean).join(" "); }
 $("#finishBtn").addEventListener("click", ()=>finishTest(false));
@@ -6327,7 +6327,7 @@ try{ LO_REFS["090.15"]=(LO_REFS["090.15"]||[]).concat(["smodes"]); LO_REFS["090.
 })();
 </script>
 <script src="../viz16.js?v=3f8f4cfe" defer></script>
-<script src="../viz3d.js?v=75355044" defer></script>
+<script src="../viz3d.js?v=c4596a92" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>
 </body>

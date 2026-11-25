@@ -2484,6 +2484,7 @@ Desv. ISA = corr. temp. ÷ Indicada ÷ 4% × 10</span>
     <span class="eq">METAR LEVS 180940Z 25015G28KT 3000 +RA BKN035 05/M02 Q1002 NOSIG=</span>
     <p><strong>LEVS</strong> Cuatro Vientos · <strong>180940Z</strong> día 18 a las 09:40 UTC · <strong>25015G28KT</strong> viento de 250° a 15 kt con rachas de 28 · <strong>3000</strong> visibilidad 3.000 m · <strong>+RA</strong> lluvia fuerte · <strong>BKN035</strong> 5–7 octas con base a 3.500 ft AAL · <strong>05/M02</strong> +5 °C y rocío −2 °C · <strong>Q1002</strong> QNH 1002 hPa · <strong>NOSIG</strong> sin cambios significativos en las dos horas siguientes.</p>
   </div>
+  <div class="f0viz" data-viz="metar"></div>
   <h4>CAVOK · las cuatro condiciones a la vez</h4>
   <div class="axiom">
     <span class="k">Ceiling and visibility OK</span>
@@ -5297,7 +5298,7 @@ $("#finishBtn").addEventListener("click", async ()=>{
 });
 
 // ---------- historial ----------
-const MODENAME = {global:"Simulacro global",sim:"Simulacro SENASA",multi:"Multitema",adaptive:"Adaptativo",wrong:"Fallos",lo:"Por tema",all:"Completo",trial:"Trial",foto:"Nubes por foto",simb:"Símbolos",ofi:"Oficiales"};
+const MODENAME = {s15:"Sesión 15 min",global:"Simulacro global",sim:"Simulacro SENASA",multi:"Multitema",adaptive:"Adaptativo",wrong:"Fallos",lo:"Por tema",all:"Completo",trial:"Trial",foto:"Nubes por foto",simb:"Símbolos",ofi:"Oficiales"};
 function renderHist(){
   const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
   const done = list.filter(r=>r.items && !r.ignore);
@@ -6153,7 +6154,7 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
 })();
 </script>
 <script src="../viz16.js?v=3f8f4cfe" defer></script>
-<script src="../viz3d.js?v=75355044" defer></script>
+<script src="../viz3d.js?v=c4596a92" defer></script>
 <script src="../labs.js?v=7496b38f" defer></script>
 <script src="../std.js?v=3"></script>
 <script src="../sub.js?v=7"></script>

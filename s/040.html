@@ -2640,7 +2640,7 @@ function loSummary(at){
 }
 function renderHist(){
   const list = [...state.attempts].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const modeName = {global:"Simulacro global",multi:"Multitema",adaptive:"Adaptativo",wrong:"Fallos",lo:"Por tema",all:"Banco completo",trial:"Trial",senasa:"SENASA"};
+  const modeName = {s15:"Sesión 15 min",global:"Simulacro global",multi:"Multitema",adaptive:"Adaptativo",wrong:"Fallos",lo:"Por tema",all:"Banco completo",trial:"Trial",senasa:"SENASA"};
   $("#histEvo").innerHTML = evoChart();
   $("#histBody").innerHTML = list.length ? `<div class="card"><div class="scroll"><table class="hist"><tr><th>Fecha</th><th>Tipo</th><th>Nota</th><th></th><th></th></tr>${
     list.map(r=>{ const ig=isIgnored(r); return `<tr style="${ig?'opacity:.5':''}"><td>${fmtDate(r.date)}</td><td>${r.source==="campus"?"Trial":(modeName[r.mode]||r.mode)}${r.mode==="senasa"?` <span class="muted">${(SEN_LEN[r.len]||{}).label||""} · ${fmtMS(r.usedS||0)}</span>`:""}</td><td>${r.score}/${r.total} · ${r.pct} %</td><td class="${ig?'muted':r.pct>=75?'pass':'fail'}">${ig?'no cuenta':r.pct>=75?'Apto':'No apto'}</td><td>${r.items?`<button class="linkbtn" data-id="${r.id}">Detalle</button>`:''}${r.mode==="trial"?` · <button class="linkbtn" data-ig="${r.id}">${ig?'volver a contar':'no contar (al azar)'}</button>`:''}</td></tr>
