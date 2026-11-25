@@ -537,5 +537,275 @@ init(el){
 }};
 })();
 
+/* =====================================================================
+   6 · TÚNEL DE VIENTO 3D (081): ala con flaps y slats, líneas de corriente, centro de presiones, vórtices de punta y pérdida
+   Ejes: x en la dirección del viento, y arriba, z envergadura. Cuerda 1 (unidades arbitrarias).
+   ===================================================================== */
+V.tun3d=(()=>{
+const AF=(()=>{ const P=[]; const yt=x=>.6*(.2969*Math.sqrt(x)-.126*x-.3516*x*x+.2843*x**3-.1015*x**4), yc=x=>x<.4?.02/.16*(.8*x-x*x):.02/.36*(.2+.8*x-x*x);   // NACA 2412
+  const xs=Array.from({length:15},(_,i)=>(1-Math.cos(i/14*Math.PI))/2); for(const x of xs.slice().reverse()) P.push([x,yc(x)+yt(x)]); for(const x of xs.slice(1)) P.push([x,yc(x)-yt(x)]); return P; })();
+const FL={0:[0,0],10:[.3,-.5],25:[.6,-1.5],40:[.8,-3]};   // flaps: [ΔCL0, Δα crítico]
+const model=(a,f,sl)=>{ const d=FL[f], ac=16+d[1]+(sl?6:0), cl0=.22+d[0], k=.1, clmax=cl0+k*ac; let c=a<=ac?cl0+k*a:clmax-(a-ac)*.09; c=Math.max(c,-.3); const st=a>ac, cm=-.05-.12*d[0];
+  let cp=.25-cm/Math.max(.15,c); cp=Math.min(.62,cp); if(st) cp=Math.min(.55,.32+(a-ac)*.03); return {cl:c,ac,clmax,st,sep:st?1:sst(ac-5,ac,a)*.35,cp}; };
+const f2=x=>(Math.round(x*100)/100).toString().replace(".",",");
+const QZ=[
+ {q:"Al aumentar el ángulo de ataque (antes de la pérdida), el <b>centro de presiones</b>…",o:["Avanza hacia el borde de ataque","Retrocede hacia el borde de salida","No se mueve"],a:0,e:"En un perfil con curvatura el CP <b>avanza</b> al subir el ángulo de ataque, hasta la pérdida; al entrar en pérdida retrocede bruscamente.",s:{a:12}},
+ {q:"¿De qué depende que el ala entre en pérdida?",o:["Del ángulo de ataque crítico","De la velocidad","Del peso"],a:0,e:"La pérdida es de <b>ángulo</b>: con la misma configuración siempre ocurre al mismo ángulo crítico, a cualquier velocidad, peso o actitud.",s:{a:18}},
+ {q:"Al sacar flaps, ¿qué pasa con el C<sub>L</sub> máximo y el ángulo crítico?",o:["Sube el CLmax y el ángulo crítico baja un poco","Baja el CLmax y sube el ángulo crítico","No cambian"],a:0,e:"Los flaps añaden curvatura: más C<sub>L</sub> a cada ángulo y más C<sub>L</sub>max, pero el ala entra en pérdida con un ángulo algo <b>menor</b>.",s:{a:10,f:25}},
+ {q:"¿Qué hacen los <b>slats</b>?",o:["Retrasan la separación y aumentan el ángulo crítico","Aumentan la curvatura y bajan el ángulo crítico","Reducen la resistencia en crucero"],a:0,e:"El slat abre una ranura que energiza la capa límite del extradós: la separación llega más tarde y el ángulo crítico <b>sube</b> (y con él el CLmax).",s:{a:20,sl:1}},
+ {q:"¿Por qué aparecen los <b>torbellinos de punta de plano</b>?",o:["El aire pasa de la alta presión del intradós a la baja del extradós por la punta","Por la hélice","Por la fricción del aire con la piel"],a:0,e:"La diferencia de presión empuja el aire alrededor de la punta: torbellinos, <b>downwash</b> y <b>resistencia inducida</b>. Son más fuertes con C<sub>L</sub> alto: lento, pesado y limpio.",s:{a:14}},
+ {q:"En la pérdida, el flujo sobre el extradós…",o:["Se separa y se vuelve turbulento","Se acelera aún más","Se hace laminar"],a:0,e:"Pasado el ángulo crítico la capa límite no puede vencer el gradiente de presión adverso y <b>se desprende</b>: cae la sustentación y aparece el bataneo (buffet).",s:{a:19}}];
+return {t:"3D · Túnel de viento: ángulo de ataque, flaps y slats, centro de presiones y pérdida",
+cap:"Ala rectangular con perfil NACA 2412 y modelo simplificado: pendiente 0,1 por grado, ángulo crítico 16° en limpio. Flaps 10/25/40° suben el CL y bajan el ángulo crítico 0,5/1,5/3°; los slats lo suben 6°. El CP se calcula con un momento de picado constante del perfil. Las partículas de arriba corren más que las de abajo: menor presión.",
+init(el){
+  const ctl=row("",sl("a","Ángulo de ataque α",-4,20,6,.5))+row("Flaps",bt("data-f","0","0°",1)+bt("data-f","10","10°")+bt("data-f","25","25°")+bt("data-f","40","40°")+`<label class="v3k"><input type="checkbox" data-sl> Slats</label><label class="v3k"><input type="checkbox" data-vx checked> Vórtices</label>`)
+   +row("Vista",bt("data-v","34","3/4",1)+bt("data-v","si","Perfil")+bt("data-v","re","Desde atrás")+bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shell(el,this.t,"Ala en 3D dentro de un túnel de viento con líneas de corriente y vórtices de punta",ctl,this.cap);
+  let a=6, fl=0, sls=false, vx=true, qm=false;
+  const S=orbit(u.c,{yaw:-35,pit:18,ar:.6,hmin:300,hmax:480,pmin:-20,pmax:89,draw}); S.anim=true;
+  const SP=1.5, PART=[]; for(let i=0;i<260;i++) PART.push({x:Math.random()*4-1.6,y:(Math.random()-.5)*1.1,z:(Math.random()*2-1)*SP*.95,ph:Math.random()});
+  const VXP=Array.from({length:90},(_,i)=>({s:Math.random(),r:Math.random(),side:i%2?1:-1}));
+  function draw(S,dt,t){ const x=S.x, W=S.W, H=S.H, d=S.dp, M=model(a,fl,sls), k=Math.min(W*.24,H*.42); S.cam(k,W*.47,H*.5,[.5,0,0],9); const P=S.P;
+    x.setTransform(1,0,0,1,0,0); const g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,"#13263b"); g.addColorStop(1,"#0a1522"); x.fillStyle=g; x.fillRect(0,0,W,H);
+    // suelo del túnel
+    x.strokeStyle="rgba(140,170,200,.12)"; x.lineWidth=d; for(let i=-4;i<=6;i++){ const p=P([i*.5,-.75,-2.2]), q=P([i*.5,-.75,2.2]); x.beginPath(); x.moveTo(p[0],p[1]); x.lineTo(q[0],q[1]); x.stroke(); } for(let j=-4;j<=4;j++){ const p=P([-2,-.75,j*.5]), q=P([3,-.75,j*.5]); x.beginPath(); x.moveTo(p[0],p[1]); x.lineTo(q[0],q[1]); x.stroke(); }
+    // ala: perfil girado α alrededor del 25 %, flap (25 % trasero) y slat (12 % delantero)
+    const ar=-a*R, ca=Math.cos(ar), sa=Math.sin(ar), rot=(px,py)=>{ const X=px-.25, Y=py; return [.25+X*ca-Y*sa,X*sa+Y*ca]; };
+    const fr=-fl*R, fc=Math.cos(fr), fs=Math.sin(fr), slx=sls?-.06:0, sly=sls?-.035:0;
+    const prof=AF.map(([px,py])=>{ let X=px, Y=py; if(px>.75){ const dx=px-.75; X=.75+dx*fc-Y*fs*0; Y=Y+dx*fs; X=.75+dx*fc; } if(px<.12&&sls){ X+=slx*(1-px/.12)*1.4; Y+=sly*(1-px/.12)*1.4; } return rot(X,Y); });
+    const items=[];
+    const NZ=6; for(let j=0;j<NZ;j++){ const z0=-SP+2*SP*j/NZ, z1=-SP+2*SP*(j+1)/NZ; for(let i=0;i<prof.length-1;i++){ const a0=prof[i], a1=prof[i+1], quad=[[a0[0],a0[1],z0],[a1[0],a1[1],z0],[a1[0],a1[1],z1],[a0[0],a0[1],z1]], q=quad.map(P), n=vnorm(vcross(vsub(quad[1],quad[0]),vsub(quad[3],quad[0]))), lit=.5+.5*Math.abs(vdot(n,vnorm([-.3,.9,.4])));
+        const isF=AF[i][0]>.75&&AF[i+1][0]>.75&&fl>0, isS=AF[i][0]<.12&&AF[i+1][0]<.12&&sls; items.push({z:(q[0][2]+q[2][2])/2,f:()=>{ x.beginPath(); q.forEach((p,m)=>m?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); const c=isF?[255,201,77]:isS?[110,231,160]:[214,222,232]; x.fillStyle=`rgb(${c.map(v=>v*lit|0)})`; x.fill(); x.strokeStyle="rgba(30,40,50,.25)"; x.lineWidth=.6*d; x.stroke(); }}); } }
+    for(const z of [-SP,SP]){ const q=prof.map(p=>P([p[0],p[1],z])); items.push({z:q.reduce((s,p)=>s+p[2],0)/q.length,f:()=>{ x.beginPath(); q.forEach((p,m)=>m?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.closePath(); x.fillStyle="#9fb0c2"; x.fill(); }}); }
+    // líneas de corriente que rodean el perfil (girado α): upwash delante, downwash detrás; el aire de arriba corre más. Tras la pérdida, extradós desprendido
+    const CL=M.cl, UP=prof.slice(0,15).reverse(), LO=prof.slice(14);
+    const itp=(pts,X)=>{ if(X<=pts[0][0]) return pts[0][1]; for(let i=0;i<pts.length-1;i++){ const a0=pts[i], a1=pts[i+1]; if(X<=a1[0]) return lerp(a0[1],a1[1],(X-a0[0])/((a1[0]-a0[0])||1e-6)); } return pts[pts.length-1][1]; };
+    const lx0=Math.min(UP[0][0],LO[0][0]), lx1=Math.max(UP[UP.length-1][0],LO[LO.length-1][0]);
+    const yAt=(X,y0,z,tt)=>{ const upr=y0>0, inf=Math.exp(-Math.max(0,Math.abs(y0)-.06)*3)*(Math.abs(z)<SP?1:Math.exp(-(Math.abs(z)-SP)*4)), w=sst(lx0-.35,lx0,X)*(1-sst(lx1,lx1+.7,X)), ys=itp(upr?UP:LO,cl1(X))*w;
+      const wash=CL*(.05*sst(-1.4,lx0,X)*(1-sst(lx0,lx0+.4,X))-.11*sst(lx1-.2,lx1+1.2,X))*Math.exp(-Math.abs(y0)*1.2);
+      let y=y0+(ys+wash)*inf+wash*(1-inf)*.5; const tu=upr&&X>lx0+.12+.6*(1-M.sep)&&inf>.35?(M.st?1:M.sep*.6):0; if(tu) y+=tu*(.04+.05*Math.abs(Math.sin(X*9+tt*7+z*3)));
+      return [y,tu]; };
+    const cl1=X=>cl(X,lx0,lx1);
+    for(const z of [-1.1,-.4,.4,1.1,(SP+.25)]) for(const y0 of [-.42,-.26,-.14,-.07,.07,.14,.26,.42]){ const up=y0>0, spd=up?1.15+.35*CL*Math.exp(-Math.abs(y0)*4):.9;
+      let prev=null; for(let X=-1.5;X<=2.6;X+=.12){ const r=yAt(X,y0,z,t), q=P([X,r[0],z]); if(prev){ const a0=prev, col=r[1]>.2?`rgba(255,${150-50*r[1]|0},90,.55)`:up?"rgba(120,200,255,.28)":"rgba(170,220,255,.2)"; items.push({z:(a0[2]+q[2])/2,f:()=>{ x.strokeStyle=col; x.lineWidth=1.1*d; x.beginPath(); x.moveTo(a0[0],a0[1]); x.lineTo(q[0],q[1]); x.stroke(); }}); } prev=q; }
+      for(let kq=0;kq<5;kq++){ const ph=((t*.22*spd+kq/5+(y0+z)*.37)%1+1)%1, X=-1.5+ph*4.1, r=yAt(X,y0,z,t), r2=yAt(X+.09,y0,z,t), a0=P([X,r[0],z]), a1=P([X+.09,r2[0],z]), col=r[1]>.2?"rgba(255,120,80,.95)":up?"rgba(140,215,255,.95)":"rgba(190,230,255,.8)";
+        items.push({z:a0[2]+.005,f:()=>{ x.strokeStyle=col; x.lineWidth=2.4*d; x.lineCap="round"; x.beginPath(); x.moveTo(a0[0],a0[1]); x.lineTo(a1[0],a1[1]); x.stroke(); }}); } }
+    // vórtices de punta: hélices detrás de cada punta, más fuertes con CL alto
+    if(vx&&CL>.05){ for(const v of VXP){ v.s=(v.s+dt*.35)%1; const xr=.9+v.s*1.9, ang=v.side*(t*5+v.s*18)+v.r*6, rr=.04+.12*v.s*CL/1.2, zz=v.side*(SP-.04-.12*v.s), yy=-.08*CL*v.s-.03+Math.sin(ang)*rr; const q=P([xr,yy,zz+Math.cos(ang)*rr]);
+        items.push({z:q[2],f:()=>{ x.fillStyle=`rgba(230,140,255,${.75*(1-v.s)})`; x.beginPath(); x.arc(q[0],q[1],1.8*d,0,7); x.fill(); }}); } }
+    items.sort((p,q)=>p.z-q.z).forEach(o=>o.f());
+    // centro de presiones y sustentación
+    const cpp=rot(M.cp,.03), c0=P([cpp[0],cpp[1],0]), lift=Math.max(.05,M.cl*.55), c1=P([cpp[0],cpp[1]+lift,0]);
+    x.strokeStyle="#6ee7a0"; x.fillStyle="#6ee7a0"; x.lineWidth=3.5*d; x.beginPath(); x.moveTo(c0[0],c0[1]); x.lineTo(c1[0],c1[1]); x.stroke(); const an=Math.atan2(c1[1]-c0[1],c1[0]-c0[0]); x.beginPath(); x.moveTo(c1[0],c1[1]); x.lineTo(c1[0]-11*d*Math.cos(an-.45),c1[1]-11*d*Math.sin(an-.45)); x.lineTo(c1[0]-11*d*Math.cos(an+.45),c1[1]-11*d*Math.sin(an+.45)); x.closePath(); x.fill();
+    x.fillStyle="#ffd24d"; x.beginPath(); x.arc(c0[0],c0[1],5*d,0,7); x.fill(); tag(x,c0[0]+8*d,c0[1]+12*d,`CP ${Math.round(M.cp*100)} %`,{dp:d,fs:11.5,c:"#ffd24d"}); tag(x,c1[0]+6*d,c1[1],"Sustentación · Lift",{dp:d,fs:11,c:"#6ee7a0"});
+    if(vx&&M.cl>.4){ const q=P([2.2,-.1,SP]); tag(x,q[0],q[1],"vórtice de punta",{dp:d,fs:10.5,c:"#e6a0ff",al:"c"}); }
+    if(M.st){ tag(x,W/2,22*d,"PÉRDIDA · flujo desprendido · STALL",{dp:d,fs:13,al:"c",c:"#fff",bg:"rgba(190,40,30,.85)",w:800}); }
+    // curva CL-α
+    const bw=Math.min(W*.3,190*d), bh=bw*.62, bx=W-bw-10*d, by=10*d; x.fillStyle="rgba(8,16,28,.82)"; x.fillRect(bx,by,bw,bh); const X=v=>bx+10*d+(v+4)/28*(bw-20*d), Y=v=>by+bh-12*d-(v+.3)/2.6*(bh-24*d);
+    x.strokeStyle="rgba(200,215,230,.25)"; x.lineWidth=d; x.beginPath(); x.moveTo(X(-4),Y(0)); x.lineTo(X(24),Y(0)); x.stroke();
+    x.strokeStyle="#55d0ff"; x.lineWidth=2*d; x.beginPath(); for(let v=-4;v<=24;v+=.5){ const m=model(v,fl,sls); v===-4?x.moveTo(X(v),Y(m.cl)):x.lineTo(X(v),Y(m.cl)); } x.stroke();
+    x.setLineDash([3*d,3*d]); x.strokeStyle="#ff8a80"; x.beginPath(); x.moveTo(X(M.ac),by+6*d); x.lineTo(X(M.ac),by+bh-10*d); x.stroke(); x.setLineDash([]);
+    x.fillStyle=M.st?"#ff8a80":"#ffd24d"; x.beginPath(); x.arc(X(a),Y(M.cl),4*d,0,7); x.fill(); x.font=`600 ${10*d}px system-ui,sans-serif`; x.fillStyle="#cfd8e3"; x.fillText("CL",bx+4*d,by+12*d); x.fillText("α",bx+bw-12*d,by+bh-3*d); x.fillStyle="#ff8a80"; x.fillText(`crítico ${f1(M.ac)}°`,Math.min(X(M.ac)+3*d,bx+bw-64*d),by+12*d);
+    return true; }
+  const say=()=>{ if(qm) return; const M=model(a,fl,sls), L0=model(a,0,false);
+    u.out.innerHTML=`α <b>${f1(a)}°</b> · C<sub>L</sub> <b>${f2(M.cl)}</b> (máximo ${f2(M.clmax)} a ${f1(M.ac)}°) · CP al <b>${Math.round(M.cp*100)} %</b> de la cuerda. ${M.st?"<b class=\"bad\">Ala en pérdida</b>: el flujo se ha desprendido del extradós, cae la sustentación y el CP retrocede. Para salir: <b>bajar el ángulo de ataque</b>.":M.sep>.05?"<b>Cerca del ángulo crítico</b>: la separación empieza en el borde de salida y avanza; aviso de bataneo (buffet).":"Flujo adherido."} ${fl||sls?`Con ${fl?`flaps ${fl}°`:""}${fl&&sls?" y ":""}${sls?"slats":""} el C<sub>L</sub> a este ángulo es ${f2(M.cl)} frente a ${f2(L0.cl)} en limpio.`:""}`; };
+  const I=u.q('[data-k="a"]'), O=u.q('[data-o="a"]'); const setA=v=>{ a=+v; I.value=a; O.textContent=f1(a)+"°"; say(); };
+  I.addEventListener("input",()=>setA(I.value)); setA(6);
+  u.qa("[data-f]").forEach(b=>b.addEventListener("click",()=>{ fl=+b.dataset.f; press(u,"data-f",fl); say(); }));
+  u.q("[data-sl]").addEventListener("change",e=>{ sls=e.target.checked; say(); }); u.q("[data-vx]").addEventListener("change",e=>{ vx=e.target.checked; });
+  const VW={"34":[-35,18],si:[0,0],re:[-90,8]}; u.qa("[data-v]").forEach(b=>b.addEventListener("click",()=>{ const v=VW[b.dataset.v]; S.go(v[0],v[1]); press(u,"data-v",b.dataset.v); }));
+  const Q=quiz(u,QZ,c=>{ const s=c.s; fl=s.f||0; sls=!!s.sl; press(u,"data-f",fl); u.q("[data-sl]").checked=sls; I.value=s.a; a=s.a; O.textContent=f1(a)+"°"; });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); say(); } });
+  S.kick();
+}};
+})();
+
+/* =====================================================================
+   7 · CARRERA DE DESPEGUE (032): masa, altitud de presión, temperatura, viento y superficie → punto de VR y margen hasta el final de pista
+   Mismo avión de ejemplo que la lámina de TORA/TODA: MTOM 1.000 kg, ISA, nivel del mar, asfalto seco y sin viento: carrera 260 m, hasta 50 ft 480 m.
+   ===================================================================== */
+V.vrrun=(()=>{
+const fx=v=>(Math.round(v*100)/100).toString().replace(".",","), MT=1000, ROLL=260, TOD=480, VR=55, VLOF=60, TORA=800, ASDA=850, TODA=900;
+const SF=[["Asfalto seco",1],["Asfalto mojado",1],["Hierba seca",1.2],["Hierba mojada",1.3]];
+const calc=o=>{ const h=o.pa, T=15-1.98*h/1000+o.dt, sig=Math.pow(1-6.8756e-6*h,5.2559)/((273.15+T)/288.15), vt=VLOF/Math.sqrt(sig), we=o.w>=0?o.w*.5:o.w*1.5;
+  const fM=Math.pow(o.m/MT,2), fA=1+.1*h/1000, fT=Math.max(.7,1+.01*o.dt), fW=Math.pow(Math.max(.2,(vt-we)/vt),2), fS=SF[o.s][1], f=fM*fA*fT*fW*fS;
+  const roll=ROLL*f, vr=VR*Math.sqrt(o.m/MT), dvr=roll*Math.pow(vr/(VLOF*Math.sqrt(o.m/MT)),2), tod=TOD*f, req=tod*1.25;
+  return {roll,dvr,tod,req,vr,vrT:vr/Math.sqrt(sig),da:h+118.8*(o.dt),f,fM,fA,fT,fW,fS,ok:req<=TORA}; };
+const QZ=[
+ {q:"La masa sube un 10 %. ¿Cuánto crece, más o menos, la distancia de despegue?",o:["≈ 20 %","≈ 10 %","≈ 5 %"],a:0,e:"La distancia va con el cuadrado de la masa: más masa pide más velocidad (VR sube con √masa) y acelera peor. Regla práctica: <b>+10 % de masa → +20 %</b> de distancia.",s:{m:1000}},
+ {q:"Despegas en un aeródromo alto y con calor. ¿Qué pasa con la VR <b>indicada</b>?",o:["Es la misma IAS, pero la TAS y la carrera aumentan","Hay que rotar a más IAS","Hay que rotar a menos IAS"],a:0,e:"El ala vuela con la presión dinámica: la VR en <b>IAS</b> no cambia, pero con menos densidad corresponde a más <b>TAS</b> (y más velocidad sobre el suelo): carrera más larga.",s:{pa:5000,dt:20}},
+ {q:"¿Cómo se cuenta el viento en los cálculos de clase B?",o:["50 % del de cara y 150 % del de cola","100 % de los dos","150 % del de cara y 50 % del de cola"],a:0,e:"Por seguridad: como mucho el <b>50 % del viento de cara</b> y al menos el <b>150 % del de cola</b>. Un viento de cola corto penaliza mucho.",s:{w:-5}},
+ {q:"Hierba seca frente a asfalto seco:",o:["Unos 20 % más de distancia","Igual","Menos distancia"],a:0,e:"Más rozamiento de rodadura: hierba seca <b>×1,20</b> y mojada <b>×1,30</b> (factores orientativos de la CAA).",s:{s:2}},
+ {q:"Altitud de presión de 0 a 4.000 ft (misma temperatura relativa a ISA):",o:["La distancia sube ≈ 40 %","No cambia","Baja"],a:0,e:"Regla práctica: <b>+10 % por cada 1.000 ft</b> de altitud del aeródromo. Y otro +10 % por cada 10 °C por encima de la temperatura de referencia.",s:{pa:4000}}];
+return {t:"Despegue: dónde rotas (VR) y cuánta pista te sobra",
+cap:"Factores orientativos (CAA Safety Sense 7): masa al cuadrado; +10 % por cada 1.000 ft de altitud de presión; +10 % por cada 10 °C sobre ISA; hierba seca ×1,20 y mojada ×1,30 (en despegue el asfalto mojado no suele penalizar en estos aviones, en aterrizaje sí); viento al 50 % de cara y 150 % de cola. VR 55 KIAS a MTOM y despegue a 60 KIAS. Clase B: la distancia hasta 50 ft × 1,25 debe caber en la TORA. Siempre manda el manual del avión.",
+init(el){
+  const ctl=row("",sl("m","Masa",700,1000,950,10)+sl("pa","Altitud de presión",0,8000,0,250)+sl("dt","Temperatura (desviación ISA)",-20,30,0,1)+sl("w","Viento (− cola · + cara)",-10,20,0,1))
+   +row("Pista",SF.map((f,i)=>bt("data-s",i,f[0],!i)).join("")+`<button type="button" data-go>▶ Despegar</button>`+bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shell(el,this.t,"Pista vista desde arriba y de perfil con el punto de rotación, el despegue y el margen hasta el final",ctl,this.cap); u.c.style.cursor="default";
+  const o={m:950,pa:0,dt:0,w:0,s:0}; let run=-1, qm=false;
+  const U={m:" kg",pa:" ft",dt:" °C",w:" kt"};
+  const S=orbit(u.c,{ar:w=>w<620?.95:.42,hmin:260,hmax:420,ky:0,draw});
+  function draw(S,dt){ const x=S.x, W=S.W, H=S.H, d=S.dp, r=calc(o); let mv=false;
+    x.setTransform(1,0,0,1,0,0); x.fillStyle="#0f1b29"; x.fillRect(0,0,W,H);
+    const L=Math.max(TODA,r.req,r.tod)+60, X0=16*d, sc=(W-32*d)/L, X=m=>X0+m*sc, yR=H*.62, rh=Math.max(16*d,H*.09);
+    // perfil: altura exagerada
+    const yG=H*.34; x.strokeStyle="#3a4e66"; x.lineWidth=d; x.beginPath(); x.moveTo(X(0),yG); x.lineTo(X(L),yG); x.stroke();
+    x.strokeStyle="#ffd24d"; x.lineWidth=3*d; x.beginPath(); x.moveTo(X(0),yG); x.lineTo(X(r.roll),yG); x.quadraticCurveTo(X((r.roll+r.tod)/2),yG,X(r.tod),yG-H*.16); x.stroke(); x.fillStyle="#ffd24d"; x.beginPath(); x.arc(X(r.tod),yG-H*.16,4*d,0,7); x.fill(); tag(x,X(r.tod)+6*d,yG-H*.16,"50 ft",{dp:d,fs:11});
+    // pista: TORA, ASDA (zona de parada), TODA (zona libre de obstáculos)
+    x.fillStyle="rgba(85,208,255,.12)"; x.fillRect(X(0),yR-rh*.9,X(TODA)-X(0),rh*1.8); x.fillStyle="#6b5a2e"; x.fillRect(X(TORA),yR-rh/2,X(ASDA)-X(TORA),rh); x.fillStyle="#3c4046"; x.fillRect(X(0),yR-rh/2,X(TORA)-X(0),rh);
+    x.strokeStyle="#f4f4f0"; x.setLineDash([8*d,8*d]); x.lineWidth=1.2*d; x.beginPath(); x.moveTo(X(10),yR); x.lineTo(X(TORA-10),yR); x.stroke(); x.setLineDash([]);
+    const mk=(m,col,t1,up)=>{ x.strokeStyle=col; x.lineWidth=2*d; x.beginPath(); x.moveTo(X(m),yR-rh*.8); x.lineTo(X(m),yR+rh*.8); x.stroke(); tag(x,X(m),up?yR-rh*1.35:yR+rh*1.35,t1,{dp:d,fs:11,al:"c",c:col}); };
+    mk(r.dvr,"#ffd24d",`VR ${Math.round(r.vr)} kt · ${Math.round(r.dvr)} m`,1); mk(r.roll,"#6ee7a0",`despega ${Math.round(r.roll)} m`,0);
+    const fin=Math.min(r.req,L); x.strokeStyle=r.ok?"#6ee7a0":"#ff8a80"; x.lineWidth=2*d; x.setLineDash([4*d,3*d]); x.beginPath(); x.moveTo(X(fin),yG+6*d); x.lineTo(X(fin),yR+rh*2.2); x.stroke(); x.setLineDash([]); tag(x,X(fin),yR+rh*2.6,`TOD × 1,25 = ${Math.round(r.req)} m`,{dp:d,fs:11,al:"c",c:r.ok?"#6ee7a0":"#ff8a80"});
+    tag(x,X(TORA),yR-rh*2.1,"fin de TORA 800",{dp:d,fs:10.5,al:"c",c:"#cfd8e3"}); tag(x,X(TODA),yR+rh*1.35,"TODA 900",{dp:d,fs:10,al:"c",c:"#9fd8ff"});
+    // margen hasta el final de la pista desde el punto de despegue
+    const mg=TORA-r.roll; x.fillStyle=mg>0?"rgba(110,231,160,.25)":"rgba(255,138,128,.35)"; x.fillRect(Math.min(X(r.roll),X(TORA)),yR-rh/2,Math.abs(X(TORA)-X(r.roll)),rh);
+    // avión rodando
+    if(run>=0){ run+=dt; const tt=run, a=2*r.roll/Math.pow(4.2*Math.sqrt(r.f),2), pos=Math.min(r.tod,.5*a*tt*tt); mv=pos<r.tod; const lift=pos>r.roll?(pos-r.roll)/(r.tod-r.roll):0, rot=pos>r.dvr?Math.min(1,(pos-r.dvr)/(r.roll-r.dvr+1)):0;
+      const px=X(pos), py=yR; x.save(); x.translate(px,py); x.fillStyle="#fff"; x.beginPath(); x.moveTo(8*d,0); x.lineTo(-8*d,-3*d); x.lineTo(-8*d,3*d); x.closePath(); x.fill(); x.fillRect(-2*d,-9*d,3*d,18*d); x.restore();
+      const gy=yG-H*.16*lift*lift; x.save(); x.translate(px,gy-4*d); x.rotate(-rot*8*R-lift*4*R); x.fillStyle="#fff"; x.fillRect(-9*d,-2*d,18*d,4*d); x.fillRect(-9*d,-7*d,3*d,6*d); x.restore();
+      if(!mv) run=-1; }
+    return mv; }
+  const say=()=>{ if(qm) return; const r=calc(o), mg=Math.round(TORA-r.roll);
+    u.out.innerHTML=`Rotas a <b>${Math.round(r.vr)} KIAS</b> (${Math.round(r.vrT)} kt TAS) tras <b>${Math.round(r.dvr)} m</b>, despegas a los <b>${Math.round(r.roll)} m</b> y llegas a 50 ft a los <b>${Math.round(r.tod)} m</b>. Te sobran <b>${mg} m</b> de pista desde el despegue. ${r.ok?`<span class="ok">Cumple</span>: TOD × 1,25 = ${Math.round(r.req)} m ≤ TORA 800 m.`:`<b class="bad">No cumple</b>: TOD × 1,25 = ${Math.round(r.req)} m > TORA 800 m. Reduce masa o espera mejores condiciones.`} Factores: masa ×${fx(r.fM)} · altitud ×${fx(r.fA)} · temperatura ×${fx(r.fT)} · viento ×${fx(r.fW)} · superficie ×${fx(r.fS)}.`; };
+  const IN={}; for(const k of ["m","pa","dt","w"]){ IN[k]=u.q(`[data-k="${k}"]`); IN[k+"o"]=u.q(`[data-o="${k}"]`); IN[k].addEventListener("input",()=>{ o[k]=+IN[k].value; sync(); }); }
+  const sync=()=>{ for(const k of ["m","pa","dt","w"]){ IN[k].value=o[k]; IN[k+"o"].textContent=(k==="dt"&&o[k]>0?"+":"")+f0(o[k])+U[k]; } press(u,"data-s",o.s); say(); S.kick(); };
+  u.qa("[data-s]").forEach(b=>b.addEventListener("click",()=>{ o.s=+b.dataset.s; sync(); }));
+  u.q("[data-go]").addEventListener("click",()=>{ run=0; S.kick(); });
+  const Q=quiz(u,QZ,c=>{ Object.assign(o,{m:950,pa:0,dt:0,w:0,s:0},c.s); sync(); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); say(); } });
+  sync();
+}};
+})();
+
+/* ---------- utilidades para las láminas SVG (eléctrico y radio) ---------- */
+const shellS=(el,t,svg,ctl,cap)=>{ el.innerHTML=`<p class="lt">${t}</p><figure>${svg}</figure><div class="ctl">${ctl}</div><p class="out" aria-live="polite"></p><p class="cap">${cap}</p>`;
+  const f=el.querySelector("figure"); if("IntersectionObserver" in window) new IntersectionObserver(es=>{ f.classList.toggle("v3pause",!es.some(e=>e.isIntersecting)); }).observe(f);
+  return {svg:el.querySelector("svg"),out:el.querySelector(".out"),q:s=>el.querySelector(s),qa:s=>el.querySelectorAll(s)}; };
+if(!document.getElementById("v3css2")){ const s=document.createElement("style"); s.id="v3css2"; s.textContent=`
+@keyframes v3flow{to{stroke-dashoffset:-24}}
+.f0viz .v3w{fill:none;stroke:#3d4b5c;stroke-width:4;stroke-linecap:round}
+.f0viz .v3w.on{stroke:#ffc94d;stroke-dasharray:8 4;animation:v3flow .6s linear infinite}
+.f0viz .v3w.on.rev{animation-direction:reverse}
+.f0viz .v3w.on.bat{stroke:#ff9f43}
+.f0viz .v3pause .v3w.on{animation-play-state:paused}
+.f0viz .v3bus{rx:3}
+.f0viz .v3pt{cursor:pointer}
+.f0viz .v3pt:focus{outline:none}
+.f0viz .v3pt:focus circle,.f0viz .v3pt:hover circle{stroke:#fff;stroke-width:3}
+.f0viz .v3ph{display:grid;gap:6px;margin-top:6px}
+.f0viz .v3ph div{background:#0f1b29;border-radius:6px;padding:7px 10px;border-left:3px solid #3a516b}
+.f0viz .v3ph .p{border-color:#ffc94d}.f0viz .v3ph .a{border-color:#55d0ff}.f0viz .v3ph .r{border-color:#6ee7a0}
+.f0viz .v3ph small{display:block;color:#8fa3b8;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.f0viz .v3ph i{color:#b9c8d8}`; document.head.appendChild(s); }
+
+/* =====================================================================
+   8 · BARRAS ELÉCTRICAS (021): fallo de un alternador y de los dos, con el flujo de corriente y qué equipos quedan
+   Bimotor ligero genérico de 28 V (cada avión es distinto: manda su manual).
+   ===================================================================== */
+V.elec=(()=>{
+const LD={main:[["Luces de aterrizaje y estrobos",9],["Calefacción del pitot",6],["Bomba de combustible eléctrica",4],["Flaps eléctricos",6]],ess:[["COM 1 / NAV 1",3],["Transpondedor",1.5],["PFD · horizonte",3],["Indicadores de motor",1]],avi:[["COM 2 / NAV 2",3],["GPS · MFD",4],["Piloto automático",3]]};
+const CAP=15;   // Ah útiles de la batería de ejemplo
+const QZ=[
+ {q:"Falla <b>un</b> alternador. ¿Qué pasa con los equipos?",o:["Siguen todos: el otro alternador alimenta la barra principal (vigila la carga)","Se pierde la barra esencial","Todo pasa a la batería"],a:0,e:"El alternador que queda alimenta todas las barras y sigue cargando la batería. Vigila el amperímetro: si la carga supera lo que da un alternador, desconecta lo no esencial.",s:{st:1}},
+ {q:"Fallan los <b>dos</b> alternadores. ¿Qué alimenta ahora los equipos?",o:["Solo la batería, durante un tiempo limitado","Los magnetos","Nada: se apaga todo al instante"],a:0,e:"La batería toma toda la carga y se descarga (amperímetro negativo). Hay que <b>desconectar cargas no esenciales</b> para ganar autonomía y aterrizar cuanto antes. Los magnetos solo alimentan el encendido del motor.",s:{st:2}},
+ {q:"Fallo doble de alternadores: ¿qué <b>desconectas primero</b>?",o:["El interruptor de aviónica y las cargas no esenciales","La barra esencial","El master de la batería"],a:0,e:"Quitas lo que no necesitas (aviónica secundaria, luces, calefacción si no hay hielo) y mantienes la <b>barra esencial</b>: COM 1/NAV 1, transpondedor e instrumentos básicos.",s:{st:2}},
+ {q:"El amperímetro marca <b>negativo</b>. ¿Qué significa?",o:["La batería se está descargando","La batería se está cargando","Hay un cortocircuito en la barra esencial"],a:0,e:"En un amperímetro de batería, negativo = <b>descarga</b>: la batería entrega más de lo que recibe. Positivo = se está cargando.",s:{st:2}},
+ {q:"¿Por qué se apaga la aviónica (avionics master) para arrancar los motores?",o:["Para protegerla de los picos de tensión del arranque","Para ahorrar combustible","Porque lo exige el transpondedor"],a:0,e:"El motor de arranque provoca caídas y picos de tensión que pueden dañar la aviónica: se conecta después del arranque y se desconecta antes de parar.",s:{st:0}}];
+return {t:"Barras eléctricas: fallo de alternador y fallo doble, con el flujo de corriente",
+cap:"Esquema genérico de un bimotor ligero de 28 V con barra principal, esencial y de aviónica. Consumos de ejemplo y batería de 15 Ah útiles; el tiempo es orientativo (en la práctica la batería rinde menos, sobre todo en frío). Cada avión es distinto: manda su manual.",
+init(el){
+  const svg=`<svg viewBox="0 0 400 320" role="img" aria-label="Esquema eléctrico con alternadores, batería y barras"><rect width="400" height="320" fill="#12202f"/>
+   <g font-family="system-ui,sans-serif" font-size="10.5" fill="#dfe8f1">
+   <path class="v3w" data-w="a1" d="M52 62 H110"/><path class="v3w" data-w="a2" d="M52 124 H110"/><path class="v3w" data-w="bm" d="M54 258 H82 V148 H110"/>
+   <path class="v3w" data-w="be" d="M54 272 H196 V246 H230"/><path class="v3w" data-w="me" d="M120 162 V222 H230"/><path class="v3w" data-w="ma" d="M130 46 H230"/>
+   <circle cx="34" cy="62" r="17" fill="#1a2b3f" stroke="#5d6f84" stroke-width="2" data-s="a1"/><text x="34" y="66" text-anchor="middle" font-weight="700">ALT 1</text>
+   <circle cx="34" cy="124" r="17" fill="#1a2b3f" stroke="#5d6f84" stroke-width="2" data-s="a2"/><text x="34" y="128" text-anchor="middle" font-weight="700">ALT 2</text>
+   <rect x="14" y="250" width="40" height="30" rx="4" fill="#1a2b3f" stroke="#5d6f84" stroke-width="2" data-s="bt"/><text x="34" y="269" text-anchor="middle" font-weight="700">BAT</text>
+   <rect class="v3bus" x="110" y="36" width="20" height="126" fill="#3d4b5c" data-b="main"/><text x="120" y="30" text-anchor="middle" font-weight="700" font-size="10">MAIN</text>
+   <rect class="v3bus" x="230" y="30" width="20" height="44" fill="#3d4b5c" data-b="avi"/><text x="240" y="24" text-anchor="middle" font-size="9.5" font-weight="700">AVIONICS</text>
+   <rect class="v3bus" x="230" y="206" width="20" height="50" fill="#3d4b5c" data-b="ess"/><text x="240" y="200" text-anchor="middle" font-size="9.5" font-weight="700">ESSENTIAL</text>
+   <text x="62" y="56" font-size="9" fill="#8fa3b8">contactor</text><text x="140" y="40" font-size="9" fill="#8fa3b8">interruptor de aviónica</text><text x="60" y="292" font-size="9" fill="#8fa3b8">master BAT</text>
+   <text x="140" y="92" font-size="9" fill="#8fa3b8">no esenciales</text>
+   <g data-l="avi" transform="translate(258 40)"></g><g data-l="ess" transform="translate(258 216)"></g><g data-l="main" transform="translate(140 106)"></g>
+   <g transform="translate(150 290)"><text data-am x="0" y="0" font-size="12" font-weight="700">Amperímetro +0 A</text><text data-v x="0" y="16" font-size="10.5" fill="#8fa3b8">Barra 28 V</text></g>
+   <g transform="translate(14 8)"><rect data-wa1 width="40" height="15" rx="3" fill="#2a2a2a"/><text x="20" y="11" text-anchor="middle" font-size="9" font-weight="700">ALT 1</text><rect data-wa2 x="44" width="40" height="15" rx="3" fill="#2a2a2a"/><text x="64" y="11" text-anchor="middle" font-size="9" font-weight="700">ALT 2</text></g>
+   </g></svg>`;
+  const ctl=row("Situación",bt("data-st","0","Normal",1)+bt("data-st","1","Fallo de alternador 1")+bt("data-st","2","Fallo de los dos alternadores"))
+   +row("Mandos",`<label class="v3k"><input type="checkbox" data-av checked> Interruptor de aviónica</label><label class="v3k"><input type="checkbox" data-sh> Desconectar cargas no esenciales</label>`+bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shellS(el,this.t,svg,ctl,this.cap); let st=0, av=true, sh=false, qm=false;
+  const W=k=>u.q(`[data-w="${k}"]`), B=k=>u.q(`[data-b="${k}"]`);
+  const draw=()=>{ const a1=st===0, a2=st!==2, alt=a1||a2, mainOn=true, aviOn=av&&mainOn, sum=(k,on)=>on?LD[k].reduce((s,l)=>s+l[1],0):0;
+    const loadMain=sh?0:sum("main",true), load=loadMain+sum("ess",true)+sum("avi",aviOn), cap1=60, bat=alt?(load>(a1&&a2?2*cap1:cap1)?-(load-cap1):+4):-load;
+    const set=(k,on,cls)=>{ const w=W(k); w.classList.toggle("on",!!on); w.classList.toggle("bat",cls==="bat"); w.classList.toggle("rev",cls==="rev"); };
+    set("a1",a1); set("a2",a2); set("bm",true,alt?"rev":"bat"); set("be",!alt,"bat"); set("me",alt||true,alt?"":"bat"); set("ma",aviOn,alt?"":"bat");
+    u.q('[data-s="a1"]').setAttribute("stroke",a1?"#ffc94d":"#ff5a4f"); u.q('[data-s="a2"]').setAttribute("stroke",a2?"#ffc94d":"#ff5a4f"); u.q('[data-s="bt"]').setAttribute("stroke",alt?"#6ee7a0":"#ff9f43");
+    u.q("[data-wa1]").setAttribute("fill",a1?"#2a2a2a":"#d9302a"); u.q("[data-wa2]").setAttribute("fill",a2?"#2a2a2a":"#d9302a");
+    B("main").setAttribute("fill","#ffc94d"); B("ess").setAttribute("fill","#ffc94d"); B("avi").setAttribute("fill",aviOn?"#ffc94d":"#3d4b5c");
+    for(const k of ["main","ess","avi"]){ const g=u.q(`[data-l="${k}"]`), on=k==="avi"?aviOn:k==="main"?!sh:true;
+      g.innerHTML=LD[k].map((l,i)=>`<g transform="translate(0 ${i*14})"><circle cx="4" cy="-3.5" r="3.6" fill="${on?"#6ee7a0":"#4a5563"}"/><text x="12" y="0" fill="${on?"#dfe8f1":"#6b7b8c"}" font-size="9.8">${l[0]}</text></g>`).join(""); }
+    u.q("[data-am]").textContent=`Amperímetro ${bat>=0?"+":"−"}${Math.abs(Math.round(bat))} A`; u.q("[data-am]").setAttribute("fill",bat>=0?"#6ee7a0":"#ff8a80");
+    const mins=!alt?Math.round(CAP/load*60*.8):0; u.q("[data-v]").textContent=alt?"Barra 28 V · cargando la batería":`Barra ≈ 24 V · batería: ≈ ${mins} min con ${f1(load)} A`;
+    if(qm) return;
+    u.out.innerHTML=st===0?`<b>Normal</b>: los dos alternadores alimentan la barra principal y cargan la batería (amperímetro positivo). Consumo ${f1(load)} A.`
+     :st===1?`<b>Fallo del alternador 1</b>: se enciende su aviso y el <b>alternador 2</b> lo alimenta todo (${f1(load)} A de unos 60 A disponibles). No se pierde ningún equipo; reduce consumo si el amperímetro se acerca al límite.`
+     :`<b>Fallo de los dos alternadores</b>: la <b>batería</b> alimenta todas las barras y se descarga (${f1(load)} A → unos <b>${mins} min</b>). ${sh&&!av?"Con la aviónica y lo no esencial desconectados solo queda la <b>barra esencial</b>: COM 1/NAV 1, transpondedor e instrumentos básicos. Aterriza en el aeródromo adecuado más cercano.":"Procedimiento típico: <b>apaga la aviónica y lo no esencial</b> para quedarte con la barra esencial y ganar tiempo."}`; };
+  u.qa("[data-st]").forEach(b=>b.addEventListener("click",()=>{ st=+b.dataset.st; press(u,"data-st",st); draw(); }));
+  u.q("[data-av]").addEventListener("change",e=>{ av=e.target.checked; draw(); }); u.q("[data-sh]").addEventListener("change",e=>{ sh=e.target.checked; draw(); });
+  const Q=quiz(u,QZ,c=>{ st=c.s.st; press(u,"data-st",st); draw(); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); draw(); } });
+  draw();
+}};
+})();
+
+/* =====================================================================
+   9 · CIRCUITO VFR Y FRASEOLOGÍA (090): pulsa cada punto y practica la llamada en inglés y en español
+   Aeródromo y matrícula de ejemplo: Torre «Example / Ejemplo», pista 27, circuito derecha, EC-XYZ (abreviado E-YZ).
+   ===================================================================== */
+V.rtcirc=(()=>{
+const PT=[
+ {k:"in",n:"1 · Entrada por N",xy:[64,60],p:["Example Tower, EC-XYZ, over November, 2 000 feet, information Bravo, for landing.","Ejemplo Torre, EC-XYZ, sobre November, 2.000 pies, información Bravo, para aterrizar."],a:["EC-XYZ, join right-hand downwind runway 27, QNH 1015.","EC-XYZ, incorpórese a viento en cola derecha pista 27, QNH 1015."],r:["Join right-hand downwind runway 27, QNH 1015, EC-XYZ.","Viento en cola derecha pista 27, QNH 1015, EC-XYZ."],n2:"Primera llamada: indicativo completo, posición, altitud, ATIS e intenciones. Colacionas pista, tramo y QNH."},
+ {k:"dw",n:"2 · Viento en cola",xy:[200,62],p:["E-YZ, downwind.","E-YZ, viento en cola."],a:["E-YZ, number 2, follow the Cessna on base.","E-YZ, número 2, siga al Cessna en base."],r:["Number 2, traffic in sight, E-YZ.","Número 2, tráfico a la vista, E-YZ."],n2:"La torre ya te ha abreviado (E-YZ): desde ahora puedes abreviar tú. Si no ves el tráfico, dilo: «negative contact»."},
+ {k:"bs",n:"3 · Base",xy:[340,140],p:["E-YZ, base.","E-YZ, base."],a:["E-YZ, report final.","E-YZ, notifique final."],r:["Wilco, E-YZ.","Cumpliré, E-YZ."],n2:"«Wilco» = entendido y cumpliré (ya incluye «roger»): no se dice «roger wilco»."},
+ {k:"fn",n:"4 · Final",xy:[300,228],p:["E-YZ, final.","E-YZ, final."],a:["E-YZ, runway 27, wind 250 degrees 8 knots, cleared to land.","E-YZ, pista 27, viento 250 grados 8 nudos, autorizado a aterrizar."],r:["Runway 27, cleared to land, E-YZ.","Pista 27, autorizado a aterrizar, E-YZ."],n2:"Colacionas la pista y la autorización; el viento no es obligatorio. Si la torre dice «go around»: «Going around, E-YZ» (motor y al aire)."},
+ {k:"vc",n:"5 · Pista libre",xy:[96,262],p:["E-YZ, runway vacated.","E-YZ, pista libre."],a:["E-YZ, taxi to the apron via Alpha.","E-YZ, ruede a plataforma por Alfa."],r:["Taxi to the apron via Alpha, E-YZ.","Ruedo a plataforma por Alfa, E-YZ."],n2:"Se notifica «runway vacated» cuando todo el avión ha pasado el punto de espera o las marcas de la calle de salida."}];
+const QZ=[
+ {q:"¿Qué <b>no puede faltar</b> en la primera llamada a la torre?",o:["Indicativo completo, posición, altitud, ATIS e intenciones","Solo el indicativo y «para aterrizar»","Indicativo abreviado y QNH"],a:0,e:"En el primer contacto el indicativo va <b>completo</b>, con posición, altitud, la letra del ATIS que tienes y lo que quieres hacer.",k:"in"},
+ {q:"¿Cómo se abrevia EC-XYZ y <b>cuándo</b> puedes hacerlo?",o:["E-YZ, solo después de que lo abrevie la torre","XYZ, desde la primera llamada","EC-YZ, cuando quieras"],a:0,e:"Abreviatura OACI de una matrícula: el <b>primer carácter y al menos los dos últimos</b> (E-YZ). Solo la usas después de que la estación de tierra la haya usado.",k:"dw"},
+ {q:"«Join right-hand downwind runway 27, QNH 1015». ¿Qué colacionas?",o:["Tramo, pista y QNH","Solo «roger»","Solo el QNH"],a:0,e:"Se colacionan siempre las instrucciones de pista y los reglajes del altímetro: «Join right-hand downwind runway 27, QNH 1015, EC-XYZ».",k:"in"},
+ {q:"«Number 2, follow the Cessna on base». Lo tienes a la vista. ¿Respuesta?",o:["Number 2, traffic in sight, E-YZ","Roger, E-YZ","Cleared number 2, E-YZ"],a:0,e:"Colacionas tu número y confirmas que ves el tráfico. Si no lo ves: «negative contact».",k:"dw"},
+ {q:"¿Qué significa «<b>wilco</b>»?",o:["He entendido y cumpliré","Repita","Afirmativo"],a:0,e:"<b>Wilco</b> (will comply): entendido y lo haré. Ya incluye «roger», así que «roger wilco» sobra.",k:"bs"},
+ {q:"«Runway 27, wind 250 degrees 8 knots, cleared to land». ¿Colación correcta?",o:["Runway 27, cleared to land, E-YZ","Wind 250 degrees 8 knots, E-YZ","Cleared, E-YZ"],a:0,e:"Pista y autorización, siempre. El viento no hace falta colacionarlo.",k:"fn"},
+ {q:"La torre te dice «E-YZ, go around». ¿Qué contestas?",o:["Going around, E-YZ","Roger, E-YZ","Wilco go around, E-YZ"],a:0,e:"Frase estándar: «<b>Going around</b>» (en español, «motor y al aire»), y lo haces de inmediato.",k:"fn"},
+ {q:"Ya has salido de la pista. ¿Qué frase usas?",o:["Runway vacated","Runway free","Out of the runway"],a:0,e:"La fraseología OACI es «<b>runway vacated</b>» («pista libre» en español), cuando todo el avión ha pasado el punto de espera.",k:"vc"}];
+return {t:"Circuito de tránsito: qué dices en cada punto (inglés y español)",
+cap:"Aeródromo, ATIS y matrícula de ejemplo; circuito derecha a la pista 27. Fraseología OACI (Doc 9432) y su equivalente en español. Cada aeródromo publica sus puntos de notificación y procedimientos en el AIP: mandan siempre esos.",
+init(el){
+  const svg=`<svg viewBox="0 0 400 300" role="img" aria-label="Circuito de tránsito con los puntos de notificación"><rect width="400" height="300" fill="#2f4a2a"/>
+   <g font-family="system-ui,sans-serif" font-size="11" fill="#e9f0f7">
+   <rect x="80" y="246" width="230" height="16" fill="#3c4046"/><path d="M92 254 H298" stroke="#f4f4f0" stroke-dasharray="8 6"/><text x="288" y="258" font-size="9" font-weight="700" fill="#fff">27</text><text x="84" y="258" font-size="9" font-weight="700" fill="#fff">09</text>
+   <path d="M120 262 L96 282 H40" stroke="#5a5f66" stroke-width="7" fill="none"/><text x="20" y="292" font-size="9.5" fill="#cfd8e3">plataforma</text>
+   <path d="M310 230 H340 V70 H90 Q60 70 60 100 V230" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2" stroke-dasharray="4 4"/>
+   <path d="M64 60 L200 62" fill="none" stroke="#9fe0ff" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#v3ar)"/>
+   <path d="M200 62 H322 Q340 62 340 80 V210 Q340 228 322 228 H300" fill="none" stroke="#ffd24d" stroke-width="2.5" marker-end="url(#v3ar2)"/>
+   <defs><marker id="v3ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#9fe0ff"/></marker><marker id="v3ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#ffd24d"/></marker></defs>
+   <text x="18" y="40" font-size="10.5" fill="#9fe0ff">Punto VFR N</text><text x="188" y="50" font-size="10" fill="#ffd24d">viento en cola · downwind</text><text x="352" y="150" font-size="10" fill="#ffd24d" transform="rotate(90 352 150)">base</text><text x="250" y="222" font-size="10" fill="#ffd24d">final</text>
+   <g transform="translate(372 24)"><circle r="14" fill="rgba(0,0,0,.3)"/><path d="M0 -11 L4 4 L0 1 L-4 4z" fill="#fff"/><text y="-16" text-anchor="middle" font-size="9" fill="#fff">N</text></g>
+   ${PT.map((p,i)=>`<g class="v3pt" data-p="${i}" tabindex="0" role="button" aria-label="${p.n}" transform="translate(${p.xy[0]} ${p.xy[1]})"><circle r="11" fill="#12202f" stroke="#ffd24d" stroke-width="2"/><text y="4" text-anchor="middle" font-weight="800" font-size="11" fill="#ffd24d">${i+1}</text></g>`).join("")}
+   </g></svg>`;
+  const ctl=row("Idioma",bt("data-lg","0","English",1)+bt("data-lg","1","Español")+bt("data-lg","2","Los dos")+bt("data-m","quiz","Ponme a prueba"))+`<div class="v3r v3q" data-qz hidden></div>`;
+  const u=shellS(el,this.t,svg,ctl,this.cap); let cur=0, lg=0, qm=false;
+  const hi=i=>u.qa("[data-p]").forEach(g=>{ const on=+g.dataset.p===i; g.querySelector("circle").setAttribute("fill",on?"#ffd24d":"#12202f"); g.querySelector("text").setAttribute("fill",on?"#12202f":"#ffd24d"); });
+  const show=i=>{ cur=i; hi(i); if(qm) return; const p=PT[i], L=v=>lg===2?`${v[0]}<br><i>${v[1]}</i>`:v[lg];
+    u.out.innerHTML=`<b>${p.n}</b><div class="v3ph"><div class="p"><small>Tú</small>${L(p.p)}</div><div class="a"><small>Torre</small>${L(p.a)}</div><div class="r"><small>Tú · colación</small>${L(p.r)}</div></div><span style="display:block;margin-top:6px;color:#b9c8d8">${p.n2}</span>`; };
+  u.qa("[data-p]").forEach(g=>{ g.addEventListener("click",()=>show(+g.dataset.p)); g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(+g.dataset.p); } }); });
+  u.qa("[data-lg]").forEach(b=>b.addEventListener("click",()=>{ lg=+b.dataset.lg; press(u,"data-lg",lg); show(cur); }));
+  const Q=quiz(u,QZ,c=>{ hi(PT.findIndex(p=>p.k===c.k)); });
+  u.q('[data-m="quiz"]').addEventListener("click",e=>{ qm=!qm; e.currentTarget.setAttribute("aria-pressed",qm); if(qm) Q.start(); else { Q.stop(); show(cur); } });
+  show(0);
+}};
+})();
+
 F.init();
 })();
