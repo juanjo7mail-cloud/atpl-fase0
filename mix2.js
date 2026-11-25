@@ -166,7 +166,9 @@ function duelBank(ac){ const ci=AC.find(a=>a[0]===ac)[2], out=[];
     if(d.length<2) return; out.push({q:`Lista «${esc(c.t)}» · <b>${esc(a)}</b>`,a:b,d,src:c.lo||"SOP"}); }); });
   return out; }
 function pohsop(){
-  let ac=lsGet("f0:ac","cz"), tmr=0;
+  // avión propio del entrenador; si en POH/SOP filtras un solo avión («f0:ac», lista compartida por esas páginas), arranca con ese
+  const okAc=v=>AC.some(a=>a[0]===v); let ac=lsGet("f0:mxac",null), tmr=0;
+  if(!okAc(ac)){ const sh=lsGet("f0:ac",null); ac=Array.isArray(sh)&&sh.length===1&&okAc(sh[0])?sh[0]:"cz"; }
   const body=open("✈️ Entrenador de POH y SOP","<p>Cargando…</p>",()=>clearTimeout(tmr));
   getJSON("s/pohsop.json").then(j=>{ PS=j; home(); }).catch(e=>{ body.innerHTML=`<p>No se han podido cargar las listas (${esc(e.message)}).</p>`; });
   function home(){ clearTimeout(tmr); clock(""); const ml=memLists(ac), db=duelBank(ac);
@@ -174,7 +176,7 @@ function pohsop(){
       <div class="row">${AC.map(a=>`<button type="button" class="btn2" data-ac="${a[0]}" aria-pressed="${a[0]===ac}">${a[1]}</button>`).join("")}</div>
       <div class="row" style="align-items:stretch"><button type="button" class="btn2 pri" data-m="mem" style="flex:1 1 220px;text-align:left">🧠 Listas de memoria<br><small style="font-weight:500">${ml.length} emergencias y listas de memoria: ordénalas y completa los valores</small></button><button type="button" class="btn2 pri" data-m="duel" style="flex:1 1 220px;text-align:left">⚔️ Duelo de limitaciones<br><small style="font-weight:500">10 preguntas rápidas · ${db.length} datos: pesos, velocidades, combustible, aceite y listas del SOP</small></button></div>
       <p class="muted" style="font-size:13px">Ojo: el SOP da para el Piper (Archer III) VFE 100 · VNO 122 · VNE 155 y el POH 103 · 126 · 160. Cada pregunta dice de qué documento sale. Estos POH no dan MZFW: solo MTOW y MLW (iguales en los tres aviones).</p>`;
-    body.querySelectorAll("[data-ac]").forEach(b=>b.addEventListener("click",()=>{ ac=b.dataset.ac; lsSet("f0:ac",ac); home(); }));
+    body.querySelectorAll("[data-ac]").forEach(b=>b.addEventListener("click",()=>{ ac=b.dataset.ac; lsSet("f0:mxac",ac); home(); }));
     body.querySelector('[data-m="mem"]').addEventListener("click",()=>memPick());
     body.querySelector('[data-m="duel"]').addEventListener("click",()=>duel()); }
   const acName=()=>AC.find(a=>a[0]===ac)[1];
